@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="course_list_columns">3</integer>
-    <integer name="course_list_visited_rows">7</integer>
 </resources>

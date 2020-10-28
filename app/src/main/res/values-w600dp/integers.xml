@@ -2,5 +2,4 @@
 <resources>
     <integer name="achievements_to_display">6</integer>
     <integer name="course_list_columns">2</integer>
-    <integer name="course_list_visited_rows">5</integer>
 </resources>

@@ -28,8 +28,16 @@ class VisitedCourseListItemAdapterDelegate(
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.Data
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
-        ViewHolder(createView(parent, R.layout.item_visited_course))
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> {
+        val itemView = createView(parent, R.layout.item_visited_course)
+        val itemCount = (parent.width - parent.paddingLeft - parent.paddingRight) /
+                (itemView.resources.getDimensionPixelSize(R.dimen.visited_course_item_width) + itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2)
+
+        itemView.layoutParams.apply {
+            width = ((parent.width - parent.paddingLeft - parent.paddingRight) / itemCount) - itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2
+        }
+        return ViewHolder(itemView)
+    }
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
         private val courseCoverImageTarget =
