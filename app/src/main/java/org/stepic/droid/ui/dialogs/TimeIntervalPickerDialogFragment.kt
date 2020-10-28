@@ -3,10 +3,9 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
-import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.shawnlin.numberpicker.NumberPicker
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -34,7 +33,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     @Inject
     lateinit var sharedPreferences: SharedPreferenceHelper
 
-    private lateinit var picker: MaterialNumberPicker
+    private lateinit var picker: NumberPicker
 
     private lateinit var callback: Callback
 
@@ -48,7 +47,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        picker = MaterialNumberPicker(context)
+        picker = NumberPicker(context)
         picker.minValue = 0
         picker.maxValue = TimeIntervalUtil.values.size - 1
         picker.displayedValues = TimeIntervalUtil.values
@@ -57,8 +56,11 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         picker.wrapSelectorWheel = false
         picker.setBackgroundColor(0x0)
         picker.textColor = requireContext().resolveColorAttribute(R.attr.colorOnSurface)
+        picker.selectedTextColor = requireContext().resolveColorAttribute(R.attr.colorOnSurface)
+        picker.dividerColor = 0x0
+
         try {
-            picker.setTextSize(50f) //Warning: reflection!
+            picker.textSize = 50f //Warning: reflection!
         } catch (exception: Exception) {
             Timber.e("reflection failed -> ignore")
         }

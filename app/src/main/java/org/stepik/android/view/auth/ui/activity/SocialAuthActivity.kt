@@ -19,11 +19,11 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
-import com.vk.sdk.VKAccessToken
-import com.vk.sdk.VKCallback
-import com.vk.sdk.VKScope
-import com.vk.sdk.VKSdk
-import com.vk.sdk.api.VKError
+import com.vk.api.sdk.VK
+import com.vk.api.sdk.auth.VKAccessToken
+import com.vk.api.sdk.auth.VKAuthCallback
+import com.vk.api.sdk.auth.VKScope
+import com.vk.api.sdk.exceptions.VKApiCodes
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.activity_auth_social.*
 import org.stepic.droid.R
@@ -114,9 +114,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             screenManager.showLogin(this@SocialAuthActivity, null, null, AutoAuth.NONE, course)
         }
 
-        initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {
-            showNetworkError()
-        })
+        initGoogleApiClient(true) { showNetworkError() }
 
         val recyclerState = savedInstanceState?.getSerializable(KEY_SOCIAL_ADAPTER_STATE)
         if (recyclerState is SocialAuthAdapter.State) {
@@ -235,7 +233,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
                 LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
 
             SocialNetwork.VK ->
-                VKSdk.login(this, VKScope.EMAIL)
+                VK.login(this, listOf(VKScope.EMAIL))
 
             else -> {
                 selectedSocialType = type
@@ -286,14 +284,14 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
-            override fun onResult(result: VKAccessToken) {
+        if (data != null && VK.onActivityResult(requestCode, resultCode, data, object : VKAuthCallback {
+            override fun onLogin(token: VKAccessToken) {
                 socialAuthPresenter
-                    .authWithNativeCode(result.accessToken, SocialNetwork.VK, result.email)
+                    .authWithNativeCode(token.accessToken, SocialNetwork.VK, token.email)
             }
 
-            override fun onError(error: VKError?) {
-                if (error?.errorCode == VKError.VK_REQUEST_HTTP_FAILED) {
+            override fun onLoginFailed(errorCode: Int) {
+                if (errorCode == VKApiCodes.CODE_AUTHORIZATION_FAILED) {
                     showNetworkError()
                 }
             }
@@ -345,7 +343,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         root_view.snackbar(message = getMessageFor(failType))
 
         // logout from socials
-        VKSdk.logout()
+        VK.logout()
         if (googleApiClient?.isConnected == true) {
             Auth.GoogleSignInApi.signOut(googleApiClient)
         }

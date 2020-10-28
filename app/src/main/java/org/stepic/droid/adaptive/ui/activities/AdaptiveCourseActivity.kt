@@ -9,8 +9,8 @@ class AdaptiveCourseActivity : SingleFragmentActivity() {
     override fun createFragment() =
         RecommendationsFragment.newInstance(intent.getParcelableExtra(AppConstants.KEY_COURSE_BUNDLE))
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

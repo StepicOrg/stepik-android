@@ -47,7 +47,7 @@ constructor(private val autocompleteContainer: AutocompleteContainer) {
     }
 
     fun getIndentForLines(lines: List<String>): Int =
-        min(lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.min() ?: CodeEditor.DEFAULT_INDENT_SIZE, CodeEditor.MAX_INDENT_SIZE)
+        min(lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.minOrNull() ?: CodeEditor.DEFAULT_INDENT_SIZE, CodeEditor.MAX_INDENT_SIZE)
 
 
     fun onTextInserted(start: Int, count: Int, codeEditor: CodeEditor) {
