@@ -35,9 +35,7 @@ class CourseListViewDelegate(
     private val courseItemsSkeleton: List<CourseListItem>
 
     init {
-        val skeletonCount =
-            courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
-                    courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
+        val skeletonCount = calculateSkeletonCount(itemAdapterDelegateType)
 
         courseItemsSkeleton = List(skeletonCount) { CourseListItem.PlaceHolder() }
 
@@ -108,6 +106,17 @@ class CourseListViewDelegate(
     override fun showNetworkError() {
         courseItemsRecyclerView.snackbar(messageRes = R.string.connectionProblems)
     }
+
+    private fun calculateSkeletonCount(itemAdapterDelegateType: ItemAdapterDelegateType): Int =
+        when (itemAdapterDelegateType) {
+            ItemAdapterDelegateType.STANDARD -> {
+                courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
+                        courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
+            }
+            ItemAdapterDelegateType.VISITED -> {
+                courseItemsRecyclerView.resources.getInteger(R.integer.course_list_visited_rows)
+            }
+        }
 
     enum class ItemAdapterDelegateType {
         STANDARD,
