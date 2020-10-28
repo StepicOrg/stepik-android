@@ -59,6 +59,7 @@ class CourseListVisitedFragment : Fragment(R.layout.fragment_course_list) {
 
         initCenteredToolbar(R.string.visited_courses_title, true)
 
+        courseListSwipeRefresh.isEnabled = false
         courseListCoursesRecycler.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -75,7 +76,6 @@ class CourseListVisitedFragment : Fragment(R.layout.fragment_course_list) {
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

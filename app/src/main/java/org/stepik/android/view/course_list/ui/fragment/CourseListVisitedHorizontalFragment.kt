@@ -57,6 +57,8 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
         super.onViewCreated(view, savedInstanceState)
 
         coursesCarouselCount.isVisible = false
+        courseListPlaceholderNoConnection.isVisible = false
+        courseListPlaceholderEmpty.isVisible = false
         courseListTitle.text = resources.getString(R.string.visited_courses_title)
 
         with(courseListCoursesRecycler) {
@@ -73,11 +75,11 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
-        viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
+        viewStateDelegate.addState<CourseListView.State.Idle>()
+        viewStateDelegate.addState<CourseListView.State.Loading>(view, courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(view, courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>()
+        viewStateDelegate.addState<CourseListView.State.NetworkError>()
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,

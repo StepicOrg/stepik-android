@@ -20,10 +20,13 @@ constructor(
             .getVisitedCourses()
             .doOnSuccess(visitedCoursesCacheDataSource::saveVisitedCourses)
             .flatMapCompletable { Completable.complete().cache() } // cache only success
+            .onErrorComplete()
 
     override fun observeVisitedCourses(): Flowable<List<VisitedCourse>> =
-        visitedCoursesSource
-            .andThen(visitedCoursesCacheDataSource.getVisitedCourses())
+        Flowable.merge(
+            visitedCoursesSource.toFlowable(),
+            visitedCoursesCacheDataSource.getVisitedCourses()
+        )
 
     override fun saveVisitedCourse(courseId: Long): Completable =
         visitedCoursesCacheDataSource
