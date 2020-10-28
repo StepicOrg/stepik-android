@@ -34,6 +34,7 @@ constructor(
         courseListInteractor
             .getCourseListItems(
                 courseId = courseIds,
-                courseViewSource = CourseViewSource.Visited
+                courseViewSource = CourseViewSource.Visited,
+                sourceTypeComposition = SourceTypeComposition.CACHE
             )
 }

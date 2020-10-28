@@ -4,14 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
-    android:layout_height="216dp"
+    android:layout_height="222dp"
     android:layout_margin="@dimen/course_item_margin"
     app:cardElevation="4dp"
     app:cardCornerRadius="@dimen/course_item_radius">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="160dp"
-        android:layout_height="216dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:duplicateParentState="true">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -35,8 +35,7 @@
             android:layout_marginLeft="@dimen/course_item_space_between_items"
             android:layout_marginStart="@dimen/course_item_space_between_items"
             android:layout_marginRight="@dimen/course_item_space_between_items"
-            android:layout_marginTop="@dimen/course_item_space_between_items"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
 
             android:textAppearance="?textAppearanceSubtitle2"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
             app:layout_constraintRight_toRightOf="parent"
             tools:ignore="MissingPrefix"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="4"
             tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
 
         <androidx.appcompat.widget.AppCompatTextView
