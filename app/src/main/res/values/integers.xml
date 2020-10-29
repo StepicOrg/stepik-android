@@ -19,6 +19,8 @@
     <integer name="course_list_columns">1</integer>
     <integer name="course_list_rows">2</integer>
 
+    <integer name="course_list_visited_rows">3</integer>
+
     <integer name="highlighted_element_elevation">2</integer>
     <integer name="score_decimal_count">2</integer>
 </resources>

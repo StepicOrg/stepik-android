@@ -938,4 +938,8 @@
 
     <string name="filter_dismiss_action">Сбросить</string>
     <string name="filter_apply_action">Посмотреть результат</string>
+
+    <!-- Visited courses -->
+    <string name="visited_courses_title">Недавно просмотренные</string>
+    <string name="visited_courses_enrolled">Вы записаны</string>
 </resources>

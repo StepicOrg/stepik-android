@@ -974,4 +974,8 @@
 
     <string name="filter_dismiss_action">Dismiss</string>
     <string name="filter_apply_action">Show result</string>
+
+    <!-- Visited courses -->
+    <string name="visited_courses_title">Recently viewed</string>
+    <string name="visited_courses_enrolled">Enrolled</string>
 </resources>

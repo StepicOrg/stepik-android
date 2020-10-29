@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/visited_course_item_width"
+    android:layout_height="@dimen/visited_course_item_height"
+    android:layout_margin="@dimen/course_item_margin"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="@dimen/course_item_radius">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/course_item_space_between_items">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/courseItemImage"
+            android:layout_width="@dimen/new_course_image_size"
+            android:layout_height="@dimen/new_course_image_size"
+            android:contentDescription="@string/content_course_logo"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            tools:src="@drawable/general_placeholder"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/courseItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/course_item_space_between_items"
+
+            android:textAppearance="?textAppearanceBody2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseItemImage"
+            app:layout_constraintRight_toRightOf="parent"
+            android:ellipsize="end"
+            android:maxLines="4"
+            tools:text="3456789213345678921456789213345678921334567892133456789213345678"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coursePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:textAppearance="?textAppearanceSubtitle2"
+            android:textColor="@color/color_secondary"
+
+            android:lineSpacingExtra="1sp"
+            android:lines="1"
+
+            tools:text="Бесплатно"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

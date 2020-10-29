@@ -67,6 +67,7 @@ import org.stepik.android.view.injection.course_list.search_result.CourseListSea
 import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
 import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
 import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
+import org.stepik.android.view.injection.course_list.visited.CourseListVisitedComponent
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
@@ -105,6 +106,7 @@ import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
+import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModule
 import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
@@ -159,7 +161,8 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         BillingDataModule::class,
 
         CoursePaymentsDataModule::class,
-        PurchaseNotificationDataModule::class
+        PurchaseNotificationDataModule::class,
+        VisitedCoursesDataModule::class
     ]
 )
 interface AppCoreComponent {
@@ -239,6 +242,8 @@ interface AppCoreComponent {
     fun courseListCollectionComponentBuilder(): CourseListCollectionComponent.Builder
 
     fun courseListUserComponentBuilder(): CourseListUserComponent.Builder
+
+    fun courseListVisitedComponentBuilder(): CourseListVisitedComponent.Builder
 
     fun inAppWebViewComponentBuilder(): InAppWebViewComponent.Builder
 
