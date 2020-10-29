@@ -100,7 +100,7 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
                     )
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
-            itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.VISITED
+            itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.SMALL
         )
 
         courseListVisitedPresenter.fetchCourses()

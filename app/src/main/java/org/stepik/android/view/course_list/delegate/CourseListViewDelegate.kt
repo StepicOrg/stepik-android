@@ -25,7 +25,7 @@ class CourseListViewDelegate(
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     onContinueCourseClicked: (CourseListItem.Data) -> Unit,
-    private val isHandleInAppPurchase: Boolean,
+    isHandleInAppPurchase: Boolean,
     itemAdapterDelegateType: ItemAdapterDelegateType = ItemAdapterDelegateType.STANDARD // TODO Hacky way
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
@@ -51,7 +51,7 @@ class CourseListViewDelegate(
                     CourseListPlaceHolderAdapterDelegate()
                 )
             }
-            ItemAdapterDelegateType.VISITED -> {
+            ItemAdapterDelegateType.SMALL -> {
                 listOf(
                     VisitedCourseListItemAdapterDelegate(
                         analytic,
@@ -113,13 +113,13 @@ class CourseListViewDelegate(
                 courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
                         courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
             }
-            ItemAdapterDelegateType.VISITED -> {
+            ItemAdapterDelegateType.SMALL -> {
                 courseItemsRecyclerView.resources.getInteger(R.integer.course_list_visited_rows)
             }
         }
 
     enum class ItemAdapterDelegateType {
         STANDARD,
-        VISITED
+        SMALL
     }
 }
