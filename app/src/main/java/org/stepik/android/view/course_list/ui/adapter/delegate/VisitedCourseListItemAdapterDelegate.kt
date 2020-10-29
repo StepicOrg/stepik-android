@@ -4,8 +4,9 @@ import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.courseItemImage
 import kotlinx.android.synthetic.main.item_course.view.courseItemName
@@ -29,13 +30,13 @@ class VisitedCourseListItemAdapterDelegate(
         data is CourseListItem.Data
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> {
+        val parentWidth = parent.measuredWidth - parent.paddingLeft - parent.paddingRight
+        val itemMargin = parent.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2
         val itemView = createView(parent, R.layout.item_visited_course)
-        val itemCount = (parent.measuredWidth - parent.paddingLeft - parent.paddingRight) /
-                (itemView.resources.getDimensionPixelSize(R.dimen.visited_course_item_width) + itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2)
+        val itemCount = parentWidth / (itemView.resources.getDimensionPixelSize(R.dimen.visited_course_item_width) + itemMargin)
 
-        itemView.layoutParams.apply {
-            width = ((parent.measuredWidth - parent.paddingLeft - parent.paddingRight) / itemCount) - itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2
-        }
+        val itemWidth = parentWidth / itemCount - itemMargin
+        itemView.updateLayoutParams { width = itemWidth }
         return ViewHolder(itemView)
     }
 
@@ -74,18 +75,19 @@ class VisitedCourseListItemAdapterDelegate(
             courseItemName.text = data.course.title
             val isEnrolled = data.course.enrollment != 0L
 
-            val (@ColorRes textColor, displayPrice) = when {
-                isEnrolled -> {
-                    R.color.material_on_surface_disabled to context.resources.getString(R.string.visited_courses_enrolled)
-                }
-                data.course.isPaid -> {
-                    R.color.color_overlay_violet to handleCoursePrice(data)
-                }
-                else ->
-                    R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
-            }
+            val (@ColorRes textColor, displayPrice) =
+                when {
+                    isEnrolled ->
+                        R.color.material_on_surface_disabled to context.resources.getString(R.string.visited_courses_enrolled)
 
-            courseItemPrice.setTextColor(ContextCompat.getColor(context, textColor))
+                    data.course.isPaid ->
+                        R.color.color_overlay_violet to handleCoursePrice(data)
+
+                    else ->
+                        R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
+                }
+
+            courseItemPrice.setTextColor(AppCompatResources.getColorStateList(context, textColor))
             courseItemPrice.text = displayPrice
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
