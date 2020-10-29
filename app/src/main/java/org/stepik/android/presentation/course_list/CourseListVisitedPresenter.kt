@@ -58,10 +58,8 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchCourses() {
-        if (state != CourseListView.State.Idle) return
-
-        val oldState = state
+    fun fetchCourses(forceUpdate: Boolean = false) {
+        if (state != CourseListView.State.Idle && !forceUpdate) return
 
         state = CourseListView.State.Loading
 
@@ -81,13 +79,14 @@ constructor(
                     }
                 },
                 onError = {
-                    when (oldState) {
-                        is CourseListView.State.Content -> {
-                            state = oldState
-                            view?.showNetworkError()
+                    when (state) {
+                        is CourseListView.State.Content, CourseListView.State.Empty -> {
+                            fetchCourses(forceUpdate = true)
                         }
-                        else ->
+                        else -> {
+                            view?.showNetworkError()
                             state = CourseListView.State.NetworkError
+                        }
                     }
                 }
             )
