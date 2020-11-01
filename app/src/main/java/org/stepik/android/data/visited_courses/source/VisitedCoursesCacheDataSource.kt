@@ -8,4 +8,5 @@ interface VisitedCoursesCacheDataSource {
     fun getVisitedCourses(): Flowable<List<VisitedCourse>>
     fun saveVisitedCourses(visitedCourses: List<VisitedCourse>)
     fun saveVisitedCourse(courseId: Long): Completable
+    fun removeVisitedCourses(): Completable
 }

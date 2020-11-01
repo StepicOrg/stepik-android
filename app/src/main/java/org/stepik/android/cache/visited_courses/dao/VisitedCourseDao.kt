@@ -1,10 +1,11 @@
 package org.stepik.android.cache.visited_courses.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Insert
 import androidx.room.Transaction
+import androidx.room.OnConflictStrategy
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
 
@@ -21,6 +22,9 @@ abstract class VisitedCourseDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun saveVisitedCourse(visitedCourse: VisitedCourse)
+
+    @Query("DELETE FROM VisitedCourse")
+    abstract fun removeVisitedCourses(): Completable
 
     @Transaction
     open fun saveVisitedCourse(courseId: Long) {
