@@ -938,4 +938,7 @@
 
     <string name="filter_dismiss_action">Сбросить</string>
     <string name="filter_apply_action">Посмотреть результат</string>
+
+    <!-- In app web view -->
+    <string name="in_app_webview_step_title">Шаг %d</string>
 </resources>

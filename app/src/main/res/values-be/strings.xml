@@ -788,7 +788,7 @@
     <string name="pip_forward_label">Пераматаць наперад</string>
     <string name="pip_rewind_label">Пераматаць назад</string>
 
-    <!-- Filter (done via Google Translate -->
+    <!-- Filter (done via Google Translate) -->
     <string name="filter_menu_title">Фільтр</string>
     <string name="filter_dialog_title">Фільтры</string>
     <string name="filter_language_subtitle">Мова</string>
@@ -801,6 +801,8 @@
 
     <string name="filter_dismiss_action">Скінуць</string>
     <string name="filter_apply_action">Паглядзець вынік</string>
-    <!-- -->
+
+    <!-- In app web view (done via Google Translate) -->
+    <string name="in_app_webview_step_title">Крок %d</string>
 
 </resources>

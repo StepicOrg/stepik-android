@@ -28,7 +28,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -173,9 +173,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
                         submissionDeepLinkBuilder.createSubmissionLink(step.id, submission.id)
                     }
 
-                MagicLinkDialogFragment
-                    .newInstance(url)
-                    .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
+                InAppWebViewDialogFragment
+                    .newInstance(getString(R.string.in_app_webview_step_title, step.id), url, isProvideAuth = true)
+                    .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
             }
             stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)
             stepQuizAction.updateLayoutParams<ViewGroup.MarginLayoutParams> {
