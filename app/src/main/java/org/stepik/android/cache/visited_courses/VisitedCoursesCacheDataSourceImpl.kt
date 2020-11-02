@@ -24,4 +24,7 @@ constructor(
             visitedCourseDao
                 .saveVisitedCourse(courseId)
         }
+
+    override fun removeVisitedCourses(): Completable =
+        visitedCourseDao.removeVisitedCourses()
 }

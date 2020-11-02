@@ -31,4 +31,8 @@ constructor(
     override fun saveVisitedCourse(courseId: Long): Completable =
         visitedCoursesCacheDataSource
             .saveVisitedCourse(courseId)
+
+    override fun removedVisitedCourses(): Completable =
+        visitedCoursesCacheDataSource
+            .removeVisitedCourses()
 }
