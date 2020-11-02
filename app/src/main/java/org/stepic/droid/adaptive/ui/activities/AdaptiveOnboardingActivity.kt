@@ -6,8 +6,8 @@ import org.stepic.droid.base.SingleFragmentActivity
 
 
 class AdaptiveOnboardingActivity: SingleFragmentActivity() {
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

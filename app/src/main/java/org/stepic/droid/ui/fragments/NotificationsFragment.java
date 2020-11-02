@@ -2,8 +2,6 @@ package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,6 @@ import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 
-import butterknife.BindView;
 import timber.log.Timber;
 
 public class NotificationsFragment extends FragmentBase {
@@ -42,17 +39,9 @@ public class NotificationsFragment extends FragmentBase {
         return fragment;
     }
 
-    @BindView(R.id.notification_tabs)
-    TabLayout tabLayout;
-
-    @BindView(R.id.notification_viewpager)
-    ViewPager viewPager;
-
-    @BindView(R.id.needAuthView)
-    View needAuthRootView;
-
-    @BindView(R.id.authAction)
-    Button authUserButton;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private Button authUserButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +60,11 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        tabLayout = view.findViewById(R.id.notification_tabs);
+        viewPager = view.findViewById(R.id.notification_viewpager);
+        final View needAuthRootView = view.findViewById(R.id.needAuthView);
+        authUserButton = view.findViewById(R.id.authAction);
+
         if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
 //            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
             authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity(), true, MainFeedActivity.NOTIFICATIONS_INDEX));

@@ -146,12 +146,7 @@ class CourseListSearchFragment :
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
-            onFilterClicked = {
-                FilterBottomSheetDialogFragment
-                    .newInstance(filterQuery = it)
-                    .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
-            }
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
         courseListPresenter.fetchCourses(searchResultQuery)

@@ -356,6 +356,9 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListVisitedActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

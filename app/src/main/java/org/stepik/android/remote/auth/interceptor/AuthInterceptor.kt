@@ -2,7 +2,7 @@ package org.stepik.android.remote.auth.interceptor
 
 import android.content.Context
 import com.facebook.login.LoginManager
-import com.vk.sdk.VKSdk
+import com.vk.api.sdk.VK
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.stepic.droid.analytic.Analytic
@@ -112,7 +112,7 @@ constructor(
                                     if (oAuthResponse.code() == 401) {
                                         stepikLogoutManager.logout {
                                             LoginManager.getInstance().logOut()
-                                            VKSdk.logout()
+                                            VK.logout()
                                             screenManager.showLaunchScreen(context)
                                         }
                                     }

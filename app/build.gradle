@@ -150,8 +150,6 @@ dependencies {
     //<DI>
     implementation libraries.dagger
     kapt libraries.daggerCompiler
-    implementation libraries.butterKnife
-    kapt libraries.butterKnifeCompiler
     //</DI>
 
     implementation libraries.rxAndroid
@@ -196,10 +194,6 @@ dependencies {
         force = true
     }
     implementation libraries.jsoup
-    debugImplementation libraries.stetho
-    debugImplementation libraries.stethoOkHttp
-    stageDebuggableImplementation libraries.stetho
-    stageDebuggableImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
     implementation libraries.glideTransformations
@@ -274,5 +268,7 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.getkeepsafe.dexcount'
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+    apply plugin: 'com.getkeepsafe.dexcount'
+}
 apply plugin: 'com.google.firebase.firebase-perf'

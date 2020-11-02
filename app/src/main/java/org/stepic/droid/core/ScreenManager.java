@@ -163,4 +163,5 @@ public interface ScreenManager {
     void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors);
     void showUserCourses(Context context);
     void showCoursesByTag(Context context, Tag tag);
+    void showVisitedCourses(Context context);
 }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -27,7 +26,6 @@ import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
-import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepik.android.view.notification.FcmNotificationHandler;
 
@@ -35,8 +33,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import ru.nobird.android.view.base.ui.extension.SnackbarExtensionKt;
 import timber.log.Timber;
 
 public class NotificationListFragment extends FragmentBase implements NotificationListView, SwipeRefreshLayout.OnRefreshListener {
@@ -61,23 +57,11 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     NotificationCategory notificationCategory;
 
-    @BindView(R.id.notification_recycler_view)
-    RecyclerView notificationRecyclerView;
-
-    @BindView(R.id.loadProgressbarOnEmptyScreen)
-    View progressBarOnEmptyScreen;
-
-    @BindView(R.id.reportProblem)
-    View connectionProblemLayout;
-
-    @BindView(R.id.empty_notifications)
-    View emptyNotifications;
-
-    @BindView(R.id.goToCatalog)
-    Button goToCatalog;
-
-    @BindView(R.id.notification_swipe_refresh)
-    StepikSwipeRefreshLayout notificationSwipeRefresh;
+    private RecyclerView notificationRecyclerView;
+    private View progressBarOnEmptyScreen;
+    private View connectionProblemLayout;
+    private View emptyNotifications;
+    private StepikSwipeRefreshLayout notificationSwipeRefresh;
 
     private RecyclerView.OnScrollListener recyclerViewScrollListener;
     private LinearLayoutManager layoutManager;
@@ -107,8 +91,13 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        notificationRecyclerView = view.findViewById(R.id.notification_recycler_view);
+        progressBarOnEmptyScreen = view.findViewById(R.id.loadProgressbarOnEmptyScreen);
+        connectionProblemLayout = view.findViewById(R.id.reportProblem);
+        emptyNotifications = view.findViewById(R.id.empty_notifications);
+        notificationSwipeRefresh = view.findViewById(R.id.notification_swipe_refresh);
 
 //        Timber.d("We use notificationRecyclerView instance %s", sharedRecyclerViewPool);
         Timber.d("Our unique for fragment presenter is %s", notificationListPresenter);
@@ -129,7 +118,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
         recyclerViewScrollListener = new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NotNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) //check for scroll down
                 {
                     int visibleItemCount = layoutManager.getChildCount();
@@ -151,7 +140,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         };
         notificationRecyclerView.addOnScrollListener(recyclerViewScrollListener);
 
-        goToCatalog.setOnClickListener(v -> screenManager.showCatalog(getContext()));
+        view.findViewById(R.id.goToCatalog).setOnClickListener(v -> screenManager.showCatalog(getContext()));
 
         notificationListPresenter.attachView(this);
         notificationListPresenter.init(notificationCategory);
@@ -229,13 +218,13 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     public void onLoadingMarkingAsRead() {
         adapter.setEnableMarkAllButton(false);
         DialogFragment loadingProgressDialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
-        ProgressHelper.activate(loadingProgressDialogFragment, getFragmentManager(), loadingTag);
+        ProgressHelper.activate(loadingProgressDialogFragment, getChildFragmentManager(), loadingTag);
     }
 
     @Override
     public void makeEnableMarkAllButton() {
         adapter.setEnableMarkAllButton(true);
-        ProgressHelper.dismiss(getFragmentManager(), loadingTag);
+        ProgressHelper.dismiss(getChildFragmentManager(), loadingTag);
     }
 
     @Override
