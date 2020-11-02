@@ -8,12 +8,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListView
-import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.VisitedCourseListItemAdapterDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.VisitedCourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
@@ -25,9 +25,9 @@ class CourseListViewDelegate(
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     onContinueCourseClicked: (CourseListItem.Data) -> Unit,
-    private val isHandleInAppPurchase: Boolean,
-    private val onFilterClicked: ((CourseListFilterQuery) -> Unit)? = null
-) : CourseListView, CourseContinueView by courseContinueViewDelegate, FilterQueryView {
+    isHandleInAppPurchase: Boolean,
+    itemAdapterDelegateType: ItemAdapterDelegateType = ItemAdapterDelegateType.STANDARD // TODO Hacky way
+) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
     private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
@@ -35,19 +35,39 @@ class CourseListViewDelegate(
     private val courseItemsSkeleton: List<CourseListItem>
 
     init {
-        val skeletonCount =
-            courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
-                    courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
+        val skeletonCount = calculateSkeletonCount(itemAdapterDelegateType)
 
         courseItemsSkeleton = List(skeletonCount) { CourseListItem.PlaceHolder() }
 
-        courseItemAdapter += CourseListItemAdapterDelegate(
-            analytic,
-            onItemClicked = courseContinueViewDelegate::onCourseClicked,
-            onContinueCourseClicked = onContinueCourseClicked,
-            isHandleInAppPurchase = isHandleInAppPurchase
-        )
-        courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
+        val delegates = when (itemAdapterDelegateType) {
+            ItemAdapterDelegateType.STANDARD -> {
+                listOf(
+                    CourseListItemAdapterDelegate(
+                        analytic,
+                        onItemClicked = courseContinueViewDelegate::onCourseClicked,
+                        onContinueCourseClicked = onContinueCourseClicked,
+                        isHandleInAppPurchase = isHandleInAppPurchase
+                    ),
+                    CourseListPlaceHolderAdapterDelegate()
+                )
+            }
+            ItemAdapterDelegateType.SMALL -> {
+                listOf(
+                    VisitedCourseListItemAdapterDelegate(
+                        analytic,
+                        onItemClicked = courseContinueViewDelegate::onCourseClicked,
+                        isHandleInAppPurchase = isHandleInAppPurchase
+                    ),
+                    VisitedCourseListPlaceHolderAdapterDelegate()
+                )
+            }
+            else ->
+                throw IllegalArgumentException("Invalid item adapter delegate type")
+        }
+
+        delegates.forEach { adapterDelegate ->
+            courseItemAdapter += adapterDelegate
+        }
         courseItemsRecyclerView.adapter = courseItemAdapter
         courseItemsRecyclerView.setHasFixedSize(true)
     }
@@ -87,7 +107,19 @@ class CourseListViewDelegate(
         courseItemsRecyclerView.snackbar(messageRes = R.string.connectionProblems)
     }
 
-    override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
-        onFilterClicked?.invoke(filterQuery)
+    private fun calculateSkeletonCount(itemAdapterDelegateType: ItemAdapterDelegateType): Int =
+        when (itemAdapterDelegateType) {
+            ItemAdapterDelegateType.STANDARD -> {
+                courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
+                        courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
+            }
+            ItemAdapterDelegateType.SMALL -> {
+                courseItemsRecyclerView.resources.getInteger(R.integer.course_list_visited_rows)
+            }
+        }
+
+    enum class ItemAdapterDelegateType {
+        STANDARD,
+        SMALL
     }
 }
