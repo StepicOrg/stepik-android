@@ -805,4 +805,8 @@
     <!-- In app web view (done via Google Translate) -->
     <string name="in_app_web_view_step_title">Крок %d</string>
 
+    <!-- Visited courses -->
+    <string name="visited_courses_title">Нядаўна прагледжаных</string>
+    <string name="visited_courses_enrolled">Вы запісаныя</string>
+
 </resources>
