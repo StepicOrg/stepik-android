@@ -803,4 +803,8 @@
     <string name="filter_apply_action">Паглядзець вынік</string>
     <!-- -->
 
+    <!-- Visited courses -->
+    <string name="visited_courses_title">Нядаўна прагледжаных</string>
+    <string name="visited_courses_enrolled">Вы запісаныя</string>
+
 </resources>
