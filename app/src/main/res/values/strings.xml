@@ -975,6 +975,10 @@
     <string name="filter_dismiss_action">Dismiss</string>
     <string name="filter_apply_action">Show result</string>
 
+    <!-- Visited courses -->
+    <string name="visited_courses_title">Recently viewed</string>
+    <string name="visited_courses_enrolled">Enrolled</string>
+
     <!-- In app web view -->
     <string name="in_app_web_view_step_title">Step %d</string>
 

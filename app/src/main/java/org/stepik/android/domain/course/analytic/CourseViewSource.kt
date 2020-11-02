@@ -91,6 +91,11 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
             "purchase_reminder_notification"
     }
 
+    object Visited : CourseViewSource() {
+        override val name: String =
+            "visited"
+    }
+
     object Unknown : CourseViewSource() {
         override val name: String =
             "unknown"
