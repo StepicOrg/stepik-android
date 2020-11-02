@@ -803,6 +803,6 @@
     <string name="filter_apply_action">Паглядзець вынік</string>
 
     <!-- In app web view (done via Google Translate) -->
-    <string name="in_app_webview_step_title">Крок %d</string>
+    <string name="in_app_web_view_step_title">Крок %d</string>
 
 </resources>

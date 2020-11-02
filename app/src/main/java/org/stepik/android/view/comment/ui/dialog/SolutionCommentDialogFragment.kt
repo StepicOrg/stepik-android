@@ -174,7 +174,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
                     }
 
                 InAppWebViewDialogFragment
-                    .newInstance(getString(R.string.in_app_webview_step_title, step.id), url, isProvideAuth = true)
+                    .newInstance(getString(R.string.in_app_web_view_step_title, step.id), url, isProvideAuth = true)
                     .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
             }
             stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)

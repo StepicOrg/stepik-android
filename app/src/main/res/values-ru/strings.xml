@@ -940,5 +940,5 @@
     <string name="filter_apply_action">Посмотреть результат</string>
 
     <!-- In app web view -->
-    <string name="in_app_webview_step_title">Шаг %d</string>
+    <string name="in_app_web_view_step_title">Шаг %d</string>
 </resources>

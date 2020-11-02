@@ -50,7 +50,7 @@ class UnsupportedStepQuizFragment : Fragment(R.layout.fragment_step_quiz_unsuppo
 
         stepQuizAction.setOnClickListener {
             InAppWebViewDialogFragment
-                .newInstance(getString(R.string.in_app_webview_step_title, stepId), stepDeepLinkBuilder.createStepLink(stepWrapper.step), isProvideAuth = true)
+                .newInstance(getString(R.string.in_app_web_view_step_title, stepId), stepDeepLinkBuilder.createStepLink(stepWrapper.step), isProvideAuth = true)
                 .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
         }
     }

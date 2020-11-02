@@ -3,6 +3,8 @@ package org.stepik.android.view.in_app_web_view
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -116,6 +118,18 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         centeredToolbarTitle.text = title
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.inflateMenu(R.menu.in_app_web_view_menu)
+        centeredToolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_item_external -> {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    dismiss()
+                    true
+                }
+                else ->
+                    super.onOptionsItemSelected(menuItem)
+            }
+        }
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
