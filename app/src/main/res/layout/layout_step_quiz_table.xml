@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/tableRecycler"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:layout_marginLeft="14dp"
+    android:layout_marginRight="14dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+
+    android:clipToPadding="false"
+    android:clipChildren="false"
+
+    app:layout_constraintVertical_bias="0"
+
+    app:layout_constraintTop_toBottomOf="@id/stepQuizDescription"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks" />
