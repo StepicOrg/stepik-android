@@ -8,6 +8,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import ru.nobird.android.view.base.ui.extension.argument
@@ -32,6 +33,9 @@ class UnsupportedStepQuizFragment : Fragment(R.layout.fragment_step_quiz_unsuppo
     @Inject
     internal lateinit var stepWrapper: StepPersistentWrapper
 
+    @Inject
+    internal lateinit var lessonData: LessonData
+
     private var stepId: Long by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +54,7 @@ class UnsupportedStepQuizFragment : Fragment(R.layout.fragment_step_quiz_unsuppo
 
         stepQuizAction.setOnClickListener {
             InAppWebViewDialogFragment
-                .newInstance(getString(R.string.in_app_web_view_step_title, stepId), stepDeepLinkBuilder.createStepLink(stepWrapper.step), isProvideAuth = true)
+                .newInstance(lessonData.lesson.title.orEmpty(), stepDeepLinkBuilder.createStepLink(stepWrapper.step), isProvideAuth = true)
                 .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
         }
     }

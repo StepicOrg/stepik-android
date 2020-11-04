@@ -3,7 +3,6 @@ package org.stepik.android.view.in_app_web_view
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,6 +25,7 @@ import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewPresenter
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewView
@@ -44,6 +44,9 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
                 this.isProvideAuth = isProvideAuth
             }
     }
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -122,7 +125,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_item_external -> {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                    screenManager.openLinkInWebBrowser(requireContext(), Uri.parse(url))
                     dismiss()
                     true
                 }

@@ -148,7 +148,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
     private fun openStepInWeb(step: Step) {
         InAppWebViewDialogFragment
-            .newInstance(getString(R.string.in_app_web_view_step_title, step.id), stepDeepLinkBuilder.createStepLink(step), isProvideAuth = true)
+            .newInstance(lessonData.lesson.title.orEmpty(), stepDeepLinkBuilder.createStepLink(step), isProvideAuth = true)
             .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 }

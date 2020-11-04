@@ -943,6 +943,4 @@
     <string name="visited_courses_title">Недавно просмотренные</string>
     <string name="visited_courses_enrolled">Вы записаны</string>
 
-    <!-- In app web view -->
-    <string name="in_app_web_view_step_title">Шаг %d</string>
 </resources>

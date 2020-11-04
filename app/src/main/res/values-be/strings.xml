@@ -802,7 +802,4 @@
     <string name="filter_dismiss_action">Скінуць</string>
     <string name="filter_apply_action">Паглядзець вынік</string>
 
-    <!-- In app web view (done via Google Translate) -->
-    <string name="in_app_web_view_step_title">Крок %d</string>
-
 </resources>
