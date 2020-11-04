@@ -23,6 +23,8 @@ import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView {
     companion object {
+        const val TAG = "HomeFragment"
+
         fun newInstance(): HomeFragment = HomeFragment()
         private const val fastContinueTag = "fastContinueTag"
     }

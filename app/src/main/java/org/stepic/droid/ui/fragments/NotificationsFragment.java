@@ -31,6 +31,8 @@ import timber.log.Timber;
 
 public class NotificationsFragment extends FragmentBase {
 
+    public static final String TAG = "NotificationsFragment";
+
     @NotNull
     public static NotificationsFragment newInstance() {
         Bundle args = new Bundle();
