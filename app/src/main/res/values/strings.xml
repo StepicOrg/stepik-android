@@ -978,4 +978,5 @@
     <!-- Visited courses -->
     <string name="visited_courses_title">Recently viewed</string>
     <string name="visited_courses_enrolled">Enrolled</string>
+
 </resources>

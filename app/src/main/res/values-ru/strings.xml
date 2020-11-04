@@ -942,4 +942,5 @@
     <!-- Visited courses -->
     <string name="visited_courses_title">Недавно просмотренные</string>
     <string name="visited_courses_enrolled">Вы записаны</string>
+
 </resources>

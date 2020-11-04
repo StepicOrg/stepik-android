@@ -280,16 +280,16 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     private fun getNextFragmentTag(@IdRes menuId: Int): String =
         when (menuId) {
             R.id.home ->
-                HomeFragment::class.java.simpleName
+                HomeFragment.TAG
 
             R.id.catalog ->
-                CatalogFragment::class.java.simpleName
+                CatalogFragment.TAG
 
             R.id.profile ->
-                ProfileFragment::class.java.simpleName
+                ProfileFragment.TAG
 
             R.id.notifications ->
-                NotificationsFragment::class.java.simpleName
+                NotificationsFragment.TAG
 
             else ->
                 throw IllegalStateException()
