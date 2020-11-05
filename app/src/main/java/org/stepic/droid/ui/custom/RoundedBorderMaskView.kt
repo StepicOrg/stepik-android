@@ -48,7 +48,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             backgroundDrawable = drawable
         } else {
             maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
-            setLayerType(LAYER_TYPE_SOFTWARE, null)
         }
     }
 
