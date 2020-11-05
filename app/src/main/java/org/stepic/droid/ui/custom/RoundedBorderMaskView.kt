@@ -36,6 +36,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             attributes.recycle()
         }
 
+        setLayerType(LAYER_TYPE_SOFTWARE, null)
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             outlineProvider = ViewOutlineProvider.BACKGROUND
             clipToOutline = true
