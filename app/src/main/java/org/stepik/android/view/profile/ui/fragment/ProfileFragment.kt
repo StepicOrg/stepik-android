@@ -58,6 +58,8 @@ import javax.inject.Inject
 
 class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     companion object {
+        const val TAG = "ProfileFragment"
+
         fun newInstance(): Fragment =
             newInstance(0)
 

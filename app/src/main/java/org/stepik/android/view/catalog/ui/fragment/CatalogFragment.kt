@@ -47,6 +47,8 @@ import javax.inject.Inject
 
 class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCompleteSearchView.FocusCallback {
     companion object {
+        const val TAG = "CatalogFragment"
+
         fun newInstance(): Fragment =
             CatalogFragment()
 

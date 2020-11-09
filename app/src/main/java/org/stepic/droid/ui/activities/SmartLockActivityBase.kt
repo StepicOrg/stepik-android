@@ -67,12 +67,12 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
             .build()
 
         Auth.CredentialsApi.request(googleApiClient, credentialRequest).setResultCallback { credentialRequestResult ->
-            if (credentialRequestResult.status.isSuccess) {
+            if (credentialRequestResult.status.isSuccess && credentialRequestResult.credential != null) {
                 // Successfully read the credential without any user interaction, this
                 // means there was only a single credential and the user has auto
                 // sign-in enabled.
                 analytic.reportEvent(Analytic.SmartLock.READ_CREDENTIAL_WITHOUT_INTERACTION)
-                onCredentialsRetrieved(credentialRequestResult.credential.toCredentials())
+                onCredentialsRetrieved(credentialRequestResult.credential!!.toCredentials())
             } else {
                 if (credentialRequestResult.status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
                     // Prompt the user to choose a saved credential; do not show the hint

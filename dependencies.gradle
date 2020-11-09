@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2171,
-        name                 : '1.147.1',
+        code                 : 2175,
+        name                 : '1.148',
 
         minSdk               : 16,
         targetSdk            : 29,
@@ -61,7 +61,7 @@ ext.versions = [
 
         playCore             : '1.8.2',
         playCoreKtx          : '1.8.1',
-        googleauth           : '16.0.1',
+        googleauth           : '18.1.0',
         firebaseAnalytics    : '17.4.3',
         firebaseAppindexing  : '19.1.0',
         firebaseConfig       : '19.1.4',

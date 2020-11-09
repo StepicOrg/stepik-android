@@ -22,8 +22,8 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
-import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -147,8 +147,8 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     }
 
     private fun openStepInWeb(step: Step) {
-        MagicLinkDialogFragment
-            .newInstance(stepDeepLinkBuilder.createStepLink(step))
-            .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
+        InAppWebViewDialogFragment
+            .newInstance(lessonData.lesson.title.orEmpty(), stepDeepLinkBuilder.createStepLink(step), isProvideAuth = true)
+            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 }
