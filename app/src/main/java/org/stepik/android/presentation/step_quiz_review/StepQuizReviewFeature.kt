@@ -11,7 +11,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 
-interface StepQuizReviewView {
+interface StepQuizReviewFeature {
     sealed class State {
         object Idle : State()
         data class Loading(val step: Step) : State()
@@ -124,7 +124,4 @@ interface StepQuizReviewView {
             data class OpenReviewScreen(val reviewId: Long) : ViewAction()
         }
     }
-
-    fun render(state: State)
-    fun onAction(action: Action.ViewAction)
 }

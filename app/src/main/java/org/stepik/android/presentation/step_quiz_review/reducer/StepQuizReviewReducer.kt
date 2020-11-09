@@ -6,9 +6,9 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.reducer.StepQuizReducer
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView.State
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView.Action
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView.Message
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature.State
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature.Action
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature.Message
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject

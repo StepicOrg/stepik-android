@@ -14,7 +14,7 @@ import org.stepic.droid.R
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
 import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
@@ -36,9 +36,9 @@ class StepQuizReviewDelegate(
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
     private val resources = containerView.resources
 
-    private val step1viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
+    private val step1viewStateDelegate = ViewStateDelegate<StepQuizReviewFeature.State>()
         .apply {
-            addState<StepQuizReviewView.State.SubmissionNotMade>(
+            addState<StepQuizReviewFeature.State.SubmissionNotMade>(
                 reviewStep1DividerBottom, reviewStep1Container, reviewStep1Discounting,
                 reviewStep1ActionButton, reviewStep1ActionRetry
             )
@@ -52,14 +52,14 @@ class StepQuizReviewDelegate(
             addState<StepQuizFeature.State.NetworkError>(stepQuizNetworkError)
         }
 
-    private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
+    private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewFeature.State>()
         .apply {
-            addState<StepQuizReviewView.State.SubmissionNotSelected>(
+            addState<StepQuizReviewFeature.State.SubmissionNotSelected>(
                 reviewStep2DividerBottom, reviewStep2Container, reviewStep2Loading,
                 reviewStep2CreateSession, reviewStep2SelectSubmission, reviewStep2Retry
             )
-            addState<StepQuizReviewView.State.SubmissionSelected>(reviewStep2DividerBottom, reviewStep2Container)
-            addState<StepQuizReviewView.State.Completed>(reviewStep2DividerBottom, reviewStep2Container)
+            addState<StepQuizReviewFeature.State.SubmissionSelected>(reviewStep2DividerBottom, reviewStep2Container)
+            addState<StepQuizReviewFeature.State.Completed>(reviewStep2DividerBottom, reviewStep2Container)
         }
 
     init {
@@ -74,8 +74,8 @@ class StepQuizReviewDelegate(
         }
     }
 
-    fun render(state: StepQuizReviewView.State) {
-        if (state is StepQuizReviewView.State.WithQuizState) {
+    fun render(state: StepQuizReviewFeature.State) {
+        if (state is StepQuizReviewFeature.State.WithQuizState) {
             quizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(blockName, state.quizState))
         }
 
@@ -90,10 +90,10 @@ class StepQuizReviewDelegate(
         renderStep5(state)
     }
 
-    private fun renderStep1(state: StepQuizReviewView.State) {
+    private fun renderStep1(state: StepQuizReviewFeature.State) {
         step1viewStateDelegate.switchState(state)
         when (state) {
-            is StepQuizReviewView.State.SubmissionNotMade -> {
+            is StepQuizReviewFeature.State.SubmissionNotMade -> {
                 val submissionStatus = state.quizState.safeCast<StepQuizFeature.State.AttemptLoaded>()
                     ?.submissionState
                     ?.safeCast<StepQuizFeature.SubmissionState.Loaded>()
@@ -125,14 +125,14 @@ class StepQuizReviewDelegate(
         }
     }
 
-    private fun renderStep2(state: StepQuizReviewView.State) {
+    private fun renderStep2(state: StepQuizReviewFeature.State) {
         step2viewStateDelegate.switchState(state)
         when (state) {
-            is StepQuizReviewView.State.SubmissionNotMade -> {
+            is StepQuizReviewFeature.State.SubmissionNotMade -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_pending)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.PENDING)
             }
-            is StepQuizReviewView.State.SubmissionNotSelected -> {
+            is StepQuizReviewFeature.State.SubmissionNotSelected -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_in_progress)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.IN_PROGRESS)
 
@@ -150,7 +150,7 @@ class StepQuizReviewDelegate(
                 reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.COMPLETED)
 
-                state.safeCast<StepQuizReviewView.State.WithQuizState>()
+                state.safeCast<StepQuizReviewFeature.State.WithQuizState>()
                     ?.quizState
                     ?.safeCast<StepQuizFeature.State.AttemptLoaded>()
                     ?.let(quizDelegate::setState)
@@ -167,18 +167,18 @@ class StepQuizReviewDelegate(
         parent.addView(view)
     }
 
-    private fun renderStep3(state: StepQuizReviewView.State) {
-        val reviewCount = state.safeCast<StepQuizReviewView.State.WithInstruction>()?.instruction?.minReviews ?: 0
+    private fun renderStep3(state: StepQuizReviewFeature.State) {
+        val reviewCount = state.safeCast<StepQuizReviewFeature.State.WithInstruction>()?.instruction?.minReviews ?: 0
 
         when (state) {
-            is StepQuizReviewView.State.SubmissionNotMade,
-            is StepQuizReviewView.State.SubmissionNotSelected -> {
+            is StepQuizReviewFeature.State.SubmissionNotMade,
+            is StepQuizReviewFeature.State.SubmissionNotSelected -> {
                 reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.PENDING)
                 reviewStep3Container.isVisible = false
                 reviewStep3Loading.isVisible = false
             }
-            is StepQuizReviewView.State.SubmissionSelected -> {
+            is StepQuizReviewFeature.State.SubmissionSelected -> {
                 val givenReviewCount = state.session.givenReviews.size
                 val remainingReviewCount = reviewCount - givenReviewCount
 
@@ -215,7 +215,7 @@ class StepQuizReviewDelegate(
                 reviewStep3Loading.isVisible = state.isReviewCreationInProgress
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.IN_PROGRESS)
             }
-            is StepQuizReviewView.State.Completed -> {
+            is StepQuizReviewFeature.State.Completed -> {
                 val givenReviewCount = state.session.givenReviews.size
 
                 reviewStep3Title.text = resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount)
@@ -226,18 +226,18 @@ class StepQuizReviewDelegate(
         }
     }
 
-    private fun renderStep4(state: StepQuizReviewView.State) {
-        val reviewCount = state.safeCast<StepQuizReviewView.State.WithInstruction>()?.instruction?.minReviews ?: 0
+    private fun renderStep4(state: StepQuizReviewFeature.State) {
+        val reviewCount = state.safeCast<StepQuizReviewFeature.State.WithInstruction>()?.instruction?.minReviews ?: 0
 
         when (state) {
-            is StepQuizReviewView.State.SubmissionNotMade,
-            is StepQuizReviewView.State.SubmissionNotSelected -> {
+            is StepQuizReviewFeature.State.SubmissionNotMade,
+            is StepQuizReviewFeature.State.SubmissionNotSelected -> {
                 reviewStep4Title.setText(R.string.step_quiz_review_taken_pending_zero)
                 setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.PENDING)
                 reviewStep4Container.isVisible = false
                 reviewStep4Hint.isVisible = false
             }
-            is StepQuizReviewView.State.SubmissionSelected -> {
+            is StepQuizReviewFeature.State.SubmissionSelected -> {
                 val takenReviewCount = state.session.takenReviews.size
                 val remainingReviewCount = reviewCount - takenReviewCount
 
@@ -276,7 +276,7 @@ class StepQuizReviewDelegate(
                 reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
                 reviewStep4Hint.isVisible = takenReviewCount == 0
             }
-            is StepQuizReviewView.State.Completed -> {
+            is StepQuizReviewFeature.State.Completed -> {
                 val takenReviewCount = state.session.takenReviews.size
                 reviewStep4Title.text = resources.getQuantityString(R.plurals.step_quiz_review_taken_completed, takenReviewCount, takenReviewCount)
                 setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.COMPLETED)
@@ -287,7 +287,7 @@ class StepQuizReviewDelegate(
         }
     }
 
-    private fun renderStep5(state: StepQuizReviewView.State) {
+    private fun renderStep5(state: StepQuizReviewFeature.State) {
         reviewStep5Status.position =
             when (instructionType) {
                 ReviewStrategyType.PEER -> 5
@@ -295,7 +295,7 @@ class StepQuizReviewDelegate(
             }
 
         when (state) {
-            is StepQuizReviewView.State.Completed -> {
+            is StepQuizReviewFeature.State.Completed -> {
                 val receivedPoints = state.progress?.score?.toFloatOrNull() ?: 0f
 
                 reviewStep5Title.text = ProgressTextMapper
@@ -322,7 +322,7 @@ class StepQuizReviewDelegate(
                 reviewStep5Hint.isVisible = false
             }
             else -> {
-                val cost = state.safeCast<StepQuizReviewView.State.WithProgress>()?.progress?.cost ?: 0L
+                val cost = state.safeCast<StepQuizReviewFeature.State.WithProgress>()?.progress?.cost ?: 0L
 
                 @StringRes
                 val stringRes =
@@ -337,7 +337,7 @@ class StepQuizReviewDelegate(
                 reviewStep5Title.text = resources.getString(stringRes, resources.getQuantityString(R.plurals.points, cost.toInt(), cost))
                 reviewStep5Container.isVisible = false
                 val status =
-                    if (state is StepQuizReviewView.State.SubmissionSelected && instructionType == ReviewStrategyType.INSTRUCTOR) {
+                    if (state is StepQuizReviewFeature.State.SubmissionSelected && instructionType == ReviewStrategyType.INSTRUCTOR) {
                         ReviewStatusView.Status.IN_PROGRESS
                     } else {
                         ReviewStatusView.Status.PENDING
