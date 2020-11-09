@@ -10,12 +10,14 @@ import org.stepic.droid.R
 
 class ModelViewerInterface(private val context: Context) {
     companion object {
+        private const val SCENE_VIEWER_BASE_URL = "https://arvr.google.com/scene-viewer/1.0?file="
+
         const val MODEL_VIEWER_INTERFACE = "ModelViewerInterface"
     }
     @JavascriptInterface
     fun handleARModel(url: String) {
         val sceneViewerIntent = Intent(Intent.ACTION_VIEW)
-        sceneViewerIntent.data = Uri.parse(url)
+        sceneViewerIntent.data = Uri.parse("$SCENE_VIEWER_BASE_URL$url")
         sceneViewerIntent.setPackage("com.google.android.googlequicksearchbox")
         sceneViewerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
