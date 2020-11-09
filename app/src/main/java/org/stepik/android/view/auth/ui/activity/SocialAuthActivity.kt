@@ -307,7 +307,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             // here is not only fail due to Internet, fix it. see: https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInResult
-            if (result.isSuccess) {
+            if (result?.isSuccess == true) {
                 val authCode = result.signInAccount?.serverAuthCode
                 if (authCode == null) {
                     analytic.reportEvent(Analytic.Login.GOOGLE_AUTH_CODE_NULL)
