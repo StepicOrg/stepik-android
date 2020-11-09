@@ -178,6 +178,7 @@ dependencies {
     implementation libraries.adapterDelegates
     implementation libraries.adapters
     implementation libraries.presentationBase
+    implementation libraries.presentationRedux
     implementation libraries.viewKit
     implementation libraries.model
     implementation libraries.domainRx
