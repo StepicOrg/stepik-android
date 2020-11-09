@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_table_selection.view.*
 import org.stepic.droid.R
+import org.stepik.android.model.Cell
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import org.stepik.android.view.step_quiz_table.ui.model.TableSelectionItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import timber.log.Timber
 
-class TableSelectionItemAdapterDelegate : AdapterDelegate<TableSelectionItem, DelegateViewHolder<TableSelectionItem>>() {
+class TableSelectionItemAdapterDelegate(
+    private val onItemClicked: (Int, String, List<Cell>) -> Unit
+) : AdapterDelegate<TableSelectionItem, DelegateViewHolder<TableSelectionItem>>() {
     companion object {
         private const val SEPARATOR = ", "
     }
@@ -28,7 +30,7 @@ class TableSelectionItemAdapterDelegate : AdapterDelegate<TableSelectionItem, De
         private val stepQuizTableChoiceProgress = root.stepQuizChoiceProgress
 
         init {
-            root.setOnClickListener { Timber.d("Click") }
+            root.setOnClickListener { onItemClicked(adapterPosition, (itemData as TableSelectionItem).titleText, (itemData as TableSelectionItem).tableChoices) }
             stepQuizTableTitle.webViewClient = ProgressableWebViewClient(stepQuizTableTitleProgress, stepQuizTableTitle.webView)
             stepQuizTableChoice.webViewClient = ProgressableWebViewClient(stepQuizTableChoiceProgress, stepQuizTableChoice.webView)
         }

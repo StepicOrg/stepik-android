@@ -7,12 +7,6 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/itemOverlay"
-        android:duplicateParentState="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/stepQuizTableTitleText"
         android:layout_width="0dp"
@@ -67,7 +61,7 @@
     </org.stepik.android.view.latex.ui.widget.LatexView>
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/stepQuizSortingOptionUp"
+        android:id="@+id/stepQuizTableChevron"
         android:layout_width="48dp"
         android:layout_height="48dp"
 
@@ -85,5 +79,10 @@
 
         app:tint="?colorControlNormal"
         app:srcCompat="@drawable/ic_chevron_forward" />
+
+    <FrameLayout
+        android:duplicateParentState="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
