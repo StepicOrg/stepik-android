@@ -8,7 +8,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 
-interface StepQuizView {
+interface StepQuizFeature {
     sealed class State {
         object Idle : State()
         object Loading : State()
@@ -60,7 +60,4 @@ interface StepQuizView {
             object ShowNetworkError : ViewAction() // error
         }
     }
-
-    fun render(state: State)
-    fun onAction(action: Action.ViewAction)
 }

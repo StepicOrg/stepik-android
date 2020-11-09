@@ -25,7 +25,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
@@ -159,7 +159,7 @@ class StepQuizReviewFragment :
 
             override fun onQuizTryAgainClicked() {
                 stepQuizReviewPresenter.onNewMessage(
-                    StepQuizReviewView.Message.StepQuizMessage(StepQuizView.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
+                    StepQuizReviewView.Message.StepQuizMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
                 )
             }
 

@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import org.stepic.droid.R
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
@@ -44,12 +44,12 @@ class StepQuizReviewDelegate(
             )
         }
 
-    private val step1QuizViewStateDelegate = ViewStateDelegate<StepQuizView.State>()
+    private val step1QuizViewStateDelegate = ViewStateDelegate<StepQuizFeature.State>()
         .apply {
-            addState<StepQuizView.State.Loading>(stepQuizProgress)
-            addState<StepQuizView.State.AttemptLoading>(stepQuizProgress)
-            addState<StepQuizView.State.AttemptLoaded>(reviewStep1Discounting, reviewStep1QuizContainer, reviewStep1ActionButton, reviewStep1ActionRetry)
-            addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
+            addState<StepQuizFeature.State.Loading>(stepQuizProgress)
+            addState<StepQuizFeature.State.AttemptLoading>(stepQuizProgress)
+            addState<StepQuizFeature.State.AttemptLoaded>(reviewStep1Discounting, reviewStep1QuizContainer, reviewStep1ActionButton, reviewStep1ActionRetry)
+            addState<StepQuizFeature.State.NetworkError>(stepQuizNetworkError)
         }
 
     private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
@@ -94,9 +94,9 @@ class StepQuizReviewDelegate(
         step1viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizReviewView.State.SubmissionNotMade -> {
-                val submissionStatus = state.quizState.safeCast<StepQuizView.State.AttemptLoaded>()
+                val submissionStatus = state.quizState.safeCast<StepQuizFeature.State.AttemptLoaded>()
                     ?.submissionState
-                    ?.safeCast<StepQuizView.SubmissionState.Loaded>()
+                    ?.safeCast<StepQuizFeature.SubmissionState.Loaded>()
                     ?.submission
                     ?.status
 
@@ -110,7 +110,7 @@ class StepQuizReviewDelegate(
                 stepQuizDescription.isEnabled = true
 
                 step1QuizViewStateDelegate.switchState(state.quizState)
-                if (state.quizState is StepQuizView.State.AttemptLoaded) {
+                if (state.quizState is StepQuizFeature.State.AttemptLoaded) {
                     quizDelegate.setState(state.quizState)
                 }
 
@@ -152,7 +152,7 @@ class StepQuizReviewDelegate(
 
                 state.safeCast<StepQuizReviewView.State.WithQuizState>()
                     ?.quizState
-                    ?.safeCast<StepQuizView.State.AttemptLoaded>()
+                    ?.safeCast<StepQuizFeature.State.AttemptLoaded>()
                     ?.let(quizDelegate::setState)
 
                 setQuizViewParent(quizView, reviewStep2Container)

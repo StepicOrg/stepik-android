@@ -13,10 +13,10 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.base.dispatcher.ActionDispatcher
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import ru.nobird.android.core.model.mapOfNotNull
 import ru.nobird.android.domain.rx.emptyOnErrorStub
+import ru.nobird.android.presentation.redux.dispatcher.ActionDispatcher
 import javax.inject.Inject
 
 class StepQuizActionDispatcher
@@ -29,15 +29,17 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : ActionDispatcher<StepQuizView.Action, StepQuizView.Message> {
-    override val disposable: CompositeDisposable = CompositeDisposable()
+) : ActionDispatcher<StepQuizFeature.Action, StepQuizFeature.Message> {
+    private val disposable = CompositeDisposable()
+    private var messageListener: ((StepQuizFeature.Message) -> Unit)? = null
 
-    override fun handleAction(
-        action: StepQuizView.Action,
-        onNewMessage: (StepQuizView.Message) -> Unit
-    ) {
+    override fun setListener(listener: (message: StepQuizFeature.Message) -> Unit) {
+        messageListener = listener
+    }
+
+    override fun handleAction(action: StepQuizFeature.Action) {
         when (action) {
-            is StepQuizView.Action.FetchAttempt ->
+            is StepQuizFeature.Action.FetchAttempt ->
                 disposable += stepQuizInteractor
                     .getAttempt(action.stepWrapper.step.id)
                     .flatMap { attempt ->
@@ -45,7 +47,7 @@ constructor(
                             getSubmissionState(attempt.id),
                             stepQuizInteractor.getStepRestrictions(action.stepWrapper, action.lessonData)
                         ) { submissionState, stepRestrictions ->
-                            StepQuizView.Message.FetchAttemptSuccess(
+                            StepQuizFeature.Message.FetchAttemptSuccess(
                                 attempt,
                                 submissionState,
                                 stepRestrictions
@@ -55,13 +57,13 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = onNewMessage,
-                        onError = { onNewMessage(StepQuizView.Message.FetchAttemptError) }
+                        onSuccess = { messageListener?.invoke(it) },
+                        onError = { messageListener?.invoke(StepQuizFeature.Message.FetchAttemptError) }
                     )
 
-            is StepQuizView.Action.CreateAttempt ->
+            is StepQuizFeature.Action.CreateAttempt ->
                 if (stepQuizInteractor.isNeedRecreateAttemptForNewSubmission(action.step)) {
-                    val reply = (action.submissionState as? StepQuizView.SubmissionState.Loaded)
+                    val reply = (action.submissionState as? StepQuizFeature.SubmissionState.Loaded)
                         ?.submission
                         ?.reply
 
@@ -70,27 +72,27 @@ constructor(
                         .subscribeOn(backgroundScheduler)
                         .observeOn(mainScheduler)
                         .subscribeBy(
-                            onSuccess = { onNewMessage(StepQuizView.Message.CreateAttemptSuccess(it, StepQuizView.SubmissionState.Empty(reply = reply))) },
-                            onError = { onNewMessage(StepQuizView.Message.CreateAttemptError) }
+                            onSuccess = { messageListener?.invoke(StepQuizFeature.Message.CreateAttemptSuccess(it, StepQuizFeature.SubmissionState.Empty(reply = reply))) },
+                            onError = { messageListener?.invoke(StepQuizFeature.Message.CreateAttemptError) }
                         )
                 } else {
-                    val submissionState = (action.submissionState as? StepQuizView.SubmissionState.Loaded)
+                    val submissionState = (action.submissionState as? StepQuizFeature.SubmissionState.Loaded)
                         ?.submission
                         ?.let { Submission(id = it.id + 1, attempt = action.attempt.id, _reply = it.reply, status = Submission.Status.LOCAL) }
-                        ?.let { StepQuizView.SubmissionState.Loaded(it) }
-                        ?: StepQuizView.SubmissionState.Empty()
+                        ?.let { StepQuizFeature.SubmissionState.Loaded(it) }
+                        ?: StepQuizFeature.SubmissionState.Empty()
 
-                    onNewMessage(StepQuizView.Message.CreateAttemptSuccess(action.attempt, submissionState))
+                    messageListener?.invoke(StepQuizFeature.Message.CreateAttemptSuccess(action.attempt, submissionState))
                 }
 
-            is StepQuizView.Action.CreateSubmission ->
+            is StepQuizFeature.Action.CreateSubmission ->
                 disposable += stepQuizInteractor
                     .createSubmission(action.step.id, action.attemptId, action.reply)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { newSubmission ->
-                            onNewMessage(StepQuizView.Message.CreateSubmissionSuccess(newSubmission))
+                            messageListener?.invoke(StepQuizFeature.Message.CreateSubmissionSuccess(newSubmission))
 
                             val params =
                                 mapOfNotNull(
@@ -104,10 +106,10 @@ constructor(
 
                             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, params)
                         },
-                        onError = { onNewMessage(StepQuizView.Message.CreateSubmissionError) }
+                        onError = { messageListener?.invoke(StepQuizFeature.Message.CreateSubmissionError) }
                     )
 
-            is StepQuizView.Action.SaveLocalSubmission ->
+            is StepQuizFeature.Action.SaveLocalSubmission ->
                 disposable += stepQuizInteractor
                     .createLocalSubmission(action.submission)
                     .subscribeOn(backgroundScheduler)
@@ -116,9 +118,13 @@ constructor(
         }
     }
 
-    fun getSubmissionState(attemptId: Long): Single<StepQuizView.SubmissionState> =
+    fun getSubmissionState(attemptId: Long): Single<StepQuizFeature.SubmissionState> =
         stepQuizInteractor
             .getSubmission(attemptId)
-            .map<StepQuizView.SubmissionState> { StepQuizView.SubmissionState.Loaded(it) }
-            .toSingle(StepQuizView.SubmissionState.Empty())
+            .map<StepQuizFeature.SubmissionState> { StepQuizFeature.SubmissionState.Loaded(it) }
+            .toSingle(StepQuizFeature.SubmissionState.Empty())
+
+    override fun cancel() {
+        disposable.clear()
+    }
 }

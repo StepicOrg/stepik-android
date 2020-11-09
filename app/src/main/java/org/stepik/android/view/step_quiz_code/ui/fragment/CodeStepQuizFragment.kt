@@ -7,18 +7,19 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepik.android.model.code.CodeOptions
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
+import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class CodeStepQuizFragment :
     DefaultStepQuizFragment(),
-    StepQuizView,
+    ReduxView<StepQuizFeature.State, StepQuizFeature.Action.ViewAction>,
     ChangeCodeLanguageDialog.Callback,
     ProgrammingLanguageChooserDialogFragment.Callback,
     CodeStepQuizFullScreenDialogFragment.Callback {

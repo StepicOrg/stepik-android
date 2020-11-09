@@ -6,7 +6,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.model.Reply
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -32,12 +32,12 @@ class SqlStepQuizFormDelegate(
     override fun createReply(): ReplyResult =
         ReplyResult.Success(Reply(solveSql = codeLayout.text.toString()))
 
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+    override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
         val reply = when (state.submissionState) {
-            is StepQuizView.SubmissionState.Empty ->
+            is StepQuizFeature.SubmissionState.Empty ->
                 state.submissionState.reply
 
-            is StepQuizView.SubmissionState.Loaded ->
+            is StepQuizFeature.SubmissionState.Loaded ->
                 state.submissionState.submission.reply
         }
         codeLayout.setText(reply?.solveSql ?: "")

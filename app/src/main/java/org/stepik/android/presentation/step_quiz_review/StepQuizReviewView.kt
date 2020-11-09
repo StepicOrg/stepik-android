@@ -9,7 +9,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 
 interface StepQuizReviewView {
     sealed class State {
@@ -26,22 +26,22 @@ interface StepQuizReviewView {
         }
 
         interface WithQuizState {
-            val quizState: StepQuizView.State
+            val quizState: StepQuizFeature.State
         }
 
         data class SubmissionNotMade(
-            override val quizState: StepQuizView.State,
+            override val quizState: StepQuizFeature.State,
             override val progress: Progress?
         ) : State(), WithProgress, WithQuizState // 1
 
         data class SubmissionNotSelected(
-            override val quizState: StepQuizView.State.AttemptLoaded,
+            override val quizState: StepQuizFeature.State.AttemptLoaded,
             val isSessionCreationInProgress: Boolean,
             override val progress: Progress?
         ) : State(), WithProgress, WithQuizState // 2
 
         data class SubmissionSelected(
-            override val quizState: StepQuizView.State.AttemptLoaded,
+            override val quizState: StepQuizFeature.State.AttemptLoaded,
             val isReviewCreationInProgress: Boolean,
             val session: ReviewSession,
             override val instruction: ReviewInstruction,
@@ -49,7 +49,7 @@ interface StepQuizReviewView {
         ) : State(), WithInstruction, WithProgress, WithQuizState // 3
 
         data class Completed(
-            override val quizState: StepQuizView.State.AttemptLoaded,
+            override val quizState: StepQuizFeature.State.AttemptLoaded,
             val session: ReviewSession,
             override val instruction: ReviewInstruction,
             override val progress: Progress?
@@ -67,7 +67,7 @@ interface StepQuizReviewView {
             val progress: Progress? // assignment progress
         ) : Message()
         data class FetchStepQuizStateSuccess(
-            val quizState: StepQuizView.State,
+            val quizState: StepQuizFeature.State,
             val progress: Progress? // assignment progress
         ) : Message()
         object InitialFetchError : Message()
@@ -75,7 +75,7 @@ interface StepQuizReviewView {
         /**
          * Step Quiz Message Wrapper
          */
-        data class StepQuizMessage(val message: StepQuizView.Message) : Message()
+        data class StepQuizMessage(val message: StepQuizFeature.Message) : Message()
 
         /**
          * Submission creation or changing
@@ -113,7 +113,7 @@ interface StepQuizReviewView {
         /**
          * Step Quiz Action Wrapper
          */
-        data class StepQuizAction(val action: StepQuizView.Action) : Action()
+        data class StepQuizAction(val action: StepQuizFeature.Action) : Action()
 
         data class CreateSessionWithSubmission(val submissionId: Long) : Action() // select solution
 

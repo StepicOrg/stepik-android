@@ -12,7 +12,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.domain.step_quiz_review.interactor.StepQuizReviewInteractor
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.dispatcher.StepQuizActionDispatcher
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import ru.nobird.android.presentation.base.PresenterBase
@@ -42,17 +42,15 @@ constructor(
 
     private val viewActionQueue = ArrayDeque<StepQuizReviewView.Action.ViewAction>()
 
-    private val stepQuizMessageListener = { message: StepQuizView.Message ->
-        onNewMessage(StepQuizReviewView.Message.StepQuizMessage(message))
-    }
-
     init {
         compositeDisposable += stepWrapperRxRelay
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(onNext = { onNewMessage(StepQuizReviewView.Message.InitWithStep(it, lessonData)) })
 
-        compositeDisposable += stepQuizActionDispatcher.disposable
+        stepQuizActionDispatcher.setListener {
+            onNewMessage(StepQuizReviewView.Message.StepQuizMessage(it))
+        }
     }
 
     override fun attachView(view: StepQuizReviewView) {
@@ -106,7 +104,7 @@ constructor(
             }
 
             is StepQuizReviewView.Action.StepQuizAction ->
-                stepQuizActionDispatcher.handleAction(action.action, stepQuizMessageListener)
+                stepQuizActionDispatcher.handleAction(action.action)
 
             is StepQuizReviewView.Action.CreateSessionWithSubmission -> {
                 compositeDisposable += stepQuizReviewInteractor
@@ -136,7 +134,7 @@ constructor(
         }
     }
 
-    private fun getAttemptState(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizView.State.AttemptLoaded> =
+    private fun getAttemptState(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizFeature.State.AttemptLoaded> =
         stepQuizInteractor
             .getAttempt(stepWrapper.id)
             .flatMap { attempt ->
@@ -146,7 +144,12 @@ constructor(
                         stepQuizInteractor.getStepRestrictions(stepWrapper, lessonData)
                     )
                     .map { (submissionState, stepRestrictions) ->
-                        StepQuizView.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
+                        StepQuizFeature.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
                     }
             }
+
+    override fun onCleared() {
+        super.onCleared()
+        stepQuizActionDispatcher.cancel()
+    }
 }

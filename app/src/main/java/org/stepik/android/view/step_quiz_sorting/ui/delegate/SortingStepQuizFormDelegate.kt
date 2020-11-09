@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
 import org.stepic.droid.R
 import org.stepik.android.model.Reply
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -56,12 +56,12 @@ class SortingStepQuizFormDelegate(
         optionsAdapter.notifyItemChanged(targetPosition)
     }
 
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+    override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
         val sortingOptions = sortingOptionMapper
             .mapToSortingOptions(state.attempt, StepQuizFormResolver.isQuizEnabled(state))
 
         optionsAdapter.items =
-            if (state.submissionState is StepQuizView.SubmissionState.Loaded) {
+            if (state.submissionState is StepQuizFeature.SubmissionState.Loaded) {
                 val ordering = state.submissionState.submission.reply?.ordering ?: emptyList()
                 sortingOptions.sortedBy { ordering.indexOf(it.id) }
             } else {
