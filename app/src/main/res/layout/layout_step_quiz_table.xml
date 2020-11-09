@@ -8,8 +8,6 @@
     android:gravity="center_vertical"
     android:paddingLeft="2dp"
     android:paddingRight="2dp"
-    android:layout_marginLeft="14dp"
-    android:layout_marginRight="14dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
 
