@@ -25,7 +25,6 @@ object StepQuizPresentationModule {
      * Presentation
      */
     @Provides
-    @JvmStatic
     @IntoMap
     @ViewModelKey(StepQuizPresenter::class)
     internal fun provideStepQuizPresenter(
@@ -39,7 +38,6 @@ object StepQuizPresentationModule {
         )
 
     @Provides
-    @JvmStatic
     @IntoMap
     @ViewModelKey(StepQuizReviewPresenter::class)
     internal fun provideStepQuizReviewPresenter(
