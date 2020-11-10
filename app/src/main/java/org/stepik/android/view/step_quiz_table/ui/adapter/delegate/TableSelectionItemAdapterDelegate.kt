@@ -37,7 +37,7 @@ class TableSelectionItemAdapterDelegate(
         }
 
         override fun onBind(data: TableSelectionItem) {
-            itemView.isEnabled = data.isEnabled
+            viewOverlay.isEnabled = data.isEnabled
             stepQuizTableTitle.setText(data.titleText)
             val selectedChoices = data.tableChoices.filter { it.answer }
 
