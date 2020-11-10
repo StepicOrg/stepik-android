@@ -73,6 +73,7 @@ class TableColumnSelectionBottomSheetDialogFragment : BottomSheetDialogFragment(
             adapter = columnsAdapter
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
+            itemAnimator = null
         }
         selectionHelper = if (isCheckBox) {
             MultipleChoiceSelectionHelper(columnsAdapter)
