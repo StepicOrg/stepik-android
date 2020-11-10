@@ -18,7 +18,7 @@ constructor(
 
     private fun getStoryTemplatesByPage(lang: String): Single<List<StoryTemplate>> =
         Observable.range(1, Integer.MAX_VALUE)
-            .concatMapSingle { storyService.getStoryTemplate(it, false, lang) }
+            .concatMapSingle { storyService.getStoryTemplate(it, true, lang) }
             .takeUntil { !it.meta.hasNext }
             .map(StoryTemplatesResponse::storyTemplates)
             .reduce(emptyList()) { a, b -> a + b }

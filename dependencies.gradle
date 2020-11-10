@@ -149,8 +149,8 @@ ext.libraries = [
         room                 : "androidx.room:room-runtime:$versions.room",
         roomCompiler         : "androidx.room:room-compiler:$versions.room",
 
-        archExtensions       : "androidx.lifecycle:lifecycle-extensions:$versions.archComponents",
-        archViewModel        : "androidx.lifecycle:lifecycle-viewmodel:$versions.archComponents",
+        archCompiler         : "androidx.lifecycle:lifecycle-common-java8:$versions.archComponents",
+        archViewModel        : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.archComponents",
         media                : "androidx.media:media:$versions.media",
         multidex             : "androidx.multidex:multidex:$versions.multidex",
         adapterDelegates     : "ru.nobird.android.ui:AdapterDelegates:$versions.adapterDelegates",
