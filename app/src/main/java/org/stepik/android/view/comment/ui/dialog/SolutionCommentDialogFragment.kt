@@ -41,6 +41,7 @@ import org.stepik.android.view.step_quiz_fill_blanks.ui.delegate.FillBlanksStepQ
 import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_table.ui.delegate.TableStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
 import org.stepik.android.view.submission.routing.SubmissionDeepLinkBuilder
 import ru.nobird.android.view.base.ui.extension.argument
@@ -138,6 +139,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_FILL_BLANKS ->
                 R.layout.layout_step_quiz_fill_blanks
 
+            AppConstants.TYPE_TABLE ->
+                R.layout.layout_step_quiz_table
+
             else ->
                 R.layout.fragment_step_quiz_unsupported
         }
@@ -225,6 +229,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
 
             AppConstants.TYPE_FILL_BLANKS ->
                 FillBlanksStepQuizFormDelegate(view, childFragmentManager)
+
+            AppConstants.TYPE_TABLE ->
+                TableStepQuizFormDelegate(view, childFragmentManager)
 
             else ->
                 null
