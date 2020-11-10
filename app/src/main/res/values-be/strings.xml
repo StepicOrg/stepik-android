@@ -648,7 +648,11 @@
     <string name="step_quiz_choice_description_multiple">Абярыце адзін або некалькі аб\'ектаў</string>
     <string name="step_quiz_sql_description">Увядзіце SQL запыт</string>
     <string name="step_quiz_fill_blanks_description">Запоўніце пропускі</string>
-    <string name="step_quiz_table_description">Адзначце слушныя ячэйкі</string>
+    <!-- Translated via Google Translate -->
+    <string name="step_quiz_table_description">Выберыце верныя ячэйкі</string>
+    <string name="step_quiz_table_single_choice">Выбераце адзін варыянт</string>
+    <string name="step_quiz_table_multiple_choice">Абярыце адзін або некалькі варыянтаў</string>
+    <!-- -->
     <string name="step_quiz_text_empty_reply">Адказ не можа быць пустым</string>
     <string name="step_quiz_text_invalid_number_reply">Адказ мае быць лікам</string>
     <string name="step_quiz_choice_empty_reply">Абярыце варыянт</string>
