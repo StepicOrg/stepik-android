@@ -21,13 +21,12 @@ class TableColumnMultipleSelectionItemAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_table_column_selection_checkbox))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<Cell>(root) {
-        private val viewOverlay = root.viewOverlay
         private val tableColumnCheckBox = root.tableColumnSelectionCheckBox
         private val tableColumnText = root.tableColumnSelectionText
         private val tableColumnTextProgress = root.tableColumnSelectionTextProgress
 
         init {
-            viewOverlay.setOnClickListener {
+            root.setOnClickListener {
                 onClick(itemData as Cell)
             }
             tableColumnText.webViewClient = ProgressableWebViewClient(tableColumnTextProgress, tableColumnText.webView)

@@ -89,6 +89,8 @@ class TableColumnSelectionBottomSheetDialogFragment : BottomSheetDialogFragment(
         columnsAdapter += delegate
         columnsAdapter.items = chosenColumns
         mapSelection(selected)
+        // This is necessary to avoid java.lang.IllegalArgumentException: parameter must be a descendant of this view
+        tableNested.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
     }
 
     override fun onPause() {

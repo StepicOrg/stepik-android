@@ -22,42 +22,38 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tableColumnSelectionText"/>
+        app:layout_constraintEnd_toStartOf="@id/quizItem"/>
 
-    <org.stepik.android.view.latex.ui.widget.LatexView
-        android:id="@+id/tableColumnSelectionText"
+    <org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView
+        android:id="@+id/quizItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
         android:paddingRight="16dp"
         android:paddingEnd="16dp"
-
-        android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/tableColumnSelectionCheckBox"
         app:layout_constraintEnd_toEndOf="parent">
-        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-            android:id="@+id/tableColumnSelectionTextProgress"
-            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+        <org.stepik.android.view.latex.ui.widget.LatexView
+            android:id="@+id/tableColumnSelectionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:visibility="gone"
-            tools:visibility="visible" />
-    </org.stepik.android.view.latex.ui.widget.LatexView>
+            android:textSize="16sp"
+>
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/tableColumnSelectionTextProgress"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </org.stepik.android.view.latex.ui.widget.LatexView>
+    </org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView>
 
-    <View
-        android:id="@+id/viewOverlay"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="?selectableItemBackground"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
