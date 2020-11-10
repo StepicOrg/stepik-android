@@ -26,7 +26,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="@string/filter_dialog_title"
             android:textColor="?android:textColorSecondary"
             android:textAppearance="?textAppearanceCaption" />
 
@@ -58,10 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
 
             android:clipToPadding="false"
             android:clipChildren="false" />

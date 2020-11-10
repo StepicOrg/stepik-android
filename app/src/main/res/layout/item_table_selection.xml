@@ -11,16 +11,16 @@
         android:id="@+id/stepQuizTableTitleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
-        android:textSize="16sp"
         android:textAppearance="?textAppearanceBody1"
+
         android:layout_marginTop="14dp"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="6dp"
         app:layout_goneMarginBottom="14dp"
 
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/stepQuizTableChevron"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/stepQuizTableChoiceText">
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
@@ -39,14 +39,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:textSize="14sp"
-        android:textAppearance="?textAppearanceCaption"
+        android:textAppearance="?textAppearanceBody2"
         android:textColor="?android:textColorSecondary"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="14dp"
 
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/stepQuizTableChevron"
         app:layout_constraintTop_toBottomOf="@id/stepQuizTableTitleText"
         app:layout_constraintBottom_toBottomOf="parent">
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
@@ -80,9 +80,15 @@
         app:tint="?colorControlNormal"
         app:srcCompat="@drawable/ic_chevron_forward" />
 
-    <FrameLayout
-        android:duplicateParentState="true"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <View
+        android:id="@+id/viewOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?selectableItemBackground"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

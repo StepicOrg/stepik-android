@@ -2,7 +2,11 @@ package org.stepik.android.view.step_quiz_table.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.item_table_column_selection_checkbox.view.*
 import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.*
+import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.tableColumnSelectionText
+import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.tableColumnSelectionTextProgress
+import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.viewOverlay
 import org.stepic.droid.R
 import org.stepik.android.model.Cell
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
@@ -21,12 +25,13 @@ class TableColumnSingleSelectionItemAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_table_column_selection_radiobutton))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<Cell>(root) {
+        private val viewOverlay = root.viewOverlay
         private val tableColumnRadioButton = root.tableColumnSelectionRadioButton
         private val tableColumnText = root.tableColumnSelectionText
         private val tableColumnTextProgress = root.tableColumnSelectionTextProgress
 
         init {
-            root.setOnClickListener {
+            viewOverlay.setOnClickListener {
                 onClick(itemData as Cell)
             }
             tableColumnText.webViewClient = ProgressableWebViewClient(tableColumnTextProgress, tableColumnText.webView)

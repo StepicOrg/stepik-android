@@ -24,13 +24,14 @@ class TableSelectionItemAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_table_selection))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<TableSelectionItem>(root) {
+        private val viewOverlay = root.viewOverlay
         private val stepQuizTableTitle = root.stepQuizTableTitleText
         private val stepQuizTableTitleProgress = root.stepQuizTitleProgress
         private val stepQuizTableChoice = root.stepQuizTableChoiceText
         private val stepQuizTableChoiceProgress = root.stepQuizChoiceProgress
 
         init {
-            root.setOnClickListener { onItemClicked(adapterPosition, (itemData as TableSelectionItem).titleText, (itemData as TableSelectionItem).tableChoices) }
+            viewOverlay.setOnClickListener { onItemClicked(adapterPosition, (itemData as TableSelectionItem).titleText, (itemData as TableSelectionItem).tableChoices) }
             stepQuizTableTitle.webViewClient = ProgressableWebViewClient(stepQuizTableTitleProgress, stepQuizTableTitle.webView)
             stepQuizTableChoice.webViewClient = ProgressableWebViewClient(stepQuizTableChoiceProgress, stepQuizTableChoice.webView)
         }
