@@ -75,6 +75,5 @@ class TableStepQuizFormDelegate(
             val tableSelectionItem = get(index)
             set(index, tableSelectionItem.copy(tableChoices = columns))
         }
-        tableAdapter.notifyItemChanged(index)
     }
 }

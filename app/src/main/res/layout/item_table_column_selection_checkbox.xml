@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<org.stepik.android.view.step_quiz_matching.ui.view.TableChoiceItemView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -22,10 +22,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/quizItem"/>
+        app:layout_constraintEnd_toStartOf="@id/tableColumnSelectionText"/>
 
-    <org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView
-        android:id="@+id/quizItem"
+    <org.stepik.android.view.latex.ui.widget.LatexView
+        android:id="@+id/tableColumnSelectionText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
@@ -36,24 +36,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/tableColumnSelectionCheckBox"
-        app:layout_constraintEnd_toEndOf="parent">
-        <org.stepik.android.view.latex.ui.widget.LatexView
-            android:id="@+id/tableColumnSelectionText"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
+>
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/tableColumnSelectionTextProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
->
-            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-                android:id="@+id/tableColumnSelectionTextProgress"
-                style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </org.stepik.android.view.latex.ui.widget.LatexView>
-    </org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView>
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </org.stepik.android.view.latex.ui.widget.LatexView>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</org.stepik.android.view.step_quiz_matching.ui.view.TableChoiceItemView>
