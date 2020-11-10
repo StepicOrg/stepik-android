@@ -132,7 +132,8 @@ constructor(
             AppConstants.TYPE_CODE,
             AppConstants.TYPE_SORTING,
             AppConstants.TYPE_MATCHING,
-            AppConstants.TYPE_FILL_BLANKS ->
+            AppConstants.TYPE_FILL_BLANKS,
+            AppConstants.TYPE_TABLE ->
                 false
 
             else ->
