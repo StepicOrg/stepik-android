@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
@@ -28,6 +27,7 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
+import org.stepik.android.view.base.ui.extension.presenter
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -88,7 +88,7 @@ class StepQuizReviewFragment :
 
     private lateinit var stepWrapper: StepPersistentWrapper
 
-    private val stepQuizReviewPresenter: StepQuizReviewPresenter by viewModels { viewModelFactory }
+    private val stepQuizReviewPresenter: StepQuizReviewPresenter by presenter(this) { viewModelFactory }
     private lateinit var delegate: StepQuizReviewDelegate
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewFeature.State>
@@ -249,16 +249,6 @@ class StepQuizReviewFragment :
             else ->
                 null
         }
-
-    override fun onStart() {
-        super.onStart()
-        stepQuizReviewPresenter.attachView(this)
-    }
-
-    override fun onStop() {
-        stepQuizReviewPresenter.detachView(this)
-        super.onStop()
-    }
 
     override fun render(state: StepQuizReviewFeature.State) {
         viewStateDelegate.switchState(state)
