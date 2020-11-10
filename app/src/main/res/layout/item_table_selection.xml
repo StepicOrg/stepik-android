@@ -14,8 +14,8 @@
         android:textAppearance="?textAppearanceBody1"
 
         android:layout_marginTop="14dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:layout_marginBottom="6dp"
         app:layout_goneMarginBottom="14dp"
 
@@ -41,8 +41,8 @@
 
         android:textAppearance="?textAppearanceBody2"
         android:textColor="?android:textColorSecondary"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
         android:layout_marginBottom="14dp"
 
         app:layout_constraintStart_toStartOf="parent"
