@@ -29,6 +29,7 @@ class TableSelectionItemAdapterDelegate(
         private val stepQuizTableTitleProgress = root.stepQuizTitleProgress
         private val stepQuizTableChoice = root.stepQuizTableChoiceText
         private val stepQuizTableChoiceProgress = root.stepQuizChoiceProgress
+        private val stepQuizTableChevron = root.stepQuizTableChevron
 
         init {
             viewOverlay.setOnClickListener { onItemClicked(adapterPosition, (itemData as TableSelectionItem).titleText, (itemData as TableSelectionItem).tableChoices) }
@@ -38,6 +39,7 @@ class TableSelectionItemAdapterDelegate(
 
         override fun onBind(data: TableSelectionItem) {
             viewOverlay.isEnabled = data.isEnabled
+            stepQuizTableChevron.alpha = if (data.isEnabled) 1f else 0.2f
             stepQuizTableTitle.setText(data.titleText)
             val selectedChoices = data.tableChoices.filter { it.answer }
 
