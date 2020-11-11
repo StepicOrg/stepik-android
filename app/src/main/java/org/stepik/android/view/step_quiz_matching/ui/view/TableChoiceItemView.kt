@@ -47,10 +47,10 @@ constructor(
 
     override fun onTouchEvent(event: MotionEvent?): Boolean = false
 
-    override fun performClick(): Boolean {
+    override fun performClick(): Boolean =
         if (clickDuration < MAX_CLICK_DURATION) {
-            return super.performClick()
+            super.performClick()
+        } else {
+            false
         }
-        return false
-    }
 }

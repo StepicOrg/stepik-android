@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_table.ui.delegate
 
 import android.view.View
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,7 +50,7 @@ class TableStepQuizFormDelegate(
             layoutManager = LinearLayoutManager(context)
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
+                AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
         }
     }
