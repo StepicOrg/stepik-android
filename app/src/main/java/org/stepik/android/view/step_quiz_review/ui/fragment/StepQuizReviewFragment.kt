@@ -25,9 +25,8 @@ import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
-import org.stepik.android.view.base.ui.extension.presenter
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -44,6 +43,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class StepQuizReviewFragment :
@@ -88,7 +88,7 @@ class StepQuizReviewFragment :
 
     private lateinit var stepWrapper: StepPersistentWrapper
 
-    private val stepQuizReviewPresenter: StepQuizReviewPresenter by presenter(this) { viewModelFactory }
+    private val stepQuizReviewViewModel: StepQuizReviewViewModel by reduxViewModel(this) { viewModelFactory }
     private lateinit var delegate: StepQuizReviewDelegate
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewFeature.State>
@@ -143,7 +143,7 @@ class StepQuizReviewFragment :
         viewStateDelegate.addState<StepQuizReviewFeature.State.Completed>(stepQuizReviewContainer)
 
         stepQuizReviewNetworkError.tryAgain
-            .setOnClickListener { stepQuizReviewPresenter.onNewMessage(StepQuizReviewFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
+            .setOnClickListener { stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
 
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
             override fun onSelectDifferentSubmissionClicked() {
@@ -151,21 +151,21 @@ class StepQuizReviewFragment :
             }
 
             override fun onCreateSessionClicked() {
-                stepQuizReviewPresenter.onNewMessage(StepQuizReviewFeature.Message.CreateSessionWithCurrentSubmission)
+                stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.CreateSessionWithCurrentSubmission)
             }
 
             override fun onSolveAgainClicked() {
-                stepQuizReviewPresenter.onNewMessage(StepQuizReviewFeature.Message.SolveAgain(stepWrapper.step))
+                stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.SolveAgain(stepWrapper.step))
             }
 
             override fun onQuizTryAgainClicked() {
-                stepQuizReviewPresenter.onNewMessage(
+                stepQuizReviewViewModel.onNewMessage(
                     StepQuizReviewFeature.Message.StepQuizMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
                 )
             }
 
             override fun onStartReviewClicked() {
-                stepQuizReviewPresenter.onNewMessage(StepQuizReviewFeature.Message.StartReviewWithCurrentSession)
+                stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StartReviewWithCurrentSession)
             }
 
             override fun onTakenReviewClicked(sessionId: Long) {
@@ -189,7 +189,7 @@ class StepQuizReviewFragment :
                 stepRetryButton = reviewStep1ActionRetry,
 
                 stepQuizDiscountingPolicy = reviewStep1Discounting,
-                onNewMessage = { stepQuizReviewPresenter.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(it)) }
+                onNewMessage = { stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(it)) }
             )
 
         delegate =
@@ -281,6 +281,6 @@ class StepQuizReviewFragment :
     }
 
     override fun onSubmissionSelected(submission: Submission, attempt: Attempt) {
-        stepQuizReviewPresenter.onNewMessage(StepQuizReviewFeature.Message.ChangeSubmission(submission, attempt))
+        stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.ChangeSubmission(submission, attempt))
     }
 }

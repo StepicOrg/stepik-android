@@ -6,11 +6,11 @@ import dagger.Provides
 import dagger.multibindings.IntoMap
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
-import org.stepik.android.presentation.step_quiz.StepQuizPresenter
+import org.stepik.android.presentation.step_quiz.StepQuizViewModel
 import org.stepik.android.presentation.step_quiz.dispatcher.StepQuizActionDispatcher
 import org.stepik.android.presentation.step_quiz.reducer.StepQuizReducer
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.presentation.step_quiz_review.dispatcher.StepQuizReviewActionDispatcher
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import ru.nobird.android.core.model.safeCast
@@ -26,12 +26,12 @@ object StepQuizPresentationModule {
      */
     @Provides
     @IntoMap
-    @ViewModelKey(StepQuizPresenter::class)
+    @ViewModelKey(StepQuizViewModel::class)
     internal fun provideStepQuizPresenter(
         stepQuizReducer: StepQuizReducer,
         stepQuizActionDispatcher: StepQuizActionDispatcher
     ): ViewModel =
-        StepQuizPresenter(
+        StepQuizViewModel(
             ReduxFeature(StepQuizFeature.State.Idle, stepQuizReducer)
                 .wrapWithActionDispatcher(stepQuizActionDispatcher)
                 .wrapWithViewContainer()
@@ -39,13 +39,13 @@ object StepQuizPresentationModule {
 
     @Provides
     @IntoMap
-    @ViewModelKey(StepQuizReviewPresenter::class)
+    @ViewModelKey(StepQuizReviewViewModel::class)
     internal fun provideStepQuizReviewPresenter(
         stepQuizReviewReducer: StepQuizReviewReducer,
         stepQuizReviewActionDispatcher: StepQuizReviewActionDispatcher,
         stepQuizActionDispatcher: StepQuizActionDispatcher
     ): ViewModel =
-        StepQuizReviewPresenter(
+        StepQuizReviewViewModel(
             ReduxFeature(StepQuizReviewFeature.State.Idle, stepQuizReviewReducer)
                 .wrapWithActionDispatcher(stepQuizReviewActionDispatcher)
                 .wrapWithActionDispatcher(

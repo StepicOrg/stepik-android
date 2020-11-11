@@ -1,8 +1,8 @@
 package org.stepik.android.presentation.step_quiz_review
 
-import org.stepik.android.presentation.base.ReduxPresenter
 import ru.nobird.android.presentation.redux.container.ReduxViewContainer
+import ru.nobird.android.view.redux.viewmodel.ReduxViewModel
 
-class StepQuizReviewPresenter(
+class StepQuizReviewViewModel(
     reduxViewContainer: ReduxViewContainer<StepQuizReviewFeature.State, StepQuizReviewFeature.Message, StepQuizReviewFeature.Action.ViewAction>
-) : ReduxPresenter<StepQuizReviewFeature.State, StepQuizReviewFeature.Message, StepQuizReviewFeature.Action.ViewAction>(reduxViewContainer)
+) : ReduxViewModel<StepQuizReviewFeature.State, StepQuizReviewFeature.Message, StepQuizReviewFeature.Action.ViewAction>(reduxViewContainer)

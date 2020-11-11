@@ -20,7 +20,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
-import org.stepik.android.presentation.step_quiz.StepQuizPresenter
+import org.stepik.android.presentation.step_quiz.StepQuizViewModel
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
@@ -53,7 +53,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     protected var stepId: Long by argument()
 
-    private val presenter: StepQuizPresenter by viewModels { viewModelFactory }
+    private val viewModel: StepQuizViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
@@ -69,7 +69,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
         stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
 
-        presenter.onNewMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData))
+        viewModel.onNewMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData))
     }
 
     private fun injectComponent() {
@@ -95,7 +95,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
         viewStateDelegate.addState<StepQuizFeature.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener {
-            presenter.onNewMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
+            viewModel.onNewMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
         }
 
         stepQuizDelegate =
@@ -111,7 +111,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
                 stepQuizActionButton = stepQuizAction,
                 stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
-                onNewMessage = presenter::onNewMessage
+                onNewMessage = viewModel::onNewMessage
             ) {
                 (parentFragment as? NextMoveable)?.moveNext()
             }
@@ -125,11 +125,11 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     override fun onStart() {
         super.onStart()
-        presenter.attachView(this)
+        viewModel.attachView(this)
     }
 
     override fun onStop() {
-        presenter.detachView(this)
+        viewModel.detachView(this)
         stepQuizDelegate.syncReplyState()
         super.onStop()
     }
