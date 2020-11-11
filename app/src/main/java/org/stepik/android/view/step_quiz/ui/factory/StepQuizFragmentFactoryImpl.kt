@@ -15,6 +15,7 @@ import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 import org.stepik.android.view.step_quiz_pycharm.ui.fragment.PyCharmStepQuizFragment
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewFragment
+import org.stepik.android.view.step_quiz_table.ui.fragment.TableStepQuizFragment
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -65,6 +66,9 @@ constructor(
 
             AppConstants.TYPE_FILL_BLANKS ->
                 FillBlanksStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+
+            AppConstants.TYPE_TABLE ->
+                TableStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
             else ->
                 UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper.step.id)

@@ -42,6 +42,7 @@ public class AppConstants {
     public static final String TYPE_SQL = "sql";
     public static final String TYPE_LINUX_CODE = "linux-code";
     public static final String TYPE_FILL_BLANKS = "fill-blanks";
+    public static final String TYPE_TABLE = "table";
 
     public static final String TYPE_NULL = "null_type";
 
