@@ -652,6 +652,7 @@
     <string name="step_quiz_table_description">Выберыце верныя ячэйкі</string>
     <string name="step_quiz_table_single_choice">Выбераце адзін варыянт</string>
     <string name="step_quiz_table_multiple_choice">Абярыце адзін або некалькі варыянтаў</string>
+    <string name="step_quiz_table_confirm_choice">Пацвердзіць</string>
     <!-- -->
     <string name="step_quiz_text_empty_reply">Адказ не можа быць пустым</string>
     <string name="step_quiz_text_invalid_number_reply">Адказ мае быць лікам</string>

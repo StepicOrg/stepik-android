@@ -778,6 +778,7 @@
     <string name="step_quiz_table_description">Select the right cells</string>
     <string name="step_quiz_table_single_choice">Select one option</string>
     <string name="step_quiz_table_multiple_choice">Select one or more options</string>
+    <string name="step_quiz_table_confirm_choice">Confirm</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
     <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>

@@ -57,10 +57,29 @@
             android:id="@+id/tableColumnsRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:gravity="center_vertical"
 
             android:clipToPadding="false"
             android:clipChildren="false" />
 
+        <include
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/confirmColumnsAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+
+            style="@style/Widget.AppTheme.Button"
+            android:text="@string/step_quiz_table_confirm_choice"
+            android:theme="@style/ThemeOverlay.Violet" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

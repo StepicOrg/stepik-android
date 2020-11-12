@@ -745,6 +745,7 @@
     <string name="step_quiz_table_description">Выберите верные ячейки</string>
     <string name="step_quiz_table_single_choice">Выберите один вариант</string>
     <string name="step_quiz_table_multiple_choice">Выберите один или несколько вариантов</string>
+    <string name="step_quiz_table_confirm_choice">Подтвердить</string>
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_text_invalid_number_reply">Ответ должен быть числом</string>
