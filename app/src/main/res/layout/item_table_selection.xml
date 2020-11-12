@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+
+    <org.stepik.android.view.latex.ui.widget.LatexView
+        android:id="@+id/stepQuizTableTitleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceBody1"
+
+        android:layout_marginTop="14dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="6dp"
+        app:layout_goneMarginBottom="14dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/stepQuizTableChevron"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/stepQuizTableChoiceText">
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/stepQuizTitleProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </org.stepik.android.view.latex.ui.widget.LatexView>
+
+    <org.stepik.android.view.latex.ui.widget.LatexView
+        android:id="@+id/stepQuizTableChoiceText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
+        android:layout_marginLeft="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="14dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/stepQuizTableChevron"
+        app:layout_constraintTop_toBottomOf="@id/stepQuizTableTitleText"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/stepQuizChoiceProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </org.stepik.android.view.latex.ui.widget.LatexView>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/stepQuizTableChevron"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+
+        android:padding="16dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="1dp"
+
+        app:layout_constraintVertical_chainStyle="packed"
+
+        app:tint="?colorControlNormal"
+        app:srcCompat="@drawable/ic_chevron_forward" />
+
+    <View
+        android:id="@+id/viewOverlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="?selectableItemBackground"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

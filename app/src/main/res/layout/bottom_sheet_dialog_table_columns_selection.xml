@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tableNested"
+    android:scrollbarStyle="outsideOverlay">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/tableColumnSelectionGrip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            app:tint="?colorControlNormal"
+            app:srcCompat="@drawable/ic_grip" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tableColumnSelectionInformation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="?android:textColorSecondary"
+            android:textAppearance="?textAppearanceCaption" />
+
+        <org.stepik.android.view.latex.ui.widget.LatexView
+            android:id="@+id/tableColumnSelectionRowTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textSize="16sp"
+            android:textAppearance="?textAppearanceBody1"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="14dp">
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/stepQuizChoiceProgress"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </org.stepik.android.view.latex.ui.widget.LatexView>
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tableColumnsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical"
+
+            android:clipToPadding="false"
+            android:clipChildren="false" />
+
+        <include
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/confirmColumnsAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+
+            style="@style/Widget.AppTheme.Button"
+            android:text="@string/step_quiz_table_confirm_choice"
+            android:theme="@style/ThemeOverlay.Violet" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.core.widget.NestedScrollView>

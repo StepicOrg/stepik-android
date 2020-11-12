@@ -142,9 +142,9 @@ constructor(
                 onNext = { (items, source) ->
                     state =
                         if (source == DataSourceType.CACHE) {
-                            oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, items))
+                            oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(state.cast<CourseListSearchResultView.State.Data>().courseListViewState, items))
                         } else {
-                            oldState.copy(courseListViewState = courseListStateMapper.mergeWithUpdatedItems(oldCourseListState, items.associateBy { it.course.id }))
+                            oldState.copy(courseListViewState = courseListStateMapper.mergeWithUpdatedItems(state.cast<CourseListSearchResultView.State.Data>().courseListViewState, items.associateBy { it.course.id }))
                         }
                 },
                 onError = {

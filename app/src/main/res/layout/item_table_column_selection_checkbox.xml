@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.stepik.android.view.step_quiz_matching.ui.view.TableChoiceItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?selectableItemBackground">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/tableColumnSelectionCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tableColumnSelectionText"/>
+
+    <org.stepik.android.view.latex.ui.widget.LatexView
+        android:id="@+id/tableColumnSelectionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tableColumnSelectionCheckBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="16sp"
+>
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/tableColumnSelectionTextProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </org.stepik.android.view.latex.ui.widget.LatexView>
+
+</org.stepik.android.view.step_quiz_matching.ui.view.TableChoiceItemView>
