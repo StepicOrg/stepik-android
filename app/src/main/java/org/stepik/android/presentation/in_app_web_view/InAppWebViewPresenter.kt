@@ -36,9 +36,11 @@ constructor(
             return
         }
 
+        val embeddedUrl = addEmbeddedQueryParameter(url)
+
         if (isProvideAuth) {
             compositeDisposable += magicLinkInteractor
-                .createMagicLink(url)
+                .createMagicLink(embeddedUrl)
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
@@ -46,7 +48,7 @@ constructor(
                     onError = { state = InAppWebViewView.State.Error }
                 )
         } else {
-            state = InAppWebViewView.State.WebLoading(url)
+            state = InAppWebViewView.State.WebLoading(embeddedUrl)
         }
     }
 
@@ -63,4 +65,15 @@ constructor(
         }
         state = InAppWebViewView.State.Error
     }
+
+    private fun addEmbeddedQueryParameter(url: String): String =
+        StringBuilder(url).apply {
+            val suffix = if (url.indexOf('?') > -1) {
+                '&'
+            } else {
+                '?'
+            }
+            append(suffix)
+            append("embedded=true")
+        }.toString()
 }
