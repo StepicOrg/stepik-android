@@ -49,9 +49,10 @@ class CourseListCollectionHeaderDecoration : RecyclerView.ItemDecoration() {
 
     private fun initHeader(parent: RecyclerView, collectionDescriptionColors: CollectionDescriptionColors) {
         if (header == null) {
+            val headerText = headerText ?: return
             val view = parent.inflate(R.layout.item_course_collection_header) as PlaceholderTextView
 
-            view.setPlaceholderText(headerText.orEmpty())
+            view.setPlaceholderText(headerText)
             view.setBackgroundResource(collectionDescriptionColors.backgroundResSquared)
             view.setTextColor(AppCompatResources.getColorStateList(parent.context, collectionDescriptionColors.textColorRes))
 
@@ -83,8 +84,6 @@ class CourseListCollectionHeaderDecoration : RecyclerView.ItemDecoration() {
             ?: return
 
         initHeader(parent, collectionDescriptionColors)
-        val header = this.header ?: return
-
-        outRect.set(0, header.height, 0, 0)
+        outRect.set(0, header?.height ?: 0, 0, 0)
     }
 }

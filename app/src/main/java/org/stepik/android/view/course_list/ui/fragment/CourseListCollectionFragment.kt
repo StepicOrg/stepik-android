@@ -125,7 +125,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             }
             is CourseListCollectionView.State.Data -> {
                 courseListCollectionHeaderDecoration.collectionDescriptionColors = CollectionDescriptionColors.ofCollection(state.courseCollection)
-                courseListCollectionHeaderDecoration.headerText = state.courseCollection.description
+                courseListCollectionHeaderDecoration.headerText = state.courseCollection.description.takeIf { it.isNotEmpty() }
 
                 centeredToolbarTitle.text = state.courseCollection.title
                 courseListViewDelegate.setState(state.courseListViewState)
