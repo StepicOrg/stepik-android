@@ -2,11 +2,11 @@ package org.stepik.android.presentation.step_quiz.reducer
 
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.presentation.step_quiz.StepQuizView.State
-import org.stepik.android.presentation.step_quiz.StepQuizView.Message
-import org.stepik.android.presentation.step_quiz.StepQuizView.Action
-import org.stepik.android.presentation.base.reducer.StateReducer
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
+import org.stepik.android.presentation.step_quiz.StepQuizFeature.State
+import org.stepik.android.presentation.step_quiz.StepQuizFeature.Message
+import org.stepik.android.presentation.step_quiz.StepQuizFeature.Action
+import ru.nobird.android.presentation.redux.reducer.StateReducer
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -63,7 +63,7 @@ constructor() : StateReducer<State, Message, Action> {
                 if (state is State.AttemptLoaded) {
                     val submission = Submission(attempt = state.attempt.id, _reply = message.reply, status = Submission.Status.EVALUATION)
 
-                    state.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission)) to
+                    state.copy(submissionState = StepQuizFeature.SubmissionState.Loaded(submission)) to
                             setOf(
                                 Action.SaveLocalSubmission(createLocalSubmission(state, message.reply)),
                                 Action.CreateSubmission(message.step, state.attempt.id, message.reply)
@@ -75,7 +75,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.CreateSubmissionSuccess ->
                 if (state is State.AttemptLoaded) {
                     state.copy(
-                        submissionState = StepQuizView.SubmissionState.Loaded(message.submission),
+                        submissionState = StepQuizFeature.SubmissionState.Loaded(message.submission),
                         restrictions = state.restrictions.copy(submissionCount = state.restrictions.submissionCount + 1)
                     ) to emptySet()
                 } else {
@@ -83,10 +83,10 @@ constructor() : StateReducer<State, Message, Action> {
                 }
 
             is Message.CreateSubmissionError ->
-                if (state is State.AttemptLoaded && state.submissionState is StepQuizView.SubmissionState.Loaded) {
+                if (state is State.AttemptLoaded && state.submissionState is StepQuizFeature.SubmissionState.Loaded) {
                     val submission = state.submissionState.submission.copy(status = Submission.Status.LOCAL)
 
-                    state.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission)) to setOf(Action.ViewAction.ShowNetworkError)
+                    state.copy(submissionState = StepQuizFeature.SubmissionState.Loaded(submission)) to setOf(Action.ViewAction.ShowNetworkError)
                 } else {
                     null
                 }
@@ -95,14 +95,14 @@ constructor() : StateReducer<State, Message, Action> {
                 if (state is State.AttemptLoaded) {
                     val submission = createLocalSubmission(state, message.reply)
 
-                    state.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission)) to setOf(Action.SaveLocalSubmission(submission))
+                    state.copy(submissionState = StepQuizFeature.SubmissionState.Loaded(submission)) to setOf(Action.SaveLocalSubmission(submission))
                 } else {
                     null
                 }
         } ?: state to emptySet()
 
     private fun createLocalSubmission(oldState: State.AttemptLoaded, reply: Reply): Submission {
-        val submissionId = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
+        val submissionId = (oldState.submissionState as? StepQuizFeature.SubmissionState.Loaded)
             ?.submission
             ?.id
             ?: 0

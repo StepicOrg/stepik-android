@@ -14,7 +14,7 @@ import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.base.ui.drawable.GravityDrawable
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
@@ -83,8 +83,8 @@ class TextStepQuizFormDelegate(
             }
         }
 
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
+    override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
+        val submission = (state.submissionState as? StepQuizFeature.SubmissionState.Loaded)
             ?.submission
 
         val reply = submission?.reply
