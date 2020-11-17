@@ -12,14 +12,27 @@ import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.util.inflate
 
-class CourseListCollectionHeaderDecoration(
-    private val headerText: String,
-    private val collectionDescriptionColors: CollectionDescriptionColors
-) : RecyclerView.ItemDecoration() {
-    private lateinit var header: PlaceholderTextView
+class CourseListCollectionHeaderDecoration : RecyclerView.ItemDecoration() {
+    var collectionDescriptionColors: CollectionDescriptionColors? = null
+        set(value) {
+            field = value
+            header = null
+        }
+
+    var headerText: String? = null
+        set(value) {
+            field = value
+            header = null
+        }
+
+    private var header: PlaceholderTextView? = null
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        initHeader(parent)
+        val collectionDescriptionColors =
+            this.collectionDescriptionColors ?: return
+
+        initHeader(parent, collectionDescriptionColors)
+        val header = this.header ?: return
 
         val child = parent.getChildAt(0)
         canvas.save()
@@ -34,11 +47,11 @@ class CourseListCollectionHeaderDecoration(
         canvas.restore()
     }
 
-    private fun initHeader(parent: RecyclerView) {
-        if (!this::header.isInitialized) {
+    private fun initHeader(parent: RecyclerView, collectionDescriptionColors: CollectionDescriptionColors) {
+        if (header == null) {
             val view = parent.inflate(R.layout.item_course_collection_header) as PlaceholderTextView
 
-            view.setPlaceholderText(headerText)
+            view.setPlaceholderText(headerText.orEmpty())
             view.setBackgroundResource(collectionDescriptionColors.backgroundResSquared)
             view.setTextColor(AppCompatResources.getColorStateList(parent.context, collectionDescriptionColors.textColorRes))
 
@@ -57,6 +70,9 @@ class CourseListCollectionHeaderDecoration(
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val collectionDescriptionColors =
+            this.collectionDescriptionColors ?: return
+
         val columnsCount = (parent.layoutManager as? GridLayoutManager)
             ?.spanCount
             ?: 1
@@ -66,7 +82,9 @@ class CourseListCollectionHeaderDecoration(
             ?.takeIf { it < columnsCount }
             ?: return
 
-        initHeader(parent)
+        initHeader(parent, collectionDescriptionColors)
+        val header = this.header ?: return
+
         outRect.set(0, header.height, 0, 0)
     }
 }

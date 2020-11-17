@@ -15,6 +15,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
@@ -25,6 +26,7 @@ import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListCollectionHeaderDecoration
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -54,6 +56,8 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListCollectionPresenter by viewModels { viewModelFactory }
 
+    private lateinit var courseListCollectionHeaderDecoration: CourseListCollectionHeaderDecoration
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -63,17 +67,13 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
         super.onViewCreated(view, savedInstanceState)
 
         initCenteredToolbar(R.string.catalog_title, true)
+
+        courseListCollectionHeaderDecoration = CourseListCollectionHeaderDecoration()
         with(courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
+            itemAnimator = null
+            addItemDecoration(courseListCollectionHeaderDecoration)
         }
-
-        courseListCoursesRecycler.itemAnimator = null
-//        courseListCoursesRecycler.addItemDecoration(
-//            CourseListCollectionHeaderDecoration(
-//                courseCollection.description,
-//                CollectionDescriptionColors.ofCollection(courseCollection)
-//            )
-//        )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
@@ -124,10 +124,11 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                 courseListViewDelegate.setState(CourseListView.State.Loading)
             }
             is CourseListCollectionView.State.Data -> {
+                courseListCollectionHeaderDecoration.collectionDescriptionColors = CollectionDescriptionColors.ofCollection(state.courseCollection)
+                courseListCollectionHeaderDecoration.headerText = state.courseCollection.description
+
                 centeredToolbarTitle.text = state.courseCollection.title
                 courseListViewDelegate.setState(state.courseListViewState)
-
-                // todo set up colors
             }
             is CourseListCollectionView.State.NetworkError -> {
                 courseListViewDelegate.setState(CourseListView.State.NetworkError)
