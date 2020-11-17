@@ -9,37 +9,35 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
-import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListCollectionHeaderDecoration
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), CourseListCollectionView {
     companion object {
-        fun newInstance(courseCollection: CourseCollection): Fragment =
+        fun newInstance(courseCollectionId: Long): Fragment =
             CourseListCollectionFragment().apply {
-                this.courseCollection = courseCollection
+                this.courseCollectionId = courseCollectionId
             }
     }
 
-    private var courseCollection by argument<CourseCollection>()
+    private var courseCollectionId by argument<Long>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -64,22 +62,22 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCenteredToolbar(courseCollection.title, true)
+        initCenteredToolbar(R.string.catalog_title, true)
         with(courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
         }
 
         courseListCoursesRecycler.itemAnimator = null
-        courseListCoursesRecycler.addItemDecoration(
-            CourseListCollectionHeaderDecoration(
-                courseCollection.description,
-                CollectionDescriptionColors.ofCollection(courseCollection)
-            )
-        )
+//        courseListCoursesRecycler.addItemDecoration(
+//            CourseListCollectionHeaderDecoration(
+//                courseCollection.description,
+//                CollectionDescriptionColors.ofCollection(courseCollection)
+//            )
+//        )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseCollection = courseCollection, forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(courseCollection = courseCollection, forceUpdate = true) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
+        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
@@ -102,14 +100,14 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                 courseListPresenter
                     .continueCourse(
                         course = courseListItem.course,
-                        viewSource = CourseViewSource.Collection(courseCollection.id),
+                        viewSource = CourseViewSource.Collection(courseCollectionId),
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
-        courseListPresenter.fetchCourses(courseCollection)
+        courseListPresenter.fetchCourses(courseCollectionId)
     }
 
     private fun injectComponent() {
@@ -120,8 +118,21 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
     }
 
     override fun setState(state: CourseListCollectionView.State) {
-        val courseListState = (state as? CourseListCollectionView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
-        courseListViewDelegate.setState(courseListState)
+        when (state) {
+            is CourseListCollectionView.State.Idle,
+            is CourseListCollectionView.State.Loading -> {
+                courseListViewDelegate.setState(CourseListView.State.Loading)
+            }
+            is CourseListCollectionView.State.Data -> {
+                centeredToolbarTitle.text = state.courseCollection.title
+                courseListViewDelegate.setState(state.courseListViewState)
+
+                // todo set up colors
+            }
+            is CourseListCollectionView.State.NetworkError -> {
+                courseListViewDelegate.setState(CourseListView.State.NetworkError)
+            }
+        }
     }
 
     override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {

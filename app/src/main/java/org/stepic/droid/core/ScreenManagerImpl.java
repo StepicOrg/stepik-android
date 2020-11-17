@@ -675,8 +675,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCoursesCollection(Context context, CourseCollection courseCollection) {
-        Intent intent = CourseListCollectionActivity.Companion.createIntent(context, courseCollection);
+    public void showCoursesCollection(Context context, long courseCollectionId) {
+        Intent intent = CourseListCollectionActivity.Companion.createIntent(context, courseCollectionId);
         context.startActivity(intent);
     }
 

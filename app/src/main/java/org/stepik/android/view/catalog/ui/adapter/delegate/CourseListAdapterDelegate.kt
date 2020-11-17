@@ -66,7 +66,7 @@ class CourseListAdapterDelegate(
 
             val onClickListener = View.OnClickListener {
                 val collection = courseCollection ?: return@OnClickListener
-                screenManager.showCoursesCollection(itemView.context, collection)
+                screenManager.showCoursesCollection(itemView.context, collection.id)
             }
 
             courseListDescription.setOnClickListener(onClickListener)
@@ -76,7 +76,7 @@ class CourseListAdapterDelegate(
             courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
             courseListPlaceholderNoConnection.setOnClickListener {
                 val collection = courseCollection ?: return@setOnClickListener
-                itemData?.fetchCourses(courseCollection = collection, forceUpdate = true)
+                itemData?.fetchCourses(courseCollectionId = collection.id, forceUpdate = true)
             }
             courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 

@@ -159,7 +159,7 @@ public interface ScreenManager {
     void showCachedAttempts(@NotNull Context context, long courseId);
 
     void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
-    void showCoursesCollection(Context context, CourseCollection courseCollection);
+    void showCoursesCollection(Context context, long courseCollectionId);
     void showUserCourses(Context context);
     void showCoursesByTag(Context context, Tag tag);
     void showVisitedCourses(Context context);
