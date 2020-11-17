@@ -28,7 +28,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
-import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
