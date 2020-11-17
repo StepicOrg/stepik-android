@@ -11,7 +11,7 @@ import org.stepic.droid.R
 import org.stepik.android.model.Cell
 import org.stepik.android.model.Reply
 import org.stepik.android.model.TableChoiceAnswer
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -55,8 +55,8 @@ class TableStepQuizFormDelegate(
         }
     }
 
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
+    override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
+        val submission = (state.submissionState as? StepQuizFeature.SubmissionState.Loaded)
             ?.submission
 
         isCheckBox = state.attempt.dataset?.isCheckbox ?: false
