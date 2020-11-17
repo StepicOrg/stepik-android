@@ -17,7 +17,6 @@ class FeedbackActivity : SingleFragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setBackgroundDrawable(null)
         setUpToolbar()
     }
 
