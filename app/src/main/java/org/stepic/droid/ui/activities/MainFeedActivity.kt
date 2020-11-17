@@ -30,6 +30,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
+import org.stepik.android.view.course_list.routing.getCourseListCollectionId
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -181,6 +182,27 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         onShowStreakSuggestion()
     }
 
+    private fun openFragment(launchIntent: Intent?, forceHome: Boolean = false) {
+        if (forceHome) {
+            setFragment(R.id.home)
+        }
+
+        when (getFragmentIndexFromIntent(launchIntent)) {
+            CATALOG_INDEX -> {
+                navigationView.selectedItemId = R.id.catalog
+                val courseCollectionId = launchIntent?.getCourseListCollectionId()
+                if (courseCollectionId != null) {
+                    screenManager.showCoursesCollection(this, courseCollectionId)
+                }
+            }
+            PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
+            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
+            else -> {
+                //do nothing
+            }
+        }
+    }
+
     private fun getFragmentIndexFromIntent(intent: Intent?): Int {
         if (intent == null) return -1
 
@@ -193,21 +215,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         return intent.getIntExtra(CURRENT_INDEX_KEY, -1)
-    }
-
-    private fun openFragment(launchIntent: Intent?, forceHome: Boolean = false) {
-        if (forceHome) {
-            setFragment(R.id.home)
-        }
-
-        when (getFragmentIndexFromIntent(launchIntent)) {
-            CATALOG_INDEX       -> navigationView.selectedItemId = R.id.catalog
-            PROFILE_INDEX       -> navigationView.selectedItemId = R.id.profile
-            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
-            else -> {
-                //do nothing
-            }
-        }
     }
 
     private fun initNavigation() {

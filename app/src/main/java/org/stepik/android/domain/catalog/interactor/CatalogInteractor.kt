@@ -2,6 +2,7 @@ package org.stepik.android.domain.catalog.interactor
 
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.domain.course_collection.model.CourseCollectionQuery
 import org.stepik.android.domain.course_collection.repository.CourseCollectionRepository
 import org.stepik.android.model.CourseCollection
 import javax.inject.Inject
@@ -14,5 +15,5 @@ constructor(
 ) {
     fun fetchCourseCollections(): Single<List<CourseCollection>> =
         courseCollectionRepository
-            .getCourseCollection(sharedPreferenceHelper.languageForFeatured)
+            .getCourseCollections(CourseCollectionQuery(language = sharedPreferenceHelper.languageForFeatured))
 }

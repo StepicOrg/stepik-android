@@ -9,6 +9,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
+import org.stepik.android.domain.course_collection.interactor.CourseCollectionInteractor
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
@@ -31,6 +32,7 @@ abstract class CourseListCollectionModule {
         @Provides
         @JvmStatic
         fun provideCourseListCollectionPresenter(
+            courseCollectionInteractor: CourseCollectionInteractor,
             courseListStateMapper: CourseListStateMapper,
             courseListInteractor: CourseListInteractor,
             @BackgroundScheduler
@@ -49,6 +51,7 @@ abstract class CourseListCollectionModule {
             userCourseOperationObservable: Observable<UserCourse>
         ): CourseListCollectionPresenter =
             CourseListCollectionPresenter(
+                courseCollectionInteractor = courseCollectionInteractor,
                 courseListStateMapper = courseListStateMapper,
                 courseListInteractor = courseListInteractor,
                 backgroundScheduler = backgroundScheduler,

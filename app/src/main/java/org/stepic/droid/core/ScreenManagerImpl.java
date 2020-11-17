@@ -32,7 +32,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
@@ -676,8 +675,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors) {
-        Intent intent = CourseListCollectionActivity.Companion.createIntent(context, courseCollection, collectionDescriptionColors);
+    public void showCoursesCollection(Context context, long courseCollectionId) {
+        Intent intent = CourseListCollectionActivity.Companion.createIntent(context, courseCollectionId);
         context.startActivity(intent);
     }
 
