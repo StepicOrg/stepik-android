@@ -9,6 +9,8 @@ import org.stepic.droid.R
 
 class AllowMobileDataDialogFragment : DialogFragment() {
     companion object {
+        const val TAG = "AllowMobileDataDialogFragment"
+
         fun newInstance(): AllowMobileDataDialogFragment =
             AllowMobileDataDialogFragment()
     }

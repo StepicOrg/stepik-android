@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
 import org.stepic.droid.R
 import org.stepik.android.model.Reply
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -38,7 +38,7 @@ class ChoiceStepQuizFormDelegate(
         }
     }
 
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+    override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
         val dataset = state.attempt.dataset ?: return
 
         @StringRes
@@ -50,7 +50,7 @@ class ChoiceStepQuizFormDelegate(
             }
         quizDescription.setText(descriptionRes)
 
-        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
+        val submission = (state.submissionState as? StepQuizFeature.SubmissionState.Loaded)
                 ?.submission
 
         val reply = submission?.reply

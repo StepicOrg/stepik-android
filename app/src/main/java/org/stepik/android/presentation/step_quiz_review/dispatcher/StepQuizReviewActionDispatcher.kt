@@ -1,8 +1,9 @@
-package org.stepik.android.presentation.step_quiz_review
+package org.stepik.android.presentation.step_quiz_review.dispatcher
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -12,71 +13,44 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.domain.step_quiz_review.interactor.StepQuizReviewInteractor
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.dispatcher.StepQuizActionDispatcher
-import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
-import ru.nobird.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
+import ru.nobird.android.presentation.redux.dispatcher.ActionDispatcher
 import javax.inject.Inject
 
-class StepQuizReviewPresenter
+class StepQuizReviewActionDispatcher
 @Inject
 constructor(
     stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
     lessonData: LessonData,
 
-    private val stepQuizActionDispatcher: StepQuizActionDispatcher,
+    private val stepQuizActionDispatcher: StepQuizActionDispatcher, // todo remove
     private val stepQuizInteractor: StepQuizInteractor,
     private val stepQuizReviewInteractor: StepQuizReviewInteractor,
-    private val stepQuizReviewReducer: StepQuizReviewReducer,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<StepQuizReviewView>() {
-    private var state: StepQuizReviewView.State = StepQuizReviewView.State.Idle
-        set(value) {
-            field = value
-            view?.render(value)
-        }
-
-    private val viewActionQueue = ArrayDeque<StepQuizReviewView.Action.ViewAction>()
-
-    private val stepQuizMessageListener = { message: StepQuizView.Message ->
-        onNewMessage(StepQuizReviewView.Message.StepQuizMessage(message))
-    }
+) : ActionDispatcher<StepQuizReviewFeature.Action, StepQuizReviewFeature.Message> {
+    private val compositeDisposable = CompositeDisposable()
+    private var messageListener: ((StepQuizReviewFeature.Message) -> Unit)? = null
 
     init {
         compositeDisposable += stepWrapperRxRelay
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(onNext = { onNewMessage(StepQuizReviewView.Message.InitWithStep(it, lessonData)) })
-
-        compositeDisposable += stepQuizActionDispatcher.disposable
+            .subscribeBy(onNext = { messageListener?.invoke(StepQuizReviewFeature.Message.InitWithStep(it, lessonData)) })
     }
 
-    override fun attachView(view: StepQuizReviewView) {
-        super.attachView(view)
-        view.render(state)
-        while (viewActionQueue.isNotEmpty()) {
-            view.onAction(viewActionQueue.removeFirst())
-        }
+    override fun setListener(listener: (message: StepQuizReviewFeature.Message) -> Unit) {
+        messageListener = listener
     }
 
-    fun onNewMessage(message: StepQuizReviewView.Message) {
-        val (newState, actions) = stepQuizReviewReducer.reduce(state, message)
-
-        state = newState
-        actions.forEach(::handleAction)
-    }
-
-    private fun handleAction(action: StepQuizReviewView.Action) {
+    override fun handleAction(action: StepQuizReviewFeature.Action) {
         when (action) {
-            is StepQuizReviewView.Action.ViewAction -> {
-                view?.onAction(action) ?: viewActionQueue.addLast(action)
-            }
-
-            is StepQuizReviewView.Action.FetchStepQuizState -> {
+            is StepQuizReviewFeature.Action.FetchStepQuizState -> {
                 compositeDisposable += Singles
                     .zip(
                         getAttemptState(action.stepWrapper, action.lessonData),
@@ -86,57 +60,54 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { (quizState, progress) ->
-                            onNewMessage(StepQuizReviewView.Message.FetchStepQuizStateSuccess(quizState, progress.firstOrNull()))
+                            messageListener?.invoke(StepQuizReviewFeature.Message.FetchStepQuizStateSuccess(quizState, progress.firstOrNull()))
                         },
-                        onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
+                        onError = { messageListener?.invoke(StepQuizReviewFeature.Message.InitialFetchError) }
                     )
             }
 
-            is StepQuizReviewView.Action.FetchReviewSession -> {
+            is StepQuizReviewFeature.Action.FetchReviewSession -> {
                 compositeDisposable += stepQuizReviewInteractor
                     .getReviewSession(action.stepId, action.unitId, action.instructionId, action.sessionId)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
                         onSuccess = { (instruction, sessionData, progress) ->
-                            onNewMessage(StepQuizReviewView.Message.FetchReviewSessionSuccess(sessionData, instruction, progress.firstOrNull()))
+                            messageListener?.invoke(StepQuizReviewFeature.Message.FetchReviewSessionSuccess(sessionData, instruction, progress.firstOrNull()))
                         },
-                        onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
+                        onError = { messageListener?.invoke(StepQuizReviewFeature.Message.InitialFetchError) }
                     )
             }
 
-            is StepQuizReviewView.Action.StepQuizAction ->
-                stepQuizActionDispatcher.handleAction(action.action, stepQuizMessageListener)
-
-            is StepQuizReviewView.Action.CreateSessionWithSubmission -> {
+            is StepQuizReviewFeature.Action.CreateSessionWithSubmission -> {
                 compositeDisposable += stepQuizReviewInteractor
                     .createSession(action.submissionId)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
                         onSuccess = { (session, instruction) ->
-                            onNewMessage(StepQuizReviewView.Message.SessionCreated(session, instruction))
+                            messageListener?.invoke(StepQuizReviewFeature.Message.SessionCreated(session, instruction))
                         },
-                        onError = { onNewMessage(StepQuizReviewView.Message.CreateSessionError) }
+                        onError = { messageListener?.invoke(StepQuizReviewFeature.Message.CreateSessionError) }
                     )
             }
 
-            is StepQuizReviewView.Action.CreateReviewWithSession -> {
+            is StepQuizReviewFeature.Action.CreateReviewWithSession -> {
                 compositeDisposable += stepQuizReviewInteractor
                     .createReview(action.sessionId)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
                         onSuccess = { review ->
-                            onNewMessage(StepQuizReviewView.Message.ReviewCreated(review.id))
+                            messageListener?.invoke(StepQuizReviewFeature.Message.ReviewCreated(review.id))
                         },
-                        onError = { onNewMessage(StepQuizReviewView.Message.StartReviewError) }
+                        onError = { messageListener?.invoke(StepQuizReviewFeature.Message.StartReviewError) }
                     )
             }
         }
     }
 
-    private fun getAttemptState(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizView.State.AttemptLoaded> =
+    private fun getAttemptState(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizFeature.State.AttemptLoaded> =
         stepQuizInteractor
             .getAttempt(stepWrapper.id)
             .flatMap { attempt ->
@@ -146,7 +117,11 @@ constructor(
                         stepQuizInteractor.getStepRestrictions(stepWrapper, lessonData)
                     )
                     .map { (submissionState, stepRestrictions) ->
-                        StepQuizView.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
+                        StepQuizFeature.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
                     }
             }
+
+    override fun cancel() {
+        compositeDisposable.clear()
+    }
 }

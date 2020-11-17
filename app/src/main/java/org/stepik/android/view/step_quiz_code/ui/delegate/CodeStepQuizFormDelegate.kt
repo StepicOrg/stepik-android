@@ -9,7 +9,7 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.model.Reply
 import org.stepik.android.model.code.CodeOptions
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -84,7 +84,7 @@ class CodeStepQuizFormDelegate(
         }
     }
 
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+    override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
         this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
 
         val isEnabled = StepQuizFormResolver.isQuizEnabled(state)
