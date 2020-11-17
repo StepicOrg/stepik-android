@@ -1,7 +1,7 @@
 package org.stepik.android.view.injection.in_app_web_view
 
 import dagger.Subcomponent
-import org.stepik.android.view.in_app_web_view.ui.InAppWebViewDialogFragment
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.magic_links.MagicLinksDataModule
 
 @Subcomponent(modules = [

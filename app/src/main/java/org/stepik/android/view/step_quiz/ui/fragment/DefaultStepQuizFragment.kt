@@ -22,7 +22,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.view.in_app_web_view.ui.InAppWebViewDialogFragment
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate

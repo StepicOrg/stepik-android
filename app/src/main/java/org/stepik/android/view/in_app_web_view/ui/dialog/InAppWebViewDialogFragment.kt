@@ -1,4 +1,4 @@
-package org.stepik.android.view.in_app_web_view.ui
+package org.stepik.android.view.in_app_web_view.ui.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
