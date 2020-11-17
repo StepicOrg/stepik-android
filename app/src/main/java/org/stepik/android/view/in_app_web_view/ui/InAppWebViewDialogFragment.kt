@@ -1,4 +1,4 @@
-package org.stepik.android.view.in_app_web_view
+package org.stepik.android.view.in_app_web_view.ui
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -29,6 +29,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewPresenter
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewView
+import org.stepik.android.view.in_app_web_view.routing.InAppWebViewUrlProcessor
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -50,6 +51,9 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var inAppWebViewUrlProcessor: InAppWebViewUrlProcessor
 
     private val inAppWebViewPresenter: InAppWebViewPresenter by viewModels { viewModelFactory }
 
@@ -140,7 +144,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = true) {
-        inAppWebViewPresenter.onData(url, isProvideAuth, forceUpdate)
+        inAppWebViewPresenter.onData(inAppWebViewUrlProcessor.processInAppWebViewUrl(url), isProvideAuth, forceUpdate)
     }
 
     override fun onStart() {
