@@ -25,7 +25,6 @@ constructor(
                 .map(mapper)
         }
 
-
     override fun getCourseCollections(query: CourseCollectionQuery): Single<List<CourseCollection>> =
         courseCollectionService
             .getCourseCollections(query.toMap())
