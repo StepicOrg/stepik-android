@@ -58,8 +58,8 @@ class CourseListAdapterDelegate(
         private val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         init {
-            viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer, courseListDescription)
-            viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListView.State.Idle>(courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
@@ -113,22 +113,32 @@ class CourseListAdapterDelegate(
 
         override fun setState(state: CourseListCollectionView.State) {
             courseCollection = (state as? CourseListCollectionView.State.Data)?.courseCollection
-            courseCollection?.let {
-                courseListTitle.text = it.title
-                courseListDescription.setPlaceholderText(it.description)
+            when (state) {
+                is CourseListCollectionView.State.Idle,
+                is CourseListCollectionView.State.Loading -> {
+                    viewStateDelegate.switchState(CourseListView.State.Loading)
+                    delegate.setState(CourseListView.State.Loading)
+                }
+                is CourseListCollectionView.State.Data -> {
+                    courseListTitle.text = state.courseCollection.title
+                    courseListDescription.setPlaceholderText(state.courseCollection.description)
 
-                with(CollectionDescriptionColors.ofCollection(it)) {
-                    courseListDescription.setBackgroundResource(backgroundRes)
-                    courseListDescription.setTextColor(AppCompatResources.getColorStateList(context, textColorRes))
+                    with(CollectionDescriptionColors.ofCollection(state.courseCollection)) {
+                        courseListDescription.setBackgroundResource(backgroundRes)
+                        courseListDescription.setTextColor(AppCompatResources.getColorStateList(context, textColorRes))
+                    }
+
+                    if (state.courseListViewState == CourseListView.State.Empty) {
+                        analytic.reportEvent(Analytic.Error.COURSE_COLLECTION_EMPTY)
+                    }
+                    viewStateDelegate.switchState(state.courseListViewState)
+                    delegate.setState(state.courseListViewState)
+                }
+                is CourseListCollectionView.State.NetworkError -> {
+                    viewStateDelegate.switchState(CourseListView.State.NetworkError)
+                    delegate.setState(CourseListView.State.NetworkError)
                 }
             }
-
-            val courseListState = (state as? CourseListCollectionView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
-            if (courseListState == CourseListView.State.Empty) {
-                analytic.reportEvent(Analytic.Error.COURSE_COLLECTION_EMPTY)
-            }
-            viewStateDelegate.switchState(courseListState)
-            delegate.setState(courseListState)
         }
 
         override fun showNetworkError() {
