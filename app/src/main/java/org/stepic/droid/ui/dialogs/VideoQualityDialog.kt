@@ -13,6 +13,8 @@ import javax.inject.Inject
 
 class VideoQualityDialog : VideoQualityDialogBase() {
     companion object {
+        const val TAG = "VideoQualityDialog"
+
         fun newInstance(forPlaying: Boolean) =
             VideoQualityDialog().also {
                 it.forPlaying = forPlaying

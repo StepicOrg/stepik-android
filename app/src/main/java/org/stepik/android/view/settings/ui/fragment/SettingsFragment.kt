@@ -103,25 +103,21 @@ class SettingsFragment :
                     fragmentSettingsWifiEnableSwitch.isChecked = true
                     val dialogFragment = AllowMobileDataDialogFragment.newInstance()
                     dialogFragment.setTargetFragment(this@SettingsFragment, 0)
-                    if (!dialogFragment.isAdded) {
-                        dialogFragment.show(childFragmentManager, null)
-                    }
+                    dialogFragment.showIfNotExists(parentFragmentManager, AllowMobileDataDialogFragment.TAG)
                 }
             }
         }
 
         videoQualityView.setOnClickListener {
-            val videoDialog = VideoQualityDialog.newInstance(forPlaying = false)
-            if (!videoDialog.isAdded) {
-                videoDialog.show(childFragmentManager, null)
-            }
+            VideoQualityDialog
+                .newInstance(forPlaying = false)
+                .showIfNotExists(childFragmentManager, VideoQualityDialog.TAG)
         }
 
         videoPlayingQualityView.setOnClickListener {
-            val videoDialog = VideoQualityDialog.newInstance(forPlaying = true)
-            if (!videoDialog.isAdded) {
-                videoDialog.show(childFragmentManager, null)
-            }
+            VideoQualityDialog
+                .newInstance(forPlaying = true)
+                .showIfNotExists(childFragmentManager, VideoQualityDialog.TAG)
         }
 
         storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
