@@ -13,18 +13,15 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListCollectionFragm
 class CourseListCollectionActivity : SingleFragmentActivity() {
     companion object {
         private const val EXTRA_COURSE_COLLECTION = "course_collection"
-        private const val EXTRA_COURSE_DESCRIPTION_COLORS = "course_description_colors"
 
-        fun createIntent(context: Context, courseCollection: CourseCollection, collectionDescriptionColors: CollectionDescriptionColors): Intent =
+        fun createIntent(context: Context, courseCollection: CourseCollection): Intent =
             Intent(context, CourseListCollectionActivity::class.java)
                 .putExtra(EXTRA_COURSE_COLLECTION, courseCollection)
-                .putExtra(EXTRA_COURSE_DESCRIPTION_COLORS, collectionDescriptionColors as Parcelable)
     }
 
     override fun createFragment(): Fragment =
         CourseListCollectionFragment.newInstance(
-            courseCollection = intent.getParcelableExtra(EXTRA_COURSE_COLLECTION),
-            collectionDescriptionColors = intent.getParcelableExtra(EXTRA_COURSE_DESCRIPTION_COLORS)
+            courseCollection = intent.getParcelableExtra(EXTRA_COURSE_COLLECTION)
         )
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

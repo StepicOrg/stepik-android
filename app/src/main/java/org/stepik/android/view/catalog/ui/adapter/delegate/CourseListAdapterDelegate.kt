@@ -66,14 +66,7 @@ class CourseListAdapterDelegate(
 
             val onClickListener = View.OnClickListener {
                 val collection = courseCollection ?: return@OnClickListener
-
-                val collectionColors =
-                    if (adapterPosition % 2 == 0) {
-                        CollectionDescriptionColors.BLUE
-                    } else {
-                        CollectionDescriptionColors.FIRE
-                    }
-                screenManager.showCoursesCollection(itemView.context, collection, collectionColors)
+                screenManager.showCoursesCollection(itemView.context, collection)
             }
 
             courseListDescription.setOnClickListener(onClickListener)
@@ -123,6 +116,11 @@ class CourseListAdapterDelegate(
             courseCollection?.let {
                 courseListTitle.text = it.title
                 courseListDescription.setPlaceholderText(it.description)
+
+                with(CollectionDescriptionColors.ofCollection(it)) {
+                    courseListDescription.setBackgroundResource(backgroundRes)
+                    courseListDescription.setTextColor(AppCompatResources.getColorStateList(context, textColorRes))
+                }
             }
 
             val courseListState = (state as? CourseListCollectionView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
@@ -152,19 +150,6 @@ class CourseListAdapterDelegate(
 
         override fun attachView(data: CourseListCollectionPresenter) {
             data.attachView(this)
-
-            val collectionColors =
-                if (adapterPosition % 2 == 0) {
-                    CollectionDescriptionColors.BLUE
-                } else {
-                    CollectionDescriptionColors.FIRE
-                }
-
-            with(collectionColors) {
-                courseListDescription.setBackgroundResource(backgroundRes)
-                courseListDescription.setTextColor(AppCompatResources.getColorStateList(context, textColorRes))
-            }
-
             courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)
         }
 

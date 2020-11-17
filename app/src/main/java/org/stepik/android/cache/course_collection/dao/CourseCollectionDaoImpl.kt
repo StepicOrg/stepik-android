@@ -25,7 +25,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseCollection>(
         persistentObject.id.toString()
 
     override fun getContentValues(persistentObject: CourseCollection): ContentValues =
-        ContentValues(6)
+        ContentValues(7)
             .apply {
                 put(DbStructureCourseCollection.Columns.ID, persistentObject.id)
                 put(DbStructureCourseCollection.Columns.POSITION, persistentObject.position)

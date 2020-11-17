@@ -33,15 +33,13 @@ import javax.inject.Inject
 
 class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), CourseListCollectionView {
     companion object {
-        fun newInstance(courseCollection: CourseCollection, collectionDescriptionColors: CollectionDescriptionColors): Fragment =
+        fun newInstance(courseCollection: CourseCollection): Fragment =
             CourseListCollectionFragment().apply {
                 this.courseCollection = courseCollection
-                this.collectionDescriptionColors = collectionDescriptionColors
             }
     }
 
     private var courseCollection by argument<CourseCollection>()
-    private var collectionDescriptionColors by argument<CollectionDescriptionColors>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -75,7 +73,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
         courseListCoursesRecycler.addItemDecoration(
             CourseListCollectionHeaderDecoration(
                 courseCollection.description,
-                collectionDescriptionColors
+                CollectionDescriptionColors.ofCollection(courseCollection)
             )
         )
 
