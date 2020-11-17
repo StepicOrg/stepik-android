@@ -25,7 +25,6 @@ import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
-import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
@@ -162,6 +161,5 @@ public interface ScreenManager {
     void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
     void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors);
     void showUserCourses(Context context);
-    void showCoursesByTag(Context context, Tag tag);
     void showVisitedCourses(Context context);
 }

@@ -39,7 +39,6 @@ constructor(
     private val catalogInteractor: CatalogInteractor,
 
     private val storiesPresenter: StoriesPresenter,
-    private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
 
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
@@ -83,7 +82,6 @@ constructor(
 
         if (forceUpdate) {
             storiesPresenter.fetchStories(forceUpdate = forceUpdate)
-            tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
             fetchPopularCourses(forceUpdate = forceUpdate)
         }
 
@@ -139,9 +137,9 @@ constructor(
 
     private fun getHeaders(): List<CatalogItem> =
         if (sharedPreferenceHelper.isNeedShowLangWidget) {
-            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
+            listOf(storiesPresenter, filtersPresenter)
         } else {
-            listOf(storiesPresenter, tagsPresenter)
+            listOf(storiesPresenter)
         }
 
     override fun detachView(view: CatalogView) {

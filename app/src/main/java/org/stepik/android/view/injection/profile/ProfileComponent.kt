@@ -8,7 +8,6 @@ import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.social_profile.SocialProfileDataModule
-import org.stepik.android.view.injection.tags.TagsDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
@@ -31,8 +30,7 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
     UserDataModule::class,
     UserActivityDataModule::class,
     SocialProfileDataModule::class,
-    CertificateDataModule::class,
-    TagsDataModule::class
+    CertificateDataModule::class
 ])
 interface ProfileComponent {
     @Subcomponent.Builder
