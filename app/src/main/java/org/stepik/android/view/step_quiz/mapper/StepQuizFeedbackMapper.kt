@@ -3,12 +3,12 @@ package org.stepik.android.view.step_quiz.mapper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 
 class StepQuizFeedbackMapper {
-    fun mapToStepQuizFeedbackState(stepBlockName: String?, state: StepQuizView.State): StepQuizFeedbackState =
-        if (state is StepQuizView.State.AttemptLoaded && state.submissionState is StepQuizView.SubmissionState.Loaded) {
+    fun mapToStepQuizFeedbackState(stepBlockName: String?, state: StepQuizFeature.State): StepQuizFeedbackState =
+        if (state is StepQuizFeature.State.AttemptLoaded && state.submissionState is StepQuizFeature.SubmissionState.Loaded) {
             when (state.submissionState.submission.status) {
                 Submission.Status.CORRECT ->
                     StepQuizFeedbackState.Correct(formatHint(stepBlockName, state.submissionState.submission))

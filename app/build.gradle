@@ -171,14 +171,16 @@ dependencies {
     implementation libraries.room
     kapt libraries.roomCompiler
 
-    implementation libraries.archExtensions
+    implementation libraries.archCompiler
     implementation libraries.archViewModel
     implementation libraries.media
     implementation libraries.multidex
     implementation libraries.adapterDelegates
     implementation libraries.adapters
     implementation libraries.presentationBase
-    implementation libraries.viewKit
+    implementation libraries.presentationRedux
+    implementation libraries.viewUI
+    implementation libraries.viewRedux
     implementation libraries.model
     implementation libraries.domainRx
 

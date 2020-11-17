@@ -5,14 +5,18 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
+import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
-class SqlStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, CodeStepQuizFullScreenDialogFragment.Callback {
+class SqlStepQuizFragment :
+    DefaultStepQuizFragment(),
+    ReduxView<StepQuizFeature.State, StepQuizFeature.Action.ViewAction>,
+    CodeStepQuizFullScreenDialogFragment.Callback {
     companion object {
         fun newInstance(stepId: Long): Fragment =
             SqlStepQuizFragment()

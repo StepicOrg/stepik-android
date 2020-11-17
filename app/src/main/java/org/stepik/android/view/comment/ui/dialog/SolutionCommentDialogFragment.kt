@@ -27,7 +27,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
@@ -152,9 +152,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         val state =
-            StepQuizView.State.AttemptLoaded(
+            StepQuizFeature.State.AttemptLoaded(
                 attempt,
-                StepQuizView.SubmissionState.Loaded(submission),
+                StepQuizFeature.SubmissionState.Loaded(submission),
                 StepQuizRestrictions(0, 0, DiscountingPolicyType.NoDiscount)
             )
 

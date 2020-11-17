@@ -14,7 +14,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
@@ -30,7 +30,7 @@ class StepQuizDelegate(
     private val stepRetryButton: MaterialButton,
     private val stepQuizDiscountingPolicy: TextView,
 
-    private val onNewMessage: (StepQuizView.Message) -> Unit,
+    private val onNewMessage: (StepQuizFeature.Message) -> Unit,
     /**
      * If null so there is no next action will be shown
      */
@@ -40,11 +40,11 @@ class StepQuizDelegate(
 
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
 
-    private var currentState: StepQuizView.State.AttemptLoaded? = null
+    private var currentState: StepQuizFeature.State.AttemptLoaded? = null
 
     init {
         stepQuizActionButton.setOnClickListener { onActionButtonClicked() }
-        stepRetryButton.setOnClickListener { onNewMessage(StepQuizView.Message.CreateAttemptClicked(step)) }
+        stepRetryButton.setOnClickListener { onNewMessage(StepQuizFeature.Message.CreateAttemptClicked(step)) }
     }
 
     fun onActionButtonClicked() {
@@ -54,12 +54,12 @@ class StepQuizDelegate(
             if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) && onNextClicked != null) {
                 onNextClicked.invoke()
             } else {
-                onNewMessage(StepQuizView.Message.CreateAttemptClicked(step))
+                onNewMessage(StepQuizFeature.Message.CreateAttemptClicked(step))
             }
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    onNewMessage(StepQuizView.Message.CreateSubmissionClicked(step, replyResult.reply))
+                    onNewMessage(StepQuizFeature.Message.CreateSubmissionClicked(step, replyResult.reply))
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
@@ -67,7 +67,7 @@ class StepQuizDelegate(
         }
     }
 
-    fun setState(state: StepQuizView.State.AttemptLoaded) {
+    fun setState(state: StepQuizFeature.State.AttemptLoaded) {
         currentState = state
 
         stepQuizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(step.block?.name, state))
@@ -105,13 +105,13 @@ class StepQuizDelegate(
 
         val isNeedShowDiscountingPolicy =
             state.restrictions.discountingPolicyType != DiscountingPolicyType.NoDiscount &&
-            (state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status != Submission.Status.CORRECT
+            (state.submissionState as? StepQuizFeature.SubmissionState.Loaded)?.submission?.status != Submission.Status.CORRECT
 
         stepQuizDiscountingPolicy.isVisible = isNeedShowDiscountingPolicy
         stepQuizDiscountingPolicy.text = resolveQuizDiscountingPolicyText(state)
     }
 
-    private fun resolveQuizActionButtonText(state: StepQuizView.State.AttemptLoaded): String =
+    private fun resolveQuizActionButtonText(state: StepQuizFeature.State.AttemptLoaded): String =
         with(state.restrictions) {
             if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
                 when {
@@ -137,7 +137,7 @@ class StepQuizDelegate(
             }
         }
 
-    private fun resolveQuizDiscountingPolicyText(state: StepQuizView.State.AttemptLoaded): String? =
+    private fun resolveQuizDiscountingPolicyText(state: StepQuizFeature.State.AttemptLoaded): String? =
         with(state.restrictions) {
             when (discountingPolicyType) {
                 DiscountingPolicyType.Inverse ->
@@ -164,6 +164,6 @@ class StepQuizDelegate(
             ?.reply
             ?: return
 
-        onNewMessage(StepQuizView.Message.SyncReply(reply))
+        onNewMessage(StepQuizFeature.Message.SyncReply(reply))
     }
 }
