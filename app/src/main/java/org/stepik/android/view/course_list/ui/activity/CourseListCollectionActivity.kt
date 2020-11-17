@@ -27,8 +27,8 @@ class CourseListCollectionActivity : SingleFragmentActivity() {
             collectionDescriptionColors = intent.getParcelableExtra(EXTRA_COURSE_DESCRIPTION_COLORS)
         )
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

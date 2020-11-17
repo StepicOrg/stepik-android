@@ -116,7 +116,7 @@
                 <data android:host="@string/host_name" />
                 <data android:host="@string/secondary_host_name" />
 
-                <data android:pathPattern="/catalog.*" />
+                <data android:pathPattern="/catalog" />
                 <data android:pathPattern="/notifications.*" />
 
             </intent-filter>
@@ -334,7 +334,23 @@
             android:name="org.stepik.android.view.solutions.ui.activity.SolutionsActivity" />
 
         <activity
-            android:name="org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity" />
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity">
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:host="@string/host_name" />
+                <data android:pathPattern="/catalog/.*" />
+                <data android:pathPattern="/catalog/.*/" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name="org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity" />
