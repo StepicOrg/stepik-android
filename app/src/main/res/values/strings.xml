@@ -775,6 +775,10 @@
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
     <string name="step_quiz_sql_description">Enter an SQL query</string>
     <string name="step_quiz_fill_blanks_description">Fill in the blanks</string>
+    <string name="step_quiz_table_description">Select the right cells</string>
+    <string name="step_quiz_table_single_choice">Select one option</string>
+    <string name="step_quiz_table_multiple_choice">Select one or more options</string>
+    <string name="step_quiz_table_confirm_choice">Confirm</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
     <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>

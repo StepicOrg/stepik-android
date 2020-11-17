@@ -37,6 +37,7 @@ import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFo
 import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_table.ui.delegate.TableStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -60,7 +61,8 @@ class StepQuizReviewFragment :
                 AppConstants.TYPE_CHOICE,
                 AppConstants.TYPE_MATCHING,
                 AppConstants.TYPE_SORTING,
-                AppConstants.TYPE_FILL_BLANKS
+                AppConstants.TYPE_FILL_BLANKS,
+                AppConstants.TYPE_TABLE
             )
 
         fun newInstance(stepId: Long, instructionType: ReviewStrategyType): Fragment =
@@ -222,6 +224,9 @@ class StepQuizReviewFragment :
             AppConstants.TYPE_FILL_BLANKS ->
                 R.layout.layout_step_quiz_fill_blanks
 
+            AppConstants.TYPE_TABLE ->
+                R.layout.layout_step_quiz_table
+
             else ->
                 R.layout.fragment_step_quiz_unsupported
         }
@@ -245,6 +250,9 @@ class StepQuizReviewFragment :
 
             AppConstants.TYPE_FILL_BLANKS ->
                 FillBlanksStepQuizFormDelegate(view, childFragmentManager)
+
+            AppConstants.TYPE_TABLE ->
+                TableStepQuizFormDelegate(view, childFragmentManager)
 
             else ->
                 null
