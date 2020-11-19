@@ -5,12 +5,16 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_table.*
 import org.stepic.droid.R
 import org.stepik.android.model.Cell
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_table.ui.delegate.TableStepQuizFormDelegate
+import ru.nobird.android.presentation.redux.container.ReduxView
 
-class TableStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, TableColumnSelectionBottomSheetDialogFragment.Callback {
+class TableStepQuizFragment :
+    DefaultStepQuizFragment(),
+    ReduxView<StepQuizFeature.State, StepQuizFeature.Action.ViewAction>,
+    TableColumnSelectionBottomSheetDialogFragment.Callback {
     companion object {
         fun newInstance(stepId: Long): Fragment =
             TableStepQuizFragment()

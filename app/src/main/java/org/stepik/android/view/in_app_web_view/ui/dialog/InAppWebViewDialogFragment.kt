@@ -1,8 +1,9 @@
-package org.stepik.android.view.in_app_web_view
+package org.stepik.android.view.in_app_web_view.ui.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,12 +26,17 @@ import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewPresenter
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewView
+import org.stepik.android.view.in_app_web_view.routing.InAppWebViewUrlProcessor
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import java.net.URL
 import javax.inject.Inject
 
 class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
@@ -50,6 +56,12 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var inAppWebViewUrlProcessor: InAppWebViewUrlProcessor
+
+    @Inject
+    internal lateinit var config: Config
 
     private val inAppWebViewPresenter: InAppWebViewPresenter by viewModels { viewModelFactory }
 
@@ -105,6 +117,17 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
                                 inAppWebViewPresenter.onError()
                             }
                         }
+                        it.setDownloadListener { url, _, _, _, _ ->
+                            if (isValidForMagicLink(url)) {
+                                MagicLinkDialogFragment
+                                    .newInstance(url)
+                                    .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
+                            } else {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.data = Uri.parse(url)
+                                startActivity(intent)
+                            }
+                        }
                     }
                 }
                 webView?.let { root.containerView.addView(it) }
@@ -125,8 +148,8 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menu_item_external -> {
-                    screenManager.openLinkInWebBrowser(requireContext(), Uri.parse(url))
-                    dismiss()
+                    val externalUrl = webView?.url ?: url
+                    screenManager.openLinkInWebBrowser(requireContext(), Uri.parse(externalUrl))
                     true
                 }
                 else ->
@@ -140,7 +163,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = true) {
-        inAppWebViewPresenter.onData(url, isProvideAuth, forceUpdate)
+        inAppWebViewPresenter.onData(inAppWebViewUrlProcessor.processInAppWebViewUrl(url), isProvideAuth, forceUpdate)
     }
 
     override fun onStart() {
@@ -180,6 +203,14 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onDismiss(dialog: DialogInterface) {
         (activity as? Callback)?.onDismissed()
         super.onDismiss(dialog)
+    }
+
+    private fun isValidForMagicLink(url: String): Boolean {
+        val (protocol, host) = with(URL(url)) {
+            protocol to host
+        }
+        val baseUrl = getString(R.string.protocol_host_url, protocol, host)
+        return baseUrl == config.baseUrl
     }
 
     interface Callback {

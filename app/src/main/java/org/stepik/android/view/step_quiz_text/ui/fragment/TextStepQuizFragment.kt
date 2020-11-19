@@ -4,12 +4,15 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_text.*
 import org.stepic.droid.R
-import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
+import ru.nobird.android.presentation.redux.container.ReduxView
 
-class TextStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
+class TextStepQuizFragment :
+    DefaultStepQuizFragment(),
+    ReduxView<StepQuizFeature.State, StepQuizFeature.Action.ViewAction> {
     companion object {
         fun newInstance(stepId: Long): Fragment =
             TextStepQuizFragment()

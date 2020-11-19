@@ -10,6 +10,7 @@ object DbStructureCourseCollection {
         const val LANGUAGE = "language"
         const val COURSES = "courses"
         const val DESCRIPTION = "description"
+        const val PLATFORM = "platform"
     }
 
     const val TABLE_SCHEMA =
