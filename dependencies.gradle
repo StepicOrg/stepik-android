@@ -158,6 +158,7 @@ ext.libraries = [
         adapters             : "ru.nobird.android.ui:Adapters:$versions.adapters",
         presentationBase     : "ru.nobird.android.presentation:base:$versions.presentationBase",
         presentationRedux    : "ru.nobird.android.presentation:redux:$versions.presentationRedux",
+        presentationReduxRx  : "ru.nobird.android.presentation:redux-rx:$versions.presentationRedux",
         viewUI               : "ru.nobird.android.view:ui:$versions.viewUI",
         viewRedux            : "ru.nobird.android.view:redux:$versions.viewRedux",
         model                : "ru.nobird.android.core:model:$versions.model",
