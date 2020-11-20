@@ -175,14 +175,7 @@ dependencies {
     implementation libraries.archViewModel
     implementation libraries.media
     implementation libraries.multidex
-    implementation libraries.adapterDelegates
-    implementation libraries.adapters
-    implementation libraries.presentationBase
-    implementation libraries.presentationRedux
-    implementation libraries.presentationReduxRx
-    implementation libraries.viewUI
-    implementation libraries.viewRedux
-    implementation libraries.model
+    implementation libraries.androidKit.values()
     implementation libraries.domainRx
 
     implementation libraries.exoPlayerCore
