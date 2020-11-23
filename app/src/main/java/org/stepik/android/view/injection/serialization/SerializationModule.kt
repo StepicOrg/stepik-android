@@ -11,9 +11,11 @@ import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer
 import org.stepic.droid.jsonHelpers.deserializers.FeedbackDeserializer
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer
+import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 import org.stepik.android.model.ReplyWrapper
 import org.stepik.android.model.attempts.DatasetWrapper
 import org.stepik.android.model.feedback.Feedback
+import org.stepik.android.remote.catalog_block.deserializers.CatalogBlockContentItemDeserialiazer
 import retrofit2.Converter
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Date
@@ -40,6 +42,7 @@ abstract class SerializationModule {
                 .registerTypeAdapter(ReplyWrapper::class.java, ReplySerializer())
                 .registerTypeAdapter(Date::class.java, UTCDateAdapter())
                 .registerTypeAdapter(Feedback::class.java, FeedbackDeserializer())
+                .registerTypeAdapter(CatalogBlockItem::class.java, CatalogBlockContentItemDeserialiazer())
                 .create()
     }
 }
