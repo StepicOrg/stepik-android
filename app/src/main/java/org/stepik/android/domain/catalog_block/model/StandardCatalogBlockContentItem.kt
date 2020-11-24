@@ -2,7 +2,7 @@ package org.stepik.android.domain.catalog_block.model
 
 import com.google.gson.annotations.SerializedName
 
-data class FullCourseListCatalogBlockContentItem(
+data class StandardCatalogBlockContentItem(
     @SerializedName("id")
     val id: Long,
     @SerializedName("title")

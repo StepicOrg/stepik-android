@@ -13,4 +13,4 @@ class SimpleCourseListCatalogBlockContentItem(
     val courses: List<Long>,
     @SerializedName("courses_count")
     val coursesCount: Int
-) : CatalogBlockContentItem
+)

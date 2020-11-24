@@ -2,7 +2,7 @@ package org.stepik.android.domain.catalog_block.model
 
 import com.google.gson.annotations.SerializedName
 
-class AuthorCatalogBlockContentItem(
+data class AuthorCatalogBlockContentItem(
     @SerializedName("id")
     val id: Long,
     @SerializedName("is_organization")
@@ -17,4 +17,4 @@ class AuthorCatalogBlockContentItem(
     val createdCoursesCount: Int,
     @SerializedName("followers_count")
     val followersCount: Int
-) : CatalogBlockContentItem
+)

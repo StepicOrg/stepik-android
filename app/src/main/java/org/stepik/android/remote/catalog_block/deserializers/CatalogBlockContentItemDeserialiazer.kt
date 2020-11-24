@@ -5,7 +5,10 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
-import org.stepik.android.domain.catalog_block.model.*
+import org.stepik.android.domain.catalog_block.model.AuthorCatalogBlockContentItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
+import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
 import java.lang.reflect.Type
 
 class CatalogBlockContentItemDeserialiazer : JsonDeserializer<CatalogBlockItem> {
@@ -13,23 +16,43 @@ class CatalogBlockContentItemDeserialiazer : JsonDeserializer<CatalogBlockItem> 
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): CatalogBlockItem {
         val jsonObject = json.asJsonObject
 
-        val kind = CatalogBlockItem.Kind.valueOf(jsonObject.get("kind").asString.toUpperCase())
+        val kind = jsonObject.get("kind").asString
         val contentField = jsonObject.get("content").asJsonArray
         val content = when (kind) {
-            CatalogBlockItem.Kind.FULL_COURSE_LISTS ->
-                context.deserialize<ArrayList<FullCourseListCatalogBlockContentItem>>(contentField, TypeToken.getParameterized(ArrayList::class.java, FullCourseListCatalogBlockContentItem::class.java).type)
+            CatalogBlockContent.FULL_COURSE_LISTS ->
+                CatalogBlockContent.FullCourseList(
+                    context.deserialize<StandardCatalogBlockContentItem>(
+                        contentField.first(),
+                        StandardCatalogBlockContentItem::class.java
+                    )
+                )
 
-            CatalogBlockItem.Kind.SIMPLE_COURSE_LISTS ->
-                context.deserialize<ArrayList<SimpleCourseListCatalogBlockContentItem>>(contentField, TypeToken.getParameterized(ArrayList::class.java, SimpleCourseListCatalogBlockContentItem::class.java).type)
+            CatalogBlockContent.SIMPLE_COURSE_LISTS ->
+                CatalogBlockContent.SimpleCourseList(
+                    context.deserialize<ArrayList<StandardCatalogBlockContentItem>>(
+                        contentField,
+                        TypeToken.getParameterized(ArrayList::class.java, StandardCatalogBlockContentItem::class.java).type
+                    )
+                )
 
-            CatalogBlockItem.Kind.SPECIALIZATIONS ->
-                context.deserialize<ArrayList<SpecializationCatalogBlockContentItem>>(contentField, TypeToken.getParameterized(ArrayList::class.java, SpecializationCatalogBlockContentItem::class.java).type)
+            CatalogBlockContent.AUTHORS ->
+                CatalogBlockContent.AuthorCourseList(
+                    context.deserialize<ArrayList<AuthorCatalogBlockContentItem>>(
+                        contentField,
+                        TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type
+                    )
+                )
 
-            CatalogBlockItem.Kind.AUTHORS, CatalogBlockItem.Kind.ORGANIZATIONS ->
-                context.deserialize<ArrayList<AuthorCatalogBlockContentItem>>(contentField, TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type)
+            CatalogBlockContent.ORGANIZATIONS ->
+                CatalogBlockContent.OrganizationCourseList(
+                    context.deserialize<ArrayList<AuthorCatalogBlockContentItem>>(
+                        contentField,
+                        TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type
+                    )
+                )
 
             else ->
-                emptyList()
+                CatalogBlockContent.UnsupportedList
         }
         return CatalogBlockItem(
             id = jsonObject["id"].asLong,
@@ -37,7 +60,6 @@ class CatalogBlockContentItemDeserialiazer : JsonDeserializer<CatalogBlockItem> 
             title = jsonObject["title"].asString,
             description = jsonObject["description"].asString,
             language = jsonObject["language"].asString,
-            kind = kind,
             appearance = jsonObject["appearance"].asString,
             isTitleVisible = jsonObject["is_title_visible"].asBoolean,
             content = content

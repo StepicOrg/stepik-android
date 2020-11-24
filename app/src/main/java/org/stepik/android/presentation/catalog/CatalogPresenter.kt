@@ -85,6 +85,20 @@ constructor(
             fetchPopularCourses(forceUpdate = forceUpdate)
         }
 
+        // TODO Testing API, remove later
+//        collectionsDisposable += catalogInteractor
+//            .fetchCatalogBlocks()
+//            .subscribeOn(backgroundScheduler)
+//            .observeOn(mainScheduler)
+//            .subscribeBy(
+//                onSuccess = {
+//                    Timber.d("List: $it")
+//                },
+//                onError = {
+//                    it.printStackTrace()
+//                }
+//            )
+
         collectionsDisposable += catalogInteractor
             .fetchCourseCollections()
             .subscribeOn(backgroundScheduler)
