@@ -43,14 +43,6 @@ class CatalogBlockContentItemDeserialiazer : JsonDeserializer<CatalogBlockItem> 
                     )
                 )
 
-            CatalogBlockContent.ORGANIZATIONS ->
-                CatalogBlockContent.OrganizationCourseList(
-                    context.deserialize<ArrayList<AuthorCatalogBlockContentItem>>(
-                        contentField,
-                        TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type
-                    )
-                )
-
             else ->
                 CatalogBlockContent.UnsupportedList
         }

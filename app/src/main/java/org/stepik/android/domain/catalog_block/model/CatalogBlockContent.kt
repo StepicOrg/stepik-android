@@ -11,7 +11,6 @@ sealed class CatalogBlockContent {
         const val FULL_COURSE_LISTS = "full_course_lists"
         const val SIMPLE_COURSE_LISTS = "simple_course_lists"
         const val AUTHORS = "authors"
-        const val ORGANIZATIONS = "organizations"
         const val UNSUPPORTED = "unsupported"
     }
 }

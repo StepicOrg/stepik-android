@@ -32,9 +32,6 @@ class CatalogBlockContentSerializer {
             CatalogBlockContent.AUTHORS ->
                 CatalogBlockContent.AuthorCourseList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type))
 
-            CatalogBlockContent.ORGANIZATIONS ->
-                CatalogBlockContent.OrganizationCourseList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type))
-
             else ->
                 CatalogBlockContent.UnsupportedList
         }
