@@ -24,7 +24,7 @@ class CatalogBlockContentSerializer {
         val contentField = parsed["content"]
         return when (kind) {
             CatalogBlockContent.FULL_COURSE_LISTS ->
-                CatalogBlockContent.FullCourseList(gson.fromJson(contentField, StandardCatalogBlockContentItem::class.java))
+                CatalogBlockContent.FullCourseList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, StandardCatalogBlockContentItem::class.java).type))
 
             CatalogBlockContent.SIMPLE_COURSE_LISTS ->
                 CatalogBlockContent.SimpleCourseList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, StandardCatalogBlockContentItem::class.java).type))
