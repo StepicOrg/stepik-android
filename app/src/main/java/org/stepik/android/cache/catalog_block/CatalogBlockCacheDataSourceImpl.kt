@@ -16,5 +16,7 @@ constructor(
         catalogBlockDao.getCatalogBlocks()
 
     override fun insertCatalogBlocks(catalogBlocks: List<CatalogBlockItem>): Completable =
-        catalogBlockDao.insertCatalogBlocks(catalogBlocks)
+        catalogBlockDao
+            .clearCatalogBlocks()
+            .andThen(catalogBlockDao.insertCatalogBlocks(catalogBlocks))
 }

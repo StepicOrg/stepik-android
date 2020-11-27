@@ -15,4 +15,7 @@ interface CatalogBlockDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCatalogBlocks(catalogBlocks: List<CatalogBlockItem>): Completable
+
+    @Query("DELETE FROM CatalogBlockItem")
+    fun clearCatalogBlocks(): Completable
 }
