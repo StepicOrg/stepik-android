@@ -106,7 +106,7 @@ constructor(
             .subscribeBy(
                 onSuccess = { courseCollections ->
                     val collections = courseCollections.map {
-                        courseListCollectionPresenterProvider.get().apply { fetchCourses(it) }
+                        courseListCollectionPresenterProvider.get().apply { fetchCourses(it.id) }
                     }
 
                     (state.collectionsState as? CatalogView.CollectionsState.Content)

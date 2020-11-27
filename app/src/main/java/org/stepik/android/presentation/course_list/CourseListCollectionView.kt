@@ -6,7 +6,9 @@ import org.stepik.android.presentation.course_continue.CourseContinueView
 interface CourseListCollectionView : CourseContinueView {
     sealed class State {
         object Idle : State()
+        object Loading : State()
         data class Data(val courseCollection: CourseCollection, val courseListViewState: CourseListView.State) : State()
+        object NetworkError : State()
     }
 
     fun setState(state: State)

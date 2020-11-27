@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentActivity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
-import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.course.analytic.CourseViewSource;
@@ -159,7 +158,7 @@ public interface ScreenManager {
     void showCachedAttempts(@NotNull Context context, long courseId);
 
     void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
-    void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors);
+    void showCoursesCollection(Context context, long courseCollectionId);
     void showUserCourses(Context context);
     void showVisitedCourses(Context context);
 }

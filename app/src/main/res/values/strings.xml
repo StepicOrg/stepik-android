@@ -982,4 +982,6 @@
     <string name="visited_courses_title">Recently viewed</string>
     <string name="visited_courses_enrolled">Enrolled</string>
 
+    <string name="protocol_host_url" translatable="false">%s://%s</string>
+
 </resources>
