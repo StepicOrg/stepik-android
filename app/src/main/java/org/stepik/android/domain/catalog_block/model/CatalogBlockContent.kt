@@ -1,7 +1,7 @@
 package org.stepik.android.domain.catalog_block.model
 
 sealed class CatalogBlockContent {
-    data class FullCourseList(val content: List<StandardCatalogBlockContentItem>) : CatalogBlockContent()
+    data class FullCourseList(val content: StandardCatalogBlockContentItem) : CatalogBlockContent()
     data class SimpleCourseList(val content: List<StandardCatalogBlockContentItem>) : CatalogBlockContent()
     data class AuthorCourseList(val content: List<AuthorCatalogBlockContentItem>) : CatalogBlockContent()
     object UnsupportedList : CatalogBlockContent()
