@@ -92,32 +92,32 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         catalogItemAdapter += StoriesAdapterDelegate(
             onStoryClicked = { _, position -> showStories(position) }
         )
-
-        catalogItemAdapter += TagsAdapterDelegate { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
-
-        catalogItemAdapter += FiltersAdapterDelegate()
-
-        val courseContinueViewDelegate = CourseContinueViewDelegate(
-            activity = requireActivity(),
-            analytic = analytic,
-            screenManager = screenManager
-        )
-
-        catalogItemAdapter += CourseListAdapterDelegate(
-            analytic = analytic,
-            screenManager = screenManager,
-            courseContinueViewDelegate = courseContinueViewDelegate,
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
-        )
-
-        catalogItemAdapter += CourseListQueryAdapterDelegate(
-            analytic = analytic,
-            screenManager = screenManager,
-            courseContinueViewDelegate = courseContinueViewDelegate,
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
-        )
-
-        catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
+//
+//        catalogItemAdapter += TagsAdapterDelegate { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
+//
+//        catalogItemAdapter += FiltersAdapterDelegate()
+//
+//        val courseContinueViewDelegate = CourseContinueViewDelegate(
+//            activity = requireActivity(),
+//            analytic = analytic,
+//            screenManager = screenManager
+//        )
+//
+//        catalogItemAdapter += CourseListAdapterDelegate(
+//            analytic = analytic,
+//            screenManager = screenManager,
+//            courseContinueViewDelegate = courseContinueViewDelegate,
+//            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+//        )
+//
+//        catalogItemAdapter += CourseListQueryAdapterDelegate(
+//            analytic = analytic,
+//            screenManager = screenManager,
+//            courseContinueViewDelegate = courseContinueViewDelegate,
+//            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+//        )
+//
+//        catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
         catalogItemAdapter += LoadingAdapterDelegate()
 
         with(catalogRecyclerView) {
@@ -125,7 +125,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
             layoutManager = LinearLayoutManager(context)
             itemAnimator = null
         }
-        catalogPresenter.fetchCollections()
+//        catalogPresenter.fetchCollections()
     }
 
     override fun setState(state: CatalogView.State) {
@@ -229,36 +229,36 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         super.onStart()
         catalogItemAdapter.notifyDataSetChanged() // re-attach existing view holders
         catalogPresenter.attachView(this)
-        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View? {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
-                        as? StoriesAdapterDelegate.StoriesViewHolder
-                    ?: return null
-
-                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
-                        as? StoriesAdapter.StoryViewHolder
-                    ?: return null
-
-                return storyViewHolder.cover
-            }
-
-            override fun onPositionChanged(position: Int) {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
-                        as? StoriesAdapterDelegate.StoriesViewHolder
-                    ?: return
-
-                storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
-                storiesViewHolder.storiesAdapter.selected = position
-
-                if (position != -1) {
-                    val story = storiesViewHolder.storiesAdapter.stories[position]
-                    (catalogItemAdapter.items[CATALOG_STORIES_INDEX] as StoriesPresenter).onStoryViewed(story.id)
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
-                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
-                    ))
-                }
-            }
-        })
+//        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
+//            override fun getSharedView(position: Int): View? {
+//                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+//                        as? StoriesAdapterDelegate.StoriesViewHolder
+//                    ?: return null
+//
+//                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
+//                        as? StoriesAdapter.StoryViewHolder
+//                    ?: return null
+//
+//                return storyViewHolder.cover
+//            }
+//
+//            override fun onPositionChanged(position: Int) {
+//                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+//                        as? StoriesAdapterDelegate.StoriesViewHolder
+//                    ?: return
+//
+//                storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
+//                storiesViewHolder.storiesAdapter.selected = position
+//
+//                if (position != -1) {
+//                    val story = storiesViewHolder.storiesAdapter.stories[position]
+//                    (catalogItemAdapter.items[CATALOG_STORIES_INDEX] as StoriesPresenter).onStoryViewed(story.id)
+//                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+//                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
+//                    ))
+//                }
+//            }
+//        })
     }
 
     override fun onStop() {

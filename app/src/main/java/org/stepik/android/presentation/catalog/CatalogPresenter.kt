@@ -18,6 +18,8 @@ import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.filter.FiltersPresenter
+import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.presentation.stories.StoriesViewModel
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
@@ -38,7 +40,7 @@ constructor(
 
     private val catalogInteractor: CatalogInteractor,
 
-    private val storiesPresenter: StoriesPresenter,
+    private val storiesViewModel: StoriesViewModel,
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
 
@@ -52,7 +54,8 @@ constructor(
         CatalogView.State(
             headers = getHeaders(),
             collectionsState = CatalogView.CollectionsState.Idle,
-            footers = listOf(courseListQueryPresenter)
+            footers = listOf()
+//            footers = listOf(courseListQueryPresenter)
         )
         set(value) {
             field = value
@@ -67,8 +70,9 @@ constructor(
 
     init {
         compositeDisposable += collectionsDisposable
-        subscribeForFilterUpdates()
-        fetchPopularCourses()
+        storiesViewModel.onNewMessage(StoriesFeature.Message.InitMessage())
+//        subscribeForFilterUpdates()
+//        fetchPopularCourses()
     }
 
     override fun attachView(view: CatalogView) {
@@ -82,7 +86,7 @@ constructor(
         state = state.copy(collectionsState = CatalogView.CollectionsState.Loading)
 
         if (forceUpdate) {
-            storiesPresenter.fetchStories(forceUpdate = forceUpdate)
+//            storiesPresenter.fetchStories(forceUpdate = forceUpdate)
             tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
             fetchPopularCourses(forceUpdate = forceUpdate)
         }
@@ -138,11 +142,12 @@ constructor(
     }
 
     private fun getHeaders(): List<CatalogItem> =
-        if (sharedPreferenceHelper.isNeedShowLangWidget) {
-            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
-        } else {
-            listOf(storiesPresenter, tagsPresenter)
-        }
+        listOf(storiesViewModel)
+//        if (sharedPreferenceHelper.isNeedShowLangWidget) {
+//            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
+//        } else {
+//            listOf(storiesPresenter, tagsPresenter)
+//        }
 
     override fun detachView(view: CatalogView) {
         nestedDisposables

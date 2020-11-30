@@ -7,6 +7,7 @@ import org.stepik.android.view.injection.course_list.search_result.CourseListSea
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
+import org.stepik.android.view.injection.story.StoriesPresentationModule
 import org.stepik.android.view.injection.tags.TagsDataModule
 
 @CourseListSearchResultScope
@@ -18,6 +19,7 @@ import org.stepik.android.view.injection.tags.TagsDataModule
     LastStepDataModule::class,
     TagsDataModule::class,
     ProfileDataModule::class
+//    StoriesPresentationModule::class
 ])
 interface CatalogComponent {
     @Subcomponent.Builder
