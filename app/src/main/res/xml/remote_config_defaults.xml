@@ -22,7 +22,7 @@
     </entry>
     <entry>
         <key>adaptive_backend_url</key>
-        <value>http://52.174.33.220</value>
+        <value>http://adaptive-rating.int.stepik.org</value>
     </entry>
     <entry>
         <key>is_local_submissions_enabled</key>
