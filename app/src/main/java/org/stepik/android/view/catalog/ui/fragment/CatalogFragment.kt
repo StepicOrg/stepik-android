@@ -36,7 +36,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager

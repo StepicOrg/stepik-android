@@ -9,7 +9,6 @@ import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModul
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.story.StoriesPresentationModule
-import org.stepik.android.view.injection.tags.TagsDataModule
 
 @CourseListSearchResultScope
 @Subcomponent(modules = [

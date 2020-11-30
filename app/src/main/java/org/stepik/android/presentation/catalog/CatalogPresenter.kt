@@ -41,7 +41,6 @@ constructor(
     private val catalogInteractor: CatalogInteractor,
 
     private val storiesViewModel: StoriesViewModel,
-    private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
 
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
@@ -87,7 +86,7 @@ constructor(
 
         if (forceUpdate) {
 //            storiesPresenter.fetchStories(forceUpdate = forceUpdate)
-            tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
+//            tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
             fetchPopularCourses(forceUpdate = forceUpdate)
         }
 
