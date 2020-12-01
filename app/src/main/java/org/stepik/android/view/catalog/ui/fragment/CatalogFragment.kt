@@ -88,9 +88,9 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
 
-        catalogItemAdapter += StoriesAdapterDelegate(
-            onStoryClicked = { _, position -> showStories(position) }
-        )
+//        catalogItemAdapter += StoriesAdapterDelegate(
+//            onStoryClicked = { _, position -> showStories(position) }
+//        )
 //
 //        catalogItemAdapter += TagsAdapterDelegate { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
 //
@@ -117,13 +117,13 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 //        )
 //
 //        catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
-        catalogItemAdapter += LoadingAdapterDelegate()
+//        catalogItemAdapter += LoadingAdapterDelegate()
 
-        with(catalogRecyclerView) {
-            adapter = catalogItemAdapter
-            layoutManager = LinearLayoutManager(context)
-            itemAnimator = null
-        }
+//        with(catalogRecyclerView) {
+//            adapter = catalogItemAdapter
+//            layoutManager = LinearLayoutManager(context)
+//            itemAnimator = null
+//        }
 //        catalogPresenter.fetchCollections()
     }
 

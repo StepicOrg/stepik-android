@@ -56,6 +56,7 @@ import org.stepik.android.view.injection.billing.BillingDataModule
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
 import org.stepik.android.view.injection.catalog.CatalogComponent
+import org.stepik.android.view.injection.catalog_block.CatalogBlockComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -250,6 +251,8 @@ interface AppCoreComponent {
     fun magicLinksComponentBuilder(): MagicLinksComponent.Builder
 
     fun analyticProviderComponentBuilder(): AnalyticComponent.Builder
+
+    fun catalogBlockComponentBuilder(): CatalogBlockComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

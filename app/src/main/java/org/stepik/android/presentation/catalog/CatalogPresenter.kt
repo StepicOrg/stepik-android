@@ -19,7 +19,6 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.filter.FiltersPresenter
 import org.stepik.android.presentation.stories.StoriesFeature
-import org.stepik.android.presentation.stories.StoriesViewModel
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
@@ -39,8 +38,6 @@ constructor(
     private val mainScheduler: Scheduler,
 
     private val catalogInteractor: CatalogInteractor,
-
-    private val storiesViewModel: StoriesViewModel,
     private val filtersPresenter: FiltersPresenter,
 
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
@@ -69,7 +66,6 @@ constructor(
 
     init {
         compositeDisposable += collectionsDisposable
-        storiesViewModel.onNewMessage(StoriesFeature.Message.InitMessage())
 //        subscribeForFilterUpdates()
 //        fetchPopularCourses()
     }
@@ -140,8 +136,7 @@ constructor(
             )
     }
 
-    private fun getHeaders(): List<CatalogItem> =
-        listOf(storiesViewModel)
+    private fun getHeaders(): List<CatalogItem> = emptyList()
 //        if (sharedPreferenceHelper.isNeedShowLangWidget) {
 //            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
 //        } else {
