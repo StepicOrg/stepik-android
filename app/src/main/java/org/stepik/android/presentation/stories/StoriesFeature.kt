@@ -18,8 +18,6 @@ interface StoriesFeature {
 
     sealed class Action {
         object FetchStories : Action()
-        sealed class ViewAction : Action() {
-
-        }
+        sealed class ViewAction : Action()
     }
 }

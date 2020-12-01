@@ -19,9 +19,7 @@ constructor(
 ) : RxActionDispatcher<CatalogFeature.Action, CatalogFeature.Message>() {
     override fun handleAction(action: CatalogFeature.Action) {
         when (action) {
-            is CatalogFeature.Action.FetchCatalogBlocks -> {
-
-            }
+            is CatalogFeature.Action.FetchCatalogBlocks -> { }
         }
     }
 }

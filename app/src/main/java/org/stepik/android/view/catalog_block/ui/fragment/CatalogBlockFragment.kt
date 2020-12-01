@@ -26,9 +26,10 @@ import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
+import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
-import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.catalog_block.model.CatalogBlockItem
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
@@ -73,6 +74,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         injectComponent()
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
+        catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
     }
 
     private fun injectComponent() {
@@ -90,6 +92,13 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
         catalogItemAdapter += StoriesAdapterDelegate(
             onStoryClicked = { _, position -> showStories(position) }
+        )
+
+        catalogItemAdapter += FiltersAdapterDelegate(
+            onFiltersChanged = {
+                if (catalogRecyclerView.isComputingLayout) return@FiltersAdapterDelegate
+                catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.FiltersChanged(it)))
+            }
         )
 
         with(catalogRecyclerView) {
@@ -149,7 +158,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     override fun onAction(action: CatalogFeature.Action.ViewAction) {}
 
     override fun render(state: CatalogFeature.State) {
-        catalogItemAdapter.items = listOf(CatalogBlockItem.StoriesBlock(state = state.storiesState))
+        catalogItemAdapter.items = listOf(CatalogBlockItem.StoriesBlock(state = state.storiesState), CatalogBlockItem.FiltersBlock(state = state.filtersState))
         Timber.d("State: $state")
     }
 

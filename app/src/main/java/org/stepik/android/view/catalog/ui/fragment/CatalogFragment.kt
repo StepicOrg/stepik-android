@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -19,9 +18,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
-import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -30,16 +27,9 @@ import org.stepik.android.presentation.catalog.CatalogView
 import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.catalog.model.LoadingPlaceholder
 import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
-import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
-import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject

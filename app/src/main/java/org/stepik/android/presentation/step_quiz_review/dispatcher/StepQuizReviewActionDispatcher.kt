@@ -16,7 +16,6 @@ import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.dispatcher.StepQuizActionDispatcher
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class StepQuizReviewActionDispatcher

@@ -6,24 +6,25 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.StepikFilter
-import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.model.CatalogItem
-import org.stepik.android.presentation.filter.FiltersPresenter
-import org.stepik.android.presentation.filter.FiltersView
+import org.stepik.android.presentation.filter.FiltersFeature
+import org.stepik.android.view.catalog_block.model.CatalogBlockItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import timber.log.Timber
 import java.util.EnumSet
 
-class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
-    override fun isForViewType(position: Int, data: CatalogItem): Boolean =
-        data is FiltersPresenter
+class FiltersAdapterDelegate(
+    val onFiltersChanged: (filters: EnumSet<StepikFilter>) -> Unit
+) : AdapterDelegate<CatalogBlockItem, DelegateViewHolder<CatalogBlockItem>>() {
+    override fun isForViewType(position: Int, data: CatalogBlockItem): Boolean =
+        data is CatalogBlockItem.FiltersBlock
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        FiltersViewHolder(createView(parent, R.layout.view_course_languages)) as DelegateViewHolder<CatalogItem>
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogBlockItem> =
+        FiltersViewHolder(createView(parent, R.layout.view_course_languages))
 
-    private class FiltersViewHolder(root: View) : PresenterViewHolder<FiltersView, FiltersPresenter>(root), FiltersView {
-        private val viewStateDelegate = ViewStateDelegate<FiltersView.State>()
+    private inner class FiltersViewHolder(root: View) : DelegateViewHolder<CatalogBlockItem>(root) {
+        private val viewStateDelegate = ViewStateDelegate<FiltersFeature.State>()
         private val languages = itemView.languages
 
         init {
@@ -37,19 +38,27 @@ class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
                             return
                         }
                         val filters = composeFilters()
-                        itemData?.onFilterChanged(filters)
+                        Timber.d("Go")
+
+                        onFiltersChanged(filters)
                     }
                 }
             languages.addOnButtonCheckedListener(toggleListener)
 
-            viewStateDelegate.addState<FiltersView.State.Idle>()
-            viewStateDelegate.addState<FiltersView.State.Empty>()
-            viewStateDelegate.addState<FiltersView.State.FiltersLoaded>(itemView)
+            viewStateDelegate.addState<FiltersFeature.State.Idle>()
+            viewStateDelegate.addState<FiltersFeature.State.Loading>()
+            viewStateDelegate.addState<FiltersFeature.State.Empty>()
+            viewStateDelegate.addState<FiltersFeature.State.FiltersLoaded>(itemView)
         }
 
-        override fun setState(state: FiltersView.State) {
+        override fun onBind(data: CatalogBlockItem) {
+            data as CatalogBlockItem.FiltersBlock
+            render(data.state)
+        }
+
+        private fun render(state: FiltersFeature.State) {
             viewStateDelegate.switchState(state)
-            if (state is FiltersView.State.FiltersLoaded) {
+            if (state is FiltersFeature.State.FiltersLoaded) {
                 if (StepikFilter.RUSSIAN in state.filters) {
                     languages.check(R.id.languageRu)
                 }
@@ -58,14 +67,6 @@ class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
                     languages.check(R.id.languageEn)
                 }
             }
-        }
-
-        override fun attachView(data: FiltersPresenter) {
-            data.attachView(this)
-        }
-
-        override fun detachView(data: FiltersPresenter) {
-            data.detachView(this)
         }
 
         private fun composeFilters(): EnumSet<StepikFilter> {

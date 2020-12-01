@@ -7,10 +7,8 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
@@ -18,8 +16,8 @@ import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.filter.FiltersPresenter
-import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.injection.catalog.FiltersBus
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
 import java.util.EnumSet
@@ -136,7 +134,8 @@ constructor(
             )
     }
 
-    private fun getHeaders(): List<CatalogItem> = emptyList()
+    private fun getHeaders(): List<CatalogItem> =
+        emptyList()
 //        if (sharedPreferenceHelper.isNeedShowLangWidget) {
 //            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
 //        } else {
