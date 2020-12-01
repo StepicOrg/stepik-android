@@ -400,7 +400,6 @@
     <string name="course_collection_empty">Выбачайце, гэтая падборка на вакацыях</string>
     <string name="internet_problem_catalog">Уключыце інтэрнэт, каб убачыць нашы падборкі курсаў</string>
     <string name="course_rating">Рэйтынг курса</string>
-    <string name="trending_topics">Папулярныя тэмы</string>
     <string name="early_notification_description">Праграма дапаможа завяршыць курс і атрымаць сертыфікат. Уключыце штодзённыя апавяшчэнні, каб вучыцца часцей!</string>
     <string name="early_notification_title">Прывітанне!</string>
     <plurals name="course_count">

@@ -426,7 +426,6 @@
     <string name="course_collection_empty">Извините, эта подборка на каникулах</string>
     <string name="internet_problem_catalog">Включите интернет, чтобы увидеть наши подборки курсов</string>
     <string name="course_rating">Рейтинг курса</string>
-    <string name="trending_topics">Популярные темы</string>
     <string name="early_notification_description">Приложение поможет завершить курс и получить сертификат. Включите ежедневные уведомления, чтобы учиться чаще!</string>
     <string name="early_notification_title">Здравствуйте!</string>
     <plurals name="course_count">

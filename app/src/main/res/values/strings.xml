@@ -442,7 +442,6 @@
 
     <string name="course_collection_empty">Sorry, this collection is on vacation</string>
     <string name="internet_problem_catalog">Enable internet to see our Course Collections</string>
-    <string name="trending_topics">Trending topics</string>
     <string name="early_notification_description">App will help complete course and get certificate. Enable everyday notifications for continuous learning!</string>
     <string name="early_notification_title">Greetings!</string>
     <plurals name="course_count">
