@@ -29,8 +29,10 @@ import org.stepik.android.presentation.catalog_block.CatalogViewModel
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
-import org.stepik.android.view.catalog_block.model.CatalogBlockItem
+import org.stepik.android.view.catalog_block.model.CatalogItem
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -67,7 +69,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     private val catalogViewModel: CatalogViewModel by viewModels { viewModelFactory }
 
-    private var catalogItemAdapter: DefaultDelegateAdapter<CatalogBlockItem> = DefaultDelegateAdapter()
+    private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +77,8 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
+        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
+        Timber.d("onCreate")
     }
 
     private fun injectComponent() {
@@ -101,6 +105,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             }
         )
 
+        catalogItemAdapter += OfflineAdapterDelegate { }
+        catalogItemAdapter += LoadingAdapterDelegate()
+
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = LinearLayoutManager(context)
@@ -110,8 +117,8 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     override fun onStart() {
         super.onStart()
-        catalogItemAdapter.notifyDataSetChanged()
         catalogViewModel.attachView(this)
+        catalogItemAdapter.notifyDataSetChanged()
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
             SharedTransitionContainerDelegate {
             override fun getSharedView(position: Int): View? {
@@ -150,15 +157,32 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     }
 
     override fun onStop() {
-        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         catalogViewModel.detachView(this)
+        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         super.onStop()
     }
 
     override fun onAction(action: CatalogFeature.Action.ViewAction) {}
 
     override fun render(state: CatalogFeature.State) {
-        catalogItemAdapter.items = listOf(CatalogBlockItem.StoriesBlock(state = state.storiesState), CatalogBlockItem.FiltersBlock(state = state.filtersState))
+        Timber.d("State: $state")
+        val collectionCatalogItems = when (state.collectionsState) {
+            is CatalogFeature.CollectionsState.Error ->
+                listOf(CatalogItem.Offline)
+
+            is CatalogFeature.CollectionsState.Loading ->
+                listOf(CatalogItem.Loading)
+
+            is CatalogFeature.CollectionsState.Content ->
+                state.collectionsState.collections.map { CatalogItem.Block(it) }
+
+            else ->
+                listOf()
+        }
+        catalogItemAdapter.items = listOf(
+            CatalogItem.Stories(state = state.storiesState),
+            CatalogItem.Filters(state = state.filtersState)
+        ) + collectionCatalogItems
         Timber.d("State: $state")
     }
 

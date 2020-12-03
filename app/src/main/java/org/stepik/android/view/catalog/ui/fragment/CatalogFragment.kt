@@ -24,7 +24,7 @@ import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.catalog.model.LoadingPlaceholder
 import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
@@ -61,7 +61,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 
     private val catalogPresenter: CatalogPresenter by viewModels { viewModelFactory }
 
-    private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
+    private var oldCatalogItemAdapter: DefaultDelegateAdapter<OldCatalogItem> = DefaultDelegateAdapter()
 
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
@@ -118,7 +118,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
     }
 
     override fun setState(state: CatalogView.State) {
-        catalogItemAdapter.items =
+        oldCatalogItemAdapter.items =
             when (val collectionsState = state.collectionsState) {
                 is CatalogView.CollectionsState.Loading ->
                     state.headers + listOf(LoadingPlaceholder) + state.footers
@@ -216,7 +216,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 
     override fun onStart() {
         super.onStart()
-        catalogItemAdapter.notifyDataSetChanged() // re-attach existing view holders
+        oldCatalogItemAdapter.notifyDataSetChanged() // re-attach existing view holders
         catalogPresenter.attachView(this)
 //        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
 //            override fun getSharedView(position: Int): View? {

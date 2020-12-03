@@ -16,7 +16,7 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListQueryStateMapper
@@ -51,7 +51,7 @@ constructor(
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
 ) : PresenterBase<CourseListQueryView>(viewContainer),
     CourseContinuePresenterDelegate by continueCoursePresenterDelegate,
-    CatalogItem {
+    OldCatalogItem {
 
     override val delegates: List<PresenterDelegate<in CourseListQueryView>> =
         listOf(continueCoursePresenterDelegate)

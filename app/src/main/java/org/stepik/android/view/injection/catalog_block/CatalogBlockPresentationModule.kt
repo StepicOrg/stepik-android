@@ -31,7 +31,11 @@ object CatalogBlockPresentationModule {
         filtersActionDispatcher: FiltersActionDispatcher
     ): ViewModel =
         CatalogViewModel(
-            ReduxFeature(CatalogFeature.State(storiesState = StoriesFeature.State.Idle, filtersState = FiltersFeature.State.Idle), catalogReducer)
+            ReduxFeature(CatalogFeature.State(
+                storiesState = StoriesFeature.State.Idle,
+                filtersState = FiltersFeature.State.Idle,
+                collectionsState = CatalogFeature.CollectionsState.Error // TODO Switch to idle
+            ), catalogReducer)
                 .wrapWithActionDispatcher(catalogActionDispatcher)
                 .wrapWithActionDispatcher(
                     storiesActionDispatcher.tranform(

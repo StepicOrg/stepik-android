@@ -12,7 +12,7 @@ import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.util.defaultLocale
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.model.StoryTemplate
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import ru.nobird.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ constructor(
         @MainScheduler
         private val mainScheduler: Scheduler
 ) : PresenterBase<StoriesView>(),
-    CatalogItem {
+    OldCatalogItem {
     private var state : StoriesView.State = StoriesView.State.Idle
         set(value) {
             field = value

@@ -7,23 +7,22 @@ import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.StepikFilter
 import org.stepik.android.presentation.filter.FiltersFeature
-import org.stepik.android.view.catalog_block.model.CatalogBlockItem
+import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import timber.log.Timber
 import java.util.EnumSet
 
 class FiltersAdapterDelegate(
     val onFiltersChanged: (filters: EnumSet<StepikFilter>) -> Unit
-) : AdapterDelegate<CatalogBlockItem, DelegateViewHolder<CatalogBlockItem>>() {
-    override fun isForViewType(position: Int, data: CatalogBlockItem): Boolean =
-        data is CatalogBlockItem.FiltersBlock
+) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+    override fun isForViewType(position: Int, data: CatalogItem): Boolean =
+        data is CatalogItem.Filters
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogBlockItem> =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         FiltersViewHolder(createView(parent, R.layout.view_course_languages))
 
-    private inner class FiltersViewHolder(root: View) : DelegateViewHolder<CatalogBlockItem>(root) {
+    private inner class FiltersViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
         private val viewStateDelegate = ViewStateDelegate<FiltersFeature.State>()
         private val languages = itemView.languages
 
@@ -38,8 +37,6 @@ class FiltersAdapterDelegate(
                             return
                         }
                         val filters = composeFilters()
-                        Timber.d("Go")
-
                         onFiltersChanged(filters)
                     }
                 }
@@ -51,8 +48,8 @@ class FiltersAdapterDelegate(
             viewStateDelegate.addState<FiltersFeature.State.FiltersLoaded>(itemView)
         }
 
-        override fun onBind(data: CatalogBlockItem) {
-            data as CatalogBlockItem.FiltersBlock
+        override fun onBind(data: CatalogItem) {
+            data as CatalogItem.Filters
             render(data.state)
         }
 

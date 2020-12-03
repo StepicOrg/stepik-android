@@ -12,7 +12,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.filter.FiltersPresenter
@@ -134,7 +134,7 @@ constructor(
             )
     }
 
-    private fun getHeaders(): List<CatalogItem> =
+    private fun getHeaders(): List<OldCatalogItem> =
         emptyList()
 //        if (sharedPreferenceHelper.isNeedShowLangWidget) {
 //            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
