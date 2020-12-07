@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.stories.presentation.StoriesPresenter
@@ -28,11 +29,12 @@ import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
-import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -61,6 +63,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var searchIcon: ImageView
 
@@ -107,6 +112,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
         catalogItemAdapter += OfflineAdapterDelegate { }
         catalogItemAdapter += LoadingAdapterDelegate()
+        catalogItemAdapter += CourseListAdapterDelegate(analytic, inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive)
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -165,7 +171,6 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     override fun onAction(action: CatalogFeature.Action.ViewAction) {}
 
     override fun render(state: CatalogFeature.State) {
-        Timber.d("State: $state")
         val collectionCatalogItems = when (state.collectionsState) {
             is CatalogFeature.CollectionsState.Error ->
                 listOf(CatalogItem.Offline)
@@ -183,7 +188,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             CatalogItem.Stories(state = state.storiesState),
             CatalogItem.Filters(state = state.filtersState)
         ) + collectionCatalogItems
-        Timber.d("State: $state")
+        Timber.d("State: ${state.collectionsState}")
     }
 
     private fun showStories(position: Int) {

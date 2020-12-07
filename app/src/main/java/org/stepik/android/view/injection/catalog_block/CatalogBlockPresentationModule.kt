@@ -9,6 +9,8 @@ import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
 import org.stepik.android.presentation.catalog_block.dispatcher.CatalogActionDispatcher
 import org.stepik.android.presentation.catalog_block.reducer.CatalogReducer
+import org.stepik.android.presentation.course_list_redux.CourseListFeature
+import org.stepik.android.presentation.course_list_redux.dispatcher.CourseListActionDispatcher
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
 import org.stepik.android.presentation.stories.StoriesFeature
@@ -28,14 +30,17 @@ object CatalogBlockPresentationModule {
         catalogReducer: CatalogReducer,
         catalogActionDispatcher: CatalogActionDispatcher,
         storiesActionDispatcher: StoriesActionDispatcher,
-        filtersActionDispatcher: FiltersActionDispatcher
+        filtersActionDispatcher: FiltersActionDispatcher,
+        courseListActionDispatcher: CourseListActionDispatcher
     ): ViewModel =
         CatalogViewModel(
-            ReduxFeature(CatalogFeature.State(
-                storiesState = StoriesFeature.State.Idle,
-                filtersState = FiltersFeature.State.Idle,
-                collectionsState = CatalogFeature.CollectionsState.Error // TODO Switch to idle
-            ), catalogReducer)
+            ReduxFeature(
+                CatalogFeature.State(
+                    storiesState = StoriesFeature.State.Idle,
+                    filtersState = FiltersFeature.State.Idle,
+                    collectionsState = CatalogFeature.CollectionsState.Idle // TODO Switch to idle
+                ), catalogReducer
+            )
                 .wrapWithActionDispatcher(catalogActionDispatcher)
                 .wrapWithActionDispatcher(
                     storiesActionDispatcher.tranform(
@@ -47,6 +52,22 @@ object CatalogBlockPresentationModule {
                     filtersActionDispatcher.tranform(
                         transformAction = { it.safeCast<CatalogFeature.Action.FiltersAction>()?.action },
                         transformMessage = CatalogFeature.Message::FiltersMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    courseListActionDispatcher.tranform(
+                        transformAction = { it.safeCast<CatalogFeature.Action.CourseListAction>()?.action },
+                        transformMessage = { courseListMessage ->
+                            val (id, message) = when (courseListMessage) {
+                                is CourseListFeature.Message.InitMessage ->
+                                    courseListMessage.id to courseListMessage
+                                is CourseListFeature.Message.FetchCourseListSuccess ->
+                                    courseListMessage.id to courseListMessage
+                                is CourseListFeature.Message.FetchCourseListError ->
+                                    courseListMessage.id to courseListMessage
+                            }
+                            CatalogFeature.Message.CourseListMessage(id, message)
+                        }
                     )
                 )
                 .wrapWithViewContainer()

@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
+import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
@@ -30,7 +31,8 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { catalogBlocks ->
-                            val catalogWrappers = catalogBlocks.map { CatalogBlockStateWrapper.CourseList(catalogBlockItem = it, state = CourseListFeature.State.Idle) }
+                            val fullLists = catalogBlocks.filter { it.content is CatalogBlockContent.FullCourseList }
+                            val catalogWrappers = fullLists.map { CatalogBlockStateWrapper.CourseList(catalogBlockItem = it, state = CourseListFeature.State.Loading) }
                             onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogWrappers))
                         },
                         onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }

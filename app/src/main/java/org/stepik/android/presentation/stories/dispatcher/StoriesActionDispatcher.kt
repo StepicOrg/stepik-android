@@ -13,7 +13,6 @@ import org.stepic.droid.util.defaultLocale
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.presentation.stories.StoriesFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class StoriesActionDispatcher
@@ -27,7 +26,6 @@ constructor(
     private val mainScheduler: Scheduler
 ) : RxActionDispatcher<StoriesFeature.Action, StoriesFeature.Message>() {
     override fun handleAction(action: StoriesFeature.Action) {
-        Timber.d("Action: $action")
         when (action) {
             is StoriesFeature.Action.FetchStories -> {
                 val locale = Resources.getSystem().configuration.defaultLocale

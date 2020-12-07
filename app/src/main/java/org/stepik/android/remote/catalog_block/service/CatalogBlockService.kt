@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface CatalogBlockService {
     // TODO Add platform and language query parameters
-    @GET("api/catalog-blocks")
+    @GET("api/catalog-blocks?language=ru")
     fun getCatalogBlocks(): Single<CatalogBlockResponse>
 }

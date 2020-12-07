@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.stories.reducer
+ package org.stepik.android.presentation.stories.reducer
 
 import org.stepik.android.presentation.stories.StoriesFeature.State
 import org.stepik.android.presentation.stories.StoriesFeature.Message
