@@ -31,5 +31,12 @@ constructor() : StateReducer<State, Message, Action> {
                 } else {
                     null
                 }
+
+            is Message.StoryViewed ->
+                if (state is State.Success) {
+                    state.copy(viewedStoriesIds = state.viewedStoriesIds + message.storyId) to setOf(Action.MarkStoryAsViewed(message.storyId))
+                } else {
+                    null
+                }
         } ?: state to emptySet()
 }

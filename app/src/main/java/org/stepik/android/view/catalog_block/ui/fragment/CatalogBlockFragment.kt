@@ -19,7 +19,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
@@ -153,7 +152,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
                 if (position != -1) {
                     val story = storiesViewHolder.storiesAdapter.stories[position]
-                    (catalogItemAdapter.items[CATALOG_STORIES_INDEX] as StoriesPresenter).onStoryViewed(story.id)
+                    catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.StoryViewed(story.id)))
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
                         AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
                     ))

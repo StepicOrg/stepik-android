@@ -13,11 +13,13 @@ interface StoriesFeature {
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchStoriesSuccess(val stories: List<Story>, val viewedStoriesIds: Set<Long>) : Message()
+        data class StoryViewed(val storyId: Long) : Message()
         object FetchStoriesError : Message()
     }
 
     sealed class Action {
         object FetchStories : Action()
+        data class MarkStoryAsViewed(val storyId: Long) : Action()
         sealed class ViewAction : Action()
     }
 }

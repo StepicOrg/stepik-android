@@ -12,6 +12,7 @@ import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.util.defaultLocale
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.presentation.stories.StoriesFeature
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
 
@@ -52,6 +53,14 @@ constructor(
                         onError = { onNewMessage(StoriesFeature.Message.FetchStoriesError) }
                     )
             }
+
+            is StoriesFeature.Action.MarkStoryAsViewed ->
+                compositeDisposable += storiesRepository
+                    .markStoryAsViewed(action.storyId)
+                    .subscribeBy(
+                        onComplete = {},
+                        onError = emptyOnErrorStub
+                    )
         }
     }
 }
