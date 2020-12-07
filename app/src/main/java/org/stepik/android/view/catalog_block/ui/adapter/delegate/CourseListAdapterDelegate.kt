@@ -3,7 +3,8 @@ package org.stepik.android.view.catalog_block.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_course_list.view.*
+import kotlinx.android.synthetic.main.item_course_list_new.view.*
+import kotlinx.android.synthetic.main.view_container_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -13,6 +14,7 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockTitleDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -30,19 +32,18 @@ class CourseListAdapterDelegate(
         data is CatalogItem.Block
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list))
+        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list_new))
 
     private inner class CourseCollectionViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
 
         private var courseCollection: CatalogBlockItem? = null
 
-        private val courseListTitle = root.courseListTitle
-        private val courseListDescription = root.courseListDescription
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListPlaceholderEmpty = root.courseListPlaceholderEmpty
         private val courseListTitleContainer = root.courseListTitleContainer
         private val courseListPlaceholderNoConnection = root.courseListPlaceholderNoConnection
 
+        private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer)
         private val skeletonCount = root.resources.getInteger(R.integer.course_list_rows) * root.resources.getInteger(R.integer.course_list_columns)
         private val courseItemsSkeleton: List<CourseListItem> = List(skeletonCount) { CourseListItem.PlaceHolder() }
         private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
@@ -51,13 +52,11 @@ class CourseListAdapterDelegate(
         init {
             viewStateDelegate.addState<CourseListFeature.State.Idle>(courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListFeature.State.NetworkError>(courseListPlaceholderNoConnection)
 
             val onClickListener = View.OnClickListener {}
-
-            courseListDescription.setOnClickListener(onClickListener)
             courseListTitleContainer.setOnClickListener(onClickListener)
 
             courseListPlaceholderEmpty.setOnClickListener {  }
@@ -90,8 +89,8 @@ class CourseListAdapterDelegate(
             data as CatalogItem.Block
             val catalogBlockCourseListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.CourseList
             courseCollection = catalogBlockCourseListItem.catalogBlockItem
-            courseListTitle.text = catalogBlockCourseListItem.catalogBlockItem.title
-            courseListDescription.setPlaceholderText(catalogBlockCourseListItem.catalogBlockItem.description)
+            catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlockItem)
+            catalogBlockTitleDelegate.setCount(catalogBlockCourseListItem.catalogBlockItem)
             setState(catalogBlockCourseListItem.state)
         }
 
