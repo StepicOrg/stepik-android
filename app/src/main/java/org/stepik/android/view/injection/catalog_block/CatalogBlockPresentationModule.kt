@@ -38,7 +38,7 @@ object CatalogBlockPresentationModule {
                 CatalogFeature.State(
                     storiesState = StoriesFeature.State.Idle,
                     filtersState = FiltersFeature.State.Idle,
-                    collectionsState = CatalogFeature.CollectionsState.Idle // TODO Switch to idle
+                    collectionsState = CatalogFeature.CollectionsState.Idle
                 ), catalogReducer
             )
                 .wrapWithActionDispatcher(catalogActionDispatcher)

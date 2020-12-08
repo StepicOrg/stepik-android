@@ -12,17 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/course_list_side_padding"
-            android:layout_marginRight="@dimen/course_list_side_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
         <include layout="@layout/view_container_block" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -35,29 +24,6 @@
             android:paddingLeft="@dimen/course_list_padding"
             android:paddingRight="@dimen/course_list_padding"
             android:paddingBottom="8dp" />
-
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListPlaceholderNoConnection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/course_list_side_padding"
-            android:layout_marginRight="@dimen/course_list_side_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="visible"
-            tools:visibility="visible"/>
-
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListPlaceholderEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/internet_problem"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/course_list_side_padding"
-            android:layout_marginRight="@dimen/course_list_side_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="visible"
-            tools:visibility="visible"/>
 
     </RelativeLayout>
 

@@ -26,6 +26,7 @@ import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
+import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
@@ -71,7 +72,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
 
-    private val catalogViewModel: CatalogViewModel by viewModels { viewModelFactory }
+    private val catalogViewModel: CatalogViewModel by viewModels { viewModelFactory } // by reduxViewModels
 
     private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
@@ -109,9 +110,17 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             }
         )
 
-        catalogItemAdapter += OfflineAdapterDelegate { }
+        catalogItemAdapter += OfflineAdapterDelegate {
+            catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage(forceUpdate = true))
+        }
         catalogItemAdapter += LoadingAdapterDelegate()
-        catalogItemAdapter += CourseListAdapterDelegate(analytic, inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive)
+        catalogItemAdapter += CourseListAdapterDelegate(
+            analytic = analytic,
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            sendLoadingMessage = { id, fullCourseList ->
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
+            }
+        )
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -183,10 +192,14 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             else ->
                 listOf()
         }
-        catalogItemAdapter.items = listOf(
-            CatalogItem.Stories(state = state.storiesState),
-            CatalogItem.Filters(state = state.filtersState)
-        ) + collectionCatalogItems
+
+        catalogRecyclerView.post {
+            catalogItemAdapter.items = listOf(
+                CatalogItem.Stories(state = state.storiesState),
+                CatalogItem.Filters(state = state.filtersState)
+            ) + collectionCatalogItems
+        }
+
         Timber.d("State: ${state.collectionsState}")
     }
 

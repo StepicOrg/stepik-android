@@ -31,8 +31,15 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { catalogBlocks ->
-                            val fullLists = catalogBlocks.filter { it.content is CatalogBlockContent.FullCourseList }
-                            val catalogWrappers = fullLists.map { CatalogBlockStateWrapper.CourseList(catalogBlockItem = it, state = CourseListFeature.State.Loading) }
+                            val mapped = catalogBlocks.mapNotNull { catalogBlockItem ->
+                                when (catalogBlockItem.content) {
+                                    is CatalogBlockContent.FullCourseList ->
+                                        catalogBlockItem
+                                    else ->
+                                        null
+                                }
+                            }
+                            val catalogWrappers = mapped.map { CatalogBlockStateWrapper.CourseList(catalogBlockItem = it, state = CourseListFeature.State.Idle) }
                             onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogWrappers))
                         },
                         onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }

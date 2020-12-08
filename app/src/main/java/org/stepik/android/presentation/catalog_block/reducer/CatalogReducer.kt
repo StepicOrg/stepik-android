@@ -1,19 +1,15 @@
 package org.stepik.android.presentation.catalog_block.reducer
 
-import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature.State
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Message
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Action
-import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
-import ru.nobird.android.core.model.cast
 import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.reducer.StateReducer
-import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogReducer
@@ -38,12 +34,7 @@ constructor(
 
             is Message.FetchCatalogBlocksSuccess -> {
                 if (state.collectionsState is CatalogFeature.CollectionsState.Loading) {
-                    val courseListActions = message
-                        .collections
-                        .map { Action.CourseListAction(CourseListFeature.Action.FetchCourseList(it.id, it.cast<CatalogBlockStateWrapper.CourseList>().catalogBlockItem.content.cast<CatalogBlockContent.FullCourseList>())) }.toSet()
-                    val (collectionsState, collectionsAction) = CatalogFeature.CollectionsState.Content(message.collections) to courseListActions
-                    Timber.d("Actions: $courseListActions")
-                    state.copy(collectionsState = collectionsState) to collectionsAction
+                    state.copy(collectionsState = CatalogFeature.CollectionsState.Content(message.collections)) to emptySet()
                 } else {
                     null
                 }
@@ -70,10 +61,10 @@ constructor(
 
             is Message.CourseListMessage -> {
                 if (state.collectionsState is CatalogFeature.CollectionsState.Content) {
-                    val neededStateIndex = state.collectionsState.collections.indexOfFirst { it.id == message.id }
-                    val neededState = state.collectionsState.collections[neededStateIndex] as CatalogBlockStateWrapper.CourseList
-                    val (courseListState, courseListActions) = courseListReducer.reduce(neededState.state, message.message)
-                    val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(neededStateIndex, neededState.copy(state = courseListState)) }))
+                    val updateIndex = state.collectionsState.collections.indexOfFirst { it.id == message.id }
+                    val updateState = state.collectionsState.collections[updateIndex] as CatalogBlockStateWrapper.CourseList
+                    val (courseListState, courseListActions) = courseListReducer.reduce(updateState.state, message.message)
+                    val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = courseListState)) }))
                     result to courseListActions.map(Action::CourseListAction).toSet()
                 } else {
                     null

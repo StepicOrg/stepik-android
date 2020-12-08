@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.view_container_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
@@ -24,7 +25,8 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListAdapterDelegate(
     private val analytic: Analytic,
-    private val isHandleInAppPurchase: Boolean
+    private val isHandleInAppPurchase: Boolean,
+    private val sendLoadingMessage: (Long, CatalogBlockContent.FullCourseList) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -39,9 +41,7 @@ class CourseListAdapterDelegate(
         private var courseCollection: CatalogBlockItem? = null
 
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
-        private val courseListPlaceholderEmpty = root.courseListPlaceholderEmpty
         private val courseListTitleContainer = root.courseListTitleContainer
-        private val courseListPlaceholderNoConnection = root.courseListPlaceholderNoConnection
 
         private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer)
         private val skeletonCount = root.resources.getInteger(R.integer.course_list_rows) * root.resources.getInteger(R.integer.course_list_columns)
@@ -53,16 +53,11 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListFeature.State.Idle>(courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListFeature.State.Empty>(courseListPlaceholderEmpty)
-            viewStateDelegate.addState<CourseListFeature.State.NetworkError>(courseListPlaceholderNoConnection)
+            viewStateDelegate.addState<CourseListFeature.State.Empty>()
+            viewStateDelegate.addState<CourseListFeature.State.NetworkError>()
 
             val onClickListener = View.OnClickListener {}
             courseListTitleContainer.setOnClickListener(onClickListener)
-
-            courseListPlaceholderEmpty.setOnClickListener {  }
-            courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
-            courseListPlaceholderNoConnection.setOnClickListener {}
-            courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
             courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
             courseItemAdapter += CourseListItemAdapterDelegate(
@@ -88,6 +83,7 @@ class CourseListAdapterDelegate(
         override fun onBind(data: CatalogItem) {
             data as CatalogItem.Block
             val catalogBlockCourseListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.CourseList
+            initLoading(catalogBlockCourseListItem)
             courseCollection = catalogBlockCourseListItem.catalogBlockItem
             catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlockItem)
             catalogBlockTitleDelegate.setCount(catalogBlockCourseListItem.catalogBlockItem)
@@ -114,5 +110,12 @@ class CourseListAdapterDelegate(
                     courseItemAdapter.items = emptyList()
             }
         }
+    }
+
+    private fun initLoading(catalogBlockCourseList: CatalogBlockStateWrapper.CourseList) {
+        if (catalogBlockCourseList.catalogBlockItem.content !is CatalogBlockContent.FullCourseList) {
+            return
+        }
+        sendLoadingMessage(catalogBlockCourseList.id, catalogBlockCourseList.catalogBlockItem.content)
     }
 }
