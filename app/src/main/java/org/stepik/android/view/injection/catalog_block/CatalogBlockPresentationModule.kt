@@ -9,6 +9,8 @@ import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
 import org.stepik.android.presentation.catalog_block.dispatcher.CatalogActionDispatcher
 import org.stepik.android.presentation.catalog_block.reducer.CatalogReducer
+import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
+import org.stepik.android.presentation.course_continue_redux.dispatcher.CourseContinueActionDispatcher
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.dispatcher.CourseListActionDispatcher
 import org.stepik.android.presentation.filter.FiltersFeature
@@ -31,14 +33,16 @@ object CatalogBlockPresentationModule {
         catalogActionDispatcher: CatalogActionDispatcher,
         storiesActionDispatcher: StoriesActionDispatcher,
         filtersActionDispatcher: FiltersActionDispatcher,
-        courseListActionDispatcher: CourseListActionDispatcher
+        courseListActionDispatcher: CourseListActionDispatcher,
+        courseContinueActionDispatcher: CourseContinueActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
                 CatalogFeature.State(
                     storiesState = StoriesFeature.State.Idle,
                     filtersState = FiltersFeature.State.Idle,
-                    collectionsState = CatalogFeature.CollectionsState.Idle
+                    collectionsState = CatalogFeature.CollectionsState.Idle,
+                    courseContinueState = CourseContinueFeature.State.Idle
                 ), catalogReducer
             )
                 .wrapWithActionDispatcher(catalogActionDispatcher)
@@ -68,6 +72,12 @@ object CatalogBlockPresentationModule {
                             }
                             CatalogFeature.Message.CourseListMessage(id, message)
                         }
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    courseContinueActionDispatcher.tranform(
+                        transformAction = { it.safeCast<CatalogFeature.Action.CourseContinueAction>()?.action },
+                        transformMessage = CatalogFeature.Message::CourseContinueMessage
                     )
                 )
                 .wrapWithViewContainer()

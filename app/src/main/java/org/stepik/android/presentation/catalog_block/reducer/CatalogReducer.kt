@@ -4,6 +4,8 @@ import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature.State
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Message
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Action
+import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
+import org.stepik.android.presentation.course_continue_redux.reducer.CourseContinueReducer
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
@@ -17,7 +19,8 @@ class CatalogReducer
 constructor(
     private val storiesReducer: StoriesReducer,
     private val filtersReducer: FiltersReducer,
-    private val courseListReducer: CourseListReducer
+    private val courseListReducer: CourseListReducer,
+    private val courseContinueReducer: CourseContinueReducer
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
@@ -69,6 +72,17 @@ constructor(
                 } else {
                     null
                 }
+            }
+
+            is Message.CourseContinueMessage -> {
+                val (courseContinueState, courseContinueActions) = courseContinueReducer.reduce(state.courseContinueState, message.message)
+                state.copy(courseContinueState = courseContinueState) to courseContinueActions.map {
+                    if (it is CourseContinueFeature.Action.ViewAction) {
+                        Action.ViewAction.CourseContinueViewAction(it)
+                    } else {
+                        Action.CourseContinueAction(it)
+                    }
+                }.toSet()
             }
         } ?: state to emptySet()
 }

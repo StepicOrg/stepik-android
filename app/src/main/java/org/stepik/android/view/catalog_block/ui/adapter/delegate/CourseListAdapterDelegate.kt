@@ -10,7 +10,10 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -26,7 +29,8 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class CourseListAdapterDelegate(
     private val analytic: Analytic,
     private val isHandleInAppPurchase: Boolean,
-    private val sendLoadingMessage: (Long, CatalogBlockContent.FullCourseList) -> Unit
+    private val sendLoadingMessage: (Long, CatalogBlockContent.FullCourseList) -> Unit,
+    private val sendContinueCourseMessage: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -63,7 +67,10 @@ class CourseListAdapterDelegate(
             courseItemAdapter += CourseListItemAdapterDelegate(
                 analytic = analytic,
                 onItemClicked = {},
-                onContinueCourseClicked = {},
+                onContinueCourseClicked = {
+                    val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
+                    sendContinueCourseMessage(it.course, CourseViewSource.Collection(collection.content.id), CourseContinueInteractionSource.COURSE_WIDGET)
+                },
                 isHandleInAppPurchase = isHandleInAppPurchase
             )
 

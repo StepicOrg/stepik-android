@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -22,10 +23,13 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
+import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
@@ -76,6 +80,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -83,7 +90,6 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
-        Timber.d("onCreate")
     }
 
     private fun injectComponent() {
@@ -119,6 +125,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             sendLoadingMessage = { id, fullCourseList ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
+            },
+            sendContinueCourseMessage = { course, courseViewSource, courseContinueInteractionSource ->
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.InitContinueCourse(course, courseViewSource, courseContinueInteractionSource)))
             }
         )
 
@@ -176,7 +185,23 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         super.onStop()
     }
 
-    override fun onAction(action: CatalogFeature.Action.ViewAction) {}
+    override fun onAction(action: CatalogFeature.Action.ViewAction) {
+        Timber.d("Action: $action")
+        if (action is CatalogFeature.Action.ViewAction.CourseContinueViewAction) {
+            when (val viewAction = action.viewAction) {
+                is CourseContinueFeature.Action.ViewAction.ShowSteps -> {
+                    screenManager.continueCourse(requireActivity(), viewAction.course.id, viewAction.viewSource, viewAction.lastStep)
+                }
+                is CourseContinueFeature.Action.ViewAction.ShowCourse -> {
+                    if (viewAction.isAdaptive) {
+                        screenManager.continueAdaptiveCourse(requireActivity(), viewAction.course)
+                    } else {
+                        screenManager.showCourseModules(requireContext(), viewAction.course, viewAction.viewSource)
+                    }
+                }
+            }
+        }
+    }
 
     override fun render(state: CatalogFeature.State) {
         val collectionCatalogItems = when (state.collectionsState) {
@@ -200,7 +225,13 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             ) + collectionCatalogItems
         }
 
-        Timber.d("State: ${state.collectionsState}")
+        when (state.courseContinueState) {
+            is CourseContinueFeature.State.Idle ->
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is CourseContinueFeature.State.Loading ->
+                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
     }
 
     private fun showStories(position: Int) {
