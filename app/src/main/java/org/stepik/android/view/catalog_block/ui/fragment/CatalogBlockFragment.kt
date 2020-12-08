@@ -45,6 +45,7 @@ import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
@@ -75,7 +76,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
 
-    private val catalogViewModel: CatalogViewModel by viewModels { viewModelFactory } // by reduxViewModels
+    private val catalogViewModel: CatalogViewModel by reduxViewModel(this) { viewModelFactory }
 
     private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
@@ -143,7 +144,6 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     override fun onStart() {
         super.onStart()
-        catalogViewModel.attachView(this)
         catalogItemAdapter.notifyDataSetChanged()
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
             SharedTransitionContainerDelegate {
@@ -183,7 +183,6 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     }
 
     override fun onStop() {
-        catalogViewModel.detachView(this)
         SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         super.onStop()
     }
