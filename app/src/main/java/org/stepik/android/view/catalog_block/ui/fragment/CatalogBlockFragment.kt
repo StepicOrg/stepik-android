@@ -122,6 +122,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         catalogItemAdapter += CourseListAdapterDelegate(
             analytic = analytic,
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             sendLoadingMessage = { id, fullCourseList ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
             },

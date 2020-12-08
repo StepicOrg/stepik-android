@@ -29,6 +29,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class CourseListAdapterDelegate(
     private val analytic: Analytic,
     private val isHandleInAppPurchase: Boolean,
+    private val onTitleClick: (Long) -> Unit,
     private val sendLoadingMessage: (Long, CatalogBlockContent.FullCourseList) -> Unit,
     private val sendContinueCourseMessage: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
     private val sendCourseListItemClickMessage: (CourseListItem.Data) -> Unit
@@ -61,7 +62,10 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListFeature.State.Empty>()
             viewStateDelegate.addState<CourseListFeature.State.NetworkError>()
 
-            val onClickListener = View.OnClickListener {}
+            val onClickListener = View.OnClickListener {
+                val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@OnClickListener
+                onTitleClick(collection.content.id)
+            }
             courseListTitleContainer.setOnClickListener(onClickListener)
 
             courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
