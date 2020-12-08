@@ -31,5 +31,12 @@ constructor() : StateReducer<State, Message, Action> {
                 } else {
                     null
                 }
+
+            is Message.CourseListItemClick ->
+                if (state is State.Idle) {
+                    state to setOf(Action.ViewAction.OnCourseListItemClick(message.courseListItem))
+                } else {
+                    null
+                }
         } ?: state to emptySet()
 }

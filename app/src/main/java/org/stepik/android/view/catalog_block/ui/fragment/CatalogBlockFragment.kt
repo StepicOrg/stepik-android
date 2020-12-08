@@ -45,7 +45,6 @@ import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
@@ -128,6 +127,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             },
             sendContinueCourseMessage = { course, courseViewSource, courseContinueInteractionSource ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.InitContinueCourse(course, courseViewSource, courseContinueInteractionSource)))
+            },
+            sendCourseListItemClickMessage = { courseListItem ->
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
 
@@ -186,17 +188,26 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     }
 
     override fun onAction(action: CatalogFeature.Action.ViewAction) {
-        Timber.d("Action: $action")
         if (action is CatalogFeature.Action.ViewAction.CourseContinueViewAction) {
             when (val viewAction = action.viewAction) {
                 is CourseContinueFeature.Action.ViewAction.ShowSteps -> {
                     screenManager.continueCourse(requireActivity(), viewAction.course.id, viewAction.viewSource, viewAction.lastStep)
                 }
+
                 is CourseContinueFeature.Action.ViewAction.ShowCourse -> {
                     if (viewAction.isAdaptive) {
                         screenManager.continueAdaptiveCourse(requireActivity(), viewAction.course)
                     } else {
                         screenManager.showCourseModules(requireContext(), viewAction.course, viewAction.viewSource)
+                    }
+                }
+
+                is CourseContinueFeature.Action.ViewAction.OnCourseListItemClick -> {
+                    analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
+                    if (viewAction.courseListItem.course.enrollment != 0L) {
+                        screenManager.showCourseModules(activity, viewAction.courseListItem.course, viewAction.courseListItem.source)
+                    } else {
+                        screenManager.showCourseDescription(activity, viewAction.courseListItem.course, viewAction.courseListItem.source)
                     }
                 }
             }

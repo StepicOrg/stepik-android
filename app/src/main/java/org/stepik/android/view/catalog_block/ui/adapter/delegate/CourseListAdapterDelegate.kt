@@ -30,7 +30,8 @@ class CourseListAdapterDelegate(
     private val analytic: Analytic,
     private val isHandleInAppPurchase: Boolean,
     private val sendLoadingMessage: (Long, CatalogBlockContent.FullCourseList) -> Unit,
-    private val sendContinueCourseMessage: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit
+    private val sendContinueCourseMessage: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
+    private val sendCourseListItemClickMessage: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -66,7 +67,7 @@ class CourseListAdapterDelegate(
             courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
             courseItemAdapter += CourseListItemAdapterDelegate(
                 analytic = analytic,
-                onItemClicked = {},
+                onItemClicked = { courseListItem -> sendCourseListItemClickMessage(courseListItem) },
                 onContinueCourseClicked = {
                     val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
                     sendContinueCourseMessage(it.course, CourseViewSource.Collection(collection.content.id), CourseContinueInteractionSource.COURSE_WIDGET)
