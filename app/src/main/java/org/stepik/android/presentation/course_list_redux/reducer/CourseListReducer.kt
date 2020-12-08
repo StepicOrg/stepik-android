@@ -21,7 +21,7 @@ constructor() : StateReducer<State, Message, Action> {
                 }
 
             is Message.FetchCourseListSuccess ->
-                if (state is State.Loading) {
+                if (state !is State.Idle) {
                     State.Content(message.courseListDataItems, message.courseListItems) to emptySet()
                 } else {
                     null
