@@ -15,11 +15,14 @@ import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
@@ -72,6 +75,9 @@ class StepQuizReviewFragment :
                     this.instructionType = instructionType
                 }
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -149,28 +155,34 @@ class StepQuizReviewFragment :
 
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
             override fun onSelectDifferentSubmissionClicked() {
+                analytic.reportStepEvent(Analytic.PeerReview.REVIEW_SELECT_DIFFERENT_SUBMISSION, AmplitudeAnalytic.PeerReview.REVIEW_SELECT_DIFFERENT_SUBMISSION, stepWrapper.step)
                 showSubmissions()
             }
 
             override fun onCreateSessionClicked() {
+                analytic.reportStepEvent(Analytic.PeerReview.REVIEW_SEND_CURRENT_SUBMISSION, AmplitudeAnalytic.PeerReview.REVIEW_SEND_CURRENT_SUBMISSION, stepWrapper.step)
                 stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.CreateSessionWithCurrentSubmission)
             }
 
             override fun onSolveAgainClicked() {
+                analytic.reportStepEvent(Analytic.PeerReview.REVIEW_SOLVE_AGAIN, AmplitudeAnalytic.PeerReview.REVIEW_SOLVE_AGAIN, stepWrapper.step)
                 stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.SolveAgain(stepWrapper.step))
             }
 
             override fun onQuizTryAgainClicked() {
+                analytic.reportStepEvent(Analytic.PeerReview.REVIEW_QUIZ_TRY_AGAIN, AmplitudeAnalytic.PeerReview.REVIEW_QUIZ_TRY_AGAIN, stepWrapper.step)
                 stepQuizReviewViewModel.onNewMessage(
                     StepQuizReviewFeature.Message.StepQuizMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
                 )
             }
 
             override fun onStartReviewClicked() {
+                analytic.reportStepEvent(Analytic.PeerReview.REVIEW_START_REVIEW, AmplitudeAnalytic.PeerReview.REVIEW_START_REVIEW, stepWrapper.step)
                 stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StartReviewWithCurrentSession)
             }
 
             override fun onTakenReviewClicked(sessionId: Long) {
+                analytic.reportStepEvent(Analytic.PeerReview.REVIEW_VIEW_REVIEW, AmplitudeAnalytic.PeerReview.REVIEW_VIEW_REVIEW, stepWrapper.step)
                 openInWeb(
                     R.string.step_quiz_review_taken_title,
                     stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(sessionId)

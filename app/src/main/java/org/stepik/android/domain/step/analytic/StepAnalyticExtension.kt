@@ -11,6 +11,7 @@ fun Analytic.reportStepEvent(eventName: String, amplitudeEventName: String, step
         amplitudeEventName, mapOf(
             AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
             AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
-            AmplitudeAnalytic.Steps.Params.STEP to step.id
+            AmplitudeAnalytic.Steps.Params.STEP to step.id,
+            AmplitudeAnalytic.Steps.Params.IS_REVIEW to (step.actions?.doReview != null)
         ))
 }
