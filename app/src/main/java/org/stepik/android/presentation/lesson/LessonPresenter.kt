@@ -290,7 +290,7 @@ constructor(
          * Analytic
          */
         val step = stepItem.stepWrapper.step
-        analytic.reportStepEvent(Analytic.Steps.STEP_OPENED, AmplitudeAnalytic.Steps.STEP_OPENED, step)
+        analytic.reportStepEvent(AmplitudeAnalytic.Steps.STEP_OPENED, step)
     }
 
     /**
