@@ -423,15 +423,6 @@ public interface Analytic {
         String COURSE_CONTENT_LOADING = "course_content_loading";
     }
 
-    interface PeerReview {
-        String REVIEW_SELECT_DIFFERENT_SUBMISSION = "review_select_different_submission";
-        String REVIEW_SEND_CURRENT_SUBMISSION = "review_send_current_submission";
-        String REVIEW_SOLVE_AGAIN = "review_solve_again";
-        String REVIEW_QUIZ_TRY_AGAIN = "review_quiz_try_again";
-        String REVIEW_START_REVIEW = "review_start_review";
-        String REVIEW_VIEW_REVIEW = "review_view_review";
-    }
-
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
