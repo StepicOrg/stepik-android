@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.catalog_block.reducer
 
+import org.stepik.android.presentation.author_list.reducer.AuthorListReducer
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature.State
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Message
@@ -20,6 +21,7 @@ constructor(
     private val storiesReducer: StoriesReducer,
     private val filtersReducer: FiltersReducer,
     private val courseListReducer: CourseListReducer,
+    private val authorListReducer: AuthorListReducer,
     private val courseContinueReducer: CourseContinueReducer
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
@@ -69,6 +71,18 @@ constructor(
                     val (courseListState, courseListActions) = courseListReducer.reduce(updateState.state, message.message)
                     val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = courseListState)) }))
                     result to courseListActions.map(Action::CourseListAction).toSet()
+                } else {
+                    null
+                }
+            }
+
+            is Message.AuthorListMessage -> {
+                if (state.collectionsState is CatalogFeature.CollectionsState.Content) {
+                    val updateIndex = state.collectionsState.collections.indexOfFirst { it.id == message.id }
+                    val updateState = state.collectionsState.collections[updateIndex] as CatalogBlockStateWrapper.AuthorList
+                    val (authorListState, authorListActions) = authorListReducer.reduce(updateState.state, message.message)
+                    val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = authorListState)) }))
+                    result to authorListActions.map(Action::AuthorListAction).toSet()
                 } else {
                     null
                 }

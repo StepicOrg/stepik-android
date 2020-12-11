@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.catalog_block
 
+import org.stepik.android.presentation.author_list.AuthorListFeature
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
@@ -32,6 +33,7 @@ interface CatalogFeature {
         data class StoriesMessage(val message: StoriesFeature.Message) : Message()
         data class FiltersMessage(val message: FiltersFeature.Message) : Message()
         data class CourseListMessage(val id: Long, val message: CourseListFeature.Message) : Message()
+        data class AuthorListMessage(val id: Long, val message: AuthorListFeature.Message) : Message()
         data class CourseContinueMessage(val message: CourseContinueFeature.Message) : Message()
     }
 
@@ -44,6 +46,7 @@ interface CatalogFeature {
         data class StoriesAction(val action: StoriesFeature.Action) : Action()
         data class FiltersAction(val action: FiltersFeature.Action) : Action()
         data class CourseListAction(val action: CourseListFeature.Action) : Action()
+        data class AuthorListAction(val action: AuthorListFeature.Action) : Action()
         data class CourseContinueAction(val action: CourseContinueFeature.Action) : Action()
 
         sealed class ViewAction : Action() {

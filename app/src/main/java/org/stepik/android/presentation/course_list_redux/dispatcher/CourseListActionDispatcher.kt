@@ -11,7 +11,6 @@ import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListActionDispatcher
@@ -24,7 +23,6 @@ constructor(
     private val mainScheduler: Scheduler
 ) : RxActionDispatcher<CourseListFeature.Action, CourseListFeature.Message>() {
     override fun handleAction(action: CourseListFeature.Action) {
-        Timber.d("Action: $action")
         when (action) {
             is CourseListFeature.Action.FetchCourseList -> {
                 compositeDisposable += Flowable

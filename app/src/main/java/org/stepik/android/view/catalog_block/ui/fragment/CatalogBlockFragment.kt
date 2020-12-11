@@ -147,24 +147,17 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
             SharedTransitionContainerDelegate {
             override fun getSharedView(position: Int): View? {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                )
-                        as? StoriesAdapterDelegate.StoriesViewHolder
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX) as? StoriesAdapterDelegate.StoriesViewHolder
                     ?: return null
 
-                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
-                        as? StoriesAdapter.StoryViewHolder
+                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
                     ?: return null
 
                 return storyViewHolder.cover
             }
 
             override fun onPositionChanged(position: Int) {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                )
-                        as? StoriesAdapterDelegate.StoriesViewHolder
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX) as? StoriesAdapterDelegate.StoriesViewHolder
                     ?: return
 
                 storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
