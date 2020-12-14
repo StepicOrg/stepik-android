@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +26,6 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import timber.log.Timber;
 
@@ -97,7 +97,8 @@ public class NotificationsFragment extends FragmentBase {
     }
 
     private void initToolbar() {
-        ToolbarHelperKt.initCenteredToolbar(this, R.string.notification_title);
+        final TextView toolbarTitle = getView().findViewById(R.id.centeredToolbarTitle);
+        toolbarTitle.setText(R.string.notification_title);
         final Toolbar toolbar = getView().findViewById(R.id.centeredToolbar);
         toolbar.inflateMenu(R.menu.notification_center_menu);
         toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
