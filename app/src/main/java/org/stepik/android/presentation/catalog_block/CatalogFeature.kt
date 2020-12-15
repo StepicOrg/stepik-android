@@ -1,11 +1,15 @@
 package org.stepik.android.presentation.catalog_block
 
 import org.stepik.android.presentation.author_list.AuthorListFeature
+import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
+import org.stepik.android.presentation.enrollment.EnrollmentFeature
 import org.stepik.android.presentation.filter.FiltersFeature
+import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.presentation.user_courses.UserCoursesFeature
 
 interface CatalogFeature {
     data class State(
@@ -24,7 +28,7 @@ interface CatalogFeature {
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
-        data class FetchCatalogBlocksSuccess(val collections: List<CatalogBlockStateWrapper>) : Message() // parameter List<CatalogBlockItem>
+        data class FetchCatalogBlocksSuccess(val collections: List<CatalogBlockItem>) : Message()
         object FetchCatalogBlocksError : Message()
 
         /**
@@ -32,9 +36,12 @@ interface CatalogFeature {
          */
         data class StoriesMessage(val message: StoriesFeature.Message) : Message()
         data class FiltersMessage(val message: FiltersFeature.Message) : Message()
-        data class CourseListMessage(val id: Long, val message: CourseListFeature.Message) : Message()
+        data class CourseListMessage(val id: String, val message: CourseListFeature.Message) : Message()
         data class AuthorListMessage(val id: Long, val message: AuthorListFeature.Message) : Message()
         data class CourseContinueMessage(val message: CourseContinueFeature.Message) : Message()
+        data class UserCourseMessage(val message: UserCoursesFeature.Message) : Message()
+        data class ProgressMessage(val message: ProgressFeature.Message) : Message()
+        data class EnrollmentMessage(val message: EnrollmentFeature.Message) : Message()
     }
 
     sealed class Action {

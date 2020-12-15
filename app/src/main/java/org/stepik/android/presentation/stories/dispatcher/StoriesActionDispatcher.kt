@@ -39,8 +39,7 @@ constructor(
                             )
                         },
                         storiesRepository.getViewedStoriesIds()
-                    )
-                    .map { (stories, viewedIds) ->
+                    ) { stories, viewedIds ->
                         StoriesFeature.Message.FetchStoriesSuccess(
                             stories.sortedBy { if (it.id in viewedIds) 1 else 0 },
                             viewedIds

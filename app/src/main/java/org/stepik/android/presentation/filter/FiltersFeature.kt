@@ -21,6 +21,5 @@ interface FiltersFeature {
     sealed class Action {
         object LoadFilters : Action()
         data class ChangeFilters(val filters: EnumSet<StepikFilter>) : Action()
-        sealed class ViewAction : Action()
     }
 }

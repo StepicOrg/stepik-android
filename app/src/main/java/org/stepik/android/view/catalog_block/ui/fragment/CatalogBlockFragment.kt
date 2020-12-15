@@ -88,7 +88,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
-        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
+//        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
     }
 
     private fun injectComponent() {
@@ -110,7 +110,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
         catalogItemAdapter += FiltersAdapterDelegate(
             onFiltersChanged = {
-                if (catalogRecyclerView.isComputingLayout) return@FiltersAdapterDelegate
+                if (it.size > 1) return@FiltersAdapterDelegate
                 catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.FiltersChanged(it)))
             }
         )
@@ -123,13 +123,13 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             analytic = analytic,
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
-            sendLoadingMessage = { id, fullCourseList ->
+            onBlockSeen = { id, fullCourseList ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
             },
-            sendContinueCourseMessage = { course, courseViewSource, courseContinueInteractionSource ->
-                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.InitContinueCourse(course, courseViewSource, courseContinueInteractionSource)))
+            onCourseContinueClicked = { course, courseViewSource, courseContinueInteractionSource ->
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.OnContinueCourseClicked(course, courseViewSource, courseContinueInteractionSource)))
             },
-            sendCourseListItemClickMessage = { courseListItem ->
+            onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )

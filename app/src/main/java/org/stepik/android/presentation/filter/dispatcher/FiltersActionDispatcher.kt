@@ -38,7 +38,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onComplete = { onNewMessage(FiltersFeature.Message.FiltersChanged(action.filters)) },
+                        onComplete = { onNewMessage(FiltersFeature.Message.LoadFiltersSuccess(action.filters)) },
                         onError = emptyOnErrorStub
                     )
         }

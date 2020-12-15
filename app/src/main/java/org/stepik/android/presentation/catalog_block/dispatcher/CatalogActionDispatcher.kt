@@ -6,10 +6,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
-import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.presentation.catalog_block.CatalogFeature
-import org.stepik.android.presentation.course_list_redux.CourseListFeature
-import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
 
@@ -30,18 +27,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { catalogBlocks ->
-                            val mapped = catalogBlocks.mapNotNull { catalogBlockItem ->
-                                when (catalogBlockItem.content) {
-                                    is CatalogBlockContent.FullCourseList ->
-                                        catalogBlockItem
-                                    else ->
-                                        null
-                                }
-                            }
-                            val catalogWrappers = mapped.map { CatalogBlockStateWrapper.CourseList(catalogBlockItem = it, state = CourseListFeature.State.Idle) }
-                            onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogWrappers))
-                        },
+                        onSuccess = { catalogBlocks -> onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogBlocks)) },
                         onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }
                     )
             }

@@ -11,7 +11,7 @@ class CourseContinueReducer
 constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
-            is Message.InitContinueCourse ->
+            is Message.OnContinueCourseClicked ->
                 if (state is State.Idle) {
                     State.Loading to setOf(Action.ContinueCourse(message.course, message.viewSource, message.interactionSource))
                 } else {

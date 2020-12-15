@@ -35,7 +35,6 @@ constructor(
                     ))
                 if (adaptiveCoursesResolver.isAdaptive(action.course.id)) {
                     onNewMessage(CourseContinueFeature.Message.ShowCourseContinue(action.course, action.viewSource, isAdaptive = true))
-                    return
                 } else {
                     compositeDisposable += continueLearningInteractor
                         .getLastStepForCourse(action.course)

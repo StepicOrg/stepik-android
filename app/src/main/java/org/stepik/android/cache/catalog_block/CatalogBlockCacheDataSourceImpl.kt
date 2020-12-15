@@ -12,8 +12,8 @@ class CatalogBlockCacheDataSourceImpl
 constructor(
     private val catalogBlockDao: CatalogBlockDao
 ) : CatalogBlockCacheDataSource {
-    override fun getCatalogBlocks(): Single<List<CatalogBlockItem>> =
-        catalogBlockDao.getCatalogBlocks()
+    override fun getCatalogBlocks(language: String): Single<List<CatalogBlockItem>> =
+        catalogBlockDao.getCatalogBlocks(language)
 
     override fun insertCatalogBlocks(catalogBlocks: List<CatalogBlockItem>): Completable =
         catalogBlockDao
