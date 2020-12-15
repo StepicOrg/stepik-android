@@ -12,8 +12,8 @@ class CatalogBlockRemoteDataSourceImpl
 constructor(
     private val catalogBlockService: CatalogBlockService
 ) : CatalogBlockRemoteDataSource {
-    override fun getCatalogBlocks(): Single<List<CatalogBlockItem>> =
+    override fun getCatalogBlocks(language: String): Single<List<CatalogBlockItem>> =
         catalogBlockService
-            .getCatalogBlocks()
+            .getCatalogBlocks(mapOf("language" to language)) // TODO Switch to a "query" object
             .map(CatalogBlockResponse::catalogBlocks)
 }

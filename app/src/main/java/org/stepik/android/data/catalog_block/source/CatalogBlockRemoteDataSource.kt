@@ -4,5 +4,5 @@ import io.reactivex.Single
 import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 
 interface CatalogBlockRemoteDataSource {
-    fun getCatalogBlocks(): Single<List<CatalogBlockItem>>
+    fun getCatalogBlocks(language: String): Single<List<CatalogBlockItem>>
 }

@@ -12,6 +12,7 @@ import org.stepik.android.presentation.course_list_redux.mapper.CourseListStateM
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
 import org.stepik.android.presentation.enrollment.EnrollmentFeature
+import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
@@ -72,17 +73,26 @@ constructor(
             }
 
             is Message.FiltersMessage -> {
+                val (collectionsState, refreshAction) = if (message.message is FiltersFeature.Message.LoadFiltersSuccess) {
+                    CatalogFeature.CollectionsState.Loading to setOf(CatalogFeature.Action.FetchCatalogBlocks)
+                } else {
+                    state.collectionsState to emptySet()
+                }
                 val (filtersState, filtersActions) = filtersReducer.reduce(state.filtersState, message.message)
-                state.copy(filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet()
+                state.copy(collectionsState =  collectionsState, filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
             }
 
             is Message.CourseListMessage -> {
                 if (state.collectionsState is CatalogFeature.CollectionsState.Content) {
                     val updateIndex = state.collectionsState.collections.indexOfFirst { it.id == message.id }
-                    val updateState = state.collectionsState.collections[updateIndex] as CatalogBlockStateWrapper.CourseList
-                    val (courseListState, courseListActions) = courseListReducer.reduce(updateState.state, message.message)
-                    val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = courseListState)) }))
-                    result to courseListActions.map(Action::CourseListAction).toSet()
+                    if (updateIndex > -1) {
+                        val updateState = state.collectionsState.collections[updateIndex] as CatalogBlockStateWrapper.CourseList
+                        val (courseListState, courseListActions) = courseListReducer.reduce(updateState.state, message.message)
+                        val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = courseListState)) }))
+                        result to courseListActions.map(Action::CourseListAction).toSet()
+                    } else {
+                        state to emptySet()
+                    }
                 } else {
                     null
                 }

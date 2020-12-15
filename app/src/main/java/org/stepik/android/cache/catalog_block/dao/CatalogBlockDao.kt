@@ -10,8 +10,8 @@ import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 
 @Dao
 interface CatalogBlockDao {
-    @Query("SELECT * FROM CatalogBlockItem")
-    fun getCatalogBlocks(): Single<List<CatalogBlockItem>>
+    @Query("SELECT * FROM CatalogBlockItem WHERE language = :language")
+    fun getCatalogBlocks(language: String): Single<List<CatalogBlockItem>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCatalogBlocks(catalogBlocks: List<CatalogBlockItem>): Completable

@@ -27,19 +27,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { catalogBlocks ->
-//                            val mapped = catalogBlocks.mapNotNull { catalogBlockItem ->
-//                                when (catalogBlockItem.content) {
-//                                    is CatalogBlockContent.FullCourseList ->
-//                                        catalogBlockItem
-//                                    else ->
-//                                        null
-//                                }
-//                            }
-//                            val catalogWrappers = mapped.map { CatalogBlockStateWrapper.CourseList(catalogBlockItem = it, state = CourseListFeature.State.Idle) }
-//                            onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogWrappers))
-                            onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogBlocks))
-                        },
+                        onSuccess = { catalogBlocks -> onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogBlocks)) },
                         onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }
                     )
             }
