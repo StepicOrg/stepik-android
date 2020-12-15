@@ -6,6 +6,7 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.presentation.user_courses.UserCoursesFeature
 
 interface CatalogFeature {
     data class State(
@@ -34,6 +35,7 @@ interface CatalogFeature {
         data class FiltersMessage(val message: FiltersFeature.Message) : Message()
         data class CourseListMessage(val id: String, val message: CourseListFeature.Message) : Message()
         data class CourseContinueMessage(val message: CourseContinueFeature.Message) : Message()
+        data class UserCourseMessage(val message: UserCoursesFeature.Message) : Message()
     }
 
     sealed class Action {

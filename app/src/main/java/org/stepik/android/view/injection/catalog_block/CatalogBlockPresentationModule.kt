@@ -16,6 +16,7 @@ import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.stories.dispatcher.StoriesActionDispatcher
+import org.stepik.android.presentation.user_courses.dispatcher.UserCoursesActionDispatcher
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
 import ru.nobird.android.presentation.redux.dispatcher.tranform
@@ -33,7 +34,8 @@ object CatalogBlockPresentationModule {
         storiesActionDispatcher: StoriesActionDispatcher,
         filtersActionDispatcher: FiltersActionDispatcher,
         courseListActionDispatcher: CourseListActionDispatcher,
-        courseContinueActionDispatcher: CourseContinueActionDispatcher
+        courseContinueActionDispatcher: CourseContinueActionDispatcher,
+        userCoursesActionDispatcher: UserCoursesActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
@@ -67,6 +69,12 @@ object CatalogBlockPresentationModule {
                     courseContinueActionDispatcher.tranform(
                         transformAction = { it.safeCast<CatalogFeature.Action.CourseContinueAction>()?.action },
                         transformMessage = CatalogFeature.Message::CourseContinueMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    userCoursesActionDispatcher.tranform(
+                        transformAction = { null },
+                        transformMessage = CatalogFeature.Message::UserCourseMessage
                     )
                 )
                 .wrapWithViewContainer()
