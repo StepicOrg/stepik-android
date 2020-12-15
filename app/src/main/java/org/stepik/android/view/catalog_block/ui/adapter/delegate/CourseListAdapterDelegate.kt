@@ -41,7 +41,7 @@ class CourseListAdapterDelegate(
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
-        data is CatalogItem.Block
+        data is CatalogItem.Block && data.catalogBlockStateWrapper is CatalogBlockStateWrapper.CourseList
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         CourseCollectionViewHolder(createView(parent, R.layout.item_course_list_new))

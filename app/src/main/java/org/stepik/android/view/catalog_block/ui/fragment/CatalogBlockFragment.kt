@@ -38,6 +38,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -133,6 +134,10 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
+
+        catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate {
+
+        }
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter

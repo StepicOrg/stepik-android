@@ -46,6 +46,9 @@ constructor(
                         when (catalogBlockItem.content) {
                             is CatalogBlockContent.FullCourseList ->
                                 CatalogBlockStateWrapper.CourseList(catalogBlockItem = catalogBlockItem, state = CourseListFeature.State.Idle)
+
+                            is CatalogBlockContent.SimpleCourseList ->
+                                CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
                             else ->
                                 null
                         }
