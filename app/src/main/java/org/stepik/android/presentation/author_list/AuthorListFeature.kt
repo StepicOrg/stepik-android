@@ -2,6 +2,7 @@ package org.stepik.android.presentation.author_list
 
 import org.stepik.android.domain.catalog_block.model.AuthorCatalogBlockContentItem
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
+import ru.nobird.android.core.model.Identifiable
 
 interface AuthorListFeature {
     sealed class State {
@@ -9,8 +10,8 @@ interface AuthorListFeature {
         data class Content(val authorListItems: List<AuthorCatalogBlockContentItem>) : State()
     }
 
-    sealed class Message {
-        data class InitMessage(val id: Long, val authorList: CatalogBlockContent.AuthorCourseList) : Message()
+    sealed class Message : Identifiable<String> {
+        data class InitMessage(override val id: String, val authorList: CatalogBlockContent.AuthorCourseList) : Message()
     }
 
     sealed class Action {

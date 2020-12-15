@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_list_redux.model
 
+import org.stepik.android.domain.catalog_block.model.CatalogBlockContent.Companion.AUTHORS
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent.Companion.FULL_COURSE_LISTS
 import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 import org.stepik.android.presentation.author_list.AuthorListFeature
@@ -12,6 +13,6 @@ sealed class CatalogBlockStateWrapper : Identifiable<String> {
     }
 
     data class AuthorList(val catalogBlockItem: CatalogBlockItem, val state: AuthorListFeature.State) : CatalogBlockStateWrapper() {
-        override val id: Long = catalogBlockItem.id
+        override val id: String = "${AUTHORS}${catalogBlockItem.id}"
     }
 }

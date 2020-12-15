@@ -29,7 +29,7 @@ class AuthorListAdapterDelegate(
         private var courseCollection: CatalogBlockItem? = null
 
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
-        private val courseListTitleContainer = root.courseListTitleContainer
+        private val courseListTitleContainer = root.catalogBlockContainer
 
         private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer)
         private val authorItemAdapter: DefaultDelegateAdapter<AuthorCatalogBlockContentItem> = DefaultDelegateAdapter()
@@ -47,7 +47,7 @@ class AuthorListAdapterDelegate(
             data as CatalogItem.Block
             val catalogBlockAuthorListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.AuthorList
             catalogBlockTitleDelegate.setInformation(catalogBlockAuthorListItem.catalogBlockItem)
-            catalogBlockTitleDelegate.setCount(catalogBlockAuthorListItem.catalogBlockItem)
+//            catalogBlockTitleDelegate.setCount(catalogBlockAuthorListItem.catalogBlockItem)
             setState(catalogBlockAuthorListItem.state)
         }
 

@@ -37,7 +37,7 @@ interface CatalogFeature {
         data class StoriesMessage(val message: StoriesFeature.Message) : Message()
         data class FiltersMessage(val message: FiltersFeature.Message) : Message()
         data class CourseListMessage(val id: String, val message: CourseListFeature.Message) : Message()
-        data class AuthorListMessage(val id: Long, val message: AuthorListFeature.Message) : Message()
+        data class AuthorListMessage(val id: String, val message: AuthorListFeature.Message) : Message()
         data class CourseContinueMessage(val message: CourseContinueFeature.Message) : Message()
         data class UserCourseMessage(val message: UserCoursesFeature.Message) : Message()
         data class ProgressMessage(val message: ProgressFeature.Message) : Message()

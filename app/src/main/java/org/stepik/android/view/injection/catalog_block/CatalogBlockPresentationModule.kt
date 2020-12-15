@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
-import org.stepik.android.presentation.author_list.AuthorListFeature
 import org.stepik.android.presentation.author_list.dispatcher.AuthorListActionDispatcher
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.catalog_block.CatalogFeature
@@ -75,10 +74,7 @@ object CatalogBlockPresentationModule {
                 .wrapWithActionDispatcher(
                     authorListActionDispatcher.tranform(
                         transformAction = { it.safeCast<CatalogFeature.Action.AuthorListAction>()?.action },
-                        transformMessage = { authorListMessage ->
-                            authorListMessage as AuthorListFeature.Message.InitMessage
-                            CatalogFeature.Message.AuthorListMessage(authorListMessage.id, authorListMessage)
-                        }
+                        transformMessage = { CatalogFeature.Message.AuthorListMessage(it.id, it) }
                     )
                 )
                 .wrapWithActionDispatcher(
