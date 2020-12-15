@@ -12,6 +12,7 @@ import org.stepik.android.presentation.course_list_redux.mapper.CourseListStateM
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
+import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
 import ru.nobird.android.core.model.mutate
@@ -98,21 +99,38 @@ constructor(
 
             is Message.UserCourseMessage -> {
                 if (state.collectionsState is CatalogFeature.CollectionsState.Content && message.message is UserCoursesFeature.Message.UserCourseOperationUpdate) {
-                    val updatedCollection = state
-                        .collectionsState
-                        .collections
-                        .map { item ->
-                            if (item is CatalogBlockStateWrapper.CourseList) {
-                                val updatedState = courseListStateMapper.mapToUserCourseUpdate(item.state, message.message.userCourse)
-                                CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
-                            } else {
-                                item
-                            }
-                        }
+                    val updatedCollection = updateCourseLists(state.collectionsState.collections) { item ->
+                        val updatedState = courseListStateMapper.mapToUserCourseUpdate(item.state, message.message.userCourse)
+                        CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
+                    }
+                    state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to emptySet()
+                } else {
+                    null
+                }
+            }
+
+            is Message.ProgressMessage -> {
+                if (state.collectionsState is CatalogFeature.CollectionsState.Content && message.message is ProgressFeature.Message.ProgressUpdate) {
+                    val updatedCollection = updateCourseLists(state.collectionsState.collections) { item ->
+                        val updatedState = courseListStateMapper.mergeWithCourseProgress(item.state, message.message.progress)
+                        CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
+                    }
                     state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to emptySet()
                 } else {
                     null
                 }
             }
         } ?: state to emptySet()
+
+    private fun updateCourseLists(
+        collections: List<CatalogBlockStateWrapper>,
+        mapper: (CatalogBlockStateWrapper.CourseList) -> CatalogBlockStateWrapper
+    ): List<CatalogBlockStateWrapper> =
+        collections.map { item ->
+            if (item is CatalogBlockStateWrapper.CourseList) {
+                mapper(item)
+            } else {
+                item
+            }
+        }
 }

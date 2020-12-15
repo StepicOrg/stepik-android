@@ -4,6 +4,7 @@ import org.stepic.droid.util.mapPaged
 import org.stepik.android.domain.course.mapper.CourseStatsMapper
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import javax.inject.Inject
 
@@ -25,6 +26,19 @@ constructor(
     private fun mergeCourseDataItemWithUserCourse(item: CourseListItem.Data, userCourse: UserCourse): CourseListItem.Data =
         if (item.course.id == userCourse.course) {
             item.copy(courseStats = courseStatsMapper.mutateEnrolledState(item.courseStats) { copy(userCourse = userCourse) })
+        } else {
+            item
+        }
+
+    /**
+     * Progress
+     */
+    fun mergeWithCourseProgress(state: CourseListFeature.State, progress: Progress): CourseListFeature.State =
+        mapCourseDataItems(state) { mergeCourseDataItemWithProgress(it, progress) }
+
+    private fun mergeCourseDataItemWithProgress(item: CourseListItem.Data, progress: Progress): CourseListItem.Data =
+        if (item.course.progress == progress.id && progress.id != null) {
+            item.copy(courseStats = item.courseStats.copy(progress = progress))
         } else {
             item
         }

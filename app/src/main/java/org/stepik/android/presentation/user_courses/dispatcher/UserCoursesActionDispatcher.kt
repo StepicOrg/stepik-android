@@ -17,7 +17,7 @@ class UserCoursesActionDispatcher
 @Inject
 constructor(
     @UserCoursesOperationBus
-    private val userCourseOperationObservable: Observable<UserCourse>,
+    userCourseOperationObservable: Observable<UserCourse>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -32,5 +32,7 @@ constructor(
                 onError = emptyOnErrorStub
             )
     }
-    override fun handleAction(action: UserCoursesFeature.Action) {}
+    override fun handleAction(action: UserCoursesFeature.Action) {
+        // no op
+    }
 }

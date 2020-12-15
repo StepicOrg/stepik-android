@@ -14,6 +14,7 @@ import org.stepik.android.presentation.course_continue_redux.dispatcher.CourseCo
 import org.stepik.android.presentation.course_list_redux.dispatcher.CourseListActionDispatcher
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
+import org.stepik.android.presentation.progress.dispatcher.ProgressActionDispatcher
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.stories.dispatcher.StoriesActionDispatcher
 import org.stepik.android.presentation.user_courses.dispatcher.UserCoursesActionDispatcher
@@ -35,7 +36,8 @@ object CatalogBlockPresentationModule {
         filtersActionDispatcher: FiltersActionDispatcher,
         courseListActionDispatcher: CourseListActionDispatcher,
         courseContinueActionDispatcher: CourseContinueActionDispatcher,
-        userCoursesActionDispatcher: UserCoursesActionDispatcher
+        userCoursesActionDispatcher: UserCoursesActionDispatcher,
+        progressActionDispatcher: ProgressActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
@@ -75,6 +77,12 @@ object CatalogBlockPresentationModule {
                     userCoursesActionDispatcher.tranform(
                         transformAction = { null },
                         transformMessage = CatalogFeature.Message::UserCourseMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    progressActionDispatcher.tranform(
+                        transformAction = { null },
+                        transformMessage = CatalogFeature.Message::ProgressMessage
                     )
                 )
                 .wrapWithViewContainer()
