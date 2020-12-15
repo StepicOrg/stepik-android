@@ -10,8 +10,8 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListActionDispatcher
@@ -24,14 +24,13 @@ constructor(
     private val mainScheduler: Scheduler
 ) : RxActionDispatcher<CourseListFeature.Action, CourseListFeature.Message>() {
     override fun handleAction(action: CourseListFeature.Action) {
-        Timber.d("Action: $action")
         when (action) {
             is CourseListFeature.Action.FetchCourseList -> {
                 compositeDisposable += Flowable
                     .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
                     .concatMapSingle { sourceType ->
                         courseListInteractor
-                            .getCourseListItems(action.fullCourseList.content.courses, sourceTypeComposition = sourceType, courseViewSource = CourseViewSource.Collection(action.fullCourseList.content.id))
+                            .getCourseListItems(action.fullCourseList.content.courses, courseViewSource = CourseViewSource.Collection(action.fullCourseList.content.id), sourceTypeComposition = sourceType)
                             .map { items ->
                                 CourseListFeature.Message.FetchCourseListSuccess(action.id, items, items)
                             }
@@ -41,6 +40,17 @@ constructor(
                     .subscribeBy(
                         onNext = { onNewMessage(it) },
                         onError = { onNewMessage(CourseListFeature.Message.FetchCourseListError(action.id)) }
+                    )
+            }
+
+            is CourseListFeature.Action.FetchCourseListAfterEnrollment -> {
+                compositeDisposable += courseListInteractor
+                    .getCourseListItems(listOf(action.course.id), courseViewSource = CourseViewSource.Collection(action.fullCourseList.content.id), sourceTypeComposition = SourceTypeComposition.CACHE)
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onSuccess = { onNewMessage(CourseListFeature.Message.OnEnrollmentFetchCourseListSuccess(action.id, it, it)) },
+                        onError = emptyOnErrorStub
                     )
             }
         }

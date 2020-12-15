@@ -12,6 +12,7 @@ import org.stepik.android.presentation.catalog_block.reducer.CatalogReducer
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_continue_redux.dispatcher.CourseContinueActionDispatcher
 import org.stepik.android.presentation.course_list_redux.dispatcher.CourseListActionDispatcher
+import org.stepik.android.presentation.enrollment.dispatcher.EnrollmentActionDispatcher
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
 import org.stepik.android.presentation.progress.dispatcher.ProgressActionDispatcher
@@ -37,7 +38,8 @@ object CatalogBlockPresentationModule {
         courseListActionDispatcher: CourseListActionDispatcher,
         courseContinueActionDispatcher: CourseContinueActionDispatcher,
         userCoursesActionDispatcher: UserCoursesActionDispatcher,
-        progressActionDispatcher: ProgressActionDispatcher
+        progressActionDispatcher: ProgressActionDispatcher,
+        enrollmentActionDispatcher: EnrollmentActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
@@ -83,6 +85,12 @@ object CatalogBlockPresentationModule {
                     progressActionDispatcher.tranform(
                         transformAction = { null },
                         transformMessage = CatalogFeature.Message::ProgressMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    enrollmentActionDispatcher.tranform(
+                        transformAction = { null },
+                        transformMessage = CatalogFeature.Message::EnrollmentMessage
                     )
                 )
                 .wrapWithViewContainer()

@@ -4,6 +4,7 @@ import org.stepic.droid.util.mapPaged
 import org.stepik.android.domain.course.mapper.CourseStatsMapper
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import javax.inject.Inject
@@ -17,6 +18,15 @@ class CourseListStateMapper
 constructor(
     private val courseStatsMapper: CourseStatsMapper
 ) {
+    /**
+     * Enrollment
+     */
+    fun mapToEnrollmentUpdateState(state: CourseListFeature.State, enrolledCourse: Course): CourseListFeature.State =
+        mapCourseDataItems(state) { if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it }
+
+    fun mapToEnrollmentUpdateState(state: CourseListFeature.State, enrolledCourse: CourseListItem.Data): CourseListFeature.State =
+        mapCourseDataItems(state) { if (it.course.id == enrolledCourse.course.id) enrolledCourse else it }
+
     /**
      * User courses
      */

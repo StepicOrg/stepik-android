@@ -11,11 +11,13 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.mapper.CourseListStateMapper
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
+import org.stepik.android.presentation.enrollment.EnrollmentFeature
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
 import ru.nobird.android.core.model.mutate
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
@@ -116,6 +118,22 @@ constructor(
                         CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
                     }
                     state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to emptySet()
+                } else {
+                    null
+                }
+            }
+
+            is Message.EnrollmentMessage -> {
+                if (state.collectionsState is CatalogFeature.CollectionsState.Content && message.message is EnrollmentFeature.Message.EnrollmentMessage) {
+                    val courseListActions = mutableSetOf<CourseListFeature.Action>()
+                    val updatedCollection = updateCourseLists(state.collectionsState.collections) { item ->
+                        item.catalogBlockItem.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
+                            courseListActions.add(CourseListFeature.Action.FetchCourseListAfterEnrollment(item.id, message.message.enrolledCourse, it))
+                        }
+                        val updatedState = courseListStateMapper.mapToEnrollmentUpdateState(item.state, message.message.enrolledCourse)
+                        CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
+                    }
+                    state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to courseListActions.map(Action::CourseListAction).toSet()
                 } else {
                     null
                 }
