@@ -1,11 +1,13 @@
 package org.stepik.android.presentation.catalog_block.reducer
 
+import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature.State
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Message
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Action
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_continue_redux.reducer.CourseContinueReducer
+import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
@@ -28,8 +30,7 @@ constructor(
                 if (state.collectionsState is CatalogFeature.CollectionsState.Idle ||
                         state.collectionsState is CatalogFeature.CollectionsState.Error && message.forceUpdate
                 ) {
-                    val (collectionsState, collectionsAction) = CatalogFeature.CollectionsState.Loading to setOf(Action.FetchCatalogBlocks)
-                    state.copy(collectionsState = collectionsState) to collectionsAction
+                    state.copy(collectionsState = CatalogFeature.CollectionsState.Loading) to setOf(Action.FetchCatalogBlocks)
                 } else {
                     null
                 }
@@ -37,7 +38,15 @@ constructor(
 
             is Message.FetchCatalogBlocksSuccess -> {
                 if (state.collectionsState is CatalogFeature.CollectionsState.Loading) {
-                    state.copy(collectionsState = CatalogFeature.CollectionsState.Content(message.collections)) to emptySet()
+                    val collections = message.collections.mapNotNull { catalogBlockItem ->
+                        when (catalogBlockItem.content) {
+                            is CatalogBlockContent.FullCourseList ->
+                                CatalogBlockStateWrapper.CourseList(catalogBlockItem = catalogBlockItem, state = CourseListFeature.State.Idle)
+                            else ->
+                                null
+                        }
+                    }
+                    state.copy(collectionsState = CatalogFeature.CollectionsState.Content(collections)) to emptySet()
                 } else {
                     null
                 }
@@ -45,8 +54,7 @@ constructor(
 
             is Message.FetchCatalogBlocksError -> {
                 if (state.collectionsState is CatalogFeature.CollectionsState.Loading) {
-                    val (collectionState, collectionsAction) = CatalogFeature.CollectionsState.Error to emptySet<Action>()
-                    state.copy(collectionsState = collectionState) to collectionsAction
+                    state.copy(collectionsState = CatalogFeature.CollectionsState.Error) to emptySet()
                 } else {
                     null
                 }

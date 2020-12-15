@@ -22,6 +22,7 @@ import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockTitleDelega
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -30,10 +31,13 @@ class CourseListAdapterDelegate(
     private val analytic: Analytic,
     private val isHandleInAppPurchase: Boolean,
     private val onTitleClick: (Long) -> Unit,
-    private val sendLoadingMessage: (Long, CatalogBlockContent.FullCourseList) -> Unit,
-    private val sendContinueCourseMessage: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-    private val sendCourseListItemClickMessage: (CourseListItem.Data) -> Unit
+    private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
+    private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
+    private val onCourseClicked: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+    companion object {
+        private const val MAX_COURSE_COUNT = 99
+    }
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
@@ -47,9 +51,13 @@ class CourseListAdapterDelegate(
         private var courseCollection: CatalogBlockItem? = null
 
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
-        private val courseListTitleContainer = root.courseListTitleContainer
+        private val courseListTitleContainer = root.catalogBlockContainer
 
-        private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer)
+        private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer) {
+            val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockTitleDelegate
+            onTitleClick(collection.content.id)
+        }
+
         private val skeletonCount = root.resources.getInteger(R.integer.course_list_rows) * root.resources.getInteger(R.integer.course_list_columns)
         private val courseItemsSkeleton: List<CourseListItem> = List(skeletonCount) { CourseListItem.PlaceHolder() }
         private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
@@ -62,19 +70,13 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListFeature.State.Empty>()
             viewStateDelegate.addState<CourseListFeature.State.NetworkError>()
 
-            val onClickListener = View.OnClickListener {
-                val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@OnClickListener
-                onTitleClick(collection.content.id)
-            }
-            courseListTitleContainer.setOnClickListener(onClickListener)
-
             courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
             courseItemAdapter += CourseListItemAdapterDelegate(
                 analytic = analytic,
-                onItemClicked = { courseListItem -> sendCourseListItemClickMessage(courseListItem) },
+                onItemClicked = { courseListItem -> onCourseClicked(courseListItem) },
                 onContinueCourseClicked = {
                     val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
-                    sendContinueCourseMessage(it.course, CourseViewSource.Collection(collection.content.id), CourseContinueInteractionSource.COURSE_WIDGET)
+                    onCourseContinueClicked(it.course, CourseViewSource.Collection(collection.content.id), CourseContinueInteractionSource.COURSE_WIDGET)
                 },
                 isHandleInAppPurchase = isHandleInAppPurchase
             )
@@ -98,11 +100,17 @@ class CourseListAdapterDelegate(
             initLoading(catalogBlockCourseListItem)
             courseCollection = catalogBlockCourseListItem.catalogBlockItem
             catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlockItem)
-            catalogBlockTitleDelegate.setCount(catalogBlockCourseListItem.catalogBlockItem)
-            setState(catalogBlockCourseListItem.state)
+            catalogBlockCourseListItem
+                .catalogBlockItem.content
+                .safeCast<CatalogBlockContent.FullCourseList>()
+                ?.let {
+                    val countString = getCountString(it.content.coursesCount)
+                    catalogBlockTitleDelegate.setCount(countString)
+                }
+            render(catalogBlockCourseListItem.state)
         }
 
-        fun setState(state: CourseListFeature.State) {
+        private fun render(state: CourseListFeature.State) {
             viewStateDelegate.switchState(state)
             when (state) {
                 is CourseListFeature.State.Idle -> {
@@ -122,12 +130,19 @@ class CourseListAdapterDelegate(
                     courseItemAdapter.items = emptyList()
             }
         }
+
+        private fun getCountString(itemCount: Int): String =
+            if (itemCount > MAX_COURSE_COUNT) {
+                context.resources.getString(R.string.courses_max_count)
+            } else {
+                context.resources.getQuantityString(R.plurals.course_count, itemCount, itemCount)
+            }
     }
 
     private fun initLoading(catalogBlockCourseList: CatalogBlockStateWrapper.CourseList) {
         if (catalogBlockCourseList.catalogBlockItem.content !is CatalogBlockContent.FullCourseList) {
             return
         }
-        sendLoadingMessage(catalogBlockCourseList.id, catalogBlockCourseList.catalogBlockItem.content)
+        onBlockSeen(catalogBlockCourseList.id, catalogBlockCourseList.catalogBlockItem.content)
     }
 }

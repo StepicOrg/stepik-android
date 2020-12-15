@@ -1,19 +1,25 @@
 package org.stepik.android.view.catalog_block.ui.delegate
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.view_container_block.view.*
-import org.stepic.droid.R
-import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
 
 class CatalogBlockTitleDelegate(
-    private val view: ViewGroup
+    private val view: ViewGroup,
+    onClickListener: View.OnClickListener? = null
 ) {
-    private val title = view.courseListTitle
-    private val count = view.coursesCarouselCount
-    private val description = view.courseListDescription
+    private val root = view.catalogBlockContainer
+    private val title = view.containerTitle
+    private val count = view.containerCarouselCount
+    private val viewAllArrow = view.containerViewAll
+    private val description = view.containerDescription
+
+    init {
+        onClickListener?.let { root.setOnClickListener(it) }
+        viewAllArrow.isVisible = onClickListener != null
+    }
 
     fun setInformation(data: CatalogBlockItem) {
         view.isVisible = data.isTitleVisible
@@ -23,15 +29,8 @@ class CatalogBlockTitleDelegate(
         description.isVisible = data.description.isNotEmpty()
     }
 
-    fun setCount(data: CatalogBlockItem) {
-        if (data.content !is CatalogBlockContent.FullCourseList) {
-            return
-        }
+    fun setCount(countText: String) {
         count.isVisible = true
-        count.text = view.resources.getQuantityString(
-            R.plurals.course_count,
-            data.content.content.coursesCount,
-            data.content.content.coursesCount
-        )
+        count.text = countText
     }
 }

@@ -11,7 +11,6 @@ import org.stepik.android.presentation.catalog_block.dispatcher.CatalogActionDis
 import org.stepik.android.presentation.catalog_block.reducer.CatalogReducer
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_continue_redux.dispatcher.CourseContinueActionDispatcher
-import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.dispatcher.CourseListActionDispatcher
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
@@ -61,17 +60,7 @@ object CatalogBlockPresentationModule {
                 .wrapWithActionDispatcher(
                     courseListActionDispatcher.tranform(
                         transformAction = { it.safeCast<CatalogFeature.Action.CourseListAction>()?.action },
-                        transformMessage = { courseListMessage ->
-                            val (id, message) = when (courseListMessage) {
-                                is CourseListFeature.Message.InitMessage ->
-                                    courseListMessage.id to courseListMessage
-                                is CourseListFeature.Message.FetchCourseListSuccess ->
-                                    courseListMessage.id to courseListMessage
-                                is CourseListFeature.Message.FetchCourseListError ->
-                                    courseListMessage.id to courseListMessage
-                            }
-                            CatalogFeature.Message.CourseListMessage(id, message)
-                        }
+                        transformMessage = { CatalogFeature.Message.CourseListMessage(it.id, it) }
                     )
                 )
                 .wrapWithActionDispatcher(

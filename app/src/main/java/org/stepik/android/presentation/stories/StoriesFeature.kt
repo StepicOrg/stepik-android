@@ -20,6 +20,5 @@ interface StoriesFeature {
     sealed class Action {
         object FetchStories : Action()
         data class MarkStoryAsViewed(val storyId: Long) : Action()
-        sealed class ViewAction : Action()
     }
 }

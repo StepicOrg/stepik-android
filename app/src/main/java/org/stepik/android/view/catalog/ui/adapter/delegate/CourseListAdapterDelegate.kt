@@ -48,11 +48,11 @@ class CourseListAdapterDelegate(
 
         private var courseCollection: CourseCollection? = null
 
-        private val courseListTitle = root.courseListTitle
-        private val courseListDescription = root.courseListDescription
+        private val courseListTitle = root.containerTitle
+        private val courseListDescription = root.containerDescription
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListPlaceholderEmpty = root.courseListPlaceholderEmpty
-        private val courseListTitleContainer = root.courseListTitleContainer
+        private val courseListTitleContainer = root.catalogBlockContainer
         private val courseListPlaceholderNoConnection = root.courseListPlaceholderNoConnection
 
         private val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -94,7 +94,7 @@ class CourseListAdapterDelegate(
         private val delegate = CourseListViewDelegate(
             analytic = analytic,
             courseContinueViewDelegate = courseContinueViewDelegate,
-            courseListTitleContainer = root.courseListTitleContainer,
+            courseListTitleContainer = root.catalogBlockContainer,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

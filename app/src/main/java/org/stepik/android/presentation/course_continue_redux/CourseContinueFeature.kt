@@ -13,7 +13,7 @@ interface CourseContinueFeature {
     }
 
     sealed class Message {
-        data class InitContinueCourse(val course: Course, val viewSource: CourseViewSource, val interactionSource: CourseContinueInteractionSource) : Message()
+        data class OnContinueCourseClicked(val course: Course, val viewSource: CourseViewSource, val interactionSource: CourseContinueInteractionSource) : Message()
         data class ShowStepsContinue(val course: Course, val viewSource: CourseViewSource, val lastStep: LastStep) : Message()
         data class ShowCourseContinue(val course: Course, val viewSource: CourseViewSource, val isAdaptive: Boolean) : Message()
         data class CourseListItemClick(val courseListItem: CourseListItem.Data) : Message()
