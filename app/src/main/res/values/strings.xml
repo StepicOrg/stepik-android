@@ -449,6 +449,11 @@
         <item quantity="other">%d courses</item>
     </plurals>
     <string name="courses_max_count">99+ courses</string>
+    <plurals name="author_count">
+        <item quantity="one">%d author</item>
+        <item quantity="other">%d authors</item>
+    </plurals>
+    <string name="author_max_count">99+ authors</string>
     <string name="course_current_progress">Current progress: %s/%d points</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 

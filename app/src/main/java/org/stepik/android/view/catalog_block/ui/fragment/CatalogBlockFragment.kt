@@ -26,6 +26,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.presentation.author_list.AuthorListFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
@@ -37,6 +38,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
@@ -132,6 +134,10 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
+        )
+        catalogItemAdapter += AuthorListAdapterDelegate(
+            onBlockSeen = { id, authorList -> catalogViewModel.onNewMessage(CatalogFeature.Message.AuthorListMessage(id = id, message = AuthorListFeature.Message.InitMessage(id = id, authorList = authorList))) },
+            onAuthorClick = { screenManager.openProfile(requireContext(), it) }
         )
 
         with(catalogRecyclerView) {

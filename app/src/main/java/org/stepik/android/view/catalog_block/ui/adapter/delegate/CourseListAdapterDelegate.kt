@@ -101,7 +101,8 @@ class CourseListAdapterDelegate(
             courseCollection = catalogBlockCourseListItem.catalogBlockItem
             catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlockItem)
             catalogBlockCourseListItem
-                .catalogBlockItem.content
+                .catalogBlockItem
+                .content
                 .safeCast<CatalogBlockContent.FullCourseList>()
                 ?.let {
                     val countString = getCountString(it.content.coursesCount)
