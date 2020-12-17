@@ -127,7 +127,7 @@ constructor(
             .subscribeBy(
                 onComplete = { state = LessonView.State.LessonNotFound },
                 onSuccess  = { state = LessonView.State.LessonLoaded(it, LessonView.StepsState.Idle); resolveStepsState() },
-                onError    = { state = LessonView.State.NetworkError; it.printStackTrace() }
+                onError    = { state = LessonView.State.NetworkError }
             )
     }
 
@@ -168,7 +168,6 @@ constructor(
                             handleDiscussionId()
                         },
                         onError = {
-                            it.printStackTrace()
                             state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
                         }
                     )
