@@ -30,7 +30,7 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val VERSION = 62
+        const val VERSION = 63
         const val NAME = "stepic_database.db"
     }
 
