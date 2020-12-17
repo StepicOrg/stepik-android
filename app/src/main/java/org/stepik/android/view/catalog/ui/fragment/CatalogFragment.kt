@@ -24,7 +24,6 @@ import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
-import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
 import org.stepik.android.presentation.catalog.model.CatalogItem
@@ -85,7 +84,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
+        centeredToolbarTitle.setText(R.string.catalog_title)
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
 
