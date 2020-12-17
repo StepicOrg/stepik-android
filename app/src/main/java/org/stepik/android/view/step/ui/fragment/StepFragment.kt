@@ -237,7 +237,8 @@ class StepFragment : Fragment(), StepView,
 
     override fun setState(state: StepView.State) {
         if (state is StepView.State.Loaded) {
-            val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
+            val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block ||
+                    stepWrapper.step.isEnabled != state.stepWrapper.step.isEnabled
 
             stepWrapper = state.stepWrapper
             stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
