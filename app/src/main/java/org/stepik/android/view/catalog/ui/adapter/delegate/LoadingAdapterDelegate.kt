@@ -11,12 +11,8 @@ class LoadingAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is CatalogItem.Loading
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> {
-        val topMargin = parent.resources.getDimensionPixelSize(R.dimen.loading_placeholder_top_margin)
-        val itemView = createView(parent, R.layout.item_course_loading_skeleton_container)
-        (itemView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, topMargin, 0, 0)
-        return LoadingViewHolder(itemView)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
+        LoadingViewHolder(createView(parent, R.layout.item_course_loading_skeleton_container))
 
     private class LoadingViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root)
 }

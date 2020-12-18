@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
     android:orientation="vertical">
 
     <include layout="@layout/view_container_block" />
@@ -14,7 +15,7 @@
         android:clipToPadding="false"
         android:paddingLeft="@dimen/course_list_padding"
         android:paddingRight="@dimen/course_list_padding"
-        android:paddingBottom="12dp"
+        android:paddingBottom="8dp"
         android:paddingTop="8dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
