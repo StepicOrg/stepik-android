@@ -59,7 +59,6 @@ class SimpleCourseListsDefaultAdapterDelegate(
 
             val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(courseListsRecycler)
-
         }
 
         override fun onBind(data: CatalogItem) {
