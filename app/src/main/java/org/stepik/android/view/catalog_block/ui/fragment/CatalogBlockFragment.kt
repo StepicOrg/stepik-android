@@ -40,6 +40,7 @@ import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -140,6 +141,11 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         )
 
         catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate(
+            courseCountMapper = courseCountMapper,
+            onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
+        )
+
+        catalogItemAdapter += SimpleCourseListsGridAdapterDelegate(
             courseCountMapper = courseCountMapper,
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
         )

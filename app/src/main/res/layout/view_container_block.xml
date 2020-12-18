@@ -2,6 +2,7 @@
 <RelativeLayout android:id="@+id/catalogBlockContainer"
     android:background="?selectableItemBackground"
     android:paddingBottom="16dp"
+    android:layout_marginTop="8dp"
     android:layout_marginBottom="4dp"
     android:visibility="visible"
     android:layout_width="match_parent"

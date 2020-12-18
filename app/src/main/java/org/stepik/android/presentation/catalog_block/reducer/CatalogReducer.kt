@@ -50,8 +50,13 @@ constructor(
                             is CatalogBlockContent.FullCourseList ->
                                 CatalogBlockStateWrapper.CourseList(catalogBlockItem = catalogBlockItem, state = CourseListFeature.State.Idle)
 
-                            is CatalogBlockContent.SimpleCourseList ->
-                                CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
+                            is CatalogBlockContent.SimpleCourseList -> {
+                                if (catalogBlockItem.appearance == CatalogBlockContent.APPEARANCE_SIMPLE_COURSE_LISTS_GRID) {
+                                    CatalogBlockStateWrapper.SimpleCourseListsGrid(catalogBlockItem, catalogBlockItem.content)
+                                } else {
+                                    CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
+                                }
+                            }
                             else ->
                                 null
                         }
