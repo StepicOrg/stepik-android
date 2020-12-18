@@ -114,8 +114,7 @@ class CourseListAdapterDelegate(
             viewStateDelegate.switchState(state)
             when (state) {
                 is CourseListFeature.State.Idle -> {
-                    courseItemAdapter.items = emptyList()
-                    courseItemAdapter.notifyDataSetChanged()
+                    courseItemAdapter.items = courseItemsSkeleton
                 }
 
                 is CourseListFeature.State.Loading -> {

@@ -11,6 +11,7 @@ import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import timber.log.Timber
 import java.util.EnumSet
 
 class FiltersAdapterDelegate(
@@ -37,6 +38,7 @@ class FiltersAdapterDelegate(
                             return
                         }
                         val filters = composeFilters()
+                        Timber.d("Test")
                         onFiltersChanged(filters)
                     }
                 }
@@ -56,6 +58,7 @@ class FiltersAdapterDelegate(
         private fun render(state: FiltersFeature.State) {
             viewStateDelegate.switchState(state)
             if (state is FiltersFeature.State.FiltersLoaded) {
+                languages.isEnabled = false
                 if (StepikFilter.RUSSIAN in state.filters) {
                     languages.check(R.id.languageRu)
                 }

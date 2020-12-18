@@ -15,13 +15,13 @@ constructor(
     private val catalogBlockRemoteDataSource: CatalogBlockRemoteDataSource,
     private val catalogBlockCacheDataSource: CatalogBlockCacheDataSource
 ) : CatalogBlockRepository {
-    override fun getCatalogBlocks(primarySourceType: DataSourceType): Single<List<CatalogBlockItem>> {
+    override fun getCatalogBlocks(language: String, primarySourceType: DataSourceType): Single<List<CatalogBlockItem>> {
         val remoteSource = catalogBlockRemoteDataSource
-            .getCatalogBlocks()
+            .getCatalogBlocks(language)
             .doCompletableOnSuccess { catalogBlockCacheDataSource.insertCatalogBlocks(it) }
 
         val cacheSource = catalogBlockCacheDataSource
-            .getCatalogBlocks()
+            .getCatalogBlocks(language)
 
         return when (primarySourceType) {
             DataSourceType.REMOTE ->

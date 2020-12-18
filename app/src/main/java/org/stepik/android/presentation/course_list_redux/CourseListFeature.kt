@@ -3,6 +3,7 @@ package org.stepik.android.presentation.course_list_redux
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.model.Course
 import ru.nobird.android.core.model.Identifiable
 
 interface CourseListFeature {
@@ -26,10 +27,16 @@ interface CourseListFeature {
             val courseListItems: List<CourseListItem>
         ) : Message()
         data class FetchCourseListError(override val id: String) : Message()
+        data class OnEnrollmentFetchCourseListSuccess(
+            override val id: String,
+            val courseListDataItems: PagedList<CourseListItem.Data>,
+            val courseListItems: List<CourseListItem>
+        ) : Message()
     }
 
     sealed class Action {
         data class FetchCourseList(val id: String, val fullCourseList: CatalogBlockContent.FullCourseList) : Action()
+        data class FetchCourseListAfterEnrollment(val id: String, val course: Course, val fullCourseList: CatalogBlockContent.FullCourseList) : Action()
         sealed class ViewAction : Action()
     }
 }

@@ -34,7 +34,12 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FiltersChanged ->
                 if (state is State.FiltersLoaded) {
-                    State.FiltersLoaded(message.filters) to emptySet()
+                    val action = if (state.filters == message.filters) {
+                        emptySet<Action>()
+                    } else {
+                        setOf(Action.ChangeFilters(message.filters))
+                    }
+                    State.FiltersLoaded(message.filters) to action
                 } else {
                     null
                 }

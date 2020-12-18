@@ -24,5 +24,5 @@ constructor(
     // TODO Testing API, remove later
     fun fetchCatalogBlocks(): Single<List<CatalogBlockItem>> =
         catalogBlockRepository
-            .getCatalogBlocks(primarySourceType = DataSourceType.REMOTE)
+            .getCatalogBlocks(language = sharedPreferenceHelper.languageForFeatured, primarySourceType = DataSourceType.REMOTE)
 }

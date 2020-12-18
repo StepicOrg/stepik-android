@@ -89,7 +89,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
-        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
+//        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
     }
 
     private fun injectComponent() {
@@ -111,7 +111,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
         catalogItemAdapter += FiltersAdapterDelegate(
             onFiltersChanged = {
-                if (catalogRecyclerView.isComputingLayout) return@FiltersAdapterDelegate
+                if (it.size > 1) return@FiltersAdapterDelegate
                 catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.FiltersChanged(it)))
             }
         )
