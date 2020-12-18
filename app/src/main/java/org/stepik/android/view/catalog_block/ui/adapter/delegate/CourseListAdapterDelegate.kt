@@ -65,7 +65,7 @@ class CourseListAdapterDelegate(
 
         init {
             viewStateDelegate.addState<CourseListFeature.State.Idle>(courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Empty>()
             viewStateDelegate.addState<CourseListFeature.State.NetworkError>()
