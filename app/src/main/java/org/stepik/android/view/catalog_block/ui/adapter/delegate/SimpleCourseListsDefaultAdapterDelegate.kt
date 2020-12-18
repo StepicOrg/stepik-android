@@ -70,7 +70,9 @@ class SimpleCourseListsDefaultAdapterDelegate(
 
             adapter.items = simpleCourseListsDefault.content.content
             catalogBlockTitleDelegate.setInformation(simpleCourseListsDefault.catalogBlockItem)
-            catalogBlockTitleDelegate.setCount(simpleCourseListsDefault.content.content.size.toString())
+
+            val count = simpleCourseListsDefault.content.content.size
+            catalogBlockTitleDelegate.setCount(context.resources.getQuantityString(R.plurals.catalog_course_lists, count, count))
         }
     }
 }

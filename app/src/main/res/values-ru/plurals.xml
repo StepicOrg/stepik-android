@@ -163,4 +163,11 @@
         <item quantity="many">%d рецензий получены.</item>
         <item quantity="other">%d рецензий получены.</item>
     </plurals>
+
+    <plurals name="catalog_course_lists">
+        <item quantity="one">%d категория</item>
+        <item quantity="few">%d категории</item>
+        <item quantity="many">%d категорий</item>
+        <item quantity="other">%d категорий</item>
+    </plurals>
 </resources>
