@@ -3,7 +3,6 @@ package org.stepic.droid.features.stories.ui.delegate
 import android.content.Context
 import android.content.res.ColorStateList
 import android.net.Uri
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
@@ -16,6 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
+import org.stepic.droid.ui.util.inflate
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import ru.nobird.android.stories.model.Story
@@ -40,28 +40,29 @@ class PlainTextWithButtonStoryPartDelegate(
     }
 
     override fun isForViewType(part: StoryPart): Boolean =
-            part is PlainTextWithButtonStoryPart
+        part is PlainTextWithButtonStoryPart
 
     override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
-            LayoutInflater.from(container.context).inflate(R.layout.view_story_plain_text_with_button, container, false).apply {
-                part as PlainTextWithButtonStoryPart
+        container.inflate(R.layout.view_story_plain_text_with_button, false).apply {
+            part as PlainTextWithButtonStoryPart
 
-                Glide.with(context)
-                        .load(part.cover)
-                        .placeholder(progressDrawable)
-                        .into(this.storyCover)
+            Glide.with(context)
+                .load(part.cover)
+                .placeholder(progressDrawable)
+                .into(this.storyCover)
 
-                val story = storyView.adapter?.story
-                if (story != null) {
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
-                            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                            AmplitudeAnalytic.Stories.Values.POSITION to position
-                    ))
-                }
-
-                setUpText(this, part.text)
-                setUpButton(story, this, part.button, position)
+            val story = storyView.adapter?.story
+            if (story != null) {
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
+                    AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                    AmplitudeAnalytic.Stories.Values.POSITION to position
+                ))
             }
+
+            setUpText(this, part.text)
+            setUpButton(story, this, part.button, position)
+            setUpReactions(story, this)
+        }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
         if (text != null) {
@@ -92,8 +93,8 @@ class PlainTextWithButtonStoryPartDelegate(
 
                 if (story != null) {
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.BUTTON_PRESSED, mapOf(
-                            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                            AmplitudeAnalytic.Stories.Values.POSITION to position
+                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                        AmplitudeAnalytic.Stories.Values.POSITION to position
                     ))
                 }
             }
@@ -101,6 +102,19 @@ class PlainTextWithButtonStoryPartDelegate(
             storyButton.isVisible = true
         } else {
             storyButton.isVisible = false
+        }
+    }
+
+    private fun setUpReactions(story: Story?, view: View) {
+        with(view.storyReactionLike) {
+            setOnClickListener {
+                isActivated = !isActivated
+            }
+        }
+        with(view.storyReactionDislike) {
+            setOnClickListener {
+                isActivated = !isActivated
+            }
         }
     }
 }
