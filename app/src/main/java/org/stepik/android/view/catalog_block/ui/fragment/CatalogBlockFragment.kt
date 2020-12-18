@@ -93,7 +93,6 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
-//        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
     }
 
     private fun injectComponent() {
