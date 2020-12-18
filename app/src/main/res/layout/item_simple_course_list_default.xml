@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:duplicateParentState="true"
-        android:textColor="@color/color_catalog_course_list_default_text"
         android:textAppearance="?textAppearanceSubtitle2"
         android:lines="2"
         android:ellipsize="end"
@@ -22,20 +21,21 @@
 
         android:layout_gravity="top"
 
-        tools:text="Общественные науки в 1920-е годы" />
+        tools:text="Общественные науки в 1920-е годы"
+        tools:textColor="@color/color_overlay_blue" />
 
     <TextView
         android:id="@+id/simpleCourseListCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:duplicateParentState="true"
-        android:textColor="@color/color_catalog_course_list_default_text"
         android:textAppearance="?textAppearanceBody2"
         android:gravity="start"
         android:lines="1"
         android:ellipsize="end"
 
         android:layout_gravity="bottom"
-        tools:text="256 курсов" />
+        tools:text="256 курсов"
+        tools:textColor="@color/color_overlay_blue" />
 
 </FrameLayout>
