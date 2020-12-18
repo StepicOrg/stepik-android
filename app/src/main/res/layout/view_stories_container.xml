@@ -25,4 +25,10 @@
 
     </LinearLayout>
 
+    <include
+        layout="@layout/view_divider_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_gravity="bottom" />
+
 </FrameLayout>
