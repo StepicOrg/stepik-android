@@ -32,10 +32,11 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
-import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
@@ -70,6 +71,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var courseCountMapper: CourseCountMapper
 
     private lateinit var searchIcon: ImageView
 
@@ -122,6 +126,7 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         catalogItemAdapter += LoadingAdapterDelegate()
         catalogItemAdapter += CourseListAdapterDelegate(
             analytic = analytic,
+            courseCountMapper = courseCountMapper,
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
@@ -135,9 +140,10 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             }
         )
 
-        catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate {
-
-        }
+        catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate(
+            courseCountMapper = courseCountMapper,
+            onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
+        )
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter

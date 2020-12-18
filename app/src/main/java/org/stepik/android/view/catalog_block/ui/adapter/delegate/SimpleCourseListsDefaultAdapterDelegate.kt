@@ -12,6 +12,7 @@ import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
+import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockTitleDelegate
 import ru.nobird.android.core.model.cast
@@ -20,6 +21,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SimpleCourseListsDefaultAdapterDelegate(
+    private val courseCountMapper: CourseCountMapper,
     private val onCourseListClicked: (StandardCatalogBlockContentItem) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
@@ -38,7 +40,7 @@ class SimpleCourseListsDefaultAdapterDelegate(
 
         private val adapter = DefaultDelegateAdapter<StandardCatalogBlockContentItem>()
             .also {
-                it += SimpleCourseListDefaultAdapterDelegate(onCourseListClicked)
+                it += SimpleCourseListDefaultAdapterDelegate(courseCountMapper, onCourseListClicked)
             }
 
         init {
