@@ -44,11 +44,12 @@ class SimpleCourseListsDefaultAdapterDelegate(
             }
 
         init {
+            val rowCount = context.resources.getInteger(R.integer.simple_course_lists_default_rows)
             courseListsRecycler.layoutManager =
                 TableLayoutManager(
                     context,
-                    horizontalSpanCount = 2,
-                    verticalSpanCount = 2,
+                    horizontalSpanCount = context.resources.getInteger(R.integer.simple_course_lists_default_columns),
+                    verticalSpanCount = rowCount,
                     orientation = LinearLayoutManager.HORIZONTAL,
                     reverseLayout = false
                 )
@@ -56,7 +57,7 @@ class SimpleCourseListsDefaultAdapterDelegate(
             courseListsRecycler.setHasFixedSize(true)
             courseListsRecycler.adapter = adapter
 
-            val snapHelper = CoursesSnapHelper(2)
+            val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(courseListsRecycler)
 
         }

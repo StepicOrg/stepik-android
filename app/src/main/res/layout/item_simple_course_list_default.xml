@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/catalog_course_list_default_height"
+    android:layout_height="@dimen/simple_course_list_default_height"
     android:padding="16dp"
     android:background="@drawable/bg_catalog_course_list_default"
     android:layout_margin="@dimen/course_item_margin"
