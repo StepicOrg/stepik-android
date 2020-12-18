@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:duplicateParentState="true"
         android:textColor="@color/color_catalog_course_list_default_text"
-        android:textAppearance="?textAppearanceSubtitle1"
+        android:textAppearance="?textAppearanceSubtitle2"
         android:lines="2"
         android:ellipsize="end"
         android:gravity="start|top"
