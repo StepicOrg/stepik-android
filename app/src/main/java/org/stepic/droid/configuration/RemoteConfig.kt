@@ -10,4 +10,5 @@ object RemoteConfig {
     const val ADAPTIVE_BACKEND_URL = "adaptive_backend_url"
     const val IS_LOCAL_SUBMISSIONS_ENABLED = "is_local_submissions_enabled"
     const val IS_PEER_REVIEW_ENABLED = "is_peer_review_enabled"
+    const val IS_DISABLED_STEPS_SUPPORTED = "is_disabled_steps_supported"
 }
