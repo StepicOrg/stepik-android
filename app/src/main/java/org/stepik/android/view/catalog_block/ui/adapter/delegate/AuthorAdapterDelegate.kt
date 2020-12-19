@@ -58,7 +58,7 @@ class AuthorAdapterDelegate(
 
             authorListTitle.text = data.fullName
             authorCourseCount.text = context.resources.getQuantityString(R.plurals.course_count, data.createdCoursesCount, data.createdCoursesCount)
-            authorSubscriberCount.text = TextUtil.formatNumbers(data.followersCount.toLong())
+            authorSubscriberCount.text = context.resources.getString(R.string.author_subscribers, TextUtil.formatNumbers(data.followersCount.toLong()))
         }
     }
 }

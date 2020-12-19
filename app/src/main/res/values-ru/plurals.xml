@@ -177,11 +177,4 @@
         <item quantity="many">%d авторов</item>
         <item quantity="other">%d авторов</item>
     </plurals>
-
-    <plurals name="catalog_author_subscribers">
-        <item quantity="one">%d подписчик</item>
-        <item quantity="few">%d подписчика</item>
-        <item quantity="many">%d подписчиков</item>
-        <item quantity="other">%d подписчиков</item>
-    </plurals>
 </resources>
