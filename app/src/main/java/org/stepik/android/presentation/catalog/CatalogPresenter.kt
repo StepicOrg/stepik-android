@@ -7,18 +7,17 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.filter.FiltersPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
 import java.util.EnumSet
@@ -37,8 +36,6 @@ constructor(
     private val mainScheduler: Scheduler,
 
     private val catalogInteractor: CatalogInteractor,
-
-    private val storiesPresenter: StoriesPresenter,
     private val filtersPresenter: FiltersPresenter,
 
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
@@ -51,7 +48,8 @@ constructor(
         CatalogView.State(
             headers = getHeaders(),
             collectionsState = CatalogView.CollectionsState.Idle,
-            footers = listOf(courseListQueryPresenter)
+            footers = listOf()
+//            footers = listOf(courseListQueryPresenter)
         )
         set(value) {
             field = value
@@ -66,8 +64,8 @@ constructor(
 
     init {
         compositeDisposable += collectionsDisposable
-        subscribeForFilterUpdates()
-        fetchPopularCourses()
+//        subscribeForFilterUpdates()
+//        fetchPopularCourses()
     }
 
     override fun attachView(view: CatalogView) {
@@ -81,23 +79,10 @@ constructor(
         state = state.copy(collectionsState = CatalogView.CollectionsState.Loading)
 
         if (forceUpdate) {
-            storiesPresenter.fetchStories(forceUpdate = forceUpdate)
+//            storiesPresenter.fetchStories(forceUpdate = forceUpdate)
+//            tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
             fetchPopularCourses(forceUpdate = forceUpdate)
         }
-
-        // TODO Testing API, remove later
-//        collectionsDisposable += catalogInteractor
-//            .fetchCatalogBlocks()
-//            .subscribeOn(backgroundScheduler)
-//            .observeOn(mainScheduler)
-//            .subscribeBy(
-//                onSuccess = {
-//                    Timber.d("List: $it")
-//                },
-//                onError = {
-//                    it.printStackTrace()
-//                }
-//            )
 
         collectionsDisposable += catalogInteractor
             .fetchCourseCollections()
@@ -149,12 +134,13 @@ constructor(
             )
     }
 
-    private fun getHeaders(): List<CatalogItem> =
-        if (sharedPreferenceHelper.isNeedShowLangWidget) {
-            listOf(storiesPresenter, filtersPresenter)
-        } else {
-            listOf(storiesPresenter)
-        }
+    private fun getHeaders(): List<OldCatalogItem> =
+        emptyList()
+//        if (sharedPreferenceHelper.isNeedShowLangWidget) {
+//            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
+//        } else {
+//            listOf(storiesPresenter, tagsPresenter)
+//        }
 
     override fun detachView(view: CatalogView) {
         nestedDisposables

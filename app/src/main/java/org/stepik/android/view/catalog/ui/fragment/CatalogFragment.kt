@@ -9,7 +9,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -19,27 +18,18 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
-import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.catalog.model.LoadingPlaceholder
 import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
-import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
-import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
@@ -71,7 +61,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 
     private val catalogPresenter: CatalogPresenter by viewModels { viewModelFactory }
 
-    private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
+    private var oldCatalogItemAdapter: DefaultDelegateAdapter<OldCatalogItem> = DefaultDelegateAdapter()
 
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
@@ -88,45 +78,47 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
 
-        catalogItemAdapter += StoriesAdapterDelegate(
-            onStoryClicked = { _, position -> showStories(position) }
-        )
+//        catalogItemAdapter += StoriesAdapterDelegate(
+//            onStoryClicked = { _, position -> showStories(position) }
+//        )
+//
+//        catalogItemAdapter += TagsAdapterDelegate { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
+//
+//        catalogItemAdapter += FiltersAdapterDelegate()
+//
+//        val courseContinueViewDelegate = CourseContinueViewDelegate(
+//            activity = requireActivity(),
+//            analytic = analytic,
+//            screenManager = screenManager
+//        )
+//
+//        catalogItemAdapter += CourseListAdapterDelegate(
+//            analytic = analytic,
+//            screenManager = screenManager,
+//            courseContinueViewDelegate = courseContinueViewDelegate,
+//            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+//        )
+//
+//        catalogItemAdapter += CourseListQueryAdapterDelegate(
+//            analytic = analytic,
+//            screenManager = screenManager,
+//            courseContinueViewDelegate = courseContinueViewDelegate,
+//            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+//        )
+//
+//        catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
+//        catalogItemAdapter += LoadingAdapterDelegate()
 
-        catalogItemAdapter += FiltersAdapterDelegate()
-
-        val courseContinueViewDelegate = CourseContinueViewDelegate(
-            activity = requireActivity(),
-            analytic = analytic,
-            screenManager = screenManager
-        )
-
-        catalogItemAdapter += CourseListAdapterDelegate(
-            analytic = analytic,
-            screenManager = screenManager,
-            courseContinueViewDelegate = courseContinueViewDelegate,
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
-        )
-
-        catalogItemAdapter += CourseListQueryAdapterDelegate(
-            analytic = analytic,
-            screenManager = screenManager,
-            courseContinueViewDelegate = courseContinueViewDelegate,
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
-        )
-
-        catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
-        catalogItemAdapter += LoadingAdapterDelegate()
-
-        with(catalogRecyclerView) {
-            adapter = catalogItemAdapter
-            layoutManager = LinearLayoutManager(context)
-            itemAnimator = null
-        }
-        catalogPresenter.fetchCollections()
+//        with(catalogRecyclerView) {
+//            adapter = catalogItemAdapter
+//            layoutManager = LinearLayoutManager(context)
+//            itemAnimator = null
+//        }
+//        catalogPresenter.fetchCollections()
     }
 
     override fun setState(state: CatalogView.State) {
-        catalogItemAdapter.items =
+        oldCatalogItemAdapter.items =
             when (val collectionsState = state.collectionsState) {
                 is CatalogView.CollectionsState.Loading ->
                     state.headers + listOf(LoadingPlaceholder) + state.footers
@@ -224,38 +216,38 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 
     override fun onStart() {
         super.onStart()
-        catalogItemAdapter.notifyDataSetChanged() // re-attach existing view holders
+        oldCatalogItemAdapter.notifyDataSetChanged() // re-attach existing view holders
         catalogPresenter.attachView(this)
-        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View? {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
-                        as? StoriesAdapterDelegate.StoriesViewHolder
-                    ?: return null
-
-                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
-                        as? StoriesAdapter.StoryViewHolder
-                    ?: return null
-
-                return storyViewHolder.cover
-            }
-
-            override fun onPositionChanged(position: Int) {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
-                        as? StoriesAdapterDelegate.StoriesViewHolder
-                    ?: return
-
-                storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
-                storiesViewHolder.storiesAdapter.selected = position
-
-                if (position != -1) {
-                    val story = storiesViewHolder.storiesAdapter.stories[position]
-                    (catalogItemAdapter.items[CATALOG_STORIES_INDEX] as StoriesPresenter).onStoryViewed(story.id)
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
-                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
-                    ))
-                }
-            }
-        })
+//        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
+//            override fun getSharedView(position: Int): View? {
+//                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+//                        as? StoriesAdapterDelegate.StoriesViewHolder
+//                    ?: return null
+//
+//                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
+//                        as? StoriesAdapter.StoryViewHolder
+//                    ?: return null
+//
+//                return storyViewHolder.cover
+//            }
+//
+//            override fun onPositionChanged(position: Int) {
+//                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+//                        as? StoriesAdapterDelegate.StoriesViewHolder
+//                    ?: return
+//
+//                storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
+//                storiesViewHolder.storiesAdapter.selected = position
+//
+//                if (position != -1) {
+//                    val story = storiesViewHolder.storiesAdapter.stories[position]
+//                    (catalogItemAdapter.items[CATALOG_STORIES_INDEX] as StoriesPresenter).onStoryViewed(story.id)
+//                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+//                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
+//                    ))
+//                }
+//            }
+//        })
     }
 
     override fun onStop() {

@@ -11,7 +11,7 @@ import org.stepik.android.cache.review_instruction.dao.ReviewInstructionDao
 import org.stepik.android.cache.review_instruction.mapper.ReviewStrategyTypeConverter
 import org.stepik.android.cache.review_session.dao.ReviewSessionDao
 import org.stepik.android.cache.visited_courses.dao.VisitedCourseDao
-import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
@@ -21,7 +21,7 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
         ReviewInstruction::class,
         ReviewSession::class,
         VisitedCourse::class,
-        CatalogBlockItem::class
+        CatalogBlock::class
     ],
     version = AppDatabase.VERSION,
     exportSchema = false
