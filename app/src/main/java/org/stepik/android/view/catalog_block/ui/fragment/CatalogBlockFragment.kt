@@ -39,7 +39,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegat
 import org.stepik.android.view.catalog_block.mapper.AuthorCountMapper
 import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
-import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListsAdapterDelegate
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -147,7 +147,7 @@ class CatalogBlockFragment :
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
-        catalogItemAdapter += AuthorListsAdapterDelegate(
+        catalogItemAdapter += AuthorListAdapterDelegate(
             authorCountMapper = authorCountMapper,
             onAuthorClick = { screenManager.openProfile(requireContext(), it) }
         )
