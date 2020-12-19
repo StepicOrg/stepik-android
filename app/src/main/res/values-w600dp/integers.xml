@@ -2,4 +2,5 @@
 <resources>
     <integer name="achievements_to_display">6</integer>
     <integer name="course_list_columns">2</integer>
+    <integer name="simple_course_lists_default_columns">3</integer>
 </resources>

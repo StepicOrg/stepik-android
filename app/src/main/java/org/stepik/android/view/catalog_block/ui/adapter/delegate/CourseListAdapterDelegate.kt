@@ -17,6 +17,7 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
+import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockHeaderDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
@@ -29,19 +30,17 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListAdapterDelegate(
     private val analytic: Analytic,
+    private val courseCountMapper: CourseCountMapper,
     private val isHandleInAppPurchase: Boolean,
     private val onTitleClick: (Long) -> Unit,
     private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
     private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
     private val onCourseClicked: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
-    companion object {
-        private const val MAX_COURSE_COUNT = 99
-    }
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
-        data is CatalogItem.Block
+        data is CatalogItem.Block && data.catalogBlockStateWrapper is CatalogBlockStateWrapper.FullCourseList
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         CourseCollectionViewHolder(createView(parent, R.layout.item_course_list_new))
@@ -104,7 +103,7 @@ class CourseListAdapterDelegate(
                 .catalogBlock.content
                 .safeCast<CatalogBlockContent.FullCourseList>()
                 ?.let {
-                    val countString = getCountString(it.courseList.coursesCount)
+                    val countString = courseCountMapper.mapCourseCountToString(context, it.courseList.coursesCount)
                     catalogBlockTitleDelegate.setCount(countString)
                 }
             render(catalogBlockCourseListItem.state)
@@ -129,13 +128,6 @@ class CourseListAdapterDelegate(
                     courseItemAdapter.items = emptyList()
             }
         }
-
-        private fun getCountString(itemCount: Int): String =
-            if (itemCount > MAX_COURSE_COUNT) {
-                context.resources.getString(R.string.courses_max_count)
-            } else {
-                context.resources.getQuantityString(R.plurals.course_count, itemCount, itemCount)
-            }
     }
 
     private fun initLoading(catalogBlockFullCourseList: CatalogBlockStateWrapper.FullCourseList) {
