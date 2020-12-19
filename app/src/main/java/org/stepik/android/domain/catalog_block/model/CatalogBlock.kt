@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity
-data class CatalogBlockItem(
+data class CatalogBlock(
     @PrimaryKey
     @SerializedName("id")
     val id: Long,

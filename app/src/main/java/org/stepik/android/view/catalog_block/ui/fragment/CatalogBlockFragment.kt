@@ -49,7 +49,10 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
+class CatalogBlockFragment :
+    Fragment(R.layout.fragment_catalog),
+    ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
+
     companion object {
         const val TAG = "CatalogBlockFragment"
 
@@ -129,7 +132,8 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
-                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
+                val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))
             },
             onCourseContinueClicked = { course, courseViewSource, courseContinueInteractionSource ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.OnContinueCourseClicked(course, courseViewSource, courseContinueInteractionSource)))
@@ -224,15 +228,15 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     }
 
     override fun render(state: CatalogFeature.State) {
-        val collectionCatalogItems = when (state.collectionsState) {
-            is CatalogFeature.CollectionsState.Error ->
+        val collectionCatalogItems = when (state.blocksState) {
+            is CatalogFeature.BlocksState.Error ->
                 listOf(CatalogItem.Offline)
 
-            is CatalogFeature.CollectionsState.Loading ->
+            is CatalogFeature.BlocksState.Loading ->
                 listOf(CatalogItem.Loading)
 
-            is CatalogFeature.CollectionsState.Content ->
-                state.collectionsState.collections.map { CatalogItem.Block(it) }
+            is CatalogFeature.BlocksState.Content ->
+                state.blocksState.blocks.map { CatalogItem.Block(it) }
 
             else ->
                 listOf()

@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.catalog_block
 
-import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
@@ -14,20 +14,20 @@ interface CatalogFeature {
     data class State(
         val storiesState: StoriesFeature.State,
         val filtersState: FiltersFeature.State,
-        val collectionsState: CollectionsState,
+        val blocksState: BlocksState,
         val courseContinueState: CourseContinueFeature.State
     )
 
-    sealed class CollectionsState {
-        object Idle : CollectionsState()
-        object Loading : CollectionsState()
-        object Error : CollectionsState()
-        data class Content(val collections: List<CatalogBlockStateWrapper>) : CollectionsState()
+    sealed class BlocksState {
+        object Idle : BlocksState()
+        object Loading : BlocksState()
+        object Error : BlocksState()
+        data class Content(val blocks: List<CatalogBlockStateWrapper>) : BlocksState()
     }
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
-        data class FetchCatalogBlocksSuccess(val collections: List<CatalogBlockItem>) : Message()
+        data class FetchCatalogBlocksSuccess(val collections: List<CatalogBlock>) : Message()
         object FetchCatalogBlocksError : Message()
 
         /**

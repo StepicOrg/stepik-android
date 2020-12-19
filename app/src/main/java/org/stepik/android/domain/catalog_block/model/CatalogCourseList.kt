@@ -2,7 +2,10 @@ package org.stepik.android.domain.catalog_block.model
 
 import com.google.gson.annotations.SerializedName
 
-data class StandardCatalogBlockContentItem(
+/**
+ * Represents lighter version of [CourseCollection] and used in catalog blocks
+ */
+data class CatalogCourseList(
     @SerializedName("id")
     val id: Long,
     @SerializedName("title")
