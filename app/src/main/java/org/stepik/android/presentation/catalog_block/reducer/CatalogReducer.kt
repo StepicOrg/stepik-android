@@ -19,7 +19,6 @@ import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
-import ru.nobird.android.core.model.mutate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
@@ -30,47 +29,52 @@ constructor(
     private val storiesReducer: StoriesReducer,
     private val filtersReducer: FiltersReducer,
     private val courseListReducer: CourseListReducer,
-    private val authorListReducer: AuthorListReducer,
     private val courseContinueReducer: CourseContinueReducer,
     private val courseListStateMapper: CourseListStateMapper
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
+            // <editor-fold desc="Blocks Messages">
             is Message.InitMessage -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Idle ||
-                        state.collectionsState is CatalogFeature.CollectionsState.Error && message.forceUpdate
+                if (state.blocksState is CatalogFeature.BlocksState.Idle ||
+                    state.blocksState is CatalogFeature.BlocksState.Error && message.forceUpdate
                 ) {
-                    state.copy(collectionsState = CatalogFeature.CollectionsState.Loading) to setOf(Action.FetchCatalogBlocks)
+                    state.copy(blocksState = CatalogFeature.BlocksState.Loading) to setOf(Action.FetchCatalogBlocks)
                 } else {
                     null
                 }
             }
 
             is Message.FetchCatalogBlocksSuccess -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Loading) {
+                if (state.blocksState is CatalogFeature.BlocksState.Loading) {
                     val collections = message.collections.mapNotNull { catalogBlockItem ->
                         when (catalogBlockItem.content) {
                             is CatalogBlockContent.FullCourseList ->
-                                CatalogBlockStateWrapper.CourseList(catalogBlockItem = catalogBlockItem, state = CourseListFeature.State.Idle)
+                                CatalogBlockStateWrapper.FullCourseList(catalogBlock = catalogBlockItem, state = CourseListFeature.State.Idle)
+
+                            is CatalogBlockContent.SimpleCourseLists ->
+                                CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
+
                             is CatalogBlockContent.AuthorCourseList ->
                                 CatalogBlockStateWrapper.AuthorList(catalogBlockItem = catalogBlockItem, state = AuthorListFeature.State.Idle)
                             else ->
                                 null
                         }
                     }
-                    state.copy(collectionsState = CatalogFeature.CollectionsState.Content(collections)) to emptySet()
+                    state.copy(blocksState = CatalogFeature.BlocksState.Content(collections)) to emptySet()
                 } else {
                     null
                 }
             }
 
             is Message.FetchCatalogBlocksError -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Loading) {
-                    state.copy(collectionsState = CatalogFeature.CollectionsState.Error) to emptySet()
+                if (state.blocksState is CatalogFeature.BlocksState.Loading) {
+                    state.copy(blocksState = CatalogFeature.BlocksState.Error) to emptySet()
                 } else {
                     null
                 }
             }
+            // </editor-fold>
 
             is Message.StoriesMessage -> {
                 val (storiesState, storiesActions) = storiesReducer.reduce(state.storiesState, message.message)
@@ -78,38 +82,39 @@ constructor(
             }
 
             is Message.FiltersMessage -> {
-                val (collectionsState, refreshAction) = if (message.message is FiltersFeature.Message.LoadFiltersSuccess) {
-                    CatalogFeature.CollectionsState.Loading to setOf(CatalogFeature.Action.FetchCatalogBlocks)
-                } else {
-                    state.collectionsState to emptySet()
-                }
+                val (collectionsState, refreshAction) =
+                    if (message.message is FiltersFeature.Message.LoadFiltersSuccess) {
+                        CatalogFeature.BlocksState.Loading to setOf(Action.FetchCatalogBlocks)
+                    } else {
+                        state.blocksState to emptySet()
+                    }
                 val (filtersState, filtersActions) = filtersReducer.reduce(state.filtersState, message.message)
-                state.copy(collectionsState =  collectionsState, filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
+                state.copy(blocksState = collectionsState, filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
             }
 
             is Message.CourseListMessage -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Content) {
-                    val updateIndex = state.collectionsState.collections.indexOfFirst { it.id == message.id }
-                    if (updateIndex > -1) {
-                        val updateState = state.collectionsState.collections[updateIndex] as CatalogBlockStateWrapper.CourseList
-                        val (courseListState, courseListActions) = courseListReducer.reduce(updateState.state, message.message)
-                        val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = courseListState)) }))
-                        result to courseListActions.map(Action::CourseListAction).toSet()
-                    } else {
-                        state to emptySet()
-                    }
-                } else {
-                    null
-                }
-            }
+                if (state.blocksState is CatalogFeature.BlocksState.Content) {
+                    val courseListActionsSet = mutableSetOf<CourseListFeature.Action>()
 
-            is Message.AuthorListMessage -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Content) {
-                    val updateIndex = state.collectionsState.collections.indexOfFirst { it.id == message.id }
-                    val updateState = state.collectionsState.collections[updateIndex] as CatalogBlockStateWrapper.AuthorList
-                    val (authorListState, authorListActions) = authorListReducer.reduce(updateState.state, message.message)
-                    val result = state.copy(collectionsState = state.collectionsState.copy(state.collectionsState.collections.mutate { set(updateIndex, updateState.copy(state = authorListState)) }))
-                    result to authorListActions.map(Action::AuthorListAction).toSet()
+                    val blocks = state.blocksState
+                        .blocks
+                        .map { collection ->
+                            if (collection.id == message.id &&
+                                collection is CatalogBlockStateWrapper.FullCourseList
+                            ) {
+                                val (courseListState, courseListActions) =
+                                    courseListReducer.reduce(collection.state, message.message)
+
+                                courseListActionsSet += courseListActions
+                                collection.copy(state = courseListState)
+                            } else {
+                                collection
+                            }
+                        }
+
+                    val actions = courseListActionsSet.map(Action::CourseListAction).toSet()
+
+                    state.copy(blocksState = CatalogFeature.BlocksState.Content(blocks)) to actions
                 } else {
                     null
                 }
@@ -117,50 +122,60 @@ constructor(
 
             is Message.CourseContinueMessage -> {
                 val (courseContinueState, courseContinueActions) = courseContinueReducer.reduce(state.courseContinueState, message.message)
-                state.copy(courseContinueState = courseContinueState) to courseContinueActions.map {
-                    if (it is CourseContinueFeature.Action.ViewAction) {
-                        Action.ViewAction.CourseContinueViewAction(it)
-                    } else {
-                        Action.CourseContinueAction(it)
+
+                val actions = courseContinueActions
+                    .map {
+                        if (it is CourseContinueFeature.Action.ViewAction) {
+                            Action.ViewAction.CourseContinueViewAction(it)
+                        } else {
+                            Action.CourseContinueAction(it)
+                        }
                     }
-                }.toSet()
+                    .toSet()
+
+                state.copy(courseContinueState = courseContinueState) to actions
             }
 
             is Message.UserCourseMessage -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Content && message.message is UserCoursesFeature.Message.UserCourseOperationUpdate) {
-                    val updatedCollection = updateCourseLists(state.collectionsState.collections) { item ->
+                if (state.blocksState is CatalogFeature.BlocksState.Content &&
+                    message.message is UserCoursesFeature.Message.UserCourseOperationUpdate
+                ) {
+                    val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
                         val updatedState = courseListStateMapper.mapToUserCourseUpdate(item.state, message.message.userCourse)
-                        CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
+                        item.copy(state = updatedState)
                     }
-                    state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to emptySet()
+                    state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to emptySet()
                 } else {
                     null
                 }
             }
 
             is Message.ProgressMessage -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Content && message.message is ProgressFeature.Message.ProgressUpdate) {
-                    val updatedCollection = updateCourseLists(state.collectionsState.collections) { item ->
+                if (state.blocksState is CatalogFeature.BlocksState.Content &&
+                    message.message is ProgressFeature.Message.ProgressUpdate
+                ) {
+                    val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
                         val updatedState = courseListStateMapper.mergeWithCourseProgress(item.state, message.message.progress)
-                        CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
+                        item.copy(state = updatedState)
                     }
-                    state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to emptySet()
+                    state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to emptySet()
                 } else {
                     null
                 }
             }
 
             is Message.EnrollmentMessage -> {
-                if (state.collectionsState is CatalogFeature.CollectionsState.Content && message.message is EnrollmentFeature.Message.EnrollmentMessage) {
+                if (state.blocksState is CatalogFeature.BlocksState.Content && message.message is EnrollmentFeature.Message.EnrollmentMessage) {
                     val courseListActions = mutableSetOf<CourseListFeature.Action>()
-                    val updatedCollection = updateCourseLists(state.collectionsState.collections) { item ->
-                        item.catalogBlockItem.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
-                            courseListActions.add(CourseListFeature.Action.FetchCourseListAfterEnrollment(item.id, message.message.enrolledCourse, it))
+                    val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
+                        item.catalogBlock.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
+                            courseListActions +=
+                                CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, it.courseList.id)
                         }
                         val updatedState = courseListStateMapper.mapToEnrollmentUpdateState(item.state, message.message.enrolledCourse)
-                        CatalogBlockStateWrapper.CourseList(item.catalogBlockItem, updatedState)
+                        item.copy(state = updatedState)
                     }
-                    state.copy(collectionsState = state.collectionsState.copy(collections = updatedCollection)) to courseListActions.map(Action::CourseListAction).toSet()
+                    state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to courseListActions.map(Action::CourseListAction).toSet()
                 } else {
                     null
                 }
@@ -168,11 +183,11 @@ constructor(
         } ?: state to emptySet()
 
     private fun updateCourseLists(
-        collections: List<CatalogBlockStateWrapper>,
-        mapper: (CatalogBlockStateWrapper.CourseList) -> CatalogBlockStateWrapper
+        blocks: List<CatalogBlockStateWrapper>,
+        mapper: (CatalogBlockStateWrapper.FullCourseList) -> CatalogBlockStateWrapper
     ): List<CatalogBlockStateWrapper> =
-        collections.map { item ->
-            if (item is CatalogBlockStateWrapper.CourseList) {
+        blocks.map { item ->
+            if (item is CatalogBlockStateWrapper.FullCourseList) {
                 mapper(item)
             } else {
                 item

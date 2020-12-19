@@ -18,7 +18,7 @@ constructor(
                 if (state is State.Idle ||
                     state is State.NetworkError && message.forceUpdate
                 ) {
-                    State.Loading to setOf(Action.FetchCourseList(message.id, message.fullCourseList))
+                    State.Loading to setOf(Action.FetchCourseList(message.id, message.courseList.courses, message.courseList.id))
                 } else {
                     null
                 }
@@ -39,7 +39,7 @@ constructor(
 
             is Message.OnEnrollmentFetchCourseListSuccess ->
                 if (state is State.Content) {
-                    val updatedState = courseListStateMapper.mapToEnrollmentUpdateState(state, message.courseListDataItems.first())
+                    val updatedState = courseListStateMapper.mapToEnrollmentUpdateState(state, message.courseListItem)
                     updatedState to emptySet()
                 } else {
                     null

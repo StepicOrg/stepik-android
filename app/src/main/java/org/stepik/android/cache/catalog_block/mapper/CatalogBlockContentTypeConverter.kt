@@ -21,10 +21,10 @@ class CatalogBlockContentTypeConverter {
             is CatalogBlockContent.FullCourseList ->
                 CatalogBlockContent.FULL_COURSE_LISTS
 
-            is CatalogBlockContent.SimpleCourseList ->
+            is CatalogBlockContent.SimpleCourseLists ->
                 CatalogBlockContent.SIMPLE_COURSE_LISTS
 
-            is CatalogBlockContent.AuthorCourseList ->
+            is CatalogBlockContent.AuthorsList ->
                 CatalogBlockContent.AUTHORS
 
             else ->

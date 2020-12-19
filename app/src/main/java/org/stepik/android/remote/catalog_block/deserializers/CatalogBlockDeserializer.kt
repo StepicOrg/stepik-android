@@ -6,13 +6,13 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import com.google.gson.JsonObject
 import org.stepik.android.cache.catalog_block.mapper.CatalogBlockContentSerializer
-import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 import java.lang.reflect.Type
 
-class CatalogBlockContentItemDeserialiazer : JsonDeserializer<CatalogBlockItem> {
+class CatalogBlockDeserializer : JsonDeserializer<CatalogBlock> {
     private val catalogBlockContentSerializer = CatalogBlockContentSerializer()
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): CatalogBlockItem {
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): CatalogBlock {
         val jsonObject = json.asJsonObject
         val toMapperJson = JsonObject()
 
@@ -23,7 +23,7 @@ class CatalogBlockContentItemDeserialiazer : JsonDeserializer<CatalogBlockItem> 
 
         val content = catalogBlockContentSerializer.mapToDomainEntity(toMapperJson.toString())
 
-        return CatalogBlockItem(
+        return CatalogBlock(
             id = jsonObject["id"].asLong,
             position = jsonObject["position"].asInt,
             title = jsonObject["title"].asString,

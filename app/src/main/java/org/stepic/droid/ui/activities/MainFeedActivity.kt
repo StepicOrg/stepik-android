@@ -291,7 +291,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 HomeFragment.TAG
 
             R.id.catalog ->
-                CatalogFragment.TAG
+                CatalogBlockFragment.TAG
 
             R.id.profile ->
                 ProfileFragment.TAG
@@ -310,7 +310,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
             R.id.catalog ->
                 CatalogBlockFragment.newInstance()
-//                CatalogFragment.newInstance()
 
             R.id.profile ->
                 ProfileFragment.newInstance()

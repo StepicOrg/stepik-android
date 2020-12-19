@@ -27,7 +27,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { catalogBlocks -> onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(catalogBlocks)) },
+                        onSuccess = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(it)) },
                         onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }
                     )
             }

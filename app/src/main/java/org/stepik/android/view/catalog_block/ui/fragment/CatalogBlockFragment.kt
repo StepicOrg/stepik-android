@@ -33,13 +33,15 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
-import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -49,7 +51,10 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
+class CatalogBlockFragment :
+    Fragment(R.layout.fragment_catalog),
+    ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
+
     companion object {
         const val TAG = "CatalogBlockFragment"
 
@@ -72,6 +77,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
+    @Inject
+    internal lateinit var courseCountMapper: CourseCountMapper
+
     private lateinit var searchIcon: ImageView
 
     // This workaround is necessary, because onFocus get activated multiple times
@@ -90,7 +98,6 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
         catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
-//        catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
     }
 
     private fun injectComponent() {
@@ -123,10 +130,12 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         catalogItemAdapter += LoadingAdapterDelegate()
         catalogItemAdapter += CourseListAdapterDelegate(
             analytic = analytic,
+            courseCountMapper = courseCountMapper,
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
-                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
+                val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))
             },
             onCourseContinueClicked = { course, courseViewSource, courseContinueInteractionSource ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.OnContinueCourseClicked(course, courseViewSource, courseContinueInteractionSource)))
@@ -138,6 +147,11 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         catalogItemAdapter += AuthorListAdapterDelegate(
             onBlockSeen = { id, authorList -> catalogViewModel.onNewMessage(CatalogFeature.Message.AuthorListMessage(id = id, message = AuthorListFeature.Message.InitMessage(id = id, authorList = authorList))) },
             onAuthorClick = { screenManager.openProfile(requireContext(), it) }
+        )
+
+        catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate(
+            courseCountMapper = courseCountMapper,
+            onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
         )
 
         with(catalogRecyclerView) {
@@ -213,15 +227,15 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     }
 
     override fun render(state: CatalogFeature.State) {
-        val collectionCatalogItems = when (state.collectionsState) {
-            is CatalogFeature.CollectionsState.Error ->
+        val collectionCatalogItems = when (state.blocksState) {
+            is CatalogFeature.BlocksState.Error ->
                 listOf(CatalogItem.Offline)
 
-            is CatalogFeature.CollectionsState.Loading ->
+            is CatalogFeature.BlocksState.Loading ->
                 listOf(CatalogItem.Loading)
 
-            is CatalogFeature.CollectionsState.Content ->
-                state.collectionsState.collections.map { CatalogItem.Block(it) }
+            is CatalogFeature.BlocksState.Content ->
+                state.blocksState.blocks.map { CatalogItem.Block(it) }
 
             else ->
                 listOf()
