@@ -11,15 +11,16 @@
 
     <TextView
         android:id="@+id/simpleCourseListGridTitle"
+        android:theme="@style/ThemeOverlay.Violet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:duplicateParentState="true"
         android:textAppearance="?textAppearanceSubtitle2"
         android:lines="2"
         android:ellipsize="end"
-        android:gravity="center_vertical"
+        android:gravity="center"
 
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center"
 
         tools:text="Kotlin"
         tools:textColor="@color/color_overlay_violet" />

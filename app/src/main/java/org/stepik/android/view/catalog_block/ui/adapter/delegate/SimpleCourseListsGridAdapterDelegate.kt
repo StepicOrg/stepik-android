@@ -48,9 +48,7 @@ class SimpleCourseListsGridAdapterDelegate(
         init {
             courseListsRecycler.layoutManager =
                 FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP)
-                    .apply {
-                        justifyContent = JustifyContent.SPACE_EVENLY
-                    }
+                    .apply { justifyContent = JustifyContent.FLEX_START }
 
             courseListsRecycler.setRecycledViewPool(sharedViewPool)
             courseListsRecycler.setHasFixedSize(true)

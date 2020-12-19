@@ -2,6 +2,8 @@ package org.stepik.android.view.catalog_block.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
+import com.google.android.flexbox.FlexboxLayoutManager
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_block_simple_course_list_grid.*
 import org.stepic.droid.R
@@ -28,6 +30,7 @@ class SimpleCourseListGridAdapterDelegate(
 
         override fun onBind(data: CatalogCourseList) {
             simpleCourseListGridTitle.text = data.title
+            itemView.updateLayoutParams<FlexboxLayoutManager.LayoutParams> { flexGrow = 1f }
         }
     }
 }
