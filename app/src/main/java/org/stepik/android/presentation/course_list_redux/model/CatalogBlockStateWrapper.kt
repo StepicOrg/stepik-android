@@ -6,7 +6,7 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import ru.nobird.android.core.model.Identifiable
 
 sealed class CatalogBlockStateWrapper : Identifiable<String> {
-    data class CourseList(
+    data class FullCourseList(
         val catalogBlock: CatalogBlock,
         val state: CourseListFeature.State
     ) : CatalogBlockStateWrapper() {

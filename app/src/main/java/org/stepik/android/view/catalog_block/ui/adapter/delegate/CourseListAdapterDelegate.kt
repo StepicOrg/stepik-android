@@ -96,7 +96,7 @@ class CourseListAdapterDelegate(
 
         override fun onBind(data: CatalogItem) {
             data as CatalogItem.Block
-            val catalogBlockCourseListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.CourseList
+            val catalogBlockCourseListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.FullCourseList
             initLoading(catalogBlockCourseListItem)
             catalogBlock = catalogBlockCourseListItem.catalogBlock
             catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlock)
@@ -138,10 +138,10 @@ class CourseListAdapterDelegate(
             }
     }
 
-    private fun initLoading(catalogBlockCourseList: CatalogBlockStateWrapper.CourseList) {
-        if (catalogBlockCourseList.catalogBlock.content !is CatalogBlockContent.FullCourseList) {
+    private fun initLoading(catalogBlockFullCourseList: CatalogBlockStateWrapper.FullCourseList) {
+        if (catalogBlockFullCourseList.catalogBlock.content !is CatalogBlockContent.FullCourseList) {
             return
         }
-        onBlockSeen(catalogBlockCourseList.id, catalogBlockCourseList.catalogBlock.content)
+        onBlockSeen(catalogBlockFullCourseList.id, catalogBlockFullCourseList.catalogBlock.content)
     }
 }

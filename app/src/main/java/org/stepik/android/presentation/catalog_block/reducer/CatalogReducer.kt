@@ -48,7 +48,7 @@ constructor(
                     val collections = message.collections.mapNotNull { catalogBlockItem ->
                         when (catalogBlockItem.content) {
                             is CatalogBlockContent.FullCourseList ->
-                                CatalogBlockStateWrapper.CourseList(catalogBlock = catalogBlockItem, state = CourseListFeature.State.Idle)
+                                CatalogBlockStateWrapper.FullCourseList(catalogBlock = catalogBlockItem, state = CourseListFeature.State.Idle)
                             else ->
                                 null
                         }
@@ -92,7 +92,7 @@ constructor(
                         .blocks
                         .map { collection ->
                             if (collection.id == message.id &&
-                                collection is CatalogBlockStateWrapper.CourseList
+                                collection is CatalogBlockStateWrapper.FullCourseList
                             ) {
                                 val (courseListState, courseListActions) =
                                     courseListReducer.reduce(collection.state, message.message)
@@ -176,10 +176,10 @@ constructor(
 
     private fun updateCourseLists(
         blocks: List<CatalogBlockStateWrapper>,
-        mapper: (CatalogBlockStateWrapper.CourseList) -> CatalogBlockStateWrapper
+        mapper: (CatalogBlockStateWrapper.FullCourseList) -> CatalogBlockStateWrapper
     ): List<CatalogBlockStateWrapper> =
         blocks.map { item ->
-            if (item is CatalogBlockStateWrapper.CourseList) {
+            if (item is CatalogBlockStateWrapper.FullCourseList) {
                 mapper(item)
             } else {
                 item
