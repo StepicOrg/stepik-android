@@ -3,13 +3,13 @@ package org.stepik.android.view.catalog_block.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.view.*
-import kotlinx.android.synthetic.main.view_container_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
-import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.catalog_block.model.CatalogBlock
+import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.model.Course
@@ -18,7 +18,7 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.catalog_block.model.CatalogItem
-import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockTitleDelegate
+import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockHeaderDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -53,8 +53,8 @@ class CourseListAdapterDelegate(
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListTitleContainer = root.catalogBlockContainer
 
-        private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer) {
-            val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockTitleDelegate
+        private val catalogBlockTitleDelegate = CatalogBlockHeaderDelegate(courseListTitleContainer) {
+            val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockHeaderDelegate
             onTitleClick(block.courseList.id)
         }
 
