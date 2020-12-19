@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/view_container_block" />
+    <include layout="@layout/header_catalog_block" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/courseListsRecycler"

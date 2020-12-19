@@ -8,14 +8,14 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.header_catalog_block.*
 import kotlinx.android.synthetic.main.item_block_simple_course_lists_grid.courseListsRecycler
-import kotlinx.android.synthetic.main.view_container_block.*
 import org.stepic.droid.R
-import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
+import org.stepik.android.domain.catalog_block.model.CatalogCourseList
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
-import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockTitleDelegate
+import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockHeaderDelegate
 import ru.nobird.android.core.model.cast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -23,7 +23,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SimpleCourseListsGridAdapterDelegate(
     private val courseCountMapper: CourseCountMapper,
-    private val onCourseListClicked: (StandardCatalogBlockContentItem) -> Unit
+    private val onCourseListClicked: (CatalogCourseList) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -37,9 +37,9 @@ class SimpleCourseListsGridAdapterDelegate(
         override val containerView: View
     ) : DelegateViewHolder<CatalogItem>(containerView), LayoutContainer {
         private val catalogBlockTitleDelegate =
-            CatalogBlockTitleDelegate(catalogBlockContainer, null)
+            CatalogBlockHeaderDelegate(catalogBlockContainer, null)
 
-        private val adapter = DefaultDelegateAdapter<StandardCatalogBlockContentItem>()
+        private val adapter = DefaultDelegateAdapter<CatalogCourseList>()
             .also {
                 it += SimpleCourseListGridFirstAdapter(courseCountMapper, onCourseListClicked)
                 it += SimpleCourseListGridAdapterDelegate(onCourseListClicked)
@@ -64,10 +64,10 @@ class SimpleCourseListsGridAdapterDelegate(
                 .catalogBlockStateWrapper
                 .cast<CatalogBlockStateWrapper.SimpleCourseListsGrid>()
 
-            adapter.items = simpleCourseListGrid.content.content
+            adapter.items = simpleCourseListGrid.content.courseLists
             catalogBlockTitleDelegate.setInformation(simpleCourseListGrid.catalogBlockItem)
 
-            val count = simpleCourseListGrid.content.content.size
+            val count = simpleCourseListGrid.content.courseLists.size
             catalogBlockTitleDelegate.setCount(context.resources.getQuantityString(R.plurals.catalog_course_lists, count, count))
         }
     }
