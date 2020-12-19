@@ -1,101 +1,63 @@
 package org.stepik.android.view.catalog_block.ui.adapter.delegate
 
+import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_author_list.view.*
-import kotlinx.android.synthetic.main.view_container_block.view.*
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import com.bumptech.glide.Glide
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_author_list.*
+import kotlinx.android.synthetic.main.layout_author_properties.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.CoursesSnapHelper
-import org.stepik.android.domain.catalog_block.model.AuthorCatalogBlockContentItem
-import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
-import org.stepik.android.presentation.author_list.AuthorListFeature
-import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
-import org.stepik.android.view.author_list.ui.adapter.delegate.AuthorListItemAdapterDelegate
-import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
-import org.stepik.android.view.catalog_block.model.CatalogItem
-import org.stepik.android.view.catalog_block.ui.delegate.CatalogBlockTitleDelegate
-import ru.nobird.android.core.model.safeCast
+import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepik.android.domain.catalog_block.model.CatalogAuthor
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
-import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 
 class AuthorListAdapterDelegate(
-    private val onBlockSeen: (String, CatalogBlockContent.AuthorCourseList) -> Unit,
-    private val onAuthorClick: (Long) -> Unit
-) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
-    companion object {
-        private const val MAX_AUTHOR_COUNT = 99
-    }
+    private val onItemClick: (Long) -> Unit
+) : AdapterDelegate<CatalogAuthor, DelegateViewHolder<CatalogAuthor>>() {
+    override fun isForViewType(position: Int, data: CatalogAuthor): Boolean =
+        true
 
-    override fun isForViewType(position: Int, data: CatalogItem): Boolean =
-        data is CatalogItem.Block && data.catalogBlockStateWrapper is CatalogBlockStateWrapper.AuthorList
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogAuthor> =
+        ViewHolder(createView(parent, R.layout.item_author_list))
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        AuthorListViewHolder(createView(parent, R.layout.item_author_list))
+    private inner class ViewHolder(
+        override val containerView: View
+    ) : DelegateViewHolder<CatalogAuthor>(containerView), LayoutContainer {
+        private val authorCoverImageTarget =
+            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.corner_radius), authorListImage)
 
-    private inner class AuthorListViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
+        private val authorPlaceholder = BitmapFactory
+            .decodeResource(context.resources, R.drawable.general_placeholder)
+            .let { bitmap ->
+                RoundedBitmapDrawableFactory
+                    .create(context.resources, bitmap)
+                    .apply {
+                        cornerRadius = context.resources.getDimension(R.dimen.corner_radius)
+                    }
+            }
 
-        private val authorListRecycler = root.authorListRecycler
-        private val catalogBlockContainer = root.catalogBlockContainer
-
-        private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(catalogBlockContainer)
-        private val authorItemAdapter: DefaultDelegateAdapter<AuthorCatalogBlockContentItem> = DefaultDelegateAdapter()
-        private val viewStateDelegate = ViewStateDelegate<AuthorListFeature.State>()
+        private val authorCourseCount = authorListPropertiesContainer.coursesCountText
+        private val authorSubscriberCount = authorListPropertiesContainer.subscribersCountText
 
         init {
-            viewStateDelegate.addState<AuthorListFeature.State.Idle>(authorListRecycler)
-            viewStateDelegate.addState<AuthorListFeature.State.Content>(catalogBlockContainer, authorListRecycler)
-
-            authorItemAdapter += AuthorListItemAdapterDelegate { onAuthorClick(it) }
-
-            with(authorListRecycler) {
-                adapter = authorItemAdapter
-                val rowCount = resources.getInteger(R.integer.course_list_rows) // TODO Maybe make custom resources?
-                val columnsCount = resources.getInteger(R.integer.course_list_columns)
-                layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
-                itemAnimator?.changeDuration = 0
-                val snapHelper = CoursesSnapHelper(rowCount)
-                snapHelper.attachToRecyclerView(this)
-                setHasFixedSize(true)
-            }
+            containerView.setOnClickListener { itemData?.id?.let(onItemClick) }
         }
 
-        override fun onBind(data: CatalogItem) {
-            data as CatalogItem.Block
-            val catalogBlockAuthorListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.AuthorList
-            catalogBlockTitleDelegate.setInformation(catalogBlockAuthorListItem.catalogBlockItem)
-            catalogBlockAuthorListItem
-                .catalogBlockItem
-                .content
-                .safeCast<CatalogBlockContent.AuthorCourseList>()
-                ?.let {
-                    val countString = getCountString(it.content.size)
-                    catalogBlockTitleDelegate.setCount(countString)
-                    onBlockSeen(catalogBlockAuthorListItem.id, it)
-                }
+        override fun onBind(data: CatalogAuthor) {
+            Glide
+                .with(context)
+                .asBitmap()
+                .load(data.avatar)
+                .placeholder(authorPlaceholder)
+                .fitCenter()
+                .into(authorCoverImageTarget)
 
-            render(catalogBlockAuthorListItem.state)
+            authorListTitle.text = data.fullName
+            authorCourseCount.text = context.resources.getQuantityString(R.plurals.course_count, data.createdCoursesCount, data.createdCoursesCount)
+            authorSubscriberCount.text = context.resources.getQuantityString(R.plurals.catalog_author_subscribers, data.followersCount, data.followersCount)
         }
-
-        private fun render(state: AuthorListFeature.State) {
-            viewStateDelegate.switchState(state)
-            when (state) {
-                is AuthorListFeature.State.Idle -> {
-                    authorItemAdapter.items = emptyList()
-                }
-
-                is AuthorListFeature.State.Content ->
-                    authorItemAdapter.items = state.authorListItems
-            }
-        }
-
-        private fun getCountString(itemCount: Int): String =
-            if (itemCount > MAX_AUTHOR_COUNT) {
-                context.resources.getString(R.string.author_max_count)
-            } else {
-                context.resources.getQuantityString(R.plurals.author_count, itemCount, itemCount)
-            }
     }
 }

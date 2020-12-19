@@ -26,7 +26,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.presentation.author_list.AuthorListFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
@@ -37,9 +36,10 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.catalog_block.mapper.AuthorCountMapper
 import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
-import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListAdapterDelegate
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListsAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -79,6 +79,9 @@ class CatalogBlockFragment :
 
     @Inject
     internal lateinit var courseCountMapper: CourseCountMapper
+
+    @Inject
+    internal lateinit var authorCountMapper: AuthorCountMapper
 
     private lateinit var searchIcon: ImageView
 
@@ -144,8 +147,8 @@ class CatalogBlockFragment :
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
-        catalogItemAdapter += AuthorListAdapterDelegate(
-            onBlockSeen = { id, authorList -> catalogViewModel.onNewMessage(CatalogFeature.Message.AuthorListMessage(id = id, message = AuthorListFeature.Message.InitMessage(id = id, authorList = authorList))) },
+        catalogItemAdapter += AuthorListsAdapterDelegate(
+            authorCountMapper = authorCountMapper,
             onAuthorClick = { screenManager.openProfile(requireContext(), it) }
         )
 

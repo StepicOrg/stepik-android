@@ -158,4 +158,18 @@
         <item quantity="many">%d катэгорый</item>
         <item quantity="other">%d катэгорый</item>
     </plurals>
+
+    <plurals name="catalog_author_lists">
+        <item quantity="one">%d аўтар</item>
+        <item quantity="few">%d аўтара</item>
+        <item quantity="many">%d аўтараў</item>
+        <item quantity="other">%d аўтараў</item>
+    </plurals>
+
+    <plurals name="catalog_author_subscribers">
+        <item quantity="one">%d падпісант</item>
+        <item quantity="few">%d падпісчыка</item>
+        <item quantity="many">%d падпісчыкаў</item>
+        <item quantity="other">%d падпісчыкаў</item>
+    </plurals>
 </resources>

@@ -1,8 +1,6 @@
 package org.stepik.android.presentation.catalog_block.reducer
 
-import org.stepik.android.presentation.author_list.reducer.AuthorListReducer
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
-import org.stepik.android.presentation.author_list.AuthorListFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature.State
 import org.stepik.android.presentation.catalog_block.CatalogFeature.Message
@@ -55,8 +53,8 @@ constructor(
                             is CatalogBlockContent.SimpleCourseLists ->
                                 CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
 
-                            is CatalogBlockContent.AuthorCourseList ->
-                                CatalogBlockStateWrapper.AuthorList(catalogBlockItem = catalogBlockItem, state = AuthorListFeature.State.Idle)
+                            is CatalogBlockContent.AuthorsList ->
+                                CatalogBlockStateWrapper.AuthorList(catalogBlockItem, catalogBlockItem.content)
                             else ->
                                 null
                         }

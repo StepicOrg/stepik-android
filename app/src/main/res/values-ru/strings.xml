@@ -435,12 +435,6 @@
         <item quantity="other">%d курсов</item>
     </plurals>
     <string name="courses_max_count">99+ курсов</string>
-    <plurals name="author_count">
-        <item quantity="one">%d автор</item>
-        <item quantity="few">%d автора</item>
-        <item quantity="many">%d авторов</item>
-        <item quantity="other">%d авторов</item>
-    </plurals>
     <string name="author_max_count">99+ авторов</string>
     <string name="course_current_progress">Текущий прогресс %s/%d баллов</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
