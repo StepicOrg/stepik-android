@@ -5,15 +5,15 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
-import org.stepik.android.domain.catalog_block.model.AuthorCatalogBlockContentItem
+import org.stepik.android.domain.catalog_block.model.CatalogAuthor
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
-import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
+import org.stepik.android.domain.catalog_block.model.CatalogCourseList
 
 class CatalogBlockContentSerializer {
     private val gson = Gson()
     private val jsonParser = JsonParser()
 
-    fun mapToLocalEntity(kind: String, content: CatalogBlockContent?): String? {
+    fun mapToLocalEntity(kind: String, content: CatalogBlockContent?): String {
         val contentField = gson.toJsonTree(content).asJsonObject["content"]
 
         val contentJson = if (contentField is JsonObject) {
@@ -34,16 +34,16 @@ class CatalogBlockContentSerializer {
         val contentField = parsed["content"]
         return when (kind) {
             CatalogBlockContent.FULL_COURSE_LISTS ->
-                CatalogBlockContent.FullCourseList(gson.fromJson<ArrayList<StandardCatalogBlockContentItem>>(contentField, TypeToken.getParameterized(ArrayList::class.java, StandardCatalogBlockContentItem::class.java).type).first())
+                CatalogBlockContent.FullCourseList(gson.fromJson<ArrayList<CatalogCourseList>>(contentField, TypeToken.getParameterized(ArrayList::class.java, CatalogCourseList::class.java).type).first())
 
             CatalogBlockContent.SIMPLE_COURSE_LISTS ->
-                CatalogBlockContent.SimpleCourseList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, StandardCatalogBlockContentItem::class.java).type))
+                CatalogBlockContent.SimpleCourseLists(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, CatalogCourseList::class.java).type))
 
             CatalogBlockContent.AUTHORS ->
-                CatalogBlockContent.AuthorCourseList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, AuthorCatalogBlockContentItem::class.java).type))
+                CatalogBlockContent.AuthorsList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, CatalogAuthor::class.java).type))
 
             else ->
-                CatalogBlockContent.UnsupportedList
+                CatalogBlockContent.Unsupported
         }
     }
 }

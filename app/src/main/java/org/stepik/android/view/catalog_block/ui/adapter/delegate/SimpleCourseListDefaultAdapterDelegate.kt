@@ -7,24 +7,24 @@ import androidx.core.view.ViewCompat
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_simple_course_list_default.*
 import org.stepic.droid.R
-import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
+import org.stepik.android.domain.catalog_block.model.CatalogCourseList
 import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class SimpleCourseListDefaultAdapterDelegate(
     private val courseCountMapper: CourseCountMapper,
-    private val onCourseListClicked: (StandardCatalogBlockContentItem) -> Unit
-) : AdapterDelegate<StandardCatalogBlockContentItem, DelegateViewHolder<StandardCatalogBlockContentItem>>() {
-    override fun isForViewType(position: Int, data: StandardCatalogBlockContentItem): Boolean =
+    private val onCourseListClicked: (CatalogCourseList) -> Unit
+) : AdapterDelegate<CatalogCourseList, DelegateViewHolder<CatalogCourseList>>() {
+    override fun isForViewType(position: Int, data: CatalogCourseList): Boolean =
         true
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<StandardCatalogBlockContentItem> =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogCourseList> =
         ViewHolder(createView(parent, R.layout.item_simple_course_list_default))
 
     private inner class ViewHolder(
         override val containerView: View
-    ) : DelegateViewHolder<StandardCatalogBlockContentItem>(containerView), LayoutContainer {
+    ) : DelegateViewHolder<CatalogCourseList>(containerView), LayoutContainer {
         private val colorSchemes =
             listOf(
                 R.color.color_overlay_green,
@@ -37,7 +37,7 @@ class SimpleCourseListDefaultAdapterDelegate(
             containerView.setOnClickListener { onCourseListClicked(itemData ?: return@setOnClickListener) }
         }
 
-        override fun onBind(data: StandardCatalogBlockContentItem) {
+        override fun onBind(data: CatalogCourseList) {
             simpleCourseListTitle.text = data.title
             simpleCourseListCount.text =
                 courseCountMapper.mapCourseCountToString(context, data.coursesCount)

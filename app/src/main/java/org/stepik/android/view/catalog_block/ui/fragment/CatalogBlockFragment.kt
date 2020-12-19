@@ -36,8 +36,10 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.catalog_block.mapper.AuthorCountMapper
 import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListsAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
@@ -50,7 +52,10 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
+class CatalogBlockFragment :
+    Fragment(R.layout.fragment_catalog),
+    ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>, AutoCompleteSearchView.FocusCallback {
+
     companion object {
         const val TAG = "CatalogBlockFragment"
 
@@ -75,6 +80,9 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
 
     @Inject
     internal lateinit var courseCountMapper: CourseCountMapper
+
+    @Inject
+    internal lateinit var authorCountMapper: AuthorCountMapper
 
     private lateinit var searchIcon: ImageView
 
@@ -130,7 +138,8 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
-                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = CourseListFeature.Message.InitMessage(id = id, fullCourseList = fullCourseList)))
+                val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))
             },
             onCourseContinueClicked = { course, courseViewSource, courseContinueInteractionSource ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.OnContinueCourseClicked(course, courseViewSource, courseContinueInteractionSource)))
@@ -138,6 +147,10 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
             onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
+        )
+        catalogItemAdapter += AuthorListsAdapterDelegate(
+            authorCountMapper = authorCountMapper,
+            onAuthorClick = { screenManager.openProfile(requireContext(), it) }
         )
 
         catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate(
@@ -163,24 +176,17 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
             SharedTransitionContainerDelegate {
             override fun getSharedView(position: Int): View? {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                )
-                        as? StoriesAdapterDelegate.StoriesViewHolder
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX) as? StoriesAdapterDelegate.StoriesViewHolder
                     ?: return null
 
-                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
-                        as? StoriesAdapter.StoryViewHolder
+                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
                     ?: return null
 
                 return storyViewHolder.cover
             }
 
             override fun onPositionChanged(position: Int) {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                )
-                        as? StoriesAdapterDelegate.StoriesViewHolder
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX) as? StoriesAdapterDelegate.StoriesViewHolder
                     ?: return
 
                 storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
@@ -230,15 +236,15 @@ class CatalogBlockFragment : Fragment(R.layout.fragment_catalog), ReduxView<Cata
     }
 
     override fun render(state: CatalogFeature.State) {
-        val collectionCatalogItems = when (state.collectionsState) {
-            is CatalogFeature.CollectionsState.Error ->
+        val collectionCatalogItems = when (state.blocksState) {
+            is CatalogFeature.BlocksState.Error ->
                 listOf(CatalogItem.Offline)
 
-            is CatalogFeature.CollectionsState.Loading ->
+            is CatalogFeature.BlocksState.Loading ->
                 listOf(CatalogItem.Loading)
 
-            is CatalogFeature.CollectionsState.Content ->
-                state.collectionsState.collections.map { CatalogItem.Block(it) }
+            is CatalogFeature.BlocksState.Content ->
+                state.blocksState.blocks.map { CatalogItem.Block(it) }
 
             else ->
                 listOf()

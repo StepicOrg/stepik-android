@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/coursesCountImage"
+        style="@style/CourseWidgetPropertyImageView"
+        android:layout_height="11dp"
+        android:layout_width="14dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/learners_count"
+        app:srcCompat="@drawable/ic_authors_info_course_count"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/coursesCountText"
+        style="@style/CourseWidgetPropertyTextView"
+        android:layout_toEndOf="@id/coursesCountImage"
+        android:layout_toRightOf="@id/coursesCountImage"
+        tools:text="999K"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/subscribersCountImage"
+        style="@style/CourseWidgetPropertyImageView"
+        android:layout_height="10dp"
+        android:layout_width="14dp"
+        android:layout_marginTop="13dp"
+        android:layout_below="@id/coursesCountImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/learners_count"
+        app:srcCompat="@drawable/ic_course_info_learners_count"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/subscribersCountText"
+        style="@style/CourseWidgetPropertyTextView"
+        android:layout_marginTop="4dp"
+        android:layout_below="@id/coursesCountText"
+        android:layout_toEndOf="@id/subscribersCountImage"
+        android:layout_toRightOf="@id/subscribersCountImage"
+        tools:text="999K"/>
+</RelativeLayout>

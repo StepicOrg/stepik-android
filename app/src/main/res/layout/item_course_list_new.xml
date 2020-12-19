@@ -5,16 +5,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <include layout="@layout/view_container_block" />
+    <include layout="@layout/header_catalog_block" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/courseListCoursesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
+
         android:paddingLeft="@dimen/course_list_padding"
         android:paddingRight="@dimen/course_list_padding"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp" />
+        android:paddingBottom="8dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

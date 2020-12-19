@@ -2,4 +2,5 @@
 <resources>
     <integer name="course_list_columns">3</integer>
     <integer name="simple_course_lists_default_columns">4</integer>
+    <integer name="author_lists_default_columns">3</integer>
 </resources>

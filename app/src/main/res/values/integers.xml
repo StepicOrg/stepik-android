@@ -23,6 +23,9 @@
     <integer name="simple_course_lists_default_rows">2</integer>
     <integer name="simple_course_list_default_lines">3</integer>
 
+    <integer name="author_lists_default_columns">1</integer>
+    <integer name="author_lists_default_rows">2</integer>
+
     <integer name="course_list_visited_rows">3</integer>
 
     <integer name="highlighted_element_elevation">2</integer>

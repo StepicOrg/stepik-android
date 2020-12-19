@@ -46,7 +46,7 @@ object CatalogBlockPresentationModule {
                 CatalogFeature.State(
                     storiesState = StoriesFeature.State.Idle,
                     filtersState = FiltersFeature.State.Idle,
-                    collectionsState = CatalogFeature.CollectionsState.Idle,
+                    blocksState = CatalogFeature.BlocksState.Idle,
                     courseContinueState = CourseContinueFeature.State.Idle
                 ), catalogReducer
             )

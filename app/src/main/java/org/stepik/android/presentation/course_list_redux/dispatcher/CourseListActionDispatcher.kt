@@ -11,6 +11,7 @@ import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import ru.nobird.android.domain.rx.emptyOnErrorStub
+import ru.nobird.android.domain.rx.first
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
 
@@ -30,7 +31,11 @@ constructor(
                     .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
                     .concatMapSingle { sourceType ->
                         courseListInteractor
-                            .getCourseListItems(action.fullCourseList.content.courses, courseViewSource = CourseViewSource.Collection(action.fullCourseList.content.id), sourceTypeComposition = sourceType)
+                            .getCourseListItems(
+                                action.courseIds,
+                                courseViewSource = CourseViewSource.Collection(action.courseListId),
+                                sourceTypeComposition = sourceType
+                            )
                             .map { items ->
                                 CourseListFeature.Message.FetchCourseListSuccess(action.id, items, items)
                             }
@@ -43,13 +48,18 @@ constructor(
                     )
             }
 
-            is CourseListFeature.Action.FetchCourseListAfterEnrollment -> {
+            is CourseListFeature.Action.FetchCourseAfterEnrollment -> {
                 compositeDisposable += courseListInteractor
-                    .getCourseListItems(listOf(action.course.id), courseViewSource = CourseViewSource.Collection(action.fullCourseList.content.id), sourceTypeComposition = SourceTypeComposition.CACHE)
+                    .getCourseListItems(
+                        listOf(action.courseId),
+                        courseViewSource = CourseViewSource.Collection(action.courseListId),
+                        sourceTypeComposition = SourceTypeComposition.CACHE
+                    )
+                    .first()
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(CourseListFeature.Message.OnEnrollmentFetchCourseListSuccess(action.id, it, it)) },
+                        onSuccess = { onNewMessage(CourseListFeature.Message.OnEnrollmentFetchCourseListSuccess(action.id, it)) },
                         onError = emptyOnErrorStub
                     )
             }

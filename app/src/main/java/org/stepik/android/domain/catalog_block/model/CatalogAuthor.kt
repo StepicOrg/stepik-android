@@ -2,7 +2,10 @@ package org.stepik.android.domain.catalog_block.model
 
 import com.google.gson.annotations.SerializedName
 
-data class AuthorCatalogBlockContentItem(
+/**
+ * Represents lighter version of [User] and used in catalog blocks
+ */
+data class CatalogAuthor(
     @SerializedName("id")
     val id: Long,
     @SerializedName("is_organization")
