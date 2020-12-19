@@ -54,8 +54,8 @@ class CourseListAdapterDelegate(
         private val courseListTitleContainer = root.catalogBlockContainer
 
         private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer) {
-            val collection = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockTitleDelegate
-            onTitleClick(collection.content.id)
+            val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockTitleDelegate
+            onTitleClick(block.courseList.id)
         }
 
         private val skeletonCount = root.resources.getInteger(R.integer.course_list_rows) * root.resources.getInteger(R.integer.course_list_columns)
@@ -75,8 +75,8 @@ class CourseListAdapterDelegate(
                 analytic = analytic,
                 onItemClicked = { courseListItem -> onCourseClicked(courseListItem) },
                 onContinueCourseClicked = {
-                    val collection = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
-                    onCourseContinueClicked(it.course, CourseViewSource.Collection(collection.content.id), CourseContinueInteractionSource.COURSE_WIDGET)
+                    val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
+                    onCourseContinueClicked(it.course, CourseViewSource.Collection(block.courseList.id), CourseContinueInteractionSource.COURSE_WIDGET)
                 },
                 isHandleInAppPurchase = isHandleInAppPurchase
             )
@@ -104,7 +104,7 @@ class CourseListAdapterDelegate(
                 .catalogBlock.content
                 .safeCast<CatalogBlockContent.FullCourseList>()
                 ?.let {
-                    val countString = getCountString(it.content.coursesCount)
+                    val countString = getCountString(it.courseList.coursesCount)
                     catalogBlockTitleDelegate.setCount(countString)
                 }
             render(catalogBlockCourseListItem.state)

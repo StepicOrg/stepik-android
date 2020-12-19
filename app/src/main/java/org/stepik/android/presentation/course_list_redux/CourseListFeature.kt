@@ -1,7 +1,7 @@
 package org.stepik.android.presentation.course_list_redux
 
 import org.stepic.droid.util.PagedList
-import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
+import org.stepik.android.domain.catalog_block.model.CatalogCourseList
 import org.stepik.android.domain.course_list.model.CourseListItem
 import ru.nobird.android.core.model.Identifiable
 
@@ -21,7 +21,7 @@ interface CourseListFeature {
     sealed class Message : Identifiable<String> {
         data class InitMessage(
             override val id: String,
-            val courseList: StandardCatalogBlockContentItem,
+            val courseList: CatalogCourseList,
             val forceUpdate: Boolean = false
         ) : Message()
 

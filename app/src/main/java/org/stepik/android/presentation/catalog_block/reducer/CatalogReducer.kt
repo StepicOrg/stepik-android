@@ -162,7 +162,7 @@ constructor(
                     val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
                         item.catalogBlock.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
                             courseListActions +=
-                                CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, it.content.id)
+                                CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, it.courseList.id)
                         }
                         val updatedState = courseListStateMapper.mapToEnrollmentUpdateState(item.state, message.message.enrolledCourse)
                         item.copy(state = updatedState)

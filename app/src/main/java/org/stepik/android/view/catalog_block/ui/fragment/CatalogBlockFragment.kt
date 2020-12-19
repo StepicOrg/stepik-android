@@ -126,7 +126,7 @@ class CatalogBlockFragment :
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
-                val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.content)
+                val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))
             },
             onCourseContinueClicked = { course, courseViewSource, courseContinueInteractionSource ->
