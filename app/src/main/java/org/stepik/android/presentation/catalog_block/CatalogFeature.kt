@@ -14,15 +14,15 @@ interface CatalogFeature {
     data class State(
         val storiesState: StoriesFeature.State,
         val filtersState: FiltersFeature.State,
-        val collectionsState: CollectionsState,
+        val blocksState: BlocksState,
         val courseContinueState: CourseContinueFeature.State
     )
 
-    sealed class CollectionsState {
-        object Idle : CollectionsState()
-        object Loading : CollectionsState()
-        object Error : CollectionsState()
-        data class Content(val collections: List<CatalogBlockStateWrapper>) : CollectionsState()
+    sealed class BlocksState {
+        object Idle : BlocksState()
+        object Loading : BlocksState()
+        object Error : BlocksState()
+        data class Content(val blocks: List<CatalogBlockStateWrapper>) : BlocksState()
     }
 
     sealed class Message {
