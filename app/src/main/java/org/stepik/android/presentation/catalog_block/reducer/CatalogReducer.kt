@@ -48,7 +48,7 @@ constructor(
                     val collections = message.collections.mapNotNull { catalogBlockItem ->
                         when (catalogBlockItem.content) {
                             is CatalogBlockContent.FullCourseList ->
-                                CatalogBlockStateWrapper.CourseList(catalogBlockItem = catalogBlockItem, state = CourseListFeature.State.Idle)
+                                CatalogBlockStateWrapper.CourseList(catalogBlock = catalogBlockItem, state = CourseListFeature.State.Idle)
                             else ->
                                 null
                         }
@@ -160,7 +160,7 @@ constructor(
                 if (state.blocksState is CatalogFeature.BlocksState.Content && message.message is EnrollmentFeature.Message.EnrollmentMessage) {
                     val courseListActions = mutableSetOf<CourseListFeature.Action>()
                     val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
-                        item.catalogBlockItem.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
+                        item.catalogBlock.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
                             courseListActions +=
                                 CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, it.content.id)
                         }

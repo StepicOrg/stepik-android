@@ -6,16 +6,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 
 @Dao
 interface CatalogBlockDao {
-    @Query("SELECT * FROM CatalogBlockItem WHERE language = :language")
-    fun getCatalogBlocks(language: String): Single<List<CatalogBlockItem>>
+    @Query("SELECT * FROM CatalogBlock WHERE language = :language")
+    fun getCatalogBlocks(language: String): Single<List<CatalogBlock>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCatalogBlocks(catalogBlocks: List<CatalogBlockItem>): Completable
+    fun insertCatalogBlocks(catalogBlocks: List<CatalogBlock>): Completable
 
-    @Query("DELETE FROM CatalogBlockItem")
+    @Query("DELETE FROM CatalogBlock")
     fun clearCatalogBlocks(): Completable
 }

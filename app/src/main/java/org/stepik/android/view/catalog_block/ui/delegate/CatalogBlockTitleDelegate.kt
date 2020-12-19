@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.view_container_block.view.*
-import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 
 class CatalogBlockTitleDelegate(
     private val view: ViewGroup,
@@ -21,7 +21,7 @@ class CatalogBlockTitleDelegate(
         viewAllArrow.isVisible = onClickListener != null
     }
 
-    fun setInformation(data: CatalogBlockItem) {
+    fun setInformation(data: CatalogBlock) {
         view.isVisible = data.isTitleVisible
         title.text = data.title
 

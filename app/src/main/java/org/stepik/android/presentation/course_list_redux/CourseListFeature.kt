@@ -1,7 +1,6 @@
 package org.stepik.android.presentation.course_list_redux
 
 import org.stepic.droid.util.PagedList
-import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.domain.catalog_block.model.StandardCatalogBlockContentItem
 import org.stepik.android.domain.course_list.model.CourseListItem
 import ru.nobird.android.core.model.Identifiable

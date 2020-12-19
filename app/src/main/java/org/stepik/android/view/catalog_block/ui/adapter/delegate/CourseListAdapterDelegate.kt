@@ -9,7 +9,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
-import org.stepik.android.domain.catalog_block.model.CatalogBlockItem
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.model.Course
@@ -48,13 +48,13 @@ class CourseListAdapterDelegate(
 
     private inner class CourseCollectionViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
 
-        private var courseCollection: CatalogBlockItem? = null
+        private var catalogBlock: CatalogBlock? = null
 
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListTitleContainer = root.catalogBlockContainer
 
         private val catalogBlockTitleDelegate = CatalogBlockTitleDelegate(courseListTitleContainer) {
-            val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockTitleDelegate
+            val collection = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockTitleDelegate
             onTitleClick(collection.content.id)
         }
 
@@ -75,7 +75,7 @@ class CourseListAdapterDelegate(
                 analytic = analytic,
                 onItemClicked = { courseListItem -> onCourseClicked(courseListItem) },
                 onContinueCourseClicked = {
-                    val collection = (courseCollection?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
+                    val collection = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
                     onCourseContinueClicked(it.course, CourseViewSource.Collection(collection.content.id), CourseContinueInteractionSource.COURSE_WIDGET)
                 },
                 isHandleInAppPurchase = isHandleInAppPurchase
@@ -98,10 +98,10 @@ class CourseListAdapterDelegate(
             data as CatalogItem.Block
             val catalogBlockCourseListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.CourseList
             initLoading(catalogBlockCourseListItem)
-            courseCollection = catalogBlockCourseListItem.catalogBlockItem
-            catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlockItem)
+            catalogBlock = catalogBlockCourseListItem.catalogBlock
+            catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlock)
             catalogBlockCourseListItem
-                .catalogBlockItem.content
+                .catalogBlock.content
                 .safeCast<CatalogBlockContent.FullCourseList>()
                 ?.let {
                     val countString = getCountString(it.content.coursesCount)
@@ -139,9 +139,9 @@ class CourseListAdapterDelegate(
     }
 
     private fun initLoading(catalogBlockCourseList: CatalogBlockStateWrapper.CourseList) {
-        if (catalogBlockCourseList.catalogBlockItem.content !is CatalogBlockContent.FullCourseList) {
+        if (catalogBlockCourseList.catalogBlock.content !is CatalogBlockContent.FullCourseList) {
             return
         }
-        onBlockSeen(catalogBlockCourseList.id, catalogBlockCourseList.catalogBlockItem.content)
+        onBlockSeen(catalogBlockCourseList.id, catalogBlockCourseList.catalogBlock.content)
     }
 }
