@@ -36,8 +36,10 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.catalog_block.mapper.AuthorCountMapper
 import org.stepik.android.view.catalog_block.mapper.CourseCountMapper
 import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog_block.ui.adapter.delegate.AuthorListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog_block.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -77,6 +79,9 @@ class CatalogBlockFragment :
 
     @Inject
     internal lateinit var courseCountMapper: CourseCountMapper
+
+    @Inject
+    internal lateinit var authorCountMapper: AuthorCountMapper
 
     private lateinit var searchIcon: ImageView
 
@@ -142,6 +147,10 @@ class CatalogBlockFragment :
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
+        catalogItemAdapter += AuthorListAdapterDelegate(
+            authorCountMapper = authorCountMapper,
+            onAuthorClick = { screenManager.openProfile(requireContext(), it) }
+        )
 
         catalogItemAdapter += SimpleCourseListsDefaultAdapterDelegate(
             courseCountMapper = courseCountMapper,
@@ -161,24 +170,17 @@ class CatalogBlockFragment :
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
             SharedTransitionContainerDelegate {
             override fun getSharedView(position: Int): View? {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                )
-                        as? StoriesAdapterDelegate.StoriesViewHolder
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX) as? StoriesAdapterDelegate.StoriesViewHolder
                     ?: return null
 
-                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
-                        as? StoriesAdapter.StoryViewHolder
+                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
                     ?: return null
 
                 return storyViewHolder.cover
             }
 
             override fun onPositionChanged(position: Int) {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                )
-                        as? StoriesAdapterDelegate.StoriesViewHolder
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX) as? StoriesAdapterDelegate.StoriesViewHolder
                     ?: return
 
                 storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)

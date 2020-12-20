@@ -170,4 +170,11 @@
         <item quantity="many">%d категорий</item>
         <item quantity="other">%d категорий</item>
     </plurals>
+
+    <plurals name="catalog_author_lists">
+        <item quantity="one">%d автор</item>
+        <item quantity="few">%d автора</item>
+        <item quantity="many">%d авторов</item>
+        <item quantity="other">%d авторов</item>
+    </plurals>
 </resources>

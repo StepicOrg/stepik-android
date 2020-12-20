@@ -100,7 +100,8 @@ class CourseListAdapterDelegate(
             catalogBlock = catalogBlockCourseListItem.catalogBlock
             catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlock)
             catalogBlockCourseListItem
-                .catalogBlock.content
+                .catalogBlock
+                .content
                 .safeCast<CatalogBlockContent.FullCourseList>()
                 ?.let {
                     val countString = courseCountMapper.mapCourseCountToString(context, it.courseList.coursesCount)

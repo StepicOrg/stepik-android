@@ -8,11 +8,10 @@
     <include layout="@layout/header_catalog_block" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/courseListCoursesRecycler"
+        android:id="@+id/authorListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-
         android:paddingLeft="@dimen/course_list_padding"
         android:paddingRight="@dimen/course_list_padding"
         android:paddingBottom="8dp" />

@@ -53,6 +53,8 @@ constructor(
                             is CatalogBlockContent.SimpleCourseLists ->
                                 CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
 
+                            is CatalogBlockContent.AuthorsList ->
+                                CatalogBlockStateWrapper.AuthorList(catalogBlockItem, catalogBlockItem.content)
                             else ->
                                 null
                         }
