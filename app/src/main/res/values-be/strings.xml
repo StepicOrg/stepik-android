@@ -410,6 +410,7 @@
     </plurals>
     <string name="courses_max_count">99+ курсаў</string>
     <string name="author_max_count">99+ аўтараў</string>
+    <string name="author_subscribers">%s падпісчыкаў</string>
     <string name="course_current_progress">Наяўны прагрэс %s/%d балаў</string>
     <string name="home_streak_counter_text"><![CDATA[Вы рашаеце <b>%s</b> запар!]]></string>
     <string name="registration_remind_message">Завершыце рэгістрацыю і атрымайце доступ да неабмежаванай колькасці бясплатных курсаў!</string>

@@ -121,9 +121,4 @@
         <item quantity="one">%d author</item>
         <item quantity="other">%d authors</item>
     </plurals>
-
-    <plurals name="catalog_author_subscribers">
-        <item quantity="one">%d subscriber</item>
-        <item quantity="other">%d subscribers</item>
-    </plurals>
 </resources>

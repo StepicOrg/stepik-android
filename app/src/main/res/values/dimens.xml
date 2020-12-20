@@ -248,9 +248,9 @@
     <!-- Catalog block / simple_course_lists / default -->
     <dimen name="simple_course_list_default_height">112dp</dimen>
 
+    <!-- Catalog block / author -->
+    <dimen name="item_author_height">112dp</dimen>
     <!-- Catalog block / simple_course_lists / grid -->
     <dimen name="simple_course_list_grid_first_height">140dp</dimen>
     <dimen name="simple_course_list_grid_height">56dp</dimen>
-
-    <dimen name="item_author_height">96dp</dimen>
 </resources>

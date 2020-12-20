@@ -1,58 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/course_item_margin"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="@dimen/course_item_radius">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include layout="@layout/header_catalog_block" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/authorListRecycler"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_author_height"
-        android:duplicateParentState="true">
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/course_list_padding"
+        android:paddingRight="@dimen/course_list_padding"
+        android:paddingBottom="8dp" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/authorListImage"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="16dp"
-
-            tools:src="@drawable/general_placeholder"/>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/authorListTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-
-            android:textAppearance="?textAppearanceBody1"
-            app:layout_constraintLeft_toRightOf="@+id/authorListImage"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingPrefix"
-            android:ellipsize="end"
-            android:maxLines="2"
-            tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
-
-        <include
-            android:id="@+id/authorListPropertiesContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/authorListTitle"
-            app:layout_constraintLeft_toRightOf="@id/authorListImage"
-            app:layout_constraintStart_toEndOf="@id/authorListImage"
-            layout="@layout/layout_author_properties" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</com.google.android.material.card.MaterialCardView>
+</androidx.appcompat.widget.LinearLayoutCompat>
