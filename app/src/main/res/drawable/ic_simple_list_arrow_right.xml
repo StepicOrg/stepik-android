@@ -2,11 +2,11 @@
     android:width="8dp"
     android:height="16dp"
     android:viewportWidth="8"
-    android:viewportHeight="16">
+    android:viewportHeight="16"
+    android:tint="?attr/colorControlNormal">
   <path
       android:pathData="M1,1.5L6.8112,7.6218C7.0629,7.8875 7.0629,8.318 6.8116,8.5832L1,14.4639"
-      android:strokeAlpha="0.6"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#000000"/>
+      android:strokeColor="@android:color/white"/>
 </vector>

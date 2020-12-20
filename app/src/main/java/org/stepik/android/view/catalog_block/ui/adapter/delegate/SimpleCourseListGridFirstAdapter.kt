@@ -24,7 +24,7 @@ class SimpleCourseListGridFirstAdapter(
         override val containerView: View
     ) : DelegateViewHolder<CatalogCourseList>(containerView), LayoutContainer {
         init {
-            containerView.setOnClickListener { onCourseListClicked(itemData ?: return@setOnClickListener) }
+            simpleCourseListGridOverlay.setOnClickListener { onCourseListClicked(itemData ?: return@setOnClickListener) }
         }
 
         override fun onBind(data: CatalogCourseList) {
