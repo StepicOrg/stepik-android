@@ -17,6 +17,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -73,6 +75,11 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             itemAnimator = null
             addItemDecoration(courseListCollectionHeaderDecoration)
+            setOnPaginationListener { pageDirection ->
+                if (pageDirection == PaginationDirection.NEXT) {
+                    courseListPresenter.fetchNextPage()
+                }
+            }
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
