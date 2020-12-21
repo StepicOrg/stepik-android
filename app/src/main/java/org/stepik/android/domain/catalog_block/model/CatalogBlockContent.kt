@@ -7,9 +7,18 @@ sealed class CatalogBlockContent {
     object Unsupported : CatalogBlockContent()
 
     companion object {
+        /**
+         * Types of content
+         */
         const val FULL_COURSE_LISTS = "full_course_lists"
         const val SIMPLE_COURSE_LISTS = "simple_course_lists"
         const val AUTHORS = "authors"
         const val UNSUPPORTED = "unsupported"
+
+        /**
+         * Appearance of content
+         */
+        const val APPEARANCE_DEFAULT = "default"
+        const val APPEARANCE_SIMPLE_COURSE_LISTS_GRID = "simple_course_lists_grid"
     }
 }

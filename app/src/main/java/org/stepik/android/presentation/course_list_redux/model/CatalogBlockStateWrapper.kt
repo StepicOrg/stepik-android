@@ -25,6 +25,14 @@ sealed class CatalogBlockStateWrapper : Identifiable<String> {
             "$SIMPLE_COURSE_LISTS${catalogBlockItem.id}"
     }
 
+    data class SimpleCourseListsGrid(
+        val catalogBlockItem: CatalogBlock,
+        val content: CatalogBlockContent.SimpleCourseLists
+    ) : CatalogBlockStateWrapper() {
+        override val id: String =
+            "$SIMPLE_COURSE_LISTS${catalogBlockItem.id}"
+    }
+
     data class AuthorList(
         val catalogBlockItem: CatalogBlock,
         val content: CatalogBlockContent.AuthorsList
