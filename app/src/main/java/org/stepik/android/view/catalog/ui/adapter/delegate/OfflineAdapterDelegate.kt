@@ -19,7 +19,10 @@ class OfflineAdapterDelegate(
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> {
         val view = createView(parent, R.layout.error_no_connection_with_button_small)
-        view.updateLayoutParams { width = ViewGroup.LayoutParams.MATCH_PARENT }
+        view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            width = ViewGroup.LayoutParams.MATCH_PARENT
+            topMargin = parent.resources.getDimensionPixelSize(R.dimen.offline_item_top_margin)
+        }
         return OfflineViewHolder(view, onRetry = onRetry)
     }
 
