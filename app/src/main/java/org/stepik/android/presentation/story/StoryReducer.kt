@@ -27,7 +27,10 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.OnReactionClicked ->
                 if (state is State.Content) {
-                    state.copy(reactions = state.reactions + (message.storyId to message.reaction)) to setOf(Action.SaveReaction(message.storyId, message.reaction))
+                    val newState = state.copy(reactions = state.reactions + (message.storyId to message.reaction))
+                    val newActions = setOf(Action.SaveReaction(message.storyId, message.storyPosition, message.reaction))
+
+                    newState to newActions
                 } else {
                     null
                 }

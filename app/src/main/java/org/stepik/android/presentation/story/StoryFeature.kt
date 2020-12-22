@@ -11,13 +11,27 @@ interface StoryFeature {
 
     sealed class Message {
         object Init : Message()
-        data class VoteFetchSuccess(val reactions: Map<Long, StoryReaction>) : Message()
-        data class OnReactionClicked(val storyId: Long, val reaction: StoryReaction) : Message()
+
+        data class VoteFetchSuccess(
+            val reactions: Map<Long, StoryReaction>
+        ) : Message()
+
+        data class OnReactionClicked(
+            val storyId: Long,
+            val storyPosition: Int,
+            val reaction: StoryReaction
+        ) : Message()
     }
 
     sealed class Action {
         object FetchVotes : Action()
-        data class SaveReaction(val storyId: Long, val reaction: StoryReaction) : Action()
+
+        data class SaveReaction(
+            val storyId: Long,
+            val storyPosition: Int,
+            val reaction: StoryReaction
+        ) : Action()
+
         sealed class ViewAction : Action()
     }
 }

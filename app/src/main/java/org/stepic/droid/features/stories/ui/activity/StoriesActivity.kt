@@ -28,8 +28,8 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
         storyViewModel.onNewMessage(StoryFeature.Message.Init)
 
         setContentView(R.layout.activity_stories)
-        storiesDelegate = StoriesActivityDelegate(this, analytic) { storyId, storyVote ->
-            storyViewModel.onNewMessage(StoryFeature.Message.OnReactionClicked(storyId, storyVote))
+        storiesDelegate = StoriesActivityDelegate(this, analytic) { storyId, storyPosition, storyReaction ->
+            storyViewModel.onNewMessage(StoryFeature.Message.OnReactionClicked(storyId, storyPosition, storyReaction))
         }
         storiesDelegate.onCreate(savedInstanceState)
 

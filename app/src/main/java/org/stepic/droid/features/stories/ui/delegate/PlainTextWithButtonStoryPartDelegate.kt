@@ -28,7 +28,7 @@ class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
     private val context: Context,
     private val storyVotes: Map<Long, StoryReaction>,
-    private val storyReactionListener: (storyId: Long, storyReaction: StoryReaction) -> Unit
+    private val storyReactionListener: (storyId: Long, storyPosition: Int, storyReaction: StoryReaction) -> Unit
 ) : StoryPartViewDelegate() {
     companion object {
         private const val COLOR_MASK = 0xFF000000.toInt()
@@ -65,7 +65,7 @@ class PlainTextWithButtonStoryPartDelegate(
 
             setUpText(this, part.text)
             setUpButton(story, this, part.button, position)
-            setUpReactions(story, this)
+            setUpReactions(story, this, position)
         }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
@@ -109,21 +109,21 @@ class PlainTextWithButtonStoryPartDelegate(
         }
     }
 
-    fun setUpReactions(story: Story?, view: View) {
+    fun setUpReactions(story: Story?, view: View, position: Int) {
         val storyId = story?.id ?: 0
         val vote = storyVotes[storyId]
 
         with(view.storyReactionLike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
-                storyReactionListener.invoke(id, StoryReaction.LIKE)
+                storyReactionListener.invoke(id, position, StoryReaction.LIKE)
             }
             isActivated = vote == StoryReaction.LIKE
         }
         with(view.storyReactionDislike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
-                storyReactionListener.invoke(id, StoryReaction.DISLIKE)
+                storyReactionListener.invoke(id, position, StoryReaction.DISLIKE)
             }
             isActivated = vote == StoryReaction.DISLIKE
         }

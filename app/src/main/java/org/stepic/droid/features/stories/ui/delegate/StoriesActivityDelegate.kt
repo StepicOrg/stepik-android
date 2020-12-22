@@ -20,7 +20,7 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 class StoriesActivityDelegate(
     activity: AppCompatActivity,
     private val analytic: Analytic,
-    storyReactionListener: (storyId: Long, storyReaction: StoryReaction) -> Unit
+    storyReactionListener: (storyId: Long, storyPosition: Int, storyReaction: StoryReaction) -> Unit
 ) : StoriesActivityDelegateBase(activity) {
     private val storyReactions = mutableMapOf<Long, StoryReaction>()
     private val storyPartDelegate =
@@ -76,7 +76,7 @@ class StoriesActivityDelegate(
                 ?.findViewById<ViewPager>(R.id.storyViewPager)
 
             storyPartPager?.children?.forEach { view ->
-                storyPartDelegate.setUpReactions(story, view)
+                storyPartDelegate.setUpReactions(story, view, position)
             }
         }
     }
