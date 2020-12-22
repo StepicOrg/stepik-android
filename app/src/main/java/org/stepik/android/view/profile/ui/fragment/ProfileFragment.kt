@@ -3,10 +3,8 @@ package org.stepik.android.view.profile.ui.fragment
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -129,7 +127,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         injectComponent()
 
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         profilePresenter.onData(userId)
     }
 
@@ -151,15 +148,16 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
 
         profileStatsDelegate = ProfileStatsDelegate(view, analytic)
 
-        (activity as? AppCompatActivity)
-            ?.apply { setSupportActionBar(toolbar) }
-            ?.supportActionBar
-            ?.apply {
-                setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
-                setDisplayShowTitleEnabled(false)
-            }
+        if (activity is CloseButtonInToolbar) {
+            toolbar.setNavigationIcon(com.google.android.material.R.drawable.abc_ic_ab_back_material)
+            toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
+            toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+        }
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
-        toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
+
+        toolbar.inflateMenu(R.menu.profile_menu)
+        initOptionsMenu(toolbar.menu)
+        toolbar.setOnMenuItemClickListener(::onOptionsItemClicked)
 
         val colorControlNormal =
             AppCompatResources.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal))
@@ -201,9 +199,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.profile_menu, menu)
-
+    private fun initOptionsMenu(menu: Menu) {
         editMenuItem = menu.findItem(R.id.menu_item_edit)
         editMenuItem?.isVisible = isEditMenuItemVisible
         editMenuItem?.let { MenuItemCompat.setIconTintList(it, menuTintStateList) }
@@ -217,7 +213,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         settingsMenuItem?.let { MenuItemCompat.setIconTintList(it, menuTintStateList) }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+    private fun onOptionsItemClicked(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.menu_item_edit -> {
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)

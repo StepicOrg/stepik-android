@@ -233,7 +233,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
                 LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
 
             SocialNetwork.VK ->
-                VK.login(this, listOf(VKScope.EMAIL))
+                VK.login(this, listOf(VKScope.OFFLINE, VKScope.EMAIL))
 
             else -> {
                 selectedSocialType = type

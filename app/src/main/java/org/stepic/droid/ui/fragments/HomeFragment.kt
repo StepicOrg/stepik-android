@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
-import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.commitNow
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
@@ -34,7 +34,6 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Home.HOME_SCREEN_OPENED)
     }
 
@@ -51,7 +50,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
-        initCenteredToolbar(R.string.home_title)
+        centeredToolbarTitle.setText(R.string.home_title)
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {

@@ -144,7 +144,7 @@ class TextStepContentFragment :
         }
 
     private fun showStepEditDialog() {
-        analytic.reportStepEvent(Analytic.Steps.STEP_EDIT_OPENED, AmplitudeAnalytic.Steps.STEP_EDIT_OPENED, stepWrapper.step)
+        analytic.reportStepEvent(AmplitudeAnalytic.Steps.STEP_EDIT_OPENED, stepWrapper.step)
 
         EditStepSourceDialogFragment
             .newInstance(stepWrapper, lessonData.lesson.title.orEmpty())
@@ -168,7 +168,7 @@ class TextStepContentFragment :
 
     override fun onStepContentChanged(stepWrapper: StepPersistentWrapper) {
         this.stepWrapper = stepWrapper
-        analytic.reportStepEvent(Analytic.Steps.STEP_EDIT_COMPLETED, AmplitudeAnalytic.Steps.STEP_EDIT_COMPLETED, stepWrapper.step)
+        analytic.reportStepEvent(AmplitudeAnalytic.Steps.STEP_EDIT_COMPLETED, stepWrapper.step)
         invalidateText()
     }
 }

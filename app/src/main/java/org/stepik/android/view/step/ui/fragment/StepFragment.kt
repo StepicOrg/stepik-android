@@ -232,7 +232,7 @@ class StepFragment : Fragment(), StepView,
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
 
         analytic
-            .reportStepEvent(AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, stepWrapper.step)
+            .reportStepEvent(AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, stepWrapper.step)
     }
 
     override fun setState(state: StepView.State) {

@@ -90,6 +90,7 @@ interface AmplitudeAnalytic {
             const val STEP = "step"
             const val LOCAL = "local"
             const val IS_ADAPTIVE = "is_adaptive"
+            const val IS_REVIEW = "is_review"
         }
     }
 
@@ -282,5 +283,14 @@ interface AmplitudeAnalytic {
         object Params {
             const val STEP_ID = "step_id"
         }
+    }
+
+    object PeerReview {
+        const val REVIEW_SELECT_DIFFERENT_SUBMISSION = "Review Select Different Submission"
+        const val REVIEW_SEND_CURRENT_SUBMISSION = "Review Send Current Submission"
+        const val REVIEW_SOLVE_AGAIN = "Review Solve Again"
+        const val REVIEW_QUIZ_TRY_AGAIN = "Review Quiz Try Again"
+        const val REVIEW_START_REVIEW = "Review Start Review"
+        const val REVIEW_VIEW_REVIEW = "Review View Review"
     }
 }

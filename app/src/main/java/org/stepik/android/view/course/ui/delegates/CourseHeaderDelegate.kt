@@ -26,8 +26,6 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
-import org.stepik.android.view.course.routing.CourseScreenTab
-import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import kotlin.math.abs
@@ -105,7 +103,6 @@ class CourseHeaderDelegate(
             courseBuyInWebAction.setOnClickListener {
                 val queryParams = courseActivity
                     .intent
-                    ?.takeIf { it.getCourseTabFromDeepLink() == CourseScreenTab.PAY }
                     ?.data
                     ?.getAllQueryParameters()
 

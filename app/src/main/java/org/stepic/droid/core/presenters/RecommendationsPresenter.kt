@@ -234,7 +234,7 @@ constructor(
     private fun reportView(card: Card) {
         val step = card.step ?: return
 
-        analytic.reportStepEvent(Analytic.Steps.STEP_OPENED, AmplitudeAnalytic.Steps.STEP_OPENED, step)
+        analytic.reportStepEvent(AmplitudeAnalytic.Steps.STEP_OPENED, step)
 
         compositeDisposable += unitRepository
             .getUnitsByCourseAndLessonId(courseId, card.lessonId)
