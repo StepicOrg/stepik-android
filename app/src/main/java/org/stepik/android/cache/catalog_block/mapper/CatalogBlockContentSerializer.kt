@@ -16,13 +16,13 @@ class CatalogBlockContentSerializer {
     fun mapToLocalEntity(kind: String, content: CatalogBlockContent?): String {
         val memberName = when (content) {
             is CatalogBlockContent.FullCourseList ->
-                "courseList"
+                CatalogBlockContent.FullCourseList::courseList.name
 
             is CatalogBlockContent.SimpleCourseLists ->
-                "courseLists"
+                CatalogBlockContent.SimpleCourseLists::courseLists::name.get()
 
             is CatalogBlockContent.AuthorsList ->
-                "authors"
+                CatalogBlockContent.AuthorsList::authors::name.get()
 
             else ->
                 null
