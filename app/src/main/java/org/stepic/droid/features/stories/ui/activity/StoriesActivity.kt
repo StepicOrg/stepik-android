@@ -68,8 +68,8 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
         val story = storiesDelegate.getCurrentStory() ?: return
 
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_CLOSED, mapOf(
-                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                AmplitudeAnalytic.Stories.Values.CLOSE_TYPE to AmplitudeAnalytic.Stories.Values.CloseTypes.CROSS
+            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+            AmplitudeAnalytic.Stories.Values.CLOSE_TYPE to AmplitudeAnalytic.Stories.Values.CloseTypes.CROSS
         ))
     }
 
