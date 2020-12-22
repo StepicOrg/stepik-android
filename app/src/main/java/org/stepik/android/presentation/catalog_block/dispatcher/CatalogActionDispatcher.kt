@@ -8,6 +8,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogActionDispatcher
@@ -28,7 +29,11 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksSuccess(it)) },
-                        onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }
+                        onError = {
+                            it.printStackTrace()
+                            Timber.d("Error: $it")
+                            onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError)
+                        }
                     )
             }
         }

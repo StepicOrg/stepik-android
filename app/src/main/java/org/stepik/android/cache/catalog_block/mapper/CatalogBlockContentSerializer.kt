@@ -14,7 +14,21 @@ class CatalogBlockContentSerializer {
     private val jsonParser = JsonParser()
 
     fun mapToLocalEntity(kind: String, content: CatalogBlockContent?): String {
-        val contentField = gson.toJsonTree(content).asJsonObject["content"]
+        val memberName = when (content) {
+            is CatalogBlockContent.FullCourseList ->
+                "courseList"
+
+            is CatalogBlockContent.SimpleCourseLists ->
+                "courseLists"
+
+            is CatalogBlockContent.AuthorsList ->
+                "authors"
+
+            else ->
+                null
+        }
+
+        val contentField = gson.toJsonTree(content).asJsonObject[memberName]
 
         val contentJson = if (contentField is JsonObject) {
             JsonArray(1).apply { add(contentField) }

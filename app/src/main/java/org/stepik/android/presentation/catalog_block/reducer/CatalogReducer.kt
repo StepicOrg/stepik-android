@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.catalog_block.reducer
 
+import org.stepik.android.domain.catalog_block.model.CatalogBlock
 import org.stepik.android.domain.catalog_block.model.CatalogBlockContent
 import org.stepik.android.presentation.catalog_block.CatalogFeature
 import org.stepik.android.presentation.catalog_block.CatalogFeature.State
@@ -45,26 +46,28 @@ constructor(
 
             is Message.FetchCatalogBlocksSuccess -> {
                 if (state.blocksState is CatalogFeature.BlocksState.Loading) {
-                    val collections = message.collections.mapNotNull { catalogBlockItem ->
-                        when (catalogBlockItem.content) {
-                            is CatalogBlockContent.FullCourseList ->
-                                CatalogBlockStateWrapper.FullCourseList(catalogBlock = catalogBlockItem, state = CourseListFeature.State.Idle)
+                    val collections = message.collections
+                        .sortedBy(CatalogBlock::position)
+                        .mapNotNull { catalogBlockItem ->
+                            when (catalogBlockItem.content) {
+                                is CatalogBlockContent.FullCourseList ->
+                                    CatalogBlockStateWrapper.FullCourseList(catalogBlock = catalogBlockItem, state = CourseListFeature.State.Idle)
 
-                            is CatalogBlockContent.SimpleCourseLists -> {
-                                if (catalogBlockItem.appearance == CatalogBlockContent.APPEARANCE_SIMPLE_COURSE_LISTS_GRID) {
-                                    CatalogBlockStateWrapper.SimpleCourseListsGrid(catalogBlockItem, catalogBlockItem.content)
-                                } else {
-                                    CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
+                                is CatalogBlockContent.SimpleCourseLists -> {
+                                    if (catalogBlockItem.appearance == CatalogBlockContent.APPEARANCE_SIMPLE_COURSE_LISTS_GRID) {
+                                        CatalogBlockStateWrapper.SimpleCourseListsGrid(catalogBlockItem, catalogBlockItem.content)
+                                    } else {
+                                        CatalogBlockStateWrapper.SimpleCourseListsDefault(catalogBlockItem, catalogBlockItem.content)
+                                    }
                                 }
+
+                                is CatalogBlockContent.AuthorsList ->
+                                    CatalogBlockStateWrapper.AuthorList(catalogBlockItem, catalogBlockItem.content)
+
+                                else ->
+                                    null
                             }
-
-                            is CatalogBlockContent.AuthorsList ->
-                                CatalogBlockStateWrapper.AuthorList(catalogBlockItem, catalogBlockItem.content)
-
-                            else ->
-                                null
                         }
-                    }
                     state.copy(blocksState = CatalogFeature.BlocksState.Content(collections)) to emptySet()
                 } else {
                     null
