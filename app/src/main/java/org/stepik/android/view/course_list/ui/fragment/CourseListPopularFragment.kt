@@ -64,8 +64,8 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        coursesCarouselCount.isVisible = false
-        courseListTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
+        containerCarouselCount.isVisible = false
+        containerTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
 
         with(courseListCoursesRecycler) {
             val rowCount = resources.getInteger(R.integer.course_list_rows)
@@ -88,7 +88,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
         )
 
-        courseListTitleContainer.setOnClickListener {
+        catalogBlockContainer.setOnClickListener {
             screenManager.showCoursesByQuery(
                 requireContext(),
                 resources.getString(R.string.course_list_popular_toolbar_title),
@@ -103,9 +103,9 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
-        viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Idle>(catalogBlockContainer)
+        viewStateDelegate.addState<CourseListView.State.Loading>(catalogBlockContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(catalogBlockContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
@@ -116,7 +116,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListTitleContainer = courseListTitleContainer,
+            courseListTitleContainer = catalogBlockContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

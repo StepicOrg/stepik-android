@@ -244,4 +244,13 @@
     <dimen name="story_item_margin">24dp</dimen>
     <dimen name="story_item_margin_vertical">60dp</dimen>
     <dimen name="stories_default_corner_stroke_radius">17dp</dimen>
+
+    <!-- Catalog block / simple_course_lists / default -->
+    <dimen name="simple_course_list_default_height">112dp</dimen>
+
+    <!-- Catalog block / author -->
+    <dimen name="item_author_height">112dp</dimen>
+    <!-- Catalog block / simple_course_lists / grid -->
+    <dimen name="simple_course_list_grid_first_height">140dp</dimen>
+    <dimen name="simple_course_list_grid_height">56dp</dimen>
 </resources>

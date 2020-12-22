@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/header_catalog_block" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/courseListsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/catalogBlockContainer"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/course_list_padding"
+        android:paddingRight="@dimen/course_list_padding"
+        android:paddingBottom="8dp"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:spanCount="2"
+        tools:orientation="horizontal"
+        tools:listitem="@layout/item_simple_course_list_default" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -56,10 +56,10 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        coursesCarouselCount.isVisible = false
+        containerCarouselCount.isVisible = false
         courseListPlaceholderNoConnection.isVisible = false
         courseListPlaceholderEmpty.isVisible = false
-        courseListTitle.text = resources.getString(R.string.visited_courses_title)
+        containerTitle.text = resources.getString(R.string.visited_courses_title)
 
         with(courseListCoursesRecycler) {
             val rowCount = 1
@@ -69,15 +69,15 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
             snapHelper.attachToRecyclerView(this)
         }
 
-        courseListTitleContainer.setOnClickListener {
+        catalogBlockContainer.setOnClickListener {
             screenManager.showVisitedCourses(requireContext())
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(view, courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(view, courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Loading>(view, catalogBlockContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(view, catalogBlockContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>()
         viewStateDelegate.addState<CourseListView.State.NetworkError>()
 
@@ -88,7 +88,7 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListTitleContainer = courseListTitleContainer,
+            courseListTitleContainer = catalogBlockContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

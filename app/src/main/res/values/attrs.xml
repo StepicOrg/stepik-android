@@ -67,4 +67,7 @@
     <declare-styleable name="ReviewStatusView">
         <attr name="position" format="integer" />
     </declare-styleable>
+
+    <!-- Simple course lists states -->
+
 </resources>
