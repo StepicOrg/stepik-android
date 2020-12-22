@@ -1,5 +1,5 @@
 package org.stepik.android.domain.story.model
 
-enum class StoryVote {
+enum class StoryReaction {
     LIKE, DISLIKE
 }

@@ -82,7 +82,7 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
         val votes =
             when (state) {
                 is StoryFeature.State.Content ->
-                    state.votes
+                    state.reactions
 
                 else ->
                     emptyMap()

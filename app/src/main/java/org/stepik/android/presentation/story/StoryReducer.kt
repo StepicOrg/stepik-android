@@ -20,14 +20,14 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.VoteFetchSuccess ->
                 if (state is State.Loading) {
-                    State.Content(message.votes) to emptySet()
+                    State.Content(message.reactions) to emptySet()
                 } else {
                     null
                 }
 
             is Message.OnReactionClicked ->
                 if (state is State.Content) {
-                    state.copy(votes = state.votes + (message.storyId to message.vote)) to setOf(Action.SaveReaction(message.storyId, message.vote))
+                    state.copy(reactions = state.reactions + (message.storyId to message.reaction)) to setOf(Action.SaveReaction(message.storyId, message.reaction))
                 } else {
                     null
                 }

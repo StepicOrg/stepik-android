@@ -16,7 +16,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepic.droid.ui.util.inflate
-import org.stepik.android.domain.story.model.StoryVote
+import org.stepik.android.domain.story.model.StoryReaction
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import ru.nobird.android.stories.model.Story
@@ -27,8 +27,8 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
     private val context: Context,
-    private val storyVotes: Map<Long, StoryVote>,
-    private val storyReactionListener: (storyId: Long, storyVote: StoryVote) -> Unit
+    private val storyVotes: Map<Long, StoryReaction>,
+    private val storyReactionListener: (storyId: Long, storyReaction: StoryReaction) -> Unit
 ) : StoryPartViewDelegate() {
     companion object {
         private const val COLOR_MASK = 0xFF000000.toInt()
@@ -116,16 +116,16 @@ class PlainTextWithButtonStoryPartDelegate(
         with(view.storyReactionLike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
-                storyReactionListener.invoke(id, StoryVote.LIKE)
+                storyReactionListener.invoke(id, StoryReaction.LIKE)
             }
-            isActivated = vote == StoryVote.LIKE
+            isActivated = vote == StoryReaction.LIKE
         }
         with(view.storyReactionDislike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
-                storyReactionListener.invoke(id, StoryVote.DISLIKE)
+                storyReactionListener.invoke(id, StoryReaction.DISLIKE)
             }
-            isActivated = vote == StoryVote.DISLIKE
+            isActivated = vote == StoryReaction.DISLIKE
         }
     }
 }

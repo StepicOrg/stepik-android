@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.activity_stories.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepik.android.domain.story.model.StoryVote
+import org.stepik.android.domain.story.model.StoryReaction
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.ui.adapter.StoriesPagerAdapter
@@ -20,11 +20,11 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 class StoriesActivityDelegate(
     activity: AppCompatActivity,
     private val analytic: Analytic,
-    storyReactionListener: (storyId: Long, storyVote: StoryVote) -> Unit
+    storyReactionListener: (storyId: Long, storyReaction: StoryReaction) -> Unit
 ) : StoriesActivityDelegateBase(activity) {
-    private val storyVotes = mutableMapOf<Long, StoryVote>()
+    private val storyReactions = mutableMapOf<Long, StoryReaction>()
     private val storyPartDelegate =
-        PlainTextWithButtonStoryPartDelegate(analytic, activity, storyVotes, storyReactionListener)
+        PlainTextWithButtonStoryPartDelegate(analytic, activity, storyReactions, storyReactionListener)
 
     public override val dismissableLayout: DismissableLayout =
         activity.content
@@ -55,11 +55,11 @@ class StoriesActivityDelegate(
             ?.stories
             ?.getOrNull(storiesViewPager.currentItem)
 
-    fun setStoryVotes(votes: Map<Long, StoryVote>) {
-        val diff = votes - storyVotes // only this way as reactions can't be removed
+    fun setStoryVotes(votes: Map<Long, StoryReaction>) {
+        val diff = votes - storyReactions // only this way as reactions can't be removed
 
-        storyVotes.clear()
-        storyVotes += votes
+        storyReactions.clear()
+        storyReactions += votes
 
         val adapter = storiesViewPager.adapter
             .safeCast<StoriesPagerAdapter>() ?: return
