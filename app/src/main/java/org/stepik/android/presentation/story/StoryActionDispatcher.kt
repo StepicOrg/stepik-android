@@ -11,6 +11,13 @@ constructor(
 
 ) : RxActionDispatcher<Action, Message>() {
     override fun handleAction(action: Action) {
+        when (action) {
+            is Action.FetchVotes ->
+                onNewMessage(Message.VoteFetchSuccess(emptyMap()))
 
+            is Action.SaveReaction -> {
+
+            }
+        }
     }
 }

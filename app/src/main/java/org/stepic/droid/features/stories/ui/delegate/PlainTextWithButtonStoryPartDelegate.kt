@@ -27,6 +27,7 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
     private val context: Context,
+    private val storyVotes: Map<Long, StoryVote>,
     private val storyReactionListener: (storyId: Long, storyVote: StoryVote) -> Unit
 ) : StoryPartViewDelegate() {
     companion object {
@@ -108,18 +109,23 @@ class PlainTextWithButtonStoryPartDelegate(
         }
     }
 
-    private fun setUpReactions(story: Story?, view: View) {
+    fun setUpReactions(story: Story?, view: View) {
+        val storyId = story?.id ?: 0
+        val vote = storyVotes[storyId]
+
         with(view.storyReactionLike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
                 storyReactionListener.invoke(id, StoryVote.LIKE)
             }
+            isActivated = vote == StoryVote.LIKE
         }
         with(view.storyReactionDislike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
                 storyReactionListener.invoke(id, StoryVote.DISLIKE)
             }
+            isActivated = vote == StoryVote.DISLIKE
         }
     }
 }

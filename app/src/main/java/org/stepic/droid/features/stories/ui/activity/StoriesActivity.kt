@@ -25,6 +25,7 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+        storyViewModel.onNewMessage(StoryFeature.Message.Init)
 
         setContentView(R.layout.activity_stories)
         storiesDelegate = StoriesActivityDelegate(this, analytic) { storyId, storyVote ->
@@ -37,8 +38,8 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
                 val story = storiesDelegate.getCurrentStory()
                 if (story != null) {
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_CLOSED, mapOf(
-                            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                            AmplitudeAnalytic.Stories.Values.CLOSE_TYPE to AmplitudeAnalytic.Stories.Values.CloseTypes.SWIPE
+                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                        AmplitudeAnalytic.Stories.Values.CLOSE_TYPE to AmplitudeAnalytic.Stories.Values.CloseTypes.SWIPE
                     ))
                 }
             }
@@ -74,10 +75,18 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
     }
 
     override fun onAction(action: StoryFeature.Action.ViewAction) {
-
+        // no op
     }
 
     override fun render(state: StoryFeature.State) {
+        val votes =
+            when (state) {
+                is StoryFeature.State.Content ->
+                    state.votes
 
+                else ->
+                    emptyMap()
+            }
+        storiesDelegate.setStoryVotes(votes)
     }
 }

@@ -2,8 +2,10 @@ package org.stepic.droid.features.stories.ui.delegate
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_stories.*
+import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepik.android.domain.story.model.StoryVote
@@ -11,6 +13,7 @@ import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.ui.adapter.StoriesPagerAdapter
 import ru.nobird.android.stories.ui.custom.DismissableLayout
+import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoriesActivityDelegateBase
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 
@@ -19,6 +22,10 @@ class StoriesActivityDelegate(
     private val analytic: Analytic,
     storyReactionListener: (storyId: Long, storyVote: StoryVote) -> Unit
 ) : StoriesActivityDelegateBase(activity) {
+    private val storyVotes = mutableMapOf<Long, StoryVote>()
+    private val storyPartDelegate =
+        PlainTextWithButtonStoryPartDelegate(analytic, activity, storyVotes, storyReactionListener)
+
     public override val dismissableLayout: DismissableLayout =
         activity.content
 
@@ -29,7 +36,7 @@ class StoriesActivityDelegate(
         activity.intent.extras ?: Bundle.EMPTY
 
     override val storyPartDelegates: List<StoryPartViewDelegate> =
-        listOf(PlainTextWithButtonStoryPartDelegate(analytic, activity, storyReactionListener))
+        listOf(storyPartDelegate)
 
     override fun onComplete() {
         super.onComplete()
@@ -47,4 +54,30 @@ class StoriesActivityDelegate(
             .safeCast<StoriesPagerAdapter>()
             ?.stories
             ?.getOrNull(storiesViewPager.currentItem)
+
+    fun setStoryVotes(votes: Map<Long, StoryVote>) {
+        val diff = votes - storyVotes // only this way as reactions can't be removed
+
+        storyVotes.clear()
+        storyVotes += votes
+
+        val adapter = storiesViewPager.adapter
+            .safeCast<StoriesPagerAdapter>() ?: return
+
+        diff.forEach { (storyId, _) ->
+            val position = adapter.stories
+                .indexOfFirst { it.id == storyId }
+
+            val story = adapter.stories
+                .getOrNull(position)
+
+            val storyPartPager = storiesViewPager
+                .findViewWithTag<StoryView>(position)
+                ?.findViewById<ViewPager>(R.id.storyViewPager)
+
+            storyPartPager?.children?.forEach { view ->
+                storyPartDelegate.setUpReactions(story, view)
+            }
+        }
+    }
 }

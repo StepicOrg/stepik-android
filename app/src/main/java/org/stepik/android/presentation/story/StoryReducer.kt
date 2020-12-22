@@ -11,8 +11,15 @@ class StoryReducer
 constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
-            is Message.VoteFetchSuccess ->
+            is Message.Init ->
                 if (state is State.Idle) {
+                    State.Loading to setOf(Action.FetchVotes)
+                } else {
+                    null
+                }
+
+            is Message.VoteFetchSuccess ->
+                if (state is State.Loading) {
                     State.Content(message.votes) to emptySet()
                 } else {
                     null
