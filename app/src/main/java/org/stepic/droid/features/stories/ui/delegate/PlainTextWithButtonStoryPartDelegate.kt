@@ -27,7 +27,7 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
     private val context: Context,
-    private val storyVotes: Map<Long, StoryReaction>,
+    private val storyReactions: Map<Long, StoryReaction>,
     private val storyReactionListener: (storyId: Long, storyPosition: Int, storyReaction: StoryReaction) -> Unit
 ) : StoryPartViewDelegate() {
     companion object {
@@ -111,7 +111,7 @@ class PlainTextWithButtonStoryPartDelegate(
 
     fun setUpReactions(story: Story?, view: View, position: Int) {
         val storyId = story?.id ?: 0
-        val vote = storyVotes[storyId]
+        val vote = storyReactions[storyId]
 
         with(view.storyReactionLike) {
             setOnClickListener {
