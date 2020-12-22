@@ -2,12 +2,14 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
 import org.stepik.android.view.catalog_block.model.CatalogItem
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
@@ -21,7 +23,6 @@ class OfflineAdapterDelegate(
         val view = createView(parent, R.layout.error_no_connection_with_button_small)
         view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             width = ViewGroup.LayoutParams.MATCH_PARENT
-            topMargin = parent.resources.getDimensionPixelSize(R.dimen.offline_item_top_margin)
         }
         return OfflineViewHolder(view, onRetry = onRetry)
     }
@@ -33,11 +34,21 @@ class OfflineAdapterDelegate(
 
         init {
             tryAgain.setOnClickListener { onRetry() }
+            containerView.isVisible = true
         }
 
         override fun onBind(data: CatalogItem) {
             data as CatalogItem.Offline
-            containerView.isVisible = true
+
+            itemView.doOnLayout {
+                val parent = it.parent.safeCast<View>() ?: return@doOnLayout
+                val remainingHeight = parent.height - containerView.bottom - containerView.top
+                if (remainingHeight > 0) {
+                    itemView.updateLayoutParams {
+                        height = containerView.height + remainingHeight
+                    }
+                }
+            }
         }
     }
 }
