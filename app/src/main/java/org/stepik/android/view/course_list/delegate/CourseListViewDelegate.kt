@@ -29,7 +29,7 @@ class CourseListViewDelegate(
     itemAdapterDelegateType: ItemAdapterDelegateType = ItemAdapterDelegateType.STANDARD // TODO Hacky way
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
-    private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
+    private val courseListCounter = courseListTitleContainer?.containerCarouselCount
     private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
     private val courseItemsSkeleton: List<CourseListItem>

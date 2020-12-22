@@ -9,18 +9,25 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_collection.interactor.CourseCollectionInteractor
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.model.CourseCollection
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
+import org.stepik.android.presentation.course_list.mapper.CourseListCollectionStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import ru.nobird.android.core.model.cast
+import ru.nobird.android.core.model.safeCast
+import ru.nobird.android.core.model.slice
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
@@ -32,6 +39,7 @@ class CourseListCollectionPresenter
 constructor(
     private val courseCollectionInteractor: CourseCollectionInteractor,
     private val courseListStateMapper: CourseListStateMapper,
+    private val courseListCollectionStateMapper: CourseListCollectionStateMapper,
     private val courseListInteractor: CourseListInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -46,7 +54,10 @@ constructor(
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
 ) : PresenterBase<CourseListCollectionView>(viewContainer),
     CourseContinuePresenterDelegate by continueCoursePresenterDelegate,
-    CatalogItem {
+    OldCatalogItem {
+    companion object {
+        private const val PAGE_SIZE = 20
+    }
     override val delegates: List<PresenterDelegate<in CourseListCollectionView>> =
         listOf(continueCoursePresenterDelegate)
 
@@ -86,31 +97,91 @@ constructor(
                     .getCourseCollection(courseCollectionId, sourceType.generalSourceType)
                     .flatMap { collection ->
                         if (collection.courses.isEmpty()) {
-                            Single.just(CourseListView.State.Empty)
+                            Single.just(CourseListView.State.Empty to sourceType.generalSourceType)
                         } else {
+                            val ids = collection.courses.take(PAGE_SIZE)
                             courseListInteractor
-                                .getCourseListItems(collection.courses, sourceTypeComposition = sourceType, courseViewSource = viewSource)
+                                .getCourseListItems(ids, sourceTypeComposition = sourceType, courseViewSource = viewSource)
                                 .map { items ->
-                                    CourseListView.State.Content(courseListDataItems = items, courseListItems = items)
+                                    CourseListView.State.Content(courseListDataItems = items, courseListItems = items) to sourceType.generalSourceType
                                 }
-                        }.map { courseListViewState ->
-                            CourseListCollectionView.State.Data(collection, courseListViewState)
+                        }.map { (courseListViewState, sourceType) ->
+                            CourseListCollectionView.State.Data(collection, courseListViewState, sourceType)
                         }
                     }
             }
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = { state = it },
+                onNext = {
+                    val isNeedLoadNextPage = courseListCollectionStateMapper.isNeedLoadNextPage(it)
+                    state = it
+
+                    if (isNeedLoadNextPage) {
+                        fetchNextPage()
+                    }
+                },
                 onError = {
-                    val oldState = state
-                    if (oldState is CourseListCollectionView.State.Data && oldState.courseListViewState is CourseListView.State.Content) {
-                        view?.showNetworkError()
-                    } else {
-                        state = CourseListCollectionView.State.NetworkError
+                    when (val oldState = state.safeCast<CourseListCollectionView.State.Data>()?.courseListViewState) {
+                        is CourseListView.State.Content -> {
+                            state = state.cast<CourseListCollectionView.State.Data>()
+                                .copy(
+                                    courseListViewState = oldState.copy(oldState.courseListDataItems, oldState.courseListItems),
+                                    sourceType = null
+                                )
+                            view?.showNetworkError()
+                        }
+                        else ->
+                            state = CourseListCollectionView.State.NetworkError
                     }
                 }
             )
+    }
+
+    fun fetchNextPage() {
+        val oldState = state as? CourseListCollectionView.State.Data
+            ?: return
+
+        val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
+            ?: return
+
+        val ids = getNextPageCourseIds(oldState.courseCollection, oldCourseListState)
+            ?.takeIf { it.isNotEmpty() }
+            ?: return
+
+        state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
+        if (oldState.sourceType != DataSourceType.CACHE) {
+            paginationDisposable += courseListInteractor
+                .getCourseListItems(ids, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id))
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = {
+                        if (oldState.sourceType == null) {
+                            state = oldState.copy(courseListViewState = CourseListView.State.Content(it, it), sourceType = DataSourceType.REMOTE)
+                            fetchNextPage()
+                        } else {
+                            state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, it))
+                        }
+                    },
+                    onError = {
+                        state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))
+                        view?.showNetworkError()
+                    }
+                )
+        }
+    }
+
+    private fun getNextPageCourseIds(courseCollection: CourseCollection, courseListViewState: CourseListView.State.Content): List<Long>? {
+        if ((courseListViewState.courseListItems.last() as? CourseListItem.PlaceHolder)?.courseId == -1L) {
+            return null
+        }
+
+        val offset = courseListViewState.courseListItems.size
+        return courseCollection
+            .courses
+            .slice(offset, offset + PAGE_SIZE)
+            .map { it }
     }
 
     /**

@@ -16,7 +16,7 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
@@ -33,14 +33,14 @@ class CourseListAdapterDelegate(
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate,
     private val isHandleInAppPurchase: Boolean
-) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+) : AdapterDelegate<OldCatalogItem, DelegateViewHolder<OldCatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
-    override fun isForViewType(position: Int, data: CatalogItem): Boolean =
+    override fun isForViewType(position: Int, data: OldCatalogItem): Boolean =
         data is CourseListCollectionPresenter
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list)) as DelegateViewHolder<CatalogItem>
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<OldCatalogItem> =
+        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list)) as DelegateViewHolder<OldCatalogItem>
 
     private inner class CourseCollectionViewHolder(
         root: View
@@ -48,11 +48,11 @@ class CourseListAdapterDelegate(
 
         private var courseCollection: CourseCollection? = null
 
-        private val courseListTitle = root.courseListTitle
-        private val courseListDescription = root.courseListDescription
+        private val courseListTitle = root.containerTitle
+        private val courseListDescription = root.containerDescription
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListPlaceholderEmpty = root.courseListPlaceholderEmpty
-        private val courseListTitleContainer = root.courseListTitleContainer
+        private val courseListTitleContainer = root.catalogBlockContainer
         private val courseListPlaceholderNoConnection = root.courseListPlaceholderNoConnection
 
         private val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -94,7 +94,7 @@ class CourseListAdapterDelegate(
         private val delegate = CourseListViewDelegate(
             analytic = analytic,
             courseContinueViewDelegate = courseContinueViewDelegate,
-            courseListTitleContainer = root.courseListTitleContainer,
+            courseListTitleContainer = root.catalogBlockContainer,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

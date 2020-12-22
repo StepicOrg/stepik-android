@@ -60,7 +60,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseListTitle.text = resources.getString(R.string.course_list_user_courses_title)
+        containerTitle.text = resources.getString(R.string.course_list_user_courses_title)
 
         with(courseListCoursesRecycler) {
             val rowCount = resources.getInteger(R.integer.course_list_rows)
@@ -76,7 +76,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             }
         }
 
-        courseListTitleContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
+        catalogBlockContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
         courseListPlaceholderNoConnection.setOnClickListener {
@@ -92,8 +92,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Loading>(catalogBlockContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(catalogBlockContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
@@ -140,7 +140,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
     override fun setState(state: CourseListUserView.State) {
         if (state is CourseListUserView.State.Data) {
-            coursesCarouselCount.text = requireContext().resources.getQuantityString(
+            containerCarouselCount.text = requireContext().resources.getQuantityString(
                 R.plurals.course_count,
                 state.userCourses.size,
                 state.userCourses.size

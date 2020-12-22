@@ -11,6 +11,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_list.CourseListView
 import javax.inject.Inject
 
+// TODO Remove when finish migrating course lists to redux
 class CourseListStateMapper
 @Inject
 constructor(

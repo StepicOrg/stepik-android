@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/selectable_item_rounded_background" />
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/color_overlay_blue_alpha_12" />
+            <corners android:radius="@dimen/corner_radius" />
+        </shape>
+    </item>
+</layer-list>

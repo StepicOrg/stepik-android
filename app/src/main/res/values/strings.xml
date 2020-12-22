@@ -442,13 +442,15 @@
 
     <string name="course_collection_empty">Sorry, this collection is on vacation</string>
     <string name="internet_problem_catalog">Enable internet to see our Course Collections</string>
-    <string name="trending_topics">Trending topics</string>
     <string name="early_notification_description">App will help complete course and get certificate. Enable everyday notifications for continuous learning!</string>
     <string name="early_notification_title">Greetings!</string>
     <plurals name="course_count">
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
+    <string name="courses_max_count">99+ courses</string>
+    <string name="author_max_count">99+ authors</string>
+    <string name="author_subscribers">%s subscribers</string>
     <string name="course_current_progress">Current progress: %s/%d points</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 

@@ -400,7 +400,6 @@
     <string name="course_collection_empty">Выбачайце, гэтая падборка на вакацыях</string>
     <string name="internet_problem_catalog">Уключыце інтэрнэт, каб убачыць нашы падборкі курсаў</string>
     <string name="course_rating">Рэйтынг курса</string>
-    <string name="trending_topics">Папулярныя тэмы</string>
     <string name="early_notification_description">Праграма дапаможа завяршыць курс і атрымаць сертыфікат. Уключыце штодзённыя апавяшчэнні, каб вучыцца часцей!</string>
     <string name="early_notification_title">Прывітанне!</string>
     <plurals name="course_count">
@@ -409,6 +408,9 @@
         <item quantity="many">%d курсаў</item>
         <item quantity="other">%d курсаў</item>
     </plurals>
+    <string name="courses_max_count">99+ курсаў</string>
+    <string name="author_max_count">99+ аўтараў</string>
+    <string name="author_subscribers">%s падпісчыкаў</string>
     <string name="course_current_progress">Наяўны прагрэс %s/%d балаў</string>
     <string name="home_streak_counter_text"><![CDATA[Вы рашаеце <b>%s</b> запар!]]></string>
     <string name="registration_remind_message">Завершыце рэгістрацыю і атрымайце доступ да неабмежаванай колькасці бясплатных курсаў!</string>

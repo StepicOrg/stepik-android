@@ -29,11 +29,18 @@
 
     <!-- ThemeOverlay -->
     <color name="color_overlay_brown">@color/color_brown_300</color>
+
     <color name="color_overlay_green">@color/color_green_300</color>
     <color name="color_overlay_green_alpha_12">@color/color_green_300_alpha_12</color>
+
     <color name="color_overlay_violet">@color/color_violet_200</color>
+    <color name="color_overlay_violet_alpha_12">@color/color_violet_200_alpha_12</color>
+
     <color name="color_overlay_yellow">@color/color_yellow_300</color>
     <color name="color_overlay_yellow_alpha_12">@color/color_yellow_300_alpha_12</color>
+
+    <color name="color_overlay_blue">@color/color_blue_200</color>
+    <color name="color_overlay_blue_alpha_12">@color/color_blue_200_alpha_12</color>
 
     <color name="color_overlay_dark_surface">@color/color_surface</color>
 </resources>

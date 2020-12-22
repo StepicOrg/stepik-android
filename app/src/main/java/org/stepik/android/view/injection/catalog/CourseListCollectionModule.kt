@@ -18,6 +18,7 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryView
+import org.stepik.android.presentation.course_list.mapper.CourseListCollectionStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListQueryStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
@@ -34,6 +35,7 @@ abstract class CourseListCollectionModule {
         fun provideCourseListCollectionPresenter(
             courseCollectionInteractor: CourseCollectionInteractor,
             courseListStateMapper: CourseListStateMapper,
+            courseListCollectionStateMapper: CourseListCollectionStateMapper,
             courseListInteractor: CourseListInteractor,
             @BackgroundScheduler
             backgroundScheduler: Scheduler,
@@ -53,6 +55,7 @@ abstract class CourseListCollectionModule {
             CourseListCollectionPresenter(
                 courseCollectionInteractor = courseCollectionInteractor,
                 courseListStateMapper = courseListStateMapper,
+                courseListCollectionStateMapper = courseListCollectionStateMapper,
                 courseListInteractor = courseListInteractor,
                 backgroundScheduler = backgroundScheduler,
                 mainScheduler = mainScheduler,
