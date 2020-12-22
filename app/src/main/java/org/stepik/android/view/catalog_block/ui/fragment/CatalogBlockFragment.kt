@@ -21,6 +21,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
@@ -50,6 +51,7 @@ import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogBlockFragment :
@@ -71,6 +73,9 @@ class CatalogBlockFragment :
 
     @Inject
     internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -101,7 +106,11 @@ class CatalogBlockFragment :
         injectComponent()
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
-        catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
+        if (sharedPreferenceHelper.isNeedShowLangWidget) {
+            catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
+        } else {
+            catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
+        }
     }
 
     private fun injectComponent() {
@@ -129,6 +138,7 @@ class CatalogBlockFragment :
         )
 
         catalogItemAdapter += OfflineAdapterDelegate {
+            catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage(forceUpdate = true)))
             catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage(forceUpdate = true))
         }
         catalogItemAdapter += LoadingAdapterDelegate()
@@ -167,6 +177,7 @@ class CatalogBlockFragment :
             adapter = catalogItemAdapter
             layoutManager = LinearLayoutManager(context)
             itemAnimator = null
+            setHasFixedSize(true)
         }
     }
 
@@ -251,10 +262,7 @@ class CatalogBlockFragment :
         }
 
         catalogRecyclerView.post {
-            catalogItemAdapter.items = listOf(
-                CatalogItem.Stories(state = state.storiesState),
-                CatalogItem.Filters(state = state.filtersState)
-            ) + collectionCatalogItems
+            catalogItemAdapter.items = resolveAdapter(state) + collectionCatalogItems
         }
 
         when (state.courseContinueState) {
@@ -264,7 +272,16 @@ class CatalogBlockFragment :
             is CourseContinueFeature.State.Loading ->
                 ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
         }
+
+        Timber.d("State: ${state.storiesState}")
     }
+
+    private fun resolveAdapter(state: CatalogFeature.State): List<CatalogItem> =
+        if (sharedPreferenceHelper.isNeedShowLangWidget) {
+            listOf(CatalogItem.Stories(state = state.storiesState), CatalogItem.Filters(state = state.filtersState))
+        } else {
+            listOf(CatalogItem.Stories(state = state.storiesState))
+        }
 
     private fun showStories(position: Int) {
         val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
