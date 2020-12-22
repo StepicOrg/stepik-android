@@ -1,5 +1,6 @@
 package org.stepik.android.domain.catalog.interactor
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
@@ -22,7 +23,7 @@ constructor(
             .getCourseCollections(CourseCollectionQuery(language = sharedPreferenceHelper.languageForFeatured))
 
     // TODO Testing API, remove later
-    fun fetchCatalogBlocks(): Single<List<CatalogBlock>> =
+    fun fetchCatalogBlocks(): Maybe<List<CatalogBlock>> =
         catalogBlockRepository
             .getCatalogBlocks(language = sharedPreferenceHelper.languageForFeatured, primarySourceType = DataSourceType.REMOTE)
 }

@@ -51,6 +51,7 @@ import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogBlockFragment :
@@ -137,6 +138,7 @@ class CatalogBlockFragment :
         )
 
         catalogItemAdapter += OfflineAdapterDelegate {
+            catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage(forceUpdate = true)))
             catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage(forceUpdate = true))
         }
         catalogItemAdapter += LoadingAdapterDelegate()
@@ -270,6 +272,8 @@ class CatalogBlockFragment :
             is CourseContinueFeature.State.Loading ->
                 ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
         }
+
+        Timber.d("State: ${state.storiesState}")
     }
 
     private fun resolveAdapter(state: CatalogFeature.State): List<CatalogItem> =

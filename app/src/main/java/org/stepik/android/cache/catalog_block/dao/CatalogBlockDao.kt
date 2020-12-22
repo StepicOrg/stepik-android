@@ -5,13 +5,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Maybe
 import org.stepik.android.domain.catalog_block.model.CatalogBlock
 
 @Dao
 interface CatalogBlockDao {
     @Query("SELECT * FROM CatalogBlock WHERE language = :language")
-    fun getCatalogBlocks(language: String): Single<List<CatalogBlock>>
+    fun getCatalogBlocks(language: String): Maybe<List<CatalogBlock>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCatalogBlocks(catalogBlocks: List<CatalogBlock>): Completable

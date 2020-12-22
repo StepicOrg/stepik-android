@@ -1,6 +1,6 @@
 package org.stepik.android.data.catalog_block.repository
 
-import io.reactivex.Single
+import io.reactivex.Maybe
 import org.stepik.android.data.catalog_block.source.CatalogBlockCacheDataSource
 import org.stepik.android.data.catalog_block.source.CatalogBlockRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -15,7 +15,7 @@ constructor(
     private val catalogBlockRemoteDataSource: CatalogBlockRemoteDataSource,
     private val catalogBlockCacheDataSource: CatalogBlockCacheDataSource
 ) : CatalogBlockRepository {
-    override fun getCatalogBlocks(language: String, primarySourceType: DataSourceType): Single<List<CatalogBlock>> {
+    override fun getCatalogBlocks(language: String, primarySourceType: DataSourceType): Maybe<List<CatalogBlock>> {
         val remoteSource = catalogBlockRemoteDataSource
             .getCatalogBlocks(language)
             .doCompletableOnSuccess { catalogBlockCacheDataSource.insertCatalogBlocks(it) }
@@ -30,7 +30,6 @@ constructor(
 
             DataSourceType.CACHE ->
                 cacheSource
-                    .filter(List<CatalogBlock>::isEmpty)
                     .switchIfEmpty(remoteSource)
 
             else ->
