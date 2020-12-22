@@ -6,11 +6,11 @@ import org.stepik.android.model.StoryTemplate
 import ru.nobird.android.stories.model.StoryPart
 
 class PlainTextWithButtonStoryPart(
-        duration: Long,
-        image: String,
+    duration: Long,
+    image: String,
 
-        val button: StoryTemplate.Button?,
-        val text: StoryTemplate.Text?
+    val button: StoryTemplate.Button?,
+    val text: StoryTemplate.Text?
 ): StoryPart(duration, image) {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(duration)
@@ -22,14 +22,15 @@ class PlainTextWithButtonStoryPart(
     override fun describeContents(): Int = 0
 
     companion object CREATOR : Parcelable.Creator<PlainTextWithButtonStoryPart> {
-        override fun createFromParcel(parcel: Parcel) = PlainTextWithButtonStoryPart(
+        override fun createFromParcel(parcel: Parcel): PlainTextWithButtonStoryPart =
+            PlainTextWithButtonStoryPart(
                 parcel.readLong(),
                 parcel.readString()!!,
                 parcel.readParcelable(StoryTemplate.Button::class.java.classLoader),
                 parcel.readParcelable(StoryTemplate.Text::class.java.classLoader)
-        )
+            )
 
-        override fun newArray(size: Int) =
-                arrayOfNulls<PlainTextWithButtonStoryPart>(size)
+        override fun newArray(size: Int): Array<PlainTextWithButtonStoryPart?> =
+            arrayOfNulls(size)
     }
 }

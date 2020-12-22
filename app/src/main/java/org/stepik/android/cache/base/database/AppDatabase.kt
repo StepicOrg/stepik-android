@@ -10,6 +10,8 @@ import org.stepik.android.cache.catalog_block.mapper.CatalogBlockContentTypeConv
 import org.stepik.android.cache.review_instruction.dao.ReviewInstructionDao
 import org.stepik.android.cache.review_instruction.mapper.ReviewStrategyTypeConverter
 import org.stepik.android.cache.review_session.dao.ReviewSessionDao
+import org.stepik.android.cache.story.dao.StoryReactionDao
+import org.stepik.android.cache.story.model.StoryReactionEntity
 import org.stepik.android.cache.visited_courses.dao.VisitedCourseDao
 import org.stepik.android.domain.catalog_block.model.CatalogBlock
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
@@ -21,7 +23,8 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
         ReviewInstruction::class,
         ReviewSession::class,
         VisitedCourse::class,
-        CatalogBlock::class
+        CatalogBlock::class,
+        StoryReactionEntity::class
     ],
     version = AppDatabase.VERSION,
     exportSchema = false
@@ -43,4 +46,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reviewSessionDao(): ReviewSessionDao
     abstract fun visitedCourseDao(): VisitedCourseDao
     abstract fun catalogBlockDao(): CatalogBlockDao
+    abstract fun storyReactionDao(): StoryReactionDao
 }
