@@ -16,6 +16,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepic.droid.ui.util.inflate
+import org.stepik.android.domain.story.model.StoryVote
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import ru.nobird.android.stories.model.Story
@@ -25,19 +26,21 @@ import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
-    private val context: Context
+    private val context: Context,
+    private val storyReactionListener: (storyId: Long, storyVote: StoryVote) -> Unit
 ) : StoryPartViewDelegate() {
     companion object {
         private const val COLOR_MASK = 0xFF000000.toInt()
     }
 
-    private val progressDrawable = CircularProgressDrawable(context).apply {
-        alpha = 0x77
-        strokeWidth = 5f
-        centerRadius = 30f
-        setColorSchemeColors(0xFFFFFF)
-        start()
-    }
+    private val progressDrawable =
+        CircularProgressDrawable(context).apply {
+            alpha = 0x77
+            strokeWidth = 5f
+            centerRadius = 30f
+            setColorSchemeColors(0xFFFFFF)
+            start()
+        }
 
     override fun isForViewType(part: StoryPart): Boolean =
         part is PlainTextWithButtonStoryPart
@@ -108,12 +111,14 @@ class PlainTextWithButtonStoryPartDelegate(
     private fun setUpReactions(story: Story?, view: View) {
         with(view.storyReactionLike) {
             setOnClickListener {
-                isActivated = !isActivated
+                val id = story?.id ?: return@setOnClickListener
+                storyReactionListener.invoke(id, StoryVote.LIKE)
             }
         }
         with(view.storyReactionDislike) {
             setOnClickListener {
-                isActivated = !isActivated
+                val id = story?.id ?: return@setOnClickListener
+                storyReactionListener.invoke(id, StoryVote.DISLIKE)
             }
         }
     }

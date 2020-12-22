@@ -99,6 +99,7 @@ import org.stepik.android.view.injection.solutions.SolutionsComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
+import org.stepik.android.view.injection.story.StoryComponent
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
@@ -253,6 +254,8 @@ interface AppCoreComponent {
     fun analyticProviderComponentBuilder(): AnalyticComponent.Builder
 
     fun catalogBlockComponentBuilder(): CatalogBlockComponent.Builder
+
+    fun storyComponentBuilder(): StoryComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

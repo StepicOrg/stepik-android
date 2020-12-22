@@ -6,6 +6,8 @@ import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_stories.*
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepik.android.domain.story.model.StoryVote
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.ui.adapter.StoriesPagerAdapter
 import ru.nobird.android.stories.ui.custom.DismissableLayout
@@ -13,20 +15,21 @@ import ru.nobird.android.stories.ui.delegate.StoriesActivityDelegateBase
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 
 class StoriesActivityDelegate(
-        activity: AppCompatActivity,
-        private val analytic: Analytic
+    activity: AppCompatActivity,
+    private val analytic: Analytic,
+    storyReactionListener: (storyId: Long, storyVote: StoryVote) -> Unit
 ) : StoriesActivityDelegateBase(activity) {
     public override val dismissableLayout: DismissableLayout =
-            activity.content
+        activity.content
 
     public override val storiesViewPager: ViewPager =
-            activity.storiesPager
+        activity.storiesPager
 
     override val arguments: Bundle =
-            activity.intent.extras ?: Bundle.EMPTY
+        activity.intent.extras ?: Bundle.EMPTY
 
     override val storyPartDelegates: List<StoryPartViewDelegate> =
-            listOf(PlainTextWithButtonStoryPartDelegate(analytic, activity))
+        listOf(PlainTextWithButtonStoryPartDelegate(analytic, activity, storyReactionListener))
 
     override fun onComplete() {
         super.onComplete()
@@ -34,13 +37,14 @@ class StoriesActivityDelegate(
         val story = getCurrentStory() ?: return
 
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_CLOSED, mapOf(
-                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                AmplitudeAnalytic.Stories.Values.CLOSE_TYPE to AmplitudeAnalytic.Stories.Values.CloseTypes.AUTO
+            AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+            AmplitudeAnalytic.Stories.Values.CLOSE_TYPE to AmplitudeAnalytic.Stories.Values.CloseTypes.AUTO
         ))
     }
 
     fun getCurrentStory(): Story? =
-            (storiesViewPager.adapter as? StoriesPagerAdapter)
-                    ?.stories
-                    ?.getOrNull(storiesViewPager.currentItem)
+        storiesViewPager.adapter
+            .safeCast<StoriesPagerAdapter>()
+            ?.stories
+            ?.getOrNull(storiesViewPager.currentItem)
 }
