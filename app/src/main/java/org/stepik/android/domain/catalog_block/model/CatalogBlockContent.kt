@@ -1,9 +1,20 @@
 package org.stepik.android.domain.catalog_block.model
 
+import com.google.gson.annotations.SerializedName
+
 sealed class CatalogBlockContent {
-    data class FullCourseList(val courseList: CatalogCourseList) : CatalogBlockContent()
-    data class SimpleCourseLists(val courseLists: List<CatalogCourseList>) : CatalogBlockContent()
-    data class AuthorsList(val authors: List<CatalogAuthor>) : CatalogBlockContent()
+    data class FullCourseList(
+        @SerializedName("course_list")
+        val courseList: CatalogCourseList
+    ) : CatalogBlockContent()
+    data class SimpleCourseLists(
+        @SerializedName("course_lists")
+        val courseLists: List<CatalogCourseList>
+    ) : CatalogBlockContent()
+    data class AuthorsList(
+        @SerializedName("authors")
+        val authors: List<CatalogAuthor>
+    ) : CatalogBlockContent()
     object Unsupported : CatalogBlockContent()
 
     companion object {
