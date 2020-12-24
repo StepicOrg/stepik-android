@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface CatalogBlockService {
-    @GET("api/catalog-blocks")
+    @GET("api/catalog-blocks?platform=mobile,android")
     fun getCatalogBlocks(@QueryMap query: Map<String, String>): Maybe<CatalogBlockResponse>
 }

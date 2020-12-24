@@ -39,7 +39,7 @@
 
             <TextView
                 android:id="@+id/simpleCourseListGridTitle"
-                android:layout_width="150dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
                 android:textAppearance="?textAppearanceSubtitle1"
@@ -48,11 +48,14 @@
 
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/simpleCourseListGridArrow"
+                app:layout_constraintHorizontal_bias="0"
 
                 tools:text="Введение в Python"
                 tools:textColor="?android:textColorPrimary" />
 
             <ImageView
+                android:id="@+id/simpleCourseListGridArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="24dp"
