@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 sealed class CatalogBlockContent {
     data class FullCourseList(
-        @SerializedName("course_list")
+        @SerializedName("courseList")
         val courseList: CatalogCourseList
     ) : CatalogBlockContent()
     data class SimpleCourseLists(
-        @SerializedName("course_lists")
+        @SerializedName("courseLists")
         val courseLists: List<CatalogCourseList>
     ) : CatalogBlockContent()
     data class AuthorsList(
