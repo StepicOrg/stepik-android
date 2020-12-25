@@ -17,6 +17,8 @@ object DbStructureStep {
         const val INSTRUCTION = "instruction"
         const val INSTRUCTION_TYPE = "instruction_type"
 
+        const val IS_ENABLED = "is_enabled"
+
         const val VIEWED_BY = "viewed_by"
         const val PASSED_BY = "passed_by"
         const val WORTH = "worth"

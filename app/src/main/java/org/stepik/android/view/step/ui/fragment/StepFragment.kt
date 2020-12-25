@@ -1,7 +1,6 @@
 package org.stepik.android.view.step.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -9,18 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_step.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -47,7 +49,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
-class StepFragment : Fragment(), StepView,
+class StepFragment : Fragment(R.layout.fragment_step), StepView,
     NextMoveable,
     Playable {
     companion object {
@@ -77,11 +79,14 @@ class StepFragment : Fragment(), StepView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var remoteConfig: FirebaseRemoteConfig
+
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
 
     private lateinit var stepComponent: StepComponent
-    private lateinit var stepPresenter: StepPresenter
+    private val stepPresenter: StepPresenter by viewModels { viewModelFactory }
 
     private lateinit var stepSolutionStatsDelegate: StepSolutionStatsDelegate
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
@@ -96,7 +101,6 @@ class StepFragment : Fragment(), StepView,
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        stepPresenter = ViewModelProviders.of(this, viewModelFactory).get(StepPresenter::class.java)
         stepPresenter.onLessonData(stepWrapper, lessonData)
     }
 
@@ -106,9 +110,6 @@ class StepFragment : Fragment(), StepView,
             .stepParentComponent(stepWrapper, lessonData)
         stepComponent.inject(this)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_step, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stepSolutionStatsDelegate = StepSolutionStatsDelegate(
@@ -237,18 +238,33 @@ class StepFragment : Fragment(), StepView,
 
     override fun setState(state: StepView.State) {
         if (state is StepView.State.Loaded) {
-            val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
+            val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block ||
+                    stepWrapper.step.isEnabled != state.stepWrapper.step.isEnabled
+
+            val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
+                    state.stepWrapper.step.isEnabled == false
+
+            stepContentContainer.isGone = isStepDisabled
+            stepContentSeparator.isGone = isStepDisabled
+            stepQuizError.isGone = isStepDisabled
+            stepQuizContainer.isGone = isStepDisabled
+            stepFooter.isGone = isStepDisabled
+
+            stepDisabled.isVisible = isStepDisabled
 
             stepWrapper = state.stepWrapper
-            stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
-            when (stepWrapper.step.status) {
-                Step.Status.READY ->
-                    setStepQuizFragment(isNeedReloadQuiz)
-                Step.Status.PREPARING,
-                Step.Status.ERROR -> {
-                    stepContentSeparator.isVisible = true
-                    stepQuizContainer.isVisible = false
-                    stepQuizError.isVisible = true
+
+            if (!isStepDisabled) {
+                stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
+                when (stepWrapper.step.status) {
+                    Step.Status.READY ->
+                        setStepQuizFragment(isNeedReloadQuiz)
+                    Step.Status.PREPARING,
+                    Step.Status.ERROR -> {
+                        stepContentSeparator.isVisible = true
+                        stepQuizContainer.isVisible = false
+                        stepQuizError.isVisible = true
+                    }
                 }
             }
         }
