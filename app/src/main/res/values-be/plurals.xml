@@ -151,4 +151,18 @@
         <item quantity="many">%d рэцэнзій атрымана.</item>
         <item quantity="other">%d рэцэнзій атрымана.</item>
     </plurals>
+
+    <plurals name="catalog_course_lists">
+        <item quantity="one">%d катэгорыя</item>
+        <item quantity="few">%d катэгорыі</item>
+        <item quantity="many">%d катэгорый</item>
+        <item quantity="other">%d катэгорый</item>
+    </plurals>
+
+    <plurals name="catalog_author_lists">
+        <item quantity="one">%d аўтар</item>
+        <item quantity="few">%d аўтара</item>
+        <item quantity="many">%d аўтараў</item>
+        <item quantity="other">%d аўтараў</item>
+    </plurals>
 </resources>

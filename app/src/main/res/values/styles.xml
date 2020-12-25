@@ -209,6 +209,19 @@
         <item name="android:gravity">start|top</item>
     </style>
 
+    <style name="StoriesReaction">
+        <item name="android:background">?selectableItemBackgroundRounded</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">@dimen/story_item_margin</item>
+
+        <item name="android:padding">12dp</item>
+        <item name="android:theme">@style/ThemeOverlay.Dark</item>
+        <item name="theme">@style/ThemeOverlay.Dark</item>
+
+        <item name="tint">@color/color_story_reaction_tint</item>
+    </style>
+
     <!-- Buttons -->
     <style name="Widget.AppTheme.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>

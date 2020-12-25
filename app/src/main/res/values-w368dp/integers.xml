@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="simple_course_list_default_lines">2</integer>
+
     <integer name="achievements_to_display">4</integer>
 </resources>

@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/courseListTitleContainer"
+            android:id="@+id/catalogBlockContainer"
             android:background="?selectableItemBackground"
             android:layout_marginTop="@dimen/course_carousel_title_top_padding"
             android:visibility="visible"
@@ -22,14 +22,14 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/courseListTitle"
+                android:id="@+id/containerTitle"
                 android:textAppearance="?textAppearanceSubtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/course_list_side_padding"
                 android:layout_marginStart="@dimen/course_list_side_padding"
-                android:layout_toLeftOf="@+id/coursesViewAll"
-                android:layout_toStartOf="@+id/coursesViewAll"
+                android:layout_toLeftOf="@+id/containerViewAll"
+                android:layout_toStartOf="@+id/containerViewAll"
                 android:ellipsize="end"
                 android:lines="1"
                 android:paddingBottom="@dimen/course_carousel_title_bottom_padding"
@@ -38,12 +38,12 @@
                 tools:text="@string/my_courses_title"/>
 
             <TextView
-                android:id="@+id/coursesCarouselCount"
+                android:id="@+id/containerCarouselCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/courseListTitle"
-                android:layout_alignStart="@id/courseListTitle"
-                android:layout_below="@id/courseListTitle"
+                android:layout_alignLeft="@id/containerTitle"
+                android:layout_alignStart="@id/containerTitle"
+                android:layout_below="@id/containerTitle"
                 android:ellipsize="end"
                 android:lines="1"
                 android:padding="0dp"
@@ -54,7 +54,7 @@
                 tools:text="10 courses"/>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/coursesViewAll"
+                android:id="@+id/containerViewAll"
                 android:layout_width="32dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="2dp"
@@ -72,7 +72,7 @@
             android:id="@+id/courseListCoursesRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/courseListTitleContainer"
+            android:layout_below="@id/catalogBlockContainer"
             android:clipToPadding="false"
             android:paddingTop="8dp"
             android:paddingLeft="@dimen/course_list_padding"
@@ -83,7 +83,7 @@
             android:id="@+id/courseListUserSkeleton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/courseListTitleContainer"
+            android:layout_below="@id/catalogBlockContainer"
             android:layout_marginRight="@dimen/course_list_padding"
             android:layout_marginLeft="@dimen/course_list_padding"
             layout="@layout/item_course_loading_skeleton_container" />

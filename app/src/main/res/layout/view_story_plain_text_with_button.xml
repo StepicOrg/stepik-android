@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     tools:context=".features.stories.ui.activity.StoriesActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -61,7 +62,6 @@
         android:layout_marginBottom="@dimen/story_item_margin"
         android:layout_marginLeft="@dimen/story_item_margin"
         android:layout_marginRight="@dimen/story_item_margin"
-        app:layout_goneMarginBottom="@dimen/story_item_margin_vertical"
 
         app:layout_constraintBottom_toTopOf="@id/storyButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -76,11 +76,33 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/story_item_margin"
         android:layout_marginRight="@dimen/story_item_margin"
-        android:layout_marginBottom="@dimen/story_item_margin_vertical"
+        android:layout_marginBottom="@dimen/story_item_margin"
         app:cornerRadius="24dp"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/storyReactionLike"
 
         tools:text="Button" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/storyReactionLike"
+        style="@style/StoriesReaction"
+
+        app:srcCompat="@drawable/ic_comment_like"
+
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/storyReactionDislike"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/storyReactionDislike"
+        style="@style/StoriesReaction"
+
+        app:srcCompat="@drawable/ic_comment_dislike"
+
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@id/storyReactionLike"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
