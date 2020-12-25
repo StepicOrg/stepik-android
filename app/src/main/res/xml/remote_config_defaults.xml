@@ -32,4 +32,8 @@
         <key>is_peer_review_enabled</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>is_disabled_steps_supported</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>

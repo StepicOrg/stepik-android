@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/simple_course_list_grid_first_height"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/course_item_margin"
+    tools:layout_width="320dp">
+
+    <org.stepic.droid.ui.custom.RoundedBorderMaskView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:borderRadius="?cornerRadius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                app:srcCompat="@drawable/bg_simple_course_list_grid_first"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <View
+                android:id="@+id/simpleCourseListGridOverlay"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="0dp"
+                android:background="?selectableItemBackgroundRounded"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/simpleCourseListGridTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textAppearance="?textAppearanceSubtitle1"
+                android:lines="2"
+                android:ellipsize="end"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/simpleCourseListGridArrow"
+                app:layout_constraintHorizontal_bias="0"
+
+                tools:text="Введение в Python"
+                tools:textColor="?android:textColorPrimary" />
+
+            <ImageView
+                android:id="@+id/simpleCourseListGridArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="24dp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+                app:tint="?colorControlNormal"
+                app:srcCompat="@drawable/ic_simple_list_arrow_right"/>
+
+            <TextView
+                android:id="@+id/simpleCourseListGridCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textAppearance="?textAppearanceSubtitle2"
+                android:gravity="start"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textColor="?android:textColorSecondary"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="256 курсов"
+                tools:textColor="?android:textColorSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+</FrameLayout>

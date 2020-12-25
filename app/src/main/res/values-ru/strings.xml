@@ -426,7 +426,6 @@
     <string name="course_collection_empty">Извините, эта подборка на каникулах</string>
     <string name="internet_problem_catalog">Включите интернет, чтобы увидеть наши подборки курсов</string>
     <string name="course_rating">Рейтинг курса</string>
-    <string name="trending_topics">Популярные темы</string>
     <string name="early_notification_description">Приложение поможет завершить курс и получить сертификат. Включите ежедневные уведомления, чтобы учиться чаще!</string>
     <string name="early_notification_title">Здравствуйте!</string>
     <plurals name="course_count">
@@ -435,6 +434,9 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
+    <string name="courses_max_count">99+ курсов</string>
+    <string name="author_max_count">99+ авторов</string>
+    <string name="author_subscribers">%s подписчиков</string>
     <string name="course_current_progress">Текущий прогресс %s/%d баллов</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
     <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
@@ -703,6 +705,8 @@
     <string name="lesson_step_counter">Шаг %d из %d</string>
 
     <!-- Step -->
+    <string name="step_disabled_description">Увидеть задачу пока нельзя!\n\nНапишите авторам курса, чтобы они обратили внимание на настройки.\nВозможно, через какое-то время доступ восстановится.</string>
+
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>
     <string name="step_navigation_next">Следующий урок</string>

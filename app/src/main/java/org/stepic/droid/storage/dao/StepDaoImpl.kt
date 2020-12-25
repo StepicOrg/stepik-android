@@ -2,6 +2,7 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
+import androidx.core.database.getIntOrNull
 import androidx.core.database.getLongOrNull
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.storage.operations.DatabaseOperations
@@ -48,6 +49,8 @@ constructor(
             instruction = cursor.getLongOrNull(cursor.getColumnIndex(DbStructureStep.Column.INSTRUCTION)),
             instructionType = cursor.getString(DbStructureStep.Column.INSTRUCTION_TYPE)?.let(ReviewStrategyType::valueOf),
 
+            isEnabled = cursor.getIntOrNull(cursor.getColumnIndex(DbStructureStep.Column.IS_ENABLED))?.let { it > 0 },
+
             position = cursor.getLong(DbStructureStep.Column.POSITION),
             hasSubmissionRestriction = cursor.getBoolean(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION),
             maxSubmissionCount = cursor.getInt(DbStructureStep.Column.MAX_SUBMISSION_COUNT),
@@ -79,6 +82,8 @@ constructor(
         values.put(DbStructureStep.Column.SESSION, step.session)
         values.put(DbStructureStep.Column.INSTRUCTION, step.instruction)
         values.put(DbStructureStep.Column.INSTRUCTION_TYPE, step.instructionType?.name)
+
+        values.put(DbStructureStep.Column.IS_ENABLED, step.isEnabled)
 
         values.put(DbStructureStep.Column.VIEWED_BY, step.viewedBy)
         values.put(DbStructureStep.Column.PASSED_BY, step.passedBy)

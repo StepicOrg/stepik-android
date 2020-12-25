@@ -111,4 +111,14 @@
         <item quantity="one">%d review received.</item>
         <item quantity="other">%d reviews received.</item>
     </plurals>
+
+    <plurals name="catalog_course_lists">
+        <item quantity="one">%d category</item>
+        <item quantity="other">%d categories</item>
+    </plurals>
+
+    <plurals name="catalog_author_lists">
+        <item quantity="one">%d author</item>
+        <item quantity="other">%d authors</item>
+    </plurals>
 </resources>

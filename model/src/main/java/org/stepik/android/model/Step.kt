@@ -29,6 +29,9 @@ data class Step(
     @SerializedName("instruction_type")
     val instructionType: ReviewStrategyType? = null,
 
+    @SerializedName("is_enabled")
+    val isEnabled: Boolean? = null,
+
     @SerializedName("viewed_by")
     val viewedBy: Long = 0,
     @SerializedName("passed_by")

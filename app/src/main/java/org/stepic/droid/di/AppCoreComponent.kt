@@ -56,6 +56,7 @@ import org.stepik.android.view.injection.billing.BillingDataModule
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
 import org.stepik.android.view.injection.catalog.CatalogComponent
+import org.stepik.android.view.injection.catalog_block.CatalogBlockComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -98,6 +99,7 @@ import org.stepik.android.view.injection.solutions.SolutionsComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
+import org.stepik.android.view.injection.story.StoryComponent
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
@@ -250,6 +252,10 @@ interface AppCoreComponent {
     fun magicLinksComponentBuilder(): MagicLinksComponent.Builder
 
     fun analyticProviderComponentBuilder(): AnalyticComponent.Builder
+
+    fun catalogBlockComponentBuilder(): CatalogBlockComponent.Builder
+
+    fun storyComponentBuilder(): StoryComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

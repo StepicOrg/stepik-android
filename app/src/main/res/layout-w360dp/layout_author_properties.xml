@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/coursesCountImage"
+        style="@style/CourseWidgetPropertyImageView"
+        android:layout_height="11dp"
+        android:layout_width="14dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@string/learners_count"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/coursesCountText"
+        app:layout_constraintEnd_toStartOf="@id/coursesCountText"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_authors_info_course_count"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/coursesCountText"
+        style="@style/CourseWidgetPropertyTextView"
+        app:layout_constraintLeft_toRightOf="@id/coursesCountImage"
+        app:layout_constraintStart_toEndOf="@id/coursesCountImage"
+        app:layout_constraintRight_toLeftOf="@id/subscribersCountImage"
+        app:layout_constraintEnd_toStartOf="@id/subscribersCountImage"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="999K"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/subscribersCountImage"
+        style="@style/CourseWidgetPropertyImageView"
+        android:layout_height="10dp"
+        android:layout_width="14dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintLeft_toRightOf="@id/coursesCountText"
+        app:layout_constraintStart_toEndOf="@id/coursesCountText"
+        app:layout_constraintRight_toLeftOf="@id/subscribersCountText"
+        app:layout_constraintEnd_toStartOf="@id/subscribersCountText"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/learners_count"
+        app:srcCompat="@drawable/ic_course_info_learners_count"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/subscribersCountText"
+        style="@style/CourseWidgetPropertyTextView"
+        app:layout_constraintLeft_toRightOf="@id/subscribersCountImage"
+        app:layout_constraintStart_toEndOf="@id/subscribersCountImage"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="999K"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
