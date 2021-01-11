@@ -35,25 +35,37 @@
             android:layout_weight="1" />
 
         <include
+            android:id="@+id/stepDisabled"
+            layout="@layout/view_step_disabled"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
             android:id="@+id/stepNavigation"
             layout="@layout/view_step_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp" />
 
-        <include
-            android:id="@+id/stepSolutionStats"
-            layout="@layout/view_step_solution_stats" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/stepFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                android:id="@+id/stepSolutionStats"
+                layout="@layout/view_step_solution_stats" />
 
-        <include
-            android:id="@+id/stepDiscussions"
-            layout="@layout/view_step_discussion" />
+            <include
+                android:id="@+id/stepDiscussions"
+                layout="@layout/view_step_discussion" />
 
-        <include layout="@layout/view_divider_vertical" />
+            <include layout="@layout/view_divider_vertical" />
 
-        <include
-            android:id="@+id/stepSolutions"
-            layout="@layout/view_step_discussion" />
-
+            <include
+                android:id="@+id/stepSolutions"
+                layout="@layout/view_step_discussion" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

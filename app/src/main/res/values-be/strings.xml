@@ -618,6 +618,8 @@
     <string name="lesson_error_exam_action">Адкрыць у вэб версіі</string>
     <string name="lesson_step_counter">Крок %d з %d</string>
     <!-- Step -->
+    <string name="step_disabled_description">Убачыць задачу пакуль нельга!\n\nНапішыце аўтарам курсу, каб яны звярнулі ўвагу на налады.\nМагчыма, праз нейкі час доступ адновіцца.</string>
+
     <string name="step_amount_passed">Рашыла:&#160;</string>
     <string name="step_correct_submissions_percentage">Паспяховых рашэнняў:&#160;</string>
     <string name="step_navigation_next">Наступны ўрок</string>
