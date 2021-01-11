@@ -51,7 +51,6 @@ import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogFragment :
@@ -277,8 +276,6 @@ class CatalogFragment :
             is CourseContinueFeature.State.Loading ->
                 ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
         }
-
-        Timber.d("State: ${state.storiesState}")
     }
 
     private fun resolveAdapter(state: CatalogFeature.State): List<CatalogItem> =
