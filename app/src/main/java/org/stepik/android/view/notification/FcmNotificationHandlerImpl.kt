@@ -30,6 +30,7 @@ import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
+import org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity
 import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
@@ -170,7 +171,6 @@ constructor(
             }
 
             val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
-            taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
@@ -409,10 +409,11 @@ constructor(
 
     private fun getReviewIntent(context: Context, notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
-        val intent = Intent(context, LessonActivity::class.java)
-        intent.data = Uri.parse(data)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return intent
+        return InAppWebViewActivity.createIntent(
+            context,
+            context.getString(R.string.step_quiz_review_taken_title),
+            Uri.parse(data).toString()
+        )
     }
 
     private fun getCommentIntent(context: Context, notification: Notification): Intent? {
