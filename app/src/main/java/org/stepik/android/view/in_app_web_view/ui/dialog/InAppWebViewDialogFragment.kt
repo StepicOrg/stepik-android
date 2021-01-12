@@ -142,7 +142,13 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         viewStateDelegate.addState<InAppWebViewView.State.Success>(webView as View)
 
         centeredToolbarTitle.text = title
-        centeredToolbar.setNavigationOnClickListener { dismiss() }
+        centeredToolbar.setNavigationOnClickListener {
+            if (showsDialog) {
+                dismiss()
+            } else {
+                activity?.finish()
+            }
+        }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.in_app_web_view_menu)
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
