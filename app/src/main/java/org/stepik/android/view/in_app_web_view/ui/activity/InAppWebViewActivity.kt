@@ -2,11 +2,9 @@ package org.stepik.android.view.in_app_web_view.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import org.stepic.droid.R
-import org.stepic.droid.base.App
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 
@@ -21,11 +19,6 @@ class InAppWebViewActivity : SingleFragmentActivity() {
             Intent(context, InAppWebViewActivity::class.java)
                 .putExtra(EXTRA_TITLE, title)
                 .putExtra(EXTRA_URL, url)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        App.component().inject(this)
     }
 
     override fun createFragment(): Fragment {
