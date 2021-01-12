@@ -26,7 +26,7 @@ class InAppWebViewActivity : SingleFragmentActivity() {
 
         val (title, url) = when {
             REVIEW_SESSIONS_PATTERN.containsMatchIn(intentDataString) ->
-                getString(R.string.step_quiz_review_taken_title) to intentDataString
+                getString(R.string.step_quiz_review_given_title) to intentDataString
 
             else ->
                 intent.getStringExtra(EXTRA_TITLE).orEmpty() to intent.getStringExtra(EXTRA_URL).orEmpty()

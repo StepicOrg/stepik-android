@@ -411,7 +411,7 @@ constructor(
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         return InAppWebViewActivity.createIntent(
             context,
-            context.getString(R.string.step_quiz_review_taken_title),
+            context.getString(R.string.step_quiz_review_given_title),
             data
         )
     }
