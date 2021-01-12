@@ -3,7 +3,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import org.stepic.droid.R
-import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog.model.CatalogItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 

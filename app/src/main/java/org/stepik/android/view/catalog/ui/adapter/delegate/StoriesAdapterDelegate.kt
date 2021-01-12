@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.view_stories_container.view.*
 import org.stepic.droid.R
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepik.android.presentation.stories.StoriesFeature
-import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate

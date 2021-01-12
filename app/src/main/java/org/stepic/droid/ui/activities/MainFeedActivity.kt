@@ -30,7 +30,6 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
-import org.stepik.android.view.catalog_block.ui.fragment.CatalogBlockFragment
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
@@ -291,7 +290,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 HomeFragment.TAG
 
             R.id.catalog ->
-                CatalogBlockFragment.TAG
+                CatalogFragment.TAG
 
             R.id.profile ->
                 ProfileFragment.TAG
@@ -309,7 +308,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 HomeFragment.newInstance()
 
             R.id.catalog ->
-                CatalogBlockFragment.newInstance()
+                CatalogFragment.newInstance()
 
             R.id.profile ->
                 ProfileFragment.newInstance()

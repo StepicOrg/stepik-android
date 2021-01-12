@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.StepikFilter
 import org.stepik.android.presentation.filter.FiltersFeature
-import org.stepik.android.view.catalog_block.model.CatalogItem
+import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
