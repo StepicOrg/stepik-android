@@ -412,7 +412,7 @@ constructor(
         return InAppWebViewActivity.createIntent(
             context,
             context.getString(R.string.step_quiz_review_taken_title),
-            Uri.parse(data).toString()
+            data
         )
     }
 

@@ -1,9 +1,9 @@
 package org.stepic.droid.ui.custom
 
 import android.text.TextPaint
-import android.text.style.URLSpan
+import org.stepik.android.domain.base.InternalDeeplinkURLSpan
 
-class CustomFontURLSpan(url: String) : URLSpan(url) {
+class CustomFontURLSpan(url: String) : InternalDeeplinkURLSpan(url) {
     override fun updateDrawState(ds: TextPaint) {
         super.updateDrawState(ds)
         ds.isUnderlineText = false

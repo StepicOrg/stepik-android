@@ -356,8 +356,25 @@
         <activity
             android:name="org.stepik.android.view.course_list.ui.activity.CourseListVisitedActivity" />
 
-        <activity
-            android:name="org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity" />
+        <activity android:name="org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity">
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/host_name" />
+                <data android:host="@string/secondary_host_name" />
+
+                <data android:pathPattern="/review/sessions/.*" />
+
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
