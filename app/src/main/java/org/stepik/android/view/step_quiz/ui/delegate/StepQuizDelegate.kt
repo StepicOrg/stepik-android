@@ -3,6 +3,7 @@ package org.stepik.android.view.step_quiz.ui.delegate
 import android.os.Build
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -12,6 +13,7 @@ import org.stepic.droid.R
 import org.stepic.droid.util.toPx
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
+import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -112,6 +114,18 @@ class StepQuizDelegate(
         stepQuizDiscountingPolicy.text = resolveQuizDiscountingPolicyText(state)
 
         stepQuizReviewTeacherMessage?.isVisible = step.actions?.doReview != null && stepQuizLessonData.isTeacher
+        step.instructionType?.let { instructionType ->
+            @StringRes
+            val stringRes =
+                when (instructionType) {
+                    ReviewStrategyType.PEER ->
+                        R.string.step_quiz_review_teacher_peer_message
+
+                    ReviewStrategyType.INSTRUCTOR ->
+                        R.string.step_quiz_review_teacher_instructor_message
+                }
+            stepQuizReviewTeacherMessage?.text = context.getString(stringRes)
+        }
     }
 
     private fun resolveQuizActionButtonText(state: StepQuizFeature.State.AttemptLoaded): String =

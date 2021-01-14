@@ -21,9 +21,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-        android:text="@string/step_quiz_review_teacher_message"
+        android:text="@string/step_quiz_review_teacher_peer_message"
 
-        tools:text="@string/step_quiz_review_teacher_message"/>
+        tools:text="@string/step_quiz_review_teacher_peer_message"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizDiscountingPolicy"
