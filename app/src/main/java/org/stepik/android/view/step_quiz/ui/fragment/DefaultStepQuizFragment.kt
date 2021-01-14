@@ -91,7 +91,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
         viewStateDelegate.addState<StepQuizFeature.State.Idle>()
         viewStateDelegate.addState<StepQuizFeature.State.Loading>(stepQuizProgress)
         viewStateDelegate.addState<StepQuizFeature.State.AttemptLoading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizFeature.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
+        viewStateDelegate.addState<StepQuizFeature.State.AttemptLoaded>(stepQuizReviewTeacherMessage, stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
         viewStateDelegate.addState<StepQuizFeature.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener {
@@ -106,11 +106,13 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizFeedbackBlocks,
+                        lessonData.lesson.actions?.editLesson != null,
                         stepWrapper.step.actions?.doReview != null
                     ) { openStepInWeb(stepWrapper.step) },
                 stepQuizActionButton = stepQuizAction,
                 stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
+                stepQuizReviewTeacherMessage = stepQuizReviewTeacherMessage,
                 onNewMessage = viewModel::onNewMessage
             ) {
                 (parentFragment as? NextMoveable)?.moveNext()

@@ -162,7 +162,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
         if (stepQuizFormDelegate != null) {
             stepQuizFormDelegate.setState(state)
 
-            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, hasReview = false, onReviewClicked = {})
+            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, isTeacher = false, hasReview = false, onReviewClicked = {})
                 .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))
 
             stepQuizCodeContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = 0 }

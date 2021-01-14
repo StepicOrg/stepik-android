@@ -5,6 +5,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_fill_blanks.ui.fragment.FillBlanksStepQuizFragment
@@ -23,14 +24,17 @@ class StepQuizFragmentFactoryImpl
 constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) : StepQuizFragmentFactory {
-    override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment {
+    override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment {
         val instructionType =
             stepPersistentWrapper.step.instructionType.takeIf { stepPersistentWrapper.step.actions?.doReview != null }
 
         val blockName = stepPersistentWrapper.step.block?.name
 
+        val isTeacher = lessonData.lesson.actions?.editLesson != null
+
         return if (instructionType != null &&
             blockName in StepQuizReviewFragment.supportedQuizTypes &&
+            !isTeacher &&
             firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
             StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
         } else {

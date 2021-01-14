@@ -687,6 +687,7 @@
     <string name="step_quiz_code_input_not_supported">Дадзены тып заданняў не падтрымлівае ўвод дадзеных</string>
     <string name="step_quiz_pycharm_message">Калі ласка, адкрыйце гэтую задачу ў <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
     <string name="step_quiz_reload_message">Выбачайце, заданне было зменена аўтарамі. Неабходна пачаць спачатку. Балы за мінулыя рашэнні захаваныя.</string>
+    <string name="step_quiz_review_teacher_message">Студэнты правяраюць рашэння адзін аднаго</string>
     <!-- Peer review -->
     <string name="step_quiz_review_send_pending">Адпраўце лепшае рашэнне на праверку</string>
     <string name="step_quiz_review_send_in_progress">Адпраўце лепшае рашэнне на праверку. Пасля адпраўкі замяніць рашэнне нельга.</string>

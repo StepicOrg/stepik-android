@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/stepQuizDiscountingPolicy"
+        android:id="@+id/stepQuizReviewTeacherMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -18,6 +18,25 @@
         style="@style/StepQuizDescription"
 
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:text="@string/step_quiz_review_teacher_message"
+
+        tools:text="@string/step_quiz_review_teacher_message"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/stepQuizDiscountingPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        style="@style/StepQuizDescription"
+
+        app:layout_constraintTop_toBottomOf="@id/stepQuizReviewTeacherMessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 

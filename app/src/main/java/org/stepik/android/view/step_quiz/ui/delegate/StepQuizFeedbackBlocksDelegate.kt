@@ -18,6 +18,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 
 class StepQuizFeedbackBlocksDelegate(
     containerView: View,
+    private val isTeacher: Boolean,
     private val hasReview: Boolean,
     private val onReviewClicked: () -> Unit
 ) {
@@ -55,7 +56,7 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackEvaluation.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()
 
-        if (hasReview) {
+        if (hasReview && !isTeacher) {
             stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
             stepQuizFeedbackCorrect.setOnClickListener { onReviewClicked() }
         } else {
@@ -82,7 +83,7 @@ class StepQuizFeedbackBlocksDelegate(
             is StepQuizFeedbackState.Correct -> {
                 stepQuizFeedbackCorrect.text =
                     when {
-                        hasReview ->
+                        hasReview && !isTeacher ->
                             context.getString(R.string.review_warning)
                         state.isFreeAnswer ->
                             context.getString(R.string.step_quiz_feedback_correct_free_answer)

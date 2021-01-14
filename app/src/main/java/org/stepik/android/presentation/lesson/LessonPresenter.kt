@@ -152,7 +152,7 @@ constructor(
                 state = oldState.copy(stepsState = LessonView.StepsState.Loading)
 
                 compositeDisposable += lessonContentInteractor
-                    .getStepItems(unit, *stepIds)
+                    .getStepItems(unit, oldState.lessonData.lesson)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(

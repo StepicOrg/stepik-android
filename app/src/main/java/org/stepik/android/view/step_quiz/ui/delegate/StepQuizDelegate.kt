@@ -29,6 +29,7 @@ class StepQuizDelegate(
     private val stepQuizActionButton: MaterialButton,
     private val stepRetryButton: MaterialButton,
     private val stepQuizDiscountingPolicy: TextView,
+    private val stepQuizReviewTeacherMessage: TextView?,
 
     private val onNewMessage: (StepQuizFeature.Message) -> Unit,
     /**
@@ -109,6 +110,8 @@ class StepQuizDelegate(
 
         stepQuizDiscountingPolicy.isVisible = isNeedShowDiscountingPolicy
         stepQuizDiscountingPolicy.text = resolveQuizDiscountingPolicyText(state)
+
+        stepQuizReviewTeacherMessage?.isVisible = step.actions?.doReview != null && stepQuizLessonData.isTeacher
     }
 
     private fun resolveQuizActionButtonText(state: StepQuizFeature.State.AttemptLoaded): String =

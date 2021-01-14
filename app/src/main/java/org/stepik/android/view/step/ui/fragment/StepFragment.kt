@@ -167,7 +167,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
 
             if (isQuizFragmentEmpty || isNeedReload) {
-                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper)
+                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData)
 
                 childFragmentManager.commitNow {
                     if (isQuizFragmentEmpty) {

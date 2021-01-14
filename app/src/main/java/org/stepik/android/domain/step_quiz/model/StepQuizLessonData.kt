@@ -9,11 +9,13 @@ import org.stepik.android.model.DiscountingPolicyType
 data class StepQuizLessonData(
     val lessonTitle: String,
     val stepCount: Int,
-    val discountingPolicyType: DiscountingPolicyType
+    val discountingPolicyType: DiscountingPolicyType,
+    val isTeacher: Boolean
 ) : Parcelable {
     constructor(lessonData: LessonData) : this(
         lessonTitle = lessonData.lesson.title.orEmpty(),
         stepCount = lessonData.lesson.steps.size,
-        discountingPolicyType = lessonData.section?.discountingPolicy ?: DiscountingPolicyType.NoDiscount
+        discountingPolicyType = lessonData.section?.discountingPolicy ?: DiscountingPolicyType.NoDiscount,
+        isTeacher = lessonData.lesson.actions?.editLesson != null
     )
 }

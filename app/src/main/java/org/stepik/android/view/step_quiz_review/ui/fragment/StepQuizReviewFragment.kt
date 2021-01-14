@@ -191,7 +191,7 @@ class StepQuizReviewFragment :
         }
 
         val blockName = stepWrapper.step.block?.name
-        val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(quizFeedbackView, false) {}
+        val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(quizFeedbackView, isTeacher = false, hasReview = false) {}
         val quizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
@@ -203,6 +203,7 @@ class StepQuizReviewFragment :
                 stepRetryButton = reviewStep1ActionRetry,
 
                 stepQuizDiscountingPolicy = reviewStep1Discounting,
+                stepQuizReviewTeacherMessage = null,
                 onNewMessage = { stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(it)) }
             )
 

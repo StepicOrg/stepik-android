@@ -28,7 +28,7 @@ constructor(
                     state is State.Error && message.forceUpdate) {
                     val sessionId = message.stepWrapper.step.session
                     val action =
-                        if (sessionId != null && sessionId > 0) {
+                        if (sessionId != null && sessionId > 0 && message.lessonData.lesson.actions?.editLesson == null) {
                             Action.FetchReviewSession(message.stepWrapper.id, message.lessonData.unit?.id, message.stepWrapper.step.instruction ?: -1, sessionId)
                         } else {
                             Action.FetchStepQuizState(message.stepWrapper, message.lessonData)
