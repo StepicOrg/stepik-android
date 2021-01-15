@@ -13,6 +13,7 @@ import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.domain.review_session.repository.ReviewSessionRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Assignment
+import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Unit
 import javax.inject.Inject
@@ -26,22 +27,29 @@ constructor(
     private val stepContentResolver: StepContentResolver,
     private val reviewSessionRepository: ReviewSessionRepository
 ) {
-    fun getStepItems(unit: Unit?, vararg stepIds: Long): Single<List<StepItem>> =
+    fun getStepItems(unit: Unit?, lesson: Lesson): Single<List<StepItem>> =
         zip(
             getAssignments(unit),
-            getSteps(*stepIds)
+            getSteps(*lesson.steps)
         )
             .flatMap { (assignments, steps) ->
-                val progressIds = assignments.getProgresses() + steps.getProgresses()
-                val reviewSessionsIds = steps.mapNotNull { it.step.session }
-
-                zip(
-                    progressRepository.getProgresses(progressIds),
-                    reviewSessionRepository.getReviewSessions(reviewSessionsIds)
-                ) { progresses, reviewSessions ->
-                    packStepItems(assignments, steps, progresses, reviewSessions)
-                }
+                getStepItems(assignments, steps, lesson.actions?.editLesson == null)
             }
+
+    private fun getStepItems(assignments: List<Assignment>, steps: List<StepPersistentWrapper>, mustLoadReviewSessions: Boolean): Single<List<StepItem>> {
+        val progressIds = assignments.getProgresses() + steps.getProgresses()
+        val reviewSessionsSingle = if (mustLoadReviewSessions) {
+            reviewSessionRepository.getReviewSessions(steps.mapNotNull { it.step.session })
+        } else {
+            Single.just(emptyList())
+        }
+        return zip(
+            progressRepository.getProgresses(progressIds),
+            reviewSessionsSingle
+        ) { progresses, reviewSessions ->
+            packStepItems(assignments, steps, progresses, reviewSessions)
+        }
+    }
 
     private fun getSteps(vararg stepIds: Long): Single<List<StepPersistentWrapper>> =
         stepRepository

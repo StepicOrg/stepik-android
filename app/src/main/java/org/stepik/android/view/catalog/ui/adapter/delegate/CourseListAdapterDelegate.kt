@@ -2,170 +2,139 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_course_list.view.*
+import kotlinx.android.synthetic.main.header_catalog_block.view.*
+import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepik.android.domain.catalog.model.CatalogBlock
+import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
-import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.model.Course
-import org.stepik.android.model.CourseCollection
-import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
-import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
-import org.stepik.android.presentation.course_list.CourseListCollectionView
-import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.presentation.course_list_redux.CourseListFeature
+import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
-import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
-import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.catalog.mapper.CourseCountMapper
+import org.stepik.android.view.catalog.model.CatalogItem
+import org.stepik.android.view.catalog.ui.delegate.CatalogBlockHeaderDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListAdapterDelegate(
     private val analytic: Analytic,
-    private val screenManager: ScreenManager,
-    private val courseContinueViewDelegate: CourseContinueViewDelegate,
-    private val isHandleInAppPurchase: Boolean
-) : AdapterDelegate<OldCatalogItem, DelegateViewHolder<OldCatalogItem>>() {
+    private val courseCountMapper: CourseCountMapper,
+    private val isHandleInAppPurchase: Boolean,
+    private val onTitleClick: (Long) -> Unit,
+    private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
+    private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
+    private val onCourseClicked: (CourseListItem.Data) -> Unit
+) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
-    override fun isForViewType(position: Int, data: OldCatalogItem): Boolean =
-        data is CourseListCollectionPresenter
+    override fun isForViewType(position: Int, data: CatalogItem): Boolean =
+        data is CatalogItem.Block && data.catalogBlockStateWrapper is CatalogBlockStateWrapper.FullCourseList
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<OldCatalogItem> =
-        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list)) as DelegateViewHolder<OldCatalogItem>
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
+        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list_new))
 
-    private inner class CourseCollectionViewHolder(
-        root: View
-    ) : PresenterViewHolder<CourseListCollectionView, CourseListCollectionPresenter>(root), CourseListCollectionView {
+    private inner class CourseCollectionViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
 
-        private var courseCollection: CourseCollection? = null
+        private var catalogBlock: CatalogBlock? = null
 
-        private val courseListTitle = root.containerTitle
-        private val courseListDescription = root.containerDescription
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
-        private val courseListPlaceholderEmpty = root.courseListPlaceholderEmpty
         private val courseListTitleContainer = root.catalogBlockContainer
-        private val courseListPlaceholderNoConnection = root.courseListPlaceholderNoConnection
 
-        private val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
+        private val catalogBlockTitleDelegate = CatalogBlockHeaderDelegate(courseListTitleContainer) {
+            val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockHeaderDelegate
+            onTitleClick(block.courseList.id)
+        }
+
+        private val skeletonCount = root.resources.getInteger(R.integer.course_list_rows) * root.resources.getInteger(R.integer.course_list_columns)
+        private val courseItemsSkeleton: List<CourseListItem> = List(skeletonCount) { CourseListItem.PlaceHolder() }
+        private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
+        private val viewStateDelegate = ViewStateDelegate<CourseListFeature.State>()
 
         init {
-            viewStateDelegate.addState<CourseListView.State.Idle>(courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
-            viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
+            viewStateDelegate.addState<CourseListFeature.State.Idle>(courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Empty>()
+            viewStateDelegate.addState<CourseListFeature.State.NetworkError>()
 
-            val onClickListener = View.OnClickListener {
-                val collection = courseCollection ?: return@OnClickListener
-                screenManager.showCoursesCollection(itemView.context, collection.id)
-            }
-
-            courseListDescription.setOnClickListener(onClickListener)
-            courseListTitleContainer.setOnClickListener(onClickListener)
-
-            courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(itemView.context) }
-            courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
-            courseListPlaceholderNoConnection.setOnClickListener {
-                val collection = courseCollection ?: return@setOnClickListener
-                itemData?.fetchCourses(courseCollectionId = collection.id, forceUpdate = true)
-            }
-            courseListPlaceholderNoConnection.setText(R.string.internet_problem)
+            courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
+            courseItemAdapter += CourseListItemAdapterDelegate(
+                analytic = analytic,
+                onItemClicked = { courseListItem -> onCourseClicked(courseListItem) },
+                onContinueCourseClicked = {
+                    val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
+                    onCourseContinueClicked(it.course, CourseViewSource.Collection(block.courseList.id), CourseContinueInteractionSource.COURSE_WIDGET)
+                },
+                isHandleInAppPurchase = isHandleInAppPurchase
+            )
 
             with(courseListCoursesRecycler) {
+                adapter = courseItemAdapter
                 val rowCount = resources.getInteger(R.integer.course_list_rows)
                 val columnsCount = resources.getInteger(R.integer.course_list_columns)
                 layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
                 itemAnimator?.changeDuration = 0
                 val snapHelper = CoursesSnapHelper(rowCount)
                 snapHelper.attachToRecyclerView(this)
-                courseListCoursesRecycler.setRecycledViewPool(sharedViewPool)
+                setRecycledViewPool(sharedViewPool)
+                setHasFixedSize(true)
             }
         }
 
-        private val delegate = CourseListViewDelegate(
-            analytic = analytic,
-            courseContinueViewDelegate = courseContinueViewDelegate,
-            courseListTitleContainer = root.catalogBlockContainer,
-            courseItemsRecyclerView = root.courseListCoursesRecycler,
-            courseListViewStateDelegate = viewStateDelegate,
-            onContinueCourseClicked = { courseListItem ->
-                val courseCollectionId = this.courseCollection?.id
-                    ?: return@CourseListViewDelegate
+        override fun onBind(data: CatalogItem) {
+            data as CatalogItem.Block
+            val catalogBlockCourseListItem = data.catalogBlockStateWrapper as CatalogBlockStateWrapper.FullCourseList
+            initLoading(catalogBlockCourseListItem)
+            catalogBlock = catalogBlockCourseListItem.catalogBlock
+            catalogBlockTitleDelegate.setInformation(catalogBlockCourseListItem.catalogBlock)
+            catalogBlockCourseListItem
+                .catalogBlock
+                .content
+                .safeCast<CatalogBlockContent.FullCourseList>()
+                ?.let {
+                    val countString = courseCountMapper.mapCourseCountToString(context, it.courseList.coursesCount)
+                    catalogBlockTitleDelegate.setCount(countString)
+                }
+            render(catalogBlockCourseListItem.state)
+        }
 
-                itemData
-                    ?.continueCourse(
-                        course = courseListItem.course,
-                        viewSource = CourseViewSource.Collection(courseCollectionId),
-                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
-                    )
-            },
-            isHandleInAppPurchase = isHandleInAppPurchase
-        )
-
-        override fun setState(state: CourseListCollectionView.State) {
-            courseCollection = (state as? CourseListCollectionView.State.Data)?.courseCollection
+        private fun render(state: CourseListFeature.State) {
+            viewStateDelegate.switchState(state)
             when (state) {
-                is CourseListCollectionView.State.Idle,
-                is CourseListCollectionView.State.Loading -> {
-                    viewStateDelegate.switchState(CourseListView.State.Loading)
-                    delegate.setState(CourseListView.State.Loading)
+                is CourseListFeature.State.Idle -> {
+                    courseItemAdapter.items = courseItemsSkeleton
                 }
-                is CourseListCollectionView.State.Data -> {
-                    courseListTitle.text = state.courseCollection.title
-                    courseListDescription.setPlaceholderText(state.courseCollection.description)
 
-                    with(CollectionDescriptionColors.ofCollection(state.courseCollection)) {
-                        courseListDescription.setBackgroundResource(backgroundRes)
-                        courseListDescription.setTextColor(AppCompatResources.getColorStateList(context, textColorRes))
-                    }
+                is CourseListFeature.State.Loading -> {
+                    courseItemAdapter.items = courseItemsSkeleton
+                }
 
-                    if (state.courseListViewState == CourseListView.State.Empty) {
-                        analytic.reportEvent(Analytic.Error.COURSE_COLLECTION_EMPTY)
-                    }
-                    viewStateDelegate.switchState(state.courseListViewState)
-                    delegate.setState(state.courseListViewState)
+                is CourseListFeature.State.Content -> {
+                    courseItemAdapter.items = state.courseListItems
                 }
-                is CourseListCollectionView.State.NetworkError -> {
-                    viewStateDelegate.switchState(CourseListView.State.NetworkError)
-                    delegate.setState(CourseListView.State.NetworkError)
-                }
+
+                else ->
+                    courseItemAdapter.items = emptyList()
             }
         }
+    }
 
-        override fun showNetworkError() {
-            if (itemView.parent == null) return
-            delegate.showNetworkError()
+    private fun initLoading(catalogBlockFullCourseList: CatalogBlockStateWrapper.FullCourseList) {
+        if (catalogBlockFullCourseList.catalogBlock.content !is CatalogBlockContent.FullCourseList) {
+            return
         }
-
-        override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
-            delegate.showCourse(course, source, isAdaptive)
-        }
-
-        override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
-            delegate.showSteps(course, source, lastStep)
-        }
-
-        override fun setBlockingLoading(isLoading: Boolean) {
-            delegate.setBlockingLoading(isLoading)
-        }
-
-        override fun attachView(data: CourseListCollectionPresenter) {
-            data.attachView(this)
-            courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)
-        }
-
-        override fun detachView(data: CourseListCollectionPresenter) {
-            data.firstVisibleItemPosition = (courseListCoursesRecycler.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
-            data.detachView(this)
-        }
+        onBlockSeen(catalogBlockFullCourseList.id, catalogBlockFullCourseList.catalogBlock.content)
     }
 }

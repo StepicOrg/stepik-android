@@ -790,6 +790,9 @@
 
     <string name="step_quiz_reload_message">Извините, задание было изменено авторами. Необходимо начать сначала. Баллы за прошлые решения сохранены.</string>
 
+    <string name="step_quiz_review_teacher_peer_message">Следите за рецензиями учащихся в веб-версии</string>
+    <string name="step_quiz_review_teacher_instructor_message">Отрецензируйте решения в веб-версии, чтобы учащиеся получили баллы</string>
+
     <!-- Peer review -->
     <string name="step_quiz_review_send_pending">Отправьте лучшее решение на проверку</string>
     <string name="step_quiz_review_send_in_progress">Отправьте лучшее решение на проверку. После отправки заменить решение нельзя.</string>

@@ -18,7 +18,6 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseCollection
-import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListCollectionStateMapper
@@ -53,8 +52,7 @@ constructor(
     viewContainer: PresenterViewContainer<CourseListCollectionView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
 ) : PresenterBase<CourseListCollectionView>(viewContainer),
-    CourseContinuePresenterDelegate by continueCoursePresenterDelegate,
-    OldCatalogItem {
+    CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
     companion object {
         private const val PAGE_SIZE = 20
     }

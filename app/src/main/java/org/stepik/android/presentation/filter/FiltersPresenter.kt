@@ -11,7 +11,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import org.stepik.android.presentation.catalog.model.OldCatalogItem
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.PresenterBase
 import java.util.EnumSet
@@ -28,8 +27,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     @FiltersBus
     private val filtersPublisher: PublishSubject<EnumSet<StepikFilter>>
-) : PresenterBase<FiltersView>(),
-    OldCatalogItem {
+) : PresenterBase<FiltersView>() {
 
     private var state: FiltersView.State =
         FiltersView.State.Idle

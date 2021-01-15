@@ -56,7 +56,6 @@ import org.stepik.android.view.injection.billing.BillingDataModule
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
 import org.stepik.android.view.injection.catalog.CatalogComponent
-import org.stepik.android.view.injection.catalog_block.CatalogBlockComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -233,8 +232,6 @@ interface AppCoreComponent {
 
     fun courseListComponentBuilder(): CourseListSearchResultComponent.Builder
 
-    fun catalogComponentBuilder(): CatalogComponent.Builder
-
     fun fastContinueComponentBuilder(): FastContinueComponent.Builder
 
     fun filterComponentBuilder(): FilterComponent.Builder
@@ -253,7 +250,7 @@ interface AppCoreComponent {
 
     fun analyticProviderComponentBuilder(): AnalyticComponent.Builder
 
-    fun catalogBlockComponentBuilder(): CatalogBlockComponent.Builder
+    fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun storyComponentBuilder(): StoryComponent.Builder
 
