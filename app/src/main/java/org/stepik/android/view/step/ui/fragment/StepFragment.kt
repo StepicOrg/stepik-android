@@ -131,6 +131,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 )
         }
 
+        stepContentNext.isVisible = stepWrapper.step.position < lessonData.lesson.steps.size && !stepWrapper.isStepCanHaveQuiz
+        stepContentNext.setOnClickListener { moveNext() }
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
         initStepContentFragment()
     }
@@ -280,14 +282,18 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {
         stepNavigationDelegate.setState(directions)
+        val actionBottomMargin =  if (stepNavigation.visibility == View.VISIBLE) {
+            0
+        } else {
+            resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
+        }
         stepQuizContainer.layoutParams = (stepQuizContainer.layoutParams as ViewGroup.MarginLayoutParams)
             .apply {
-                bottomMargin =
-                    if (stepNavigation.visibility == View.VISIBLE) {
-                        0
-                    } else {
-                        resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
-                    }
+                bottomMargin = actionBottomMargin
+            }
+        stepContentNext.layoutParams = (stepContentNext.layoutParams as ViewGroup.MarginLayoutParams)
+            .apply {
+                bottomMargin = actionBottomMargin
             }
     }
 

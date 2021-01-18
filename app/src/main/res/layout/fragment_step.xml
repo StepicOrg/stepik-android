@@ -42,6 +42,16 @@
             android:layout_weight="1" />
 
         <include
+            layout="@layout/view_step_content_next_button"
+            android:id="@+id/stepContentNext"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/step_submit_button_height"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
+
+        <include
             android:id="@+id/stepNavigation"
             layout="@layout/view_step_navigation"
             android:layout_width="match_parent"
