@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -131,6 +132,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 )
         }
 
+        stepContentNext.isVisible = stepWrapper.step.position < lessonData.lesson.steps.size && !stepWrapper.isStepCanHaveQuiz
+        stepContentNext.setOnClickListener { moveNext() }
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
         initStepContentFragment()
     }
@@ -280,15 +283,17 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {
         stepNavigationDelegate.setState(directions)
-        stepQuizContainer.layoutParams = (stepQuizContainer.layoutParams as ViewGroup.MarginLayoutParams)
-            .apply {
-                bottomMargin =
-                    if (stepNavigation.visibility == View.VISIBLE) {
-                        0
-                    } else {
-                        resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
-                    }
-            }
+        val actionBottomMargin =  if (stepNavigation.visibility == View.VISIBLE) {
+            0
+        } else {
+            resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
+        }
+        stepQuizContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = actionBottomMargin
+        }
+        stepContentNext.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = actionBottomMargin
+        }
     }
 
     override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData, isAutoplayEnabled: Boolean) {
