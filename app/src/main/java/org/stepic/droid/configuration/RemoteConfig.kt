@@ -11,4 +11,5 @@ object RemoteConfig {
     const val IS_LOCAL_SUBMISSIONS_ENABLED = "is_local_submissions_enabled"
     const val IS_PEER_REVIEW_ENABLED = "is_peer_review_enabled"
     const val IS_DISABLED_STEPS_SUPPORTED = "is_disabled_steps_supported"
+    const val SEARCH_QUERY_PARAMS_ANDROID = "search_query_params_android"
 }

@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.CoursePurchaseReminderSplitTest
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -71,7 +70,6 @@ constructor(
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
     private val coursePurchaseReminderInteractor: PurchaseReminderInteractor,
-    private val coursePurchaseReminderSplitTest: CoursePurchaseReminderSplitTest,
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
@@ -366,9 +364,7 @@ constructor(
         val checkout = this.uiCheckout
             ?: return
 
-        if (coursePurchaseReminderSplitTest.currentGroup.notificationDelayHours != -1) {
-            schedulePurchaseReminder()
-        }
+        schedulePurchaseReminder()
 
         state = CourseView.State.BlockingLoading(
             headerData.copy(
@@ -410,9 +406,7 @@ constructor(
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
         isNeedCheckCourseEnrollment = true
-        if (coursePurchaseReminderSplitTest.currentGroup.notificationDelayHours != -1) {
-            schedulePurchaseReminder()
-        }
+        schedulePurchaseReminder()
         view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 
