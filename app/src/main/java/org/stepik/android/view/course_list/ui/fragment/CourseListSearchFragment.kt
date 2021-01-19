@@ -29,6 +29,7 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.search_result.mapper.SearchResultRemoteQueryParamsMapper
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -80,6 +81,9 @@ class CourseListSearchFragment :
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
+    @Inject
+    internal lateinit var searchResultRemoteQueryParamsMapper: SearchResultRemoteQueryParamsMapper
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
 
@@ -107,7 +111,12 @@ class CourseListSearchFragment :
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
 
-        val searchResultQuery = SearchResultQuery(page = 1, query = query, filterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured))
+        val searchResultQuery = SearchResultQuery(
+            page = 1,
+            query = query,
+            filterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured),
+            remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
+        )
         courseListSwipeRefresh.setOnRefreshListener {
             courseListPresenter.fetchCourses(
                 searchResultQuery,
@@ -251,7 +260,12 @@ class CourseListSearchFragment :
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
         courseListPresenter.fetchCourses(
-            searchResultQuery = SearchResultQuery(page = 1, query = query, filterQuery = filterQuery),
+            searchResultQuery = SearchResultQuery(
+                page = 1,
+                query = query,
+                filterQuery = filterQuery,
+                remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
+            ),
             forceUpdate = true
         )
     }
