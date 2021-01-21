@@ -1,7 +1,6 @@
 package org.stepik.android.domain.purchase_notification.interactor
 
 import io.reactivex.Completable
-import org.stepic.droid.analytic.experiments.CoursePurchaseReminderSplitTest
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
@@ -14,7 +13,6 @@ class PurchaseReminderInteractor
 @Inject
 constructor(
     private val purchaseNotificationDelegate: PurchaseNotificationDelegate,
-    private val coursePurchaseReminderSplitTest: CoursePurchaseReminderSplitTest,
     private val purchaseNotificationRepository: PurchaseNotificationRepository
 ) {
     companion object {
@@ -36,7 +34,7 @@ constructor(
             .doOnComplete { purchaseNotificationDelegate.schedulePurchaseNotification() }
 
     private fun calculateScheduleOffset(timeStamp: Long): Long {
-        val scheduledTime = timeStamp + (coursePurchaseReminderSplitTest.currentGroup.notificationDelayHours * MILLIS_IN_1_HOUR)
+        val scheduledTime = timeStamp + MILLIS_IN_1_HOUR
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = scheduledTime
 

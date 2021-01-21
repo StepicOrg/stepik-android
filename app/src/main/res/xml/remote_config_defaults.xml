@@ -36,4 +36,8 @@
         <key>is_disabled_steps_supported</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>search_query_params_android</key>
+        <value>{"is_popular": true, "is_public": true}</value>
+    </entry>
 </defaultsMap>
