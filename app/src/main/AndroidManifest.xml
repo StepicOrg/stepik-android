@@ -118,6 +118,7 @@
 
                 <data android:pathPattern="/catalog.*" />
                 <data android:pathPattern="/notifications.*" />
+                <data android:pathPattern="/story-template.*" />
 
             </intent-filter>
 

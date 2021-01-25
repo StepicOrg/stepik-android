@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-class StoryTemplate(
+data class StoryTemplate(
         @SerializedName("id")
         val id: Long,
         @SerializedName("cover")

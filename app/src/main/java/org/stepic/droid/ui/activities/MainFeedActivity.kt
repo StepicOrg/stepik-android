@@ -32,6 +32,8 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
+import org.stepik.android.view.story_deeplink.routing.getStoryId
+import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import timber.log.Timber
@@ -55,6 +57,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val defaultIndex: Int = 0
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
+        private const val STORY_DEEPLINK = "story-template"
         private const val CATALOG_DEEPLINK = "catalog"
         private const val NOTIFICATIONS_DEEPLINK = "notifications"
 
@@ -190,9 +193,23 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         when (getFragmentIndexFromIntent(launchIntent)) {
             CATALOG_INDEX -> {
                 navigationView.selectedItemId = R.id.catalog
-                val courseCollectionId = launchIntent?.getCourseListCollectionId()
-                if (courseCollectionId != null) {
-                    screenManager.showCoursesCollection(this, courseCollectionId)
+                launchIntent?.data?.pathSegments?.let {
+                    when {
+                        it.contains(CATALOG_DEEPLINK) -> {
+                            val courseCollectionId = launchIntent.getCourseListCollectionId()
+                            if (courseCollectionId != null) {
+                                screenManager.showCoursesCollection(this, courseCollectionId)
+                            }
+                        }
+                        it.contains(STORY_DEEPLINK) -> {
+                            val storyId = launchIntent.getStoryId()
+                            if (storyId != null) {
+                                StoryDeepLinkDialogFragment
+                                    .newInstance(storyId, launchIntent.dataString ?: "")
+                                    .showIfNotExists(supportFragmentManager, StoryDeepLinkDialogFragment.TAG)
+                            }
+                        }
+                    }
                 }
             }
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
@@ -210,6 +227,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             when {
                 it.contains(NOTIFICATIONS_DEEPLINK) -> return NOTIFICATIONS_INDEX
                 it.contains(CATALOG_DEEPLINK)       -> return CATALOG_INDEX
+                it.contains(STORY_DEEPLINK)         -> return CATALOG_INDEX
                 else -> {}
             }
         }
