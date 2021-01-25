@@ -7,6 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
@@ -29,6 +31,9 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
 
         const val TAG = "StoryDeepLinkDialogFragment"
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -72,6 +77,13 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
                 SharedTransitionIntentBuilder.createIntent(
                     requireContext(), StoriesActivity::class.java,
                     CATALOG_STORIES_KEY, -1, ArrayList(listOf(state.story.toStory()))
+                )
+            )
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+                    AmplitudeAnalytic.Stories.Values.STORY_ID to state.story.id,
+                    AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.DEEPLINK,
+                    AmplitudeAnalytic.Stories.Values.DEEPLINK_URL to deepLinkUrl
                 )
             )
             dismiss()

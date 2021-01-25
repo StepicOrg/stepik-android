@@ -211,7 +211,8 @@ class CatalogFragment :
                     val story = storiesViewHolder.storiesAdapter.stories[position]
                     catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.StoryViewed(story.id)))
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
-                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
+                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                        AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
                     ))
                 }
             }
