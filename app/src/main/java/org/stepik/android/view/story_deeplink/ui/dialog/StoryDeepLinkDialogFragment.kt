@@ -8,14 +8,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.features.stories.mapper.toStory
+import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkPresenter
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkView
+import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.view.base.ui.extension.argument
-import timber.log.Timber
+import java.util.ArrayList
 import javax.inject.Inject
 
 class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
     companion object {
+        private const val CATALOG_STORIES_KEY = "catalog_stories"
         fun newInstance(storyId: Long, deepLinkUrl: String): DialogFragment =
             StoryDeepLinkDialogFragment()
                 .apply {
@@ -64,8 +68,12 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
 
     override fun setState(state: StoryDeepLinkView.State) {
         if (state is StoryDeepLinkView.State.Success) {
-            Timber.d("Success: ${state.story}")
-            Timber.d("Story id: $storyId Data string: $deepLinkUrl")
+            requireContext().startActivity(
+                SharedTransitionIntentBuilder.createIntent(
+                    requireContext(), StoriesActivity::class.java,
+                    CATALOG_STORIES_KEY, -1, ArrayList(listOf(state.story.toStory()))
+                )
+            )
             dismiss()
         }
         if (state is StoryDeepLinkView.State.Error) {
