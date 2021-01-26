@@ -6,6 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface StoryService {
+    @GET("api/story-templates")
+    fun getStoryTemplate(@Query("ids[]") storyIds: List<Long>): Single<StoryTemplatesResponse>
+
     @GET("api/story-templates?platform=mobile,android")
     fun getStoryTemplate(
         @Query("page") page: Int,
