@@ -17,6 +17,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <View
             android:id="@+id/storyDeepLinkMockView"
+            android:layout_gravity="center"
             android:layout_width="1dp"
             android:layout_height="1dp" />
         <androidx.recyclerview.widget.RecyclerView
