@@ -645,7 +645,7 @@
     <string name="step_quiz_number_description">Увядзіце лікавы адказ</string>
     <string name="step_quiz_math_description">Увядзіце матэматычную формулу</string>
     <string name="step_quiz_string_description">Напішыце тэкст (радок)</string>
-    <string name="step_quiz_free_answer_description">Напішыце эсэ</string>
+    <string name="step_quiz_free_answer_description">Напішыце адказ</string>
     <string name="step_quiz_sorting_description">Упарадкуйце элементы спіса</string>
     <string name="step_quiz_matching_description">Супастаўце значэнні з двух спісаў</string>
     <string name="step_quiz_choice_description_single">Абярыце адзін элемент</string>
