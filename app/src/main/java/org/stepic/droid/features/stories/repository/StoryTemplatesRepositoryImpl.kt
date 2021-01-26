@@ -15,7 +15,7 @@ import javax.inject.Inject
 class StoryTemplatesRepositoryImpl
 @Inject
 constructor(
-    private val storyTemplatesRemoteRemoteDataSource: StoryTemplatesRemoteDataSource,
+    private val storyTemplatesRemoteDataSource: StoryTemplatesRemoteDataSource,
     private val viewedStoryTemplateDao: IDao<ViewedStoryTemplate>
 ) : StoryTemplatesRepository {
     companion object {
@@ -28,21 +28,21 @@ constructor(
     }
 
     override fun getStoryTemplate(id: Long): Single<StoryTemplate> =
-        storyTemplatesRemoteRemoteDataSource
+        storyTemplatesRemoteDataSource
             .getStoryTemplates(listOf(id))
             .first()
 
     override fun getStoryTemplates(ids: List<Long>): Single<List<StoryTemplate>> {
         if (ids.isEmpty()) return Single.just(emptyList())
 
-        return storyTemplatesRemoteRemoteDataSource
+        return storyTemplatesRemoteDataSource
             .getStoryTemplates(ids)
             .map(storyTemplatesMapper)
             .onErrorReturnItem(emptyList())
     }
 
     override fun getStoryTemplates(lang: String): Single<List<StoryTemplate>> =
-        storyTemplatesRemoteRemoteDataSource
+        storyTemplatesRemoteDataSource
             .getStoryTemplates(lang)
             .map(storyTemplatesMapper)
 
