@@ -818,4 +818,5 @@
     <string name="visited_courses_title">Нядаўна прагледжаных</string>
     <string name="visited_courses_enrolled">Вы запісаныя</string>
 
+    <string name="story_deeplink_open_fail">Не атрымалася адкрыць гісторыю</string>
 </resources>

@@ -991,5 +991,5 @@
     <string name="visited_courses_enrolled">Enrolled</string>
 
     <string name="protocol_host_url" translatable="false">%s://%s</string>
-
+    <string name="story_deeplink_open_fail">Failed to open story</string>
 </resources>

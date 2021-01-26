@@ -2,6 +2,7 @@ package org.stepik.android.view.story_deeplink.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -14,14 +15,13 @@ import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkPresenter
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkView
+import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.view.base.ui.extension.argument
-import java.util.ArrayList
 import javax.inject.Inject
 
 class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
     companion object {
-        private const val CATALOG_STORIES_KEY = "catalog_stories"
         fun newInstance(storyId: Long, deepLinkUrl: String): DialogFragment =
             StoryDeepLinkDialogFragment()
                 .apply {
@@ -76,7 +76,7 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
             requireContext().startActivity(
                 SharedTransitionIntentBuilder.createIntent(
                     requireContext(), StoriesActivity::class.java,
-                    CATALOG_STORIES_KEY, -1, ArrayList(listOf(state.story.toStory()))
+                    CatalogFragment.CATALOG_DEEPLINK_STORY_KEY, 0, arrayListOf(state.story.toStory())
                 )
             )
             analytic.reportAmplitudeEvent(
@@ -89,6 +89,7 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
             dismiss()
         }
         if (state is StoryDeepLinkView.State.Error) {
+            Toast.makeText(requireContext(), R.string.story_deeplink_open_fail, Toast.LENGTH_SHORT).show()
             dismiss()
         }
     }

@@ -60,6 +60,7 @@ class CatalogFragment :
 
     companion object {
         const val TAG = "CatalogFragment"
+        const val CATALOG_DEEPLINK_STORY_KEY = "catalog_deeplink_story_key"
 
         fun newInstance(): Fragment =
             CatalogFragment()
@@ -217,9 +218,17 @@ class CatalogFragment :
                 }
             }
         })
+        SharedTransitionsManager.registerTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY, object :
+            SharedTransitionContainerDelegate {
+            override fun getSharedView(position: Int): View? =
+                storyDeepLinkMockView
+
+            override fun onPositionChanged(position: Int) {}
+        })
     }
 
     override fun onStop() {
+        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY)
         SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         super.onStop()
     }
