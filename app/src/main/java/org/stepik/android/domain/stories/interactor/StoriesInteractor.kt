@@ -41,7 +41,7 @@ constructor(
 
     private fun getOfferStoryTemplates(): Single<List<StoryTemplate>> =
         personalOffersRepository.getPersonalOffers()
-            .flatMap { offersWrapper ->
-                storiesRepository.getStoryTemplates(offersWrapper.data.promoStories.orEmpty())
+            .flatMap { personalOffers ->
+                storiesRepository.getStoryTemplates(personalOffers.promoStories.orEmpty())
             }
 }
