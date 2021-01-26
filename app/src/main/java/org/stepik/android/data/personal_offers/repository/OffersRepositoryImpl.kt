@@ -14,7 +14,7 @@ constructor(
 ) : OffersRepository {
     override fun getOffersRecord(): Single<StorageRecord<OffersWrapper>> =
         offersRemoteDataSource
-            .getOfferRecord()
+            .getOffersRecord()
             .switchIfEmpty(createOffersRecord())
 
     private fun createOffersRecord(): Single<StorageRecord<OffersWrapper>> =

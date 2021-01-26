@@ -34,10 +34,13 @@ constructor(
             .getStoryTemplates(listOf(id))
             .first()
 
-    override fun getStoryTemplates(ids: List<Long>): Single<List<StoryTemplate>> =
-        storyTemplatesRemoteRemoteDataSource
+    override fun getStoryTemplates(ids: List<Long>): Single<List<StoryTemplate>> {
+        if (ids.isEmpty()) return Single.just(emptyList())
+
+        return storyTemplatesRemoteRemoteDataSource
             .getStoryTemplates(ids)
             .map(storyTemplatesMapper)
+    }
 
     override fun getStoryTemplates(lang: String): Single<List<StoryTemplate>> =
         storyTemplatesRemoteRemoteDataSource

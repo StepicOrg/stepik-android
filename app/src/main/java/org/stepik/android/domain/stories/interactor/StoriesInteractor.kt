@@ -22,10 +22,12 @@ constructor(
 ) {
     fun fetchStories(): Single<List<Story>> =
         Singles.zip(
-            getStoryTemplates().map { it.map(StoryTemplate::toStory) },
-            getOfferStoryTemplates().map { it.map(StoryTemplate::toStory) }
+            getStoryTemplates(),
+            getOfferStoryTemplates()
         ) { stories, offerStories ->
-            stories + offerStories
+            (stories + offerStories)
+                .sortedBy { it.position }
+                .map(StoryTemplate::toStory)
         }
 
     fun getViewedStoriesIds(): Single<Set<Long>> =
@@ -42,13 +44,9 @@ constructor(
     private fun getOfferStoryTemplates(): Single<List<StoryTemplate>> =
         getOfferRecord()
             .flatMap { offersWrapper ->
-                if (offersWrapper.data.promoStories.isNullOrEmpty()) {
-                    Single.just(emptyList())
-                } else {
-                    storiesRepository
-                        .getStoryTemplates(offersWrapper.data.promoStories)
-                        .onErrorReturnItem(emptyList())
-                }
+                storiesRepository
+                    .getStoryTemplates(offersWrapper.data.promoStories.orEmpty())
+                    .onErrorReturnItem(emptyList())
             }
 
     private fun getOfferRecord(): Single<StorageRecord<OffersWrapper>> =
