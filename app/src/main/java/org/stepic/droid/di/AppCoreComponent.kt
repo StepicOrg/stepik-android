@@ -84,6 +84,7 @@ import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.network.NetworkModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.personal_offers.PersonalOffersDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
@@ -147,6 +148,7 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         NotificationModule::class,
 
         StoryDataModule::class,
+        PersonalOffersDataModule::class,
         DeviceDataModule::class,
         UserActivityDataModule::class,
         NotificationDataModule::class,
