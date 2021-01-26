@@ -23,10 +23,8 @@ constructor(
     }
 
     private val storyTemplatesMapper = Function { storyTemplates: List<StoryTemplate> ->
-        storyTemplates.asSequence()
+        storyTemplates
             .filter { template -> template.version <= STORY_TEMPLATES_VERSION }
-            .sortedBy(StoryTemplate::position)
-            .toList()
     }
 
     override fun getStoryTemplate(id: Long): Single<StoryTemplate> =
@@ -40,6 +38,7 @@ constructor(
         return storyTemplatesRemoteRemoteDataSource
             .getStoryTemplates(ids)
             .map(storyTemplatesMapper)
+            .onErrorReturnItem(emptyList())
     }
 
     override fun getStoryTemplates(lang: String): Single<List<StoryTemplate>> =

@@ -7,9 +7,7 @@ import io.reactivex.rxkotlin.Singles
 import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.util.defaultLocale
-import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.domain.personal_offers.model.OffersWrapper
-import org.stepik.android.domain.personal_offers.repository.OffersRepository
+import org.stepik.android.domain.personal_offers.repository.PersonalOffersRepository
 import org.stepik.android.model.StoryTemplate
 import ru.nobird.android.stories.model.Story
 import javax.inject.Inject
@@ -17,7 +15,7 @@ import javax.inject.Inject
 class StoriesInteractor
 @Inject
 constructor(
-    private val offersRepository: OffersRepository,
+    private val personalOffersRepository: PersonalOffersRepository,
     private val storiesRepository: StoryTemplatesRepository
 ) {
     fun fetchStories(): Single<List<Story>> =
@@ -42,13 +40,8 @@ constructor(
     }
 
     private fun getOfferStoryTemplates(): Single<List<StoryTemplate>> =
-        getOfferRecord()
+        personalOffersRepository.getPersonalOffers()
             .flatMap { offersWrapper ->
-                storiesRepository
-                    .getStoryTemplates(offersWrapper.data.promoStories.orEmpty())
-                    .onErrorReturnItem(emptyList())
+                storiesRepository.getStoryTemplates(offersWrapper.data.promoStories.orEmpty())
             }
-
-    private fun getOfferRecord(): Single<StorageRecord<OffersWrapper>> =
-        offersRepository.getOffersRecord()
 }

@@ -6,34 +6,34 @@ import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.web.storage.model.StorageRecordWrapped
-import org.stepik.android.data.personal_offers.source.OffersRemoteDataSource
-import org.stepik.android.domain.personal_offers.model.OffersWrapper
-import org.stepik.android.remote.personal_offers.mapper.OffersMapper
+import org.stepik.android.data.personal_offers.source.PersonalOffersRemoteDataSource
+import org.stepik.android.domain.personal_offers.model.PersonalOffersWrapper
+import org.stepik.android.remote.personal_offers.mapper.PersonalOffersMapper
 import org.stepik.android.remote.remote_storage.model.StorageRequest
 import org.stepik.android.remote.remote_storage.service.RemoteStorageService
 import javax.inject.Inject
 
-class OffersRemoteDataSourceImpl
+class PersonalOffersRemoteDataSourceImpl
 @Inject
 constructor(
     private val remoteStorageService: RemoteStorageService,
-    private val offersMapper: OffersMapper,
+    private val personalOffersMapper: PersonalOffersMapper,
     private val sharedPreferenceHelper: SharedPreferenceHelper
-) : OffersRemoteDataSource {
+) : PersonalOffersRemoteDataSource {
     companion object {
         private const val KIND_PERSONAL_OFFERS = "personal_offers"
     }
-    override fun getOffersRecord(): Maybe<StorageRecord<OffersWrapper>> =
+    override fun getPersonalOffers(): Maybe<StorageRecord<PersonalOffersWrapper>> =
         Single
             .fromCallable { sharedPreferenceHelper.profile?.id ?: -1 }
             .flatMapMaybe { userId ->
                 remoteStorageService
                     .getStorageRecords(page = 1, userId = userId, kind = KIND_PERSONAL_OFFERS)
-                    .map(offersMapper::mapToStorageRecord)
+                    .map(personalOffersMapper::mapToStorageRecord)
                     .toMaybe()
             }
 
-    override fun createOffersRecord(): Single<StorageRecord<OffersWrapper>> =
+    override fun createPersonalOffers(): Single<StorageRecord<PersonalOffersWrapper>> =
         remoteStorageService
             .createStorageRecord(
                 StorageRequest(
@@ -44,5 +44,5 @@ constructor(
                     )
                 )
             )
-            .map(offersMapper::mapToStorageRecord)
+            .map(personalOffersMapper::mapToStorageRecord)
 }
