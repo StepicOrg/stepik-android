@@ -1,6 +1,7 @@
 package org.stepik.android.remote.personal_offers.mapper
 
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepic.droid.web.storage.model.StorageRecordWrapped
 import org.stepik.android.data.personal_offers.getKindOfRecord
@@ -14,12 +15,12 @@ class OffersMapper
 constructor(
     private val gson: Gson
 ) {
-    fun mapToStorageRequest(offers: OffersWrapper, recordId: Long? = null): StorageRequest =
+    fun mapToStorageRequest(): StorageRequest =
         StorageRequest(
             StorageRecordWrapped(
-                id = recordId,
+                id = null,
                 kind = getKindOfRecord(),
-                data = gson.toJsonTree(offers)
+                data = JsonObject()
             )
         )
 

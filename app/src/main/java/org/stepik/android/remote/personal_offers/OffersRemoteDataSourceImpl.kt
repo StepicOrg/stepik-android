@@ -9,7 +9,6 @@ import org.stepik.android.data.personal_offers.source.OffersRemoteDataSource
 import org.stepik.android.domain.personal_offers.model.OffersWrapper
 import org.stepik.android.remote.personal_offers.mapper.OffersMapper
 import org.stepik.android.remote.remote_storage.service.RemoteStorageService
-import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 class OffersRemoteDataSourceImpl
@@ -19,12 +18,18 @@ constructor(
     private val offersMapper: OffersMapper,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : OffersRemoteDataSource {
-    override fun getOffersRecords(): Maybe<StorageRecord<OffersWrapper>> =
+    override fun getOfferRecord(): Maybe<StorageRecord<OffersWrapper>> =
         Single
             .fromCallable { sharedPreferenceHelper.profile?.id ?: -1 }
-            .flatMap { userId ->
+            .flatMapMaybe { userId ->
                 remoteStorageService
                     .getStorageRecords(page = 1, userId = userId, kind = getKindOfRecord())
-                    .map(offersMapper::mapToStorageRecordList)
-            }.maybeFirst()
+                    .map(offersMapper::mapToStorageRecord)
+                    .toMaybe()
+            }
+
+    override fun createOffersRecord(): Single<StorageRecord<OffersWrapper>> =
+        remoteStorageService
+            .createStorageRecord(offersMapper.mapToStorageRequest())
+            .map(offersMapper::mapToStorageRecord)
 }
