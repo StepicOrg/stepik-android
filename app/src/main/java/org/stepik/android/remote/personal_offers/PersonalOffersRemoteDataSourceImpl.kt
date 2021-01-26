@@ -10,6 +10,7 @@ import org.stepik.android.domain.personal_offers.model.PersonalOffers
 import org.stepik.android.remote.personal_offers.mapper.PersonalOffersMapper
 import org.stepik.android.remote.remote_storage.model.StorageRequest
 import org.stepik.android.remote.remote_storage.service.RemoteStorageService
+import ru.nobird.android.domain.rx.toMaybe
 import javax.inject.Inject
 
 class PersonalOffersRemoteDataSourceImpl
@@ -28,8 +29,7 @@ constructor(
             .flatMapMaybe { userId ->
                 remoteStorageService
                     .getStorageRecords(page = 1, userId = userId, kind = KIND_PERSONAL_OFFERS)
-                    .map(personalOffersMapper::mapToPersonalOffers)
-                    .toMaybe()
+                    .flatMapMaybe { personalOffersMapper.mapToPersonalOffers(it).toMaybe() }
             }
 
     override fun createPersonalOffers(): Single<PersonalOffers> =
