@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.app.NotificationCompat
-import androidx.core.app.TaskStackBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
@@ -21,7 +20,6 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationStatuses
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.story_deeplink.model.StoryDeepLinkNotification
 import org.stepik.android.view.notification.FcmNotificationHandler
@@ -84,16 +82,13 @@ class StepicFcmListenerService : FirebaseMessagingService() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(storyDeepLinkNotification.storyUrl))
             .setPackage(BuildConfig.APPLICATION_ID)
 
-        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
-        taskBuilder.addNextIntent(intent)
-
         val notification = NotificationCompat.Builder(applicationContext, StepikNotificationChannel.user.channelId)
             .setSmallIcon(R.drawable.ic_notification_icon_1)
             .setContentTitle(storyDeepLinkNotification.title)
             .setContentText(storyDeepLinkNotification.body)
             .setColor(applicationContext.resolveColorAttribute(R.attr.colorSecondary))
             .setAutoCancel(true)
-            .setContentIntent(taskBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_ONE_SHOT))
+            .setContentIntent(PendingIntent.getActivity(applicationContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT))
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
         notification.setStyle(NotificationCompat.BigTextStyle()
