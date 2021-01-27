@@ -1,8 +1,16 @@
 package org.stepic.droid.notifications
 
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
+import org.stepic.droid.BuildConfig
+import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.StepikDevicePoster
@@ -10,7 +18,10 @@ import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.handlers.RemoteMessageHandler
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationStatuses
+import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.story_deeplink.model.StoryDeepLinkNotification
 import org.stepik.android.view.notification.FcmNotificationHandler
 import java.io.IOException
 import javax.inject.Inject
@@ -19,6 +30,7 @@ class StepicFcmListenerService : FirebaseMessagingService() {
     companion object {
         private const val NOTIFICATION_TYPE = "notifications" // todo: refactor in message handlers
         private const val NOTIFICATION_STATUSES_TYPE = "notification-statuses"
+        private const val STORY_TEMPLATES = "story-templates"
     }
 
     private val hacker = HackFcmListener()
@@ -32,12 +44,13 @@ class StepicFcmListenerService : FirebaseMessagingService() {
                 if (userId == null || userIdServer.toLong() != userId) {
                     return
                 }
-
                 val rawMessageObject = data["object"]
+
                 val messageType = data["type"]
                 when (messageType) {
                     NOTIFICATION_TYPE -> processNotification(rawMessageObject)
                     NOTIFICATION_STATUSES_TYPE -> processNotificationStatuses(rawMessageObject)
+                    STORY_TEMPLATES -> processStoryTemplatesDeeplink(rawMessageObject)
                     else -> hacker.handlers[messageType]?.handleMessage(this, rawMessageObject)
                 }
             }
@@ -60,6 +73,30 @@ class StepicFcmListenerService : FirebaseMessagingService() {
         notificationStatuses?.let {
             hacker.notificationsBadgesManager.syncCounter()
         }
+    }
+
+    private fun processStoryTemplatesDeeplink(rawMessageObject: String?) {
+        val storyDeepLinkNotification = Gson().fromJson(rawMessageObject, StoryDeepLinkNotification::class.java)
+        val requestCode = 1233
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(storyDeepLinkNotification.storyUrl))
+            .setPackage(BuildConfig.APPLICATION_ID)
+
+        val notification = NotificationCompat.Builder(applicationContext, StepikNotificationChannel.user.channelId)
+            .setSmallIcon(R.drawable.ic_notification_icon_1)
+            .setContentTitle(storyDeepLinkNotification.title)
+            .setContentText(storyDeepLinkNotification.body)
+            .setColor(applicationContext.resolveColorAttribute(R.attr.colorSecondary))
+            .setAutoCancel(true)
+            .setContentIntent(PendingIntent.getActivity(applicationContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+        notification.setStyle(NotificationCompat.BigTextStyle()
+            .bigText(storyDeepLinkNotification.body))
+            .setContentText(storyDeepLinkNotification.body)
+
+        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(requestCode, notification.build())
     }
 
     override fun onNewToken(token: String) {
