@@ -156,7 +156,7 @@ constructor(
 
     fun onFilterMenuItemClicked() {
         val oldState = (state as? CourseListSearchResultView.State.Data)
-            ?.takeIf { it.courseListViewState is CourseListView.State.Content }
+            ?.takeIf { it.courseListViewState is CourseListView.State.Content || it.courseListViewState is CourseListView.State.Empty }
             ?: return
 
         val filterView = (view as? FilterQueryView)
