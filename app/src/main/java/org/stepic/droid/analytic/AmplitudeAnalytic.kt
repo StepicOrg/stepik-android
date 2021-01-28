@@ -153,6 +153,16 @@ interface AmplitudeAnalytic {
                 const val SWIPE = "swipe"
                 const val CROSS = "cross"
             }
+
+            const val SOURCE = "source"
+
+            object Source {
+                const val CATALOG = "catalog"
+                const val DEEPLINK = "deeplink"
+                const val HOME = "home"
+            }
+
+            const val DEEPLINK_URL = "deeplink_url"
         }
     }
 

@@ -15,6 +15,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <View
+            android:id="@+id/storyDeepLinkMockView"
+            android:layout_gravity="center"
+            android:layout_width="1dp"
+            android:layout_height="1dp" />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/catalogRecyclerView"
             android:layout_width="match_parent"

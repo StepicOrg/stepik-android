@@ -772,7 +772,7 @@
     <string name="step_quiz_number_description">Enter a number</string>
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
-    <string name="step_quiz_free_answer_description">Write an essay</string>
+    <string name="step_quiz_free_answer_description">Write an answer</string>
     <string name="step_quiz_sorting_description">Sort a given list</string>
     <string name="step_quiz_matching_description">Match two lists</string>
     <string name="step_quiz_choice_description_single">Choose one option</string>
@@ -991,5 +991,5 @@
     <string name="visited_courses_enrolled">Enrolled</string>
 
     <string name="protocol_host_url" translatable="false">%s://%s</string>
-
+    <string name="story_deeplink_open_fail">Failed to open story</string>
 </resources>
