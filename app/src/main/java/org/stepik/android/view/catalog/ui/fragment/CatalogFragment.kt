@@ -41,8 +41,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDele
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
-import ru.nobird.android.stories.transition.SharedTransitionsManager
-import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
@@ -55,13 +53,9 @@ class CatalogFragment :
 
     companion object {
         const val TAG = "CatalogFragment"
-        const val CATALOG_DEEPLINK_STORY_KEY = "catalog_deeplink_story_key"
 
         fun newInstance(): Fragment =
             CatalogFragment()
-
-        private const val CATALOG_STORIES_INDEX = 0
-        private const val CATALOG_STORIES_KEY = "catalog_stories"
     }
 
     @Inject
@@ -169,23 +163,6 @@ class CatalogFragment :
             itemAnimator = null
             setHasFixedSize(true)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        catalogItemAdapter.notifyDataSetChanged()
-        SharedTransitionsManager.registerTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY, object :
-            SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View? =
-                storyDeepLinkMockView
-
-            override fun onPositionChanged(position: Int) {}
-        })
-    }
-
-    override fun onStop() {
-        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY)
-        super.onStop()
     }
 
     override fun onAction(action: CatalogFeature.Action.ViewAction) {

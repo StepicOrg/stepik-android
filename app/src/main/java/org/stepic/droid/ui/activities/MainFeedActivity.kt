@@ -191,25 +191,20 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         when (getFragmentIndexFromIntent(launchIntent)) {
+            HOME_INDEX -> {
+                navigationView.selectedItemId = R.id.home
+                val storyId = launchIntent?.getStoryId()
+                if (storyId != null) {
+                    StoryDeepLinkDialogFragment
+                        .newInstance(storyId, launchIntent.dataString ?: "")
+                        .showIfNotExists(supportFragmentManager, StoryDeepLinkDialogFragment.TAG)
+                }
+            }
             CATALOG_INDEX -> {
                 navigationView.selectedItemId = R.id.catalog
-                launchIntent?.data?.pathSegments?.let {
-                    when {
-                        it.contains(CATALOG_DEEPLINK) -> {
-                            val courseCollectionId = launchIntent.getCourseListCollectionId()
-                            if (courseCollectionId != null) {
-                                screenManager.showCoursesCollection(this, courseCollectionId)
-                            }
-                        }
-                        it.contains(STORY_DEEPLINK) -> {
-                            val storyId = launchIntent.getStoryId()
-                            if (storyId != null) {
-                                StoryDeepLinkDialogFragment
-                                    .newInstance(storyId, launchIntent.dataString ?: "")
-                                    .showIfNotExists(supportFragmentManager, StoryDeepLinkDialogFragment.TAG)
-                            }
-                        }
-                    }
+                val courseCollectionId = launchIntent?.getCourseListCollectionId()
+                if (courseCollectionId != null) {
+                    screenManager.showCoursesCollection(this, courseCollectionId)
                 }
             }
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
@@ -227,7 +222,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             when {
                 it.contains(NOTIFICATIONS_DEEPLINK) -> return NOTIFICATIONS_INDEX
                 it.contains(CATALOG_DEEPLINK)       -> return CATALOG_INDEX
-                it.contains(STORY_DEEPLINK)         -> return CATALOG_INDEX
+                it.contains(STORY_DEEPLINK)         -> return HOME_INDEX
                 else -> {}
             }
         }
