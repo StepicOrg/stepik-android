@@ -49,7 +49,6 @@ constructor(
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(PromoCode(-1L, "")) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo)
         ) { courseStats, localSubmissions, promoCode ->
-            // TODO Handle promoCode
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -57,7 +56,8 @@ constructor(
                 cover = course.cover ?: "",
 
                 stats = courseStats.first(),
-                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem }
+                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
+                promoCode = promoCode
             )
         }
             .toMaybe()

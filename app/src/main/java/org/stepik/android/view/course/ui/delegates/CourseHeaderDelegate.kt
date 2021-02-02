@@ -1,8 +1,11 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StrikethroughSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -23,6 +26,7 @@ import org.stepic.droid.util.getAllQueryParameters
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
@@ -40,6 +44,9 @@ class CourseHeaderDelegate(
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
+
+        private const val RUB_FORMAT = "RUB"
+        private const val USD_FORMAT = "USD"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -168,7 +175,11 @@ class CourseHeaderDelegate(
             }
 
             courseBuyInWebAction.text = if (courseHeaderData.course.displayPrice != null) {
-                getString(R.string.course_payments_purchase_in_web_with_price, courseHeaderData.course.displayPrice)
+                if (courseHeaderData.promoCode.price != -1L) {
+                    setupPurchaseButton(courseHeaderData.course.displayPrice as String, courseHeaderData.promoCode)
+                } else {
+                    getString(R.string.course_payments_purchase_in_web_with_price, courseHeaderData.course.displayPrice)
+                }
             } else {
                 getString(R.string.course_payments_purchase_in_web)
             }
@@ -192,6 +203,25 @@ class CourseHeaderDelegate(
                     (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledInApp || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
 
             shareCourseMenuItem?.isVisible = true
+        }
+
+    private fun setupPurchaseButton(originalDisplayPrice: String, promoCode: PromoCode): Spannable {
+        val promoDisplayPrice = formatPromoDisplayPrice(promoCode)
+        val spanString = courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo, promoDisplayPrice, originalDisplayPrice)
+        return SpannableString(spanString).apply {
+            setSpan(RelativeSizeSpan(0.9f), spanString.length - promoDisplayPrice.length - 1, spanString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            setSpan(StrikethroughSpan(), spanString.length - promoDisplayPrice.length - 1, spanString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+    }
+
+    private fun formatPromoDisplayPrice(promoCode: PromoCode): String =
+        when (promoCode.currencyCode) {
+            RUB_FORMAT ->
+                courseActivity.getString(R.string.rub_format, promoCode.price)
+            USD_FORMAT ->
+                courseActivity.getString(R.string.usd_format, promoCode.price)
+            else ->
+                "${promoCode.price} ${promoCode.currencyCode}"
         }
 
     fun showCourseShareTooltip() {
