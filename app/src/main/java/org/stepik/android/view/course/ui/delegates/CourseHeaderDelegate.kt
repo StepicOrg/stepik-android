@@ -9,6 +9,8 @@ import android.text.style.StrikethroughSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -18,9 +20,11 @@ import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
+import kotlinx.android.synthetic.main.view_discounted_purchase_button.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepic.droid.util.resolveColorAttribute
@@ -38,6 +42,7 @@ class CourseHeaderDelegate(
     private val courseActivity: Activity,
     private val analytic: Analytic,
     private val coursePresenter: CoursePresenter,
+    private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -107,21 +112,8 @@ class CourseHeaderDelegate(
                 }
             }
 
-            courseBuyInWebAction.setOnClickListener {
-                val queryParams = courseActivity
-                    .intent
-                    ?.data
-                    ?.getAllQueryParameters()
-
-                coursePresenter.openCoursePurchaseInWeb(queryParams)
-
-                courseHeaderData?.let { headerData ->
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.BUY_COURSE_PRESSED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
-                    ))
-                }
-            }
+            courseBuyInWebAction.setOnClickListener { buyInWebAction() }
+            courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
 
             courseBuyInAppAction.setOnClickListener {
                 coursePresenter.purchaseCourse()
@@ -140,12 +132,28 @@ class CourseHeaderDelegate(
         }
     }
 
+    private fun buyInWebAction() {
+        val queryParams = courseActivity
+            .intent
+            ?.data
+            ?.getAllQueryParameters()
+
+        coursePresenter.openCoursePurchaseInWeb(queryParams)
+
+        courseHeaderData?.let { headerData ->
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.BUY_COURSE_PRESSED, mapOf(
+                AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
+            ))
+        }
+    }
+
     private fun initViewStateDelegate() {
         with(courseActivity) {
             viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
-            viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(courseBuyInWebAction)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(purchaseContainer)
             // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
         }
     }
@@ -176,12 +184,37 @@ class CourseHeaderDelegate(
 
             courseBuyInWebAction.text = if (courseHeaderData.course.displayPrice != null) {
                 if (courseHeaderData.promoCode.price != -1L) {
-                    setupPurchaseButton(courseHeaderData.course.displayPrice as String, courseHeaderData.promoCode)
+                    setupPurchaseButtonText(courseHeaderData.course.displayPrice as String, courseHeaderData.promoCode)
                 } else {
                     getString(R.string.course_payments_purchase_in_web_with_price, courseHeaderData.course.displayPrice)
                 }
             } else {
                 getString(R.string.course_payments_purchase_in_web)
+            }
+
+            courseBuyInWebActionDiscountedNewPrice.text = getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(courseHeaderData.promoCode))
+            courseBuyInWebActionDiscountedOldPrice.text = SpannableString(courseHeaderData.course.displayPrice).apply { setSpan(StrikethroughSpan(), 0, courseHeaderData.course.displayPrice?.length ?: 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+
+            if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode.price != -1L) {
+                when (discountButtonAppearanceSplitTest.currentGroup) {
+                    DiscountButtonAppearanceSplitTest.Group.DiscountTransparent -> {
+                        courseBuyInWebAction.isVisible = false
+                        courseBuyInWebActionDiscounted.isVisible = true
+                    }
+                    DiscountButtonAppearanceSplitTest.Group.DiscountGreen -> {
+                        courseBuyInWebAction.isVisible = true
+                        courseBuyInWebActionDiscounted.isVisible = false
+                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, ContextCompat.getColorStateList(courseActivity, R.color.color_overlay_green))
+                    }
+                    DiscountButtonAppearanceSplitTest.Group.DiscountPurple -> {
+                        courseBuyInWebAction.isVisible = true
+                        courseBuyInWebActionDiscounted.isVisible = false
+                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, ContextCompat.getColorStateList(courseActivity, R.color.color_overlay_violet))
+                    }
+                }
+            } else {
+                courseBuyInWebAction.isVisible = true
+                courseBuyInWebActionDiscounted.isVisible = false
             }
 
             with(courseHeaderData.stats.enrollmentState) {
@@ -205,7 +238,7 @@ class CourseHeaderDelegate(
             shareCourseMenuItem?.isVisible = true
         }
 
-    private fun setupPurchaseButton(originalDisplayPrice: String, promoCode: PromoCode): Spannable {
+    private fun setupPurchaseButtonText(originalDisplayPrice: String, promoCode: PromoCode): Spannable {
         val promoDisplayPrice = formatPromoDisplayPrice(promoCode)
         val spanString = courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo, promoDisplayPrice, originalDisplayPrice)
         return SpannableString(spanString).apply {
