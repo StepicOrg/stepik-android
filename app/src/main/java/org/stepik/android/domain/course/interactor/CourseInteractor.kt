@@ -1,11 +1,13 @@
 package org.stepik.android.domain.course.interactor
 
 import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
@@ -25,11 +27,11 @@ constructor(
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
     }
 
-    fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
+    fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
         courseRepository
             .getCourse(courseId, if (canUseCache) DataSourceType.CACHE else DataSourceType.REMOTE, canUseCache)
             .doOnSuccess(coursePublishSubject::onNext)
-            .flatMap(::obtainCourseHeaderData)
+            .flatMap { obtainCourseHeaderData(it, promo) }
 
     /**
      * Trying to fetch DB data in first place as course object passed with intent could be obsolete
@@ -41,11 +43,12 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
-    private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
+    private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> =
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
-            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
-        ) { courseStats, localSubmissions ->
+            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
+            if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo)
+        ) { courseStats, localSubmissions, promoCode ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -53,7 +56,8 @@ constructor(
                 cover = course.cover ?: "",
 
                 stats = courseStats.first(),
-                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem }
+                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
+                promoCode = promoCode
             )
         }
             .toMaybe()

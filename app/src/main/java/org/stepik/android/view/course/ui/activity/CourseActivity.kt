@@ -25,6 +25,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
+import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -45,6 +46,7 @@ import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import org.stepik.android.view.course.routing.getPromoCodeFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
@@ -129,6 +131,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
+    internal lateinit var discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest
+
+    @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
     @Inject
@@ -179,13 +184,12 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter,
+                this, analytic, coursePresenter, discountButtonAppearanceSplitTest,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
                 isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
             )
-
         uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId)
         initViewStateDelegate()
@@ -211,7 +215,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         if (course != null) {
             coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, source, forceUpdate)
+            coursePresenter.onCourseId(courseId, source, intent.getPromoCodeFromDeepLink(), forceUpdate)
         }
     }
 

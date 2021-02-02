@@ -7,10 +7,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
 import org.stepic.droid.analytic.StepikAnalytic
 import org.stepic.droid.analytic.StepikAnalyticImpl
-import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
-import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
-import org.stepic.droid.analytic.experiments.SplitTest
+import org.stepic.droid.analytic.experiments.*
 import org.stepic.droid.di.AppSingleton
 
 @Module
@@ -38,4 +35,9 @@ abstract class AnalyticModule {
     @Binds
     @IntoSet
     internal abstract fun bindInAppPurchaseSplitTest(inAppPurchaseSplitTest: InAppPurchaseSplitTest): SplitTest<*>
+
+    @AppSingleton
+    @Binds
+    @IntoSet
+    internal abstract fun bindDiscountButtonAppearanceSplitTest(discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest): SplitTest<*>
 }
