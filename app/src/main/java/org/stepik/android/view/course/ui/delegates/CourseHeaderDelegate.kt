@@ -182,11 +182,13 @@ class CourseHeaderDelegate(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
-            courseBuyInWebAction.text = if (courseHeaderData.course.displayPrice != null) {
-                if (courseHeaderData.promoCode == PromoCode.EMPTY) {
-                    setupPurchaseButtonText(courseHeaderData.course.displayPrice as String, courseHeaderData.promoCode)
+            val courseDisplayPrice = courseHeaderData.course.displayPrice
+
+            courseBuyInWebAction.text = if (courseDisplayPrice != null) {
+                if (courseHeaderData.promoCode != PromoCode.EMPTY) {
+                    getPurchaseButtonText(courseDisplayPrice, courseHeaderData.promoCode)
                 } else {
-                    getString(R.string.course_payments_purchase_in_web_with_price, courseHeaderData.course.displayPrice)
+                    getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
                 }
             } else {
                 getString(R.string.course_payments_purchase_in_web)
@@ -195,7 +197,7 @@ class CourseHeaderDelegate(
             courseBuyInWebActionDiscountedNewPrice.text = getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(courseHeaderData.promoCode))
             courseBuyInWebActionDiscountedOldPrice.text = SpannableString(courseHeaderData.course.displayPrice).apply { setSpan(StrikethroughSpan(), 0, courseHeaderData.course.displayPrice?.length ?: 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
 
-            if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode == PromoCode.EMPTY) {
+            if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode != PromoCode.EMPTY) {
                 when (discountButtonAppearanceSplitTest.currentGroup) {
                     DiscountButtonAppearanceSplitTest.Group.DiscountTransparent -> {
                         courseBuyInWebAction.isVisible = false
@@ -238,7 +240,7 @@ class CourseHeaderDelegate(
             shareCourseMenuItem?.isVisible = true
         }
 
-    private fun setupPurchaseButtonText(originalDisplayPrice: String, promoCode: PromoCode): Spannable {
+    private fun getPurchaseButtonText(originalDisplayPrice: String, promoCode: PromoCode): Spannable {
         val promoDisplayPrice = formatPromoDisplayPrice(promoCode)
         val spanString = courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo, promoDisplayPrice, originalDisplayPrice)
         return SpannableString(spanString).apply {
