@@ -19,11 +19,15 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
+import org.stepik.android.view.stories.ui.fragment.StoriesFragment
+import ru.nobird.android.stories.transition.SharedTransitionsManager
+import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView {
     companion object {
         const val TAG = "HomeFragment"
+        const val HOME_DEEPLINK_STORY_KEY = "home_deeplink_story_key"
 
         fun newInstance(): HomeFragment = HomeFragment()
         private const val fastContinueTag = "fastContinueTag"
@@ -54,6 +58,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
+                add(R.id.homeMainContainer, StoriesFragment.newInstance())
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
@@ -63,6 +68,22 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
         homeStreakPresenter.attachView(this)
         homeStreakPresenter.onNeedShowStreak()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        SharedTransitionsManager.registerTransitionDelegate(HOME_DEEPLINK_STORY_KEY, object :
+            SharedTransitionContainerDelegate {
+            override fun getSharedView(position: Int): View? =
+                storyDeepLinkMockView
+
+            override fun onPositionChanged(position: Int) {}
+        })
+    }
+
+    override fun onStop() {
+        SharedTransitionsManager.unregisterTransitionDelegate(HOME_DEEPLINK_STORY_KEY)
+        super.onStop()
     }
 
     override fun onDestroyView() {

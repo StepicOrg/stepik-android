@@ -12,7 +12,6 @@ import org.stepik.android.presentation.user_courses.UserCoursesFeature
 
 interface CatalogFeature {
     data class State(
-        val storiesState: StoriesFeature.State,
         val filtersState: FiltersFeature.State,
         val blocksState: BlocksState,
         val courseContinueState: CourseContinueFeature.State
@@ -33,7 +32,6 @@ interface CatalogFeature {
         /**
          * Message Wrappers
          */
-        data class StoriesMessage(val message: StoriesFeature.Message) : Message()
         data class FiltersMessage(val message: FiltersFeature.Message) : Message()
         data class CourseListMessage(val id: String, val message: CourseListFeature.Message) : Message()
         data class CourseContinueMessage(val message: CourseContinueFeature.Message) : Message()

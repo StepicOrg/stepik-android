@@ -13,9 +13,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
+import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkPresenter
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkView
-import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -76,7 +76,7 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
             requireContext().startActivity(
                 SharedTransitionIntentBuilder.createIntent(
                     requireContext(), StoriesActivity::class.java,
-                    CatalogFragment.CATALOG_DEEPLINK_STORY_KEY, 0, arrayListOf(state.story.toStory())
+                    HomeFragment.HOME_DEEPLINK_STORY_KEY, 0, arrayListOf(state.story.toStory())
                 )
             )
             analytic.reportAmplitudeEvent(
