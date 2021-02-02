@@ -47,7 +47,7 @@ constructor(
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            if (promo == null) Single.just(PromoCode(-1L, "")) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo)
+            if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo)
         ) { courseStats, localSubmissions, promoCode ->
             CourseHeaderData(
                 courseId = course.id,

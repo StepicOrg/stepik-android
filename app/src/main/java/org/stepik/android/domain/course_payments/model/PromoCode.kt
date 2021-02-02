@@ -5,9 +5,13 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class PromoCode(
+data class PromoCode(
     @SerializedName("price")
     val price: Long,
     @SerializedName("currency_code")
     val currencyCode: String
-) : Parcelable
+) : Parcelable {
+    companion object {
+        val EMPTY = PromoCode(-1, "")
+    }
+}

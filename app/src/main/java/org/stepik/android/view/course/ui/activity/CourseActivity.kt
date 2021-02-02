@@ -56,7 +56,6 @@ import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback {
@@ -216,8 +215,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         if (course != null) {
             coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            val code = intent.getPromoCodeFromDeepLink()
-            Timber.d("COde: $code")
             coursePresenter.onCourseId(courseId, source, intent.getPromoCodeFromDeepLink(), forceUpdate)
         }
     }

@@ -53,5 +53,4 @@ constructor(
                 course = courseId,
                 name = name
             ))
-            .map { PromoCode(it.price, it.currencyCode) }
 }
