@@ -45,6 +45,7 @@ import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import org.stepik.android.view.course.routing.getPromoCodeFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
@@ -54,6 +55,7 @@ import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback {
@@ -211,7 +213,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         if (course != null) {
             coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, source, forceUpdate)
+            val code = intent.getPromoCodeFromDeepLink()
+            Timber.d("COde: $code")
+            coursePresenter.onCourseId(courseId, source, intent.getPromoCodeFromDeepLink(), forceUpdate)
         }
     }
 
