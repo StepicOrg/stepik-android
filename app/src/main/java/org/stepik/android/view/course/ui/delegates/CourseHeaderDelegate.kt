@@ -183,7 +183,7 @@ class CourseHeaderDelegate(
             }
 
             courseBuyInWebAction.text = if (courseHeaderData.course.displayPrice != null) {
-                if (courseHeaderData.promoCode.price != -1L) {
+                if (courseHeaderData.promoCode == PromoCode.EMPTY) {
                     setupPurchaseButtonText(courseHeaderData.course.displayPrice as String, courseHeaderData.promoCode)
                 } else {
                     getString(R.string.course_payments_purchase_in_web_with_price, courseHeaderData.course.displayPrice)
@@ -195,7 +195,7 @@ class CourseHeaderDelegate(
             courseBuyInWebActionDiscountedNewPrice.text = getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(courseHeaderData.promoCode))
             courseBuyInWebActionDiscountedOldPrice.text = SpannableString(courseHeaderData.course.displayPrice).apply { setSpan(StrikethroughSpan(), 0, courseHeaderData.course.displayPrice?.length ?: 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
 
-            if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode.price != -1L) {
+            if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode == PromoCode.EMPTY) {
                 when (discountButtonAppearanceSplitTest.currentGroup) {
                     DiscountButtonAppearanceSplitTest.Group.DiscountTransparent -> {
                         courseBuyInWebAction.isVisible = false

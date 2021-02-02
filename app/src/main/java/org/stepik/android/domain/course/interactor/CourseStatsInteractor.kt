@@ -67,7 +67,6 @@ constructor(
     fun checkPromoCodeValidity(courseId: Long, promo: String): Single<PromoCode> =
         coursePaymentsRepository
             .checkPromoCodeValidity(courseId, promo)
-            .onErrorReturnItem(PromoCode(-1L, ""))
 
     /**
      * Load course reviews for not enrolled [courses]

@@ -39,4 +39,5 @@ constructor(
     override fun checkPromoCodeValidity(courseId: Long, name: String): Single<PromoCode> =
         coursePaymentsRemoteDataSource
             .checkPromoCodeValidity(courseId, name)
+            .onErrorReturnItem(PromoCode.EMPTY)
 }
