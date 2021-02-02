@@ -9,7 +9,9 @@ import android.text.style.StrikethroughSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.text.buildSpannedString
+import androidx.core.text.strikeThrough
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -184,18 +186,26 @@ class CourseHeaderDelegate(
 
             val courseDisplayPrice = courseHeaderData.course.displayPrice
 
-            courseBuyInWebAction.text = if (courseDisplayPrice != null) {
-                if (courseHeaderData.promoCode != PromoCode.EMPTY) {
-                    getPurchaseButtonText(courseDisplayPrice, courseHeaderData.promoCode)
+            courseBuyInWebAction.text =
+                if (courseDisplayPrice != null) {
+                    if (courseHeaderData.promoCode != PromoCode.EMPTY) {
+                        getPurchaseButtonText(courseDisplayPrice, courseHeaderData.promoCode)
+                    } else {
+                        getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
+                    }
                 } else {
-                    getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
+                    getString(R.string.course_payments_purchase_in_web)
                 }
-            } else {
-                getString(R.string.course_payments_purchase_in_web)
-            }
 
-            courseBuyInWebActionDiscountedNewPrice.text = getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(courseHeaderData.promoCode))
-            courseBuyInWebActionDiscountedOldPrice.text = SpannableString(courseHeaderData.course.displayPrice).apply { setSpan(StrikethroughSpan(), 0, courseHeaderData.course.displayPrice?.length ?: 0, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE) }
+            courseBuyInWebActionDiscountedNewPrice.text =
+                getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(courseHeaderData.promoCode))
+
+            courseBuyInWebActionDiscountedOldPrice.text =
+                buildSpannedString {
+                    strikeThrough {
+                        append(courseHeaderData.course.displayPrice)
+                    }
+                }
 
             if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode != PromoCode.EMPTY) {
                 when (discountButtonAppearanceSplitTest.currentGroup) {
@@ -206,12 +216,12 @@ class CourseHeaderDelegate(
                     DiscountButtonAppearanceSplitTest.Group.DiscountGreen -> {
                         courseBuyInWebAction.isVisible = true
                         courseBuyInWebActionDiscounted.isVisible = false
-                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, ContextCompat.getColorStateList(courseActivity, R.color.color_overlay_green))
+                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, AppCompatResources.getColorStateList(courseActivity, R.color.color_overlay_green))
                     }
                     DiscountButtonAppearanceSplitTest.Group.DiscountPurple -> {
                         courseBuyInWebAction.isVisible = true
                         courseBuyInWebActionDiscounted.isVisible = false
-                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, ContextCompat.getColorStateList(courseActivity, R.color.color_overlay_violet))
+                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, AppCompatResources.getColorStateList(courseActivity, R.color.color_overlay_violet))
                     }
                 }
             } else {
