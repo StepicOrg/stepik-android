@@ -7,11 +7,11 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class PromoCode(
     @SerializedName("price")
-    val price: Long,
+    val price: String,
     @SerializedName("currency_code")
     val currencyCode: String
 ) : Parcelable {
     companion object {
-        val EMPTY = PromoCode(-1, "")
+        val EMPTY = PromoCode("", "")
     }
 }

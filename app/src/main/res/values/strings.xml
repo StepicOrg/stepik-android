@@ -995,6 +995,6 @@
     <string name="story_deeplink_open_fail">Failed to open story</string>
 
     <!-- Currency format -->
-    <string name="rub_format" translatable="false">%d ₽</string>
-    <string name="usd_format" translatable="false">$%d</string>
+    <string name="rub_format" translatable="false">%s ₽</string>
+    <string name="usd_format" translatable="false">$%s</string>
 </resources>
