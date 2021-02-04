@@ -6,6 +6,8 @@ import org.stepic.droid.util.getPathSegmentParameter
 
 internal const val COURSE_PATH_SEGMENT = "course"
 
+internal const val QUERY_PARAMETER_PROMO = "promo"
+
 fun Intent.getCourseIdFromDeepLink(): Long? {
     val data = this.data ?: return null
 
@@ -15,6 +17,9 @@ fun Intent.getCourseIdFromDeepLink(): Long? {
 
     return HtmlHelper.parseIdFromSlug(path)
 }
+
+fun Intent.getPromoCodeFromDeepLink(): String? =
+    this.data?.getQueryParameter(QUERY_PARAMETER_PROMO)
 
 enum class CourseScreenTab(val path: String) {
     INFO(""),

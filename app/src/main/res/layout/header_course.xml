@@ -40,15 +40,27 @@
         android:text="@string/course_payments_purchase_in_app"
         android:layout_marginTop="?actionBarSize" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/courseBuyInWebAction"
+    <FrameLayout
+        android:id="@+id/purchaseContainer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.Green"
-        app:cornerRadius="@dimen/header_action_radius"
-        android:minWidth="200dp"
-        android:text="@string/course_payments_purchase_in_web"
-        android:layout_marginTop="?actionBarSize" />
+        android:layout_height="wrap_content" >
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/courseBuyInWebAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.Green"
+            app:cornerRadius="@dimen/header_action_radius"
+            android:minWidth="200dp"
+            android:text="@string/course_payments_purchase_in_web"
+            android:layout_marginTop="?actionBarSize" />
+
+        <include
+            android:id="@+id/courseBuyInWebActionDiscounted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="?actionBarSize"
+            layout="@layout/view_discounted_purchase_button" />
+    </FrameLayout>
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseEnrollmentProgress"

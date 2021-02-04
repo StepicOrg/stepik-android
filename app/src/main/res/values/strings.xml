@@ -656,6 +656,7 @@
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
     <string name="course_payments_purchase_in_web_with_price">Buy for %s</string>
+    <string name="course_payments_purchase_in_web_with_price_promo">Buy for %s %s</string>
 
     <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
     <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>
@@ -992,4 +993,8 @@
 
     <string name="protocol_host_url" translatable="false">%s://%s</string>
     <string name="story_deeplink_open_fail">Failed to open story</string>
+
+    <!-- Currency format -->
+    <string name="rub_format" translatable="false">%s ₽</string>
+    <string name="usd_format" translatable="false">$%s</string>
 </resources>
