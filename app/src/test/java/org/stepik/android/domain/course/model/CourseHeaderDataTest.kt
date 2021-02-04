@@ -34,7 +34,7 @@ class CourseHeaderDataTest {
                 enrollmentState = EnrollmentState.NotEnrolledWeb
             ),
             localSubmissionsCount = 5,
-            promoCode = PromoCode(100L, "RUB")
+            promoCode = PromoCode("200", "RUB")
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()
