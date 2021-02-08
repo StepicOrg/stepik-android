@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.layout_step_tab_icon.view.*
 import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -403,6 +404,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     override fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?) {
         if (discussionThread != null) {
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Discussions.SCREEN_OPENED,
+                mapOf(AmplitudeAnalytic.Discussions.Params.SOURCE to AmplitudeAnalytic.Discussions.Values.DISCUSSION)
+            )
             screenManager.openComments(this, discussionThread, step, discussionId, false)
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE)

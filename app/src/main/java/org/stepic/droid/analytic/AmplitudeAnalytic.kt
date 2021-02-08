@@ -324,4 +324,38 @@ interface AmplitudeAnalytic {
         const val REVIEW_START_REVIEW = "Review Start Review"
         const val REVIEW_VIEW_REVIEW = "Review View Review"
     }
+
+    object Settings {
+        const val SCREEN_OPENED = "Settings screen opened"
+    }
+
+    object Sections {
+        const val SCREEN_OPENED = "Sections screen opened"
+
+        object Params {
+            const val COURSE = "course"
+            const val TITLE = "title"
+        }
+    }
+
+    object Discussions {
+        const val SCREEN_OPENED = "Discussions screen opened"
+
+        object Params {
+            const val SOURCE = "source"
+        }
+
+        object Values {
+            /***
+             * Source
+             */
+            const val DISCUSSION = "discussion"
+            const val REPLY = "reply"
+            const val DEFAULT = "default"
+        }
+    }
+
+    object Certificates {
+        const val SCREEN_OPENED = "Certificates screen opened"
+    }
 }
