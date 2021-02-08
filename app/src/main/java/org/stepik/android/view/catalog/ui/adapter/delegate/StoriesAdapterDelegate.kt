@@ -12,7 +12,6 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import timber.log.Timber
 
 class StoriesAdapterDelegate(
     private val onStoryClicked: (Story, Int) -> Unit
