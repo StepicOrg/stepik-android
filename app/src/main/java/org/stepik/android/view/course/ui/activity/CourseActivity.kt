@@ -519,6 +519,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         val customTabsIntent = builder.build()
         val packageName = CustomTabsHelper.getPackageNameToUse(this)
         if (packageName == null) {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.ChromeTab.FALLBACK_USED)
             InAppWebViewDialogFragment
                 .newInstance(getString(R.string.course_purchase), url, isProvideAuth = false)
                 .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)

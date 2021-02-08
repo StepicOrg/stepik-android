@@ -307,4 +307,8 @@ interface AmplitudeAnalytic {
         const val REVIEW_START_REVIEW = "Review Start Review"
         const val REVIEW_VIEW_REVIEW = "Review View Review"
     }
+
+    object ChromeTab {
+        const val FALLBACK_USED = "Chrome Tab Fallback Used"
+    }
 }
