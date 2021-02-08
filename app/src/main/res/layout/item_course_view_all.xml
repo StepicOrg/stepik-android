@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewAllButton"
+    style="@style/Widget.AppTheme.Button.OutlinedButton"
     android:layout_width="match_parent"
     android:layout_height="@dimen/course_item_height"
     android:layout_margin="@dimen/course_item_margin"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="@dimen/course_item_radius">
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/viewAllText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/view_all_courses"
-        android:textAppearance="?textAppearanceBody1"
-        android:theme="@style/ThemeOverlay.Violet"
-        android:drawablePadding="8dp"
-        app:drawableEndCompat="@drawable/ic_arrow_forward"
-        tools:text="@string/view_all_courses"/>
-
-</com.google.android.material.card.MaterialCardView>
+    android:gravity="center"
+    android:text="@string/view_all_courses"
+    android:textAppearance="?textAppearanceBody1"
+    android:theme="@style/ThemeOverlay.Violet"
+    app:cornerRadius="@dimen/course_item_radius"
+    app:icon="@drawable/ic_arrow_forward"
+    app:iconGravity="textEnd"
+    app:iconPadding="8dp"
+    tools:text="@string/view_all_courses" />

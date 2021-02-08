@@ -30,7 +30,7 @@ class CourseListViewAllAdapterDelegate(
         }
 
         override fun onBind(data: CourseListItem) {
-            TextViewCompat.setCompoundDrawableTintList(viewAllText, ColorStateList.valueOf(viewAllText.context.resolveColorAttribute(R.attr.colorPrimary)))
+            TextViewCompat.setCompoundDrawableTintList(viewAllButton, ColorStateList.valueOf(viewAllButton.context.resolveColorAttribute(R.attr.colorPrimary)))
         }
     }
 }
