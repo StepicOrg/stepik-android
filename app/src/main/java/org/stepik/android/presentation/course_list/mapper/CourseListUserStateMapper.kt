@@ -74,6 +74,9 @@ constructor(
 
                                     is CourseListItem.PlaceHolder ->
                                         it.courseId
+
+                                    else ->
+                                        null
                                 }
                             }
                             ?.let { lastCourseId ->
