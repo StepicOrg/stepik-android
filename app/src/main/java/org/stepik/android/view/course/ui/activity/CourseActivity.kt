@@ -74,8 +74,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
-        private const val CUSTOM_TAB_REQUEST_CODE = 9231
-
         fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
@@ -480,9 +478,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == CUSTOM_TAB_REQUEST_CODE) {
-//            coursePresenter.handleCoursePurchasePressed()
-        }
         if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
         }
