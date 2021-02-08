@@ -191,9 +191,26 @@ interface AmplitudeAnalytic {
     object Achievements {
         const val NOTIFICATION_RECEIVED = "Achievement notification received"
 
+        const val SCREEN_OPENED = "Achievements screen opened"
+        const val POPUP_OPENED = "Achievement popup opened"
+        const val SHARE_PRESSED = "Achievement share pressed"
+
         object Params {
             const val KIND = "achievement_kind"
             const val LEVEL = "achievement_level"
+
+            const val IS_PERSONAL = "is_personal"
+
+            const val SOURCE = "source"
+        }
+
+        object Values {
+            /***
+             * Source
+             */
+            const val PROFILE = "profile"
+            const val ACHIEVEMENT_LIST = "achievement-list"
+            const val NOTIFICATION = "notification"
         }
     }
 
