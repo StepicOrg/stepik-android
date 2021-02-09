@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Helper class for Custom Tabs.
  */
-public class CustomTabsHelper {
+public final class CustomTabsHelper {
     private static final String TAG = "CustomTabsHelper";
     static final String STABLE_PACKAGE = "com.android.chrome";
     static final String BETA_PACKAGE = "com.chrome.beta";
@@ -111,12 +111,5 @@ public class CustomTabsHelper {
             Log.e(TAG, "Runtime exception while getting specialized handlers");
         }
         return false;
-    }
-
-    /**
-     * @return All possible chrome package names that provide custom tabs feature.
-     */
-    public static String[] getPackages() {
-        return new String[]{"", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE};
     }
 }
