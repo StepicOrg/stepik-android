@@ -13,13 +13,12 @@ constructor(
     analytic,
     sharedPreferenceHelper,
 
-    name = "course_purchase_webview",
+    name = "course_purchase_webview_2",
     groups = Group.values()
 ) {
-    enum class Group(
-        val isInAppWebViewUsed: Boolean
-    ) : SplitTest.Group {
-        Control(isInAppWebViewUsed = false),
-        InAppWebview(isInAppWebViewUsed = true)
+    enum class Group : SplitTest.Group {
+        Control,
+        InAppWebview,
+        ChromeTab
     }
 }
