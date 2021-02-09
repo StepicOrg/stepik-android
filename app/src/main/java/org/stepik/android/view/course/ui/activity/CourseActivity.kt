@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -515,11 +516,19 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     override fun handleUrl(url: String) {
         val builder = CustomTabsIntent.Builder()
         builder.setShowTitle(true)
-        builder.setToolbarColor(resolveColorAttribute(R.attr.colorSurface))
+        builder.setDefaultColorSchemeParams(
+            CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(resolveColorAttribute(R.attr.colorSurface))
+                .setSecondaryToolbarColor(resolveColorAttribute(R.attr.colorSurface))
+                .build()
+        )
         val customTabsIntent = builder.build()
         val packageName = CustomTabsHelper.getPackageNameToUse(this)
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.ChromeTab.CHROME_TAB_OPENED,
+            mapOf(AmplitudeAnalytic.ChromeTab.Params.FALLBACK to (packageName == null))
+        )
         if (packageName == null) {
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.ChromeTab.FALLBACK_USED)
             InAppWebViewDialogFragment
                 .newInstance(getString(R.string.course_purchase), url, isProvideAuth = false)
                 .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)

@@ -309,6 +309,10 @@ interface AmplitudeAnalytic {
     }
 
     object ChromeTab {
-        const val FALLBACK_USED = "Chrome Tab Fallback Used"
+        const val CHROME_TAB_OPENED = "Chrome tab opened"
+
+        object Params {
+            const val FALLBACK = "fallback"
+        }
     }
 }
