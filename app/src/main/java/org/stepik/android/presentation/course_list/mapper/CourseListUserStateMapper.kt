@@ -75,7 +75,7 @@ constructor(
                                     is CourseListItem.PlaceHolder ->
                                         it.courseId
 
-                                    else ->
+                                    is CourseListItem.ViewAll ->
                                         null
                                 }
                             }
