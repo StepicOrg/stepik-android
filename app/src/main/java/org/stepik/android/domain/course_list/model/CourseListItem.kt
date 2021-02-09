@@ -17,4 +17,6 @@ sealed class CourseListItem {
     }
 
     class PlaceHolder(val courseId: Long = -1) : CourseListItem()
+
+    object ViewAll : CourseListItem()
 }
