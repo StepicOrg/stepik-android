@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.step_quiz.reducer
 
+import org.stepik.android.cache.code_preference.model.CodePreference
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -96,6 +97,13 @@ constructor() : StateReducer<State, Message, Action> {
                     val submission = createLocalSubmission(state, message.reply)
 
                     state.copy(submissionState = StepQuizFeature.SubmissionState.Loaded(submission)) to setOf(Action.SaveLocalSubmission(submission))
+                } else {
+                    null
+                }
+
+            is Message.CreateCodePreference ->
+                if (state is State.AttemptLoaded) {
+                    state to setOf(Action.SaveCodePreference(CodePreference(message.languagesKey, message.language)))
                 } else {
                     null
                 }

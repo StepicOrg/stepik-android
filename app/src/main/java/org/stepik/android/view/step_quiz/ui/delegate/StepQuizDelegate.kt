@@ -10,6 +10,7 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updateMarginsRelative
 import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.toPx
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
@@ -182,5 +183,11 @@ class StepQuizDelegate(
             ?: return
 
         onNewMessage(StepQuizFeature.Message.SyncReply(reply))
+
+        if (step.block?.name == AppConstants.TYPE_CODE) {
+            val languagesKey = step.block?.options?.codeTemplates?.keys?.toList()?.sorted() ?: return
+            val preferredLanguage = reply.language ?: return
+            onNewMessage(StepQuizFeature.Message.CreateCodePreference(languagesKey = languagesKey.toString(), language = preferredLanguage))
+        }
     }
 }

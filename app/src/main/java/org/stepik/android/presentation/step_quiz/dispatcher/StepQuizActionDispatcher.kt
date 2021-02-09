@@ -9,8 +9,13 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.getStepType
+import org.stepik.android.cache.code_preference.model.CodePreference
+import org.stepik.android.domain.code_preference.interactor.CodePreferenceInteractor
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
+import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import ru.nobird.android.core.model.mapOfNotNull
@@ -23,6 +28,7 @@ class StepQuizActionDispatcher
 constructor(
     private val analytic: Analytic,
     private val stepQuizInteractor: StepQuizInteractor,
+    private val codePreferenceInteractor: CodePreferenceInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -37,11 +43,22 @@ constructor(
                     .flatMap { attempt ->
                         Singles.zip(
                             getSubmissionState(attempt.id),
-                            stepQuizInteractor.getStepRestrictions(action.stepWrapper, action.lessonData)
-                        ) { submissionState, stepRestrictions ->
+                            stepQuizInteractor.getStepRestrictions(action.stepWrapper, action.lessonData),
+                            resolveCodeQuizLanguage(action.stepWrapper)
+                        ) { submissionState, stepRestrictions, codePreference ->
+                            val updatedSubmissionState = if (codePreference != CodePreference.EMPTY && submissionState is StepQuizFeature.SubmissionState.Empty) {
+                                StepQuizFeature.SubmissionState.Empty(
+                                    Reply(
+                                        language = codePreference.preferredLanguage,
+                                        code = action.stepWrapper.step.block?.options?.codeTemplates?.get(codePreference.preferredLanguage)
+                                    )
+                                )
+                            } else {
+                                submissionState
+                            }
                             StepQuizFeature.Message.FetchAttemptSuccess(
                                 attempt,
-                                submissionState,
+                                updatedSubmissionState,
                                 stepRestrictions
                             )
                         }
@@ -107,6 +124,13 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(onError = emptyOnErrorStub)
+
+            is StepQuizFeature.Action.SaveCodePreference ->
+                compositeDisposable += codePreferenceInteractor
+                    .saveCodePreference(action.codePreference)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(onError = emptyOnErrorStub)
         }
     }
 
@@ -115,4 +139,13 @@ constructor(
             .getSubmission(attemptId)
             .map<StepQuizFeature.SubmissionState> { StepQuizFeature.SubmissionState.Loaded(it) }
             .toSingle(StepQuizFeature.SubmissionState.Empty())
+
+    private fun resolveCodeQuizLanguage(stepWrapper: StepPersistentWrapper): Single<CodePreference> =
+        if (stepWrapper.step.block?.name == AppConstants.TYPE_CODE) {
+            stepWrapper.step.block?.options?.codeTemplates?.entries?.let {
+                codePreferenceInteractor.getCodePreference(stepWrapper.step.block?.options?.codeTemplates?.keys?.toList()?.sorted().toString())
+            } ?: Single.just(CodePreference.EMPTY)
+        } else {
+            Single.just(CodePreference.EMPTY)
+        }
 }

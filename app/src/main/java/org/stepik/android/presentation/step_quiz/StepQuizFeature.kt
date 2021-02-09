@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.step_quiz
 
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.cache.code_preference.model.CodePreference
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.model.Reply
@@ -47,6 +48,7 @@ interface StepQuizFeature {
         object CreateSubmissionError : Message()
 
         data class SyncReply(val reply: Reply) : Message()
+        data class CreateCodePreference(val languagesKey: String, val language: String) : Message()
     }
 
     sealed class Action {
@@ -55,6 +57,7 @@ interface StepQuizFeature {
         data class CreateAttempt(val step: Step, val attempt: Attempt, val submissionState: SubmissionState) : Action()
         data class CreateSubmission(val step: Step, val attemptId: Long, val reply: Reply) : Action()
         data class SaveLocalSubmission(val submission: Submission) : Action()
+        data class SaveCodePreference(val codePreference: CodePreference) : Action()
 
         sealed class ViewAction : Action() {
             object ShowNetworkError : ViewAction() // error
