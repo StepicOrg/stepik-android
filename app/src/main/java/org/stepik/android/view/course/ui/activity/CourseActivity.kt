@@ -55,6 +55,7 @@ import org.stepik.android.view.course.routing.getPromoCodeFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
+import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
@@ -96,12 +97,20 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     private var courseId: Long = NO_ID
     private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(page: Int) {
-            if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
-                analytic
-                    .reportAmplitudeEvent(
-                        AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
-                        mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
-                    )
+            when (coursePagerAdapter.getItem(page)) {
+                is CourseReviewsFragment ->
+                    analytic
+                        .reportAmplitudeEvent(
+                            AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                            mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                        )
+
+                is CourseContentFragment ->
+                    analytic
+                        .reportAmplitudeEvent(
+                            AmplitudeAnalytic.Sections.SCREEN_OPENED,
+                            mapOf(AmplitudeAnalytic.Sections.Params.COURSE to courseId.toString())
+                        )
             }
         }
     }

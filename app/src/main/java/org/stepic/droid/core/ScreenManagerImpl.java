@@ -91,7 +91,9 @@ import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -274,6 +276,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showCertificates(Context context, long userId) {
         analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES, userId + "");
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Certificates.SCREEN_OPENED);
         Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
         context.startActivity(intent);
     }
@@ -359,6 +362,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showSettings(Activity sourceActivity) {
         analytic.reportEvent(Analytic.Screens.SHOW_SETTINGS);
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Settings.SCREEN_OPENED);
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);
         sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
@@ -596,6 +600,9 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showAchievementsList(Context context, long userId, boolean isMyProfile) {
         Intent intent = AchievementsListActivity.Companion.createIntent(context, userId, isMyProfile);
+        Map<String, Object> params = new HashMap<>();
+        params.put(AmplitudeAnalytic.Achievements.Params.IS_PERSONAL, isMyProfile);
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Achievements.SCREEN_OPENED, params);
         context.startActivity(intent);
     }
 
