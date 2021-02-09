@@ -7,6 +7,7 @@ import org.stepik.android.cache.base.mapper.CollectionConverter
 import org.stepik.android.cache.base.mapper.DateConverter
 import org.stepik.android.cache.catalog.dao.CatalogBlockDao
 import org.stepik.android.cache.catalog.mapper.CatalogBlockContentTypeConverter
+import org.stepik.android.cache.code_preference.dao.CodePreferenceDao
 import org.stepik.android.cache.review_instruction.dao.ReviewInstructionDao
 import org.stepik.android.cache.review_instruction.mapper.ReviewStrategyTypeConverter
 import org.stepik.android.cache.review_session.dao.ReviewSessionDao
@@ -16,6 +17,7 @@ import org.stepik.android.cache.visited_courses.dao.VisitedCourseDao
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_session.model.ReviewSession
+import org.stepik.android.cache.code_preference.model.CodePreference
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
 
 @Database(
@@ -24,7 +26,8 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
         ReviewSession::class,
         VisitedCourse::class,
         CatalogBlock::class,
-        StoryReactionEntity::class
+        StoryReactionEntity::class,
+        CodePreference::class
     ],
     version = AppDatabase.VERSION,
     exportSchema = false
@@ -38,7 +41,7 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val VERSION = 63
+        const val VERSION = 64
         const val NAME = "stepic_database.db"
     }
 
@@ -47,4 +50,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun visitedCourseDao(): VisitedCourseDao
     abstract fun catalogBlockDao(): CatalogBlockDao
     abstract fun storyReactionDao(): StoryReactionDao
+    abstract fun codePreferenceDao(): CodePreferenceDao
 }
