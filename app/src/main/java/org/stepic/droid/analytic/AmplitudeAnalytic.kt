@@ -358,4 +358,12 @@ interface AmplitudeAnalytic {
     object Certificates {
         const val SCREEN_OPENED = "Certificates screen opened"
     }
+
+    object ChromeTab {
+        const val CHROME_TAB_OPENED = "Chrome tab opened"
+
+        object Params {
+            const val FALLBACK = "fallback"
+        }
+    }
 }
