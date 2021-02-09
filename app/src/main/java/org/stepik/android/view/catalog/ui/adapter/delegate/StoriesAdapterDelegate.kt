@@ -49,6 +49,7 @@ class StoriesAdapterDelegate(
             viewStateDelegate.switchState(state)
             if (state is StoriesFeature.State.Success) {
                 storiesAdapter.setData(state.stories, state.viewedStoriesIds)
+                storiesAdapter.selected = -1
             }
         }
     }
