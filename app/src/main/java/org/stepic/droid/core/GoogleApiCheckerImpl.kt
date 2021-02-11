@@ -11,14 +11,14 @@ import javax.inject.Inject
 class GoogleApiCheckerImpl
 @Inject
 constructor(
-        private val context: Context,
-        private val analytic: Analytic
+    private val context: Context,
+    private val analytic: Analytic
 ) : GoogleApiChecker {
 
     override fun checkPlayServices(): Boolean {
         val apiAvailability = GoogleApiAvailability.getInstance()
         val resultCode = apiAvailability.isGooglePlayServicesAvailable(context)
-        return if (resultCode != ConnectionResult.SUCCESS) {
+        val isAvailable = if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 //do not show Google Services dialog
                 analytic.reportEvent(Analytic.Error.GOOGLE_SERVICES_TOO_OLD) //it is resolvable, but we do not want push user for updating services
@@ -27,5 +27,7 @@ constructor(
         } else {
             true
         }
+        analytic.setGoogleServicesAvailable(isAvailable)
+        return isAvailable
     }
 }
