@@ -122,6 +122,10 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Discussions.SCREEN_OPENED,
+                mapOf(AmplitudeAnalytic.Discussions.Params.SOURCE to AmplitudeAnalytic.Discussions.Values.DEFAULT)
+            )
             screenManager
                 .openComments(
                     activity,
