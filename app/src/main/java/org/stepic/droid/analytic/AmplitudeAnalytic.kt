@@ -12,6 +12,7 @@ interface AmplitudeAnalytic {
         const val TEACHING_COURSES_COUNT = "teaching_courses_count"
         const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
         const val IS_AR_SUPPORTED = "is_ar_supported"
+        const val IS_GOOGLE_SERVICES_AVAILABLE = "is_google_services_available"
     }
 
     object Launch {
