@@ -24,8 +24,18 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
+
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
+    sourceSets {
+        androidTest.assets.srcDirs +=
+                files("$projectDir/schemas".toString())
+    }
 
     signingConfigs {
         debug {
@@ -94,7 +104,7 @@ android {
                     'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro', 'proguard-rules-dev.pro'
@@ -250,6 +260,7 @@ dependencies {
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.roomTesting
 
     debugImplementation libraries.soloader
     debugImplementation libraries.flipperCore
