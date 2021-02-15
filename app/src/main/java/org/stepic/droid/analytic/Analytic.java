@@ -442,6 +442,7 @@ public interface Analytic {
     void setScreenOrientation(int orientation);
     void setStreaksNotificationsEnabled(boolean isEnabled);
     void setTeachingCoursesCount(int coursesCount);
+    void setGoogleServicesAvailable(boolean isAvailable);
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
 
