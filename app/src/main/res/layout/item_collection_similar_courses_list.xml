@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/catalogBlockContainerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_marginTop="8dp"
+        layout="@layout/view_divider_vertical" />
+
+    <TextView
+        android:id="@+id/containerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:gravity="start"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:text="@string/similar_courses_title"
+        tools:ignore="MissingPrefix"
+        tools:text="@string/my_courses_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/courseListsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/catalogBlockContainer"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:spanCount="2"
+        tools:orientation="horizontal"
+        tools:listitem="@layout/item_simple_course_list_default" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

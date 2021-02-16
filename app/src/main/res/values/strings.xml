@@ -992,4 +992,7 @@
 
     <string name="protocol_host_url" translatable="false">%s://%s</string>
 
+    <string name="authors_title">Course authors</string>
+    <string name="similar_courses_title">Similar courses</string>
+
 </resources>
