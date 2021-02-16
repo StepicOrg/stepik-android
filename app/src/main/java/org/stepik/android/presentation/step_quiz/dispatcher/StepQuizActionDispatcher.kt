@@ -1,10 +1,12 @@
 package org.stepik.android.presentation.step_quiz.dispatcher
 
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -18,6 +20,7 @@ import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
+import org.stepik.android.view.injection.step_quiz.CodePreferenceBus
 import ru.nobird.android.core.model.mapOfNotNull
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
@@ -30,11 +33,24 @@ constructor(
     private val stepQuizInteractor: StepQuizInteractor,
     private val codePreferenceInteractor: CodePreferenceInteractor,
 
+    @CodePreferenceBus
+    private val codePreferenceObservable: Observable<Pair<String, String>>,
+    @CodePreferenceBus
+    private val codePreferencePublisher: PublishSubject<Pair<String, String>>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : RxActionDispatcher<StepQuizFeature.Action, StepQuizFeature.Message>() {
+    init {
+        compositeDisposable += codePreferenceObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { (language, code) -> onNewMessage(StepQuizFeature.Message.InitWithCodePreference(language, code)) },
+                onError = emptyOnErrorStub
+            )
+    }
     override fun handleAction(action: StepQuizFeature.Action) {
         when (action) {
             is StepQuizFeature.Action.FetchAttempt ->
@@ -131,6 +147,9 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(onError = emptyOnErrorStub)
+
+            is StepQuizFeature.Action.PublishCodePreference ->
+                codePreferencePublisher.onNext(action.language to action.code)
         }
     }
 

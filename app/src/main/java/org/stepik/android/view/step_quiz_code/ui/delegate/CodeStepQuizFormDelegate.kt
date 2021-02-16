@@ -60,11 +60,13 @@ class CodeStepQuizFormDelegate(
          * Lang chooser
          */
         stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate {
+            val codeTemplate = codeOptions.codeTemplates[it] ?: ""
             onNewMessage(StepQuizFeature.Message.CreateCodePreference(
                 languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
-                language = it
+                language = it,
+                codeTemplate = codeTemplate
             ))
-            state = CodeStepQuizFormState.Lang(it, codeOptions.codeTemplates[it] ?: "")
+            state = CodeStepQuizFormState.Lang(it, codeTemplate)
         }
         stepQuizCodeLangChooserAdapter.items = codeOptions.codeTemplates.keys.toList().sorted()
 
@@ -102,6 +104,11 @@ class CodeStepQuizFormDelegate(
         if (state !is CodeStepQuizFormState.Lang) {
             return
         }
+        onNewMessage(StepQuizFeature.Message.CreateCodePreference(
+            languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
+            language = lang,
+            codeTemplate = codeOptions.codeTemplates[lang] ?: ""
+        ))
         state = CodeStepQuizFormState.Lang(lang, codeOptions.codeTemplates[lang] ?: "")
     }
 

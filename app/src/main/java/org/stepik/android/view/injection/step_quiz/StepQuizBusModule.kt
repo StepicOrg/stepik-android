@@ -30,5 +30,24 @@ abstract class StepQuizBusModule {
             scheduler: Scheduler
         ): Observable<Long> =
             stepQuizPublisher.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @CodePreferenceBus
+        internal fun provideCodePreferencePublisher(): PublishSubject<Pair<String, String>> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @CodePreferenceBus
+        internal fun provideCodePreferenceObservable(
+            @CodePreferenceBus
+            codePreferencePublisher: PublishSubject<Pair<String, String>>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<Pair<String, String>> =
+            codePreferencePublisher.observeOn(scheduler)
     }
 }

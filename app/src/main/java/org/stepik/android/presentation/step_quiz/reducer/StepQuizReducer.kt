@@ -103,10 +103,18 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.CreateCodePreference ->
                 if (state is State.AttemptLoaded) {
-                    state to setOf(Action.SaveCodePreference(CodePreference(message.languagesKey, message.language)))
+                    state to setOf(Action.SaveCodePreference(CodePreference(message.languagesKey, message.language)), Action.PublishCodePreference(message.language, message.codeTemplate))
                 } else {
                     null
                 }
+
+            is Message.InitWithCodePreference -> {
+                if (state is State.AttemptLoaded && state.submissionState is StepQuizFeature.SubmissionState.Empty) {
+                    state.copy(submissionState = StepQuizFeature.SubmissionState.Empty(Reply(language = message.language, code = message.code))) to emptySet<Action>()
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 
     private fun createLocalSubmission(oldState: State.AttemptLoaded, reply: Reply): Submission {

@@ -48,7 +48,8 @@ interface StepQuizFeature {
         object CreateSubmissionError : Message()
 
         data class SyncReply(val reply: Reply) : Message()
-        data class CreateCodePreference(val languagesKey: String, val language: String) : Message()
+        data class CreateCodePreference(val languagesKey: String, val language: String, val codeTemplate: String) : Message()
+        data class InitWithCodePreference(val language: String, val code: String) : Message()
     }
 
     sealed class Action {
@@ -58,6 +59,7 @@ interface StepQuizFeature {
         data class CreateSubmission(val step: Step, val attemptId: Long, val reply: Reply) : Action()
         data class SaveLocalSubmission(val submission: Submission) : Action()
         data class SaveCodePreference(val codePreference: CodePreference) : Action()
+        data class PublishCodePreference(val language: String, val code: String) : Action()
 
         sealed class ViewAction : Action() {
             object ShowNetworkError : ViewAction() // error
