@@ -46,6 +46,7 @@ class CodeStepQuizFragment :
 
         codeStepQuizFormDelegate = CodeStepQuizFormDelegate(
             containerView = view,
+            stepId = stepId,
             codeOptions = codeOptions,
             codeLayoutDelegate = CodeLayoutDelegate(
                 codeContainerView = view,

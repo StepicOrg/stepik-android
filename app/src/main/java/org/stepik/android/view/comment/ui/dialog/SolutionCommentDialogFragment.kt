@@ -206,6 +206,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_CODE ->
                 CodeStepQuizFormDelegate(
                     containerView = view,
+                    stepId = step.id,
                     codeOptions = step.block?.options!!,
                     codeLayoutDelegate =
                         CodeLayoutDelegate(

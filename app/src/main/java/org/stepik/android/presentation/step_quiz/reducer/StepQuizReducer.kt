@@ -103,14 +103,39 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.CreateCodePreference ->
                 if (state is State.AttemptLoaded) {
-                    state to setOf(Action.SaveCodePreference(CodePreference(message.languagesKey, message.language)), Action.PublishCodePreference(message.language, message.codeTemplate))
+                    state to setOf(Action.SaveCodePreference(CodePreference(message.languagesKey, message.language)), Action.PublishCodePreference(message.initCodePreference))
                 } else {
                     null
                 }
 
             is Message.InitWithCodePreference -> {
-                if (state is State.AttemptLoaded && state.submissionState is StepQuizFeature.SubmissionState.Empty) {
-                    state.copy(submissionState = StepQuizFeature.SubmissionState.Empty(Reply(language = message.language, code = message.code))) to emptySet<Action>()
+                if (state is State.AttemptLoaded) {
+                    val newState: State.AttemptLoaded = when (state.submissionState) {
+                        is StepQuizFeature.SubmissionState.Empty -> {
+                            state.copy(submissionState = StepQuizFeature.SubmissionState.Empty(Reply(language = message.initCodePreference.language, code = message.initCodePreference.codeTemplates[message.initCodePreference.language])))
+                        }
+                        is StepQuizFeature.SubmissionState.Loaded -> {
+                            val codeFromSubmission = state.submissionState.submission.reply?.code
+                            val codeTemplate = message.initCodePreference.codeTemplates[state.submissionState.submission.reply?.language]
+                            if (message.initCodePreference.sourceStepId == state.attempt.step || codeFromSubmission == codeTemplate) {
+                                state.copy(
+                                    submissionState = state.submissionState.copy(
+                                        submission = state.submissionState.submission.copy(
+                                            _reply = state.submissionState.submission._reply?.copy(
+                                                language = message.initCodePreference.language,
+                                                code = message.initCodePreference.codeTemplates[message.initCodePreference.language]
+                                            )
+                                        )
+                                    )
+                                )
+                            } else {
+                                state
+                            }
+                        }
+                        else ->
+                            throw IllegalArgumentException()
+                    }
+                    newState to emptySet<Action>()
                 } else {
                     null
                 }
