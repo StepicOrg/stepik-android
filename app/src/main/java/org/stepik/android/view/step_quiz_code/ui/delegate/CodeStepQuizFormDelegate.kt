@@ -23,7 +23,8 @@ class CodeStepQuizFormDelegate(
     containerView: View,
     private val codeOptions: CodeOptions,
     private val codeLayoutDelegate: CodeLayoutDelegate,
-    private val onFullscreenClicked: (lang: String, code: String) -> Unit
+    private val onFullscreenClicked: (lang: String, code: String) -> Unit,
+    private val onNewMessage: (StepQuizFeature.Message) -> Unit
 ) : StepQuizFormDelegate {
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
@@ -58,7 +59,13 @@ class CodeStepQuizFormDelegate(
         /**
          * Lang chooser
          */
-        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, codeOptions.codeTemplates[it] ?: "") }
+        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate {
+            onNewMessage(StepQuizFeature.Message.CreateCodePreference(
+                languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
+                language = it
+            ))
+            state = CodeStepQuizFormState.Lang(it, codeOptions.codeTemplates[it] ?: "")
+        }
         stepQuizCodeLangChooserAdapter.items = codeOptions.codeTemplates.keys.toList().sorted()
 
         stepQuizCodeLangChooserTitle.setCompoundDrawables(start = R.drawable.ic_step_quiz_code_lang)

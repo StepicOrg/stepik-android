@@ -215,8 +215,10 @@ class SolutionCommentDialogFragment : DialogFragment() {
                             codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, isCollapseable = true),
                             codeToolbarAdapter = null,
                             onChangeLanguageClicked = {}
-                        )
-                ) { _, _ -> }
+                        ),
+                    onFullscreenClicked = { _, _ -> },
+                    onNewMessage = { }
+                )
 
             AppConstants.TYPE_SORTING ->
                 SortingStepQuizFormDelegate(view)

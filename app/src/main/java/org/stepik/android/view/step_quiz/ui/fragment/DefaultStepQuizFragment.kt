@@ -53,7 +53,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     protected var stepId: Long by argument()
 
-    private val viewModel: StepQuizViewModel by viewModels { viewModelFactory }
+    internal val viewModel: StepQuizViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate

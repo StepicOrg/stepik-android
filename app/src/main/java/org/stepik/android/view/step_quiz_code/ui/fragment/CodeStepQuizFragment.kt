@@ -55,7 +55,8 @@ class CodeStepQuizFragment :
                 codeToolbarAdapter = null,
                 onChangeLanguageClicked = ::onChangeLanguageClicked
             ),
-            onFullscreenClicked = ::onFullScreenClicked
+            onFullscreenClicked = ::onFullScreenClicked,
+            onNewMessage = viewModel::onNewMessage
         )
 
         return codeStepQuizFormDelegate

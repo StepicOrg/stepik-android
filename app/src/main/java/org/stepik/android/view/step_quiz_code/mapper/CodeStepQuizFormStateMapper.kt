@@ -22,10 +22,12 @@ class CodeStepQuizFormStateMapper {
     }
 
     private fun resolveSubmissionState(submissionState: StepQuizFeature.SubmissionState): Pair<Reply?, String?> =
-        if (submissionState is StepQuizFeature.SubmissionState.Empty) {
-            submissionState.reply to submissionState.reply?.language
-        } else {
-            submissionState as StepQuizFeature.SubmissionState.Loaded
-            submissionState.submission.reply to submissionState.submission.reply?.language
+        when (submissionState) {
+            is StepQuizFeature.SubmissionState.Empty ->
+                submissionState.reply to submissionState.reply?.language
+            is StepQuizFeature.SubmissionState.Loaded ->
+                submissionState.submission.reply to submissionState.submission.reply?.language
+            else ->
+                throw IllegalArgumentException("Unsupported submission state = $submissionState")
         }
 }
