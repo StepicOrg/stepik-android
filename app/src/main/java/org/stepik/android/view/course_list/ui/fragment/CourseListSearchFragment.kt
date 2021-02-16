@@ -48,12 +48,12 @@ import javax.inject.Inject
 class CourseListSearchFragment :
     Fragment(R.layout.fragment_course_list),
     CourseListSearchResultView,
-    FilterQueryView,
-    FilterBottomSheetDialogFragment.Callback {
+    FilterQueryView {
     companion object {
-        fun newInstance(query: String?): Fragment =
+        fun newInstance(query: String?, filterQuery: CourseListFilterQuery?): Fragment =
             CourseListSearchFragment().apply {
                 this.query = query ?: ""
+                this.filterQuery = filterQuery ?: CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured)
             }
 
         init {
@@ -65,6 +65,7 @@ class CourseListSearchFragment :
     private lateinit var searchIcon: ImageView
 
     private var query by argument<String>()
+    private var filterQuery by argument<CourseListFilterQuery>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -114,7 +115,7 @@ class CourseListSearchFragment :
         val searchResultQuery = SearchResultQuery(
             page = 1,
             query = query,
-            filterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured),
+            filterQuery = filterQuery,
             remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
         )
         courseListSwipeRefresh.setOnRefreshListener {
@@ -256,17 +257,5 @@ class CourseListSearchFragment :
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)
             .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
-    }
-
-    override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
-        courseListPresenter.fetchCourses(
-            searchResultQuery = SearchResultQuery(
-                page = 1,
-                query = query,
-                filterQuery = filterQuery,
-                remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
-            ),
-            forceUpdate = true
-        )
     }
 }

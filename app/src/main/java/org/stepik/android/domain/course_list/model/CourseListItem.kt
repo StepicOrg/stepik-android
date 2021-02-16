@@ -20,6 +20,8 @@ sealed class CourseListItem {
 
     class PlaceHolder(val courseId: Long = -1) : CourseListItem()
 
+    object ViewAll : CourseListItem()
+
     data class SimilarCourses(val similarCourses: List<CatalogCourseList>) : CourseListItem()
 
     data class SimilarAuthors(val similarAuthors: List<CatalogAuthor>) : CourseListItem()

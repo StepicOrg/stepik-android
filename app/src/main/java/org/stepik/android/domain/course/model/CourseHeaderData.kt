@@ -2,6 +2,7 @@ package org.stepik.android.domain.course.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.model.Course
 
 @Parcelize
@@ -12,5 +13,6 @@ data class CourseHeaderData(
     val cover: String,
 
     val stats: CourseStats,
-    val localSubmissionsCount: Int
+    val localSubmissionsCount: Int,
+    val promoCode: PromoCode
 ) : Parcelable

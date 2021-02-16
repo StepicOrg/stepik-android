@@ -371,7 +371,7 @@
     <string name="accessibility_last_step_cover">Выява апошняга кроку</string>
     <string name="my_courses_title">Мае курсы</string>
     <string name="popular_courses_title">Папулярныя</string>
-    <string name="view_all_courses">Усе</string>
+    <string name="view_all_courses">Паглядзець усе</string>
     <string name="sign_in_with_social_suffix">" праз сацыяльныя сеткі"</string>
     <string name="sign_in_with_social">Уваход праз сацсеткі</string>
     <string name="social_recycler_show_more">Яшчэ</string>
@@ -558,6 +558,7 @@
     <string name="course_payments_purchase_in_app">Купіць за %s</string>
     <string name="course_payments_purchase_in_web">Купіць у вэб версіі</string>
     <string name="course_payments_purchase_in_web_with_price">Купіць за %s</string>
+    <string name="course_payments_purchase_in_web_with_price_promo">Купіць за %s %s</string>
     <string name="course_purchase_server_error">Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і звяжыцеся з падтрымкай, калі памылка будзе паўтарацца</string>
     <string name="course_purchase_billing_error">Пры апрацоўцы плацяжу адбылася памылка</string>
     <string name="course_purchase_billing_cancelled">Плацёж быў адменены</string>
@@ -645,7 +646,7 @@
     <string name="step_quiz_number_description">Увядзіце лікавы адказ</string>
     <string name="step_quiz_math_description">Увядзіце матэматычную формулу</string>
     <string name="step_quiz_string_description">Напішыце тэкст (радок)</string>
-    <string name="step_quiz_free_answer_description">Напішыце эсэ</string>
+    <string name="step_quiz_free_answer_description">Напішыце адказ</string>
     <string name="step_quiz_sorting_description">Упарадкуйце элементы спіса</string>
     <string name="step_quiz_matching_description">Супастаўце значэнні з двух спісаў</string>
     <string name="step_quiz_choice_description_single">Абярыце адзін элемент</string>
@@ -818,6 +819,7 @@
     <string name="visited_courses_title">Нядаўна прагледжаных</string>
     <string name="visited_courses_enrolled">Вы запісаныя</string>
 
+    <string name="story_deeplink_open_fail">Не атрымалася адкрыць гісторыю</string>
     <string name="authors_title">Аўтары курсаў</string>
     <string name="similar_courses_title">Падобныя тэмы</string>
 

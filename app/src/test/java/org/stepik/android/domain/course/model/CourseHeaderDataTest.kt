@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 
@@ -32,7 +33,8 @@ class CourseHeaderDataTest {
                 progress = Progress(id = "1"),
                 enrollmentState = EnrollmentState.NotEnrolledWeb
             ),
-            localSubmissionsCount = 5
+            localSubmissionsCount = 5,
+            promoCode = PromoCode("200", "RUB")
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()

@@ -93,7 +93,7 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
         applyFilterAction.setOnClickListener {
             val newFilterQuery = mapFiltersToQuery()
             if (newFilterQuery != filterQuery) {
-                (parentFragment as? Callback)
+                (activity as? Callback)
                     ?.onSyncFilterQueryWithParent(newFilterQuery)
             }
             dismiss()

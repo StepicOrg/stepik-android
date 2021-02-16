@@ -12,6 +12,7 @@ interface AmplitudeAnalytic {
         const val TEACHING_COURSES_COUNT = "teaching_courses_count"
         const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
         const val IS_AR_SUPPORTED = "is_ar_supported"
+        const val IS_GOOGLE_SERVICES_AVAILABLE = "is_google_services_available"
     }
 
     object Launch {
@@ -153,6 +154,16 @@ interface AmplitudeAnalytic {
                 const val SWIPE = "swipe"
                 const val CROSS = "cross"
             }
+
+            const val SOURCE = "source"
+
+            object Source {
+                const val CATALOG = "catalog"
+                const val DEEPLINK = "deeplink"
+                const val HOME = "home"
+            }
+
+            const val DEEPLINK_URL = "deeplink_url"
         }
     }
 
@@ -181,9 +192,26 @@ interface AmplitudeAnalytic {
     object Achievements {
         const val NOTIFICATION_RECEIVED = "Achievement notification received"
 
+        const val SCREEN_OPENED = "Achievements screen opened"
+        const val POPUP_OPENED = "Achievement popup opened"
+        const val SHARE_PRESSED = "Achievement share pressed"
+
         object Params {
             const val KIND = "achievement_kind"
             const val LEVEL = "achievement_level"
+
+            const val IS_PERSONAL = "is_personal"
+
+            const val SOURCE = "source"
+        }
+
+        object Values {
+            /***
+             * Source
+             */
+            const val PROFILE = "profile"
+            const val ACHIEVEMENT_LIST = "achievement-list"
+            const val NOTIFICATION = "notification"
         }
     }
 
@@ -296,5 +324,47 @@ interface AmplitudeAnalytic {
         const val REVIEW_QUIZ_TRY_AGAIN = "Review Quiz Try Again"
         const val REVIEW_START_REVIEW = "Review Start Review"
         const val REVIEW_VIEW_REVIEW = "Review View Review"
+    }
+
+    object Settings {
+        const val SCREEN_OPENED = "Settings screen opened"
+    }
+
+    object Sections {
+        const val SCREEN_OPENED = "Sections screen opened"
+
+        object Params {
+            const val COURSE = "course"
+            const val TITLE = "title"
+        }
+    }
+
+    object Discussions {
+        const val SCREEN_OPENED = "Discussions screen opened"
+
+        object Params {
+            const val SOURCE = "source"
+        }
+
+        object Values {
+            /***
+             * Source
+             */
+            const val DISCUSSION = "discussion"
+            const val REPLY = "reply"
+            const val DEFAULT = "default"
+        }
+    }
+
+    object Certificates {
+        const val SCREEN_OPENED = "Certificates screen opened"
+    }
+
+    object ChromeTab {
+        const val CHROME_TAB_OPENED = "Chrome tab opened"
+
+        object Params {
+            const val FALLBACK = "fallback"
+        }
     }
 }

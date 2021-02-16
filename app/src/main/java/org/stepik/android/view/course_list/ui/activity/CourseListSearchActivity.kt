@@ -7,16 +7,20 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.view.course_list.ui.fragment.CourseListSearchFragment
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 
-class CourseListSearchActivity : FragmentActivityBase() {
+class CourseListSearchActivity : FragmentActivityBase(), FilterBottomSheetDialogFragment.Callback  {
     private var query: String? = null
+    private var filterQuery: CourseListFilterQuery? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTitle(R.string.search_title)
         setContentView(R.layout.activity_search_courses)
         query = intent.getStringExtra(SearchManager.QUERY)
+        filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
         initOrTryRestoreFragment()
     }
 
@@ -35,6 +39,10 @@ class CourseListSearchActivity : FragmentActivityBase() {
         super.onNewIntent(intent) // add new fragment
         setIntent(intent)
         query = intent.getStringExtra(SearchManager.QUERY)
+        updateFragment()
+    }
+
+    private fun updateFragment() {
         val fm = supportFragmentManager
         val fragment: Fragment = createFragment()
         fm.beginTransaction()
@@ -43,7 +51,7 @@ class CourseListSearchActivity : FragmentActivityBase() {
     }
 
     private fun createFragment(): Fragment =
-        CourseListSearchFragment.newInstance(query)
+        CourseListSearchFragment.newInstance(query, filterQuery)
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -54,6 +62,12 @@ class CourseListSearchActivity : FragmentActivityBase() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        this.query = intent.getStringExtra(SearchManager.QUERY)
+        this.filterQuery = filterQuery
+        updateFragment()
     }
 
     override fun finish() {

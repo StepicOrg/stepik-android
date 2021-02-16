@@ -2,11 +2,14 @@ package org.stepik.android.view.course.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -25,6 +28,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
+import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -33,6 +37,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
@@ -41,13 +46,16 @@ import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.view.base.web.CustomTabsHelper
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import org.stepik.android.view.course.routing.getPromoCodeFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
+import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
@@ -56,7 +64,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback {
+class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback, MagicLinkDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
@@ -89,12 +97,20 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     private var courseId: Long = NO_ID
     private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(page: Int) {
-            if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
-                analytic
-                    .reportAmplitudeEvent(
-                        AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
-                        mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
-                    )
+            when (coursePagerAdapter.getItem(page)) {
+                is CourseReviewsFragment ->
+                    analytic
+                        .reportAmplitudeEvent(
+                            AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                            mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                        )
+
+                is CourseContentFragment ->
+                    analytic
+                        .reportAmplitudeEvent(
+                            AmplitudeAnalytic.Sections.SCREEN_OPENED,
+                            mapOf(AmplitudeAnalytic.Sections.Params.COURSE to courseId.toString())
+                        )
             }
         }
     }
@@ -127,6 +143,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest
 
     @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
@@ -179,13 +198,12 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter,
+                this, analytic, coursePresenter, discountButtonAppearanceSplitTest,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
                 isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
             )
-
         uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId)
         initViewStateDelegate()
@@ -211,7 +229,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         if (course != null) {
             coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, source, forceUpdate)
+            coursePresenter.onCourseId(courseId, source, intent.getPromoCodeFromDeepLink(), forceUpdate)
         }
     }
 
@@ -235,7 +253,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
     override fun onResume() {
         super.onResume()
-        if (!coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
+        if (coursePurchaseWebviewSplitTest.currentGroup != CoursePurchaseWebviewSplitTest.Group.InAppWebview) {
             coursePresenter.handleCoursePurchasePressed()
         }
         coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
@@ -446,14 +464,22 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
-        if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
-            InAppWebViewDialogFragment
-                .newInstance(getString(R.string.course_purchase), url, isProvideAuth = true)
-                .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
-        } else {
-            MagicLinkDialogFragment
-                .newInstance(url)
-                .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
+        when (coursePurchaseWebviewSplitTest.currentGroup) {
+            CoursePurchaseWebviewSplitTest.Group.Control -> {
+                MagicLinkDialogFragment
+                    .newInstance(url)
+                    .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
+            }
+            CoursePurchaseWebviewSplitTest.Group.InAppWebview -> {
+                InAppWebViewDialogFragment
+                    .newInstance(getString(R.string.course_purchase), url, isProvideAuth = true)
+                    .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
+            }
+            CoursePurchaseWebviewSplitTest.Group.ChromeTab -> {
+                MagicLinkDialogFragment
+                    .newInstance(url, handleUrlInParent = true)
+                    .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
+            }
         }
     }
 
@@ -494,5 +520,30 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
     override fun onDismissed() {
         coursePresenter.handleCoursePurchasePressed()
+    }
+
+    override fun handleUrl(url: String) {
+        val builder = CustomTabsIntent.Builder()
+        builder.setShowTitle(true)
+        builder.setDefaultColorSchemeParams(
+            CustomTabColorSchemeParams.Builder()
+                .setToolbarColor(resolveColorAttribute(R.attr.colorSurface))
+                .setSecondaryToolbarColor(resolveColorAttribute(R.attr.colorSurface))
+                .build()
+        )
+        val customTabsIntent = builder.build()
+        val packageName = CustomTabsHelper.getPackageNameToUse(this)
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.ChromeTab.CHROME_TAB_OPENED,
+            mapOf(AmplitudeAnalytic.ChromeTab.Params.FALLBACK to (packageName == null))
+        )
+        if (packageName == null) {
+            InAppWebViewDialogFragment
+                .newInstance(getString(R.string.course_purchase), url, isProvideAuth = false)
+                .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
+        } else {
+            customTabsIntent.intent.`package` = packageName
+            customTabsIntent.launchUrl(this, Uri.parse(url))
+        }
     }
 }

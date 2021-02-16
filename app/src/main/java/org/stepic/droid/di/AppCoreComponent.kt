@@ -84,6 +84,7 @@ import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.network.NetworkModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.personal_offers.PersonalOffersDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
@@ -100,6 +101,7 @@ import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.story.StoryComponent
 import org.stepik.android.view.injection.story.StoryDataModule
+import org.stepik.android.view.injection.story_deeplink.StoryDeepLinkComponent
 import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.injection.user_code_run.UserCodeRunComponent
@@ -146,6 +148,7 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         NotificationModule::class,
 
         StoryDataModule::class,
+        PersonalOffersDataModule::class,
         DeviceDataModule::class,
         UserActivityDataModule::class,
         NotificationDataModule::class,
@@ -253,6 +256,8 @@ interface AppCoreComponent {
     fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun storyComponentBuilder(): StoryComponent.Builder
+
+    fun storyDeepLinkComponentBuilder(): StoryDeepLinkComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

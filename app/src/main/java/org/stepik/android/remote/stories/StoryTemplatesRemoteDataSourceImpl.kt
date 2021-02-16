@@ -13,6 +13,11 @@ class StoryTemplatesRemoteDataSourceImpl
 constructor(
     private val storyService: StoryService
 ) : StoryTemplatesRemoteDataSource {
+    override fun getStoryTemplates(ids: List<Long>): Single<List<StoryTemplate>> =
+        storyService
+            .getStoryTemplate(ids)
+            .map(StoryTemplatesResponse::storyTemplates)
+
     override fun getStoryTemplates(lang: String): Single<List<StoryTemplate>> =
         getStoryTemplatesByPage(lang)
 

@@ -392,7 +392,7 @@
     <string name="accessibility_last_step_cover">Изображение последнего шага</string>
     <string name="my_courses_title">Мои курсы</string>
     <string name="popular_courses_title">Популярные</string>
-    <string name="view_all_courses">Все</string>
+    <string name="view_all_courses">Посмотреть все</string>
 
     <string name="sign_in_with_social_suffix">" через социальные сети"</string>
     <string name="sign_in_with_social">Вход через соцсети</string>
@@ -626,6 +626,7 @@
     <string name="course_payments_purchase_in_app">Купить за %s</string>
     <string name="course_payments_purchase_in_web">Купить в веб версии</string>
     <string name="course_payments_purchase_in_web_with_price">Купить за %s</string>
+    <string name="course_payments_purchase_in_web_with_price_promo">Купить за %s %s</string>
 
     <string name="course_purchase_server_error">При обработке платежа произошла ошибка, попробуйте восстановить покупку и свяжитесь с поддержкой, если ошибка не будет устранена</string>
     <string name="course_purchase_billing_error">При обработке платежа произошла ошибка</string>
@@ -739,7 +740,7 @@
     <string name="step_quiz_number_description">Введите численный ответ</string>
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
-    <string name="step_quiz_free_answer_description">Напишите эссе</string>
+    <string name="step_quiz_free_answer_description">Напишите ответ</string>
     <string name="step_quiz_sorting_description">Упорядочьте элементы списка</string>
     <string name="step_quiz_matching_description">Сопоставьте значения из двух списков</string>
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
@@ -954,6 +955,7 @@
     <string name="visited_courses_title">Недавно просмотренные</string>
     <string name="visited_courses_enrolled">Вы записаны</string>
 
+    <string name="story_deeplink_open_fail">Не удалось открыть историю</string>
     <string name="authors_title">Авторы курсов</string>
     <string name="similar_courses_title">Похожие темы</string>
 
