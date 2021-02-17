@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_collection_author_list.*
+import kotlinx.android.synthetic.main.item_collection_horizontal_list.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog.model.CatalogAuthor
@@ -25,7 +25,7 @@ class CourseCollectionAuthorListAdapterDelegate(
         data is CourseListItem.SimilarAuthors
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
-        AuthorListViewHolder(createView(parent, R.layout.item_collection_author_list))
+        AuthorListViewHolder(createView(parent, R.layout.item_collection_horizontal_list))
 
     private inner class AuthorListViewHolder(
         override val containerView: View
@@ -38,7 +38,7 @@ class CourseCollectionAuthorListAdapterDelegate(
 
         init {
             val rowCount = context.resources.getInteger(R.integer.author_lists_default_rows)
-            authorListRecycler.layoutManager =
+            horizontalListRecycler.layoutManager =
                 TableLayoutManager(
                     context,
                     horizontalSpanCount = context.resources.getInteger(R.integer.author_lists_default_columns),
@@ -46,18 +46,20 @@ class CourseCollectionAuthorListAdapterDelegate(
                     orientation = RecyclerView.HORIZONTAL,
                     reverseLayout = false
                 )
-            authorListRecycler.setRecycledViewPool(sharedViewPool)
-            authorListRecycler.setHasFixedSize(true)
-            authorListRecycler.adapter = adapter
+            horizontalListRecycler.setRecycledViewPool(sharedViewPool)
+            horizontalListRecycler.setHasFixedSize(true)
+            horizontalListRecycler.adapter = adapter
 
             val snapHelper = CoursesSnapHelper(rowCount)
-            snapHelper.attachToRecyclerView(authorListRecycler)
+            snapHelper.attachToRecyclerView(horizontalListRecycler)
         }
 
         override fun onBind(data: CourseListItem) {
             val authorLists = data
                 .cast<CourseListItem.SimilarAuthors>()
                 .similarAuthors
+
+            containerTitle.text = itemView.resources.getString(R.string.authors_title)
 
             adapter.items = authorLists
         }

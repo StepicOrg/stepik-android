@@ -1,22 +1,16 @@
 package org.stepik.android.presentation.course_list
 
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.catalog.model.CatalogAuthor
-import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_collection.interactor.CourseCollectionInteractor
-import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
@@ -42,7 +36,6 @@ constructor(
     private val courseCollectionInteractor: CourseCollectionInteractor,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListCollectionStateMapper: CourseListCollectionStateMapper,
-    private val courseListInteractor: CourseListInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -89,52 +82,8 @@ constructor(
         val viewSource = CourseViewSource.Collection(courseCollectionId)
 
         state = CourseListCollectionView.State.Loading
-        paginationDisposable += Flowable
-            .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
-            .concatMapSingle { sourceType ->
-                courseCollectionInteractor
-                    .getCourseCollection(courseCollectionId, sourceType.generalSourceType)
-                    .flatMap { collection ->
-                        if (collection.courses.isEmpty()) {
-                            Single.just(CourseListCollectionView.State.Data(
-                                collection,
-                                CourseListView.State.Empty,
-                                sourceType = sourceType.generalSourceType
-                            ))
-                        } else {
-                            if (collection.similarCourseLists.isNotEmpty()) {
-                                zip(
-                                    courseListInteractor
-                                        .getCourseListItems(collection.courses, sourceTypeComposition = sourceType, courseViewSource = viewSource),
-                                    courseCollectionInteractor
-                                        .getSimilarCourseLists(collection.similarCourseLists, dataSource = sourceType.generalSourceType),
-                                    courseCollectionInteractor
-                                        .getSimilarAuthorLists(collection.similarAuthors, dataSource = sourceType.generalSourceType)
-                                ) { items, similarCourses, authors ->
-                                    CourseListCollectionView.State.Data(
-                                        collection,
-                                        CourseListView.State.Content(
-                                            courseListDataItems = items,
-                                            courseListItems = items + formHorizontalLists(authors, similarCourses)
-                                        ),
-                                        sourceType.generalSourceType
-                                    )
-                                }
-                            } else {
-                                val ids = collection.courses.take(PAGE_SIZE)
-                                courseListInteractor
-                                    .getCourseListItems(ids, sourceTypeComposition = sourceType, courseViewSource = viewSource)
-                                    .map { items ->
-                                        CourseListCollectionView.State.Data(
-                                            collection,
-                                            CourseListView.State.Content(courseListDataItems = items, courseListItems = items),
-                                            sourceType = sourceType.generalSourceType
-                                        )
-                                    }
-                            }
-                        }
-                    }
-            }
+        paginationDisposable += courseCollectionInteractor
+            .getCourseCollectionNew(courseCollectionId, viewSource)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -181,7 +130,7 @@ constructor(
 
         state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
         if (oldState.sourceType != DataSourceType.CACHE) {
-            paginationDisposable += courseListInteractor
+            paginationDisposable += courseCollectionInteractor
                 .getCourseListItems(ids, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id))
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
@@ -237,7 +186,7 @@ constructor(
         val oldState = (state as? CourseListCollectionView.State.Data)
             ?: return
 
-        compositeDisposable += courseListInteractor
+        compositeDisposable += courseCollectionInteractor
             .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
@@ -265,17 +214,6 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
-    }
-
-    private fun formHorizontalLists(authors: List<CatalogAuthor>, similarCourses: List<CatalogCourseList>): List<CourseListItem> {
-        val list = mutableListOf<CourseListItem>()
-        if (authors.isNotEmpty()) {
-            list += CourseListItem.SimilarAuthors(authors)
-        }
-        if (similarCourses.isNotEmpty()) {
-            list += CourseListItem.SimilarCourses(similarCourses)
-        }
-        return list
     }
 
     public override fun onCleared() {

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <include
         android:id="@+id/catalogBlockContainerDivider"
         android:layout_width="match_parent"
         android:layout_height="?dividerVerticalSize"
-        android:layout_marginTop="8dp"
         layout="@layout/view_divider_vertical" />
 
     <TextView
@@ -25,20 +24,15 @@
         android:ellipsize="end"
         android:lines="1"
         android:textAppearance="?textAppearanceSubtitle1"
-        android:text="@string/similar_courses_title"
+        android:text="@string/authors_title"
         tools:ignore="MissingPrefix"
         tools:text="@string/my_courses_title" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/courseListsRecycler"
+        android:id="@+id/horizontalListRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/catalogBlockContainer"
         android:clipToPadding="false"
-        android:paddingBottom="8dp"
-        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:spanCount="2"
-        tools:orientation="horizontal"
-        tools:listitem="@layout/item_simple_course_list_default" />
+        android:paddingBottom="8dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
