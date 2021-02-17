@@ -121,7 +121,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             courseCountMapper = courseCountMapper,
             isVerticalCourseCollection = true
         )
-
+        courseListCoursesRecycler.setPadding(0, 0, 0, 0)
         courseListPresenter.fetchCourses(courseCollectionId)
     }
 

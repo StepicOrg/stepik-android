@@ -52,7 +52,8 @@ class CourseListViewDelegate(
                         analytic,
                         onItemClicked = courseContinueViewDelegate::onCourseClicked,
                         onContinueCourseClicked = onContinueCourseClicked,
-                        isHandleInAppPurchase = isHandleInAppPurchase
+                        isHandleInAppPurchase = isHandleInAppPurchase,
+                        isNeedExtraMargin = isVerticalCourseCollection
                     ),
                     CourseListPlaceHolderAdapterDelegate()
                 )

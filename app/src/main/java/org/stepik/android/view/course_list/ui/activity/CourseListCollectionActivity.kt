@@ -18,7 +18,7 @@ class CourseListCollectionActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment =
         CourseListCollectionFragment.newInstance(
-            courseCollectionId =  intent.getLongExtra(EXTRA_COURSE_COLLECTION, -1) // TODO 12L - ID to test course list with simialr authors and courses
+            courseCollectionId =  12L // TODO 12L - ID to test course list with simialr authors and courses
         )
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
