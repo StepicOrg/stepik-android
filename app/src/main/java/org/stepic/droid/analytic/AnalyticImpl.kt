@@ -105,6 +105,11 @@ constructor(
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
     }
 
+    override fun setGoogleServicesAvailable(isAvailable: Boolean) {
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString()))
+        updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE).withValue(isAvailable)) }
+    }
+
     override fun report(analyticEvent: AnalyticEvent) {
         if (AnalyticSource.YANDEX in analyticEvent.sources) {
             YandexMetrica.reportEvent(analyticEvent.name, analyticEvent.params)
