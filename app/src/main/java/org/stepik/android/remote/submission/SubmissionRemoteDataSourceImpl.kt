@@ -22,6 +22,7 @@ constructor(
         private const val STEP = "step"
         private const val USER = "user"
         private const val STATUS = "status"
+        private const val SEARCH = "search"
         private const val PAGE = "page"
     }
 
@@ -45,16 +46,17 @@ constructor(
         submissionService.getSubmissions(attemptId)
             .map(submissionMapper)
 
-    override fun getSubmissionsForStep(stepId: Long, userId: Long?, status: Submission.Status?, page: Int): Single<PagedList<Submission>> =
+    override fun getSubmissionsForStep(stepId: Long, userId: Long?, status: Submission.Status?, searchQuery: String?, page: Int): Single<PagedList<Submission>> =
         submissionService
-            .getSubmissions(getQueryMap(stepId, userId, status, page))
+            .getSubmissions(getQueryMap(stepId, userId, status, searchQuery, page))
             .map { it.toPagedList(submissionMapper::apply) }
 
-    private fun getQueryMap(stepId: Long, userId: Long?, status: Submission.Status?, page: Int): Map<String, String> =
+    private fun getQueryMap(stepId: Long, userId: Long?, status: Submission.Status?, searchQuery: String?, page: Int): Map<String, String> =
         mapOfNotNull(
             STEP to stepId.toString(),
             USER to userId?.toString(),
             STATUS to status?.scope,
+            SEARCH to searchQuery,
             PAGE to page.toString()
         )
 }
