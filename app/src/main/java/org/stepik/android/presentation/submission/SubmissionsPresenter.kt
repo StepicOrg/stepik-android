@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 
 class SubmissionsPresenter
@@ -32,7 +33,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchSubmissions(stepId: Long, status: Submission.Status?, forceUpdate: Boolean = false) {
+    fun fetchSubmissions(stepId: Long, isTeacher: Boolean, status: Submission.Status?, forceUpdate: Boolean = false) {
         if (state != SubmissionsView.State.Idle &&
             !((state == SubmissionsView.State.NetworkError || state is SubmissionsView.State.Content) && forceUpdate)) {
             return
@@ -43,11 +44,12 @@ constructor(
 
         state = SubmissionsView.State.Loading
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, status)
+            .getSubmissionItems(stepId, isTeacher, status)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = {
+                    Timber.d("Items: ${it.toList()}")
                     state =
                         if (it.isEmpty()) {
                             SubmissionsView.State.ContentEmpty
@@ -56,6 +58,7 @@ constructor(
                         }
                 },
                 onError = {
+                    Timber.d("Error: $it")
                     if (oldState is SubmissionsView.State.Content) {
                         state = oldState
                         view?.showNetworkError()
@@ -66,14 +69,14 @@ constructor(
             )
     }
 
-    fun fetchNextPage(stepId: Long, status: Submission.Status?) {
+    fun fetchNextPage(stepId: Long, isTeacher: Boolean, status: Submission.Status?) {
         val oldState = (state as? SubmissionsView.State.Content)
             ?.takeIf { it.items.hasNext }
             ?: return
 
         state = SubmissionsView.State.ContentLoading(oldState.items)
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, status, page = oldState.items.page + 1)
+            .getSubmissionItems(stepId, isTeacher, status, page = oldState.items.page + 1)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

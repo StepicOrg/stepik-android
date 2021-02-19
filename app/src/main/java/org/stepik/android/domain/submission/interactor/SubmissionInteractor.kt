@@ -23,20 +23,43 @@ constructor(
     private val userPreferences: UserPreferences,
     private val userRepository: UserRepository
 ) {
-    fun getSubmissionItems(stepId: Long, status: Submission.Status?, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
+    fun getSubmissionItems(stepId: Long, isTeacher: Boolean, status: Submission.Status?, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
-            .getSubmissionsForStep(stepId, userPreferences.userId, status, page)
+            .getSubmissionsForStep(
+                stepId,
+                if (isTeacher) null else userPreferences.userId,
+                status,
+                page)
             .flatMap { submissions ->
-                val attemptIds = submissions.mapToLongArray(Submission::attempt)
+                resolveSubmissionItems(isTeacher, submissions)
+            }
 
-                zip(
-                    attemptRepository
-                        .getAttempts(*attemptIds),
-                    userRepository
-                        .getUsers(listOf(userPreferences.userId))
-                ) { attempts, users ->
-                    mapToSubmissionItems(submissions, attempts, users)
+    private fun resolveSubmissionItems(isTeacher: Boolean, submissions: PagedList<Submission>): Single<PagedList<SubmissionItem.Data>> {
+        val attemptIds = submissions.mapToLongArray(Submission::attempt)
+
+        return if (isTeacher) {
+            attemptRepository
+                .getAttempts(*attemptIds)
+                .flatMap { attempts ->
+                    resolveAttemptsAndUsersForTeacher(submissions, attempts)
                 }
+        } else {
+            zip(
+                attemptRepository
+                    .getAttempts(*attemptIds),
+                userRepository
+                    .getUsers(listOf(userPreferences.userId))
+            ) { attempts, users ->
+                mapToSubmissionItems(submissions, attempts, users)
+            }
+        }
+    }
+
+    private fun resolveAttemptsAndUsersForTeacher(submissions: PagedList<Submission>, attempts: List<Attempt>): Single<PagedList<SubmissionItem.Data>> =
+        userRepository
+            .getUsers(attempts.map(Attempt::user))
+            .flatMap { users ->
+                Single.just(mapToSubmissionItems(submissions, attempts, users))
             }
 
     private fun mapToSubmissionItems(submissions: PagedList<Submission>, attempts: List<Attempt>, users: List<User>): PagedList<SubmissionItem.Data> =

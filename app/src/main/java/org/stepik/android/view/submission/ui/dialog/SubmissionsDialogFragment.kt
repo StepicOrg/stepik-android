@@ -47,12 +47,14 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
         fun newInstance(
             step: Step,
+            isTeacher: Boolean = false,
             status: Submission.Status? = null,
             isSelectionEnabled: Boolean = false
         ): DialogFragment =
             SubmissionsDialogFragment()
                 .apply {
                     this.step = step
+                    this.isTeacher = isTeacher
                     this.isSelectionEnabled = isSelectionEnabled
                     this.arguments?.putSerializable(ARG_STATUS, status)
                 }
@@ -65,6 +67,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     internal lateinit var screenManager: ScreenManager
 
     private var step: Step by argument()
+    private var isTeacher: Boolean by argument()
     private var isSelectionEnabled: Boolean by argument()
     private var status: Submission.Status? = null
 
@@ -91,7 +94,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         injectComponent()
 
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
-        submissionsPresenter.fetchSubmissions(step.id, status)
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, status)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -139,7 +142,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    submissionsPresenter.fetchNextPage(step.id, status)
+                    submissionsPresenter.fetchNextPage(step.id, isTeacher, status)
                 }
             }
 
@@ -148,8 +151,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, status, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, status, forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, forceUpdate = true) }
     }
 
     private fun injectComponent() {
