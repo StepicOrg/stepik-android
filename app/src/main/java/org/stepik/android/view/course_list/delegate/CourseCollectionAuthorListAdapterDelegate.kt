@@ -11,7 +11,6 @@ import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.catalog.ui.adapter.delegate.AuthorAdapterDelegate
-import ru.nobird.android.core.model.cast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -55,13 +54,11 @@ class CourseCollectionAuthorListAdapterDelegate(
         }
 
         override fun onBind(data: CourseListItem) {
-            val authorLists = data
-                .cast<CourseListItem.SimilarAuthors>()
-                .similarAuthors
+            data as CourseListItem.SimilarAuthors
 
-            containerTitle.text = itemView.resources.getString(R.string.authors_title)
+            containerTitle.setText(R.string.authors_title)
 
-            adapter.items = authorLists
+            adapter.items = data.similarAuthors
         }
     }
 }

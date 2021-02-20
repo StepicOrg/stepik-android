@@ -13,7 +13,6 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListDefaultAdapterDelegate
-import ru.nobird.android.core.model.cast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -57,13 +56,11 @@ class CourseCollectionSimilarCoursesListAdapterDelegate(
         }
 
         override fun onBind(data: CourseListItem) {
-            val courseLists = data
-                .cast<CourseListItem.SimilarCourses>()
-                .similarCourses
+            data as CourseListItem.SimilarCourses
 
-            containerTitle.text = itemView.resources.getString(R.string.similar_courses_title)
+            containerTitle.setText(R.string.similar_courses_title)
 
-            adapter.items = courseLists
+            adapter.items = data.similarCourses
         }
     }
 }

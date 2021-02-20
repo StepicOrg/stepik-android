@@ -60,9 +60,9 @@ constructor(
         courseCollectionRepository
             .getCourseCollections(id, dataSource)
 
-    private fun getSimilarCourseLists(id: List<Long>, dataSource: DataSourceType): Single<List<CatalogCourseList>> =
+    private fun getSimilarCourseLists(ids: List<Long>, dataSource: DataSourceType): Single<List<CatalogCourseList>> =
         courseCollectionRepository
-            .getCourseCollections(id, dataSource)
+            .getCourseCollections(ids, dataSource)
             .map { it.map { courseCollection ->
                 CatalogCourseList(
                     id = courseCollection.id,
@@ -73,9 +73,9 @@ constructor(
                 )
             } }
 
-    private fun getSimilarAuthorLists(id: List<Long>, dataSource: DataSourceType): Single<List<CatalogAuthor>> =
+    private fun getSimilarAuthorLists(ids: List<Long>, dataSource: DataSourceType): Single<List<CatalogAuthor>> =
         userRepository
-            .getUsers(id, dataSource)
+            .getUsers(ids, dataSource)
             .map { it.map { user ->
                 CatalogAuthor(
                     id = user.id,
@@ -89,29 +89,19 @@ constructor(
             } }
 
     private fun resolveCollectionLoading(collection: CourseCollection, sourceType: SourceTypeComposition, viewSource: CourseViewSource): Single<CourseListCollectionView.State.Data> =
-        if (collection.similarCourseLists.isNotEmpty() || collection.similarAuthors.isNotEmpty()) {
-            loadWithSimilar(collection, sourceType, viewSource)
-        } else {
-            val ids = collection.courses.take(PAGE_SIZE)
-            courseListInteractor
-                .getCourseListItems(ids, sourceTypeComposition = sourceType, courseViewSource = viewSource)
-                .map { items ->
-                    CourseListCollectionView.State.Data(
-                        collection,
-                        CourseListView.State.Content(
-                            courseListDataItems = items,
-                            courseListItems = items
-                        ),
-                        sourceType = sourceType.generalSourceType
-                    )
-                }
-        }
-
-    private fun loadWithSimilar(collection: CourseCollection, sourceType: SourceTypeComposition, viewSource: CourseViewSource): Single<CourseListCollectionView.State.Data> =
         zip(
-            courseListInteractor.getCourseListItems(collection.courses, sourceTypeComposition = sourceType, courseViewSource = viewSource),
-            if (collection.similarCourseLists.isNotEmpty()) getSimilarCourseLists(collection.similarCourseLists, dataSource = sourceType.generalSourceType) else Single.just(emptyList()),
-            if (collection.similarAuthors.isNotEmpty()) getSimilarAuthorLists(collection.similarAuthors, dataSource = sourceType.generalSourceType) else Single.just(emptyList())
+            courseListInteractor.getCourseListItems(
+                courseIds =
+                    if (collection.similarCourseLists.isNotEmpty() || collection.similarAuthors.isNotEmpty()) {
+                        collection.courses
+                    } else {
+                        collection.courses.take(PAGE_SIZE)
+                    },
+                sourceTypeComposition = sourceType,
+                courseViewSource = viewSource
+            ),
+            getSimilarCourseLists(collection.similarCourseLists, dataSource = sourceType.generalSourceType),
+            getSimilarAuthorLists(collection.similarAuthors, dataSource = sourceType.generalSourceType)
         ) { items, similarCourses, authors ->
             CourseListCollectionView.State.Data(
                 collection,
