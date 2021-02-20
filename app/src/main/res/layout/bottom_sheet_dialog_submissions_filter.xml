@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarStyle="outsideOverlay">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            app:tint="?colorControlNormal"
+            app:srcCompat="@drawable/ic_grip" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/submissionsFilterTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/submissions_filter_dialog_title"
+            android:textAppearance="?textAppearanceSubtitle1" />
+
+        <include layout="@layout/view_divider_vertical"
+            android:layout_height="2dp"
+            android:layout_width="match_parent"
+            android:elevation="?appBarElevation"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/submissionStatusTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/submissions_filter_submission_status_subtitle"
+            android:textAppearance="?textAppearanceSubtitle1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/anyStatusButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_any_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/correctStatusButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_correct_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/partiallyCorrectButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_partially_correct_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/incorrectStatusButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_incorrect_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/dateSortingTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/submissions_filter_date_sort_subtitle"
+            android:textAppearance="?textAppearanceSubtitle1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/descendingDateSortButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_desc_date_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/ascendingDateSortButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_asc_date_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reviewStatusTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/submissions_filter_review_status_subtitle"
+            android:textAppearance="?textAppearanceSubtitle1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/anyReviewStatusButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_any_review_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/finishedReviewStatusButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_finished_review_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/awaitingReviewStatusButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
+            android:text="@string/submissions_filter_awaiting_review_status_radio_button_title"
+            android:textAppearance="?textAppearanceBody1" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dismissSubmissionsFilter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/filter_dismiss_action"
+            android:visibility="visible"
+            app:icon="@drawable/ic_dismiss_filter"
+            app:iconPadding="12dp"
+            app:cornerRadius="0dp"
+            style="@style/Widget.AppTheme.Button.TextButton"
+            android:gravity="start|center"
+            android:theme="@style/ThemeOverlay.Violet" />
+
+        <include
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginBottom="16dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/applyFilterAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+
+            style="@style/Widget.AppTheme.Button"
+            android:text="@string/filter_apply_action"
+            android:theme="@style/ThemeOverlay.Violet" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.core.widget.NestedScrollView>

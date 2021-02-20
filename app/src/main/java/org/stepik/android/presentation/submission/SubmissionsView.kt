@@ -24,4 +24,5 @@ interface SubmissionsView {
 
     fun setState(state: State)
     fun showNetworkError()
+    fun showSubmissionsFilterDialog(submissionsFilterQuery: SubmissionsFilterQuery)
 }

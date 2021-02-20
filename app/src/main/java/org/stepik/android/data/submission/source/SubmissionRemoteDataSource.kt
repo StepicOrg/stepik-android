@@ -8,5 +8,5 @@ import org.stepik.android.model.Submission
 interface SubmissionRemoteDataSource {
     fun createSubmission(submission: Submission): Single<Submission>
     fun getSubmissionsForAttempt(attemptId: Long): Single<List<Submission>>
-    fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery): Single<PagedList<Submission>>
+    fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery, page: Int): Single<PagedList<Submission>>
 }

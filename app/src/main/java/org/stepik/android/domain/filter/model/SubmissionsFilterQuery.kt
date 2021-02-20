@@ -1,11 +1,12 @@
 package org.stepik.android.domain.filter.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import ru.nobird.android.core.model.mapOfNotNull
 
+@Parcelize
 data class SubmissionsFilterQuery(
-    @SerializedName("page")
-    val page: Int? = null,
     @SerializedName("user")
     val user: Long? = null,
     @SerializedName("order")
@@ -16,7 +17,7 @@ data class SubmissionsFilterQuery(
     val reviewStatus: ReviewStatus? = null,
     @SerializedName("search")
     val search: String? = null
-) {
+) : Parcelable {
     companion object {
         private const val PAGE = "page"
         private const val USER = "user"
@@ -25,7 +26,7 @@ data class SubmissionsFilterQuery(
         private const val REVIEW_STATUS = "review_status"
         private const val SEARCH = "search"
 
-        val DEFAULT_QUERY = SubmissionsFilterQuery(page = 1, order = Order.DESC)
+        val DEFAULT_QUERY = SubmissionsFilterQuery(order = Order.DESC)
     }
     enum class Order(val order: String) {
         @SerializedName("desc")
@@ -43,7 +44,6 @@ data class SubmissionsFilterQuery(
 
     fun toMap(): Map<String, String> =
         mapOfNotNull(
-            PAGE to page?.toString(),
             USER to user?.toString(),
             STATUS to status,
             ORDER to order?.order,

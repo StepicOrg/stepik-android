@@ -47,9 +47,9 @@ constructor(
         submissionService.getSubmissions(attemptId)
             .map(submissionMapper)
 
-    override fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery): Single<PagedList<Submission>> =
+    override fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery, page: Int): Single<PagedList<Submission>> =
         submissionService
-            .getSubmissions(mapOf(STEP to stepId.toString()) + submissionsFilterQuery.toMap())
+            .getSubmissions(mapOf(STEP to stepId.toString(), PAGE to page.toString()) + submissionsFilterQuery.toMap())
             .map { it.toPagedList(submissionMapper::apply) }
 
     private fun getQueryMap(stepId: Long, userId: Long?, status: Submission.Status?, searchQuery: String?, page: Int): Map<String, String> =

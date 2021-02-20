@@ -24,11 +24,12 @@ constructor(
     private val userPreferences: UserPreferences,
     private val userRepository: UserRepository
 ) {
-    fun getSubmissionItems(stepId: Long, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery): Single<PagedList<SubmissionItem.Data>> =
+    fun getSubmissionItems(stepId: Long, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
             .getSubmissionsForStep(
                 stepId,
-                submissionsFilterQuery.copy(user = if (isTeacher) null else userPreferences.userId)
+                submissionsFilterQuery.copy(user = if (isTeacher) null else userPreferences.userId),
+                page
             )
             .flatMap { submissions ->
                 resolveSubmissionItems(isTeacher, submissions)

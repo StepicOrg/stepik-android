@@ -47,7 +47,6 @@ constructor(
 
         state = state.copy(
             submissionsFilterQuery = state.submissionsFilterQuery.copy(
-                page = 1,
                 status = status?.scope,
                 search = searchQuery
             ),
@@ -84,16 +83,16 @@ constructor(
 
         state = state.copy(contentState = SubmissionsView.ContentState.ContentLoading(oldState.items))
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(
-                stepId,
-                isTeacher,
-                state.submissionsFilterQuery.copy(page = oldState.items.page + 1)
-            )
+            .getSubmissionItems(stepId, isTeacher, state.submissionsFilterQuery, oldState.items.page + 1)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = state.copy(contentState = SubmissionsView.ContentState.Content(oldState.items + it)) },
                 onError = { state = state.copy(contentState = oldState); view?.showNetworkError() }
             )
+    }
+
+    fun onFilterMenuItemClicked() {
+        view?.showSubmissionsFilterDialog(state.submissionsFilterQuery)
     }
 }

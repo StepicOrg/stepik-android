@@ -16,7 +16,7 @@ constructor(
 ) {
     fun getLastSubmission(stepId: Long): Maybe<Submission> =
         submissionRepository
-            .getSubmissionsForStep(stepId, SubmissionsFilterQuery(page = 1, user = userPreferences.userId))
+            .getSubmissionsForStep(stepId, SubmissionsFilterQuery(user = userPreferences.userId))
             .map { it as List<Submission> }
             .maybeFirst()
 }

@@ -14,7 +14,7 @@ interface SubmissionRepository {
     /**
      * If [userId] not specified all available submissions will be returned
      */
-    fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery): Single<PagedList<Submission>>
+    fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery, page: Int = 1): Single<PagedList<Submission>>
 
     fun removeSubmissionsForAttempt(attemptId: Long): Completable
 }

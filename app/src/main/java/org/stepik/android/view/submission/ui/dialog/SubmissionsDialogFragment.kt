@@ -26,6 +26,7 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -113,6 +114,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         backIcon.setOnClickListener { dismiss() }
+        filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
 
         viewContentStateDelegate = ViewStateDelegate()
         viewContentStateDelegate.addState<SubmissionsView.ContentState.Idle>()
@@ -222,6 +224,12 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     override fun showNetworkError() {
         view?.snackbar(messageRes = R.string.connectionProblems)
+    }
+
+    override fun showSubmissionsFilterDialog(submissionsFilterQuery: SubmissionsFilterQuery) {
+        SubmissionsQueryFilterDialogFragment
+            .newInstance(submissionsFilterQuery)
+            .showIfNotExists(childFragmentManager, SubmissionsQueryFilterDialogFragment.TAG)
     }
 
     private fun showSolution(submissionItem: SubmissionItem.Data) {
