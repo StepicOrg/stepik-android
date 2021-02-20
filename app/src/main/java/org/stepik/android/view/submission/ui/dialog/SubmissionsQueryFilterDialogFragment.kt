@@ -72,11 +72,20 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
         setupListeners(reviewStatusRadioButtons)
 
         dismissSubmissionsFilter.setOnClickListener {
-            allRadioButtons.forEach { it.isChecked = false }
+            allRadioButtons.forEach { radioButton -> radioButton.isChecked = false }
             defaultStatusButton.isChecked = true
             defaultDateSortButton.isChecked = true
             defaultReviewStatusButton.isChecked = true
             it.isVisible = false
+        }
+
+        applyFilterAction.setOnClickListener {
+            val newFilter = mapFiltersToQuery()
+            if (newFilter != submissionsFilterQuery) {
+                (parentFragment as? Callback)
+                    ?.onSyncFilterQueryWithParent(newFilter)
+            }
+            dismiss()
         }
     }
 
@@ -128,6 +137,45 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
         }
 
         reviewStatusRadioButton.isChecked = true
+    }
+
+    private fun mapFiltersToQuery(): SubmissionsFilterQuery {
+        val status = when {
+            correctStatusButton.isChecked ->
+                Submission.Status.CORRECT?.scope
+
+            partiallyCorrectButton.isChecked ->
+                Submission.Status.PARTIALLY_CORRECT?.scope
+
+            incorrectStatusButton.isChecked ->
+                Submission.Status.WRONG?.scope
+
+            else ->
+                null
+        }
+
+        val dateOrder = if (ascendingDateSortButton.isChecked) {
+            SubmissionsFilterQuery.Order.ASC
+        } else {
+            SubmissionsFilterQuery.Order.DESC
+        }
+
+        val reviewStatus = when {
+            awaitingReviewStatusButton.isChecked ->
+                SubmissionsFilterQuery.ReviewStatus.AWAITING
+
+            finishedReviewStatusButton.isChecked ->
+                SubmissionsFilterQuery.ReviewStatus.DONE
+
+            else ->
+                null
+        }
+
+        return submissionsFilterQuery.copy(
+            order = dateOrder,
+            status = status,
+            reviewStatus = reviewStatus
+        )
     }
 
     private fun onRadioButtonClicked(buttonView: CompoundButton, radioButtons: List<AppCompatRadioButton>) {

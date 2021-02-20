@@ -1008,8 +1008,8 @@
     <string name="submissions_filter_incorrect_status_radio_button_title">Incorrect</string>
 
     <string name="submissions_filter_date_sort_subtitle">Submission date sort</string>
-    <string name="submissions_filter_desc_date_radio_button_title">By new</string>
-    <string name="submissions_filter_asc_date_radio_button_title">By old</string>
+    <string name="submissions_filter_desc_date_radio_button_title">First new</string>
+    <string name="submissions_filter_asc_date_radio_button_title">First old</string>
 
     <string name="submissions_filter_review_status_subtitle">Reviews</string>
     <string name="submissions_filter_any_review_status_radio_button_title">Any review status</string>

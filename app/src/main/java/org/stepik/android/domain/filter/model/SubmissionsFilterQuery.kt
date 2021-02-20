@@ -19,7 +19,6 @@ data class SubmissionsFilterQuery(
     val search: String? = null
 ) : Parcelable {
     companion object {
-        private const val PAGE = "page"
         private const val USER = "user"
         private const val ORDER = "order"
         private const val STATUS = "status"

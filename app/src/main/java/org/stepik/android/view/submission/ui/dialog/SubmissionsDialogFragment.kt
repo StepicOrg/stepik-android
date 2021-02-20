@@ -44,7 +44,7 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
+class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, SubmissionsQueryFilterDialogFragment.Callback {
     companion object {
         const val TAG = "SubmissionsDialogFragment"
 
@@ -76,6 +76,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     private var isSelectionEnabled: Boolean by argument()
     private var status: Submission.Status? = null
 
+    private var submissionsFilterQuery = SubmissionsFilterQuery.DEFAULT_QUERY
+
     private val submissionsPresenter: SubmissionsPresenter by viewModels { viewModelFactory }
 
     private lateinit var submissionItemAdapter: DefaultDelegateAdapter<SubmissionItem>
@@ -99,7 +101,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         injectComponent()
 
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
-        submissionsPresenter.fetchSubmissions(step.id, isTeacher, status)
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery.copy(status = status?.scope))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -162,14 +164,19 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery.copy(status = status?.scope), forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery.copy(status = status?.scope), forceUpdate = true) }
 
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchSubmissionsEditText.hideKeyboard()
                 searchSubmissionsEditText.clearFocus()
-                submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, searchQuery = searchSubmissionsEditText.text?.toString(), forceUpdate = true)
+                submissionsPresenter.fetchSubmissions(
+                    step.id,
+                    isTeacher,
+                    submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+                    forceUpdate = true
+                )
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -202,9 +209,9 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     override fun setState(state: SubmissionsView.State) {
         swipeRefresh.isRefreshing = false
-
         if (state is SubmissionsView.State.Data) {
             viewContentStateDelegate.switchState(state.contentState)
+            submissionsFilterQuery = state.submissionsFilterQuery
             submissionItemAdapter.items =
                 when (state.contentState) {
                     is SubmissionsView.ContentState.Loading ->
@@ -230,6 +237,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         SubmissionsQueryFilterDialogFragment
             .newInstance(submissionsFilterQuery)
             .showIfNotExists(childFragmentManager, SubmissionsQueryFilterDialogFragment.TAG)
+    }
+
+    override fun onSyncFilterQueryWithParent(submissionsFilterQuery: SubmissionsFilterQuery) {
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true)
     }
 
     private fun showSolution(submissionItem: SubmissionItem.Data) {
