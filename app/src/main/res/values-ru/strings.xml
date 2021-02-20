@@ -958,6 +958,7 @@
     <string name="story_deeplink_open_fail">Не удалось открыть историю</string>
     
     <!-- Submissions filter -->
+    <string name="submissions_filter_search_hint">ID, email, имя, номер решения</string>
     <string name="submissions_filter_dialog_title">Поиск решений</string>
 
     <string name="submissions_filter_submission_status_subtitle">Статус решения</string>

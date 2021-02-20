@@ -53,7 +53,11 @@
             android:text="@string/submissions_filter_any_status_radio_button_title"
             android:textAppearance="?textAppearanceBody1" />
 
-        <include layout="@layout/view_divider_vertical" />
+        <include
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginLeft="16dp" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/correctStatusButton"
@@ -133,7 +137,11 @@
             android:text="@string/submissions_filter_any_review_status_radio_button_title"
             android:textAppearance="?textAppearanceBody1" />
 
-        <include layout="@layout/view_divider_vertical" />
+        <include
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginLeft="16dp" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/finishedReviewStatusButton"

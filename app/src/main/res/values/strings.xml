@@ -999,6 +999,7 @@
     <string name="usd_format" translatable="false">$%s</string>
 
     <!-- Submissions filter -->
+    <string name="submissions_filter_search_hint">ID, email, name, submission number</string>
     <string name="submissions_filter_dialog_title">Search submissions</string>
 
     <string name="submissions_filter_submission_status_subtitle">Submission status</string>
