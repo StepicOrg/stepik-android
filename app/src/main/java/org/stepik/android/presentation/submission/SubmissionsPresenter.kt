@@ -7,9 +7,9 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
-import timber.log.Timber
 import javax.inject.Inject
 
 class SubmissionsPresenter
@@ -22,7 +22,10 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<SubmissionsView>() {
-    private var state: SubmissionsView.State = SubmissionsView.State.Idle
+    private var state: SubmissionsView.State.Data = SubmissionsView.State.Data(
+        submissionsFilterQuery = SubmissionsFilterQuery.DEFAULT_QUERY,
+        SubmissionsView.ContentState.Idle
+    )
         set(value) {
             field = value
             view?.setState(value)
@@ -33,55 +36,64 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchSubmissions(stepId: Long, isTeacher: Boolean, status: Submission.Status?, forceUpdate: Boolean = false) {
-        if (state != SubmissionsView.State.Idle &&
-            !((state == SubmissionsView.State.NetworkError || state is SubmissionsView.State.Content) && forceUpdate)) {
+    fun fetchSubmissions(stepId: Long, isTeacher: Boolean, status: Submission.Status?, searchQuery: String? = null, forceUpdate: Boolean = false) {
+        if (state.contentState != SubmissionsView.ContentState.Idle &&
+            !((state.contentState == SubmissionsView.ContentState.NetworkError || state.contentState is SubmissionsView.ContentState.Content) && forceUpdate)) {
             return
         }
 
         val oldState = state
         compositeDisposable.clear()
 
-        state = SubmissionsView.State.Loading
+        state = state.copy(
+            submissionsFilterQuery = state.submissionsFilterQuery.copy(
+                page = 1,
+                status = status?.scope,
+                search = searchQuery
+            ),
+            contentState = SubmissionsView.ContentState.Loading
+        )
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, isTeacher, status)
+            .getSubmissionItems(stepId, isTeacher, state.submissionsFilterQuery)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = {
-                    Timber.d("Items: ${it.toList()}")
-                    state =
-                        if (it.isEmpty()) {
-                            SubmissionsView.State.ContentEmpty
-                        } else {
-                            SubmissionsView.State.Content(it)
-                        }
+                    val newState = if (it.isEmpty()) {
+                        SubmissionsView.ContentState.ContentEmpty
+                    } else {
+                        SubmissionsView.ContentState.Content(it)
+                    }
+                    state = state.copy(contentState = newState)
                 },
                 onError = {
-                    Timber.d("Error: $it")
-                    if (oldState is SubmissionsView.State.Content) {
+                    if (oldState.contentState is SubmissionsView.ContentState.Content) {
                         state = oldState
                         view?.showNetworkError()
                     } else {
-                        state = SubmissionsView.State.NetworkError
+                        state = state.copy(contentState = SubmissionsView.ContentState.NetworkError)
                     }
                 }
             )
     }
 
-    fun fetchNextPage(stepId: Long, isTeacher: Boolean, status: Submission.Status?) {
-        val oldState = (state as? SubmissionsView.State.Content)
+    fun fetchNextPage(stepId: Long, isTeacher: Boolean) {
+        val oldState = (state.contentState as? SubmissionsView.ContentState.Content)
             ?.takeIf { it.items.hasNext }
             ?: return
 
-        state = SubmissionsView.State.ContentLoading(oldState.items)
+        state = state.copy(contentState = SubmissionsView.ContentState.ContentLoading(oldState.items))
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, isTeacher, status, page = oldState.items.page + 1)
+            .getSubmissionItems(
+                stepId,
+                isTeacher,
+                state.submissionsFilterQuery.copy(page = oldState.items.page + 1)
+            )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { state = SubmissionsView.State.Content(oldState.items + it) },
-                onError = { state = oldState; view?.showNetworkError() }
+                onSuccess = { state = state.copy(contentState = SubmissionsView.ContentState.Content(oldState.items + it)) },
+                onError = { state = state.copy(contentState = oldState); view?.showNetworkError() }
             )
     }
 }

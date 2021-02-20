@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.dialog_submissions.*
 import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import kotlinx.android.synthetic.main.view_submissions_search_toolbar.*
+import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -36,6 +39,7 @@ import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlacehol
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -75,7 +79,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     private lateinit var submissionItemAdapter: DefaultDelegateAdapter<SubmissionItem>
 
-    private lateinit var viewStateDelegate: ViewStateDelegate<SubmissionsView.State>
+    private lateinit var viewContentStateDelegate: ViewStateDelegate<SubmissionsView.ContentState>
 
     private val placeholders = List(10) { SubmissionItem.Placeholder }
 
@@ -101,17 +105,22 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         inflater.inflate(R.layout.dialog_submissions, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        centeredToolbar.isVisible = !isTeacher
+        searchViewContainer.isVisible = isTeacher
+
         centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
-        viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<SubmissionsView.State.Idle>()
-        viewStateDelegate.addState<SubmissionsView.State.Loading>(swipeRefresh)
-        viewStateDelegate.addState<SubmissionsView.State.NetworkError>(error)
-        viewStateDelegate.addState<SubmissionsView.State.Content>(swipeRefresh)
-        viewStateDelegate.addState<SubmissionsView.State.ContentLoading>(swipeRefresh)
-        viewStateDelegate.addState<SubmissionsView.State.ContentEmpty>(report_empty)
+        backIcon.setOnClickListener { dismiss() }
+
+        viewContentStateDelegate = ViewStateDelegate()
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.Idle>()
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.Loading>(swipeRefresh)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.NetworkError>(error)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.Content>(swipeRefresh)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.ContentLoading>(swipeRefresh)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.ContentEmpty>(report_empty)
 
         submissionItemAdapter = DefaultDelegateAdapter()
         submissionItemAdapter += SubmissionDataAdapterDelegate(
@@ -142,7 +151,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    submissionsPresenter.fetchNextPage(step.id, isTeacher, status)
+                    submissionsPresenter.fetchNextPage(step.id, isTeacher)
                 }
             }
 
@@ -153,6 +162,16 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
         swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, forceUpdate = true) }
         tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, forceUpdate = true) }
+
+        searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchSubmissionsEditText.hideKeyboard()
+                searchSubmissionsEditText.clearFocus()
+                submissionsPresenter.fetchSubmissions(step.id, isTeacher, status, searchQuery = searchSubmissionsEditText.text?.toString(), forceUpdate = true)
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
     }
 
     private fun injectComponent() {
@@ -182,21 +201,23 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     override fun setState(state: SubmissionsView.State) {
         swipeRefresh.isRefreshing = false
 
-        viewStateDelegate.switchState(state)
-        submissionItemAdapter.items =
-            when (state) {
-                is SubmissionsView.State.Loading ->
-                    placeholders
+        if (state is SubmissionsView.State.Data) {
+            viewContentStateDelegate.switchState(state.contentState)
+            submissionItemAdapter.items =
+                when (state.contentState) {
+                    is SubmissionsView.ContentState.Loading ->
+                        placeholders
 
-                is SubmissionsView.State.Content ->
-                    state.items
+                    is SubmissionsView.ContentState.Content ->
+                        state.contentState.items
 
-                is SubmissionsView.State.ContentLoading ->
-                    state.items + SubmissionItem.Placeholder
+                    is SubmissionsView.ContentState.ContentLoading ->
+                        state.contentState.items + SubmissionItem.Placeholder
 
-                else ->
-                    emptyList()
-            }
+                    else ->
+                        emptyList()
+                }
+        }
     }
 
     override fun showNetworkError() {
@@ -206,7 +227,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     private fun showSolution(submissionItem: SubmissionItem.Data) {
         SolutionCommentDialogFragment
             .newInstance(step, submissionItem.attempt, submissionItem.submission)
-            .showIfNotExists(fragmentManager ?: return, SolutionCommentDialogFragment.TAG)
+            .showIfNotExists(parentFragmentManager, SolutionCommentDialogFragment.TAG)
     }
 
     interface Callback {

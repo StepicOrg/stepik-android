@@ -4,6 +4,7 @@ import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepic.droid.util.PagedList
 import org.stepik.android.data.submission.source.SubmissionRemoteDataSource
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.model.Submission
 import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.submission.model.SubmissionRequest
@@ -46,9 +47,9 @@ constructor(
         submissionService.getSubmissions(attemptId)
             .map(submissionMapper)
 
-    override fun getSubmissionsForStep(stepId: Long, userId: Long?, status: Submission.Status?, searchQuery: String?, page: Int): Single<PagedList<Submission>> =
+    override fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery): Single<PagedList<Submission>> =
         submissionService
-            .getSubmissions(getQueryMap(stepId, userId, status, searchQuery, page))
+            .getSubmissions(mapOf(STEP to stepId.toString()) + submissionsFilterQuery.toMap())
             .map { it.toPagedList(submissionMapper::apply) }
 
     private fun getQueryMap(stepId: Long, userId: Long?, status: Submission.Status?, searchQuery: String?, page: Int): Map<String, String> =

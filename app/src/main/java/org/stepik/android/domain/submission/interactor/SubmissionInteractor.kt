@@ -7,6 +7,7 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapNotNullPaged
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.attempt.repository.AttemptRepository
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -23,14 +24,11 @@ constructor(
     private val userPreferences: UserPreferences,
     private val userRepository: UserRepository
 ) {
-    fun getSubmissionItems(stepId: Long, isTeacher: Boolean, status: Submission.Status?, searchQuery: String? = null, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
+    fun getSubmissionItems(stepId: Long, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
             .getSubmissionsForStep(
                 stepId,
-                if (isTeacher) null else userPreferences.userId,
-                status,
-                searchQuery,
-                page
+                submissionsFilterQuery.copy(user = if (isTeacher) null else userPreferences.userId)
             )
             .flatMap { submissions ->
                 resolveSubmissionItems(isTeacher, submissions)
