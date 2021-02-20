@@ -132,7 +132,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     discussionThread,
                     stepWrapper.step,
                     null,
-                    discussionThread.discussionsCount == 0
+                    discussionThread.discussionsCount == 0,
+                    lessonData.lesson.actions?.editLesson != null
                 )
         }
 

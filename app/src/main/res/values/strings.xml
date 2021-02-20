@@ -859,6 +859,7 @@
     <string name="solutions_compose_title">Solution</string>
     <string name="comment_compose_hint">Add your comment</string>
     <string name="comment_action_create">Write comment</string>
+    <string name="comment_action_submissions">Submissions</string>
     <string name="comment_action_edit">Edit</string>
     <string name="comment_action_remove">Remove</string>
     <string name="comment_action_remove_description">Remove this comment?</string>

@@ -28,7 +28,7 @@ constructor(
         submissionRepository
             .getSubmissionsForStep(
                 stepId,
-                submissionsFilterQuery.copy(user = if (isTeacher) null else userPreferences.userId),
+                submissionsFilterQuery.copy(user = if (isTeacher) submissionsFilterQuery.user else userPreferences.userId),
                 page
             )
             .flatMap { submissions ->
