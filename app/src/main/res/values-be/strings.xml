@@ -820,6 +820,8 @@
     <string name="visited_courses_enrolled">Вы запісаныя</string>
 
     <string name="story_deeplink_open_fail">Не атрымалася адкрыць гісторыю</string>
+    <string name="authors_title">Аўтары курсаў</string>
+    <string name="similar_courses_title">Падобныя тэмы</string>
 
     <!-- Submissions filter -->
     <string name="submissions_filter_search_hint">ID, email, імя, нумар рашэння</string>
