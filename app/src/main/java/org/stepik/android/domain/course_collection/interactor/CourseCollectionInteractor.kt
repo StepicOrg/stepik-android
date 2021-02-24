@@ -28,7 +28,7 @@ constructor(
         private const val PAGE_SIZE = 20
     }
 
-    fun getCourseCollectionNew(id: Long, viewSource: CourseViewSource): Flowable<CourseCollectionResult> =
+    fun getCourseCollectionResult(id: Long, viewSource: CourseViewSource): Flowable<CourseCollectionResult> =
         Flowable
             .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
             .concatMapSingle { sourceType ->

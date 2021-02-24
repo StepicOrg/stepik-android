@@ -83,7 +83,7 @@ constructor(
 
         state = CourseListCollectionView.State.Loading
         paginationDisposable += courseCollectionInteractor
-            .getCourseCollectionNew(courseCollectionId, viewSource)
+            .getCourseCollectionResult(courseCollectionId, viewSource)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
