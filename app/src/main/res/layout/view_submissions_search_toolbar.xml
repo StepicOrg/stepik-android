@@ -53,6 +53,8 @@
             android:ellipsize="end"
             android:imeOptions="actionSearch"
             android:drawablePadding="8dp"
+            android:focusableInTouchMode="true"
+            android:textAppearance="?textAppearanceBody1"
             android:drawableLeft="@drawable/ic_search_mag"
             android:background="@drawable/bg_submissions_search"
             tools:visibility="visible" />

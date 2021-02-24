@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatEditText
  */
 class ClearFocusEditText
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null) : AppCompatEditText(context, attrs) {
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : AppCompatEditText(context, attrs, defStyleAttr) {
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
