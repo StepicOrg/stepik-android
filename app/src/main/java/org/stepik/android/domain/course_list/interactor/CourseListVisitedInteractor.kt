@@ -33,7 +33,7 @@ constructor(
     private fun getCourseListItems(courseIds: List<Long>): Single<PagedList<CourseListItem.Data>> =
         courseListInteractor
             .getCourseListItems(
-                courseId = courseIds,
+                courseIds = courseIds,
                 courseViewSource = CourseViewSource.Visited,
                 sourceTypeComposition = SourceTypeComposition.CACHE
             )

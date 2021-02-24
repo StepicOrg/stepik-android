@@ -9,13 +9,12 @@ import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
+import org.stepik.android.domain.course_collection.model.CourseCollectionResult
 import org.stepik.android.domain.course_collection.repository.CourseCollectionRepository
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.CourseCollection
-import org.stepik.android.presentation.course_list.CourseListCollectionView
-import org.stepik.android.presentation.course_list.CourseListView
 import javax.inject.Inject
 
 class CourseCollectionInteractor
@@ -29,7 +28,7 @@ constructor(
         private const val PAGE_SIZE = 20
     }
 
-    fun getCourseCollectionNew(id: Long, viewSource: CourseViewSource): Flowable<CourseListCollectionView.State> =
+    fun getCourseCollectionNew(id: Long, viewSource: CourseViewSource): Flowable<CourseCollectionResult> =
         Flowable
             .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
             .concatMapSingle { sourceType ->
@@ -37,9 +36,10 @@ constructor(
                     .flatMap { collection ->
                         if (collection.courses.isEmpty()) {
                             Single.just(
-                                CourseListCollectionView.State.Data(
-                                    collection,
-                                    CourseListView.State.Empty,
+                                CourseCollectionResult(
+                                    courseCollection = collection,
+                                    courseListDataItems = PagedList(emptyList()),
+                                    courseListItems = emptyList(),
                                     sourceType = sourceType.generalSourceType
                                 )
                             )
@@ -88,7 +88,7 @@ constructor(
                 )
             } }
 
-    private fun resolveCollectionLoading(collection: CourseCollection, sourceType: SourceTypeComposition, viewSource: CourseViewSource): Single<CourseListCollectionView.State.Data> =
+    private fun resolveCollectionLoading(collection: CourseCollection, sourceType: SourceTypeComposition, viewSource: CourseViewSource): Single<CourseCollectionResult> =
         zip(
             courseListInteractor.getCourseListItems(
                 courseIds =
@@ -103,13 +103,11 @@ constructor(
             getSimilarCourseLists(collection.similarCourseLists, dataSource = sourceType.generalSourceType),
             getSimilarAuthorLists(collection.similarAuthors, dataSource = sourceType.generalSourceType)
         ) { items, similarCourses, authors ->
-            CourseListCollectionView.State.Data(
-                collection,
-                CourseListView.State.Content(
-                    courseListDataItems = items,
-                    courseListItems = items + formHorizontalLists(authors, similarCourses)
-                ),
-                sourceType.generalSourceType
+            CourseCollectionResult(
+                courseCollection = collection,
+                courseListDataItems = items,
+                courseListItems = items + formHorizontalLists(authors, similarCourses),
+                sourceType = sourceType.generalSourceType
             )
         }
 

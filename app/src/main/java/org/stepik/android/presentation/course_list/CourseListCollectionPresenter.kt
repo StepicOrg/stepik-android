@@ -87,9 +87,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = {
-                    val isNeedLoadNextPage = courseListCollectionStateMapper.isNeedLoadNextPage(it)
-                    state = it
+                onNext = { courseCollectionResult ->
+                    val newState = courseListCollectionStateMapper.mapCourseCollectionResultToState(courseCollectionResult)
+                    val isNeedLoadNextPage = courseListCollectionStateMapper.isNeedLoadNextPage(newState)
+                    state = newState
 
                     if (isNeedLoadNextPage) {
                         fetchNextPage()
