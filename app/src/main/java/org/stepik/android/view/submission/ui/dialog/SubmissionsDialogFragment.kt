@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -122,6 +123,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             ?.setTintList(requireContext(), R.attr.colorControlNormal)
             ?.let { backIcon.setImageDrawable(it) }
         backIcon.setOnClickListener { dismiss() }
+        clearSearchButton.setOnClickListener { searchSubmissionsEditText.text?.clear() }
         filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
 
         viewContentStateDelegate = ViewStateDelegate()
@@ -188,6 +190,16 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
+        }
+
+        searchSubmissionsEditText.addTextChangedListener {
+            if (it.isNullOrEmpty()) {
+                clearSearchButton.isVisible = false
+                searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_without_text), 0)
+            } else {
+                clearSearchButton.isVisible = true
+                searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_with_text), 0)
+            }
         }
     }
 

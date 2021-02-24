@@ -40,6 +40,7 @@
             android:paddingRight="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
+            android:gravity="left|center_vertical"
             app:layout_constraintLeft_toRightOf="@id/backIcon"
             app:layout_constraintRight_toLeftOf="@id/filterIcon"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,6 +56,18 @@
             android:drawableLeft="@drawable/ic_search_mag"
             android:background="@drawable/bg_submissions_search"
             tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/clearSearchButton"
+            app:layout_constraintRight_toRightOf="@id/searchSubmissionsEditText"
+            app:layout_constraintTop_toTopOf="@id/searchSubmissionsEditText"
+            app:layout_constraintBottom_toBottomOf="@id/searchSubmissionsEditText"
+            app:srcCompat="@drawable/ic_search_cancel"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:id="@+id/filterIcon"
