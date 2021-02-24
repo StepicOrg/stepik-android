@@ -111,8 +111,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             step.id,
             isTeacher,
             submissionsFilterQuery.copy(
-                user = if (userId == -1L) null else userId,
-                status = status?.scope
+                status = status?.scope,
+                search = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
             )
         )
     }
@@ -188,6 +188,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
         tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
 
+        val userIdQuery = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
+        userIdQuery?.let { searchSubmissionsEditText.setText(it) }
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 fetchSearchQuery()
