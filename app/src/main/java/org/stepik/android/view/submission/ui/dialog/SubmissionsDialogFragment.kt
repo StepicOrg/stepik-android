@@ -7,8 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -34,6 +36,7 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.submission.SubmissionsPresenter
 import org.stepik.android.presentation.submission.SubmissionsView
+import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
@@ -125,7 +128,15 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
+        AppCompatResources
+            .getDrawable(requireContext(), R.drawable.ic_close_dark)
+            ?.setTintList(requireContext(), R.attr.colorControlNormal)
+            ?.let { backIcon.setImageDrawable(it) }
         backIcon.setOnClickListener { dismiss() }
+        clearSearchButton.setOnClickListener {
+            searchSubmissionsEditText.text?.clear()
+            fetchSearchQuery()
+        }
         filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
 
         viewContentStateDelegate = ViewStateDelegate()
@@ -174,22 +185,25 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery.copy(status = status?.scope), forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery.copy(status = status?.scope), forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
 
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                searchSubmissionsEditText.hideKeyboard()
-                searchSubmissionsEditText.clearFocus()
-                submissionsPresenter.fetchSubmissions(
-                    step.id,
-                    isTeacher,
-                    submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
-                    forceUpdate = true
-                )
+                fetchSearchQuery()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
+        }
+
+        searchSubmissionsEditText.addTextChangedListener {
+            if (it.isNullOrEmpty()) {
+                clearSearchButton.isVisible = false
+                searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_without_text), 0)
+            } else {
+                clearSearchButton.isVisible = true
+                searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_with_text), 0)
+            }
         }
     }
 
@@ -221,6 +235,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         swipeRefresh.isRefreshing = false
         if (state is SubmissionsView.State.Data) {
             viewContentStateDelegate.switchState(state.contentState)
+            filterIcon.setImageResource(getFilterIcon(state.submissionsFilterQuery))
             submissionsFilterQuery = state.submissionsFilterQuery
             submissionItemAdapter.items =
                 when (state.contentState) {
@@ -245,7 +260,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
     override fun showSubmissionsFilterDialog(submissionsFilterQuery: SubmissionsFilterQuery) {
         SubmissionsQueryFilterDialogFragment
-            .newInstance(submissionsFilterQuery)
+            .newInstance(submissionsFilterQuery, isPeerReview = step.actions?.doReview != null)
             .showIfNotExists(childFragmentManager, SubmissionsQueryFilterDialogFragment.TAG)
     }
 
@@ -257,6 +272,24 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         SolutionCommentDialogFragment
             .newInstance(step, submissionItem.attempt, submissionItem.submission)
             .showIfNotExists(parentFragmentManager, SolutionCommentDialogFragment.TAG)
+    }
+
+    private fun getFilterIcon(updatedSubmissionQuery: SubmissionsFilterQuery): Int =
+        if (updatedSubmissionQuery == SubmissionsFilterQuery.DEFAULT_QUERY.copy(search = updatedSubmissionQuery.search)) {
+            R.drawable.ic_filter
+        } else {
+            R.drawable.ic_filter_active
+        }
+
+    private fun fetchSearchQuery() {
+        searchSubmissionsEditText.hideKeyboard()
+        searchSubmissionsEditText.clearFocus()
+        submissionsPresenter.fetchSubmissions(
+            step.id,
+            isTeacher,
+            submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+            forceUpdate = true
+        )
     }
 
     interface Callback {

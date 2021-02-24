@@ -69,15 +69,6 @@
             android:textAppearance="?textAppearanceBody1" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/partiallyCorrectButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:paddingLeft="8dp"
-            android:text="@string/submissions_filter_partially_correct_status_radio_button_title"
-            android:textAppearance="?textAppearanceBody1" />
-
-        <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/incorrectStatusButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,6 +129,7 @@
             android:textAppearance="?textAppearanceBody1" />
 
         <include
+            android:id="@+id/anyReviewStatusButtonDivider"
             layout="@layout/view_divider_vertical"
             android:layout_width="match_parent"
             android:layout_height="?dividerVerticalSize"
@@ -161,7 +153,11 @@
             android:text="@string/submissions_filter_awaiting_review_status_radio_button_title"
             android:textAppearance="?textAppearanceBody1" />
 
-        <include layout="@layout/view_divider_vertical" />
+        <include
+            android:id="@+id/reviewStatusClosingDivider"
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/dismissSubmissionsFilter"

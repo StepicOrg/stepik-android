@@ -37,7 +37,7 @@ constructor(
 
     fun fetchSubmissions(stepId: Long, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery, forceUpdate: Boolean = false) {
         if (state.contentState != SubmissionsView.ContentState.Idle &&
-            !((state.contentState == SubmissionsView.ContentState.NetworkError || state.contentState is SubmissionsView.ContentState.Content) && forceUpdate)) {
+            !((state.contentState == SubmissionsView.ContentState.NetworkError || state.contentState is SubmissionsView.ContentState.Content || state.contentState is SubmissionsView.ContentState.ContentEmpty) && forceUpdate)) {
             return
         }
 

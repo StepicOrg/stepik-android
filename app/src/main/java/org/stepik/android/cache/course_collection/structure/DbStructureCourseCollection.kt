@@ -11,6 +11,9 @@ object DbStructureCourseCollection {
         const val COURSES = "courses"
         const val DESCRIPTION = "description"
         const val PLATFORM = "platform"
+
+        const val SIMILAR_AUTHORS = "similar_authors"
+        const val SIMILAR_COURSE_LISTS = "similar_course_lists"
     }
 
     const val TABLE_SCHEMA =

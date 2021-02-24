@@ -21,13 +21,15 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "SubmissionsQueryFilterDialogFragment"
 
-        fun newInstance(submissionsFilterQuery: SubmissionsFilterQuery): DialogFragment =
+        fun newInstance(submissionsFilterQuery: SubmissionsFilterQuery, isPeerReview: Boolean): DialogFragment =
             SubmissionsQueryFilterDialogFragment().apply {
                 this.submissionsFilterQuery = submissionsFilterQuery
+                this.isPeerReview = isPeerReview
             }
     }
 
     private var submissionsFilterQuery: SubmissionsFilterQuery by argument()
+    private var isPeerReview: Boolean by argument()
 
     private lateinit var defaultStatusButton: AppCompatRadioButton
     private lateinit var defaultDateSortButton: AppCompatRadioButton
@@ -58,10 +60,15 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
         defaultDateSortButton = descendingDateSortButton
         defaultReviewStatusButton = anyReviewStatusButton
 
-        submissionStatusRadioButtons = listOf<AppCompatRadioButton>(anyStatusButton, correctStatusButton, partiallyCorrectButton, incorrectStatusButton)
+        submissionStatusRadioButtons = listOf<AppCompatRadioButton>(anyStatusButton, correctStatusButton, incorrectStatusButton)
         dateSortRadioButtons = listOf<AppCompatRadioButton>(descendingDateSortButton, ascendingDateSortButton)
         reviewStatusRadioButtons = listOf<AppCompatRadioButton>(anyReviewStatusButton, finishedReviewStatusButton, awaitingReviewStatusButton)
         allRadioButtons = submissionStatusRadioButtons + dateSortRadioButtons + reviewStatusRadioButtons
+
+        reviewStatusTitle.isVisible = isPeerReview
+        anyReviewStatusButtonDivider.isVisible = isPeerReview
+        reviewStatusClosingDivider.isVisible = isPeerReview
+        reviewStatusRadioButtons.forEach { it.isVisible = isPeerReview }
 
         setupFilters(submissionsFilterQuery)
 
@@ -105,9 +112,6 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
             Submission.Status.CORRECT.scope ->
                 correctStatusButton
 
-            Submission.Status.PARTIALLY_CORRECT.scope ->
-                partiallyCorrectButton
-
             Submission.Status.WRONG.scope ->
                 incorrectStatusButton
 
@@ -143,9 +147,6 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
         val status = when {
             correctStatusButton.isChecked ->
                 Submission.Status.CORRECT?.scope
-
-            partiallyCorrectButton.isChecked ->
-                Submission.Status.PARTIALLY_CORRECT?.scope
 
             incorrectStatusButton.isChecked ->
                 Submission.Status.WRONG?.scope

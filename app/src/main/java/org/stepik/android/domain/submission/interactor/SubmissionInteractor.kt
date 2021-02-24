@@ -1,7 +1,6 @@
 package org.stepik.android.domain.submission.interactor
 
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapNotNullPaged
@@ -32,35 +31,24 @@ constructor(
                 page
             )
             .flatMap { submissions ->
-                resolveSubmissionItems(isTeacher, submissions)
+                resolveSubmissionItems(submissions)
             }
 
-    private fun resolveSubmissionItems(isTeacher: Boolean, submissions: PagedList<Submission>): Single<PagedList<SubmissionItem.Data>> {
+    private fun resolveSubmissionItems(submissions: PagedList<Submission>): Single<PagedList<SubmissionItem.Data>> {
         val attemptIds = submissions.mapToLongArray(Submission::attempt)
 
-        return if (isTeacher) {
-            attemptRepository
-                .getAttempts(*attemptIds)
-                .flatMap { attempts ->
-                    resolveAttemptsAndUsersForTeacher(submissions, attempts)
-                }
-        } else {
-            zip(
-                attemptRepository
-                    .getAttempts(*attemptIds),
-                userRepository
-                    .getUsers(listOf(userPreferences.userId))
-            ) { attempts, users ->
-                mapToSubmissionItems(submissions, attempts, users)
+        return attemptRepository
+            .getAttempts(*attemptIds)
+            .flatMap { attempts ->
+                resolveAttemptsAndUsers(submissions, attempts)
             }
-        }
     }
 
-    private fun resolveAttemptsAndUsersForTeacher(submissions: PagedList<Submission>, attempts: List<Attempt>): Single<PagedList<SubmissionItem.Data>> =
+    private fun resolveAttemptsAndUsers(submissions: PagedList<Submission>, attempts: List<Attempt>): Single<PagedList<SubmissionItem.Data>> =
         userRepository
             .getUsers(attempts.map(Attempt::user))
-            .flatMap { users ->
-                Single.just(mapToSubmissionItems(submissions, attempts, users))
+            .map { users ->
+                mapToSubmissionItems(submissions, attempts, users)
             }
 
     private fun mapToSubmissionItems(submissions: PagedList<Submission>, attempts: List<Attempt>, users: List<User>): PagedList<SubmissionItem.Data> =

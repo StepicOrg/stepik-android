@@ -10,7 +10,6 @@ import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.submission.model.SubmissionRequest
 import org.stepik.android.remote.submission.model.SubmissionResponse
 import org.stepik.android.remote.submission.service.SubmissionService
-import ru.nobird.android.core.model.mapOfNotNull
 import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
 
@@ -21,9 +20,6 @@ constructor(
 ) : SubmissionRemoteDataSource {
     companion object {
         private const val STEP = "step"
-        private const val USER = "user"
-        private const val STATUS = "status"
-        private const val SEARCH = "search"
         private const val PAGE = "page"
     }
 
@@ -51,13 +47,4 @@ constructor(
         submissionService
             .getSubmissions(mapOf(STEP to stepId.toString(), PAGE to page.toString()) + submissionsFilterQuery.toMap())
             .map { it.toPagedList(submissionMapper::apply) }
-
-    private fun getQueryMap(stepId: Long, userId: Long?, status: Submission.Status?, searchQuery: String?, page: Int): Map<String, String> =
-        mapOfNotNull(
-            STEP to stepId.toString(),
-            USER to userId?.toString(),
-            STATUS to status?.scope,
-            SEARCH to searchQuery,
-            PAGE to page.toString()
-        )
 }
