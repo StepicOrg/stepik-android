@@ -717,6 +717,7 @@
     <string name="comment_compose_title">Каментар</string>
     <string name="solutions_compose_title">Рашэнне</string>
     <string name="comment_action_create">Напісаць каментар</string>
+    <string name="comment_action_submissions">Рашэнні </string>
     <string name="comment_action_edit">Змяніць</string>
     <string name="comment_action_remove">Выдаліць</string>
     <string name="comment_action_remove_description">Выдаліць гэты каментар</string>

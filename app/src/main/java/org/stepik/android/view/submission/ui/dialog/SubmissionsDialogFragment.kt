@@ -56,6 +56,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         fun newInstance(
             step: Step,
             isTeacher: Boolean = false,
+            userId: Long = -1L,
             status: Submission.Status? = null,
             isSelectionEnabled: Boolean = false
         ): DialogFragment =
@@ -63,6 +64,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                 .apply {
                     this.step = step
                     this.isTeacher = isTeacher
+                    this.userId = userId
                     this.isSelectionEnabled = isSelectionEnabled
                     this.arguments?.putSerializable(ARG_STATUS, status)
                 }
@@ -76,6 +78,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
     private var step: Step by argument()
     private var isTeacher: Boolean by argument()
+    private var userId: Long by argument()
     private var isSelectionEnabled: Boolean by argument()
     private var status: Submission.Status? = null
 
@@ -104,7 +107,14 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         injectComponent()
 
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
-        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery.copy(status = status?.scope))
+        submissionsPresenter.fetchSubmissions(
+            step.id,
+            isTeacher,
+            submissionsFilterQuery.copy(
+                status = status?.scope,
+                search = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
+            )
+        )
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -195,6 +205,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                 searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_with_text), 0)
             }
         }
+        val userIdQuery = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
+        userIdQuery?.let { searchSubmissionsEditText.setText(it) }
     }
 
     private fun injectComponent() {
