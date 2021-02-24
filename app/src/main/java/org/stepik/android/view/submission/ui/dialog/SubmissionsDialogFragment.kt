@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -34,6 +35,7 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.submission.SubmissionsPresenter
 import org.stepik.android.presentation.submission.SubmissionsView
+import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
@@ -115,6 +117,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
+        AppCompatResources
+            .getDrawable(requireContext(), R.drawable.ic_close_dark)
+            ?.setTintList(requireContext(), R.attr.colorControlNormal)
+            ?.let { backIcon.setImageDrawable(it) }
         backIcon.setOnClickListener { dismiss() }
         filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
 

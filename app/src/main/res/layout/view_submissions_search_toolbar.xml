@@ -26,25 +26,33 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/searchSubmissionsEditText"
-            android:layout_marginStart="@dimen/back_button_left_margin"
-            android:layout_marginLeft="@dimen/back_button_left_margin"
-            android:layout_marginRight="@dimen/back_button_right_margin"
-            android:layout_marginEnd="@dimen/back_button_right_margin"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginEnd="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/searchSubmissionsEditText"
             android:visibility="visible"
-            android:layout_margin="@dimen/search_bar_margin"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintLeft_toRightOf="@id/backIcon"
             app:layout_constraintRight_toLeftOf="@id/filterIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:maxLines="1"
             android:hint="@string/submissions_filter_search_hint"
             android:inputType="text"
             android:imeOptions="actionSearch"
+            android:drawablePadding="8dp"
+            android:drawableLeft="@drawable/ic_search_mag"
+            android:background="@drawable/bg_submissions_search"
             tools:visibility="visible" />
 
         <ImageView
@@ -57,10 +65,7 @@
             app:layout_constraintLeft_toRightOf="@id/searchSubmissionsEditText"
             app:layout_constraintRight_toRightOf="parent"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/back_button_left_margin"
-            android:layout_marginLeft="@dimen/back_button_left_margin"
-            android:layout_marginRight="@dimen/back_button_right_margin"
-            android:layout_marginEnd="@dimen/back_button_right_margin"
+            android:layout_margin="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
