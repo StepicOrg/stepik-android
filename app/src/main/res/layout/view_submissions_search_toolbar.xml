@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <org.stepik.android.view.base.ui.widget.ClearFocusEditText
             android:id="@+id/searchSubmissionsEditText"
             android:visibility="visible"
             android:paddingLeft="8dp"
@@ -49,6 +49,7 @@
             android:maxLines="1"
             android:hint="@string/submissions_filter_search_hint"
             android:inputType="text"
+            android:ellipsize="end"
             android:imeOptions="actionSearch"
             android:drawablePadding="8dp"
             android:drawableLeft="@drawable/ic_search_mag"

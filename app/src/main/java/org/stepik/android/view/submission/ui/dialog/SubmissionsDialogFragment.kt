@@ -177,12 +177,14 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchSubmissionsEditText.hideKeyboard()
                 searchSubmissionsEditText.clearFocus()
-                submissionsPresenter.fetchSubmissions(
-                    step.id,
-                    isTeacher,
-                    submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
-                    forceUpdate = true
-                )
+                if (!searchSubmissionsEditText.text.isNullOrEmpty()) {
+                    submissionsPresenter.fetchSubmissions(
+                        step.id,
+                        isTeacher,
+                        submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+                        forceUpdate = true
+                    )
+                }
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
