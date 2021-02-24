@@ -997,4 +997,7 @@
     <!-- Currency format -->
     <string name="rub_format" translatable="false">%s ₽</string>
     <string name="usd_format" translatable="false">$%s</string>
+    <string name="authors_title">Course authors</string>
+    <string name="similar_courses_title">Similar courses</string>
+
 </resources>

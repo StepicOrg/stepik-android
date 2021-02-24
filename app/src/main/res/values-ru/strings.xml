@@ -956,4 +956,7 @@
     <string name="visited_courses_enrolled">Вы записаны</string>
 
     <string name="story_deeplink_open_fail">Не удалось открыть историю</string>
+    <string name="authors_title">Авторы курсов</string>
+    <string name="similar_courses_title">Похожие темы</string>
+
 </resources>

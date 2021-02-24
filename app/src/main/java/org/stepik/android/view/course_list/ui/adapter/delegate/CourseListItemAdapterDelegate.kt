@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
@@ -26,13 +27,22 @@ class CourseListItemAdapterDelegate(
     private val analytic: Analytic,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
-    private val isHandleInAppPurchase: Boolean
+    private val isHandleInAppPurchase: Boolean,
+    private val isNeedExtraMargin: Boolean = false
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.Data
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
-        ViewHolder(createView(parent, R.layout.item_course))
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> {
+        val view = createView(parent, R.layout.item_course)
+        if (isNeedExtraMargin) {
+            view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                leftMargin = view.resources.getDimensionPixelOffset(R.dimen.course_list_padding)
+                rightMargin = view.resources.getDimensionPixelOffset(R.dimen.course_list_padding)
+            }
+        }
+        return ViewHolder(view)
+    }
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
         private val courseCoverImageTarget =

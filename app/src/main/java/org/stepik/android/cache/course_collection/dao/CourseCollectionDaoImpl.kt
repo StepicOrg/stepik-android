@@ -25,7 +25,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseCollection>(
         persistentObject.id.toString()
 
     override fun getContentValues(persistentObject: CourseCollection): ContentValues =
-        ContentValues(7)
+        ContentValues(9)
             .apply {
                 put(DbStructureCourseCollection.Columns.ID, persistentObject.id)
                 put(DbStructureCourseCollection.Columns.POSITION, persistentObject.position)
@@ -34,6 +34,8 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseCollection>(
                 put(DbStructureCourseCollection.Columns.COURSES, DbParseHelper.parseLongListToString(persistentObject.courses))
                 put(DbStructureCourseCollection.Columns.DESCRIPTION, persistentObject.description)
                 put(DbStructureCourseCollection.Columns.PLATFORM, persistentObject.platform)
+                put(DbStructureCourseCollection.Columns.SIMILAR_AUTHORS, DbParseHelper.parseLongListToString(persistentObject.similarAuthors))
+                put(DbStructureCourseCollection.Columns.SIMILAR_COURSE_LISTS, DbParseHelper.parseLongListToString(persistentObject.similarCourseLists))
             }
 
     override fun parsePersistentObject(cursor: Cursor): CourseCollection =
@@ -44,6 +46,8 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseCollection>(
             cursor.getString(DbStructureCourseCollection.Columns.LANGUAGE)!!,
             DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseCollection.Columns.COURSES)) ?: listOf(),
             cursor.getString(DbStructureCourseCollection.Columns.DESCRIPTION)!!,
-            cursor.getInt(DbStructureCourseCollection.Columns.PLATFORM)
+            cursor.getInt(DbStructureCourseCollection.Columns.PLATFORM),
+            DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseCollection.Columns.SIMILAR_AUTHORS)) ?: listOf(),
+            DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseCollection.Columns.SIMILAR_COURSE_LISTS)) ?: listOf()
         )
 }

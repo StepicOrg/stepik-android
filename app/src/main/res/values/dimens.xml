@@ -257,4 +257,8 @@
 
     <!-- Catalog item / offline -->
     <dimen name="offline_item_top_margin">64dp</dimen>
+
+    <!-- Course collection / similar course lists / -->
+    <dimen name="similar_course_lists_top_margin">16dp</dimen>
+    <dimen name="vertical_course_collection_padding">8dp</dimen>
 </resources>
