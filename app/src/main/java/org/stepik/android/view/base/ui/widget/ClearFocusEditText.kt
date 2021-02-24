@@ -8,10 +8,9 @@ import androidx.appcompat.widget.AppCompatEditText
 /**
  * Clears focus from edit text when back button is pressed
  */
-class ClearFocusEditText : AppCompatEditText {
-    constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+class ClearFocusEditText
+@JvmOverloads
+constructor(context: Context, attrs: AttributeSet? = null) : AppCompatEditText(context, attrs) {
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
