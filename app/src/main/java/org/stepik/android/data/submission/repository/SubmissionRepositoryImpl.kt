@@ -7,6 +7,7 @@ import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.submission.source.SubmissionCacheDataSource
 import org.stepik.android.data.submission.source.SubmissionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
 import javax.inject.Inject
@@ -45,8 +46,8 @@ constructor(
                     }
         }
 
-    override fun getSubmissionsForStep(stepId: Long, userId: Long?, status: Submission.Status?, page: Int): Single<PagedList<Submission>> =
-        submissionRemoteDataSource.getSubmissionsForStep(stepId, userId, status, page)
+    override fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery, page: Int): Single<PagedList<Submission>> =
+        submissionRemoteDataSource.getSubmissionsForStep(stepId, submissionsFilterQuery, page)
 
     override fun removeSubmissionsForAttempt(attemptId: Long): Completable =
         submissionCacheDataSource.removeSubmissionsForAttempt(attemptId)

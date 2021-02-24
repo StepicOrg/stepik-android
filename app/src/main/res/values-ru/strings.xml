@@ -959,4 +959,22 @@
     <string name="authors_title">Авторы курсов</string>
     <string name="similar_courses_title">Похожие темы</string>
 
+    <!-- Submissions filter -->
+    <string name="submissions_filter_search_hint">ID, email, имя, номер решения</string>
+    <string name="submissions_filter_dialog_title">Поиск решений</string>
+
+    <string name="submissions_filter_submission_status_subtitle">Статус решения</string>
+    <string name="submissions_filter_any_status_radio_button_title">Любой</string>
+    <string name="submissions_filter_correct_status_radio_button_title">Верные</string>
+    <string name="submissions_filter_partially_correct_status_radio_button_title">Частично-верные</string>
+    <string name="submissions_filter_incorrect_status_radio_button_title">Неверные</string>
+
+    <string name="submissions_filter_date_sort_subtitle">Дата отправки решения</string>
+    <string name="submissions_filter_desc_date_radio_button_title">Сначала новые</string>
+    <string name="submissions_filter_asc_date_radio_button_title">Сначала старые</string>
+
+    <string name="submissions_filter_review_status_subtitle">Рецензии</string>
+    <string name="submissions_filter_any_review_status_radio_button_title">Любой статус рецензии</string>
+    <string name="submissions_filter_finished_review_status_radio_button_title">Рецензирование завершено</string>
+    <string name="submissions_filter_awaiting_review_status_radio_button_title">Ожидают рецензии</string>
 </resources>

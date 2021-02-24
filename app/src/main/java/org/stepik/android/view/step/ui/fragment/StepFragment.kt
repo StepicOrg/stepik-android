@@ -236,7 +236,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             ?: return
 
         SubmissionsDialogFragment
-            .newInstance(stepWrapper.step)
+            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.actions?.editLesson != null)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
 
         analytic

@@ -29,5 +29,5 @@
         </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
     </FrameLayout>
 
-    <include layout="@layout/view_centered_appbar"/>
+    <include layout="@layout/view_submissions_search_toolbar"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
