@@ -12,6 +12,7 @@ import ru.nobird.android.domain.rx.maybeFirst
 import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.domain.submission.repository.SubmissionRepository
@@ -119,7 +120,7 @@ constructor(
 
     private fun getStepSubmissionCount(stepId: Long): Single<Int> =
         submissionRepository
-            .getSubmissionsForStep(stepId)
+            .getSubmissionsForStep(stepId, SubmissionsFilterQuery())
             .map { it.size }
             .onErrorReturnItem(0)
 

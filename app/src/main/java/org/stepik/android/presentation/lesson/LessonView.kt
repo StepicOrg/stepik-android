@@ -42,7 +42,7 @@ interface LessonView {
 
     fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 
-    fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?)
+    fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?, isTeacher: Boolean)
 
     fun showRateDialog()
 

@@ -6,6 +6,7 @@ import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
+import org.stepik.android.view.injection.user.UserDataModule
 
 @CourseListCollectionScope
 @Subcomponent(modules = [
@@ -13,7 +14,8 @@ import org.stepik.android.view.injection.profile.ProfileDataModule
     CourseDataModule::class,
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
-    ProfileDataModule::class]
+    ProfileDataModule::class,
+    UserDataModule::class]
 )
 interface CourseListCollectionComponent {
     @Subcomponent.Builder

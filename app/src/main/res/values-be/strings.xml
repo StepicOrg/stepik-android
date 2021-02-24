@@ -717,6 +717,7 @@
     <string name="comment_compose_title">Каментар</string>
     <string name="solutions_compose_title">Рашэнне</string>
     <string name="comment_action_create">Напісаць каментар</string>
+    <string name="comment_action_submissions">Рашэнні </string>
     <string name="comment_action_edit">Змяніць</string>
     <string name="comment_action_remove">Выдаліць</string>
     <string name="comment_action_remove_description">Выдаліць гэты каментар</string>
@@ -820,4 +821,25 @@
     <string name="visited_courses_enrolled">Вы запісаныя</string>
 
     <string name="story_deeplink_open_fail">Не атрымалася адкрыць гісторыю</string>
+    <string name="authors_title">Аўтары курсаў</string>
+    <string name="similar_courses_title">Падобныя тэмы</string>
+
+    <!-- Submissions filter -->
+    <string name="submissions_filter_search_hint">ID, email, імя, нумар рашэння</string>
+    <string name="submissions_filter_dialog_title">Пошук рашэнняў </string>
+
+    <string name="submissions_filter_submission_status_subtitle">Статус рашэння </string>
+    <string name="submissions_filter_any_status_radio_button_title">Любы</string>
+    <string name="submissions_filter_correct_status_radio_button_title">Верныя</string>
+    <string name="submissions_filter_partially_correct_status_radio_button_title">Часткова-верныя</string>
+    <string name="submissions_filter_incorrect_status_radio_button_title">Няслушныя</string>
+
+    <string name="submissions_filter_date_sort_subtitle">Дата адпраўкі рашэння</string>
+    <string name="submissions_filter_desc_date_radio_button_title">Спачатку новыя</string>
+    <string name="submissions_filter_asc_date_radio_button_title">Спачатку старыя</string>
+
+    <string name="submissions_filter_review_status_subtitle">Рэцэнзіі</string>
+    <string name="submissions_filter_any_review_status_radio_button_title">Любы статус рэцэнзіі</string>
+    <string name="submissions_filter_finished_review_status_radio_button_title">Рэцэнзаванне завершана</string>
+    <string name="submissions_filter_awaiting_review_status_radio_button_title">Чакаюць рэцэнзіі</string>
 </resources>

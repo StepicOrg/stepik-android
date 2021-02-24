@@ -77,6 +77,12 @@ constructor(
 
                                     is CourseListItem.ViewAll ->
                                         null
+
+                                    is CourseListItem.SimilarCourses ->
+                                        null
+
+                                    is CourseListItem.SimilarAuthors ->
+                                        null
                                 }
                             }
                             ?.let { lastCourseId ->
