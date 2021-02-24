@@ -179,14 +179,12 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 searchSubmissionsEditText.hideKeyboard()
                 searchSubmissionsEditText.clearFocus()
-                if (!searchSubmissionsEditText.text.isNullOrEmpty()) {
-                    submissionsPresenter.fetchSubmissions(
-                        step.id,
-                        isTeacher,
-                        submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
-                        forceUpdate = true
-                    )
-                }
+                submissionsPresenter.fetchSubmissions(
+                    step.id,
+                    isTeacher,
+                    submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+                    forceUpdate = true
+                )
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -231,6 +229,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         swipeRefresh.isRefreshing = false
         if (state is SubmissionsView.State.Data) {
             viewContentStateDelegate.switchState(state.contentState)
+            filterIcon.setImageResource(getFilterIcon(state.submissionsFilterQuery))
             submissionsFilterQuery = state.submissionsFilterQuery
             submissionItemAdapter.items =
                 when (state.contentState) {
@@ -268,6 +267,13 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             .newInstance(step, submissionItem.attempt, submissionItem.submission)
             .showIfNotExists(parentFragmentManager, SolutionCommentDialogFragment.TAG)
     }
+
+    private fun getFilterIcon(updatedSubmissionQuery: SubmissionsFilterQuery): Int =
+        if (updatedSubmissionQuery == SubmissionsFilterQuery.DEFAULT_QUERY.copy(search = updatedSubmissionQuery.search)) {
+            R.drawable.ic_filter
+        } else {
+            R.drawable.ic_filter_active
+        }
 
     interface Callback {
         fun onSubmissionSelected(submission: Submission, attempt: Attempt)
