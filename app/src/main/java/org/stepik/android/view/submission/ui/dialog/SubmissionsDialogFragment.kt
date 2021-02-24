@@ -241,7 +241,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
     override fun showSubmissionsFilterDialog(submissionsFilterQuery: SubmissionsFilterQuery) {
         SubmissionsQueryFilterDialogFragment
-            .newInstance(submissionsFilterQuery)
+            .newInstance(submissionsFilterQuery, isPeerReview = step.actions?.doReview != null)
             .showIfNotExists(childFragmentManager, SubmissionsQueryFilterDialogFragment.TAG)
     }
 
