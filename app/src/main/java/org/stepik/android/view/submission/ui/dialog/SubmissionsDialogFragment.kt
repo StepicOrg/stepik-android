@@ -123,7 +123,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             ?.setTintList(requireContext(), R.attr.colorControlNormal)
             ?.let { backIcon.setImageDrawable(it) }
         backIcon.setOnClickListener { dismiss() }
-        clearSearchButton.setOnClickListener { searchSubmissionsEditText.text?.clear() }
+        clearSearchButton.setOnClickListener {
+            searchSubmissionsEditText.text?.clear()
+            fetchSearchQuery()
+        }
         filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
 
         viewContentStateDelegate = ViewStateDelegate()
@@ -177,14 +180,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                searchSubmissionsEditText.hideKeyboard()
-                searchSubmissionsEditText.clearFocus()
-                submissionsPresenter.fetchSubmissions(
-                    step.id,
-                    isTeacher,
-                    submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
-                    forceUpdate = true
-                )
+                fetchSearchQuery()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -274,6 +270,17 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         } else {
             R.drawable.ic_filter_active
         }
+
+    private fun fetchSearchQuery() {
+        searchSubmissionsEditText.hideKeyboard()
+        searchSubmissionsEditText.clearFocus()
+        submissionsPresenter.fetchSubmissions(
+            step.id,
+            isTeacher,
+            submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+            forceUpdate = true
+        )
+    }
 
     interface Callback {
         fun onSubmissionSelected(submission: Submission, attempt: Attempt)
