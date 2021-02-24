@@ -188,8 +188,6 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
         tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
 
-        val userIdQuery = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
-        userIdQuery?.let { searchSubmissionsEditText.setText(it) }
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 fetchSearchQuery()
@@ -207,6 +205,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                 searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_with_text), 0)
             }
         }
+        val userIdQuery = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
+        userIdQuery?.let { searchSubmissionsEditText.setText(it) }
     }
 
     private fun injectComponent() {
