@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.model.Submission
 
 interface SubmissionRepository {
@@ -13,7 +14,7 @@ interface SubmissionRepository {
     /**
      * If [userId] not specified all available submissions will be returned
      */
-    fun getSubmissionsForStep(stepId: Long, userId: Long? = null, status: Submission.Status? = null, page: Int = 1): Single<PagedList<Submission>>
+    fun getSubmissionsForStep(stepId: Long, submissionsFilterQuery: SubmissionsFilterQuery, page: Int = 1): Single<PagedList<Submission>>
 
     fun removeSubmissionsForAttempt(attemptId: Long): Completable
 }
