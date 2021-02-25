@@ -402,13 +402,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             ?.play()
     }
 
-    override fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?) {
+    override fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?, isTeacher: Boolean) {
         if (discussionThread != null) {
             analytic.reportAmplitudeEvent(
                 AmplitudeAnalytic.Discussions.SCREEN_OPENED,
                 mapOf(AmplitudeAnalytic.Discussions.Params.SOURCE to AmplitudeAnalytic.Discussions.Values.DISCUSSION)
             )
-            screenManager.openComments(this, discussionThread, step, discussionId, false)
+            screenManager.openComments(this, discussionThread, step, discussionId, false, isTeacher)
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE)
             lessonPager.snackbar(messageRes = R.string.comment_disabled)

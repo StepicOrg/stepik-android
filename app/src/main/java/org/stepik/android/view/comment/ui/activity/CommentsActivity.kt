@@ -41,6 +41,7 @@ import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAda
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
+import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -56,6 +57,7 @@ class CommentsActivity :
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
         private const val EXTRA_STEP = "step"
         private const val EXTRA_IS_NEED_OPEN_COMPOSE = "is_need_open_compose"
+        private const val EXTRA_IS_TEACHER = "is_teacher"
 
         /**
          * [discussionId] - discussion id from deep link
@@ -65,13 +67,15 @@ class CommentsActivity :
             step: Step,
             discussionThread: DiscussionThread,
             discussionId: Long? = null,
-            isNeedOpenCompose: Boolean = false
+            isNeedOpenCompose: Boolean = false,
+            isTeacher: Boolean = false
         ): Intent =
             Intent(context, CommentsActivity::class.java)
                 .putExtra(EXTRA_STEP, step)
                 .putExtra(EXTRA_DISCUSSION_THREAD, discussionThread)
                 .putExtra(EXTRA_DISCUSSION_ID, discussionId ?: -1)
                 .putExtra(EXTRA_IS_NEED_OPEN_COMPOSE, isNeedOpenCompose)
+                .putExtra(EXTRA_IS_TEACHER, isTeacher)
     }
 
     @Inject
@@ -90,6 +94,7 @@ class CommentsActivity :
 
     private val step by lazy { intent.getParcelableExtra<Step>(EXTRA_STEP) }
     private val discussionThread by lazy { intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD) }
+    private val isTeacher by lazy { intent.getBooleanExtra(EXTRA_IS_TEACHER, false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,6 +119,7 @@ class CommentsActivity :
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
         commentsAdapter += CommentDataAdapterDelegate(
+            isTeacher = isTeacher,
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
                     commentsPresenter.onComposeCommentClicked(step, parent = parentCommentId)
@@ -121,6 +127,12 @@ class CommentsActivity :
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
                     commentsPresenter.onChangeVote(commentDataItem, voteValue)
+                }
+
+                override fun onViewSubmissionsClicked(commentDataItem: CommentItem.Data) {
+                    SubmissionsDialogFragment
+                        .newInstance(step, isTeacher = isTeacher, userId = commentDataItem.user.id)
+                        .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {

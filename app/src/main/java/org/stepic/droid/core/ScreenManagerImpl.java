@@ -559,9 +559,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Activity context, @NonNull DiscussionThread discussionThread, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm) {
+    public void openComments(Activity context, @NonNull DiscussionThread discussionThread, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm, boolean isTeacher) {
         analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-        context.startActivity(CommentsActivity.Companion.createIntent(context, step, discussionThread, discussionId, needOpenForm));
+        context.startActivity(CommentsActivity.Companion.createIntent(context, step, discussionThread, discussionId, needOpenForm, isTeacher));
     }
 
     @Override

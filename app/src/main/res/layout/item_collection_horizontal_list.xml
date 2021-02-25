@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/catalogBlockContainerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical" />
+
+    <TextView
+        android:id="@+id/containerTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginStart="@dimen/course_list_side_padding"
+        android:gravity="start"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:text="@string/authors_title"
+        tools:ignore="MissingPrefix"
+        tools:text="@string/my_courses_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/horizontalListRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

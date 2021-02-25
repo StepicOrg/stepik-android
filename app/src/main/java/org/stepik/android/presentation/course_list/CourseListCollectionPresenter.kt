@@ -1,9 +1,7 @@
 package org.stepik.android.presentation.course_list
 
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -13,7 +11,6 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_collection.interactor.CourseCollectionInteractor
-import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
@@ -39,7 +36,6 @@ constructor(
     private val courseCollectionInteractor: CourseCollectionInteractor,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListCollectionStateMapper: CourseListCollectionStateMapper,
-    private val courseListInteractor: CourseListInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -65,8 +61,6 @@ constructor(
             view?.setState(value)
         }
 
-    var firstVisibleItemPosition: Int? = null
-
     private val paginationDisposable = CompositeDisposable()
 
     init {
@@ -88,32 +82,15 @@ constructor(
         val viewSource = CourseViewSource.Collection(courseCollectionId)
 
         state = CourseListCollectionView.State.Loading
-        paginationDisposable += Flowable
-            .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
-            .concatMapSingle { sourceType ->
-                courseCollectionInteractor
-                    .getCourseCollection(courseCollectionId, sourceType.generalSourceType)
-                    .flatMap { collection ->
-                        if (collection.courses.isEmpty()) {
-                            Single.just(CourseListView.State.Empty to sourceType.generalSourceType)
-                        } else {
-                            val ids = collection.courses.take(PAGE_SIZE)
-                            courseListInteractor
-                                .getCourseListItems(ids, sourceTypeComposition = sourceType, courseViewSource = viewSource)
-                                .map { items ->
-                                    CourseListView.State.Content(courseListDataItems = items, courseListItems = items) to sourceType.generalSourceType
-                                }
-                        }.map { (courseListViewState, sourceType) ->
-                            CourseListCollectionView.State.Data(collection, courseListViewState, sourceType)
-                        }
-                    }
-            }
+        paginationDisposable += courseCollectionInteractor
+            .getCourseCollectionResult(courseCollectionId, viewSource)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = {
-                    val isNeedLoadNextPage = courseListCollectionStateMapper.isNeedLoadNextPage(it)
-                    state = it
+                onNext = { courseCollectionResult ->
+                    val newState = courseListCollectionStateMapper.mapCourseCollectionResultToState(courseCollectionResult)
+                    val isNeedLoadNextPage = courseListCollectionStateMapper.isNeedLoadNextPage(newState)
+                    state = newState
 
                     if (isNeedLoadNextPage) {
                         fetchNextPage()
@@ -143,13 +120,18 @@ constructor(
         val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
             ?: return
 
+        val lastItem = oldCourseListState.courseListItems.last()
+        if (lastItem is CourseListItem.SimilarAuthors || lastItem is CourseListItem.SimilarCourses) {
+            return
+        }
+
         val ids = getNextPageCourseIds(oldState.courseCollection, oldCourseListState)
             ?.takeIf { it.isNotEmpty() }
             ?: return
 
         state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
         if (oldState.sourceType != DataSourceType.CACHE) {
-            paginationDisposable += courseListInteractor
+            paginationDisposable += courseCollectionInteractor
                 .getCourseListItems(ids, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id))
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
@@ -205,7 +187,7 @@ constructor(
         val oldState = (state as? CourseListCollectionView.State.Data)
             ?: return
 
-        compositeDisposable += courseListInteractor
+        compositeDisposable += courseCollectionInteractor
             .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)

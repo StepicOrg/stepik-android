@@ -2,6 +2,7 @@ package org.stepik.android.domain.submission.interactor
 
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.UserPreferences
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
@@ -15,7 +16,7 @@ constructor(
 ) {
     fun getLastSubmission(stepId: Long): Maybe<Submission> =
         submissionRepository
-            .getSubmissionsForStep(stepId, userPreferences.userId)
+            .getSubmissionsForStep(stepId, SubmissionsFilterQuery(user = userPreferences.userId))
             .map { it as List<Submission> }
             .maybeFirst()
 }
