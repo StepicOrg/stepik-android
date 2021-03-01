@@ -978,4 +978,11 @@
     <string name="submissions_filter_any_review_status_radio_button_title">Любой статус рецензии</string>
     <string name="submissions_filter_finished_review_status_radio_button_title">Рецензирование завершено</string>
     <string name="submissions_filter_awaiting_review_status_radio_button_title">Ожидают рецензии</string>
+
+    <string name="submission_score">Оценка</string>
+    <string name="submission_select">Выбрать это решение</string>
+    <string name="submission_status_correct">Верно</string>
+    <string name="submission_status_partially_correct">Частично-верно</string>
+    <string name="submission_status_incorrect">Неверно</string>
+    <string name="submission_action_similar">Все решения пользователя</string>
 </resources>

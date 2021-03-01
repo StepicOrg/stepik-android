@@ -865,6 +865,7 @@
     <string name="comment_action_remove_description">Remove this comment?</string>
 
     <string name="comment_solution_pattern">Solution %d</string>
+    <string name="comment_solution_number" translatable="false">#%d</string>
 
     <string name="comment_disabled">Comments disabled</string>
     <string name="solution_disabled">Solutions disabled</string>
@@ -1009,7 +1010,7 @@
     <string name="submissions_filter_any_status_radio_button_title">Any</string>
     <string name="submissions_filter_correct_status_radio_button_title">Correct</string>
     <string name="submissions_filter_partially_correct_status_radio_button_title">Partially correct</string>
-    <string name="submissions_filter_incorrect_status_radio_button_title">Incorrect</string>
+    <string name="submissions_filter_incorrect_status_radio_button_title">Wrong</string>
 
     <string name="submissions_filter_date_sort_subtitle">Submission date sort</string>
     <string name="submissions_filter_desc_date_radio_button_title">First new</string>
@@ -1021,4 +1022,11 @@
     <string name="submissions_filter_awaiting_review_status_radio_button_title">Awaiting review</string>
 
     <string name="submissions_user_filter" translatable="false">id:%d</string>
+
+    <string name="submission_score">Score</string>
+    <string name="submission_select">Select this submission</string>
+    <string name="submission_status_correct">Correct</string>
+    <string name="submission_status_partially_correct">Partially correct</string>
+    <string name="submission_status_incorrect">Wrong</string>
+    <string name="submission_action_similar">All user submissions</string>
 </resources>
