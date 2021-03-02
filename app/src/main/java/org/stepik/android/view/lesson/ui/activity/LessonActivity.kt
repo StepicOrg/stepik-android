@@ -269,9 +269,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent != null) {
-            if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
-                lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
-                intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+            when {
+                intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false) -> {
+                    lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
+                    intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+                }
+
+                intent.data != null -> {
+                    finish()
+                    startActivity(intent)
+                }
             }
         }
     }
