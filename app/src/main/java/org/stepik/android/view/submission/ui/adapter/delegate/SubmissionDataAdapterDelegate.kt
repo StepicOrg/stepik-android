@@ -13,12 +13,14 @@ import kotlinx.android.synthetic.main.item_submission_data.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import kotlin.math.roundToInt
 
 class SubmissionDataAdapterDelegate(
     private val isTeacher: Boolean,
@@ -43,6 +45,7 @@ class SubmissionDataAdapterDelegate(
         private val submissionSelect = root.submissionSelect
         private val submissionStatus = root.submissionStatus
         private val submissionScoreValue = root.submissionScoreValue
+        private val submissionScoreText = root.submissionScoreText
 
         private val submissionUserIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
@@ -135,9 +138,22 @@ class SubmissionDataAdapterDelegate(
 
             submissionStatus.setTextColor(tintColor)
             submissionStatus.text = statusText
-            submissionScoreValue.text = submission.score
+            submissionScoreValue.text = getSubmissionValue(submission)
             submissionSolution.text = context.getString(R.string.comment_solution_number, submission.id)
             TextViewCompat.setCompoundDrawableTintList(submissionSolution, ColorStateList.valueOf(tintColor))
+
+            val needShowScore = (submission.score?.toFloatOrNull() ?: 0f) > 0f
+            submissionScoreValue.isVisible = needShowScore
+            submissionScoreText.isVisible = needShowScore
+        }
+
+        private fun getSubmissionValue(submission: Submission): String {
+            val submissionScore = submission.score?.toFloatOrNull() ?: 0f
+            return if (submissionScore < 1f) {
+                submissionScore.toFixed(2)
+            } else {
+                submissionScore.roundToInt().toString()
+            }
         }
     }
 

@@ -83,7 +83,7 @@
             android:background="?selectableItemBackgroundBorderless"
 
             android:layout_marginTop="@dimen/comment_item_margin"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="8dp"
 
             app:srcCompat="@drawable/ic_more_vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -122,21 +122,23 @@
             android:textAppearance="?textAppearanceCaption"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/submissionScoreText"
+            app:layout_constraintTop_toBottomOf="@id/submissionSolution"
+            app:layout_constraintBottom_toBottomOf="parent"
 
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
+            android:layout_marginBottom="12dp"
 
             tools:text="Верно" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/submissionScoreValue"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:textAppearance="?textAppearanceSubtitle1"
             android:theme="@style/ThemeOverlay.Violet"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="16dp"
             android:layout_marginBottom="8dp"
 
             app:layout_constraintEnd_toEndOf="parent"
