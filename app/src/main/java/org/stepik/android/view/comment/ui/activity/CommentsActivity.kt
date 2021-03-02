@@ -23,6 +23,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
+import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -119,7 +120,7 @@ class CommentsActivity :
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
         commentsAdapter += CommentDataAdapterDelegate(
-            isTeacher = isTeacher,
+            showUserSubmissions = resolveShowUserSubmissions(),
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
                     commentsPresenter.onComposeCommentClicked(step, parent = parentCommentId)
@@ -346,5 +347,14 @@ class CommentsActivity :
     override fun onDeleteComment(commentId: Long) {
         analytic.reportEvent(Analytic.Comments.DELETE_COMMENT_CONFIRMATION)
         commentsPresenter.removeComment(commentId)
+    }
+
+    private fun resolveShowUserSubmissions(): Boolean {
+        val hasQuiz = step.block?.name?.let { name ->
+            name != AppConstants.TYPE_VIDEO &&
+                    name != AppConstants.TYPE_TEXT
+        } ?: false
+
+        return hasQuiz && isTeacher
     }
 }

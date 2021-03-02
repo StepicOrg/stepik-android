@@ -149,7 +149,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
         submissionItemAdapter = DefaultDelegateAdapter()
         submissionItemAdapter += SubmissionDataAdapterDelegate(
-            isItemClickEnabled = isSelectionEnabled,
+            isTeacher = isTeacher,
+            isSelectionEnabled = isSelectionEnabled,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -166,6 +167,12 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                         ?.onSubmissionSelected(data.submission, data.attempt)
                     dismiss()
                 }
+
+                override fun onViewSubmissionsClicked(submissionDataItem: SubmissionItem.Data) {
+                    val userIdQuery = resources.getString(R.string.submissions_user_filter, submissionDataItem.user.id)
+                    searchSubmissionsEditText.setText(userIdQuery)
+                    fetchSearchQuery()
+                }
             }
         )
         submissionItemAdapter += SubmissionPlaceholderAdapterDelegate()
@@ -181,7 +188,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             }
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
+                ContextCompat.getDrawable(context, R.drawable.bg_submission_item_divider)?.let(::setDrawable)
             })
         }
 

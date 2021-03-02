@@ -842,4 +842,11 @@
     <string name="submissions_filter_any_review_status_radio_button_title">Любы статус рэцэнзіі</string>
     <string name="submissions_filter_finished_review_status_radio_button_title">Рэцэнзаванне завершана</string>
     <string name="submissions_filter_awaiting_review_status_radio_button_title">Чакаюць рэцэнзіі</string>
+
+    <string name="submission_score">Адзнака</string>
+    <string name="submission_select">Выбраць гэтае рашэнне</string>
+    <string name="submission_status_correct">Дакладна</string>
+    <string name="submission_status_partially_correct">Часткова-дакладна</string>
+    <string name="submission_status_incorrect">Няслушна</string>
+    <string name="submission_action_similar">Ўсе рашэнні карыстальніка</string>
 </resources>
