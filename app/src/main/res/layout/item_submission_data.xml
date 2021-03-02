@@ -82,10 +82,12 @@
             android:layout_height="wrap_content"
             android:background="?selectableItemBackgroundBorderless"
 
-            android:layout_marginTop="@dimen/comment_item_margin"
+            android:layout_marginTop="18dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_marginRight="8dp"
 
-            app:srcCompat="@drawable/ic_more_vertical"
+            app:srcCompat="@drawable/ic_more_without_padding"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             />
