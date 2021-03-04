@@ -26,6 +26,7 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -84,6 +85,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                     courseListPresenter.fetchNextPage()
                 }
             }
+            enforceSingleScrollDirection()
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
