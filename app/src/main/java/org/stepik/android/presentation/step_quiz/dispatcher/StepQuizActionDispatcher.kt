@@ -181,8 +181,6 @@ constructor(
                     submissionState
                 }
             }
-            else ->
-                throw IllegalArgumentException("Unsupported submission state = $submissionState")
         }
 
     private fun resolveCodeQuizLanguage(stepWrapper: StepPersistentWrapper): Single<CodePreference> =
