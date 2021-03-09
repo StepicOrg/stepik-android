@@ -1,35 +1,33 @@
 package org.stepik.android.cache.base.database
 
-import androidx.room.testing.MigrationTestHelper
-import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
+import org.stepik.android.migration_wrapper.MigrationWrappers
+import java.io.IOException
 
-/**
- * File with migration tests
- * Tests run migrations from Migrations.kt and validate the result using the json
- * schema generated from AppDatabase
- */
 @RunWith(AndroidJUnit4::class)
 class MigrationTest {
-    private val TEST_DB = "migration-test"
 
-    @get:Rule
-    val helper: MigrationTestHelper = MigrationTestHelper(
-        InstrumentationRegistry.getInstrumentation(),
-        AppDatabase::class.java.canonicalName,
-        FrameworkSQLiteOpenHelperFactory()
-    )
-
-//    @Test
-//    @Throws(IOException::class)
-//    fun migrate63To64() {
-//        helper.createDatabase(TEST_DB, 63).apply {
-//            close()
-//        }
-//
-//        helper.runMigrationsAndValidate(TEST_DB, 64, true, MigrationFrom63To64)
-//    }
+    @Test
+    @Throws(IOException::class)
+    fun migrateTest() {
+        Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().targetContext, AppDatabase::class.java)
+            .addMigrations(*MigrationWrappers.allMigration.map { it.migration }.toTypedArray())
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    MigrationWrappers.allMigration.forEach {
+                        it.migration.migrate(db)
+                        it.runTest(db)
+                    }
+                }
+            })
+            .build()
+            .openHelper
+            .writableDatabase
+    }
 }
