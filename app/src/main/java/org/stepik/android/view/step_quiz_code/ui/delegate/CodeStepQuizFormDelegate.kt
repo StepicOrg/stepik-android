@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.codeStepLayout
@@ -24,7 +25,8 @@ class CodeStepQuizFormDelegate(
     private val codeOptions: CodeOptions,
     private val codeLayoutDelegate: CodeLayoutDelegate,
     private val onFullscreenClicked: (lang: String, code: String) -> Unit,
-    private val syncCodePreference: (String) -> Unit
+    private val syncCodePreference: (String) -> Unit,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
@@ -78,6 +80,7 @@ class CodeStepQuizFormDelegate(
                 ?: return@setOnClickListener
             onFullscreenClicked(oldState.lang, oldState.code)
         }
+        codeLayout.codeEditor.doAfterTextChanged { onQuizChanged(createReply()) }
     }
 
     override fun createReply(): ReplyResult {

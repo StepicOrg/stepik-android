@@ -21,7 +21,7 @@ import ru.nobird.android.ui.adapters.selection.SingleChoiceSelectionHelper
 
 class ChoiceStepQuizFormDelegate(
     containerView: View,
-    private val syncReply: (() -> Unit)? = null
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private val context = containerView.context
 
@@ -100,6 +100,6 @@ class ChoiceStepQuizFormDelegate(
             is MultipleChoiceSelectionHelper ->
                 selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
         }
-        syncReply?.invoke()
+        onQuizChanged(createReply())
     }
 }

@@ -32,12 +32,15 @@ class TableStepQuizFragment :
         get() = arrayOf(tableRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
-        tableStepQuizFormDelegate = TableStepQuizFormDelegate(view, childFragmentManager)
+        tableStepQuizFormDelegate = TableStepQuizFormDelegate(
+            view,
+            childFragmentManager,
+            onQuizChanged = { replyResult -> syncReplyState(replyResult) }
+        )
         return tableStepQuizFormDelegate
     }
 
     override fun onSyncChosenColumnsWithParent(index: Int, chosenRows: List<Cell>) {
         tableStepQuizFormDelegate.updateTableSelectionItem(index, chosenRows)
-        syncReplyState()
     }
 }

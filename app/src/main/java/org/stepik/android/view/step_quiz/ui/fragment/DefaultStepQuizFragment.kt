@@ -22,6 +22,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizViewModel
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
+import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
@@ -148,8 +149,12 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
         }
     }
 
-    protected fun syncReplyState() {
-        stepQuizDelegate.syncReplyState()
+    protected fun syncReplyState(replyResult: ReplyResult) {
+        val reply = (replyResult as? ReplyResult.Success)
+            ?.reply
+            ?: return
+
+        viewModel.onNewMessage(StepQuizFeature.Message.SyncReply(reply))
     }
 
     private fun openStepInWeb(step: Step) {

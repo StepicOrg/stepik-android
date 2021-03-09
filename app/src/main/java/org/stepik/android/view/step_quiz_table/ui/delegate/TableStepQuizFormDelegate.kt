@@ -25,7 +25,8 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class TableStepQuizFormDelegate(
     containerView: View,
-    private val fragmentManager: FragmentManager
+    private val fragmentManager: FragmentManager,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private val quizDescription = containerView.stepQuizDescription
 
@@ -75,5 +76,6 @@ class TableStepQuizFormDelegate(
             val tableSelectionItem = get(index)
             set(index, tableSelectionItem.copy(tableChoices = columns))
         }
+        onQuizChanged(createReply())
     }
 }

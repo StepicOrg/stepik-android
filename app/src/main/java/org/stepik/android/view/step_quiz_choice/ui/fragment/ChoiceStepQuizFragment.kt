@@ -28,5 +28,5 @@ class ChoiceStepQuizFragment :
         get() = arrayOf(choicesRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        ChoiceStepQuizFormDelegate(view, syncReply = ::syncReplyState)
+        ChoiceStepQuizFormDelegate(view, onQuizChanged = { replyResult -> syncReplyState(replyResult) })
 }

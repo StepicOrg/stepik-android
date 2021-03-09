@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.TextViewCompat
+import androidx.core.widget.doAfterTextChanged
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
@@ -23,7 +24,8 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
     containerView: View,
-    private val stepBlockName: String?
+    private val stepBlockName: String?,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     companion object {
         private const val MINUS = "-\\\u002D\u00AD\u2012\u2013\u2014\u2015\u02D7"
@@ -60,6 +62,7 @@ class TextStepQuizFormDelegate(
 
         quizTextField.inputType = inputType
         quizDescription.setText(descriptionTextRes)
+        quizTextField.doAfterTextChanged { onQuizChanged(createReply()) }
     }
 
     override fun createReply(): ReplyResult =

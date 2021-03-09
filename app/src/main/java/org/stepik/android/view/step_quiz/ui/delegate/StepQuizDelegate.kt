@@ -173,14 +173,4 @@ class StepQuizDelegate(
                     null
             }
         }
-
-    fun syncReplyState() {
-        if (StepQuizFormResolver.isSubmissionInTerminalState(currentState ?: return)) return
-
-        val reply = (stepQuizFormDelegate.createReply() as? ReplyResult.Success)
-            ?.reply
-            ?: return
-
-        onNewMessage(StepQuizFeature.Message.SyncReply(reply))
-    }
 }

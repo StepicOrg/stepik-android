@@ -20,7 +20,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class MatchingStepQuizFormDelegate(
     containerView: View,
-    private val syncReply: (() -> Unit)? = null
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private val quizDescription = containerView.stepQuizDescription
     private val optionsAdapter = DefaultDelegateAdapter<MatchingItem>()
@@ -55,7 +55,7 @@ class MatchingStepQuizFormDelegate(
         optionsAdapter.items = optionsAdapter.items.swap(position, targetPosition)
         optionsAdapter.notifyItemChanged(position)
         optionsAdapter.notifyItemChanged(targetPosition)
-        syncReply?.invoke()
+        onQuizChanged(createReply())
     }
 
     override fun setState(state: StepQuizFeature.State.AttemptLoaded) {

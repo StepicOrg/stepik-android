@@ -1,8 +1,6 @@
 package org.stepik.android.view.step_quiz_code.ui.fragment
 
-import android.os.Bundle
 import android.view.View
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
@@ -44,11 +42,6 @@ class CodeStepQuizFragment :
     override val quizViews: Array<View>
         get() = arrayOf(stepQuizCodeContainer)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        codeStepLayout.codeEditor.doAfterTextChanged { syncReplyState() }
-    }
-
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
         codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
 
@@ -64,7 +57,8 @@ class CodeStepQuizFragment :
                 onChangeLanguageClicked = ::onChangeLanguageClicked
             ),
             onFullscreenClicked = ::onFullScreenClicked,
-            syncCodePreference = { language -> onSyncCodePreference(language) }
+            syncCodePreference = { language -> onSyncCodePreference(language) },
+            onQuizChanged = { replyResult -> syncReplyState(replyResult) }
         )
 
         return codeStepQuizFormDelegate

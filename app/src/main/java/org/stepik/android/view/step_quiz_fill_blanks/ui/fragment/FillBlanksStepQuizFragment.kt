@@ -31,7 +31,11 @@ class FillBlanksStepQuizFragment :
         get() = arrayOf(fillBlanksRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
-        fillBlanksStepQuizFormDelegate = FillBlanksStepQuizFormDelegate(view, childFragmentManager, syncReply = ::syncReplyState)
+        fillBlanksStepQuizFormDelegate = FillBlanksStepQuizFormDelegate(
+            view,
+            childFragmentManager,
+            onQuizChanged = { replyResult -> syncReplyState(replyResult) }
+        )
         return fillBlanksStepQuizFormDelegate
     }
 

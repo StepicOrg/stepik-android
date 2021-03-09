@@ -24,5 +24,5 @@ class MatchingStepQuizFragment : DefaultStepQuizFragment() {
         get() = arrayOf(sortingRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        MatchingStepQuizFormDelegate(view, syncReply = ::syncReplyState)
+        MatchingStepQuizFormDelegate(view, onQuizChanged = { replyResult -> syncReplyState(replyResult) })
 }

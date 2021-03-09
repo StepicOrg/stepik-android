@@ -250,22 +250,22 @@ class StepQuizReviewFragment :
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER ->
-                TextStepQuizFormDelegate(view, blockName)
+                TextStepQuizFormDelegate(view, blockName) {}
 
             AppConstants.TYPE_CHOICE ->
-                ChoiceStepQuizFormDelegate(view)
+                ChoiceStepQuizFormDelegate(view) {}
 
             AppConstants.TYPE_SORTING ->
-                SortingStepQuizFormDelegate(view)
+                SortingStepQuizFormDelegate(view) {}
 
             AppConstants.TYPE_MATCHING ->
-                MatchingStepQuizFormDelegate(view)
+                MatchingStepQuizFormDelegate(view) {}
 
             AppConstants.TYPE_FILL_BLANKS ->
-                FillBlanksStepQuizFormDelegate(view, childFragmentManager)
+                FillBlanksStepQuizFormDelegate(view, childFragmentManager) {}
 
             AppConstants.TYPE_TABLE ->
-                TableStepQuizFormDelegate(view, childFragmentManager)
+                TableStepQuizFormDelegate(view, childFragmentManager) {}
 
             else ->
                 null

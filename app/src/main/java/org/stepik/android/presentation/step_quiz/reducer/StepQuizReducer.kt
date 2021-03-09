@@ -7,6 +7,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.State
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.Message
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.Action
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import java.util.Calendar
 import javax.inject.Inject
@@ -93,7 +94,7 @@ constructor() : StateReducer<State, Message, Action> {
                 }
 
             is Message.SyncReply ->
-                if (state is State.AttemptLoaded) {
+                if (state is State.AttemptLoaded && !StepQuizFormResolver.isSubmissionInTerminalState(state)) {
                     val submission = createLocalSubmission(state, message.reply)
 
                     state.copy(submissionState = StepQuizFeature.SubmissionState.Loaded(submission)) to setOf(Action.SaveLocalSubmission(submission))
@@ -117,7 +118,7 @@ constructor() : StateReducer<State, Message, Action> {
                         is StepQuizFeature.SubmissionState.Loaded -> {
                             val codeFromSubmission = state.submissionState.submission.reply?.code
                             val codeTemplate = message.initCodePreference.codeTemplates[state.submissionState.submission.reply?.language]
-                            if (message.initCodePreference.sourceStepId == state.attempt.step || codeFromSubmission == codeTemplate) {
+                            if ((message.initCodePreference.sourceStepId == state.attempt.step || codeFromSubmission == codeTemplate) && state.submissionState.submission.status == Submission.Status.LOCAL) {
                                 state.copy(
                                     submissionState = state.submissionState.copy(
                                         submission = state.submissionState.submission.copy(
