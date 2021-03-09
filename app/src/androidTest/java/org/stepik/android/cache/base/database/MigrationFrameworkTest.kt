@@ -21,6 +21,7 @@ class MigrationFrameworkTest {
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     MigrationWrappers.allMigration.forEach {
+                        it.beforeTest(db)
                         it.migration.migrate(db)
                         it.afterTest(db)
                     }

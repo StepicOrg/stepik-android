@@ -15,6 +15,6 @@ class MigrationUnitTest {
     @Test
     fun migrationsPerformedTest() {
         val testedMigrations = MigrationWrappers.allMigration.map { it.migration }.toSet()
-        assert(testedMigrations == Migrations.migrations.toSet()) { "Check if migration test is written and migrationNames is updated!" }
+        assert(testedMigrations == Migrations.migrations.toSet()) { "Check if migration test is written and MigrationWrappers are updated!" }
     }
 }
