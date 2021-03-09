@@ -1,6 +1,7 @@
 package org.stepik.android.view.step.ui.fragment
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.Menu
 import android.view.MenuInflater
@@ -174,8 +175,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     .copyTextToClipboard(textToCopy = stepUri, toastMessage = getString(R.string.link_copied_title))
             }
         }
-
-        stepDisabled.placeholderMessage.text =
+        val placeholderMessage = stepDisabled.placeholderMessage
+        placeholderMessage.text =
             buildSpannedString {
                 append(getString(R.string.step_disabled_description_part_1))
                 inSpans(stepLinkSpan) {
@@ -183,6 +184,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 }
                 append(getString(R.string.step_disabled_description_part_2))
             }
+        placeholderMessage.movementMethod = LinkMovementMethod.getInstance()
     }
 
     private fun initStepContentFragment() {
@@ -291,8 +293,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block ||
                     stepWrapper.step.isEnabled != state.stepWrapper.step.isEnabled
 
-            val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
-                    state.stepWrapper.step.isEnabled == false
+            val isStepDisabled = true
 
             stepContentContainer.isGone = isStepDisabled
             stepContentSeparator.isGone = isStepDisabled
