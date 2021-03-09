@@ -20,7 +20,7 @@ class RemoveCommentDialogFragment : DialogFragment() {
     private var commentId by argument<Long>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.comment_action_remove_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->
