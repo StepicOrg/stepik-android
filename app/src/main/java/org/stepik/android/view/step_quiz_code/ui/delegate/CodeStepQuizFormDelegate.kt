@@ -7,7 +7,6 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playgroun
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.stepQuizActions
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepik.android.domain.code_preference.model.InitCodePreference
 import org.stepik.android.model.Reply
 import org.stepik.android.model.code.CodeOptions
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -22,11 +21,10 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
     containerView: View,
-    private val stepId: Long,
     private val codeOptions: CodeOptions,
     private val codeLayoutDelegate: CodeLayoutDelegate,
     private val onFullscreenClicked: (lang: String, code: String) -> Unit,
-    private val onNewMessage: (StepQuizFeature.Message) -> Unit
+    private val syncCodePreference: (String) -> Unit
 ) : StepQuizFormDelegate {
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
@@ -63,15 +61,7 @@ class CodeStepQuizFormDelegate(
          */
         stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate {
             val codeTemplate = codeOptions.codeTemplates[it] ?: ""
-            onNewMessage(StepQuizFeature.Message.CreateCodePreference(
-                languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
-                language = it,
-                initCodePreference = InitCodePreference(
-                    sourceStepId = stepId,
-                    language = it,
-                    codeTemplates = codeOptions.codeTemplates
-                )
-            ))
+            syncCodePreference(it)
             state = CodeStepQuizFormState.Lang(it, codeTemplate)
         }
         stepQuizCodeLangChooserAdapter.items = codeOptions.codeTemplates.keys.toList().sorted()
@@ -110,15 +100,7 @@ class CodeStepQuizFormDelegate(
         if (state !is CodeStepQuizFormState.Lang) {
             return
         }
-        onNewMessage(StepQuizFeature.Message.CreateCodePreference(
-            languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
-            language = lang,
-            initCodePreference = InitCodePreference(
-                sourceStepId = stepId,
-                language = lang,
-                codeTemplates = codeOptions.codeTemplates
-            )
-        ))
+        syncCodePreference(lang)
         state = CodeStepQuizFormState.Lang(lang, codeOptions.codeTemplates[lang] ?: "")
     }
 

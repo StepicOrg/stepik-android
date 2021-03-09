@@ -206,7 +206,6 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_CODE ->
                 CodeStepQuizFormDelegate(
                     containerView = view,
-                    stepId = step.id,
                     codeOptions = step.block?.options!!,
                     codeLayoutDelegate =
                         CodeLayoutDelegate(
@@ -218,7 +217,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
                             onChangeLanguageClicked = {}
                         ),
                     onFullscreenClicked = { _, _ -> },
-                    onNewMessage = { }
+                    syncCodePreference = { }
                 )
 
             AppConstants.TYPE_SORTING ->

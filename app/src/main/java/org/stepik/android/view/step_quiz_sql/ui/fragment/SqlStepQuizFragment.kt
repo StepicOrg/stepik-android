@@ -58,6 +58,8 @@ class SqlStepQuizFragment :
         }
     }
 
+    override fun onSyncCodePreference(lang: String) {}
+
     private fun onFullScreenClicked(lang: String, code: String) {
         CodeStepQuizFullScreenDialogFragment
             .newInstance(lang, code, mapOf(ProgrammingLanguage.SQL.serverPrintableName to ""), stepWrapper, lessonData.lesson.title.orEmpty())

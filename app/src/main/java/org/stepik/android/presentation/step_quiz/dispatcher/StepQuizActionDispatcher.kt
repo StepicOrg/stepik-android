@@ -168,7 +168,8 @@ constructor(
             is StepQuizFeature.SubmissionState.Loaded -> {
                 val codeFromSubmission = submissionState.submission.reply?.code
                 val codeTemplate = stepWrapper.step.block?.options?.codeTemplates?.get(submissionState.submission.reply?.language)
-                if (codeFromSubmission == codeTemplate) {
+                // If the submission is local and was not changed - set new template
+                if (codeFromSubmission == codeTemplate && submissionState.submission.status == Submission.Status.LOCAL) {
                     submissionState.copy(
                         submission = submissionState.submission.copy(
                             _reply = submissionState.submission._reply?.copy(

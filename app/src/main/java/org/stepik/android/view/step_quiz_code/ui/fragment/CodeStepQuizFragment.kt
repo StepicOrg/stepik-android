@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
+import org.stepik.android.domain.code_preference.model.InitCodePreference
 import org.stepik.android.model.code.CodeOptions
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -53,7 +54,6 @@ class CodeStepQuizFragment :
 
         codeStepQuizFormDelegate = CodeStepQuizFormDelegate(
             containerView = view,
-            stepId = stepId,
             codeOptions = codeOptions,
             codeLayoutDelegate = CodeLayoutDelegate(
                 codeContainerView = view,
@@ -64,7 +64,7 @@ class CodeStepQuizFragment :
                 onChangeLanguageClicked = ::onChangeLanguageClicked
             ),
             onFullscreenClicked = ::onFullScreenClicked,
-            onNewMessage = viewModel::onNewMessage
+            syncCodePreference = { language -> onSyncCodePreference(language) }
         )
 
         return codeStepQuizFormDelegate
@@ -88,6 +88,18 @@ class CodeStepQuizFragment :
         if (onSubmitClicked) {
             onActionButtonClicked()
         }
+    }
+
+    override fun onSyncCodePreference(lang: String) {
+        viewModel.onNewMessage(StepQuizFeature.Message.CreateCodePreference(
+            languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
+            language = lang,
+            initCodePreference = InitCodePreference(
+                sourceStepId = stepId,
+                language = lang,
+                codeTemplates = codeOptions.codeTemplates
+            )
+        ))
     }
 
     private fun onChangeLanguageClicked() {
