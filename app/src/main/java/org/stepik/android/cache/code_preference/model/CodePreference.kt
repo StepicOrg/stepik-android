@@ -6,10 +6,10 @@ import androidx.room.PrimaryKey
 @Entity
 data class CodePreference(
     @PrimaryKey
-    val languagesKey: String,
+    val languagesKey: List<String>,
     val preferredLanguage: String
 ) {
     companion object {
-        val EMPTY = CodePreference("", "")
+        val EMPTY = CodePreference(emptyList(), "")
     }
 }

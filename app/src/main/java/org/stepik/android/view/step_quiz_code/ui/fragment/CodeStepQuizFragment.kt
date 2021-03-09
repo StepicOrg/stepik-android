@@ -86,7 +86,7 @@ class CodeStepQuizFragment :
 
     override fun onSyncCodePreference(lang: String) {
         viewModel.onNewMessage(StepQuizFeature.Message.CreateCodePreference(
-            languagesKey = codeOptions.codeTemplates.keys.sorted().toString(),
+            languagesKey = codeOptions.codeTemplates.keys.sorted().toList(),
             language = lang,
             initCodePreference = InitCodePreference(
                 sourceStepId = stepId,

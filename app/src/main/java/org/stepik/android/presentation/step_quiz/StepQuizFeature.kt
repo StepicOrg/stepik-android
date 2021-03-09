@@ -50,7 +50,7 @@ interface StepQuizFeature {
 
         data class SyncReply(val reply: Reply) : Message()
         data class CreateCodePreference(
-            val languagesKey: String,
+            val languagesKey: List<String>,
             val language: String,
             val initCodePreference: InitCodePreference
         ) : Message()

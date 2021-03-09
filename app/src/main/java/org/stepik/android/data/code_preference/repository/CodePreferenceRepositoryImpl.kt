@@ -12,7 +12,7 @@ class CodePreferenceRepositoryImpl
 constructor(
     private val codePreferenceCacheDataSource: CodePreferenceCacheDataSource
 ) : CodePreferenceRepository {
-    override fun getCodePreference(languagesKey: String): Single<CodePreference> =
+    override fun getCodePreference(languagesKey: List<String>): Single<CodePreference> =
         codePreferenceCacheDataSource
             .getCodePreference(languagesKey)
             .onErrorReturnItem(CodePreference.EMPTY)

@@ -5,6 +5,6 @@ import io.reactivex.Single
 import org.stepik.android.cache.code_preference.model.CodePreference
 
 interface CodePreferenceRepository {
-    fun getCodePreference(languagesKey: String): Single<CodePreference>
+    fun getCodePreference(languagesKey: List<String>): Single<CodePreference>
     fun saveCodePreference(codePreference: CodePreference): Completable
 }

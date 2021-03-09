@@ -11,7 +11,7 @@ class CodePreferenceInteractor
 constructor(
     private val codePreferenceRepository: CodePreferenceRepository
 ) {
-    fun getCodePreference(languagesKey: String): Single<CodePreference> =
+    fun getCodePreference(languagesKey: List<String>): Single<CodePreference> =
         codePreferenceRepository.getCodePreference(languagesKey)
 
     fun saveCodePreference(codePreference: CodePreference): Completable =

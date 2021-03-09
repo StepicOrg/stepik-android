@@ -12,9 +12,17 @@ class CodePreferenceCacheDataSourceImpl
 constructor(
     private val codePreferenceDao: CodePreferenceDao
 ) : CodePreferenceCacheDataSource {
-    override fun getCodePreference(languagesKey: String): Single<CodePreference> =
-        codePreferenceDao.getCodePreferences(languagesKey)
+    companion object {
+        private const val PREFIX = "["
+        private const val POSTFIX = "]"
+        private const val SEPARATOR = "__,__"
+    }
+    override fun getCodePreference(languagesKey: List<String>): Single<CodePreference> =
+        codePreferenceDao.getCodePreferences(mapLanguagesKeyToString(languagesKey))
 
     override fun saveCodePreference(codePreference: CodePreference): Completable =
         codePreferenceDao.saveCodePreference(codePreference)
+
+    private fun mapLanguagesKeyToString(languagesKey: List<String>): String =
+        languagesKey.joinToString(separator = SEPARATOR, transform = { "$PREFIX$it$POSTFIX" })
 }

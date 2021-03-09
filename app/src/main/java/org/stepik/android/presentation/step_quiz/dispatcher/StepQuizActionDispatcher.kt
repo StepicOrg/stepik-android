@@ -187,7 +187,7 @@ constructor(
     private fun resolveCodeQuizLanguage(stepWrapper: StepPersistentWrapper): Single<CodePreference> =
         if (stepWrapper.step.block?.name == AppConstants.TYPE_CODE) {
             stepWrapper.step.block?.options?.codeTemplates?.entries?.let {
-                codePreferenceInteractor.getCodePreference(stepWrapper.step.block?.options?.codeTemplates?.keys?.sorted().toString())
+                codePreferenceInteractor.getCodePreference(stepWrapper.step.block?.options?.codeTemplates?.keys?.sorted()?.toList() ?: emptyList())
             } ?: Single.just(CodePreference.EMPTY)
         } else {
             Single.just(CodePreference.EMPTY)
