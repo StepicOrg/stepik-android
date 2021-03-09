@@ -620,7 +620,9 @@
     <string name="lesson_step_counter">Крок %d з %d</string>
     <!-- Step -->
     <string name="step_disabled_title">Убачыць задачу пакуль нельга</string>
-    <string name="step_disabled_description">Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады %s.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
+    <string name="step_disabled_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
+    <string name="step_disabled_description_part_2">.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
+    <string name="step_disabled_pattern">%s → Крок %d</string>
 
     <string name="step_amount_passed">Рашыла:&#160;</string>
     <string name="step_correct_submissions_percentage">Паспяховых рашэнняў:&#160;</string>

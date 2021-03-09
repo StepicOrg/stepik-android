@@ -707,7 +707,9 @@
 
     <!-- Step -->
     <string name="step_disabled_title">Увидеть задачу пока нельзя</string>
-    <string name="step_disabled_description">Напишите авторам курса, чтобы они обратили внимание на настройки %s.\n\nВозможно, через какое-то время доступ восстановится.</string>
+    <string name="step_disabled_description_part_1">"Напишите авторам курса, чтобы они обратили внимание на настройки "</string>
+    <string name="step_disabled_description_part_2">.\n\nВозможно, через какое-то время доступ восстановится.</string>
+    <string name="step_disabled_pattern">%s → Шаг %d</string>
 
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>

@@ -1,6 +1,7 @@
 package org.stepik.android.view.step.ui.fragment
 
 import android.os.Bundle
+import android.text.style.ClickableSpan
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -8,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -18,18 +21,22 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_step.*
+import kotlinx.android.synthetic.main.view_step_disabled.view.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.commitNow
+import org.stepic.droid.util.copyTextToClipboard
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
@@ -39,6 +46,7 @@ import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
@@ -82,6 +90,12 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     @Inject
     internal lateinit var remoteConfig: FirebaseRemoteConfig
+
+    @Inject
+    internal lateinit var lessonTitleMapper: LessonTitleMapper
+
+    @Inject
+    internal lateinit var config: Config
 
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
@@ -140,7 +154,35 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         stepContentNext.isVisible = stepWrapper.step.position < lessonData.lesson.steps.size && !stepWrapper.isStepCanHaveQuiz
         stepContentNext.setOnClickListener { moveNext() }
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
+
+        initDisabledStep()
         initStepContentFragment()
+    }
+
+    private fun initDisabledStep() {
+        val lessonTitle =
+            lessonTitleMapper.mapToLessonTitle(requireContext(), lessonData)
+        val stepTitle =
+            getString(R.string.step_disabled_pattern, lessonTitle, stepWrapper.step.position)
+
+        val stepLinkSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val stepUri = StringUtil
+                    .getUriForStep(config.baseUrl, lessonData.lesson, lessonData.unit, stepWrapper.step)
+
+                requireContext()
+                    .copyTextToClipboard(textToCopy = stepUri, toastMessage = getString(R.string.link_copied_title))
+            }
+        }
+
+        stepDisabled.placeholderMessage.text =
+            buildSpannedString {
+                append(getString(R.string.step_disabled_description_part_1))
+                inSpans(stepLinkSpan) {
+                    append(stepTitle)
+                }
+                append(getString(R.string.step_disabled_description_part_2))
+            }
     }
 
     private fun initStepContentFragment() {

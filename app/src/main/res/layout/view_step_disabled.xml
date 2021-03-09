@@ -11,17 +11,16 @@
     tools:visibility="visible">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/placeholderIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         app:srcCompat="@drawable/ic_empty_disabled_step"
         android:alpha="0.6"
-        android:contentDescription="@string/step_disabled_description" />
+        android:contentDescription="@string/step_disabled_description_part_1" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/stepQuizFeedbackValidation"
         style="@style/StepQuizFeedback.Info"
+        android:textAppearance="?textAppearanceSubtitle1"
         android:layout_marginTop="32dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -34,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_placeholders"
         android:textAppearance="?textAppearanceBody1"
-        android:text="@string/step_disabled_description" />
+        android:linksClickable="true"
+        android:text="@string/step_disabled_description_part_1" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

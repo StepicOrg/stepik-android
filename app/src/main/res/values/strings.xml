@@ -740,7 +740,9 @@
 
     <!-- Step -->
     <string name="step_disabled_title">You can\'t view the assignment yet</string>
-    <string name="step_disabled_description">Contact the course authors to suggest that they change the settings %s.\n\nThe access might resume after a while.</string>
+    <string name="step_disabled_description_part_1">"Contact the course authors to suggest that they change the settings "</string>
+    <string name="step_disabled_description_part_2">.\n\nThe access might resume after a while.</string>
+    <string name="step_disabled_pattern">%s → Step %d</string>
 
     <string name="step_amount_passed">Passed:&#160;</string>
     <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>
