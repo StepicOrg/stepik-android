@@ -1,10 +1,6 @@
 package org.stepic.droid.ui.util
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.os.Build
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -13,17 +9,11 @@ import android.view.animation.Transformation
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
-import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import org.stepic.droid.R
-import org.stepik.android.domain.base.PaginationDirection
 
 fun View.setHeight(height: Int) {
     layoutParams.height = height
@@ -83,37 +73,6 @@ fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
     Snackbar
         .make(this, message, length)
         .show()
-}
-
-fun RecyclerView.setOnPaginationListener(onPagination: (PaginationDirection) -> Unit) {
-    addOnScrollListener(object : RecyclerView.OnScrollListener() {
-        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-            val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
-                ?: return
-
-
-            val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-            val delta = if (layoutManager.orientation == LinearLayoutManager.HORIZONTAL) {
-                dx
-            } else {
-                dy
-            }
-
-            if (delta > 0) {
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-
-                if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                    post { onPagination(PaginationDirection.NEXT) }
-                }
-            } else {
-                if (pastVisibleItems == 0) {
-                    post { onPagination(PaginationDirection.PREV) }
-                }
-            }
-        }
-    })
 }
 
 
