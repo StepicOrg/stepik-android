@@ -10,12 +10,14 @@ class CollectionConverter {
     }
 
     @TypeConverter
-    fun listStringToString(list: List<String>?): String? =
-        list?.joinToString(separator = SEPARATOR, transform = ::escapeString)
+    fun setStringToString(set: Set<String>?): String? =
+        set?.joinToString(separator = SEPARATOR, transform = ::escapeString)
 
     @TypeConverter
-    fun stringToListString(value: String?): List<String>? =
-        value?.split(SEPARATOR)?.map { unescapeId(it.trim()) }
+    fun stringToListString(value: String?): Set<String>? =
+        value?.split(SEPARATOR)
+            ?.map { unescapeId(it.trim()) }
+            ?.toSet()
 
     @TypeConverter
     fun listLongToString(list: List<Long>?): String? =

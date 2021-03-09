@@ -37,7 +37,7 @@ class SqlStepQuizFragment :
         sqlStepQuizFormDelegate = SqlStepQuizFormDelegate(
             containerView = view,
             onFullscreenClicked = ::onFullScreenClicked,
-            onQuizChanged = { replyResult -> syncReplyState(replyResult) }
+            onQuizChanged = ::syncReplyState
         )
         return sqlStepQuizFormDelegate
     }

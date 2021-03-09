@@ -32,11 +32,7 @@ class TableStepQuizFragment :
         get() = arrayOf(tableRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
-        tableStepQuizFormDelegate = TableStepQuizFormDelegate(
-            view,
-            childFragmentManager,
-            onQuizChanged = { replyResult -> syncReplyState(replyResult) }
-        )
+        tableStepQuizFormDelegate = TableStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)
         return tableStepQuizFormDelegate
     }
 

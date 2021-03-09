@@ -134,10 +134,3 @@ fun WebView.evaluateJavascriptCompat(code: String) {
         loadUrl("javascript: $code")
     }
 }
-
-// TODO 09/03/21 - Remove after Android Kit PR is merged
-fun TextView.setTextIfChanged(text: CharSequence) {
-    if (this.text.toString() != text.toString()) {
-        this.text = text
-    }
-}

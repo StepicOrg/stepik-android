@@ -17,12 +17,12 @@ constructor(
         private const val POSTFIX = "]"
         private const val SEPARATOR = "__,__"
     }
-    override fun getCodePreference(languagesKey: List<String>): Single<CodePreference> =
+    override fun getCodePreference(languagesKey: Set<String>): Single<CodePreference> =
         codePreferenceDao.getCodePreferences(mapLanguagesKeyToString(languagesKey))
 
     override fun saveCodePreference(codePreference: CodePreference): Completable =
         codePreferenceDao.saveCodePreference(codePreference)
 
-    private fun mapLanguagesKeyToString(languagesKey: List<String>): String =
+    private fun mapLanguagesKeyToString(languagesKey: Set<String>): String =
         languagesKey.joinToString(separator = SEPARATOR, transform = { "$PREFIX$it$POSTFIX" })
 }

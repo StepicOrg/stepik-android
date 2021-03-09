@@ -58,7 +58,7 @@ class CodeStepQuizFragment :
             ),
             onFullscreenClicked = ::onFullScreenClicked,
             syncCodePreference = { language -> onSyncCodePreference(language) },
-            onQuizChanged = { replyResult -> syncReplyState(replyResult) }
+            onQuizChanged = ::syncReplyState
         )
 
         return codeStepQuizFormDelegate
@@ -86,7 +86,7 @@ class CodeStepQuizFragment :
 
     override fun onSyncCodePreference(lang: String) {
         viewModel.onNewMessage(StepQuizFeature.Message.CreateCodePreference(
-            languagesKey = codeOptions.codeTemplates.keys.sorted().toList(),
+            languagesKey = codeOptions.codeTemplates.keys,
             language = lang,
             initCodePreference = InitCodePreference(
                 sourceStepId = stepId,
