@@ -40,7 +40,7 @@ class SqlStepQuizFormDelegate(
             is StepQuizFeature.SubmissionState.Loaded ->
                 state.submissionState.submission.reply
         }
-        codeLayout.setText(reply?.solveSql ?: "")
+        codeLayout.setTextIfChanged(reply?.solveSql ?: "")
         codeLayout.lang = ProgrammingLanguage.SQL.serverPrintableName
         codeLayout.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
     }

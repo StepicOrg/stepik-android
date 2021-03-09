@@ -1,6 +1,8 @@
 package org.stepik.android.view.step_quiz_text.ui.fragment
 
+import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_text.*
 import org.stepic.droid.R
@@ -26,6 +28,11 @@ class TextStepQuizFragment :
 
     override val quizViews: Array<View>
         get() = arrayOf(stringStepQuizField)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        stringStepQuizField.doAfterTextChanged { syncReplyState() }
+    }
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
         TextStepQuizFormDelegate(view, stepWrapper.step.block?.name)

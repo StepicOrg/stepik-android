@@ -1,8 +1,13 @@
 package org.stepik.android.view.step_quiz_sql.ui.fragment
 
+import android.os.Bundle
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code.codeStepLayout
+import kotlinx.android.synthetic.main.layout_step_quiz_code.stepQuizCodeContainer
+import kotlinx.android.synthetic.main.layout_step_quiz_sql.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -32,6 +37,11 @@ class SqlStepQuizFragment :
 
     override val quizViews: Array<View>
         get() = arrayOf(stepQuizCodeContainer)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        codeStepLayout.codeEditor.doAfterTextChanged { syncReplyState() }
+    }
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
         sqlStepQuizFormDelegate = SqlStepQuizFormDelegate(

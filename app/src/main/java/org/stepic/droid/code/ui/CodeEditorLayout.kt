@@ -78,6 +78,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         codeEditor.insertText(text, offset)
     }
 
+    fun setTextIfChanged(text: String) {
+        if (this.text.toString() != text) {
+            codeEditor.setText(text)
+        }
+    }
+
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         codeEditor.isEnabled = enabled

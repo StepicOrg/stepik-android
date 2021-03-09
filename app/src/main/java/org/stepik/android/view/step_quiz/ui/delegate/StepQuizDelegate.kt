@@ -21,6 +21,7 @@ import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
+import timber.log.Timber
 
 class StepQuizDelegate(
     private val step: Step,
@@ -180,6 +181,8 @@ class StepQuizDelegate(
         val reply = (stepQuizFormDelegate.createReply() as? ReplyResult.Success)
             ?.reply
             ?: return
+
+        Timber.d("Syncing")
 
         onNewMessage(StepQuizFeature.Message.SyncReply(reply))
     }

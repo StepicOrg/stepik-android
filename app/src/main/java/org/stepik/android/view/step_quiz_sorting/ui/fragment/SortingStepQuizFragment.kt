@@ -28,5 +28,5 @@ class SortingStepQuizFragment :
         get() = arrayOf(sortingRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        SortingStepQuizFormDelegate(view)
+        SortingStepQuizFormDelegate(view, syncReply = ::syncReplyState)
 }

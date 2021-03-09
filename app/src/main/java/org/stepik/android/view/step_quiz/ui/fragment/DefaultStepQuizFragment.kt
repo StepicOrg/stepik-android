@@ -132,7 +132,6 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     override fun onStop() {
         viewModel.detachView(this)
-        stepQuizDelegate.syncReplyState()
         super.onStop()
     }
 
@@ -147,6 +146,10 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
         if (action is StepQuizFeature.Action.ViewAction.ShowNetworkError) {
             view?.snackbar(messageRes = R.string.no_connection)
         }
+    }
+
+    protected fun syncReplyState() {
+        stepQuizDelegate.syncReplyState()
     }
 
     private fun openStepInWeb(step: Step) {

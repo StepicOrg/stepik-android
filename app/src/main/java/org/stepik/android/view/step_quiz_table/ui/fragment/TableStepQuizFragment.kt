@@ -38,5 +38,6 @@ class TableStepQuizFragment :
 
     override fun onSyncChosenColumnsWithParent(index: Int, chosenRows: List<Cell>) {
         tableStepQuizFormDelegate.updateTableSelectionItem(index, chosenRows)
+        syncReplyState()
     }
 }

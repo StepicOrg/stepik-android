@@ -18,7 +18,8 @@ import ru.nobird.android.core.model.swap
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SortingStepQuizFormDelegate(
-    containerView: View
+    containerView: View,
+    private val syncReply: (() -> Unit)? = null
 ) : StepQuizFormDelegate {
     private val quizDescription = containerView.stepQuizDescription
 
@@ -54,6 +55,7 @@ class SortingStepQuizFormDelegate(
         optionsAdapter.items = optionsAdapter.items.swap(position, targetPosition)
         optionsAdapter.notifyItemChanged(position)
         optionsAdapter.notifyItemChanged(targetPosition)
+        syncReply?.invoke()
     }
 
     override fun setState(state: StepQuizFeature.State.AttemptLoaded) {

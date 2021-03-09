@@ -11,6 +11,7 @@ import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.setTextIfChanged
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
@@ -88,9 +89,7 @@ class TextStepQuizFormDelegate(
             ?.submission
 
         val reply = submission?.reply
-
-        quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
-        quizTextField.text =
+        val text =
             when (stepBlockName) {
                 AppConstants.TYPE_NUMBER ->
                     reply?.number
@@ -101,6 +100,9 @@ class TextStepQuizFormDelegate(
                 else ->
                     reply?.text
             } ?: ""
+
+        quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
+        quizTextField.setTextIfChanged(text)
 
         @DrawableRes
         val drawableRes =
