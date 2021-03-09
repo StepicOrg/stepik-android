@@ -1,35 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:visibility="gone"
     tools:visibility="visible">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/placeholderIcon"
-        android:layout_width="@dimen/placeholders_image_width"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_empty"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/step_disabled_description"
-        app:layout_constraintBottom_toTopOf="@+id/placeholderMessage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:layout_marginTop="32dp"
+        app:srcCompat="@drawable/ic_empty_disabled_step"
+        android:alpha="0.6"
+        android:contentDescription="@string/step_disabled_description" />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/stepQuizFeedbackValidation"
+        style="@style/StepQuizFeedback.Info"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/step_disabled_title"
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/placeholderMessage"
-        style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_margin="@dimen/padding_placeholders"
-        android:text="@string/step_disabled_description"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
+        android:textAppearance="?textAppearanceBody1"
+        android:text="@string/step_disabled_description" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

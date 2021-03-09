@@ -739,7 +739,8 @@
     <string name="lesson_step_counter">Step %d out of %d</string>
 
     <!-- Step -->
-    <string name="step_disabled_description">You can\'t see the quiz yet!\n\nWrite to the course authors so that they pay attention to the settings.\nAccess may be restored after some time.</string>
+    <string name="step_disabled_title">You can\'t view the assignment yet</string>
+    <string name="step_disabled_description">Contact the course authors to suggest that they change the settings %s.\n\nThe access might resume after a while.</string>
 
     <string name="step_amount_passed">Passed:&#160;</string>
     <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>
