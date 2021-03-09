@@ -11,7 +11,7 @@ import org.stepik.android.migration_wrapper.MigrationWrappers
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
-class MigrationTest {
+class MigrationFrameworkTest {
 
     @Test
     @Throws(IOException::class)
@@ -22,7 +22,7 @@ class MigrationTest {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     MigrationWrappers.allMigration.forEach {
                         it.migration.migrate(db)
-                        it.runTest(db)
+                        it.afterTest(db)
                     }
                 }
             })

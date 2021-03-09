@@ -17,7 +17,10 @@ class MigrationWrapperFrom62To63(migration: MigrationFrom62To63) : MigrationWrap
         const val STORY_ID_COLUMN = "storyId"
         const val REACTION_COLUMN = "reaction"
     }
-    override fun runTest(db: SupportSQLiteDatabase) {
+
+    override fun beforeTest(db: SupportSQLiteDatabase) {}
+
+    override fun afterTest(db: SupportSQLiteDatabase) {
         generateStoryReaction(db)
     }
 

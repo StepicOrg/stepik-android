@@ -7,7 +7,7 @@ import org.stepic.droid.storage.migration.Migrations
 import org.stepik.android.migration_wrapper.MigrationWrappers
 
 @RunWith(RobolectricTestRunner::class)
-class MigrationsTest {
+class MigrationUnitTest {
     /**
      * Migrations that we are covered by tests. Update this list, after writing
      * respective migration test in MigrationTest.kt

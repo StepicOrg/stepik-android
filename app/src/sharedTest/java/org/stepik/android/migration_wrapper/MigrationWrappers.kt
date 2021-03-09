@@ -8,7 +8,7 @@ object MigrationWrappers {
     private val oldMigrations =
         Migrations
             .migrations
-            .slice(0 until AppDatabase.VERSION)
+            .slice(0 until AppDatabase.VERSION - 1)
             .map { object : MigrationWrapper(it) {} } as List<MigrationWrapper>
 
 
