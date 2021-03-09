@@ -39,8 +39,8 @@ import org.stepik.android.presentation.submission.SubmissionsView
 import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
-import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -175,7 +175,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                 }
             }
         )
-        submissionItemAdapter += SubmissionPlaceholderAdapterDelegate()
+        submissionItemAdapter +=
+            adapterDelegate<SubmissionItem, SubmissionItem.Placeholder>(R.layout.item_submission_placeholder)
 
         with(recycler) {
             adapter = submissionItemAdapter
