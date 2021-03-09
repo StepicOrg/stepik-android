@@ -5,10 +5,10 @@ import org.stepic.droid.util.filterNot
 import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.plus
 import org.stepic.droid.util.transform
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
+import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.core.model.insert
 import ru.nobird.android.core.model.mutate
 import javax.inject.Inject

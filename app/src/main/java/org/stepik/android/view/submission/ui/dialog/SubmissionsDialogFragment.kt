@@ -24,10 +24,8 @@ import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
@@ -39,11 +37,13 @@ import org.stepik.android.presentation.submission.SubmissionsView
 import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
-import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -149,7 +149,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
         submissionItemAdapter = DefaultDelegateAdapter()
         submissionItemAdapter += SubmissionDataAdapterDelegate(
-            isItemClickEnabled = isSelectionEnabled,
+            isTeacher = isTeacher,
+            isSelectionEnabled = isSelectionEnabled,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -166,9 +167,16 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                         ?.onSubmissionSelected(data.submission, data.attempt)
                     dismiss()
                 }
+
+                override fun onViewSubmissionsClicked(submissionDataItem: SubmissionItem.Data) {
+                    val userIdQuery = resources.getString(R.string.submissions_user_filter, submissionDataItem.user.id)
+                    searchSubmissionsEditText.setText(userIdQuery)
+                    fetchSearchQuery()
+                }
             }
         )
-        submissionItemAdapter += SubmissionPlaceholderAdapterDelegate()
+        submissionItemAdapter +=
+            adapterDelegate<SubmissionItem, SubmissionItem.Placeholder>(R.layout.item_submission_placeholder)
 
         with(recycler) {
             adapter = submissionItemAdapter
@@ -181,7 +189,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             }
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
+                ContextCompat.getDrawable(context, R.drawable.bg_submission_item_divider)?.let(::setDrawable)
             })
         }
 

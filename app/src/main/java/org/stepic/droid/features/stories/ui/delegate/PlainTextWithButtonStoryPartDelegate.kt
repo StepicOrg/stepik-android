@@ -15,7 +15,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
-import org.stepic.droid.ui.util.inflate
 import org.stepik.android.domain.story.model.StoryReaction
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.view.base.routing.InternalDeeplinkRouter
@@ -23,6 +22,7 @@ import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,

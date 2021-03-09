@@ -12,9 +12,9 @@ import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
-import org.stepic.droid.util.getDrawableCompat
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
 class StepQuizFeedbackBlocksDelegate(
     containerView: View,

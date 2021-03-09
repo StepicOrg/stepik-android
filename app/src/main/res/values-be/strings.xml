@@ -619,7 +619,10 @@
     <string name="lesson_error_exam_action">Адкрыць у вэб версіі</string>
     <string name="lesson_step_counter">Крок %d з %d</string>
     <!-- Step -->
-    <string name="step_disabled_description">Убачыць задачу пакуль нельга!\n\nНапішыце аўтарам курсу, каб яны звярнулі ўвагу на налады.\nМагчыма, праз нейкі час доступ адновіцца.</string>
+    <string name="step_disabled_title">Убачыць задачу пакуль нельга</string>
+    <string name="step_disabled_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
+    <string name="step_disabled_description_part_2">.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
+    <string name="step_disabled_pattern">%s → Крок %d</string>
 
     <string name="step_amount_passed">Рашыла:&#160;</string>
     <string name="step_correct_submissions_percentage">Паспяховых рашэнняў:&#160;</string>
@@ -842,4 +845,11 @@
     <string name="submissions_filter_any_review_status_radio_button_title">Любы статус рэцэнзіі</string>
     <string name="submissions_filter_finished_review_status_radio_button_title">Рэцэнзаванне завершана</string>
     <string name="submissions_filter_awaiting_review_status_radio_button_title">Чакаюць рэцэнзіі</string>
+
+    <string name="submission_score">Адзнака</string>
+    <string name="submission_select">Выбраць гэтае рашэнне</string>
+    <string name="submission_status_correct">Дакладна</string>
+    <string name="submission_status_partially_correct">Часткова-дакладна</string>
+    <string name="submission_status_incorrect">Няслушна</string>
+    <string name="submission_action_similar">Ўсе рашэнні карыстальніка</string>
 </resources>

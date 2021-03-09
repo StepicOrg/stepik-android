@@ -16,12 +16,12 @@ import androidx.core.view.isVisible
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.util.inflate
 import org.stepik.android.domain.latex.mapper.LatexTextMapper
 import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.view.base.ui.extension.ExternalLinkWebViewClient
 import org.stepik.android.view.latex.mapper.LatexWebViewMapper
 import org.stepik.android.view.latex.model.TextAttributes
+import ru.nobird.android.view.base.ui.extension.inflate
 import javax.inject.Inject
 
 class LatexView

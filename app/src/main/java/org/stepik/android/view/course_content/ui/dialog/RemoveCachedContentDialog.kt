@@ -52,7 +52,7 @@ class RemoveCachedContentDialog : DialogFragment() {
     private val unit: Unit? by lazy { arguments?.getParcelable<Unit>(ARG_UNIT) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.course_content_remove_item_title)
             .setMessage(R.string.course_content_remove_item_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->

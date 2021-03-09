@@ -9,8 +9,8 @@ import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.insertText
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class CodeEditorLayout
 @JvmOverloads

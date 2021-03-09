@@ -6,9 +6,9 @@ import android.widget.Button
 import kotlinx.android.synthetic.main.view_choice_attempt.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
-import org.stepic.droid.ui.util.inflate
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class ChoiceQuizDelegate: QuizDelegate() {
     private lateinit var choiceAdapter: StepikRadioGroupAdapter

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_social.view.*
 import org.stepic.droid.R
 import org.stepic.droid.social.SocialMedia
-import org.stepic.droid.ui.util.inflate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class SocialLinksAdapter(
     private val socialLinks: Array<SocialMedia> = SocialMedia.values(),

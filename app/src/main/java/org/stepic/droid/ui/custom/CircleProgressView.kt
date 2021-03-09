@@ -10,7 +10,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveColorAttribute
-import org.stepic.droid.util.toPx
+import ru.nobird.android.view.base.ui.extension.toPx
 
 /**
  * this view has different implementation of onDraw, based on stroke of circle

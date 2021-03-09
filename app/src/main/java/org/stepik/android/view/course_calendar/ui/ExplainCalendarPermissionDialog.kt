@@ -17,7 +17,7 @@ class ExplainCalendarPermissionDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.allow_question)
             .setMessage(R.string.explain_calendar_permission)
             .setPositiveButton(R.string.allow) { _, _ ->

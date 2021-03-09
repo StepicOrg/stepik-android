@@ -10,8 +10,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.resolveFloatAttribute
-import org.stepic.droid.util.toSp
 import org.stepik.android.view.base.ui.extension.ColorExtensions
+import ru.nobird.android.view.base.ui.extension.toSp
 
 data class TextAttributes(
     val textSize: Float,

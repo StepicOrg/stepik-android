@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.inflate
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import ru.nobird.android.view.base.ui.extension.inflate
 
 open class StringQuizDelegate: QuizDelegate() {
     protected lateinit var answerField: EditText

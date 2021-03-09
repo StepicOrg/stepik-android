@@ -29,7 +29,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CommentDataAdapterDelegate(
-    private val isTeacher: Boolean,
+    private val showUserSubmissions: Boolean,
     private val actionListener: ActionListener
 ) : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
@@ -167,7 +167,7 @@ class CommentDataAdapterDelegate(
                 .menu
                 .findItem(R.id.comment_item_submissions)
                 ?.let { menuItem ->
-                    menuItem.isVisible = isTeacher
+                    menuItem.isVisible = showUserSubmissions
                 }
 
             popupMenu
