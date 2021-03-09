@@ -24,10 +24,8 @@ import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
@@ -39,11 +37,13 @@ import org.stepik.android.presentation.submission.SubmissionsView
 import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
-import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -175,7 +175,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                 }
             }
         )
-        submissionItemAdapter += SubmissionPlaceholderAdapterDelegate()
+        submissionItemAdapter +=
+            adapterDelegate<SubmissionItem, SubmissionItem.Placeholder>(R.layout.item_submission_placeholder)
 
         with(recycler) {
             adapter = submissionItemAdapter

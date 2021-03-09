@@ -41,7 +41,7 @@ class ChooseStorageDialog : DialogFragment() {
         val youWantMoveDataDialog = WantMoveDataDialog.newInstance()
         youWantMoveDataDialog.setTargetFragment(targetFragment, WantMoveDataDialog.REQUEST_CODE)
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.choose_storage_title)
             .setSingleChoiceItems(headers, indexChosen) { _, which ->
                 if (which != indexChosen && !youWantMoveDataDialog.isAdded) {

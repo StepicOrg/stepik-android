@@ -79,7 +79,7 @@ class AchievementDetailsDialog : DialogFragment() {
             achievementRest.isVisible = scoreDiff > 0
         }
 
-        val builder = MaterialAlertDialogBuilder(context)
+        val builder = MaterialAlertDialogBuilder(requireContext())
                 .setView(view)
 
         if (canShare && !achievementItem.isLocked) {

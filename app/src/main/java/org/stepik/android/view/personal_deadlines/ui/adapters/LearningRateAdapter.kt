@@ -7,9 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_learning_rate.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class LearningRateAdapter(
     private val rates: Array<LearningRate>,

@@ -14,8 +14,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.util.CoursesSnapHelper
-import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.last_step.model.LastStep
@@ -28,6 +26,8 @@ import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 
 class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_list), CourseListUserView {

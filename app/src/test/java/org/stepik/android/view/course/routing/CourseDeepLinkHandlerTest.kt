@@ -6,7 +6,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.stepic.droid.util.getAllQueryParameters
+import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
 
 @RunWith(RobolectricTestRunner::class)
 class CourseDeepLinkHandlerTest {

@@ -10,8 +10,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.view_review_status.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.resolveColorAttribute
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class ReviewStatusView
 @JvmOverloads

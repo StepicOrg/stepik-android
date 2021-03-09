@@ -32,7 +32,7 @@ class ChooseCalendarDialog : DialogFragment() {
         val calendarItems = arguments?.getParcelableArrayList<CalendarItem>(parcelableArrayListKey) ?: arrayListOf()
         val ownerTitles: Array<String> = calendarItems.map { it.owner }.toTypedArray()
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.choose_calendar_title)
             .setSingleChoiceItems(ownerTitles, 0, null)
             .setNegativeButton(R.string.cancel, null)

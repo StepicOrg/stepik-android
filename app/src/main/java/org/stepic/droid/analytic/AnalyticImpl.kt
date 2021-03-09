@@ -20,9 +20,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
-import org.stepic.droid.util.isNightModeEnabled
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.base.analytic.AnalyticSource
+import ru.nobird.android.view.base.ui.extension.isNightModeEnabled
 import java.util.HashMap
 import javax.inject.Inject
 

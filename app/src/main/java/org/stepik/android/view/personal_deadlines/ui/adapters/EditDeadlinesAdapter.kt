@@ -7,10 +7,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_edit_deadlines_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.model.Section
+import ru.nobird.android.view.base.ui.extension.inflate
 import java.util.ArrayList
 import java.util.Date
 import java.util.TimeZone
