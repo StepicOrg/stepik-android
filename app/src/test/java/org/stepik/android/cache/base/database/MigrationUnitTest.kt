@@ -10,7 +10,7 @@ import org.stepik.android.migration_wrapper.MigrationWrappers
 class MigrationUnitTest {
     /**
      * Migrations that we are covered by tests. Update this list, after writing
-     * respective migration test in MigrationTest.kt
+     * respective migration test wrapper
      */
     @Test
     fun migrationsPerformedTest() {
