@@ -17,7 +17,7 @@ class LoadingProgressDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         isCancelable = false
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.loading)
             .setView(R.layout.dialog_progress)
             .setCancelable(false)

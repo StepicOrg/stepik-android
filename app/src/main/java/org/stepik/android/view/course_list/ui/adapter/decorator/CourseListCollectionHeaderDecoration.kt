@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.custom.PlaceholderTextView
-import org.stepic.droid.ui.util.inflate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class CourseListCollectionHeaderDecoration : RecyclerView.ItemDecoration() {
     var collectionDescriptionColors: CollectionDescriptionColors? = null

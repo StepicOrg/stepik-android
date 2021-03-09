@@ -12,10 +12,10 @@ import android.webkit.WebView
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.ui.util.evaluateJavascriptCompat
 import org.stepic.droid.util.contextForWebView
-import org.stepic.droid.util.toDp
 import org.stepik.android.view.latex.model.TextAttributes
 import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
 import org.stepik.android.view.latex.js_interface.ModelViewerInterface
+import ru.nobird.android.view.base.ui.extension.toDp
 import kotlin.math.abs
 
 @SuppressLint("AddJavascriptInterface")

@@ -41,7 +41,7 @@ class CoursesLangDialogFragment : DialogFragment(), FiltersView {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.language_of_courses)
             .setSingleChoiceItems(resources.getStringArray(R.array.course_list_languages), -1) { _, which ->
                 val filters = EnumSet.noneOf(StepikFilter::class.java)

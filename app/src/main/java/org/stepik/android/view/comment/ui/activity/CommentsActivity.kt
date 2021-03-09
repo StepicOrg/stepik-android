@@ -21,7 +21,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.comment.model.CommentsData
@@ -45,6 +44,7 @@ import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
