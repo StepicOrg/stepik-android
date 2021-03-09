@@ -8,8 +8,8 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.toBitmap
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.toBitmap
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates

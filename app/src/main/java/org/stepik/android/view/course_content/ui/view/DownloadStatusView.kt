@@ -8,9 +8,9 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_download_status.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class DownloadStatusView
 @JvmOverloads

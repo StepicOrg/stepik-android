@@ -66,18 +66,6 @@ fun TextView.setTextViewBackgroundWithoutResettingPadding(@DrawableRes backgroun
     }
 }
 
-
-fun Drawable.toBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight): Bitmap {
-    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-    setBounds(0, 0, canvas.width, canvas.height)
-    draw(canvas)
-    return bitmap
-}
-
-fun ViewGroup.inflate(@LayoutRes resId: Int, attachToRoot: Boolean = false): View =
-    LayoutInflater.from(this.context).inflate(resId, this, attachToRoot)
-
 inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) {
     viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
         override fun onGlobalLayout() {

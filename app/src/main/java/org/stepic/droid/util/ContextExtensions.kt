@@ -15,12 +15,6 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 
-/**
- * Returns drawable for [drawableRes]
- */
-fun Context.getDrawableCompat(@DrawableRes drawableRes: Int): Drawable =
-    AppCompatResources.getDrawable(this, drawableRes) as Drawable
-
 fun Context.copyTextToClipboard(label: String? = null, textToCopy: String, toastMessage: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     clipboardManager.setPrimaryClip(ClipData.newPlainText(label, textToCopy))
@@ -55,50 +49,6 @@ fun Context.resolveFloatAttribute(@AttrRes attributeResId: Int): Float =
 
 fun Context.resolveResourceIdAttribute(@AttrRes attributeResId: Int): Int =
     resolveAttribute(attributeResId)?.resourceId ?: 0
-
-/**
- * Converts current value in px to dp
- */
-fun Int.toDp(): Int =
-    this.toFloat().toDp().toInt()
-
-/**
- * Converts current value in dp to px
- */
-fun Int.toPx(): Int =
-    this.toFloat().toPx().toInt()
-
-
-/**
- * Converts current value in px to sp
- */
-fun Int.toSp(): Int =
-    this.toFloat().toSp().toInt()
-
-/**
- * Converts current value in px to dp
- */
-fun Float.toDp(): Float =
-    this / Resources.getSystem().displayMetrics.density
-
-/**
- * Converts current value in dp to px
- */
-fun Float.toPx(): Float =
-    this * Resources.getSystem().displayMetrics.density
-
-/**
- * Converts current value in px to dp
- */
-fun Float.toSp(): Float =
-    this / Resources.getSystem().displayMetrics.scaledDensity
-
-
-/**
- * True if MODE_NIGHT enabled
- */
-fun Context.isNightModeEnabled(): Boolean =
-    (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
 /**
  * "com.google.android.googlequicksearchbox" is necessary to launch Scene Viewer
