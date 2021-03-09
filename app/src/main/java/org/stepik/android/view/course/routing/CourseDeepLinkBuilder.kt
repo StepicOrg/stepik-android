@@ -2,8 +2,8 @@ package org.stepik.android.view.course.routing
 
 import android.net.Uri
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.util.appendQueryParameters
 import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
+import ru.nobird.android.view.base.ui.extension.appendQueryParameters
 import javax.inject.Inject
 
 class CourseDeepLinkBuilder

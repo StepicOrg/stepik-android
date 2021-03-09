@@ -2,7 +2,7 @@ package org.stepik.android.view.course_list.routing
 
 import android.content.Intent
 import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.getPathSegmentParameter
+import ru.nobird.android.view.base.ui.extension.getPathSegmentParameter
 
 internal const val COURSE_COLLECTION_PATH_SEGMENT = "catalog"
 
