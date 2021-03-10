@@ -103,7 +103,6 @@ ext.versions = [
         hamcrest             : '2.1',
         espresso             : '3.1.0',
         testCore             : '1.1.1',
-        roomTesting          : '2.2.6',
 
         ktlint               : '0.34.2',
         ktlintRules          : '1.0.0',
@@ -234,7 +233,6 @@ ext.libraries = [
         espressoCore         : "androidx.test.espresso:espresso-core:$versions.espresso",
         espressoContrib      : "androidx.test.espresso:espresso-contrib:$versions.espresso",
         espressoIntents      : "androidx.test.espresso:espresso-intents:$versions.espresso",
-        roomTesting          : "androidx.room:room-testing:$versions.roomTesting",
 
         ktlint               : "com.pinterest:ktlint:$versions.ktlint",
         ktlintRules          : "ru.nobird.android.ktlint:rules:$versions.ktlintRules",
