@@ -293,7 +293,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block ||
                     stepWrapper.step.isEnabled != state.stepWrapper.step.isEnabled
 
-            val isStepDisabled = true
+            val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
+                    state.stepWrapper.step.isEnabled == false
 
             stepContentContainer.isGone = isStepDisabled
             stepContentSeparator.isGone = isStepDisabled
