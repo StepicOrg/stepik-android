@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.codeStepLayout
@@ -23,7 +24,9 @@ class CodeStepQuizFormDelegate(
     containerView: View,
     private val codeOptions: CodeOptions,
     private val codeLayoutDelegate: CodeLayoutDelegate,
-    private val onFullscreenClicked: (lang: String, code: String) -> Unit
+    private val onFullscreenClicked: (lang: String, code: String) -> Unit,
+    private val syncCodePreference: (String) -> Unit,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
@@ -58,7 +61,11 @@ class CodeStepQuizFormDelegate(
         /**
          * Lang chooser
          */
-        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, codeOptions.codeTemplates[it] ?: "") }
+        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate {
+            val codeTemplate = codeOptions.codeTemplates[it] ?: ""
+            syncCodePreference(it)
+            state = CodeStepQuizFormState.Lang(it, codeTemplate)
+        }
         stepQuizCodeLangChooserAdapter.items = codeOptions.codeTemplates.keys.toList().sorted()
 
         stepQuizCodeLangChooserTitle.setCompoundDrawables(start = R.drawable.ic_step_quiz_code_lang)
@@ -73,6 +80,7 @@ class CodeStepQuizFormDelegate(
                 ?: return@setOnClickListener
             onFullscreenClicked(oldState.lang, oldState.code)
         }
+        codeLayout.codeEditor.doAfterTextChanged { onQuizChanged(createReply()) }
     }
 
     override fun createReply(): ReplyResult {
@@ -95,6 +103,7 @@ class CodeStepQuizFormDelegate(
         if (state !is CodeStepQuizFormState.Lang) {
             return
         }
+        syncCodePreference(lang)
         state = CodeStepQuizFormState.Lang(lang, codeOptions.codeTemplates[lang] ?: "")
     }
 

@@ -22,6 +22,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizViewModel
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
+import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
@@ -53,7 +54,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     protected var stepId: Long by argument()
 
-    private val viewModel: StepQuizViewModel by viewModels { viewModelFactory }
+    protected val viewModel: StepQuizViewModel by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
@@ -132,7 +133,6 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     override fun onStop() {
         viewModel.detachView(this)
-        stepQuizDelegate.syncReplyState()
         super.onStop()
     }
 
@@ -147,6 +147,14 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
         if (action is StepQuizFeature.Action.ViewAction.ShowNetworkError) {
             view?.snackbar(messageRes = R.string.no_connection)
         }
+    }
+
+    protected fun syncReplyState(replyResult: ReplyResult) {
+        val reply = (replyResult as? ReplyResult.Success)
+            ?.reply
+            ?: return
+
+        viewModel.onNewMessage(StepQuizFeature.Message.SyncReply(reply))
     }
 
     private fun openStepInWeb(step: Step) {

@@ -198,10 +198,10 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER ->
-                TextStepQuizFormDelegate(view, blockName)
+                TextStepQuizFormDelegate(view, blockName) {}
 
             AppConstants.TYPE_CHOICE ->
-                ChoiceStepQuizFormDelegate(view)
+                ChoiceStepQuizFormDelegate(view, onQuizChanged = {})
 
             AppConstants.TYPE_CODE ->
                 CodeStepQuizFormDelegate(
@@ -215,23 +215,26 @@ class SolutionCommentDialogFragment : DialogFragment() {
                             codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, isCollapseable = true),
                             codeToolbarAdapter = null,
                             onChangeLanguageClicked = {}
-                        )
-                ) { _, _ -> }
+                        ),
+                    onFullscreenClicked = { _, _ -> },
+                    syncCodePreference = {},
+                    onQuizChanged = {}
+                )
 
             AppConstants.TYPE_SORTING ->
-                SortingStepQuizFormDelegate(view)
+                SortingStepQuizFormDelegate(view) {}
 
             AppConstants.TYPE_MATCHING ->
-                MatchingStepQuizFormDelegate(view)
+                MatchingStepQuizFormDelegate(view) {}
 
             AppConstants.TYPE_SQL ->
-                SqlStepQuizFormDelegate(view) { _, _ -> }
+                SqlStepQuizFormDelegate(view, onFullscreenClicked = { _, _ -> }) {}
 
             AppConstants.TYPE_FILL_BLANKS ->
-                FillBlanksStepQuizFormDelegate(view, childFragmentManager)
+                FillBlanksStepQuizFormDelegate(view, childFragmentManager) {}
 
             AppConstants.TYPE_TABLE ->
-                TableStepQuizFormDelegate(view, childFragmentManager)
+                TableStepQuizFormDelegate(view, childFragmentManager) {}
 
             else ->
                 null

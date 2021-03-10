@@ -38,7 +38,7 @@ class CodeLayoutDelegate(
     fun setLanguage(lang: String, code: String? = null) {
         codeLayout.lang = extensionForLanguage(lang)
         stepQuizActionChangeLang.text = lang
-        codeLayout.setText(code ?: codeTemplates[lang] ?: "")
+        codeLayout.setTextIfChanged(code ?: codeTemplates[lang] ?: "")
         codeToolbarAdapter?.setLanguage(lang)
     }
 

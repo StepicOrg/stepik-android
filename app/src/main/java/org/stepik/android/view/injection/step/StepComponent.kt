@@ -5,6 +5,7 @@ import dagger.Subcomponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.attempt.AttemptDataModule
+import org.stepik.android.view.injection.code_preference.CodePreferenceDataModule
 import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataModule
 import org.stepik.android.view.injection.review.ReviewDataModule
 import org.stepik.android.view.injection.review_instruction.ReviewInstructionDataModule
@@ -38,7 +39,8 @@ import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStep
 
     ReviewDataModule::class,
     ReviewInstructionDataModule::class,
-    ReviewSessionDataModule::class
+    ReviewSessionDataModule::class,
+    CodePreferenceDataModule::class
 ])
 @StepScope
 interface StepComponent {

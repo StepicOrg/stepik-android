@@ -1,11 +1,13 @@
 package org.stepik.android.presentation.step_quiz.reducer
 
+import org.stepik.android.cache.code_preference.model.CodePreference
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.State
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.Message
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.Action
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import java.util.Calendar
 import javax.inject.Inject
@@ -92,13 +94,53 @@ constructor() : StateReducer<State, Message, Action> {
                 }
 
             is Message.SyncReply ->
-                if (state is State.AttemptLoaded) {
+                if (state is State.AttemptLoaded && !StepQuizFormResolver.isSubmissionInTerminalState(state)) {
                     val submission = createLocalSubmission(state, message.reply)
 
                     state.copy(submissionState = StepQuizFeature.SubmissionState.Loaded(submission)) to setOf(Action.SaveLocalSubmission(submission))
                 } else {
                     null
                 }
+
+            is Message.CreateCodePreference ->
+                if (state is State.AttemptLoaded) {
+                    state to setOf(Action.SaveCodePreference(CodePreference(message.languagesKey, message.language)), Action.PublishCodePreference(message.initCodePreference))
+                } else {
+                    null
+                }
+
+            is Message.InitWithCodePreference -> {
+                if (state is State.AttemptLoaded) {
+                    val newState: State.AttemptLoaded = when (state.submissionState) {
+                        is StepQuizFeature.SubmissionState.Empty -> {
+                            state.copy(submissionState = StepQuizFeature.SubmissionState.Empty(Reply(language = message.initCodePreference.language, code = message.initCodePreference.codeTemplates[message.initCodePreference.language])))
+                        }
+                        is StepQuizFeature.SubmissionState.Loaded -> {
+                            val codeFromSubmission = state.submissionState.submission.reply?.code
+                            val codeTemplate = message.initCodePreference.codeTemplates[state.submissionState.submission.reply?.language]
+                            if ((message.initCodePreference.sourceStepId == state.attempt.step || codeFromSubmission == codeTemplate) && state.submissionState.submission.status == Submission.Status.LOCAL) {
+                                state.copy(
+                                    submissionState = state.submissionState.copy(
+                                        submission = state.submissionState.submission.copy(
+                                            _reply = state.submissionState.submission._reply?.copy(
+                                                language = message.initCodePreference.language,
+                                                code = message.initCodePreference.codeTemplates[message.initCodePreference.language]
+                                            )
+                                        )
+                                    )
+                                )
+                            } else {
+                                state
+                            }
+                        }
+                        else ->
+                            throw IllegalArgumentException()
+                    }
+                    newState to emptySet<Action>()
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 
     private fun createLocalSubmission(oldState: State.AttemptLoaded, reply: Reply): Submission {

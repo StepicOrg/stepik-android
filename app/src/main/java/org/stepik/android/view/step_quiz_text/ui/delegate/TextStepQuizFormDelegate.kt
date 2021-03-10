@@ -8,6 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.TextViewCompat
+import androidx.core.widget.doAfterTextChanged
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
@@ -19,10 +20,12 @@ import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.base.ui.drawable.GravityDrawable
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
+import ru.nobird.android.view.base.ui.extension.setTextIfChanged
 
 class TextStepQuizFormDelegate(
     containerView: View,
-    private val stepBlockName: String?
+    private val stepBlockName: String?,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     companion object {
         private const val MINUS = "-\\\u002D\u00AD\u2012\u2013\u2014\u2015\u02D7"
@@ -59,6 +62,7 @@ class TextStepQuizFormDelegate(
 
         quizTextField.inputType = inputType
         quizDescription.setText(descriptionTextRes)
+        quizTextField.doAfterTextChanged { onQuizChanged(createReply()) }
     }
 
     override fun createReply(): ReplyResult =
@@ -88,9 +92,7 @@ class TextStepQuizFormDelegate(
             ?.submission
 
         val reply = submission?.reply
-
-        quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
-        quizTextField.text =
+        val text =
             when (stepBlockName) {
                 AppConstants.TYPE_NUMBER ->
                     reply?.number
@@ -101,6 +103,9 @@ class TextStepQuizFormDelegate(
                 else ->
                     reply?.text
             } ?: ""
+
+        quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
+        quizTextField.setTextIfChanged(text)
 
         @DrawableRes
         val drawableRes =
