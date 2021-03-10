@@ -26,6 +26,15 @@ android {
         multiDexEnabled true
     }
 
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTest/java"
+        }
+
+        test {
+            java.srcDirs += "src/sharedTest/java"
+        }
+    }
 
     signingConfigs {
         debug {
@@ -94,7 +103,7 @@ android {
                     'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro', 'proguard-rules-dev.pro'
@@ -250,6 +259,7 @@ dependencies {
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.roomTesting
 
     debugImplementation libraries.soloader
     debugImplementation libraries.flipperCore
