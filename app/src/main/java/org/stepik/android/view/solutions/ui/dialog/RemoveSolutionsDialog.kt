@@ -21,7 +21,7 @@ class RemoveSolutionsDialog : DialogFragment() {
     private var attemptIds: List<Long> by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.solutions_delete_dialog_title)
             .setMessage(R.string.solutions_delete_dialog_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->

@@ -58,6 +58,7 @@ import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -109,6 +110,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var lessonTitleMapper: LessonTitleMapper
 
     private val lessonPresenter: LessonPresenter by viewModels { viewModelFactory }
 
@@ -269,9 +273,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent != null) {
-            if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
-                lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
-                intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+            when {
+                intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false) -> {
+                    lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
+                    intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+                }
+
+                intent.data != null -> {
+                    finish()
+                    startActivity(intent)
+                }
             }
         }
     }
@@ -328,11 +339,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     private fun setupToolbarTitle(lessonData: LessonData) {
         centeredToolbarTitle.text =
-            if (lessonData.section != null && lessonData.unit != null) {
-                resources.getString(R.string.lesson_toolbar_title, lessonData.section.position, lessonData.unit.position, lessonData.lesson.title)
-            } else {
-                lessonData.lesson.title
-            }
+            lessonTitleMapper.mapToLessonTitle(this, lessonData)
     }
 
     private fun invalidateTabLayout() {
@@ -402,13 +409,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             ?.play()
     }
 
-    override fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?) {
+    override fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?, isTeacher: Boolean) {
         if (discussionThread != null) {
             analytic.reportAmplitudeEvent(
                 AmplitudeAnalytic.Discussions.SCREEN_OPENED,
                 mapOf(AmplitudeAnalytic.Discussions.Params.SOURCE to AmplitudeAnalytic.Discussions.Values.DISCUSSION)
             )
-            screenManager.openComments(this, discussionThread, step, discussionId, false)
+            screenManager.openComments(this, discussionThread, step, discussionId, false, isTeacher)
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE)
             lessonPager.snackbar(messageRes = R.string.comment_disabled)

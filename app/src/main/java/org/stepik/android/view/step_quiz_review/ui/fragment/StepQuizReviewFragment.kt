@@ -28,6 +28,7 @@ import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
+import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
@@ -250,22 +251,22 @@ class StepQuizReviewFragment :
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER ->
-                TextStepQuizFormDelegate(view, blockName)
+                TextStepQuizFormDelegate(view, blockName, onQuizChanged = ::syncReplyState)
 
             AppConstants.TYPE_CHOICE ->
-                ChoiceStepQuizFormDelegate(view)
+                ChoiceStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
 
             AppConstants.TYPE_SORTING ->
-                SortingStepQuizFormDelegate(view)
+                SortingStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
 
             AppConstants.TYPE_MATCHING ->
-                MatchingStepQuizFormDelegate(view)
+                MatchingStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
 
             AppConstants.TYPE_FILL_BLANKS ->
-                FillBlanksStepQuizFormDelegate(view, childFragmentManager)
+                FillBlanksStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)
 
             AppConstants.TYPE_TABLE ->
-                TableStepQuizFormDelegate(view, childFragmentManager)
+                TableStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)
 
             else ->
                 null
@@ -303,5 +304,13 @@ class StepQuizReviewFragment :
 
     override fun onSubmissionSelected(submission: Submission, attempt: Attempt) {
         stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.ChangeSubmission(submission, attempt))
+    }
+
+    private fun syncReplyState(replyResult: ReplyResult) {
+        val reply = (replyResult as? ReplyResult.Success)
+            ?.reply
+            ?: return
+
+        stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(StepQuizFeature.Message.SyncReply(reply)))
     }
 }

@@ -31,7 +31,7 @@ import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.util.RxEmpty
 import org.stepic.droid.util.substringOrNull
-import org.stepic.droid.util.toPx
+import ru.nobird.android.view.base.ui.extension.toPx
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

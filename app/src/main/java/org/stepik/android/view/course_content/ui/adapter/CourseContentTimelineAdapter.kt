@@ -6,10 +6,10 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_course_content_section_date.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentSectionDate
+import ru.nobird.android.view.base.ui.extension.inflate
 import java.util.Date
 import java.util.TimeZone
 

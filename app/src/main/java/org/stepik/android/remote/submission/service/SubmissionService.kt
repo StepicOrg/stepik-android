@@ -20,7 +20,7 @@ interface SubmissionService {
         @Query("attempt") attemptId: Long
     ): Single<SubmissionResponse>
 
-    @GET("api/submissions?order=desc")
+    @GET("api/submissions")
     fun getSubmissions(
         @QueryMap queryMap: Map<String, String>
     ): Single<SubmissionResponse>

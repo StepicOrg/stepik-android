@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2192,
-        name                 : '1.160',
+        code                 : 2195,
+        name                 : '1.163',
 
         minSdk               : 16,
         targetSdk            : 29,
@@ -37,13 +37,12 @@ ext.versions = [
         archComponents       : '2.2.0',
         media                : '1.1.0',
         multidex             : '2.0.1',
-        adapterDelegates     : '1.0.1',
-        adapters             : '1.0.1',
+        adapters             : '1.1.0',
         presentationBase     : '1.1.1',
         presentationRedux    : '1.1.0',
-        viewUI               : '1.0.8',
+        viewUI               : '1.0.11',
         viewRedux            : '1.0.8',
-        model                : '1.0.4',
+        model                : '1.0.6',
         domainRx             : '1.0.1',
 
         retrofit             : '2.6.1',
@@ -159,7 +158,6 @@ ext.libraries = [
         multidex             : "androidx.multidex:multidex:$versions.multidex",
 
         androidKit           : [
-                adapterDelegates     : "ru.nobird.android.ui:AdapterDelegates:$versions.adapterDelegates",
                 adapters             : "ru.nobird.android.ui:Adapters:$versions.adapters",
                 presentationBase     : "ru.nobird.android.presentation:base:$versions.presentationBase",
                 presentationRedux    : "ru.nobird.android.presentation:redux:$versions.presentationRedux",

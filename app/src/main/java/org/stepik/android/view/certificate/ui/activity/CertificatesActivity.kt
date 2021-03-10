@@ -17,14 +17,14 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.certificate.CertificatesPresenter
 import org.stepik.android.presentation.certificate.CertificatesView
 import org.stepik.android.view.certificate.ui.adapter.delegate.CertificatesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 

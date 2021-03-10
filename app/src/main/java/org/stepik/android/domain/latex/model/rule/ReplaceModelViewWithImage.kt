@@ -1,6 +1,6 @@
 package org.stepik.android.domain.latex.model.rule
 
-import org.stepic.droid.util.toPx
+import ru.nobird.android.view.base.ui.extension.toPx
 
 class ReplaceModelViewWithImage : ContentRule {
     companion object {

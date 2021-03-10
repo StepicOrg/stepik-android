@@ -1,12 +1,12 @@
 package org.stepik.android.domain.submission.interactor
 
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapNotNullPaged
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.attempt.repository.AttemptRepository
+import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -23,20 +23,32 @@ constructor(
     private val userPreferences: UserPreferences,
     private val userRepository: UserRepository
 ) {
-    fun getSubmissionItems(stepId: Long, status: Submission.Status?, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
+    fun getSubmissionItems(stepId: Long, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
-            .getSubmissionsForStep(stepId, userPreferences.userId, status, page)
+            .getSubmissionsForStep(
+                stepId,
+                submissionsFilterQuery.copy(user = if (isTeacher) null else userPreferences.userId),
+                page
+            )
             .flatMap { submissions ->
-                val attemptIds = submissions.mapToLongArray(Submission::attempt)
+                resolveSubmissionItems(submissions)
+            }
 
-                zip(
-                    attemptRepository
-                        .getAttempts(*attemptIds),
-                    userRepository
-                        .getUsers(listOf(userPreferences.userId))
-                ) { attempts, users ->
-                    mapToSubmissionItems(submissions, attempts, users)
-                }
+    private fun resolveSubmissionItems(submissions: PagedList<Submission>): Single<PagedList<SubmissionItem.Data>> {
+        val attemptIds = submissions.mapToLongArray(Submission::attempt)
+
+        return attemptRepository
+            .getAttempts(*attemptIds)
+            .flatMap { attempts ->
+                resolveAttemptsAndUsers(submissions, attempts)
+            }
+    }
+
+    private fun resolveAttemptsAndUsers(submissions: PagedList<Submission>, attempts: List<Attempt>): Single<PagedList<SubmissionItem.Data>> =
+        userRepository
+            .getUsers(attempts.map(Attempt::user))
+            .map { users ->
+                mapToSubmissionItems(submissions, attempts, users)
             }
 
     private fun mapToSubmissionItems(submissions: PagedList<Submission>, attempts: List<Attempt>, users: List<User>): PagedList<SubmissionItem.Data> =

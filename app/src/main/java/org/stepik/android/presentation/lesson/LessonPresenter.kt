@@ -196,6 +196,12 @@ constructor(
             ?.step
             ?: return
 
+        val isTeacher = oldState
+            .lessonData
+            .lesson
+            .actions
+            ?.editLesson != null
+
         compositeDisposable += lessonInteractor
             .getDiscussionThreads(step)
             .observeOn(mainScheduler)
@@ -203,10 +209,10 @@ constructor(
             .subscribeBy(
                 onSuccess = { discussionThreads ->
                     val discussionThread = discussionThreads.find { it.thread == discussionThreadType }
-                    view?.showComments(step, discussionId, discussionThread)
+                    view?.showComments(step, discussionId, discussionThread, isTeacher)
                 },
                 onError = {
-                    view?.showComments(step, discussionId, null)
+                    view?.showComments(step, discussionId, null, isTeacher)
                 }
             )
     }

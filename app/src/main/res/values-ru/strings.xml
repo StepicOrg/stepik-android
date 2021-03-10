@@ -706,7 +706,10 @@
     <string name="lesson_step_counter">Шаг %d из %d</string>
 
     <!-- Step -->
-    <string name="step_disabled_description">Увидеть задачу пока нельзя!\n\nНапишите авторам курса, чтобы они обратили внимание на настройки.\nВозможно, через какое-то время доступ восстановится.</string>
+    <string name="step_disabled_title">Увидеть задачу пока нельзя</string>
+    <string name="step_disabled_description_part_1">"Напишите авторам курса, чтобы они обратили внимание на настройки "</string>
+    <string name="step_disabled_description_part_2">.\n\nВозможно, через какое-то время доступ восстановится.</string>
+    <string name="step_disabled_pattern">%s → Шаг %d</string>
 
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>
@@ -826,6 +829,7 @@
     <string name="comment_compose_title">Комментарий</string>
     <string name="solutions_compose_title">Решение</string>
     <string name="comment_action_create">Написать комментарий</string>
+    <string name="comment_action_submissions">Решения</string>
     <string name="comment_action_edit">Изменить</string>
     <string name="comment_action_remove">Удалить</string>
     <string name="comment_action_remove_description">Удалить этот комментарий</string>
@@ -956,4 +960,32 @@
     <string name="visited_courses_enrolled">Вы записаны</string>
 
     <string name="story_deeplink_open_fail">Не удалось открыть историю</string>
+    <string name="authors_title">Авторы курсов</string>
+    <string name="similar_courses_title">Похожие темы</string>
+
+    <!-- Submissions filter -->
+    <string name="submissions_filter_search_hint">ID, email, имя, номер решения</string>
+    <string name="submissions_filter_dialog_title">Поиск решений</string>
+
+    <string name="submissions_filter_submission_status_subtitle">Статус решения</string>
+    <string name="submissions_filter_any_status_radio_button_title">Любой</string>
+    <string name="submissions_filter_correct_status_radio_button_title">Верные</string>
+    <string name="submissions_filter_partially_correct_status_radio_button_title">Частично-верные</string>
+    <string name="submissions_filter_incorrect_status_radio_button_title">Неверные</string>
+
+    <string name="submissions_filter_date_sort_subtitle">Дата отправки решения</string>
+    <string name="submissions_filter_desc_date_radio_button_title">Сначала новые</string>
+    <string name="submissions_filter_asc_date_radio_button_title">Сначала старые</string>
+
+    <string name="submissions_filter_review_status_subtitle">Рецензии</string>
+    <string name="submissions_filter_any_review_status_radio_button_title">Любой статус рецензии</string>
+    <string name="submissions_filter_finished_review_status_radio_button_title">Рецензирование завершено</string>
+    <string name="submissions_filter_awaiting_review_status_radio_button_title">Ожидают рецензии</string>
+
+    <string name="submission_score">Оценка</string>
+    <string name="submission_select">Выбрать это решение</string>
+    <string name="submission_status_correct">Верно</string>
+    <string name="submission_status_partially_correct">Частично-верно</string>
+    <string name="submission_status_incorrect">Неверно</string>
+    <string name="submission_action_similar">Все решения пользователя</string>
 </resources>

@@ -17,8 +17,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -26,11 +24,15 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
+import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListCollectionHeaderDecoration
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 
 class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), CourseListCollectionView {
@@ -54,6 +56,9 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var courseCountMapper: CourseCountMapper
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListCollectionPresenter by viewModels { viewModelFactory }
@@ -80,6 +85,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                     courseListPresenter.fetchNextPage()
                 }
             }
+            enforceSingleScrollDirection()
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
@@ -111,9 +117,17 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) },
+            onAuthorClick = { screenManager.openProfile(requireContext(), it) },
+            courseCountMapper = courseCountMapper,
+            isVerticalCourseCollection = true
         )
-
+        courseListCoursesRecycler.setPadding(0,
+            resources.getDimensionPixelOffset(R.dimen.vertical_course_collection_padding),
+            0,
+            resources.getDimensionPixelOffset(R.dimen.vertical_course_collection_padding)
+        )
         courseListPresenter.fetchCourses(courseCollectionId)
     }
 

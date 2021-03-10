@@ -17,7 +17,7 @@ class ResetCodeDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.reset_code_dialog_title)
             .setMessage(R.string.reset_code_dialog_explanation)
             .setPositiveButton(R.string.yes) { _, _ ->

@@ -9,7 +9,6 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
@@ -25,6 +24,7 @@ import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.comment.mapper.CommentsStateMapper
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.injection.step.StepDiscussionBus
+import ru.nobird.android.core.model.PaginationDirection
 import javax.inject.Inject
 
 class CommentsPresenter
