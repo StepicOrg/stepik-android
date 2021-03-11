@@ -17,8 +17,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.listeners.OnItemClickListener
-import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.resolveColorAttribute
+import ru.nobird.android.view.base.ui.extension.inflate
 import javax.inject.Inject
 
 class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>(), OnItemClickListener {

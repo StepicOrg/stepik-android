@@ -296,6 +296,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         runCodeDelegate?.lang = lang
         codeLayoutDelegate.setLanguage(programmingLanguage)
         codeLayoutDelegate.setDetailsContentData(programmingLanguage)
+        (parentFragment as? Callback)
+            ?.onSyncCodePreference(programmingLanguage)
     }
 
     override fun onReset() {
@@ -398,5 +400,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     interface Callback {
         fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean = false)
+        fun onSyncCodePreference(lang: String)
     }
 }

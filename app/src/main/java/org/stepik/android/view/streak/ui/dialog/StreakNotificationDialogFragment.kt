@@ -43,7 +43,7 @@ class StreakNotificationDialogFragment : DialogFragment() {
                     headerTitle.text = title
                 }
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setCustomTitle(titleView)
             .setMessage(message)
             .setPositiveButton(R.string.ok) { _, _ ->

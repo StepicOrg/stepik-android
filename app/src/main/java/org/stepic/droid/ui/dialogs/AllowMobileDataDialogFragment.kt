@@ -16,7 +16,7 @@ class AllowMobileDataDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.allow_mobile_download_title)
             .setMessage(R.string.allow_mobile_message)
             .setPositiveButton(R.string.yes) { _, _ ->

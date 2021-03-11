@@ -15,8 +15,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.CoursesSnapHelper
-import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
@@ -30,6 +28,8 @@ import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 
 class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseListQueryView {

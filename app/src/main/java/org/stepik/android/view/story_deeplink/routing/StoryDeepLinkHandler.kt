@@ -2,7 +2,7 @@ package org.stepik.android.view.story_deeplink.routing
 
 import android.content.Intent
 import org.stepic.droid.util.HtmlHelper
-import org.stepic.droid.util.getPathSegmentParameter
+import ru.nobird.android.view.base.ui.extension.getPathSegmentParameter
 
 internal const val STORY_TEMPLATE_PATH_SEGMENT = "story-template"
 

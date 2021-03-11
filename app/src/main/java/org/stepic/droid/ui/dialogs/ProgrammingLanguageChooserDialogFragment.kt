@@ -43,7 +43,7 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
             //reflection failed -> ignore
         }
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.choose_language)
             .setView(picker)
             .setPositiveButton(R.string.choose_action) { _, _ ->

@@ -58,6 +58,7 @@ import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -109,6 +110,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var lessonTitleMapper: LessonTitleMapper
 
     private val lessonPresenter: LessonPresenter by viewModels { viewModelFactory }
 
@@ -335,11 +339,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     private fun setupToolbarTitle(lessonData: LessonData) {
         centeredToolbarTitle.text =
-            if (lessonData.section != null && lessonData.unit != null) {
-                resources.getString(R.string.lesson_toolbar_title, lessonData.section.position, lessonData.unit.position, lessonData.lesson.title)
-            } else {
-                lessonData.lesson.title
-            }
+            lessonTitleMapper.mapToLessonTitle(this, lessonData)
     }
 
     private fun invalidateTabLayout() {

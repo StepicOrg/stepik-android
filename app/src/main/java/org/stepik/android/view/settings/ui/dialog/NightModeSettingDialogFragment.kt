@@ -42,7 +42,7 @@ class NightModeSettingDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.setting_night_mode)
             .setSingleChoiceItems(resources.getStringArray(R.array.night_modes), nightModeValues.indexOf(sharedPreferenceHelper.nightMode)) { _, which ->
                 sharedPreferenceHelper.nightMode = nightModeValues[which]
