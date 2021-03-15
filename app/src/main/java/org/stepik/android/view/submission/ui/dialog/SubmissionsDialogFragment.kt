@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
@@ -36,6 +37,9 @@ import org.stepik.android.presentation.submission.SubmissionsPresenter
 import org.stepik.android.presentation.submission.SubmissionsView
 import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
+import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
+import org.stepik.android.view.submission.routing.SubmissionDeepLinkBuilder
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.PaginationDirection
@@ -47,7 +51,11 @@ import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, SubmissionsQueryFilterDialogFragment.Callback {
+class SubmissionsDialogFragment :
+    DialogFragment(),
+    SubmissionsView,
+    SubmissionsQueryFilterDialogFragment.Callback,
+    InAppWebViewDialogFragment.Callback {
     companion object {
         const val TAG = "SubmissionsDialogFragment"
 
@@ -71,10 +79,19 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
     }
 
     @Inject
+    internal lateinit var userPreferences: UserPreferences
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    lateinit var submissionDeepLinkBuilder: SubmissionDeepLinkBuilder
+
+    @Inject
+    internal lateinit var stepQuizReviewDeepLinkBuilder: StepQuizReviewDeepLinkBuilder
 
     private var step: Step by argument()
     private var isTeacher: Boolean by argument()
@@ -149,8 +166,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
 
         submissionItemAdapter = DefaultDelegateAdapter()
         submissionItemAdapter += SubmissionDataAdapterDelegate(
+            currentUserId = userPreferences.userId,
             isTeacher = isTeacher,
             isSelectionEnabled = isSelectionEnabled,
+            reviewInstruction = null, // TODO APPS 3227 Pass reviewInstruction through newInstance
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -172,6 +191,18 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
                     val userIdQuery = resources.getString(R.string.submissions_user_filter, submissionDataItem.user.id)
                     searchSubmissionsEditText.setText(userIdQuery)
                     fetchSearchQuery()
+                }
+
+                override fun onSeeSubmissionReviewAction(submissionId: Long) {
+                    val (title, url) = getString(R.string.comment_solution_pattern, submissionId) to
+                            submissionDeepLinkBuilder.createSubmissionLink(step.id, submissionId)
+                    openInWeb(title, url)
+                }
+
+                override fun onSeeReviewsReviewAction(session: Long) {
+                    val (title, url) = getString(R.string.step_quiz_review_taken_title) to
+                            stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(session)
+                    openInWeb(title, url)
                 }
             }
         )
@@ -278,6 +309,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
         submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true)
     }
 
+    override fun onDismissed() {
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true)
+    }
+
     private fun showSolution(submissionItem: SubmissionItem.Data) {
         SolutionCommentDialogFragment
             .newInstance(step, submissionItem.attempt, submissionItem.submission)
@@ -300,6 +335,12 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
             forceUpdate = true
         )
+    }
+
+    private fun openInWeb(title: String, url: String) {
+        InAppWebViewDialogFragment
+            .newInstance(title, url, isProvideAuth = true)
+            .showIfNotExists(parentFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 
     interface Callback {
