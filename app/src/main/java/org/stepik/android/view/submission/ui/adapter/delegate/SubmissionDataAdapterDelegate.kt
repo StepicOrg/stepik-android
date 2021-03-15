@@ -75,7 +75,7 @@ class SubmissionDataAdapterDelegate(
                 submissionSelect.setOnClickListener(this)
             }
 
-            root.submissionDivider.isVisible = true
+            root.submissionDivider.isVisible = isSelectionEnabled
             submissionSelect.isVisible = isSelectionEnabled
             submissionMoreIcon.isVisible = isTeacher
         }
@@ -88,7 +88,7 @@ class SubmissionDataAdapterDelegate(
 
             setupSubmission(data.submission)
             // TODO APPS 3227 Enable setup when feature is finished
-            setupReviewView(data, ReviewState.NOT_SUBMITTED_FOR_REVIEW)
+            // setupReviewView(data, ReviewState.NOT_SUBMITTED_FOR_REVIEW)
         }
 
         override fun onClick(view: View) {
