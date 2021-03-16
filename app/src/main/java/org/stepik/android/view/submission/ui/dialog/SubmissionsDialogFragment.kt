@@ -28,6 +28,7 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
+import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -60,12 +61,14 @@ class SubmissionsDialogFragment :
         const val TAG = "SubmissionsDialogFragment"
 
         private const val ARG_STATUS = "status"
+        private const val ARG_REVIEW_INSTRUCTION = "review_instruction"
 
         fun newInstance(
             step: Step,
             isTeacher: Boolean = false,
             userId: Long = -1L,
             status: Submission.Status? = null,
+            reviewInstruction: ReviewInstruction? = null,
             isSelectionEnabled: Boolean = false
         ): DialogFragment =
             SubmissionsDialogFragment()
@@ -74,7 +77,11 @@ class SubmissionsDialogFragment :
                     this.isTeacher = isTeacher
                     this.userId = userId
                     this.isSelectionEnabled = isSelectionEnabled
-                    this.arguments?.putSerializable(ARG_STATUS, status)
+                    this.arguments = Bundle(2)
+                        .also {
+                            it.putSerializable(ARG_STATUS, status)
+                            it.putParcelable(ARG_REVIEW_INSTRUCTION, reviewInstruction)
+                        }
                 }
     }
 
@@ -98,6 +105,7 @@ class SubmissionsDialogFragment :
     private var userId: Long by argument()
     private var isSelectionEnabled: Boolean by argument()
     private var status: Submission.Status? = null
+    private var reviewInstruction: ReviewInstruction? = null
 
     private var submissionsFilterQuery = SubmissionsFilterQuery.DEFAULT_QUERY
 
@@ -124,8 +132,9 @@ class SubmissionsDialogFragment :
         injectComponent()
 
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
+        reviewInstruction = arguments?.getParcelable<ReviewInstruction>(ARG_REVIEW_INSTRUCTION)
         submissionsPresenter.fetchSubmissions(
-            step.id,
+            step,
             isTeacher,
             submissionsFilterQuery.copy(
                 status = status?.scope,
@@ -169,7 +178,7 @@ class SubmissionsDialogFragment :
             currentUserId = userPreferences.userId,
             isTeacher = isTeacher,
             isSelectionEnabled = isSelectionEnabled,
-            reviewInstruction = null, // TODO APPS 3227 Pass reviewInstruction through newInstance
+            reviewInstruction = reviewInstruction,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -215,7 +224,7 @@ class SubmissionsDialogFragment :
 
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    submissionsPresenter.fetchNextPage(step.id, isTeacher)
+                    submissionsPresenter.fetchNextPage(step, isTeacher)
                 }
             }
 
@@ -224,8 +233,8 @@ class SubmissionsDialogFragment :
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true) }
 
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -306,11 +315,11 @@ class SubmissionsDialogFragment :
     }
 
     override fun onSyncFilterQueryWithParent(submissionsFilterQuery: SubmissionsFilterQuery) {
-        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true)
+        submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true)
     }
 
     override fun onDismissed() {
-        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, forceUpdate = true)
+        submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true)
     }
 
     private fun showSolution(submissionItem: SubmissionItem.Data) {
@@ -330,7 +339,7 @@ class SubmissionsDialogFragment :
         searchSubmissionsEditText.hideKeyboard()
         searchSubmissionsEditText.clearFocus()
         submissionsPresenter.fetchSubmissions(
-            step.id,
+            step,
             isTeacher,
             submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
             forceUpdate = true
@@ -338,9 +347,9 @@ class SubmissionsDialogFragment :
     }
 
     private fun openInWeb(title: String, url: String) {
-        InAppWebViewDialogFragment
-            .newInstance(title, url, isProvideAuth = true)
-            .showIfNotExists(parentFragmentManager, InAppWebViewDialogFragment.TAG)
+        val dialog = InAppWebViewDialogFragment.newInstance(title, url, isProvideAuth = true)
+        dialog.setTargetFragment(this, InAppWebViewDialogFragment.IN_APP_WEB_VIEW_DIALOG_REQUEST_CODE)
+        dialog.showIfNotExists(parentFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 
     interface Callback {

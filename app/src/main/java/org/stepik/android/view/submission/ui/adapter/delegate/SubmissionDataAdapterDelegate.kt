@@ -55,6 +55,7 @@ class SubmissionDataAdapterDelegate(
         private val submissionScoreText = root.submissionScoreText
         private val reviewSelect = root.reviewSelect
         private val reviewSelectText = root.reviewSelectText
+        private val reviewSelectArrow = root.reviewSelectArrow
 
         private val submissionUserIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
@@ -68,14 +69,14 @@ class SubmissionDataAdapterDelegate(
             submissionUserIcon.setOnClickListener(this)
             submissionUserName.setOnClickListener(this)
             submissionMoreIcon.setOnClickListener(this)
-            // TODO APPS 3227: Enable listener when feature is finished
-            // reviewSelect.setOnClickListener(this)
+            reviewSelect.setOnClickListener(this)
 
             if (isSelectionEnabled) {
                 submissionSelect.setOnClickListener(this)
             }
 
-            root.submissionDivider.isVisible = isSelectionEnabled
+            root.submissionDivider.isVisible = isSelectionEnabled || reviewInstruction != null
+            reviewSelect.isVisible = reviewInstruction != null
             submissionSelect.isVisible = isSelectionEnabled
             submissionMoreIcon.isVisible = isTeacher
         }
@@ -87,8 +88,7 @@ class SubmissionDataAdapterDelegate(
             submissionTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: 0)
 
             setupSubmission(data.submission)
-            // TODO APPS 3227 Enable setup when feature is finished
-            // setupReviewView(data, ReviewState.NOT_SUBMITTED_FOR_REVIEW)
+            setupReviewView(data, getSubmissionReviewState(data))
         }
 
         override fun onClick(view: View) {
@@ -111,8 +111,7 @@ class SubmissionDataAdapterDelegate(
                     if (reviewState == ReviewState.NOT_SUBMITTED_FOR_REVIEW) {
                         actionListener.onSeeSubmissionReviewAction(dataItem.submission.id)
                     } else {
-                        // TODO APPS 3227 review session will be added to SubmissionItem.Data
-                        // dataItem.reviewSessionData?.let { actionListener.onSeeReviewsReviewAction(it.id) }
+                        dataItem.reviewSessionData?.let { actionListener.onSeeReviewsReviewAction(it.id) }
                     }
                 }
 
@@ -184,9 +183,7 @@ class SubmissionDataAdapterDelegate(
 
             val title = when (reviewState) {
                 ReviewState.IN_PROGRESS, ReviewState.FINISHED -> {
-                    val takenReviewCount = 0
-                    // TODO APPS 3227 See above
-                    // val takenReviewCount = submissionItemData.reviewSessionData?.session?.takenReviews?.size ?: 0
+                    val takenReviewCount = submissionItemData.reviewSessionData?.session?.takenReviews?.size ?: 0
                     val minReviewsCount = reviewInstruction?.minReviews ?: 0
                     context.getString(R.string.submission_review_state_in_progress_title, takenReviewCount, minReviewsCount)
                 }
@@ -221,9 +218,11 @@ class SubmissionDataAdapterDelegate(
                 }
             }
             reviewSelect.isEnabled = isEnabled
+            val alpha = if (isEnabled) 1f else 0.4f
+            reviewSelectText.alpha = alpha
+            reviewSelectArrow.alpha = alpha
         }
 
-        // TODO APPS 3227 This function depends on ReviewSession
         private fun getSubmissionReviewState(itemData: SubmissionItem.Data): ReviewState? {
             if (reviewInstruction == null) {
                 return null

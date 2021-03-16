@@ -39,6 +39,7 @@ import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.commitNow
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
@@ -257,7 +258,12 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             }
 
             R.id.menu_item_submissions -> {
-                showSubmissionsDialog()
+                val instructionId = stepWrapper.step.instruction
+                if (instructionId == null) {
+                    showSubmissionsDialog(reviewInstruction = null)
+                } else {
+                    stepPresenter.onFetchReviewInstruction(instructionId)
+                }
                 true
             }
 
@@ -275,13 +281,13 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             .showIfNotExists(supportFragmentManager, StepShareDialogFragment.TAG)
     }
 
-    private fun showSubmissionsDialog() {
+    private fun showSubmissionsDialog(reviewInstruction: ReviewInstruction?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
             ?: return
 
         SubmissionsDialogFragment
-            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.actions?.editLesson != null)
+            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.actions?.editLesson != null, reviewInstruction = reviewInstruction)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
 
         analytic
@@ -365,6 +371,10 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun showQuizReloadMessage() {
         view?.snackbar(messageRes = R.string.step_quiz_reload_message, length = Snackbar.LENGTH_LONG)
+    }
+
+    override fun openShowSubmissionsWithReview(reviewInstruction: ReviewInstruction) {
+        showSubmissionsDialog(reviewInstruction = reviewInstruction)
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {

@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
+import org.stepik.android.model.Step
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -35,7 +36,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchSubmissions(stepId: Long, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery, forceUpdate: Boolean = false) {
+    fun fetchSubmissions(step: Step, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery, forceUpdate: Boolean = false) {
         if (state.contentState != SubmissionsView.ContentState.Idle &&
             !((state.contentState == SubmissionsView.ContentState.NetworkError || state.contentState is SubmissionsView.ContentState.Content || state.contentState is SubmissionsView.ContentState.ContentEmpty) && forceUpdate)) {
             return
@@ -49,7 +50,7 @@ constructor(
             contentState = SubmissionsView.ContentState.Loading
         )
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, isTeacher, state.submissionsFilterQuery)
+            .getSubmissionItems(step, isTeacher, state.submissionsFilterQuery)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -72,14 +73,14 @@ constructor(
             )
     }
 
-    fun fetchNextPage(stepId: Long, isTeacher: Boolean) {
+    fun fetchNextPage(step: Step, isTeacher: Boolean) {
         val oldState = (state.contentState as? SubmissionsView.ContentState.Content)
             ?.takeIf { it.items.hasNext }
             ?: return
 
         state = state.copy(contentState = SubmissionsView.ContentState.ContentLoading(oldState.items))
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, isTeacher, state.submissionsFilterQuery, oldState.items.page + 1)
+            .getSubmissionItems(step, isTeacher, state.submissionsFilterQuery, oldState.items.page + 1)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
