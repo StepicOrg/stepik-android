@@ -29,13 +29,13 @@ constructor(
         if (state != StoryDeepLinkView.State.Idle) return
 
         state = StoryDeepLinkView.State.Loading
-        compositeDisposable += storyDeepLinkInteractor
-            .getStoryTemplate(storyId)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onSuccess = { state = StoryDeepLinkView.State.Success(it) },
-                onError = { state = StoryDeepLinkView.State.Error }
-            )
+//        compositeDisposable += storyDeepLinkInteractor
+//            .getStoryTemplate(storyId)
+//            .observeOn(mainScheduler)
+//            .subscribeOn(backgroundScheduler)
+//            .subscribeBy(
+//                onSuccess = { state = StoryDeepLinkView.State.Success(it) },
+//                onError = { state = StoryDeepLinkView.State.Error }
+//            )
     }
 }

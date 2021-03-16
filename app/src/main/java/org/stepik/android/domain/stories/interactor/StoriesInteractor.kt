@@ -1,9 +1,8 @@
 package org.stepik.android.domain.stories.interactor
 
 import android.content.res.Resources
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.util.defaultLocale
@@ -18,30 +17,30 @@ constructor(
     private val personalOffersRepository: PersonalOffersRepository,
     private val storiesRepository: StoryTemplatesRepository
 ) {
-    fun fetchStories(): Single<List<Story>> =
-        Singles.zip(
-            getStoryTemplates(),
-            getOfferStoryTemplates()
-        ) { stories, offerStories ->
-            (stories + offerStories)
+    suspend fun fetchStories(): List<Story> =
+        coroutineScope {
+            val stories = async { getStoryTemplates() }
+            val offerStories = async { getOfferStoryTemplates() }
+
+            (stories.await() + offerStories.await())
                 .sortedBy { it.position }
                 .map(StoryTemplate::toStory)
         }
 
-    fun getViewedStoriesIds(): Single<Set<Long>> =
+    suspend fun getViewedStoriesIds(): Set<Long> =
         storiesRepository.getViewedStoriesIds()
 
-    fun markStoryAsViewed(storyId: Long): Completable =
+    suspend fun markStoryAsViewed(storyId: Long) {
         storiesRepository.markStoryAsViewed(storyId)
+    }
 
-    private fun getStoryTemplates(): Single<List<StoryTemplate>> {
+    private suspend fun getStoryTemplates(): List<StoryTemplate> {
         val locale = Resources.getSystem().configuration.defaultLocale
         return storiesRepository.getStoryTemplates(locale.language)
     }
 
-    private fun getOfferStoryTemplates(): Single<List<StoryTemplate>> =
-        personalOffersRepository.getPersonalOffers()
-            .flatMap { personalOffers ->
-                storiesRepository.getStoryTemplates(personalOffers.promoStories.orEmpty())
-            }
+    private suspend fun getOfferStoryTemplates(): List<StoryTemplate> {
+        val personalOffers = personalOffersRepository.getPersonalOffers()
+        return storiesRepository.getStoryTemplates(personalOffers.promoStories.orEmpty())
+    }
 }

@@ -37,4 +37,19 @@ interface RemoteStorageService {
     fun removeStorageRecord(
         @Path("recordId") recordId: Long
     ): Completable
+
+
+    @POST("api/storage-records")
+    suspend fun createStorageRecordCoroutine(
+        @Body body: StorageRequest
+    ): StorageResponse
+
+
+    @GET("api/storage-records")
+    suspend fun getStorageRecordsCoroutine(
+        @Query("page") page: Int,
+        @Query("user") userId: Long,
+        @Query("kind") kind: String? = null,
+        @Query("kind__startswith") startsWith: String? = null
+    ): StorageResponse
 }

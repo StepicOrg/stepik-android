@@ -1,6 +1,5 @@
 package org.stepik.android.data.personal_offers.repository
 
-import io.reactivex.Single
 import org.stepik.android.data.personal_offers.source.PersonalOffersRemoteDataSource
 import org.stepik.android.domain.personal_offers.model.PersonalOffers
 import org.stepik.android.domain.personal_offers.repository.PersonalOffersRepository
@@ -11,11 +10,10 @@ class PersonalOffersRepositoryImpl
 constructor(
     private val personalOffersRemoteDataSource: PersonalOffersRemoteDataSource
 ) : PersonalOffersRepository {
-    override fun getPersonalOffers(): Single<PersonalOffers> =
-        personalOffersRemoteDataSource
-            .getPersonalOffers()
-            .switchIfEmpty(createOffersRecord())
+    override suspend fun getPersonalOffers(): PersonalOffers =
+        personalOffersRemoteDataSource.getPersonalOffers()
+            ?: createOffersRecord()
 
-    private fun createOffersRecord(): Single<PersonalOffers> =
+    private suspend fun createOffersRecord(): PersonalOffers =
         personalOffersRemoteDataSource.createPersonalOffers()
 }
