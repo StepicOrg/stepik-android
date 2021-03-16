@@ -194,14 +194,14 @@ class SubmissionsDialogFragment :
                 }
 
                 override fun onSeeSubmissionReviewAction(submissionId: Long) {
-                    val (title, url) = getString(R.string.comment_solution_pattern, submissionId) to
-                            submissionDeepLinkBuilder.createSubmissionLink(step.id, submissionId)
+                    val title = getString(R.string.comment_solution_pattern, submissionId)
+                    val url = submissionDeepLinkBuilder.createSubmissionLink(step.id, submissionId)
                     openInWeb(title, url)
                 }
 
                 override fun onSeeReviewsReviewAction(session: Long) {
-                    val (title, url) = getString(R.string.step_quiz_review_taken_title) to
-                            stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(session)
+                    val title = getString(R.string.step_quiz_review_taken_title)
+                    val url = stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(session)
                     openInWeb(title, url)
                 }
             }
