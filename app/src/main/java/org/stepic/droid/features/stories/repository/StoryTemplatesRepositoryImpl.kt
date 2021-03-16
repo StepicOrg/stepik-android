@@ -19,6 +19,7 @@ constructor(
     private val viewedStoryTemplateDao: IDao<ViewedStoryTemplate>
 ) : StoryTemplatesRepository {
     companion object {
+        // TODO APPS 3223 Bump story version when feature is complete
         const val STORY_TEMPLATES_VERSION = 1
     }
 
