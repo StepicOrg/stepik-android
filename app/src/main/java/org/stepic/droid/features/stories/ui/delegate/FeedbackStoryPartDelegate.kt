@@ -14,7 +14,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.view_story_plain_text_with_input.view.*
+import kotlinx.android.synthetic.main.view_story_feedback.view.*
 import kotlinx.android.synthetic.main.view_story_text_input.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
