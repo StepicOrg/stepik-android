@@ -64,6 +64,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     NextMoveable,
     Playable {
     companion object {
+        // TODO APPS 3227 Feature flag
+        private const val REVIEWS_IN_SUBMISSION_IS_ENABLED = false
+
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
 
@@ -259,10 +262,10 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
             R.id.menu_item_submissions -> {
                 val instructionId = stepWrapper.step.instruction
-                if (instructionId == null) {
-                    showSubmissionsDialog(reviewInstruction = null)
-                } else {
+                if (instructionId != null && REVIEWS_IN_SUBMISSION_IS_ENABLED) {
                     stepPresenter.onFetchReviewInstruction(instructionId)
+                } else {
+                    showSubmissionsDialog(reviewInstruction = null)
                 }
                 true
             }

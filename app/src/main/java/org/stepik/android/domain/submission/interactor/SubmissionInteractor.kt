@@ -9,6 +9,7 @@ import org.stepic.droid.util.mapNotNullPaged
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
+import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.domain.review_session.repository.ReviewSessionRepository
 import org.stepik.android.domain.submission.repository.SubmissionRepository
@@ -16,7 +17,6 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.domain.user.repository.UserRepository
-import org.stepik.android.model.Step
 import org.stepik.android.model.user.User
 import javax.inject.Inject
 
@@ -29,28 +29,34 @@ constructor(
     private val userRepository: UserRepository,
     private val reviewSessionRepository: ReviewSessionRepository
 ) {
-    fun getSubmissionItems(step: Step, isTeacher: Boolean, submissionsFilterQuery: SubmissionsFilterQuery, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
+    fun getSubmissionItems(
+        stepId: Long,
+        isTeacher: Boolean,
+        submissionsFilterQuery: SubmissionsFilterQuery,
+        reviewInstruction: ReviewInstruction? = null,
+        page: Int = 1
+    ): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
             .getSubmissionsForStep(
-                step.id,
+                stepId,
                 submissionsFilterQuery.copy(user = if (isTeacher) null else userPreferences.userId),
                 page
             )
             .flatMap { submissions -> resolveSubmissionItems(submissions) }
             .flatMap { submissionItems ->
-                if (step.actions?.doReview != null) {
-                    resolveSubmissionItemsWithReviewSessionData(submissionItems, step)
+                if (reviewInstruction != null) {
+                    resolveSubmissionItemsWithReviewSessionData(submissionItems, reviewInstruction.id)
                 } else {
                     Single.just(submissionItems)
                 }
             }
 
-    private fun resolveSubmissionItemsWithReviewSessionData(submissionItems: PagedList<SubmissionItem.Data>, step: Step): Single<PagedList<SubmissionItem.Data>> {
+    private fun resolveSubmissionItemsWithReviewSessionData(submissionItems: PagedList<SubmissionItem.Data>, instructionId: Long): Single<PagedList<SubmissionItem.Data>> {
         val sessions = submissionItems.mapNotNull { it.submission.session }
         val users = submissionItems.filter { it.submission.session == null }.map { it.user }
         return zip(
             fetchReviewSessionsBySession(sessions),
-            fetchReviewSessionsByUserAndInstruction(step, users)
+            fetchReviewSessionsByUserAndInstruction(instructionId, users)
         ) { reviewSessionsBySession, reviewSessionsByUsers ->
             val reviewSessions = reviewSessionsBySession + reviewSessionsByUsers
             submissionItems.mapNotNullPaged { submissionItem ->
@@ -96,12 +102,9 @@ constructor(
     private fun fetchReviewSessionsBySession(sessions: List<Long>): Single<List<ReviewSessionData>> =
         reviewSessionRepository.getReviewSessions(sessions)
 
-    private fun fetchReviewSessionsByUserAndInstruction(step: Step, users: List<User>): Single<List<ReviewSessionData>> {
-        if (step.instruction == null) return Single.just(emptyList())
-
-        return users
+    private fun fetchReviewSessionsByUserAndInstruction(instructionId: Long, users: List<User>): Single<List<ReviewSessionData>> =
+        users
             .toObservable()
-            .flatMapMaybe { reviewSessionRepository.getReviewSession(step.instruction!!, it.id) }
+            .flatMapMaybe { reviewSessionRepository.getReviewSession(instructionId, it.id) }
             .reduce(emptyList<ReviewSessionData>()) { a, b -> a + b }
-    }
 }

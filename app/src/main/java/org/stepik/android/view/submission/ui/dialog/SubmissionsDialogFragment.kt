@@ -134,12 +134,13 @@ class SubmissionsDialogFragment :
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
         reviewInstruction = arguments?.getParcelable<ReviewInstruction>(ARG_REVIEW_INSTRUCTION)
         submissionsPresenter.fetchSubmissions(
-            step,
+            step.id,
             isTeacher,
             submissionsFilterQuery.copy(
                 status = status?.scope,
                 search = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
-            )
+            ),
+            reviewInstruction
         )
     }
 
@@ -224,7 +225,7 @@ class SubmissionsDialogFragment :
 
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    submissionsPresenter.fetchNextPage(step, isTeacher)
+                    submissionsPresenter.fetchNextPage(step.id, isTeacher, reviewInstruction)
                 }
             }
 
@@ -233,8 +234,8 @@ class SubmissionsDialogFragment :
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true) }
 
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -315,11 +316,11 @@ class SubmissionsDialogFragment :
     }
 
     override fun onSyncFilterQueryWithParent(submissionsFilterQuery: SubmissionsFilterQuery) {
-        submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true)
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true)
     }
 
     override fun onDismissed() {
-        submissionsPresenter.fetchSubmissions(step, isTeacher, submissionsFilterQuery, forceUpdate = true)
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true)
     }
 
     private fun showSolution(submissionItem: SubmissionItem.Data) {
@@ -339,9 +340,10 @@ class SubmissionsDialogFragment :
         searchSubmissionsEditText.hideKeyboard()
         searchSubmissionsEditText.clearFocus()
         submissionsPresenter.fetchSubmissions(
-            step,
+            step.id,
             isTeacher,
             submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+            reviewInstruction,
             forceUpdate = true
         )
     }
