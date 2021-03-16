@@ -95,13 +95,14 @@ class FeedbackStoryPartDelegate(
                     null,
                     null
                 )
-                if (story != null) {
-                    // TODO APPS 3223 Enable when feature is finished
-//                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_FEEDBACK_PRESSED, mapOf(
-//                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-//                        AmplitudeAnalytic.Stories.Values.POSITION to position,
-//                        AmplitudeAnalytic.Stories.Values.FEEDBACK to
-//                    ))
+
+                val textToSend = storyFeedbackEditText.text?.toString()
+                if (story != null && textToSend != null) {
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_FEEDBACK_PRESSED, mapOf(
+                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                        AmplitudeAnalytic.Stories.Values.POSITION to position,
+                        AmplitudeAnalytic.Stories.Values.FEEDBACK to textToSend
+                    ))
                 }
             }
             storyButton.text = button.title
