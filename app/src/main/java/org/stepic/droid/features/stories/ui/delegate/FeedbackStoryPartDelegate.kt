@@ -12,6 +12,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
+import androidx.core.widget.TextViewCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_feedback.view.*
@@ -25,15 +26,13 @@ import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.inflate
 
 class FeedbackStoryPartDelegate(
     private val analytic: Analytic,
-    private val context: Context,
+    private val context: Context
 ) : StoryPartViewDelegate() {
-    companion object {
-        private const val COLOR_MASK = 0xFF000000.toInt()
-    }
 
     private val progressDrawable =
         CircularProgressDrawable(context).apply {
@@ -67,15 +66,13 @@ class FeedbackStoryPartDelegate(
 
             setUpText(this, part.text)
             setUpButton(story, this, part.button, position)
-            setUpInput(this, part.feedback)
+            setUpInput(this, storyView, part.feedback)
         }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
         if (text != null) {
             val storyTitle = view.storyTitle
-
-            @ColorInt val textColor = COLOR_MASK or text.textColor.toInt(16)
-
+            @ColorInt val textColor = getColorInt(text.textColor)
             storyTitle.setTextColor(textColor)
             storyTitle.text = text.title
         }
@@ -85,14 +82,15 @@ class FeedbackStoryPartDelegate(
         val storyButton = view.storyButton
         val storyFeedbackEditText = view.storyFeedbackEditText
         if (button != null) {
-            ViewCompat.setBackgroundTintList(storyButton, ColorStateList.valueOf(COLOR_MASK or button.backgroundColor.toInt(16)))
-            storyButton.setTextColor(COLOR_MASK or button.textColor.toInt(16))
+            ViewCompat.setBackgroundTintList(storyButton, ColorStateList.valueOf(getColorInt(button.backgroundColor)))
+            storyButton.setTextColor(getColorInt(button.textColor))
             storyButton.setOnClickListener {
                 storyButton.isEnabled = false
                 storyButton.text = button.feedbackTitle ?: ""
                 storyFeedbackEditText.isEnabled = false
-                storyButton.setCompoundDrawables(
-                    getColoredDrawable(R.drawable.ic_check_white, COLOR_MASK or button.textColor.toInt(16)),
+                TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                    storyButton,
+                    getColoredDrawable(R.drawable.ic_check_white, button.textColor),
                     null,
                     null,
                     null
@@ -110,16 +108,16 @@ class FeedbackStoryPartDelegate(
         }
     }
 
-    private fun setUpInput(view: View, feedback: StoryTemplate.Feedback?) {
+    private fun setUpInput(view: View, storyView: StoryView, feedback: StoryTemplate.Feedback?) {
         if (feedback == null) return
         val storyFeedbackContainer = view.storyInputContainer
         val storyFeedbackText = view.storyFeedbackText
         val storyFeedbackIcon = view.storyFeedbackIcon
         val storyFeedbackEditText = view.storyFeedbackEditText
 
-        storyFeedbackContainer.background = getColoredDrawable(R.drawable.bg_story_feedback, "#${feedback.backgroundColor}".toColorInt())
+        storyFeedbackContainer.background = getColoredDrawable(R.drawable.bg_story_feedback, feedback.backgroundColor)
         storyFeedbackText.text = feedback.text
-        storyFeedbackText.setTextColor(COLOR_MASK or feedback.textColor.toInt(16))
+        storyFeedbackText.setTextColor(getColorInt(feedback.textColor))
 
         val iconImageResource = when (feedback.iconStyle) {
             StoryTemplate.Feedback.IconStyle.DARK ->
@@ -129,19 +127,39 @@ class FeedbackStoryPartDelegate(
         }
         storyFeedbackIcon.setImageResource(iconImageResource)
 
-        storyFeedbackEditText.setTextColor(COLOR_MASK or feedback.inputTextColor.toInt(16))
-        storyFeedbackEditText.background = getColoredDrawable(R.drawable.bg_story_feedback, "#${feedback.inputBackgroundColor}".toColorInt())
+        storyFeedbackEditText.setTextColor(getColorInt(feedback.inputTextColor))
+        storyFeedbackEditText.background = getColoredDrawable(R.drawable.bg_story_feedback, feedback.inputBackgroundColor)
         storyFeedbackEditText.hint = feedback.placeholderText
-        storyFeedbackEditText.setHintTextColor("#${feedback.placeholderTextColor}".toColorInt())
+        storyFeedbackEditText.setHintTextColor(getColorInt(feedback.placeholderTextColor))
+
+        storyFeedbackEditText.setOnFocusChangeListener { _, hasFocus ->
+            view.isFocusableInTouchMode = hasFocus
+            view.isFocusable = hasFocus
+            view.isClickable = hasFocus
+
+            if (hasFocus) {
+                storyView.pause()
+            } else {
+                storyFeedbackEditText.hideKeyboard()
+                storyFeedbackEditText.clearFocus()
+                storyView.resume()
+            }
+        }
     }
 
-    private fun getColoredDrawable(@DrawableRes resId: Int, @ColorInt color: Int): Drawable? =
+    private fun getColoredDrawable(@DrawableRes resId: Int, color: String): Drawable? =
         AppCompatResources
             .getDrawable(context, resId)
             ?.mutate()
             ?.let { DrawableCompat.wrap(it) }
             ?.also {
-                DrawableCompat.setTint(it, color)
+                DrawableCompat.setTint(it, getColorInt(color))
                 DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
             }
+
+    /**
+     * Add symbol # as prefix and convert to @ColorRes Int
+     */
+    private fun getColorInt(color: String): Int =
+        "#$color".toColorInt()
 }
