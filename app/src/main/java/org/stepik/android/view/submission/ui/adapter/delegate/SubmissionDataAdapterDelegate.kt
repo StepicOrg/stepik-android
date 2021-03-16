@@ -4,16 +4,21 @@ import android.content.res.ColorStateList
 import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.item_submission_data.view.*
+import kotlinx.android.synthetic.main.view_submission_review.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toFixed
+import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
@@ -23,8 +28,10 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import kotlin.math.roundToInt
 
 class SubmissionDataAdapterDelegate(
+    private val currentUserId: Long,
     private val isTeacher: Boolean,
     private val isSelectionEnabled: Boolean,
+    private val reviewInstruction: ReviewInstruction?,
     private val actionListener: ActionListener
 ) : AdapterDelegate<SubmissionItem, DelegateViewHolder<SubmissionItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SubmissionItem> =
@@ -46,6 +53,8 @@ class SubmissionDataAdapterDelegate(
         private val submissionStatus = root.submissionStatus
         private val submissionScoreValue = root.submissionScoreValue
         private val submissionScoreText = root.submissionScoreText
+        private val reviewSelect = root.reviewSelect
+        private val reviewSelectText = root.reviewSelectText
 
         private val submissionUserIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
@@ -59,6 +68,8 @@ class SubmissionDataAdapterDelegate(
             submissionUserIcon.setOnClickListener(this)
             submissionUserName.setOnClickListener(this)
             submissionMoreIcon.setOnClickListener(this)
+            // TODO APPS 3227: Enable listener when feature is finished
+            // reviewSelect.setOnClickListener(this)
 
             if (isSelectionEnabled) {
                 submissionSelect.setOnClickListener(this)
@@ -76,6 +87,8 @@ class SubmissionDataAdapterDelegate(
             submissionTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: 0)
 
             setupSubmission(data.submission)
+            // TODO APPS 3227 Enable setup when feature is finished
+            // setupReviewView(data, ReviewState.NOT_SUBMITTED_FOR_REVIEW)
         }
 
         override fun onClick(view: View) {
@@ -92,6 +105,16 @@ class SubmissionDataAdapterDelegate(
 
                 R.id.submissionSelect ->
                     actionListener.onItemClicked(dataItem)
+
+                R.id.reviewSelect -> {
+                    val reviewState = getSubmissionReviewState(dataItem) ?: return
+                    if (reviewState == ReviewState.NOT_SUBMITTED_FOR_REVIEW) {
+                        actionListener.onSeeSubmissionReviewAction(dataItem.submission.id)
+                    } else {
+                        // TODO APPS 3227 review session will be added to SubmissionItem.Data
+                        // dataItem.reviewSessionData?.let { actionListener.onSeeReviewsReviewAction(it.id) }
+                    }
+                }
 
                 R.id.submissionContainer ->
                     actionListener.onSubmissionClicked(dataItem)
@@ -155,6 +178,94 @@ class SubmissionDataAdapterDelegate(
                 submissionScore.roundToInt().toString()
             }
         }
+
+        private fun setupReviewView(submissionItemData: SubmissionItem.Data, reviewState: ReviewState?) {
+            if (reviewState == null) return
+
+            val title = when (reviewState) {
+                ReviewState.IN_PROGRESS, ReviewState.FINISHED -> {
+                    val takenReviewCount = 0
+                    // TODO APPS 3227 See above
+                    // val takenReviewCount = submissionItemData.reviewSessionData?.session?.takenReviews?.size ?: 0
+                    val minReviewsCount = reviewInstruction?.minReviews ?: 0
+                    context.getString(R.string.submission_review_state_in_progress_title, takenReviewCount, minReviewsCount)
+                }
+
+                ReviewState.CANT_REVIEW_WRONG, ReviewState.CANT_REVIEW_ANOTHER, ReviewState.CANT_REVIEW_TEACHER ->
+                    context.getString(R.string.submission_review_state_cannot_review_title)
+
+                ReviewState.NOT_SUBMITTED_FOR_REVIEW ->
+                    context.getString(R.string.submission_review_state_not_submitted_title)
+            }
+
+            val message = context.getString(reviewState.messageResId)
+
+            val isEnabled = when (reviewState) {
+                ReviewState.IN_PROGRESS, ReviewState.FINISHED, ReviewState.NOT_SUBMITTED_FOR_REVIEW ->
+                    true
+                ReviewState.CANT_REVIEW_WRONG, ReviewState.CANT_REVIEW_ANOTHER, ReviewState.CANT_REVIEW_TEACHER ->
+                    false
+            }
+
+            val actionTitle = if (reviewState == ReviewState.NOT_SUBMITTED_FOR_REVIEW) {
+                context.getString(R.string.submission_review_action_see_submissions_title)
+            } else {
+                context.getString(R.string.submission_review_action_see_reviews_title)
+            }
+
+            reviewSelectText.text = buildSpannedString {
+                append("$title\n")
+                append("$message\n")
+                color(ContextCompat.getColor(context, R.color.color_overlay_violet)) {
+                    append(actionTitle)
+                }
+            }
+            reviewSelect.isEnabled = isEnabled
+        }
+
+        // TODO APPS 3227 This function depends on ReviewSession
+        private fun getSubmissionReviewState(itemData: SubmissionItem.Data): ReviewState? {
+            if (reviewInstruction == null) {
+                return null
+            }
+
+            if (itemData.submission.status == Submission.Status.EVALUATION) {
+                return null
+            }
+
+            itemData.submission.session?.let {
+                itemData.reviewSessionData?.let { reviewSessionData ->
+                    return if (reviewSessionData.session.isFinished) {
+                        ReviewState.FINISHED
+                    } else {
+                        ReviewState.IN_PROGRESS
+                    }
+                }
+            }
+
+            if (itemData.submission.status == Submission.Status.WRONG) {
+                return ReviewState.CANT_REVIEW_WRONG
+            }
+
+            if (itemData.attempt.user == currentUserId && isTeacher) {
+                return ReviewState.CANT_REVIEW_TEACHER
+            }
+
+            if (itemData.submission.session == null && itemData.reviewSessionData == null) {
+                return ReviewState.NOT_SUBMITTED_FOR_REVIEW
+            }
+
+            return ReviewState.CANT_REVIEW_ANOTHER
+        }
+    }
+
+    enum class ReviewState(@StringRes val messageResId: Int) {
+        IN_PROGRESS(R.string.submission_review_state_in_progress_message),
+        FINISHED(R.string.submission_review_state_finished_message),
+        CANT_REVIEW_WRONG(R.string.submission_review_state_cannot_review_wrong_message),
+        CANT_REVIEW_TEACHER(R.string.submission_review_state_cannot_review_teacher_message),
+        CANT_REVIEW_ANOTHER(R.string.submission_review_state_cannot_review_another_message),
+        NOT_SUBMITTED_FOR_REVIEW(R.string.submission_review_state_not_submitted_message)
     }
 
     interface ActionListener {
@@ -163,5 +274,7 @@ class SubmissionDataAdapterDelegate(
         fun onItemClicked(data: SubmissionItem.Data)
 
         fun onViewSubmissionsClicked(submissionDataItem: SubmissionItem.Data)
+        fun onSeeSubmissionReviewAction(submissionId: Long)
+        fun onSeeReviewsReviewAction(session: Long)
     }
 }

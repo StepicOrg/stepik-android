@@ -177,35 +177,24 @@
         app:layout_constraintTop_toBottomOf="@id/submissionContainer"
         app:layout_constraintBottom_toTopOf="@id/submissionSelect"/>
 
-    <FrameLayout
+    <include
         android:id="@+id/submissionSelect"
+        layout="@layout/view_submission_select"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-
-        android:padding="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/submissionDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:background="?selectableItemBackground">
+        app:layout_constraintBottom_toTopOf="@id/reviewSelect" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:textAppearance="?textAppearanceBody1"
-            android:theme="@style/ThemeOverlay.Violet"
-            android:text="@string/submission_select"
-            tools:text="Выбрать это решение"/>
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="24dp"
-            android:theme="@style/ThemeOverlay.Violet"
-            app:srcCompat="@drawable/ic_chevron_forward"
-            android:layout_gravity="end"/>
-
-    </FrameLayout>
+    <include
+        android:id="@+id/reviewSelect"
+        layout="@layout/view_submission_review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
