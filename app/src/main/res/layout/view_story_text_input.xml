@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_story_feedback_dark"/>
     
-    <androidx.appcompat.widget.AppCompatEditText
+    <org.stepik.android.view.base.ui.widget.StoriesClearFocusEditText
         android:id="@+id/storyFeedbackEditText"
         android:layout_width="match_parent"
         android:layout_height="112dp"
@@ -35,6 +35,7 @@
         android:padding="8dp"
         android:gravity="top|start"
         android:textSize="16sp"
+        android:focusableInTouchMode="true"
         android:background="@drawable/bg_story_feedback"
         tools:hint="Type your feedback..." />
 
