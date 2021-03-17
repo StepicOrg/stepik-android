@@ -116,7 +116,7 @@ class FeedbackStoryPartDelegate(
         val storyFeedbackIcon = view.storyFeedbackIcon
         val storyFeedbackEditText = view.storyFeedbackEditText
 
-        storyFeedbackContainer.background = getColoredDrawable(R.drawable.bg_story_feedback, feedback.backgroundColor)
+        storyFeedbackContainer.background = getColoredDrawable(R.drawable.bg_shape_rounded, feedback.backgroundColor)
         storyFeedbackText.text = feedback.text
         storyFeedbackText.setTextColor(getColorInt(feedback.textColor))
 
@@ -129,7 +129,7 @@ class FeedbackStoryPartDelegate(
         storyFeedbackIcon.setImageResource(iconImageResource)
 
         storyFeedbackEditText.setTextColor(getColorInt(feedback.inputTextColor))
-        storyFeedbackEditText.background = getColoredDrawable(R.drawable.bg_story_feedback, feedback.inputBackgroundColor)
+        storyFeedbackEditText.background = getColoredDrawable(R.drawable.bg_shape_rounded, feedback.inputBackgroundColor)
         storyFeedbackEditText.hint = feedback.placeholderText
         storyFeedbackEditText.setHintTextColor(getColorInt(feedback.placeholderTextColor))
 

@@ -1,6 +1,7 @@
 package org.stepik.android.view.submission.ui.dialog
 
 import android.app.Dialog
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.Window
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
@@ -138,6 +140,15 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView, Submissions
             fetchSearchQuery()
         }
         filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
+
+        searchSubmissionsEditText.background = AppCompatResources
+            .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
+            ?.mutate()
+            ?.let { DrawableCompat.wrap(it) }
+            ?.also {
+                DrawableCompat.setTint(it, ContextCompat.getColor(requireContext(), R.color.color_elevation_overlay_1dp))
+                DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+            }
 
         viewContentStateDelegate = ViewStateDelegate()
         viewContentStateDelegate.addState<SubmissionsView.ContentState.Idle>()
