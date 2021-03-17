@@ -80,7 +80,7 @@ class PlainTextWithButtonStoryPartDelegate(
 
             storyTitle.text = text.title
             storyText.text = text.text
-            storyText.isVisible = text.text.isNotBlank()
+            storyText.isVisible = text.text?.isNotBlank() ?: false
         }
     }
 

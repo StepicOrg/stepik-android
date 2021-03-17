@@ -56,7 +56,7 @@
             android:focusableInTouchMode="true"
             android:textAppearance="?textAppearanceBody1"
             android:drawableLeft="@drawable/ic_search_mag"
-            android:background="@drawable/bg_submissions_search"
+            android:background="@drawable/bg_shape_rounded"
             tools:visibility="visible" />
 
         <ImageView
