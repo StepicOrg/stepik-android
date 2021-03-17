@@ -19,7 +19,7 @@ constructor(
     private val viewedStoryTemplateDao: IDao<ViewedStoryTemplate>
 ) : StoryTemplatesRepository {
     companion object {
-        const val STORY_TEMPLATES_VERSION = 1
+        const val STORY_TEMPLATES_VERSION = 2
     }
 
     private val storyTemplatesMapper = Function { storyTemplates: List<StoryTemplate> ->
