@@ -1032,4 +1032,19 @@
     <string name="submission_status_partially_correct">Partially correct</string>
     <string name="submission_status_incorrect">Wrong</string>
     <string name="submission_action_similar">All user submissions</string>
+
+    <string name="submission_review_state_cannot_review_title">Reviewing is not possible.</string>
+    <string name="submission_review_state_in_progress_title">%d out of %d reviews.</string>
+    <string name="submission_review_state_not_submitted_title">Not submitted for review.</string>
+
+    <string name="submission_review_state_cannot_review_another_message">Another submission has been sent for review.</string>
+    <string name="submission_review_state_cannot_review_teacher_message">Submission of a teacher cannot be reviewed.</string>
+    <string name="submission_review_state_cannot_review_wrong_message">Wrong answer.</string>
+    <string name="submission_review_state_in_progress_message">More reviews are needed for this submission.</string>
+    <string name="submission_review_state_not_submitted_message">Need to send the solution for review.</string>
+    <string name="submission_review_state_finished_message">Required number of reviews for this submission has been received.</string>
+
+    <string name="submission_review_action_see_reviews_title">See reviews</string>
+    <string name="submission_review_action_see_submissions_title">See submissions</string>
+
 </resources>

@@ -6,6 +6,7 @@ import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -49,6 +50,7 @@ class PlainTextWithButtonStoryPartDelegate(
     override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
         container.inflate(R.layout.view_story_plain_text_with_button, false).apply {
             part as PlainTextWithButtonStoryPart
+            (context as? AppCompatActivity)?.currentFocus?.clearFocus()
 
             Glide.with(context)
                 .load(part.cover)
@@ -80,7 +82,7 @@ class PlainTextWithButtonStoryPartDelegate(
 
             storyTitle.text = text.title
             storyText.text = text.text
-            storyText.isVisible = text.text.isNotBlank()
+            storyText.isVisible = text.text?.isNotBlank() ?: false
         }
     }
 

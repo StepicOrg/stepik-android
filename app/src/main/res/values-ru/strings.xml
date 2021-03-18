@@ -988,4 +988,18 @@
     <string name="submission_status_partially_correct">Частично-верно</string>
     <string name="submission_status_incorrect">Неверно</string>
     <string name="submission_action_similar">Все решения пользователя</string>
+
+    <string name="submission_review_state_cannot_review_title">Рецензирование невозможно.</string>
+    <string name="submission_review_state_in_progress_title">%d из %d рецензий получены.</string>
+    <string name="submission_review_state_not_submitted_title">Не отправлено на рецензию.</string>
+
+    <string name="submission_review_state_cannot_review_another_message">Другое решение отправлено.</string>
+    <string name="submission_review_state_cannot_review_teacher_message">Решение преподавателя отрецензировать нельзя.</string>
+    <string name="submission_review_state_cannot_review_wrong_message">Ответ неверен.</string>
+    <string name="submission_review_state_in_progress_message">Нужны ещё рецензии на это решение.</string>
+    <string name="submission_review_state_not_submitted_message">Нужно отправить решение на рецензию.</string>
+    <string name="submission_review_state_finished_message">Обязательное количество рецензий на это решение получено.</string>
+
+    <string name="submission_review_action_see_reviews_title">Посмотреть рецензии</string>
+    <string name="submission_review_action_see_submissions_title">Посмотреть решение</string>
 </resources>
