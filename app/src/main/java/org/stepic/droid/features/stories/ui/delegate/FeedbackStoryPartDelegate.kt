@@ -7,10 +7,12 @@ import android.graphics.drawable.Drawable
 import android.view.*
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -51,6 +53,7 @@ class FeedbackStoryPartDelegate(
     override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
         container.inflate(R.layout.view_story_feedback, false).apply {
             part as FeedbackStoryPart
+            (context as? AppCompatActivity)?.currentFocus?.clearFocus()
 
             Glide.with(context)
                 .load(part.cover)
@@ -113,6 +116,7 @@ class FeedbackStoryPartDelegate(
 
     private fun setUpInput(view: View, storyView: StoryView, feedback: StoryTemplate.Feedback?) {
         if (feedback == null) return
+        val title = view.storyTitle
         val storyFeedbackContainer = view.storyInputContainer
         val storyFeedbackText = view.storyFeedbackText
         val storyFeedbackIcon = view.storyFeedbackIcon
@@ -153,9 +157,10 @@ class FeedbackStoryPartDelegate(
 
         setOnKeyboardOpenListener(storyView,
             {
-                // no op
+                title.isVisible = false
             },
             {
+                title.isVisible = true
                 storyFeedbackEditText.clearFocus()
             }
         )
