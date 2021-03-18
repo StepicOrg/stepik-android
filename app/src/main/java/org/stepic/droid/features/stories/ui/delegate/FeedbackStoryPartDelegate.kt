@@ -4,8 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -21,9 +20,11 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.FeedbackStoryPart
+import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepik.android.model.StoryTemplate
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
+import ru.nobird.android.stories.ui.custom.DismissableLayout
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -31,7 +32,8 @@ import ru.nobird.android.view.base.ui.extension.inflate
 
 class FeedbackStoryPartDelegate(
     private val analytic: Analytic,
-    private val context: Context
+    private val context: Context,
+    private val dismissableLayout: DismissableLayout
 ) : StoryPartViewDelegate() {
 
     private val progressDrawable =
@@ -137,15 +139,26 @@ class FeedbackStoryPartDelegate(
             view.isFocusableInTouchMode = hasFocus
             view.isFocusable = hasFocus
             view.isClickable = hasFocus
+            storyFeedbackEditText.post {
+                dismissableLayout.isFocusable = !hasFocus
+                dismissableLayout.isFocusableInTouchMode = !hasFocus
+                dismissableLayout.isEnabled = !hasFocus
+            }
 
-            if (hasFocus) {
-                storyView.pause()
-            } else {
+            if (!hasFocus) {
                 storyFeedbackEditText.hideKeyboard()
                 storyFeedbackEditText.clearFocus()
-                storyView.resume()
             }
         }
+
+        setOnKeyboardOpenListener(storyView,
+            {
+                // no op
+            },
+            {
+                storyFeedbackEditText.clearFocus()
+            }
+        )
     }
 
     private fun getColoredDrawable(@DrawableRes resId: Int, color: String): Drawable? =

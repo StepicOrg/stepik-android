@@ -36,7 +36,7 @@ class StoriesActivityDelegate(
         activity.intent.extras ?: Bundle.EMPTY
 
     override val storyPartDelegates: List<StoryPartViewDelegate> =
-        listOf(storyPartDelegate, FeedbackStoryPartDelegate(analytic, activity))
+        listOf(storyPartDelegate, FeedbackStoryPartDelegate(analytic, activity, dismissableLayout))
 
     override fun onComplete() {
         super.onComplete()
