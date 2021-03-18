@@ -10,7 +10,7 @@
         android:id="@+id/storyFeedbackText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/StoriesTitle"
+        app:fontFamily="@font/stories"
         android:textSize="22sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +35,8 @@
         android:gravity="top|start"
         android:textSize="16sp"
         android:focusableInTouchMode="true"
+        android:scrollbars="vertical"
+        android:fadeScrollbars="false"
         tools:hint="Type your feedback..." />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
