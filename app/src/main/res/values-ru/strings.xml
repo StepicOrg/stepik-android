@@ -821,6 +821,10 @@
     <string name="step_quiz_review_peer_pending">Получите баллы, максимальная оценка — %s</string>
     <string name="step_quiz_review_peer_completed">Ваш ответ оценили на %s из %s</string>
 
+    <string name="step_quiz_review_teacher_notice_peer">Учащиеся проверяют решения друг друга</string>
+    <string name="step_quiz_review_teacher_notice_instructors_no_submissions">Все нужные рецензии на решения отправлены.</string>
+    <string name="step_quiz_review_teacher_notice_instructors_submissions"><b>Отрецензируйте %s</b>, чтобы учащиеся получили баллы.</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 

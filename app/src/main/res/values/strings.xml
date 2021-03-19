@@ -854,6 +854,10 @@
     <string name="step_quiz_review_peer_pending">Get points, max score is %s</string>
     <string name="step_quiz_review_peer_completed">Your solution was scored for %s out of %s</string>
 
+    <string name="step_quiz_review_teacher_notice_peer">Learners review each other</string>
+    <string name="step_quiz_review_teacher_notice_instructors_no_submissions">All reviews have been sent.</string>
+    <string name="step_quiz_review_teacher_notice_instructors_submissions"><b>Review %s</b>, learners will receive points</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 
