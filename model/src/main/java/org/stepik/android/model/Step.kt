@@ -31,6 +31,8 @@ data class Step(
 
     @SerializedName("is_enabled")
     val isEnabled: Boolean? = null,
+    @SerializedName("needs_plan")
+    val needsPlan: String? = null,
 
     @SerializedName("viewed_by")
     val viewedBy: Long = 0,
