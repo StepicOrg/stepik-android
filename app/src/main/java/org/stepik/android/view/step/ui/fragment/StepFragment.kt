@@ -148,7 +148,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     stepWrapper.step,
                     null,
                     discussionThread.discussionsCount == 0,
-                    lessonData.lesson.actions?.editLesson != null
+                    lessonData.lesson.isTeacher
                 )
         }
 
@@ -341,7 +341,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             ?: return
 
         SubmissionsDialogFragment
-            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.actions?.editLesson != null)
+            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.isTeacher)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
 
         analytic
@@ -356,19 +356,21 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
                     state.stepWrapper.step.isEnabled == false
 
-            stepContentContainer.isGone = isStepDisabled
-            stepContentSeparator.isGone = isStepDisabled
-            stepQuizError.isGone = isStepDisabled
-            stepQuizContainer.isGone = isStepDisabled
-            stepFooter.isGone = isStepDisabled
+            if (!lessonData.lesson.isTeacher) {
+                stepContentContainer.isGone = isStepDisabled
+                stepContentSeparator.isGone = isStepDisabled
+                stepQuizError.isGone = isStepDisabled
+                stepQuizContainer.isGone = isStepDisabled
+                stepFooter.isGone = isStepDisabled
+            }
 
-            stepDisabled.isVisible = isStepDisabled && lessonData.lesson.actions?.editLesson == null
-            stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.actions?.editLesson != null
+            stepDisabled.isVisible = isStepDisabled && !lessonData.lesson.isTeacher
+            stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.isTeacher
             stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper)
 
             stepWrapper = state.stepWrapper
 
-            if (!isStepDisabled) {
+            if (!isStepDisabled || lessonData.lesson.isTeacher) {
                 stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
                 when (stepWrapper.step.status) {
                     Step.Status.READY ->

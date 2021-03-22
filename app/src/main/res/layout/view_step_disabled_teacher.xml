@@ -13,7 +13,7 @@
     <com.google.android.material.textview.MaterialTextView
         style="@style/StepQuizFeedback.Wrong"
         android:textAppearance="?textAppearanceSubtitle1"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="@string/step_disabled_teacher_title"
@@ -26,5 +26,7 @@
         android:layout_margin="@dimen/padding_placeholders"
         android:textAppearance="?textAppearanceBody1"
         android:linksClickable="true" />
+
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,6 +2,7 @@ package org.stepik.android.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import ru.nobird.android.core.model.Identifiable
 import java.util.Date
@@ -60,4 +61,8 @@ class Lesson(
 
     @SerializedName("time_to_complete")
     val timeToComplete: Long = 0
-) : Parcelable, Progressable, Identifiable<Long>
+) : Parcelable, Progressable, Identifiable<Long> {
+    @IgnoredOnParcel
+    val isTeacher: Boolean =
+        actions?.editLesson != null
+}
