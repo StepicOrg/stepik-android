@@ -307,10 +307,6 @@ class StepQuizReviewFragment :
     }
 
     private fun syncReplyState(replyResult: ReplyResult) {
-        val reply = (replyResult as? ReplyResult.Success)
-            ?.reply
-            ?: return
-
-        stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(StepQuizFeature.Message.SyncReply(reply)))
+        stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(StepQuizFeature.Message.SyncReply(replyResult.reply)))
     }
 }

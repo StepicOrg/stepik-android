@@ -86,9 +86,9 @@ class ChoiceStepQuizFormDelegate(
     override fun createReply(): ReplyResult {
         val choices = (0 until choicesAdapter.itemCount).map { selectionHelper.isSelected(it) }
         return if ((true !in choices && selectionHelper is SingleChoiceSelectionHelper)) {
-            ReplyResult.Error(context.getString(R.string.step_quiz_choice_empty_reply))
+            ReplyResult(Reply(choices = choices), ReplyResult.Validation.Error(context.getString(R.string.step_quiz_choice_empty_reply)))
         } else {
-            ReplyResult.Success(Reply(choices = choices))
+            ReplyResult(Reply(choices = choices), ReplyResult.Validation.Success)
         }
     }
 
