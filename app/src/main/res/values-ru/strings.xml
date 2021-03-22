@@ -706,10 +706,25 @@
     <string name="lesson_step_counter">Шаг %d из %d</string>
 
     <!-- Step -->
-    <string name="step_disabled_title">Увидеть задачу пока нельзя</string>
-    <string name="step_disabled_description_part_1">"Напишите авторам курса, чтобы они обратили внимание на настройки "</string>
-    <string name="step_disabled_description_part_2">.\n\nВозможно, через какое-то время доступ восстановится.</string>
-    <string name="step_disabled_pattern">%s → Шаг %d</string>
+    <string name="step_disabled_teacher_title">Сейчас учащиеся не могут просмотреть эту задачу</string>
+    <string name="step_disabled_teacher_plan_description_with_course">"Чтобы учащиеся увидели эту задачу, измените тип курса на "</string>
+    <string name="step_disabled_teacher_plan_description_without_course">"Чтобы учащиеся увидели эту задачу, добавьте урок в "</string>
+    <string name="step_disabled_teacher_plan_none_description_with_course">Чтобы учащиеся увидели эту задачу, измените тип курса.</string>
+    <string name="step_disabled_teacher_plan_none_description_without_course">Чтобы учащиеся увидели эту задачу, добавьте урок в в курс с необходимым типом.</string>
+
+    <string name="step_disabled_teacher_plan_pro_with_course"><b>PRO</b> или сделайте его платным.</string>
+
+    <string name="step_disabled_teacher_plan_pro_without_course"><b>платный</b> или <b>PRO-курс</b>.</string>
+    <string name="step_disabled_teacher_plan_enterprise_without_course"><b>Enterprise-курс</b>.</string>
+
+    <string name="step_disabled_teacher_tariff_description">"\n\nВ шаге использована платная функциональность. "</string>
+    <string name="step_disabled_teacher_tariff_title">О тарифных планах</string>
+    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/ru/articles/360012252539</string>
+
+    <string name="step_disabled_student_title">Увидеть задачу пока нельзя</string>
+    <string name="step_disabled_student_description_part_1">"Напишите авторам курса, чтобы они обратили внимание на настройки "</string>
+    <string name="step_disabled_student_description_part_2">.\n\nВозможно, через какое-то время доступ восстановится.</string>
+    <string name="step_disabled_student_pattern">%s → Шаг %d</string>
 
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>

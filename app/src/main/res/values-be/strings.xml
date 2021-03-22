@@ -619,10 +619,25 @@
     <string name="lesson_error_exam_action">Адкрыць у вэб версіі</string>
     <string name="lesson_step_counter">Крок %d з %d</string>
     <!-- Step -->
-    <string name="step_disabled_title">Убачыць задачу пакуль нельга</string>
-    <string name="step_disabled_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
-    <string name="step_disabled_description_part_2">.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
-    <string name="step_disabled_pattern">%s → Крок %d</string>
+    <string name="step_disabled_teacher_title">Зараз навучэнцы не могуць прагледзець гэтую задачу</string>
+    <string name="step_disabled_teacher_plan_description_with_course">"Каб навучэнцы ўбачылі гэтую задачу, зменіце тып курсу на "</string>
+    <string name="step_disabled_teacher_plan_description_without_course">"Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у "</string>
+    <string name="step_disabled_teacher_plan_none_description_with_course">Каб навучэнцы ўбачылі гэтую задачу, зменіце тып курса.</string>
+    <string name="step_disabled_teacher_plan_none_description_without_course">Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у ў курс з неабходным тыпам.</string>
+
+    <string name="step_disabled_teacher_plan_pro_with_course"><b>PRO</b> або зрабіце яго платным.</string>
+
+    <string name="step_disabled_teacher_plan_pro_without_course"><b>платны</b> или <b>PRO-курс</b>.</string>
+    <string name="step_disabled_teacher_plan_enterprise_without_course"><b>Enterprise-курс</b>.</string>
+
+    <string name="step_disabled_teacher_tariff_description">"\n\nЗа крок выкарыстаная платная функцыянальнасць "</string>
+    <string name="step_disabled_teacher_tariff_title">Аб тарыфных планах</string>
+    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/ru/articles/360012252539</string>
+
+    <string name="step_disabled_student_title">Убачыць задачу пакуль нельга</string>
+    <string name="step_disabled_student_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
+    <string name="step_disabled_student_description_part_2">.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
+    <string name="step_disabled_student_pattern">%s → Крок %d</string>
 
     <string name="step_amount_passed">Рашыла:&#160;</string>
     <string name="step_correct_submissions_percentage">Паспяховых рашэнняў:&#160;</string>
