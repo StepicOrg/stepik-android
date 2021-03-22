@@ -15,7 +15,7 @@ class MovingProgressDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         isCancelable = false
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.moving)
             .setView(R.layout.dialog_progress)
             .setCancelable(false)

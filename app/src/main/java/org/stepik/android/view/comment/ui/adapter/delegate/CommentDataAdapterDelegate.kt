@@ -29,6 +29,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CommentDataAdapterDelegate(
+    private val showUserSubmissions: Boolean,
     private val actionListener: ActionListener
 ) : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
@@ -164,6 +165,13 @@ class CommentDataAdapterDelegate(
 
             popupMenu
                 .menu
+                .findItem(R.id.comment_item_submissions)
+                ?.let { menuItem ->
+                    menuItem.isVisible = showUserSubmissions
+                }
+
+            popupMenu
+                .menu
                 .findItem(R.id.comment_item_remove)
                 ?.let { menuItem ->
                     val title = SpannableString(menuItem.title)
@@ -182,6 +190,9 @@ class CommentDataAdapterDelegate(
             popupMenu
                 .setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
+                        R.id.comment_item_submissions ->
+                            actionListener.onViewSubmissionsClicked(commentDataItem)
+
                         R.id.comment_item_edit ->
                             actionListener.onEditCommentClicked(commentDataItem)
 
@@ -228,6 +239,7 @@ class CommentDataAdapterDelegate(
         fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
         fun onSolutionClicked(discussionId: Long, solution: CommentItem.Data.Solution)
 
+        fun onViewSubmissionsClicked(commentDataItem: CommentItem.Data)
         fun onEditCommentClicked(commentDataItem: CommentItem.Data)
         fun onRemoveCommentClicked(commentDataItem: CommentItem.Data)
     }

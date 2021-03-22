@@ -656,6 +656,7 @@
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
     <string name="course_payments_purchase_in_web_with_price">Buy for %s</string>
+    <string name="course_payments_purchase_in_web_with_price_promo">Buy for %s %s</string>
 
     <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
     <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>
@@ -738,7 +739,10 @@
     <string name="lesson_step_counter">Step %d out of %d</string>
 
     <!-- Step -->
-    <string name="step_disabled_description">You can\'t see the quiz yet!\n\nWrite to the course authors so that they pay attention to the settings.\nAccess may be restored after some time.</string>
+    <string name="step_disabled_title">You can\'t view the assignment yet</string>
+    <string name="step_disabled_description_part_1">"Contact the course authors to suggest that they change the settings "</string>
+    <string name="step_disabled_description_part_2">.\n\nThe access might resume after a while.</string>
+    <string name="step_disabled_pattern">%s → Step %d</string>
 
     <string name="step_amount_passed">Passed:&#160;</string>
     <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>
@@ -858,11 +862,13 @@
     <string name="solutions_compose_title">Solution</string>
     <string name="comment_compose_hint">Add your comment</string>
     <string name="comment_action_create">Write comment</string>
+    <string name="comment_action_submissions">Submissions</string>
     <string name="comment_action_edit">Edit</string>
     <string name="comment_action_remove">Remove</string>
     <string name="comment_action_remove_description">Remove this comment?</string>
 
     <string name="comment_solution_pattern">Solution %d</string>
+    <string name="comment_solution_number" translatable="false">#%d</string>
 
     <string name="comment_disabled">Comments disabled</string>
     <string name="solution_disabled">Solutions disabled</string>
@@ -992,4 +998,53 @@
 
     <string name="protocol_host_url" translatable="false">%s://%s</string>
     <string name="story_deeplink_open_fail">Failed to open story</string>
+
+    <!-- Currency format -->
+    <string name="rub_format" translatable="false">%s ₽</string>
+    <string name="usd_format" translatable="false">$%s</string>
+    <string name="authors_title">Course authors</string>
+    <string name="similar_courses_title">Similar courses</string>
+
+    <!-- Submissions filter -->
+    <string name="submissions_filter_search_hint">ID, email, name, submission number</string>
+    <string name="submissions_filter_dialog_title">Search submissions</string>
+
+    <string name="submissions_filter_submission_status_subtitle">Submission status</string>
+    <string name="submissions_filter_any_status_radio_button_title">Any</string>
+    <string name="submissions_filter_correct_status_radio_button_title">Correct</string>
+    <string name="submissions_filter_partially_correct_status_radio_button_title">Partially correct</string>
+    <string name="submissions_filter_incorrect_status_radio_button_title">Wrong</string>
+
+    <string name="submissions_filter_date_sort_subtitle">Submission date sort</string>
+    <string name="submissions_filter_desc_date_radio_button_title">First new</string>
+    <string name="submissions_filter_asc_date_radio_button_title">First old</string>
+
+    <string name="submissions_filter_review_status_subtitle">Reviews</string>
+    <string name="submissions_filter_any_review_status_radio_button_title">Any review status</string>
+    <string name="submissions_filter_finished_review_status_radio_button_title">Review done</string>
+    <string name="submissions_filter_awaiting_review_status_radio_button_title">Awaiting review</string>
+
+    <string name="submissions_user_filter" translatable="false">id:%d</string>
+
+    <string name="submission_score">Score</string>
+    <string name="submission_select">Select this submission</string>
+    <string name="submission_status_correct">Correct</string>
+    <string name="submission_status_partially_correct">Partially correct</string>
+    <string name="submission_status_incorrect">Wrong</string>
+    <string name="submission_action_similar">All user submissions</string>
+
+    <string name="submission_review_state_cannot_review_title">Reviewing is not possible.</string>
+    <string name="submission_review_state_in_progress_title">%d out of %d reviews.</string>
+    <string name="submission_review_state_not_submitted_title">Not submitted for review.</string>
+
+    <string name="submission_review_state_cannot_review_another_message">Another submission has been sent for review.</string>
+    <string name="submission_review_state_cannot_review_teacher_message">Submission of a teacher cannot be reviewed.</string>
+    <string name="submission_review_state_cannot_review_wrong_message">Wrong answer.</string>
+    <string name="submission_review_state_in_progress_message">More reviews are needed for this submission.</string>
+    <string name="submission_review_state_not_submitted_message">Need to send the solution for review.</string>
+    <string name="submission_review_state_finished_message">Required number of reviews for this submission has been received.</string>
+
+    <string name="submission_review_action_see_reviews_title">See reviews</string>
+    <string name="submission_review_action_see_submissions_title">See submissions</string>
+
 </resources>

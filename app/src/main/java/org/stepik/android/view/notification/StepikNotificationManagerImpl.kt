@@ -7,8 +7,8 @@ import android.app.PendingIntent
 import android.content.Context
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.scheduleCompat
 import org.stepik.android.view.notification.receiver.AlarmReceiver
+import ru.nobird.android.view.base.ui.extension.scheduleCompat
 import javax.inject.Inject
 
 class StepikNotificationManagerImpl

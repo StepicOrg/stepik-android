@@ -22,6 +22,7 @@ import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.catalog.ui.delegate.CatalogBlockHeaderDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListViewAllAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -48,6 +49,7 @@ class CourseListAdapterDelegate(
     private inner class CourseCollectionViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
 
         private var catalogBlock: CatalogBlock? = null
+        private var courseCount: Int? = null
 
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListTitleContainer = root.catalogBlockContainer
@@ -79,6 +81,10 @@ class CourseListAdapterDelegate(
                 },
                 isHandleInAppPurchase = isHandleInAppPurchase
             )
+            courseItemAdapter += CourseListViewAllAdapterDelegate {
+                val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListViewAllAdapterDelegate
+                onTitleClick(block.courseList.id)
+            }
 
             with(courseListCoursesRecycler) {
                 adapter = courseItemAdapter
@@ -106,6 +112,7 @@ class CourseListAdapterDelegate(
                 ?.let {
                     val countString = courseCountMapper.mapCourseCountToString(context, it.courseList.coursesCount)
                     catalogBlockTitleDelegate.setCount(countString)
+                    courseCount = it.courseList.coursesCount
                 }
             render(catalogBlockCourseListItem.state)
         }
@@ -122,7 +129,13 @@ class CourseListAdapterDelegate(
                 }
 
                 is CourseListFeature.State.Content -> {
-                    courseItemAdapter.items = state.courseListItems
+                    courseItemAdapter.items = courseCount?.let {
+                        if (it > state.courseListItems.size) {
+                            state.courseListItems + CourseListItem.ViewAll
+                        } else {
+                            state.courseListItems
+                        }
+                    } ?: state.courseListItems
                 }
 
                 else ->

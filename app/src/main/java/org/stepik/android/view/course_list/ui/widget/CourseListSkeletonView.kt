@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.updateLayoutParams
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.inflate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class CourseListSkeletonView
 @JvmOverloads

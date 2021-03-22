@@ -135,12 +135,12 @@ constructor(
     /**
      * Data initialization variants
      */
-    fun onCourseId(courseId: Long, viewSource: CourseViewSource, forceUpdate: Boolean = false) {
+    fun onCourseId(courseId: Long, viewSource: CourseViewSource, promo: String? = null, forceUpdate: Boolean = false) {
         val courseHeaderDataSource = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?.course
             ?.let { courseInteractor.getCourseHeaderData(it, canUseCache = !forceUpdate) }
-            ?: courseInteractor.getCourseHeaderData(courseId, canUseCache = !forceUpdate)
+            ?: courseInteractor.getCourseHeaderData(courseId, promo = promo, canUseCache = !forceUpdate)
         observeCourseData(courseHeaderDataSource, viewSource, forceUpdate)
     }
 

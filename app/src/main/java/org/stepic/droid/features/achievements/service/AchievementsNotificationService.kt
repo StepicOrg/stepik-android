@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -18,7 +19,6 @@ import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolv
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
-import org.stepic.droid.ui.util.toBitmap
 import org.stepik.android.view.glide.model.GlideRequestFactory
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.toObject

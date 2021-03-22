@@ -47,7 +47,7 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.setting_font_size_dialog_title)
             .setSingleChoiceItems(resources.getStringArray(R.array.step_content_font_size), -1) { _, which ->
                 val fontSize = FontSize.values()[which]

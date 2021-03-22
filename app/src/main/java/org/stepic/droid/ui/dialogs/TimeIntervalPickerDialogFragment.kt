@@ -68,7 +68,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         callback = (targetFragment as? Callback)
             ?: activity as Callback
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.choose_notification_time_interval)
             .setView(picker)
             .setPositiveButton(R.string.ok) { _, _ ->

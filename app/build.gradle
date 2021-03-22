@@ -26,6 +26,15 @@ android {
         multiDexEnabled true
     }
 
+    sourceSets {
+        androidTest {
+            java.srcDirs += "src/sharedTest/java"
+        }
+
+        test {
+            java.srcDirs += "src/sharedTest/java"
+        }
+    }
 
     signingConfigs {
         debug {
@@ -94,7 +103,7 @@ android {
                     'proguard-rules.pro'
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro', 'proguard-rules-dev.pro'
@@ -170,6 +179,7 @@ dependencies {
     implementation libraries.fragmentKtx
     implementation libraries.room
     kapt libraries.roomCompiler
+    implementation libraries.browser
 
     implementation libraries.archCompiler
     implementation libraries.archViewModel

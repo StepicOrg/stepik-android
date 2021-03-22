@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_achievements_list.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.achievement.model.AchievementItem
@@ -35,6 +37,9 @@ class AchievementsListFragment : Fragment(), AchievementsView {
                 this.isMyProfile = isMyProfile
             }
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -106,8 +111,16 @@ class AchievementsListFragment : Fragment(), AchievementsView {
     }
 
     private fun onAchievementClicked(item: AchievementItem) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Achievements.POPUP_OPENED,
+            mapOf(
+                AmplitudeAnalytic.Achievements.Params.SOURCE to AmplitudeAnalytic.Achievements.Values.ACHIEVEMENT_LIST,
+                AmplitudeAnalytic.Achievements.Params.KIND to item.kind,
+                AmplitudeAnalytic.Achievements.Params.LEVEL to item.currentLevel
+            )
+        )
         AchievementDetailsDialog
-            .newInstance(item, isMyProfile)
+            .newInstance(item, isMyProfile, AmplitudeAnalytic.Achievements.Values.ACHIEVEMENT_LIST)
             .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
     }
 

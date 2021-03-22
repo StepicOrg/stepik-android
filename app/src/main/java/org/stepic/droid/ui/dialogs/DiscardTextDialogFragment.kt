@@ -17,7 +17,7 @@ class DiscardTextDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        MaterialAlertDialogBuilder(context)
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.are_you_sure_remove_comment_text)
             .setPositiveButton(R.string.delete_label) { _, _ ->

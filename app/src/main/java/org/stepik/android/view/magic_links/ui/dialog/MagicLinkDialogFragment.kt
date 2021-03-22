@@ -17,10 +17,11 @@ import javax.inject.Inject
 
 class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
     companion object {
-        fun newInstance(url: String): DialogFragment =
+        fun newInstance(url: String, handleUrlInParent: Boolean = false): DialogFragment =
             MagicLinkDialogFragment()
                 .apply {
                     this.url = url
+                    this.returnUrlToParent = handleUrlInParent
                 }
 
         const val TAG = "MagicLinkDialogFragment"
@@ -32,11 +33,12 @@ class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
     private val magicLinkPresenter: MagicLinkPresenter by viewModels { viewModelFactory }
 
     private var url: String by argument()
+    private var returnUrlToParent: Boolean by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         isCancelable = false
 
-        return MaterialAlertDialogBuilder(context)
+        return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.loading)
             .setView(R.layout.dialog_progress)
             .setCancelable(false)
@@ -63,7 +65,11 @@ class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
 
     override fun setState(state: MagicLinkView.State) {
         if (state is MagicLinkView.State.Success) {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(state.url)))
+            if (returnUrlToParent) {
+                (activity as Callback).handleUrl(state.url)
+            } else {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(state.url)))
+            }
             dismiss()
         }
     }
@@ -71,5 +77,9 @@ class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
     override fun onStop() {
         magicLinkPresenter.detachView(this)
         super.onStop()
+    }
+
+    interface Callback {
+        fun handleUrl(url: String)
     }
 }

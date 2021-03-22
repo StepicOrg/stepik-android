@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_sql.ui.delegate
 
 import android.view.View
+import androidx.core.widget.doAfterTextChanged
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
@@ -13,7 +14,8 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class SqlStepQuizFormDelegate(
     containerView: View,
-    private val onFullscreenClicked: (lang: String, code: String) -> Unit
+    private val onFullscreenClicked: (lang: String, code: String) -> Unit,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
 
     private val quizDescription = containerView.stepQuizDescription
@@ -27,6 +29,7 @@ class SqlStepQuizFormDelegate(
         codeLayout.codeEditor.setOnClickListener {
             onFullscreenClicked(ProgrammingLanguage.SQL.serverPrintableName, codeLayout.text.toString())
         }
+        codeLayout.codeEditor.doAfterTextChanged { onQuizChanged(createReply()) }
     }
 
     override fun createReply(): ReplyResult =
@@ -40,7 +43,7 @@ class SqlStepQuizFormDelegate(
             is StepQuizFeature.SubmissionState.Loaded ->
                 state.submissionState.submission.reply
         }
-        codeLayout.setText(reply?.solveSql ?: "")
+        codeLayout.setTextIfChanged(reply?.solveSql ?: "")
         codeLayout.lang = ProgrammingLanguage.SQL.serverPrintableName
         codeLayout.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
     }

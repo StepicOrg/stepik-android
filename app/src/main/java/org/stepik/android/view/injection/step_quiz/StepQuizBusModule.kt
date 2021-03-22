@@ -7,6 +7,7 @@ import io.reactivex.Scheduler
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepik.android.domain.code_preference.model.InitCodePreference
 
 @Module
 abstract class StepQuizBusModule {
@@ -30,5 +31,24 @@ abstract class StepQuizBusModule {
             scheduler: Scheduler
         ): Observable<Long> =
             stepQuizPublisher.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @CodePreferenceBus
+        internal fun provideCodePreferencePublisher(): PublishSubject<InitCodePreference> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @CodePreferenceBus
+        internal fun provideCodePreferenceObservable(
+            @CodePreferenceBus
+            codePreferencePublisher: PublishSubject<InitCodePreference>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<InitCodePreference> =
+            codePreferencePublisher.observeOn(scheduler)
     }
 }

@@ -10,6 +10,8 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepik.android.domain.achievement.model.AchievementItem
@@ -21,19 +23,24 @@ class AchievementDetailsDialog : DialogFragment() {
     companion object {
         const val TAG = "achievement_details_dialog"
 
-        fun newInstance(achievementItem: AchievementItem, canShareAchievement: Boolean): AchievementDetailsDialog =
+        fun newInstance(achievementItem: AchievementItem, canShareAchievement: Boolean, source: String): AchievementDetailsDialog =
             AchievementDetailsDialog()
                 .apply {
                     this.achievementItem = achievementItem
                     this.canShare = canShareAchievement
+                    this.source = source
                 }
     }
+
+    @Inject
+    lateinit var analytic: Analytic
 
     @Inject
     lateinit var achievementResourceResolver: AchievementResourceResolver
 
     private var achievementItem: AchievementItem by argument()
     private var canShare: Boolean by argument()
+    private var source: String by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +79,7 @@ class AchievementDetailsDialog : DialogFragment() {
             achievementRest.isVisible = scoreDiff > 0
         }
 
-        val builder = MaterialAlertDialogBuilder(context)
+        val builder = MaterialAlertDialogBuilder(requireContext())
                 .setView(view)
 
         if (canShare && !achievementItem.isLocked) {
@@ -95,6 +102,14 @@ class AchievementDetailsDialog : DialogFragment() {
     }
 
     private fun shareAchievement() {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Achievements.SHARE_PRESSED,
+            mapOf(
+                AmplitudeAnalytic.Achievements.Params.SOURCE to source,
+                AmplitudeAnalytic.Achievements.Params.KIND to achievementItem.kind,
+                AmplitudeAnalytic.Achievements.Params.LEVEL to achievementItem.currentLevel
+            )
+        )
         val intent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, getString(R.string.achievement_share, achievementResourceResolver.resolveTitleForKind(achievementItem.kind)))
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

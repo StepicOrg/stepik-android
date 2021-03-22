@@ -20,9 +20,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
-import org.stepic.droid.util.isNightModeEnabled
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.base.analytic.AnalyticSource
+import ru.nobird.android.view.base.ui.extension.isNightModeEnabled
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -103,6 +103,11 @@ constructor(
     override fun setTeachingCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
+    }
+
+    override fun setGoogleServicesAvailable(isAvailable: Boolean) {
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString()))
+        updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE).withValue(isAvailable)) }
     }
 
     override fun report(analyticEvent: AnalyticEvent) {

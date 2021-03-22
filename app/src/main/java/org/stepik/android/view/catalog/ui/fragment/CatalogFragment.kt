@@ -36,6 +36,7 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
@@ -188,6 +189,7 @@ class CatalogFragment :
             layoutManager = LinearLayoutManager(context)
             itemAnimator = null
             setHasFixedSize(true)
+            enforceSingleScrollDirection()
         }
     }
 

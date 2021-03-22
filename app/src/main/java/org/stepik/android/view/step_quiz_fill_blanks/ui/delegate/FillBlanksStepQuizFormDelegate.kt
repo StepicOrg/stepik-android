@@ -23,7 +23,8 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class FillBlanksStepQuizFormDelegate(
     private val containerView: View,
-    private val fragmentManager: FragmentManager
+    private val fragmentManager: FragmentManager,
+    private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private val quizDescription = containerView.stepQuizDescription
     private val itemsAdapter = DefaultDelegateAdapter<FillBlanksItem>()
@@ -50,6 +51,7 @@ class FillBlanksStepQuizFormDelegate(
             set(index, inputItem.copy(text = text))
         }
         itemsAdapter.notifyItemChanged(index)
+        onQuizChanged(createReply())
     }
 
     private fun selectItemAction(index: Int, text: String) {
@@ -57,6 +59,7 @@ class FillBlanksStepQuizFormDelegate(
             val selectItem = get(index) as FillBlanksItem.Select
             set(index, selectItem.copy(text = text))
         }
+        onQuizChanged(createReply())
     }
 
     private fun inputItemAction(index: Int, text: String) {

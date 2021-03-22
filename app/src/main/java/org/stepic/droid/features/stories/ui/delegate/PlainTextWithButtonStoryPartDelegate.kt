@@ -6,6 +6,7 @@ import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -15,7 +16,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
-import org.stepic.droid.ui.util.inflate
 import org.stepik.android.domain.story.model.StoryReaction
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.view.base.routing.InternalDeeplinkRouter
@@ -23,6 +23,7 @@ import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
+import ru.nobird.android.view.base.ui.extension.inflate
 
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
@@ -49,6 +50,7 @@ class PlainTextWithButtonStoryPartDelegate(
     override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
         container.inflate(R.layout.view_story_plain_text_with_button, false).apply {
             part as PlainTextWithButtonStoryPart
+            (context as? AppCompatActivity)?.currentFocus?.clearFocus()
 
             Glide.with(context)
                 .load(part.cover)
@@ -80,7 +82,7 @@ class PlainTextWithButtonStoryPartDelegate(
 
             storyTitle.text = text.title
             storyText.text = text.text
-            storyText.isVisible = text.text.isNotBlank()
+            storyText.isVisible = text.text?.isNotBlank() ?: false
         }
     }
 

@@ -28,12 +28,12 @@ constructor(
             .reduce(emptyList()) { a, b -> a + b }
 
     fun getCourseListItems(
-        courseId: List<Long>,
+        courseIds: List<Long>,
         courseViewSource: CourseViewSource,
         sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
     ): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
-            coursesSource = courseRepository.getCourses(courseId, primarySourceType = sourceTypeComposition.generalSourceType),
+            coursesSource = courseRepository.getCourses(courseIds, primarySourceType = sourceTypeComposition.generalSourceType),
             courseViewSource = courseViewSource,
             sourceTypeComposition = sourceTypeComposition
         )

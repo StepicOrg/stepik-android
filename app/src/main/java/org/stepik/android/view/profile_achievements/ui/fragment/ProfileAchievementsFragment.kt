@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_achievements.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.achievement.model.AchievementItem
@@ -34,6 +36,9 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
                     this.userId = userId
                 }
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -120,8 +125,16 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
     }
 
     private fun onAchievementClicked(item: AchievementItem) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Achievements.POPUP_OPENED,
+            mapOf(
+                AmplitudeAnalytic.Achievements.Params.SOURCE to AmplitudeAnalytic.Achievements.Values.PROFILE,
+                AmplitudeAnalytic.Achievements.Params.KIND to item.kind,
+                AmplitudeAnalytic.Achievements.Params.LEVEL to item.currentLevel
+            )
+        )
         AchievementDetailsDialog
-            .newInstance(item, canShareAchievement = isMyProfile)
+            .newInstance(item, canShareAchievement = isMyProfile, AmplitudeAnalytic.Achievements.Values.PROFILE)
             .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
     }
 

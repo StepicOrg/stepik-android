@@ -2,7 +2,7 @@ package org.stepik.android.view.step_quiz_sql.ui.fragment
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_code.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code.stepQuizCodeContainer
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -36,7 +36,8 @@ class SqlStepQuizFragment :
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
         sqlStepQuizFormDelegate = SqlStepQuizFormDelegate(
             containerView = view,
-            onFullscreenClicked = ::onFullScreenClicked
+            onFullscreenClicked = ::onFullScreenClicked,
+            onQuizChanged = ::syncReplyState
         )
         return sqlStepQuizFormDelegate
     }
@@ -47,6 +48,8 @@ class SqlStepQuizFragment :
             onActionButtonClicked()
         }
     }
+
+    override fun onSyncCodePreference(lang: String) {}
 
     private fun onFullScreenClicked(lang: String, code: String) {
         CodeStepQuizFullScreenDialogFragment

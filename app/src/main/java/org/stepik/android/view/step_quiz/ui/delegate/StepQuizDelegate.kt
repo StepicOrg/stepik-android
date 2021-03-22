@@ -10,7 +10,6 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updateMarginsRelative
 import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
-import org.stepic.droid.util.toPx
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.ReviewStrategyType
@@ -21,6 +20,7 @@ import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
+import ru.nobird.android.view.base.ui.extension.toPx
 
 class StepQuizDelegate(
     private val step: Step,
@@ -173,14 +173,4 @@ class StepQuizDelegate(
                     null
             }
         }
-
-    fun syncReplyState() {
-        if (StepQuizFormResolver.isSubmissionInTerminalState(currentState ?: return)) return
-
-        val reply = (stepQuizFormDelegate.createReply() as? ReplyResult.Success)
-            ?.reply
-            ?: return
-
-        onNewMessage(StepQuizFeature.Message.SyncReply(reply))
-    }
 }

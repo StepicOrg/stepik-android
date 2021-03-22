@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selectable_item_rounded_background_radius_24"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/courseBuyInWebActionDiscountedOldPrice"
+        style="@style/Widget.AppTheme.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|end"
+        app:cornerRadius="@dimen/header_action_radius"
+        app:strokeColor="?android:textColorPrimary"
+        android:paddingLeft="204dp"
+        android:minWidth="200dp"
+        android:clickable="false"
+        android:layout_gravity="end"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/courseBuyInWebActionDiscountedNewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
+        android:minWidth="200dp"
+        android:clickable="false"
+        android:text="@string/course_payments_purchase_in_web" />
+
+</FrameLayout>
