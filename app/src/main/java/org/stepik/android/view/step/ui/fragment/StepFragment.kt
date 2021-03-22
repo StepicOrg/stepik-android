@@ -157,6 +157,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
 
         initDisabledStep()
+        initDisabledStepTeacher()
         initStepContentFragment()
     }
 
@@ -164,7 +165,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         val lessonTitle =
             lessonTitleMapper.mapToLessonTitle(requireContext(), lessonData)
         val stepTitle =
-            getString(R.string.step_disabled_pattern, lessonTitle, stepWrapper.step.position)
+            getString(R.string.step_disabled_student_pattern, lessonTitle, stepWrapper.step.position)
 
         val stepLinkSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -178,11 +179,70 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         val placeholderMessage = stepDisabled.placeholderMessage
         placeholderMessage.text =
             buildSpannedString {
-                append(getString(R.string.step_disabled_description_part_1))
+                append(getString(R.string.step_disabled_student_description_part_1))
                 inSpans(stepLinkSpan) {
                     append(stepTitle)
                 }
-                append(getString(R.string.step_disabled_description_part_2))
+                append(getString(R.string.step_disabled_student_description_part_2))
+            }
+        placeholderMessage.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun initDisabledStepTeacher() {
+        val tariffLinkSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val tariffInfoUrl = getString(R.string.step_disabled_teacher_tariff_url)
+
+                requireContext()
+                    .copyTextToClipboard(textToCopy = tariffInfoUrl, toastMessage = getString(R.string.link_copied_title))
+            }
+        }
+
+        val isInCourse = lessonData.section != null && lessonData.unit != null
+
+        val planDescription1 = if (stepWrapper.step.needsPlan != null) {
+            if (isInCourse) {
+                getString(R.string.step_disabled_teacher_plan_description_with_course)
+            } else {
+                getString(R.string.step_disabled_teacher_plan_description_without_course)
+            }
+        } else {
+            if (isInCourse) {
+                getString(R.string.step_disabled_teacher_plan_none_description_with_course)
+            } else {
+                getString(R.string.step_disabled_teacher_plan_none_description_without_course)
+            }
+        }
+
+        val planDescription2 = when (stepWrapper.step.needsPlan) {
+            Step.PLAN_PRO -> {
+                if (isInCourse) {
+                    getText(R.string.step_disabled_teacher_plan_pro_with_course)
+                } else {
+                    getText(R.string.step_disabled_teacher_plan_pro_without_course)
+                }
+            }
+            Step.PLAN_ENTERPRISE -> {
+                if (isInCourse) {
+                    getText(R.string.step_disabled_teacher_enterprise_with_course)
+                } else {
+                    getText(R.string.step_disabled_teacher_plan_enterprise_without_course)
+                }
+            }
+            else ->
+                ""
+        }
+
+        val placeholderMessage = stepDisabledTeacher.placeholderMessage
+        placeholderMessage.text =
+            buildSpannedString {
+                append(planDescription1)
+                append(planDescription2)
+                append(getString(R.string.step_disabled_teacher_tariff_description))
+                inSpans(tariffLinkSpan) {
+                    append(getString(R.string.step_disabled_teacher_tariff_title))
+                }
+                append(getString(R.string.full_stop))
             }
         placeholderMessage.movementMethod = LinkMovementMethod.getInstance()
     }
@@ -302,7 +362,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             stepQuizContainer.isGone = isStepDisabled
             stepFooter.isGone = isStepDisabled
 
-            stepDisabled.isVisible = isStepDisabled
+            stepDisabled.isVisible = isStepDisabled && lessonData.lesson.actions?.editLesson == null
+            stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.actions?.editLesson != null
             stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper)
 
             stepWrapper = state.stepWrapper

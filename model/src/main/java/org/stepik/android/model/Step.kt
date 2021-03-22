@@ -66,6 +66,10 @@ data class Step(
     @SerializedName("correct_ratio")
     val correctRatio: Double? = null
 ) : Parcelable, Progressable {
+    companion object {
+        const val PLAN_PRO = "pro"
+        const val PLAN_ENTERPRISE = "enterprise"
+    }
     enum class Status {
         @SerializedName("ready")
         READY,
