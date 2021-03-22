@@ -152,7 +152,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 )
         }
 
-        stepContentNext.isVisible = isStepContentNextVisible(stepWrapper)
+        stepContentNext.isVisible = isStepContentNextVisible(stepWrapper, lessonData)
         stepContentNext.setOnClickListener { moveNext() }
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
 
@@ -366,7 +366,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
             stepDisabled.isVisible = isStepDisabled && !lessonData.lesson.isTeacher
             stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.isTeacher
-            stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper)
+            stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper, lessonData)
 
             stepWrapper = state.stepWrapper
 
@@ -386,13 +386,13 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         }
     }
 
-    private fun isStepContentNextVisible(stepWrapper: StepPersistentWrapper): Boolean {
+    private fun isStepContentNextVisible(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Boolean {
         val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
                 stepWrapper.step.isEnabled == false
 
         val isStepNotLast = stepWrapper.step.position < lessonData.lesson.steps.size
 
-        return (isStepDisabled || !stepWrapper.isStepCanHaveQuiz) && isStepNotLast
+        return ((isStepDisabled && !lessonData.lesson.isTeacher) || !stepWrapper.isStepCanHaveQuiz) && isStepNotLast
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
