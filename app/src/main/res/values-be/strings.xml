@@ -623,7 +623,7 @@
     <string name="step_disabled_teacher_plan_description_with_course">"Каб навучэнцы ўбачылі гэтую задачу, зменіце тып курсу на "</string>
     <string name="step_disabled_teacher_plan_description_without_course">"Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у "</string>
     <string name="step_disabled_teacher_plan_none_description_with_course">Каб навучэнцы ўбачылі гэтую задачу, зменіце тып курса.</string>
-    <string name="step_disabled_teacher_plan_none_description_without_course">Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у ў курс з неабходным тыпам.</string>
+    <string name="step_disabled_teacher_plan_none_description_without_course">Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у курс з неабходным тыпам.</string>
 
     <string name="step_disabled_teacher_plan_pro_with_course"><b>PRO</b> або зрабіце яго платным.</string>
 
