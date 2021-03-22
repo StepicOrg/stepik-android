@@ -244,8 +244,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             when {
                 it.contains(NOTIFICATIONS_DEEPLINK) -> return NOTIFICATIONS_INDEX
                 it.contains(CATALOG_DEEPLINK)       -> return CATALOG_INDEX
-                it.contains(STORY_DEEPLINK) && !remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED) -> return CATALOG_INDEX
-                it.contains(STORY_DEEPLINK) && remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED) -> return HOME_INDEX
+                it.contains(STORY_DEEPLINK) -> {
+                    return if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+                        HOME_INDEX
+                    } else {
+                        CATALOG_INDEX
+                    }
+                }
                 else -> {}
             }
         }
