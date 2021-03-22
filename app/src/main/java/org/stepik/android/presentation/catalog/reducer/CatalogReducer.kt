@@ -16,6 +16,7 @@ import org.stepik.android.presentation.enrollment.EnrollmentFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.progress.ProgressFeature
+import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.reducer.StateReducer
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class CatalogReducer
 @Inject
 constructor(
+    private val storiesReducer: StoriesReducer,
     private val filtersReducer: FiltersReducer,
     private val courseListReducer: CourseListReducer,
     private val courseContinueReducer: CourseContinueReducer,
@@ -80,6 +82,11 @@ constructor(
                 }
             }
             // </editor-fold>
+
+            is Message.StoriesMessage -> {
+                val (storiesState, storiesActions) = storiesReducer.reduce(state.storiesState, message.message)
+                state.copy(storiesState = storiesState) to storiesActions.map(Action::StoriesAction).toSet()
+            }
 
             is Message.FiltersMessage -> {
                 val (collectionsState, refreshAction) =

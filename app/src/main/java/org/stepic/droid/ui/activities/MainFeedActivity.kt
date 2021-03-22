@@ -8,11 +8,13 @@ import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
@@ -97,6 +99,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     internal lateinit var threadPoolExecutor: ThreadPoolExecutor
+
+    @Inject
+    internal lateinit var remoteConfig: FirebaseRemoteConfig
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -202,9 +207,26 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             CATALOG_INDEX -> {
                 navigationView.selectedItemId = R.id.catalog
-                val courseCollectionId = launchIntent?.getCourseListCollectionId()
-                if (courseCollectionId != null) {
-                    screenManager.showCoursesCollection(this, courseCollectionId)
+                launchIntent?.data?.pathSegments?.let {
+                    when {
+                        it.contains(CATALOG_DEEPLINK) -> {
+                            val courseCollectionId = launchIntent.getCourseListCollectionId()
+                            if (courseCollectionId != null) {
+                                screenManager.showCoursesCollection(this, courseCollectionId)
+                            }
+                        }
+                        it.contains(STORY_DEEPLINK) -> {
+                            val storyId = launchIntent.getStoryId()
+                            if (storyId != null) {
+                                StoryDeepLinkDialogFragment
+                                    .newInstance(storyId, launchIntent.dataString ?: "")
+                                    .showIfNotExists(
+                                        supportFragmentManager,
+                                        StoryDeepLinkDialogFragment.TAG
+                                    )
+                            }
+                        }
+                    }
                 }
             }
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
@@ -222,7 +244,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             when {
                 it.contains(NOTIFICATIONS_DEEPLINK) -> return NOTIFICATIONS_INDEX
                 it.contains(CATALOG_DEEPLINK)       -> return CATALOG_INDEX
-                it.contains(STORY_DEEPLINK)         -> return HOME_INDEX
+                it.contains(STORY_DEEPLINK) && !remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED) -> return CATALOG_INDEX
+                it.contains(STORY_DEEPLINK) && remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED) -> return HOME_INDEX
                 else -> {}
             }
         }

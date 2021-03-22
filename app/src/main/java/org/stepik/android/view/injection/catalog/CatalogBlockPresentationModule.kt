@@ -16,6 +16,8 @@ import org.stepik.android.presentation.enrollment.dispatcher.EnrollmentActionDis
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
 import org.stepik.android.presentation.progress.dispatcher.ProgressActionDispatcher
+import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.presentation.stories.dispatcher.StoriesActionDispatcher
 import org.stepik.android.presentation.user_courses.dispatcher.UserCoursesActionDispatcher
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
@@ -31,6 +33,7 @@ object CatalogBlockPresentationModule {
     internal fun provideCatalogBlockPresenter(
         catalogReducer: CatalogReducer,
         catalogActionDispatcher: CatalogActionDispatcher,
+        storiesActionDispatcher: StoriesActionDispatcher,
         filtersActionDispatcher: FiltersActionDispatcher,
         courseListActionDispatcher: CourseListActionDispatcher,
         courseContinueActionDispatcher: CourseContinueActionDispatcher,
@@ -41,12 +44,19 @@ object CatalogBlockPresentationModule {
         CatalogViewModel(
             ReduxFeature(
                 CatalogFeature.State(
+                    storiesState = StoriesFeature.State.Idle,
                     filtersState = FiltersFeature.State.Idle,
                     blocksState = CatalogFeature.BlocksState.Idle,
                     courseContinueState = CourseContinueFeature.State.Idle
                 ), catalogReducer
             )
                 .wrapWithActionDispatcher(catalogActionDispatcher)
+                .wrapWithActionDispatcher(
+                    storiesActionDispatcher.tranform(
+                        transformAction = { it.safeCast<CatalogFeature.Action.StoriesAction>()?.action },
+                        transformMessage = CatalogFeature.Message::StoriesMessage
+                    )
+                )
                 .wrapWithActionDispatcher(
                     filtersActionDispatcher.tranform(
                         transformAction = { it.safeCast<CatalogFeature.Action.FiltersAction>()?.action },

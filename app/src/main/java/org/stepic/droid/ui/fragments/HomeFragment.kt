@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -12,6 +13,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.util.commitNow
@@ -36,6 +38,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
     @Inject
     lateinit var homeStreakPresenter: HomeStreakPresenter
 
+    @Inject
+    lateinit var remoteConfig: FirebaseRemoteConfig
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Home.HOME_SCREEN_OPENED)
@@ -58,7 +63,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
-                add(R.id.homeMainContainer, StoriesFragment.newInstance())
+                if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+                    add(R.id.homeMainContainer, StoriesFragment.newInstance())
+                }
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
@@ -72,17 +79,21 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
     override fun onStart() {
         super.onStart()
-        SharedTransitionsManager.registerTransitionDelegate(HOME_DEEPLINK_STORY_KEY, object :
-            SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View? =
-                storyDeepLinkMockView
+        if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            SharedTransitionsManager.registerTransitionDelegate(HOME_DEEPLINK_STORY_KEY, object :
+                SharedTransitionContainerDelegate {
+                override fun getSharedView(position: Int): View? =
+                    storyDeepLinkMockView
 
-            override fun onPositionChanged(position: Int) {}
-        })
+                override fun onPositionChanged(position: Int) {}
+            })
+        }
     }
 
     override fun onStop() {
-        SharedTransitionsManager.unregisterTransitionDelegate(HOME_DEEPLINK_STORY_KEY)
+        if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            SharedTransitionsManager.unregisterTransitionDelegate(HOME_DEEPLINK_STORY_KEY)
+        }
         super.onStop()
     }
 
