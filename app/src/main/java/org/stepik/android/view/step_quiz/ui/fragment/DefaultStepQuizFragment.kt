@@ -107,7 +107,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizFeedbackBlocks,
-                        lessonData.lesson.actions?.editLesson != null,
+                        lessonData.lesson.isTeacher,
                         stepWrapper.step.actions?.doReview != null
                     ) { openStepInWeb(stepWrapper.step) },
                 stepQuizActionButton = stepQuizAction,

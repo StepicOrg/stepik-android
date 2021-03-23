@@ -50,6 +50,7 @@ constructor(
             instructionType = cursor.getString(DbStructureStep.Column.INSTRUCTION_TYPE)?.let(ReviewStrategyType::valueOf),
 
             isEnabled = cursor.getIntOrNull(cursor.getColumnIndex(DbStructureStep.Column.IS_ENABLED))?.let { it > 0 },
+            needsPlan = cursor.getString(DbStructureStep.Column.NEEDS_PLAN),
 
             position = cursor.getLong(DbStructureStep.Column.POSITION),
             hasSubmissionRestriction = cursor.getBoolean(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION),
@@ -84,6 +85,7 @@ constructor(
         values.put(DbStructureStep.Column.INSTRUCTION_TYPE, step.instructionType?.name)
 
         values.put(DbStructureStep.Column.IS_ENABLED, step.isEnabled)
+        values.put(DbStructureStep.Column.NEEDS_PLAN, step.needsPlan)
 
         values.put(DbStructureStep.Column.VIEWED_BY, step.viewedBy)
         values.put(DbStructureStep.Column.PASSED_BY, step.passedBy)
