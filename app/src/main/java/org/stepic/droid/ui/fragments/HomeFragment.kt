@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -12,6 +13,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.util.commitNow
@@ -19,11 +21,15 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
+import org.stepik.android.view.stories.ui.fragment.StoriesFragment
+import ru.nobird.android.stories.transition.SharedTransitionsManager
+import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView {
     companion object {
         const val TAG = "HomeFragment"
+        const val HOME_DEEPLINK_STORY_KEY = "home_deeplink_story_key"
 
         fun newInstance(): HomeFragment = HomeFragment()
         private const val fastContinueTag = "fastContinueTag"
@@ -31,6 +37,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
     @Inject
     lateinit var homeStreakPresenter: HomeStreakPresenter
+
+    @Inject
+    lateinit var remoteConfig: FirebaseRemoteConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +63,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
+                if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+                    add(R.id.homeMainContainer, StoriesFragment.newInstance())
+                }
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
@@ -63,6 +75,26 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
         homeStreakPresenter.attachView(this)
         homeStreakPresenter.onNeedShowStreak()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            SharedTransitionsManager.registerTransitionDelegate(HOME_DEEPLINK_STORY_KEY, object :
+                SharedTransitionContainerDelegate {
+                override fun getSharedView(position: Int): View? =
+                    storyDeepLinkMockView
+
+                override fun onPositionChanged(position: Int) {}
+            })
+        }
+    }
+
+    override fun onStop() {
+        if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            SharedTransitionsManager.unregisterTransitionDelegate(HOME_DEEPLINK_STORY_KEY)
+        }
+        super.onStop()
     }
 
     override fun onDestroyView() {
