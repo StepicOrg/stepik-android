@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -18,6 +19,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
@@ -33,11 +35,11 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.mapper.AuthorCountMapper
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.catalog.model.CatalogItem
@@ -91,6 +93,9 @@ class CatalogFragment :
     @Inject
     internal lateinit var authorCountMapper: AuthorCountMapper
 
+    @Inject
+    internal lateinit var remoteConfig: FirebaseRemoteConfig
+
     private lateinit var searchIcon: ImageView
 
     // This workaround is necessary, because onFocus get activated multiple times
@@ -107,7 +112,9 @@ class CatalogFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
-        catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
+        if (!remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage()))
+        }
         if (sharedPreferenceHelper.isNeedShowLangWidget) {
             catalogViewModel.onNewMessage(CatalogFeature.Message.FiltersMessage(FiltersFeature.Message.InitMessage()))
         } else {
@@ -140,7 +147,9 @@ class CatalogFragment :
         )
 
         catalogItemAdapter += OfflineAdapterDelegate {
-            catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage(forceUpdate = true)))
+            if (!remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+                catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.InitMessage(forceUpdate = true)))
+            }
             catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage(forceUpdate = true))
         }
         catalogItemAdapter += LoadingAdapterDelegate()
@@ -187,51 +196,62 @@ class CatalogFragment :
     override fun onStart() {
         super.onStart()
         catalogItemAdapter.notifyDataSetChanged()
-        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
-            SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View? {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                ) as? StoriesAdapterDelegate.StoriesViewHolder
-                    ?: return null
+        if (!remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
+                SharedTransitionContainerDelegate {
+                override fun getSharedView(position: Int): View? {
+                    val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
+                        CATALOG_STORIES_INDEX
+                    ) as? StoriesAdapterDelegate.StoriesViewHolder
+                        ?: return null
 
-                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
-                    ?: return null
+                    val storyViewHolder =
+                        storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
+                            ?: return null
 
-                return storyViewHolder.cover
-            }
-
-            override fun onPositionChanged(position: Int) {
-                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
-                    CATALOG_STORIES_INDEX
-                ) as? StoriesAdapterDelegate.StoriesViewHolder
-                    ?: return
-
-                storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
-                storiesViewHolder.storiesAdapter.selected = position
-
-                if (position != -1) {
-                    val story = storiesViewHolder.storiesAdapter.stories[position]
-                    catalogViewModel.onNewMessage(CatalogFeature.Message.StoriesMessage(StoriesFeature.Message.StoryViewed(story.id)))
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
-                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                        AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
-                    ))
+                    return storyViewHolder.cover
                 }
-            }
-        })
-        SharedTransitionsManager.registerTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY, object :
-            SharedTransitionContainerDelegate {
-            override fun getSharedView(position: Int): View? =
-                storyDeepLinkMockView
 
-            override fun onPositionChanged(position: Int) {}
-        })
+                override fun onPositionChanged(position: Int) {
+                    val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
+                        CATALOG_STORIES_INDEX
+                    ) as? StoriesAdapterDelegate.StoriesViewHolder
+                        ?: return
+
+                    storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
+                    storiesViewHolder.storiesAdapter.selected = position
+
+                    if (position != -1) {
+                        val story = storiesViewHolder.storiesAdapter.stories[position]
+                        catalogViewModel.onNewMessage(
+                            CatalogFeature.Message.StoriesMessage(
+                                StoriesFeature.Message.StoryViewed(story.id)
+                            )
+                        )
+                        analytic.reportAmplitudeEvent(
+                            AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+                                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                                AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
+                            )
+                        )
+                    }
+                }
+            })
+            SharedTransitionsManager.registerTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY, object :
+                SharedTransitionContainerDelegate {
+                override fun getSharedView(position: Int): View? =
+                    storyDeepLinkMockView
+
+                override fun onPositionChanged(position: Int) {}
+            })
+        }
     }
 
     override fun onStop() {
-        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY)
-        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
+        if (!remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY)
+            SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
+        }
         super.onStop()
     }
 
@@ -308,7 +328,7 @@ class CatalogFragment :
 
         requireContext().startActivity(
             SharedTransitionIntentBuilder.createIntent(
-            requireContext(), StoriesActivity::class.java,
+                requireContext(), StoriesActivity::class.java,
                 CATALOG_STORIES_KEY, position, stories)
         )
     }
