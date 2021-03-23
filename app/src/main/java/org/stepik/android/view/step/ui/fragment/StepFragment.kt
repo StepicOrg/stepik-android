@@ -44,6 +44,7 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
@@ -189,12 +190,14 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     }
 
     private fun initDisabledStepTeacher() {
+        val tariffTitle = getString(R.string.step_disabled_teacher_tariff_title)
         val tariffLinkSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val tariffInfoUrl = getString(R.string.step_disabled_teacher_tariff_url)
 
-                requireContext()
-                    .copyTextToClipboard(textToCopy = tariffInfoUrl, toastMessage = getString(R.string.link_copied_title))
+                InAppWebViewDialogFragment
+                    .newInstance(tariffTitle, tariffInfoUrl, isProvideAuth = false)
+                    .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
             }
         }
 
@@ -240,7 +243,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 append(planDescription2)
                 append(getString(R.string.step_disabled_teacher_tariff_description))
                 inSpans(tariffLinkSpan) {
-                    append(getString(R.string.step_disabled_teacher_tariff_title))
+                    append(tariffTitle)
                 }
                 append(getString(R.string.full_stop))
             }
@@ -356,15 +359,15 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
                     state.stepWrapper.step.isEnabled == false
 
-            if (!lessonData.lesson.isTeacher) {
-                stepContentContainer.isGone = isStepDisabled
-                stepContentSeparator.isGone = isStepDisabled
-                stepQuizError.isGone = isStepDisabled
-                stepQuizContainer.isGone = isStepDisabled
-                stepFooter.isGone = isStepDisabled
-            }
+            val isStepUnavailable = isStepDisabled && !lessonData.lesson.isTeacher
 
-            stepDisabled.isVisible = isStepDisabled && !lessonData.lesson.isTeacher
+            stepContentContainer.isGone = isStepUnavailable
+            stepContentSeparator.isGone = isStepUnavailable
+            stepQuizError.isGone = isStepUnavailable
+            stepQuizContainer.isGone = isStepUnavailable
+            stepFooter.isGone = isStepUnavailable
+
+            stepDisabled.isVisible = isStepUnavailable
             stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.isTeacher
             stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper, lessonData)
 
