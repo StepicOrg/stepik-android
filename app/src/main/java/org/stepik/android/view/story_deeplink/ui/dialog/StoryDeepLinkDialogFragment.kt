@@ -79,7 +79,7 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
 
     override fun setState(state: StoryDeepLinkView.State) {
         if (state is StoryDeepLinkView.State.Success) {
-            val key = if (!remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+            val key = if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
                 HomeFragment.HOME_DEEPLINK_STORY_KEY
             } else {
                 CatalogFragment.CATALOG_DEEPLINK_STORY_KEY
