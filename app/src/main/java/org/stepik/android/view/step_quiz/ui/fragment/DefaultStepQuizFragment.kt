@@ -150,11 +150,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
     }
 
     protected fun syncReplyState(replyResult: ReplyResult) {
-        val reply = (replyResult as? ReplyResult.Success)
-            ?.reply
-            ?: return
-
-        viewModel.onNewMessage(StepQuizFeature.Message.SyncReply(reply))
+        viewModel.onNewMessage(StepQuizFeature.Message.SyncReply(replyResult.reply))
     }
 
     private fun openStepInWeb(step: Step) {
