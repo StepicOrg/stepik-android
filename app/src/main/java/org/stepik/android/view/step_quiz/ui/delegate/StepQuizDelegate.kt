@@ -60,12 +60,13 @@ class StepQuizDelegate(
                 onNewMessage(StepQuizFeature.Message.CreateAttemptClicked(step))
             }
         } else {
-            when (val replyResult = stepQuizFormDelegate.createReply()) {
-                is ReplyResult.Success ->
+            val replyResult = stepQuizFormDelegate.createReply()
+            when (replyResult.validation) {
+                is ReplyResult.Validation.Success ->
                     onNewMessage(StepQuizFeature.Message.CreateSubmissionClicked(step, replyResult.reply))
 
-                is ReplyResult.Error ->
-                    stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
+                is ReplyResult.Validation.Error ->
+                    stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.validation.message))
             }
         }
     }

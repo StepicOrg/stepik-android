@@ -7,12 +7,15 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
+import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkPresenter
 import org.stepik.android.presentation.story_deeplink.StoryDeepLinkView
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
@@ -37,6 +40,9 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var remoteConfig: FirebaseRemoteConfig
 
     private val storyDeepLinkPresenter: StoryDeepLinkPresenter by viewModels { viewModelFactory }
 
@@ -73,10 +79,16 @@ class StoryDeepLinkDialogFragment : DialogFragment(), StoryDeepLinkView {
 
     override fun setState(state: StoryDeepLinkView.State) {
         if (state is StoryDeepLinkView.State.Success) {
+            val key = if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+                HomeFragment.HOME_DEEPLINK_STORY_KEY
+            } else {
+                CatalogFragment.CATALOG_DEEPLINK_STORY_KEY
+            }
+
             requireContext().startActivity(
                 SharedTransitionIntentBuilder.createIntent(
                     requireContext(), StoriesActivity::class.java,
-                    CatalogFragment.CATALOG_DEEPLINK_STORY_KEY, 0, arrayListOf(state.story.toStory())
+                    key, 0, arrayListOf(state.story.toStory())
                 )
             )
             analytic.reportAmplitudeEvent(
