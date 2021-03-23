@@ -71,19 +71,19 @@ class TextStepQuizFormDelegate(
                 when (stepBlockName) {
                     AppConstants.TYPE_NUMBER ->
                         if (value.matches(NUMBER_VALIDATION_REGEX.toRegex())) {
-                            ReplyResult.Success(Reply(number = value))
+                            ReplyResult((Reply(number = value)), ReplyResult.Validation.Success)
                         } else {
-                            ReplyResult.Error(context.getString(R.string.step_quiz_text_invalid_number_reply))
+                            ReplyResult(Reply(number = value), ReplyResult.Validation.Error(context.getString(R.string.step_quiz_text_invalid_number_reply)))
                         }
 
                     AppConstants.TYPE_MATH ->
-                        ReplyResult.Success(Reply(formula = value))
+                        ReplyResult((Reply(formula = value)), ReplyResult.Validation.Success)
 
                     else ->
-                        ReplyResult.Success(Reply(text = value))
+                        ReplyResult((Reply(text = value)), ReplyResult.Validation.Success)
                 }
             } else {
-                ReplyResult.Error(context.getString(R.string.step_quiz_text_empty_reply))
+                ReplyResult(Reply(), ReplyResult.Validation.Error(context.getString(R.string.step_quiz_text_empty_reply)))
             }
         }
 

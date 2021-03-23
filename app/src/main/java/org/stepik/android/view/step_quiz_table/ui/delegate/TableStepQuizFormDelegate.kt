@@ -65,11 +65,14 @@ class TableStepQuizFormDelegate(
     }
 
     override fun createReply(): ReplyResult =
-        ReplyResult.Success(Reply(
-            tableChoices = tableAdapter
-                .items
-                .map { TableChoiceAnswer(nameRow = it.titleText, columns = it.tableChoices) }
-        ))
+        ReplyResult(
+            Reply(
+                tableChoices = tableAdapter
+                    .items
+                    .map { TableChoiceAnswer(nameRow = it.titleText, columns = it.tableChoices) }
+            ),
+            ReplyResult.Validation.Success
+        )
 
     fun updateTableSelectionItem(index: Int, columns: List<Cell>) {
         tableAdapter.items = tableAdapter.items.mutate {
