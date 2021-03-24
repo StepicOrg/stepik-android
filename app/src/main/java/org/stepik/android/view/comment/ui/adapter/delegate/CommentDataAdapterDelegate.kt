@@ -1,13 +1,12 @@
 package org.stepik.android.view.comment.ui.adapter.delegate
 
-import android.graphics.BitmapFactory
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -53,13 +52,6 @@ class CommentDataAdapterDelegate(
         private val commentDislike = root.commentDislike
 
         private val commentSolution = root.commentSolution
-
-        private val commentUserIconPlaceholder = with(context.resources) {
-            val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
-            val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
-            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.course_image_radius)
-            circularBitmapDrawable
-        }
 
         private val replyOffset =
             context.resources.getDimensionPixelOffset(R.dimen.comment_item_reply_offset)
@@ -109,7 +101,7 @@ class CommentDataAdapterDelegate(
 
             commentUserName.text = data.user.fullName
 
-            commentUserIconWrapper.setImagePath(data.user.avatar ?: "", commentUserIconPlaceholder)
+            commentUserIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
 
             commentText.latexData = data.textData
 

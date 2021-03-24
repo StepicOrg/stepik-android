@@ -27,7 +27,7 @@ class StoriesAdapterDelegate(
         private val storiesPlaceholder = root.storiesContainerLoadingPlaceholder
         val storiesDivider = root.storiesContainerDivider
         val storiesRecycler = root.storiesRecycler
-        val storiesAdapter = StoriesAdapter(root.context, onStoryClicked = onStoryClicked)
+        val storiesAdapter = StoriesAdapter(onStoryClicked = onStoryClicked)
 
         private val viewStateDelegate = ViewStateDelegate<StoriesFeature.State>()
 

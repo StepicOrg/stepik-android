@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorSurface">
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:src="@drawable/continue_learning_cover"
                 android:layout_height="0dp"
                 android:layout_width="match_parent"
@@ -30,6 +30,7 @@
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/accessibility_last_step_cover"
                 android:alpha="0.2"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -64,7 +65,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/fastContinueCourseCover"
                 android:contentDescription="@string/content_course_logo"
                 android:layout_width="@dimen/fast_continue_course_image_size"
@@ -75,6 +76,7 @@
                 android:layout_marginLeft="@dimen/fast_continue_inner_content_margin"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
                 android:layout_marginBottom="16dp" />
 
             <TextView

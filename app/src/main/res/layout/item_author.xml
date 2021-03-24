@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/item_author_height">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/authorListImage"
             android:layout_width="64dp"
             android:layout_height="64dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
             android:layout_margin="16dp"
 
             tools:src="@drawable/general_placeholder"/>

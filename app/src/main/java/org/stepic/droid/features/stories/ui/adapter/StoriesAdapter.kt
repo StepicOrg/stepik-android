@@ -1,38 +1,21 @@
 package org.stepic.droid.features.stories.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
 import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import ru.nobird.android.stories.model.Story
 import kotlin.properties.Delegates
 
 class StoriesAdapter(
-    private val context: Context,
     private val onStoryClicked: (Story, Int) -> Unit
 ) : RecyclerView.Adapter<StoriesAdapter.StoryViewHolder>() {
-    private val coursePlaceholderDrawable by lazy {
-        val resources = context.resources
-        val size = resources.getDimension(R.dimen.stories_size).toInt()
-
-        val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_general_placeholder_dark)!!
-        val bitmap = drawable.toBitmap(size, size)
-
-        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, bitmap)
-        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.stories_default_corner_radius)
-        return@lazy circularBitmapDrawable
-    }
 
     var stories: List<Story> = emptyList()
         private set
@@ -83,12 +66,9 @@ class StoriesAdapter(
     }
 
     inner class StoryViewHolder(root: View) : RecyclerView.ViewHolder(root) {
-        val cover: ImageView = root.storyCover
+        val cover: ShapeableImageView = root.storyCover
         private val title = root.storyTitle
         private val activeStoryMarker = root.activeStoryMarker
-
-        private val coverTarget = RoundedBitmapImageViewTarget(
-                root.context.resources.getDimension(R.dimen.stories_default_corner_radius), cover)
 
         init {
             root.setOnClickListener {
@@ -105,9 +85,9 @@ class StoriesAdapter(
             Glide.with(itemView.context)
                     .asBitmap()
                     .load(story.cover)
-                    .placeholder(coursePlaceholderDrawable)
+                    .placeholder(R.drawable.ic_general_placeholder_dark)
                     .centerCrop()
-                    .into(coverTarget)
+                    .into(cover)
 
             activeStoryMarker.isGone = story.id in viewedStoryIds
             itemView.isInvisible = position == selected
