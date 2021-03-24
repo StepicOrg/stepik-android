@@ -290,4 +290,16 @@
         <item name="android:layout_marginRight">@dimen/step_quiz_review_title_margin</item>
         <item name="android:layout_marginTop">@dimen/step_quiz_review_vertical_block_margin</item>
     </style>
+
+    <style name="ShapeAppearanceOverlay.App.RoundedCorners.NotificationThumbnail" parent="">
+        <item name="cornerSize">4dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.RoundedCorners8" parent="">
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.RoundedCorners.StoriesThumbnail" parent="">
+        <item name="cornerSize">16dp</item>
+    </style>
 </resources>

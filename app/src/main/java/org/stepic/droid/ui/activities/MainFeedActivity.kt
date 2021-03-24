@@ -402,7 +402,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         badge.number = count
         badge.maxCharacterCount = 3
         badge.isVisible = true
-        // TODO 09.04.2020: Uncomment after stable release of Material Components 1.2.0
-//        badge.verticalOffset = 8
+        badge.verticalOffset = 8
     }
 }

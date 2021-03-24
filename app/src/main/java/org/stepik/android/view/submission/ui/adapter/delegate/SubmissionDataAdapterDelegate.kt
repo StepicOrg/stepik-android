@@ -1,13 +1,12 @@
 package org.stepik.android.view.submission.ui.adapter.delegate
 
 import android.content.res.ColorStateList
-import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.view.isVisible
@@ -56,13 +55,6 @@ class SubmissionDataAdapterDelegate(
         private val reviewSelect = root.reviewSelect
         private val reviewSelectText = root.reviewSelectText
 
-        private val submissionUserIconPlaceholder = with(context.resources) {
-            val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
-            val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
-            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.course_image_radius)
-            circularBitmapDrawable
-        }
-
         init {
             submissionContainer.setOnClickListener(this)
             submissionUserIcon.setOnClickListener(this)
@@ -83,7 +75,7 @@ class SubmissionDataAdapterDelegate(
             data as SubmissionItem.Data
 
             submissionUserName.text = data.user.fullName
-            submissionUserIconWrapper.setImagePath(data.user.avatar ?: "", submissionUserIconPlaceholder)
+            submissionUserIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
             submissionTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: 0)
 
             setupSubmission(data.submission)
