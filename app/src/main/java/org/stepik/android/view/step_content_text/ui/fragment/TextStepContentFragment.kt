@@ -127,8 +127,7 @@ class TextStepContentFragment :
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.step_edit_menu, menu)
-        menu.findItem(R.id.menu_item_edit)?.isVisible =
-            lessonData.lesson.actions?.editLesson != null
+        menu.findItem(R.id.menu_item_edit)?.isVisible = lessonData.lesson.isTeacher
         super.onCreateOptionsMenu(menu, inflater)
     }
 

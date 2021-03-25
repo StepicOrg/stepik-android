@@ -80,10 +80,13 @@ class MatchingStepQuizFormDelegate(
     }
 
     override fun createReply(): ReplyResult =
-        ReplyResult.Success(Reply(
-            ordering = optionsAdapter
-                .items
-                .filterIsInstance<MatchingItem.Option>()
-                .map(MatchingItem.Option::id)
-        ))
+        ReplyResult(
+            Reply(
+                ordering = optionsAdapter
+                    .items
+                    .filterIsInstance<MatchingItem.Option>()
+                    .map(MatchingItem.Option::id)
+            ),
+            ReplyResult.Validation.Success
+        )
 }

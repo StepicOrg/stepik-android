@@ -739,10 +739,27 @@
     <string name="lesson_step_counter">Step %d out of %d</string>
 
     <!-- Step -->
-    <string name="step_disabled_title">You can\'t view the assignment yet</string>
-    <string name="step_disabled_description_part_1">"Contact the course authors to suggest that they change the settings "</string>
-    <string name="step_disabled_description_part_2">.\n\nThe access might resume after a while.</string>
-    <string name="step_disabled_pattern">%s → Step %d</string>
+    <string name="full_stop" translatable="false">.</string>
+    <string name="step_disabled_teacher_title">Students can\'t view the assignment</string>
+    <string name="step_disabled_teacher_plan_description_with_course">"For enable learners to view the assignment, change the course type to "</string>
+    <string name="step_disabled_teacher_plan_description_without_course">"For enable learners to view the assignment, add the lesson to, "</string>
+    <string name="step_disabled_teacher_plan_none_description_with_course">For enable learners to view the assignment, change the course type.</string>
+    <string name="step_disabled_teacher_plan_none_description_without_course">For enable learners to view the assignment, add the lesson to course with the necessary type.</string>
+
+    <string name="step_disabled_teacher_plan_pro_with_course"><b>PRO</b> or paid.</string>
+    <string name="step_disabled_teacher_enterprise_with_course" translatable="false"><b>Enterprise</b>.</string>
+
+    <string name="step_disabled_teacher_plan_pro_without_course">a <b>PRO</b> or <b>paid</b> course.</string>
+    <string name="step_disabled_teacher_plan_enterprise_without_course">an <b>Enterprise</b> course.</string>
+
+    <string name="step_disabled_teacher_tariff_description">"\n\nThis step has paid features. "</string>
+    <string name="step_disabled_teacher_tariff_title">Learn about plans</string>
+    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/en-us/articles/360012252539</string>
+
+    <string name="step_disabled_student_title">You can\'t view the assignment yet</string>
+    <string name="step_disabled_student_description_part_1">"Contact the course authors to suggest that they change the settings "</string>
+    <string name="step_disabled_student_description_part_2">.\n\nThe access might resume after a while.</string>
+    <string name="step_disabled_student_pattern">%s → Step %d</string>
 
     <string name="step_amount_passed">Passed:&#160;</string>
     <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>

@@ -40,4 +40,8 @@
         <key>search_query_params_android</key>
         <value>{"is_popular": true, "is_public": true}</value>
     </entry>
+    <entry>
+        <key>is_new_home_screen_enabled</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>

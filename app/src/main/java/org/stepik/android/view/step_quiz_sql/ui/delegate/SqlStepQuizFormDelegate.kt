@@ -33,7 +33,7 @@ class SqlStepQuizFormDelegate(
     }
 
     override fun createReply(): ReplyResult =
-        ReplyResult.Success(Reply(solveSql = codeLayout.text.toString()))
+        ReplyResult(Reply(solveSql = codeLayout.text.toString()), ReplyResult.Validation.Success)
 
     override fun setState(state: StepQuizFeature.State.AttemptLoaded) {
         val reply = when (state.submissionState) {
