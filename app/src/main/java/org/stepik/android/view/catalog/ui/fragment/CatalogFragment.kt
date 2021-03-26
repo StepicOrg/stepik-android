@@ -47,6 +47,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.AuthorListAdapterDele
 import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -182,6 +183,22 @@ class CatalogFragment :
         catalogItemAdapter += SimpleCourseListsGridAdapterDelegate(
             courseCountMapper = courseCountMapper,
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
+        )
+
+        catalogItemAdapter += RecommendedCourseListAdapterDelegate(
+            analytic = analytic,
+            courseCountMapper = courseCountMapper,
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            onBlockSeen = { id ->
+                val courseListMessage = CourseListFeature.Message.InitMessageRecommended(id = id)
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))
+            },
+            onCourseContinueClicked = { course, courseViewSource, courseContinueInteractionSource ->
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.OnContinueCourseClicked(course, courseViewSource, courseContinueInteractionSource)))
+            },
+            onCourseClicked = { courseListItem ->
+                catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
+            }
         )
 
         with(catalogRecyclerView) {

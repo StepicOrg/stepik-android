@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_recommendations.interactor.CourseRecommendationsInteractor
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.domain.rx.first
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class CourseListActionDispatcher
 @Inject
 constructor(
+    private val courseRecommendationsInteractor: CourseRecommendationsInteractor,
     private val courseListInteractor: CourseListInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -63,6 +65,31 @@ constructor(
                         onError = emptyOnErrorStub
                     )
             }
-        }
+
+            is CourseListFeature.Action.FetchCourseRecommendations -> {
+                compositeDisposable += Flowable
+                    .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
+                    .concatMapSingle { sourceType ->
+                        courseRecommendationsInteractor.fetchCourseRecommendations()
+                            .flatMapSingle { courseRecommendations ->
+                                courseListInteractor
+                                    .getCourseListItems(
+                                        courseRecommendations.first().courses,
+                                        CourseViewSource.Recommendation,
+                                        sourceType
+                                    )
+                                    .map { items ->
+                                        CourseListFeature.Message.FetchCourseListSuccess(action.id, items, items)
+                                    }
+                            }
+                    }
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onNext = { onNewMessage(it) },
+                        onError = { onNewMessage(CourseListFeature.Message.FetchCourseListError(action.id)) }
+                    )
+                }
+            }
     }
 }

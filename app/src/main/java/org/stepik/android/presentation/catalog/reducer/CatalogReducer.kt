@@ -64,6 +64,9 @@ constructor(
                                 is CatalogBlockContent.AuthorsList ->
                                     CatalogBlockStateWrapper.AuthorList(catalogBlockItem, catalogBlockItem.content)
 
+                                is CatalogBlockContent.RecommendedCourses ->
+                                    CatalogBlockStateWrapper.RecommendedCourseList(catalogBlockItem, CourseListFeature.State.Idle)
+
                                 else ->
                                     null
                             }
@@ -106,14 +109,25 @@ constructor(
                     val blocks = state.blocksState
                         .blocks
                         .map { collection ->
-                            if (collection.id == message.id &&
-                                collection is CatalogBlockStateWrapper.FullCourseList
-                            ) {
-                                val (courseListState, courseListActions) =
-                                    courseListReducer.reduce(collection.state, message.message)
+                            if (collection.id == message.id) {
+                                when (collection) {
+                                    is CatalogBlockStateWrapper.FullCourseList -> {
+                                        val (courseListState, courseListActions) =
+                                            courseListReducer.reduce(collection.state, message.message)
 
-                                courseListActionsSet += courseListActions
-                                collection.copy(state = courseListState)
+                                        courseListActionsSet += courseListActions
+                                        collection.copy(state = courseListState)
+                                    }
+                                    is CatalogBlockStateWrapper.RecommendedCourseList -> {
+                                        val (courseListState, courseListActions) =
+                                            courseListReducer.reduce(collection.state, message.message)
+
+                                        courseListActionsSet += courseListActions
+                                        collection.copy(state = courseListState)
+                                    }
+                                    else ->
+                                        collection
+                                }
                             } else {
                                 collection
                             }
@@ -189,6 +203,7 @@ constructor(
             }
         } ?: state to emptySet()
 
+    // TODO APPS-3254 - Update mapper to handle CatalogBlockStateWrapper.RecommendedCourseList
     private fun updateCourseLists(
         blocks: List<CatalogBlockStateWrapper>,
         mapper: (CatalogBlockStateWrapper.FullCourseList) -> CatalogBlockStateWrapper

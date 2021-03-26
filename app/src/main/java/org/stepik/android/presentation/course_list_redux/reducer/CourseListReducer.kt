@@ -23,6 +23,15 @@ constructor(
                     null
                 }
 
+            is Message.InitMessageRecommended ->
+                if (state is State.Idle ||
+                    state is State.NetworkError && message.forceUpdate
+                ) {
+                    State.Loading to setOf(Action.FetchCourseRecommendations(message.id))
+                } else {
+                    null
+                }
+
             is Message.FetchCourseListSuccess ->
                 if (state !is State.Idle) {
                     State.Content(message.courseListDataItems, message.courseListItems) to emptySet()
