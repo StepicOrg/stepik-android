@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface CourseRecommendationsService {
-     @GET("api/course-recommendations?platform=mobile,android")
+    @GET("api/course-recommendations?platform=mobile,android")
     fun getCourseRecommendations(@QueryMap query: Map<String, String>): Maybe<CourseRecommendationsResponse>
 }
