@@ -176,12 +176,13 @@ class SubmissionDataAdapterDelegate(
         private fun setupReviewView(submissionItemData: SubmissionItem.Data, reviewState: ReviewState?) {
             if (reviewState == null) return
 
+            val takenReviewCount = submissionItemData.reviewSessionData?.session?.takenReviews?.size ?: 0
+            val givenReviewsCount = submissionItemData.reviewSessionData?.session?.givenReviews?.size ?: 0
+            val minReviewsCount = reviewInstructionData?.reviewInstruction?.minReviews ?: 0
+
             val title = when (reviewState) {
-                ReviewState.IN_PROGRESS, ReviewState.FINISHED -> {
-                    val takenReviewCount = submissionItemData.reviewSessionData?.session?.takenReviews?.size ?: 0
-                    val minReviewsCount = reviewInstructionData?.reviewInstruction?.minReviews ?: 0
+                ReviewState.IN_PROGRESS, ReviewState.FINISHED ->
                     context.getString(R.string.submission_review_state_in_progress_title, takenReviewCount, minReviewsCount)
-                }
 
                 ReviewState.CANT_REVIEW_WRONG, ReviewState.CANT_REVIEW_ANOTHER, ReviewState.CANT_REVIEW_TEACHER ->
                     context.getString(R.string.submission_review_state_cannot_review_title)
@@ -190,7 +191,23 @@ class SubmissionDataAdapterDelegate(
                     context.getString(R.string.submission_review_state_not_submitted_title)
             }
 
-            val message = context.getString(reviewState.messageResId)
+            val message = when (reviewState) {
+                ReviewState.IN_PROGRESS -> {
+                    if (givenReviewsCount < minReviewsCount && takenReviewCount < minReviewsCount) {
+                        context.getString(R.string.submission_review_state_in_progress_not_give_not_take_message, submissionItemData.user.fullName)
+                    } else if (givenReviewsCount < minReviewsCount) {
+                        context.getString(R.string.submission_review_state_in_progress_not_give_message, submissionItemData.user.fullName)
+                    } else {
+                        context.getString(reviewState.messageResId)
+                    }
+                }
+                ReviewState.FINISHED,
+                ReviewState.CANT_REVIEW_WRONG,
+                ReviewState.CANT_REVIEW_TEACHER,
+                ReviewState.CANT_REVIEW_ANOTHER,
+                ReviewState.NOT_SUBMITTED_FOR_REVIEW ->
+                    context.getString(reviewState.messageResId)
+            }
 
             val isEnabled = when (reviewState) {
                 ReviewState.IN_PROGRESS, ReviewState.FINISHED, ReviewState.NOT_SUBMITTED_FOR_REVIEW ->

@@ -1057,6 +1057,8 @@
     <string name="submission_review_state_cannot_review_another_message">Another submission has been sent for review.</string>
     <string name="submission_review_state_cannot_review_teacher_message">Submission of a teacher cannot be reviewed.</string>
     <string name="submission_review_state_cannot_review_wrong_message">Wrong answer.</string>
+    <string name="submission_review_state_in_progress_not_give_not_take_message">%s has not yet submitted all reviews for other learner submissions and has not received his reviews.</string>
+    <string name="submission_review_state_in_progress_not_give_message">%s has not yet submitted all reviews for other learner submissions.</string>
     <string name="submission_review_state_in_progress_message">More reviews are needed for this submission.</string>
     <string name="submission_review_state_not_submitted_message">Need to send the solution for review.</string>
     <string name="submission_review_state_finished_message">Required number of reviews for this submission has been received.</string>

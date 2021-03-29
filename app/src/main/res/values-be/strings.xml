@@ -875,6 +875,8 @@
     <string name="submission_review_state_cannot_review_another_message">Іншае рашэнне адпраўлена.</string>
     <string name="submission_review_state_cannot_review_teacher_message">Рашэнне выкладчыка адрэцэнзавалі нельга.</string>
     <string name="submission_review_state_cannot_review_wrong_message">Адказ з\'яўляецца памылковым.</string>
+    <string name="submission_review_state_in_progress_not_give_not_take_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы і не атрымаў рэцэнзіі на сваю.</string>
+    <string name="submission_review_state_in_progress_not_give_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы.</string>
     <string name="submission_review_state_in_progress_message">Нужны ещё рецензии на это решение.</string>
     <string name="submission_review_state_not_submitted_message">Патрэбныя яшчэ рэцэнзіі на гэтае рашэнне.</string>
     <string name="submission_review_state_finished_message">Абавязковае колькасць рэцэнзій на гэтае рашэнне атрымана.</string>
