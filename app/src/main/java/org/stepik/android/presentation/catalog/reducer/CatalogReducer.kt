@@ -2,6 +2,7 @@ package org.stepik.android.presentation.catalog.reducer
 
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogFeature.State
 import org.stepik.android.presentation.catalog.CatalogFeature.Message
@@ -162,8 +163,14 @@ constructor(
                     message.message is UserCoursesFeature.Message.UserCourseOperationUpdate
                 ) {
                     val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
-                        val updatedState = courseListStateMapper.mapToUserCourseUpdate(item.state, message.message.userCourse)
-                        item.copy(state = updatedState)
+                        when (item) {
+                            is CatalogBlockStateWrapper.FullCourseList ->
+                                item.copy(state = mapUserCourseMessageToCourseListState(item.state, message.message))
+                            is CatalogBlockStateWrapper.RecommendedCourseList ->
+                                item.copy(state = mapUserCourseMessageToCourseListState(item.state, message.message))
+                            else ->
+                                return@updateCourseLists null
+                        }
                     }
                     state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to emptySet()
                 } else {
@@ -176,8 +183,14 @@ constructor(
                     message.message is ProgressFeature.Message.ProgressUpdate
                 ) {
                     val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
-                        val updatedState = courseListStateMapper.mergeWithCourseProgress(item.state, message.message.progress)
-                        item.copy(state = updatedState)
+                        when (item) {
+                            is CatalogBlockStateWrapper.FullCourseList ->
+                                item.copy(state = mapProgressMessageToCourseListState(item.state, message.message))
+                            is CatalogBlockStateWrapper.RecommendedCourseList ->
+                                item.copy(state = mapProgressMessageToCourseListState(item.state, message.message))
+                            else ->
+                                return@updateCourseLists null
+                        }
                     }
                     state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to emptySet()
                 } else {
@@ -189,12 +202,21 @@ constructor(
                 if (state.blocksState is CatalogFeature.BlocksState.Content && message.message is EnrollmentFeature.Message.EnrollmentMessage) {
                     val courseListActions = mutableSetOf<CourseListFeature.Action>()
                     val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
-                        item.catalogBlock.content.safeCast<CatalogBlockContent.FullCourseList>()?.let {
-                            courseListActions +=
-                                CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, it.courseList.id)
+                        when (item) {
+                            is CatalogBlockStateWrapper.FullCourseList -> {
+                                val courseListId = item.catalogBlock.content.safeCast<CatalogBlockContent.FullCourseList>()?.courseList?.id ?: -1
+                                courseListActions +=
+                                    CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, CourseViewSource.Collection(courseListId))
+                                item.copy(state = mapEnrollmentMessageToCourseListState(item.state, message.message))
+                            }
+                            is CatalogBlockStateWrapper.RecommendedCourseList -> {
+                                courseListActions +=
+                                    CourseListFeature.Action.FetchCourseAfterEnrollment(item.id, message.message.enrolledCourse.id, CourseViewSource.Recommendation)
+                                item.copy(state = mapEnrollmentMessageToCourseListState(item.state, message.message))
+                            }
+                            else ->
+                                return@updateCourseLists null
                         }
-                        val updatedState = courseListStateMapper.mapToEnrollmentUpdateState(item.state, message.message.enrolledCourse)
-                        item.copy(state = updatedState)
                     }
                     state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to courseListActions.map(Action::CourseListAction).toSet()
                 } else {
@@ -203,16 +225,24 @@ constructor(
             }
         } ?: state to emptySet()
 
-    // TODO APPS-3254 - Update mapper to handle CatalogBlockStateWrapper.RecommendedCourseList
     private fun updateCourseLists(
         blocks: List<CatalogBlockStateWrapper>,
-        mapper: (CatalogBlockStateWrapper.FullCourseList) -> CatalogBlockStateWrapper
+        mapper: (CatalogBlockStateWrapper) -> CatalogBlockStateWrapper?
     ): List<CatalogBlockStateWrapper> =
-        blocks.map { item ->
-            if (item is CatalogBlockStateWrapper.FullCourseList) {
+        blocks.mapNotNull { item ->
+            if (item is CatalogBlockStateWrapper.FullCourseList || item is CatalogBlockStateWrapper.RecommendedCourseList) {
                 mapper(item)
             } else {
                 item
             }
         }
+
+    private fun mapUserCourseMessageToCourseListState(courseListState: CourseListFeature.State, message: UserCoursesFeature.Message.UserCourseOperationUpdate): CourseListFeature.State =
+        courseListStateMapper.mapToUserCourseUpdate(courseListState, message.userCourse)
+
+    private fun mapProgressMessageToCourseListState(courseListState: CourseListFeature.State, message: ProgressFeature.Message.ProgressUpdate): CourseListFeature.State =
+        courseListStateMapper.mergeWithCourseProgress(courseListState, message.progress)
+
+    private fun mapEnrollmentMessageToCourseListState(courseListState: CourseListFeature.State, message: EnrollmentFeature.Message.EnrollmentMessage): CourseListFeature.State =
+        courseListStateMapper.mapToEnrollmentUpdateState(courseListState, message.enrolledCourse)
 }

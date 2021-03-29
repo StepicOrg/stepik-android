@@ -6,8 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface CourseRecommendationsService {
-    // TODO APPS-3254 use this when feature is complete
-    // @GET("api/course-recommendations?platform=mobile,android")
-    @GET("api/course-recommendations?platform=sunion_plugin")
+     @GET("api/course-recommendations?platform=mobile,android")
     fun getCourseRecommendations(@QueryMap query: Map<String, String>): Maybe<CourseRecommendationsResponse>
 }

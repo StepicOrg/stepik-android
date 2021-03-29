@@ -35,7 +35,7 @@ constructor(
                         courseListInteractor
                             .getCourseListItems(
                                 action.courseIds,
-                                courseViewSource = CourseViewSource.Collection(action.courseListId),
+                                courseViewSource = action.courseViewSource,
                                 sourceTypeComposition = sourceType
                             )
                             .map { items ->
@@ -54,7 +54,7 @@ constructor(
                 compositeDisposable += courseListInteractor
                     .getCourseListItems(
                         listOf(action.courseId),
-                        courseViewSource = CourseViewSource.Collection(action.courseListId),
+                        courseViewSource = action.courseViewSource,
                         sourceTypeComposition = SourceTypeComposition.CACHE
                     )
                     .first()
