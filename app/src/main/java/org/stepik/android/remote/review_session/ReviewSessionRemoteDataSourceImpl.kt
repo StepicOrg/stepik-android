@@ -42,6 +42,16 @@ constructor(
     override fun getReviewSession(instruction: Long, user: Long): Maybe<ReviewSessionData> =
         reviewSessionService
             .getReviewSession(instruction, user)
-            .map(mapper)
+            .map { response ->
+                val attempts = response.attempts.associateBy { it.id }
+                val submissions = response.submissions.associateBy { it.id }
+
+                response.reviewSessions.map { session ->
+                    val submission = submissions[session.submission]
+                    val attempt = attempts[submission?.attempt]
+
+                    ReviewSessionData(session, submission, attempt)
+                }
+            }
             .maybeFirst()
 }

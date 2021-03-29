@@ -66,7 +66,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     Playable {
     companion object {
         // TODO APPS 3227 Feature flag
-        private const val REVIEWS_IN_SUBMISSION_IS_ENABLED = false
+        private const val REVIEWS_IN_SUBMISSION_IS_ENABLED = true
 
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -353,7 +353,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             ?: return
 
         SubmissionsDialogFragment
-            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.isTeacher)
+            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.isTeacher, reviewInstruction = reviewInstruction)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
 
         analytic

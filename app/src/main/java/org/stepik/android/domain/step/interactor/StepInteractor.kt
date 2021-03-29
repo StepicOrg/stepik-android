@@ -8,7 +8,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.concat
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.discussion_thread.repository.DiscussionThreadRepository
-import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Step
@@ -44,7 +44,7 @@ constructor(
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
 
-    fun getReviewInstruction(instructionId: Long): Single<ReviewInstruction> =
+    fun getReviewInstruction(instructionId: Long): Single<ReviewInstructionData> =
         reviewInstructionRepository
             .getReviewInstruction(instructionId, DataSourceType.REMOTE)
 }

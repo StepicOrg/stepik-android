@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.presentation.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 
 class SubmissionsPresenter
@@ -69,6 +70,8 @@ constructor(
                     state = state.copy(contentState = newState)
                 },
                 onError = {
+                    Timber.d("Error: $it")
+                    it.printStackTrace()
                     if (oldState.contentState is SubmissionsView.ContentState.Content) {
                         state = oldState
                         view?.showNetworkError()

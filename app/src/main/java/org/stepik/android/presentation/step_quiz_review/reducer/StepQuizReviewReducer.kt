@@ -42,7 +42,7 @@ constructor(
             is Message.FetchReviewSessionSuccess ->
                 when (state) {
                     is State.Loading -> {
-                        val quizState = createAttemptLoadedState(message.sessionData.attempt, message.sessionData.submission)
+                        val quizState = createAttemptLoadedState(message.sessionData.attempt!!, message.sessionData.submission!!)
                         val newState =
                             if (message.sessionData.session.isFinished) {
                                 State.Completed(quizState, message.sessionData.session, message.instruction, message.progress)

@@ -61,7 +61,7 @@ constructor(
             val reviewSessions = reviewSessionsBySession + reviewSessionsByUsers
             submissionItems.mapNotNullPaged { submissionItem ->
                 val reviewSessionData = reviewSessions
-                    .find { it.attempt.user == submissionItem.user.id }
+                    .find { it.attempt?.user == submissionItem.user.id }
 
                 submissionItem.copy(reviewSessionData = reviewSessionData)
             }

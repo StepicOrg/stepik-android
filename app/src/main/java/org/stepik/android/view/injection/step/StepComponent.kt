@@ -10,6 +10,7 @@ import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataM
 import org.stepik.android.view.injection.review.ReviewDataModule
 import org.stepik.android.view.injection.review_instruction.ReviewInstructionDataModule
 import org.stepik.android.view.injection.review_session.ReviewSessionDataModule
+import org.stepik.android.view.injection.rubric.RubricDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule
 import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
@@ -40,7 +41,8 @@ import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStep
     ReviewDataModule::class,
     ReviewInstructionDataModule::class,
     ReviewSessionDataModule::class,
-    CodePreferenceDataModule::class
+    CodePreferenceDataModule::class,
+    RubricDataModule::class
 ])
 @StepScope
 interface StepComponent {

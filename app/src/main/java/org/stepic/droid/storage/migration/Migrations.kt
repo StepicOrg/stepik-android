@@ -197,6 +197,7 @@ object Migrations {
         MigrationFrom62To63,
         MigrationFrom63To64,
         MigrationFrom64To65,
-        MigrationFrom65To66
+        MigrationFrom65To66,
+        MigrationFrom66To67
     )
 }
