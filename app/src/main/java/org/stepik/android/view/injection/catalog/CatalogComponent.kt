@@ -10,6 +10,8 @@ import org.stepik.android.view.injection.profile.ProfileDataModule
     CatalogDataModule::class,
     ProfileDataModule::class,
     LastStepDataModule::class
+    // TODO APPS-3254 Add to dependency graph when you will be implementing UI
+    // CourseRecommendationsDataModule::class
 ])
 interface CatalogComponent {
     @Subcomponent.Builder

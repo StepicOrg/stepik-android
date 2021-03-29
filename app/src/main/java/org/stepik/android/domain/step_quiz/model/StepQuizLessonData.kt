@@ -16,6 +16,6 @@ data class StepQuizLessonData(
         lessonTitle = lessonData.lesson.title.orEmpty(),
         stepCount = lessonData.lesson.steps.size,
         discountingPolicyType = lessonData.section?.discountingPolicy ?: DiscountingPolicyType.NoDiscount,
-        isTeacher = lessonData.lesson.actions?.editLesson != null
+        isTeacher = lessonData.lesson.isTeacher
     )
 }

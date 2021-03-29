@@ -3,6 +3,7 @@ package org.stepik.android.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
 class StoryTemplate(
         @SerializedName("id")
@@ -35,6 +36,8 @@ class StoryTemplate(
             @SerializedName("type")
             val type: String,
 
+            @SerializedName("feedback")
+            val feedback: Feedback?,
             @SerializedName("button")
             val button: Button?,
             @SerializedName("text")
@@ -43,10 +46,10 @@ class StoryTemplate(
 
     class Text(
             @SerializedName("background_style")
-            val backgroundStyle: String,
+            val backgroundStyle: String?,
 
             @SerializedName("text")
-            val text: String,
+            val text: String?,
 
             @SerializedName("text_color")
             val textColor: String,
@@ -65,8 +68,8 @@ class StoryTemplate(
 
         companion object CREATOR : Parcelable.Creator<Text> {
             override fun createFromParcel(parcel: Parcel) = Text(
-                    parcel.readString()!!,
-                    parcel.readString()!!,
+                    parcel.readString(),
+                    parcel.readString(),
                     parcel.readString()!!,
                     parcel.readString()!!
             )
@@ -87,13 +90,17 @@ class StoryTemplate(
             val title: String,
 
             @SerializedName("url")
-            val url: String
+            val url: String,
+
+            @SerializedName("feedback_title")
+            val feedbackTitle: String?
     ) : Parcelable {
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeString(backgroundColor)
             parcel.writeString(textColor)
             parcel.writeString(title)
             parcel.writeString(url)
+            parcel.writeString(feedbackTitle)
         }
 
         override fun describeContents(): Int = 0
@@ -103,11 +110,39 @@ class StoryTemplate(
                     parcel.readString()!!,
                     parcel.readString()!!,
                     parcel.readString()!!,
-                    parcel.readString()!!
+                    parcel.readString()!!,
+                    parcel.readString()
             )
 
             override fun newArray(size: Int) =
                     arrayOfNulls<Button?>(size)
+        }
+    }
+
+    @Parcelize
+    data class Feedback(
+        @SerializedName("background_color")
+        val backgroundColor: String,
+        @SerializedName("text")
+        val text: String,
+        @SerializedName("text_color")
+        val textColor: String,
+        @SerializedName("icon_style")
+        val iconStyle: IconStyle,
+        @SerializedName("input_background_color")
+        val inputBackgroundColor: String,
+        @SerializedName("input_text_color")
+        val inputTextColor: String,
+        @SerializedName("placeholder_text")
+        val placeholderText: String,
+        @SerializedName("placeholder_text_color")
+        val placeholderTextColor: String
+    ) : Parcelable {
+        enum class IconStyle(val style: String) {
+            @SerializedName("light")
+            LIGHT("light"),
+            @SerializedName("dark")
+            DARK("dark")
         }
     }
 }

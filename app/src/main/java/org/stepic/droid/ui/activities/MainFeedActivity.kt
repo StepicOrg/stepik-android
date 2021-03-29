@@ -8,11 +8,13 @@ import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
@@ -97,6 +99,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     internal lateinit var threadPoolExecutor: ThreadPoolExecutor
+
+    @Inject
+    internal lateinit var remoteConfig: FirebaseRemoteConfig
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -191,6 +196,15 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         when (getFragmentIndexFromIntent(launchIntent)) {
+            HOME_INDEX -> {
+                navigationView.selectedItemId = R.id.home
+                val storyId = launchIntent?.getStoryId()
+                if (storyId != null) {
+                    StoryDeepLinkDialogFragment
+                        .newInstance(storyId, launchIntent.dataString ?: "")
+                        .showIfNotExists(supportFragmentManager, StoryDeepLinkDialogFragment.TAG)
+                }
+            }
             CATALOG_INDEX -> {
                 navigationView.selectedItemId = R.id.catalog
                 launchIntent?.data?.pathSegments?.let {
@@ -206,7 +220,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                             if (storyId != null) {
                                 StoryDeepLinkDialogFragment
                                     .newInstance(storyId, launchIntent.dataString ?: "")
-                                    .showIfNotExists(supportFragmentManager, StoryDeepLinkDialogFragment.TAG)
+                                    .showIfNotExists(
+                                        supportFragmentManager,
+                                        StoryDeepLinkDialogFragment.TAG
+                                    )
                             }
                         }
                     }
@@ -227,7 +244,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             when {
                 it.contains(NOTIFICATIONS_DEEPLINK) -> return NOTIFICATIONS_INDEX
                 it.contains(CATALOG_DEEPLINK)       -> return CATALOG_INDEX
-                it.contains(STORY_DEEPLINK)         -> return CATALOG_INDEX
+                it.contains(STORY_DEEPLINK) -> {
+                    return if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
+                        HOME_INDEX
+                    } else {
+                        CATALOG_INDEX
+                    }
+                }
                 else -> {}
             }
         }
@@ -379,7 +402,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         badge.number = count
         badge.maxCharacterCount = 3
         badge.isVisible = true
-        // TODO 09.04.2020: Uncomment after stable release of Material Components 1.2.0
-//        badge.verticalOffset = 8
+        badge.verticalOffset = 8
     }
 }

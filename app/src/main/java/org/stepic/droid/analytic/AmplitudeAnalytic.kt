@@ -141,11 +141,13 @@ interface AmplitudeAnalytic {
         const val STORY_CLOSED = "Story closed"
 
         const val STORY_REACTION_PRESSED = "Story reaction pressed"
+        const val STORY_FEEDBACK_PRESSED = "Story feedback pressed"
 
         object Values {
             const val STORY_ID = "id"
             const val POSITION = "position"
             const val REACTION = "reaction"
+            const val FEEDBACK = "feedback"
 
             const val CLOSE_TYPE = "type"
 

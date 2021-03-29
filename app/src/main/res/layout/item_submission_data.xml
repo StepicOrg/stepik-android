@@ -16,20 +16,16 @@
         app:layout_constraintBottom_toTopOf="@id/submissionDivider"
         android:background="?selectableItemBackground">
 
-        <org.stepic.droid.ui.custom.RoundedBorderMaskView
-            android:id="@+id/submissionUserIconMask"
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/submissionUserIcon"
             android:layout_width="@dimen/comment_user_image_size"
             android:layout_height="@dimen/comment_user_image_size"
             android:layout_margin="@dimen/comment_item_margin"
-            app:borderRadius="?cornerRadius"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/submissionUserIcon"
-                android:layout_width="@dimen/comment_user_image_size"
-                android:layout_height="@dimen/comment_user_image_size"
-                android:contentDescription="@null" />
-        </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@null" />
+
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/submissionUserName"
@@ -38,7 +34,7 @@
 
             android:textAppearance="?textAppearanceSubtitle1"
 
-            app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
+            app:layout_constraintStart_toEndOf="@id/submissionUserIcon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/submissionMoreIcon"
 
@@ -58,7 +54,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/comment_item_action_size"
 
-            app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
+            app:layout_constraintStart_toEndOf="@id/submissionUserIcon"
             app:layout_constraintBottom_toTopOf="@id/submissionSolution"
             app:layout_constraintTop_toBottomOf="@id/submissionUserName"
             app:layout_constraintEnd_toStartOf="@id/submissionMoreIcon"
@@ -101,7 +97,7 @@
             android:textColor="?android:textColorSecondary"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/submissionUserIconMask"
+            app:layout_constraintTop_toBottomOf="@id/submissionUserIcon"
 
             android:padding="8dp"
             android:drawablePadding="8dp"

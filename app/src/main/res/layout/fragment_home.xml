@@ -31,4 +31,11 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/storyDeepLinkMockView"
+        android:layout_gravity="center"
+        android:layout_width="1dp"
+        android:layout_height="1dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

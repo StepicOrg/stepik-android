@@ -1,17 +1,14 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 
-import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.collection.LongSparseArray
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.toFixed
 import org.stepik.android.view.course_content.model.CourseContentItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -44,16 +41,6 @@ class CourseContentUnitDelegate(
         private val unitTimeToComplete = root.unitTimeToComplete
 
         private val unitDownloadStatus = root.unitDownloadStatus
-
-        private val unitIconTarget = RoundedBitmapImageViewTarget(
-                context.resources.getDimension(R.dimen.course_image_radius), unitIcon)
-
-        private val unitIconPlaceholder = with(context.resources) {
-            val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
-            val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
-            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.course_image_radius)
-            circularBitmapDrawable
-        }
 
         init {
             root.setOnClickListener {
@@ -117,9 +104,9 @@ class CourseContentUnitDelegate(
                 Glide.with(unitIcon.context)
                     .asBitmap()
                     .load(lesson.coverUrl)
-                    .placeholder(unitIconPlaceholder)
+                    .placeholder(R.drawable.general_placeholder)
                     .centerCrop()
-                    .into(unitIconTarget)
+                    .into(unitIcon)
 
                 unitViewCount.text = lesson.passedBy.toString()
 

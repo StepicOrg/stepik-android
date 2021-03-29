@@ -72,5 +72,5 @@ class SortingStepQuizFormDelegate(
     }
 
     override fun createReply(): ReplyResult =
-        ReplyResult.Success(Reply(ordering = optionsAdapter.items.map(SortingOption::id)))
+        ReplyResult(Reply(ordering = optionsAdapter.items.map(SortingOption::id)), ReplyResult.Validation.Success)
 }

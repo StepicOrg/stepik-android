@@ -86,9 +86,9 @@ class CodeStepQuizFormDelegate(
     override fun createReply(): ReplyResult {
         val state = state
         return if (state is CodeStepQuizFormState.Lang) {
-            ReplyResult.Success(Reply(code = state.code, language = state.lang))
+            ReplyResult(Reply(code = state.code, language = state.lang), ReplyResult.Validation.Success)
         } else {
-            ReplyResult.Error(codeLayout.context.getString(R.string.step_quiz_code_empty_lang))
+            ReplyResult(Reply(), ReplyResult.Validation.Error(codeLayout.context.getString(R.string.step_quiz_code_empty_lang)))
         }
     }
 

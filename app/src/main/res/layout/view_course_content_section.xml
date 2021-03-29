@@ -139,6 +139,9 @@
         android:id="@+id/bottomMargin"
         android:layout_width="0dp"
         android:layout_height="@dimen/course_content_item_margin"
+        app:layout_constraintTop_toBottomOf="@id/sectionTimeline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

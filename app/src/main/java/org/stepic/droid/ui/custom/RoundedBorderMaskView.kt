@@ -13,6 +13,7 @@ import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import org.stepic.droid.R
 
+// TODO APPS-3146 Will be removed with new design of FastContinue
 class RoundedBorderMaskView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
