@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.view_submission_review.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveFloatAttribute
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.submission.model.SubmissionItem
@@ -210,7 +211,7 @@ class SubmissionDataAdapterDelegate(
                 }
             }
             reviewSelect.isEnabled = isEnabled
-            val alpha = if (isEnabled) 1f else 0.4f
+            val alpha = if (isEnabled) 1f else context.resolveFloatAttribute(R.attr.alphaEmphasisDisabled)
             reviewSelectText.alpha = alpha
             reviewSelectArrow.alpha = alpha
         }

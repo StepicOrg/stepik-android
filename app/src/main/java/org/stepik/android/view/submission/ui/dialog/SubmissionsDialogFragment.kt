@@ -79,11 +79,8 @@ class SubmissionsDialogFragment :
                     this.isTeacher = isTeacher
                     this.userId = userId
                     this.isSelectionEnabled = isSelectionEnabled
-                    this.arguments = Bundle(2)
-                        .also {
-                            it.putSerializable(ARG_STATUS, status)
-                            it.putParcelable(ARG_REVIEW_INSTRUCTION, reviewInstruction)
-                        }
+                    this.arguments?.putSerializable(ARG_STATUS, status)
+                    this.arguments?.putParcelable(ARG_REVIEW_INSTRUCTION, reviewInstruction)
                 }
     }
 
