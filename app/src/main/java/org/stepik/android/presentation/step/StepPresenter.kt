@@ -167,7 +167,7 @@ constructor(
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { view?.openShowSubmissionsWithReview(it.reviewInstruction) },
+                onSuccess = { view?.openShowSubmissionsWithReview(it) },
                 onError = { it.printStackTrace() }
             )
     }

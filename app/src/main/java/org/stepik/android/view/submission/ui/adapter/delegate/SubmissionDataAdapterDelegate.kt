@@ -18,7 +18,7 @@ import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveFloatAttribute
 import org.stepic.droid.util.toFixed
-import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
@@ -31,7 +31,7 @@ class SubmissionDataAdapterDelegate(
     private val currentUserId: Long,
     private val isTeacher: Boolean,
     private val isSelectionEnabled: Boolean,
-    private val reviewInstruction: ReviewInstruction?,
+    private val reviewInstructionData: ReviewInstructionData?,
     private val actionListener: ActionListener
 ) : AdapterDelegate<SubmissionItem, DelegateViewHolder<SubmissionItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SubmissionItem> =
@@ -68,8 +68,8 @@ class SubmissionDataAdapterDelegate(
                 submissionSelect.setOnClickListener(this)
             }
 
-            root.submissionDivider.isVisible = isSelectionEnabled || reviewInstruction != null
-            reviewSelect.isVisible = reviewInstruction != null
+            root.submissionDivider.isVisible = isSelectionEnabled || reviewInstructionData != null
+            reviewSelect.isVisible = reviewInstructionData != null
             submissionSelect.isVisible = isSelectionEnabled
             submissionMoreIcon.isVisible = isTeacher
         }
@@ -80,7 +80,7 @@ class SubmissionDataAdapterDelegate(
             submissionUserIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
             submissionTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: 0)
 
-            setupSubmission(data.submission)
+            setupSubmission(data)
             setupReviewView(data, getSubmissionReviewState(data))
         }
 
@@ -132,9 +132,9 @@ class SubmissionDataAdapterDelegate(
             popupMenu.show()
         }
 
-        private fun setupSubmission(submission: Submission) {
+        private fun setupSubmission(itemData: SubmissionItem.Data) {
             val (tintColor, statusText) =
-                when (submission.status) {
+                when (itemData.submission.status) {
                     Submission.Status.CORRECT ->
                         ContextCompat.getColor(context, R.color.color_overlay_green) to
                                 context.resources.getString(R.string.submission_status_correct)
@@ -151,13 +151,15 @@ class SubmissionDataAdapterDelegate(
                         R.color.transparent to ""
                 }
 
+            val formattedScore = getFormattedScore(itemData)
+
             submissionStatus.setTextColor(tintColor)
             submissionStatus.text = statusText
-            submissionScoreValue.text = getSubmissionValue(submission)
-            submissionSolution.text = context.getString(R.string.comment_solution_number, submission.id)
+            submissionScoreValue.text = formattedScore
+            submissionSolution.text = context.getString(R.string.comment_solution_number, itemData.submission.id)
             TextViewCompat.setCompoundDrawableTintList(submissionSolution, ColorStateList.valueOf(tintColor))
 
-            val needShowScore = (submission.score?.toFloatOrNull() ?: 0f) > 0f
+            val needShowScore = formattedScore != null
             submissionScoreValue.isVisible = needShowScore
             submissionScoreText.isVisible = needShowScore
         }
@@ -165,7 +167,7 @@ class SubmissionDataAdapterDelegate(
         private fun getSubmissionValue(submission: Submission): String {
             val submissionScore = submission.score?.toFloatOrNull() ?: 0f
             return if (submissionScore < 1f) {
-                submissionScore.toFixed(2)
+                submissionScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count))
             } else {
                 submissionScore.roundToInt().toString()
             }
@@ -177,7 +179,7 @@ class SubmissionDataAdapterDelegate(
             val title = when (reviewState) {
                 ReviewState.IN_PROGRESS, ReviewState.FINISHED -> {
                     val takenReviewCount = submissionItemData.reviewSessionData?.session?.takenReviews?.size ?: 0
-                    val minReviewsCount = reviewInstruction?.minReviews ?: 0
+                    val minReviewsCount = reviewInstructionData?.reviewInstruction?.minReviews ?: 0
                     context.getString(R.string.submission_review_state_in_progress_title, takenReviewCount, minReviewsCount)
                 }
 
@@ -217,7 +219,7 @@ class SubmissionDataAdapterDelegate(
         }
 
         private fun getSubmissionReviewState(itemData: SubmissionItem.Data): ReviewState? {
-            if (reviewInstruction == null) {
+            if (reviewInstructionData == null) {
                 return null
             }
 
@@ -248,6 +250,27 @@ class SubmissionDataAdapterDelegate(
             }
 
             return ReviewState.CANT_REVIEW_ANOTHER
+        }
+
+        private fun getFormattedScore(itemData: SubmissionItem.Data): String? {
+            if (reviewInstructionData != null) {
+                val hasValue = itemData.reviewSessionData?.session?.isFinished == true &&
+                        itemData.submission.session != null &&
+                        itemData.reviewSessionData.submission?.session != null
+
+                if (hasValue) {
+                    val submissionScore = itemData.submission.score?.toFloat() ?: return null
+                    val reviewSessionScore = itemData.reviewSessionData?.session?.score ?: return null
+                    val value = (submissionScore * reviewSessionScore) / reviewInstructionData.maxScore.toFloat()
+                    return value.toFixed(context.resources.getInteger(R.integer.score_decimal_count))
+                } else {
+                    return null
+                }
+            } else if (itemData.submission.status == Submission.Status.CORRECT) {
+                return getSubmissionValue(itemData.submission)
+            } else {
+                return null
+            }
         }
     }
 

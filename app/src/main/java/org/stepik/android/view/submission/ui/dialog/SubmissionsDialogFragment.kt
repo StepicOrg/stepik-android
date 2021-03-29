@@ -30,7 +30,7 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
-import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -70,7 +70,7 @@ class SubmissionsDialogFragment :
             isTeacher: Boolean = false,
             userId: Long = -1L,
             status: Submission.Status? = null,
-            reviewInstruction: ReviewInstruction? = null,
+            reviewInstructionData: ReviewInstructionData? = null,
             isSelectionEnabled: Boolean = false
         ): DialogFragment =
             SubmissionsDialogFragment()
@@ -80,7 +80,7 @@ class SubmissionsDialogFragment :
                     this.userId = userId
                     this.isSelectionEnabled = isSelectionEnabled
                     this.arguments?.putSerializable(ARG_STATUS, status)
-                    this.arguments?.putParcelable(ARG_REVIEW_INSTRUCTION, reviewInstruction)
+                    this.arguments?.putParcelable(ARG_REVIEW_INSTRUCTION, reviewInstructionData)
                 }
     }
 
@@ -104,7 +104,7 @@ class SubmissionsDialogFragment :
     private var userId: Long by argument()
     private var isSelectionEnabled: Boolean by argument()
     private var status: Submission.Status? = null
-    private var reviewInstruction: ReviewInstruction? = null
+    private var reviewInstructionData: ReviewInstructionData? = null
 
     private var submissionsFilterQuery = SubmissionsFilterQuery.DEFAULT_QUERY
 
@@ -131,7 +131,7 @@ class SubmissionsDialogFragment :
         injectComponent()
 
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
-        reviewInstruction = arguments?.getParcelable<ReviewInstruction>(ARG_REVIEW_INSTRUCTION)
+        reviewInstructionData = arguments?.getParcelable<ReviewInstructionData>(ARG_REVIEW_INSTRUCTION)
         submissionsPresenter.fetchSubmissions(
             step.id,
             isTeacher,
@@ -139,7 +139,7 @@ class SubmissionsDialogFragment :
                 status = status?.scope,
                 search = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
             ),
-            reviewInstruction
+            reviewInstructionData?.reviewInstruction
         )
     }
 
@@ -187,7 +187,7 @@ class SubmissionsDialogFragment :
             currentUserId = userPreferences.userId,
             isTeacher = isTeacher,
             isSelectionEnabled = isSelectionEnabled,
-            reviewInstruction = reviewInstruction,
+            reviewInstructionData = reviewInstructionData,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -233,7 +233,7 @@ class SubmissionsDialogFragment :
 
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    submissionsPresenter.fetchNextPage(step.id, isTeacher, reviewInstruction)
+                    submissionsPresenter.fetchNextPage(step.id, isTeacher, reviewInstructionData?.reviewInstruction)
                 }
             }
 
@@ -242,8 +242,8 @@ class SubmissionsDialogFragment :
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true) }
 
         searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -324,11 +324,11 @@ class SubmissionsDialogFragment :
     }
 
     override fun onSyncFilterQueryWithParent(submissionsFilterQuery: SubmissionsFilterQuery) {
-        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true)
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true)
     }
 
     override fun onDismissed() {
-        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstruction, forceUpdate = true)
+        submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true)
     }
 
     private fun showSolution(submissionItem: SubmissionItem.Data) {
@@ -351,7 +351,7 @@ class SubmissionsDialogFragment :
             step.id,
             isTeacher,
             submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
-            reviewInstruction,
+            reviewInstructionData?.reviewInstruction,
             forceUpdate = true
         )
     }
