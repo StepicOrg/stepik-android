@@ -265,4 +265,6 @@
     <dimen name="submissions_search_padding_left">8dp</dimen>
     <dimen name="submissions_search_padding_with_text">28dp</dimen>
     <dimen name="submissions_search_padding_without_text">8dp</dimen>
+
+    <dimen name="fast_continue_widget_height">64dp</dimen>
 </resources>

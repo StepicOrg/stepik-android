@@ -887,4 +887,6 @@
     <string name="user_courses_empty_message">Тут з\'явяцца\nвашыя Курсы</string>
     <string name="user_courses_no_connection_message">Інтэрнэт недаступны</string>
     <string name="user_courses_catalog_action_message">Знайсці курсы ў Каталогу</string>
+
+    <string name="fast_continue_find_action_title">Знайсці свой першы курс</string>
 </resources>

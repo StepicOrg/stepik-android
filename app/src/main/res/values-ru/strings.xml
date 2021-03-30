@@ -1023,4 +1023,6 @@
     <string name="user_courses_empty_message">Здесь появятся\nваши Курсы</string>
     <string name="user_courses_no_connection_message">Интернет недоступен</string>
     <string name="user_courses_catalog_action_message">Найти курсы в Каталоге</string>
+
+    <string name="fast_continue_find_action_title">Найти свой первый курс</string>
 </resources>
