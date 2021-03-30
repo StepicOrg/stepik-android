@@ -37,8 +37,8 @@ constructor(
             .fromCallable {
                 items.forEach {
                     reviewSessionDao.saveReviewSession(it.session)
-                    submissionDao.insertOrReplace(it.submission)
-                    attemptDao.insertOrReplace(it.attempt)
+                    it.submission?.let { submission -> submissionDao.insertOrUpdate(submission) }
+                    it.attempt?.let { attempt -> attemptDao.insertOrUpdate(attempt) }
                 }
             }
 }

@@ -1,5 +1,6 @@
 package org.stepik.android.domain.review_session.repository
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.review_session.model.ReviewSessionData
@@ -12,4 +13,6 @@ interface ReviewSessionRepository {
         getReviewSessions(listOf(id), sourceType).first()
 
     fun getReviewSessions(ids: List<Long>, sourceType: DataSourceType = DataSourceType.REMOTE): Single<List<ReviewSessionData>>
+
+    fun getReviewSession(instruction: Long, user: Long): Maybe<ReviewSessionData>
 }
