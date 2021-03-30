@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_list_redux.reducer
 
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.presentation.course_list_redux.CourseListFeature.State
 import org.stepik.android.presentation.course_list_redux.CourseListFeature.Message
 import org.stepik.android.presentation.course_list_redux.CourseListFeature.Action
@@ -18,7 +19,16 @@ constructor(
                 if (state is State.Idle ||
                     state is State.NetworkError && message.forceUpdate
                 ) {
-                    State.Loading to setOf(Action.FetchCourseList(message.id, message.courseList.courses, message.courseList.id))
+                    State.Loading to setOf(Action.FetchCourseList(message.id, message.courseList.courses, CourseViewSource.Collection(message.courseList.id)))
+                } else {
+                    null
+                }
+
+            is Message.InitMessageRecommended ->
+                if (state is State.Idle ||
+                    state is State.NetworkError && message.forceUpdate
+                ) {
+                    State.Loading to setOf(Action.FetchCourseRecommendations(message.id))
                 } else {
                     null
                 }

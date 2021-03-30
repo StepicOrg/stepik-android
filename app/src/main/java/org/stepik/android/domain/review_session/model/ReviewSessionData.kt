@@ -6,8 +6,8 @@ import ru.nobird.android.core.model.Identifiable
 
 data class ReviewSessionData(
     val session: ReviewSession,
-    val submission: Submission,
-    val attempt: Attempt
+    val submission: Submission?,
+    val attempt: Attempt?
 ) : Identifiable<Long> {
     override val id: Long =
         session.id
