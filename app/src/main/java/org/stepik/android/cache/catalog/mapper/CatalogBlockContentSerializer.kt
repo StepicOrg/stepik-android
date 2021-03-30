@@ -25,7 +25,7 @@ class CatalogBlockContentSerializer {
                 CatalogBlockContent.AuthorsList::authors::name.get()
 
             is CatalogBlockContent.RecommendedCourses ->
-                CatalogBlockContent.RecommendedCourses::javaClass.name
+                null
 
             else ->
                 null

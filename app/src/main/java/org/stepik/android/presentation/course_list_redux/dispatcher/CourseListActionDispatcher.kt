@@ -69,14 +69,14 @@ constructor(
             is CourseListFeature.Action.FetchCourseRecommendations -> {
                 compositeDisposable += Flowable
                     .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
-                    .concatMapSingle { sourceType ->
-                        courseRecommendationsInteractor.fetchCourseRecommendations()
+                    .concatMapSingle { sourceTypeComposition ->
+                        courseRecommendationsInteractor.fetchCourseRecommendations(sourceType = sourceTypeComposition.generalSourceType)
                             .flatMapSingle { courseRecommendations ->
                                 courseListInteractor
                                     .getCourseListItems(
                                         courseRecommendations.first().courses,
                                         CourseViewSource.Recommendation,
-                                        sourceType
+                                        sourceTypeComposition
                                     )
                                     .map { items ->
                                         CourseListFeature.Message.FetchCourseListSuccess(action.id, items, items)

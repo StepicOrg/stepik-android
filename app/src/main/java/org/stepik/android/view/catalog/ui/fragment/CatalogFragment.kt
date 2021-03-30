@@ -185,6 +185,7 @@ class CatalogFragment :
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
         )
 
+        // TODO Create delegate builder or use assisted injection
         catalogItemAdapter += RecommendedCourseListAdapterDelegate(
             analytic = analytic,
             courseCountMapper = courseCountMapper,
