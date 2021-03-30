@@ -357,9 +357,9 @@ class SubmissionsDialogFragment :
     }
 
     private fun openInWeb(title: String, url: String) {
-        val dialog = InAppWebViewDialogFragment.newInstance(title, url, isProvideAuth = true)
-        dialog.setTargetFragment(this, InAppWebViewDialogFragment.IN_APP_WEB_VIEW_DIALOG_REQUEST_CODE)
-        dialog.showIfNotExists(parentFragmentManager, InAppWebViewDialogFragment.TAG)
+        InAppWebViewDialogFragment
+            .newInstance(title, url, isProvideAuth = true)
+            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 
     interface Callback {
