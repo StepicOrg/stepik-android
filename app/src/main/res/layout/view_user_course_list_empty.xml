@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textAppearance="?textAppearanceHeadline5"
-        android:text="Здесь появятся\nваши Курсы"
+        android:text="@string/user_courses_empty_message"
         tools:text="Здесь появятся\nваши Курсы"/>
 
     <com.google.android.material.button.MaterialButton
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/userCoursesListEmptyTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:icon="@drawable/ic_plus"
-        android:text="Найти курсы в Каталоге"
+        android:text="@string/user_courses_catalog_action_message"
         tools:text="Найти курсы в Каталоге"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

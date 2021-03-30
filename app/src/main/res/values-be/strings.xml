@@ -881,4 +881,8 @@
 
     <string name="submission_review_action_see_reviews_title">Паглядзець рэцэнзіі</string>
     <string name="submission_review_action_see_submissions_title">Паглядзець рашэнне</string>
+
+    <string name="user_courses_empty_message">Тут з\'явяцца\nвашыя Курсы</string>
+    <string name="user_courses_no_connection_message">Інтэрнэт недаступны</string>
+    <string name="user_courses_catalog_action_message">Знайсці курсы ў Каталогу</string>
 </resources>

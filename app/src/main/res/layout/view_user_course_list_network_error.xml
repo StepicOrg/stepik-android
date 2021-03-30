@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="Connection is lost"
+        android:text="@string/user_courses_no_connection_message"
         tools:text="Connection is lost"/>
 
     <com.google.android.material.button.MaterialButton
@@ -27,7 +27,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="Try again"
+        android:text="@string/try_again"
         tools:text="Try again"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
