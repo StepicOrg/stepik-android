@@ -13,7 +13,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val courseRecommendationsRepository: CourseRecommendationsRepository
 ) {
-    fun fetchCourseRecommendations(): Maybe<List<CourseRecommendation>> =
+    fun fetchCourseRecommendations(sourceType: DataSourceType = DataSourceType.REMOTE): Maybe<List<CourseRecommendation>> =
         courseRecommendationsRepository
-            .getCourseRecommendations(language = sharedPreferenceHelper.languageForFeatured, primarySourceType = DataSourceType.REMOTE)
+            .getCourseRecommendations(language = sharedPreferenceHelper.languageForFeatured, sourceType)
 }

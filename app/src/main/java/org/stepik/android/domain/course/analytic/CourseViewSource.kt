@@ -43,6 +43,10 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
             mapOf(PARAM_COLLECTION to collectionId)
     }
 
+    object Recommendation : CourseViewSource() {
+        override val name: String = "recommendation"
+    }
+
     class Query(query: CourseListQuery) : CourseViewSource() {
         companion object {
             private const val PARAM_QUERY = "query"
