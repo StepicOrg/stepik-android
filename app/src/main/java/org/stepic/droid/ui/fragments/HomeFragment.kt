@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
@@ -27,7 +26,6 @@ import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFrag
 import org.stepik.android.view.stories.ui.fragment.StoriesFragment
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment.Callback {
@@ -132,13 +130,11 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
     }
 
     override fun onFastContinueLoaded(isVisible: Boolean) {
-        val margin = if (isVisible) {
+        val padding = if (isVisible) {
             resources.getDimensionPixelOffset(R.dimen.fast_continue_widget_height)
         } else {
             0
         }
-        homeNestedScrollView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-            bottomMargin = margin
-        }
+        homeNestedScrollView.setPadding(0, 0, 0, padding)
     }
 }
