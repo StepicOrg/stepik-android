@@ -881,4 +881,6 @@
 
     <string name="submission_review_action_see_reviews_title">Паглядзець рэцэнзіі</string>
     <string name="submission_review_action_see_submissions_title">Паглядзець рашэнне</string>
+
+    <string name="fast_continue_find_action_title">Знайсці свой першы курс</string>
 </resources>

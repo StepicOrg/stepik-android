@@ -1017,4 +1017,6 @@
 
     <string name="submission_review_action_see_reviews_title">Посмотреть рецензии</string>
     <string name="submission_review_action_see_submissions_title">Посмотреть решение</string>
+
+    <string name="fast_continue_find_action_title">Найти свой первый курс</string>
 </resources>

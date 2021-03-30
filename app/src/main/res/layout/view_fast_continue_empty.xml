@@ -37,7 +37,7 @@
         app:layout_constraintLeft_toRightOf="@id/fastContinueInformationCover"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Find your first course"
+        android:text="@string/fast_continue_find_action_title"
         tools:text="Find your first course" />
 
     <ImageView
