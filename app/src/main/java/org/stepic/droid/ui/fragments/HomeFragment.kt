@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
@@ -22,12 +23,14 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalF
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalNewHomeFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
+import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFragment
 import org.stepik.android.view.stories.ui.fragment.StoriesFragment
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
-class HomeFragment : FragmentBase(), HomeStreakView {
+class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment.Callback {
     companion object {
         const val TAG = "HomeFragment"
         const val HOME_DEEPLINK_STORY_KEY = "home_deeplink_story_key"
@@ -113,10 +116,10 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         if (isNewHomeScreenEnabled) {
             childFragmentManager.commitNow {
                 add(R.id.homeMainContainer, StoriesFragment.newInstance())
-                add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag) // TODO APPS-3146 Replaced when feature is finished
                 add(R.id.homeMainContainer, CourseListUserHorizontalNewHomeFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
+                add(R.id.fastContinueContainer, FastContinueNewHomeFragment.newInstance())
             }
         } else {
             childFragmentManager.commitNow {
@@ -125,6 +128,17 @@ class HomeFragment : FragmentBase(), HomeStreakView {
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
             }
+        }
+    }
+
+    override fun onFastContinueLoaded(isVisible: Boolean) {
+        val margin = if (isVisible) {
+            resources.getDimensionPixelOffset(R.dimen.fast_continue_widget_height)
+        } else {
+            0
+        }
+        homeNestedScrollView.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            bottomMargin = margin
         }
     }
 }

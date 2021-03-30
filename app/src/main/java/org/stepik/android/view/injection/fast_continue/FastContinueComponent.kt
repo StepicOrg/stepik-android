@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.fast_continue
 
 import dagger.Subcomponent
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
+import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFragment
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 
 @FastContinueScope
@@ -13,4 +14,5 @@ interface FastContinueComponent {
     }
 
     fun inject(fastContinueFragment: FastContinueFragment)
+    fun inject(fastContinueNewHomeFragment: FastContinueNewHomeFragment)
 }
