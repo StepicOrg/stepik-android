@@ -875,12 +875,18 @@
     <string name="submission_review_state_cannot_review_another_message">Іншае рашэнне адпраўлена.</string>
     <string name="submission_review_state_cannot_review_teacher_message">Рашэнне выкладчыка адрэцэнзавалі нельга.</string>
     <string name="submission_review_state_cannot_review_wrong_message">Адказ з\'яўляецца памылковым.</string>
+    <string name="submission_review_state_in_progress_not_give_not_take_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы і не атрымаў рэцэнзіі на сваю.</string>
+    <string name="submission_review_state_in_progress_not_give_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы.</string>
     <string name="submission_review_state_in_progress_message">Нужны ещё рецензии на это решение.</string>
     <string name="submission_review_state_not_submitted_message">Патрэбныя яшчэ рэцэнзіі на гэтае рашэнне.</string>
-    <string name="submission_review_state_finished_message">Абавязковае колькасць рэцэнзій на гэтае рашэнне атрымана.</string>
+    <string name="submission_review_state_finished_message" />
 
     <string name="submission_review_action_see_reviews_title">Паглядзець рэцэнзіі</string>
     <string name="submission_review_action_see_submissions_title">Паглядзець рашэнне</string>
+
+    <string name="user_courses_empty_message">Тут з\'явяцца\nвашыя Курсы</string>
+    <string name="user_courses_no_connection_message">Інтэрнэт недаступны</string>
+    <string name="user_courses_catalog_action_message">Знайсці курсы ў Каталогу</string>
 
     <string name="fast_continue_find_action_title">Знайсці свой першы курс</string>
 </resources>

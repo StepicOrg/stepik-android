@@ -24,6 +24,9 @@ class CatalogBlockContentSerializer {
             is CatalogBlockContent.AuthorsList ->
                 CatalogBlockContent.AuthorsList::authors::name.get()
 
+            is CatalogBlockContent.RecommendedCourses ->
+                null
+
             else ->
                 null
         }
@@ -55,6 +58,9 @@ class CatalogBlockContentSerializer {
 
             CatalogBlockContent.AUTHORS ->
                 CatalogBlockContent.AuthorsList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, CatalogAuthor::class.java).type))
+
+            CatalogBlockContent.RECOMMENDED_COURSES ->
+                CatalogBlockContent.RecommendedCourses
 
             else ->
                 CatalogBlockContent.Unsupported

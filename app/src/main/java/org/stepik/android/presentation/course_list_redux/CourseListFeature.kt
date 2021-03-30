@@ -2,6 +2,7 @@ package org.stepik.android.presentation.course_list_redux
 
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.catalog.model.CatalogCourseList
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import ru.nobird.android.core.model.Identifiable
 
@@ -25,6 +26,11 @@ interface CourseListFeature {
             val forceUpdate: Boolean = false
         ) : Message()
 
+        data class InitMessageRecommended(
+            override val id: String,
+            val forceUpdate: Boolean = false
+        ) : Message()
+
         data class FetchCourseListSuccess(
             override val id: String,
             val courseListDataItems: PagedList<CourseListItem.Data>,
@@ -42,8 +48,9 @@ interface CourseListFeature {
     }
 
     sealed class Action {
-        data class FetchCourseList(val id: String, val courseIds: List<Long>, val courseListId: Long) : Action()
-        data class FetchCourseAfterEnrollment(val id: String, val courseId: Long, val courseListId: Long) : Action()
+        data class FetchCourseList(val id: String, val courseIds: List<Long>, val courseViewSource: CourseViewSource) : Action()
+        data class FetchCourseAfterEnrollment(val id: String, val courseId: Long, val courseViewSource: CourseViewSource) : Action()
+        data class FetchCourseRecommendations(val id: String) : Action()
         sealed class ViewAction : Action()
     }
 }

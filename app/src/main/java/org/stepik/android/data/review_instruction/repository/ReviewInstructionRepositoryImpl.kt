@@ -5,7 +5,7 @@ import org.stepik.android.data.base.repository.delegate.SingleRepositoryDelegate
 import org.stepik.android.data.review_instruction.source.ReviewInstructionCacheDataSource
 import org.stepik.android.data.review_instruction.source.ReviewInstructionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import javax.inject.Inject
 
@@ -22,6 +22,6 @@ constructor(
             reviewInstructionCacheDataSource::saveReviewInstruction
         )
 
-    override fun getReviewInstruction(id: Long, sourceType: DataSourceType): Single<ReviewInstruction> =
+    override fun getReviewInstruction(id: Long, sourceType: DataSourceType): Single<ReviewInstructionData> =
         delegate.get(id, sourceType, allowFallback = true)
 }

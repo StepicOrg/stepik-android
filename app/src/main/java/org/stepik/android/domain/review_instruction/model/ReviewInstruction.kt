@@ -1,12 +1,15 @@
 package org.stepik.android.domain.review_instruction.model
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import org.stepik.android.model.ReviewStrategyType
 import ru.nobird.android.core.model.Identifiable
 
 @Entity
+@Parcelize
 data class ReviewInstruction(
     @PrimaryKey
     @SerializedName("id")
@@ -23,4 +26,4 @@ data class ReviewInstruction(
     val isFrozen: Boolean,
     @SerializedName("text")
     val text: String
-) : Identifiable<Long>
+) : Identifiable<Long>, Parcelable
