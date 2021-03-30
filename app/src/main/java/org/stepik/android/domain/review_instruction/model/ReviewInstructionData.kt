@@ -14,5 +14,5 @@ data class ReviewInstructionData(
         reviewInstruction.id
 
     val maxScore: Int =
-        rubrics.map(Rubric::cost).reduce { a, b -> a + b }
+        rubrics.sumBy { it.cost }
 }

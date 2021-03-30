@@ -879,7 +879,7 @@
     <string name="submission_review_state_in_progress_not_give_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы.</string>
     <string name="submission_review_state_in_progress_message">Нужны ещё рецензии на это решение.</string>
     <string name="submission_review_state_not_submitted_message">Патрэбныя яшчэ рэцэнзіі на гэтае рашэнне.</string>
-    <string name="submission_review_state_finished_message">Абавязковае колькасць рэцэнзій на гэтае рашэнне атрымана.</string>
+    <string name="submission_review_state_finished_message" />
 
     <string name="submission_review_action_see_reviews_title">Паглядзець рэцэнзіі</string>
     <string name="submission_review_action_see_submissions_title">Паглядзець рашэнне</string>

@@ -1061,7 +1061,7 @@
     <string name="submission_review_state_in_progress_not_give_message">%s has not yet submitted all reviews for other learner submissions.</string>
     <string name="submission_review_state_in_progress_message">More reviews are needed for this submission.</string>
     <string name="submission_review_state_not_submitted_message">Need to send the solution for review.</string>
-    <string name="submission_review_state_finished_message">Required number of reviews for this submission has been received.</string>
+    <string name="submission_review_state_finished_message" />
 
     <string name="submission_review_action_see_reviews_title">See reviews</string>
     <string name="submission_review_action_see_submissions_title">See submissions</string>

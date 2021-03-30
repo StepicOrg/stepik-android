@@ -193,12 +193,13 @@ class SubmissionDataAdapterDelegate(
 
             val message = when (reviewState) {
                 ReviewState.IN_PROGRESS -> {
-                    if (givenReviewsCount < minReviewsCount && takenReviewCount < minReviewsCount) {
-                        context.getString(R.string.submission_review_state_in_progress_not_give_not_take_message, submissionItemData.user.fullName)
-                    } else if (givenReviewsCount < minReviewsCount) {
-                        context.getString(R.string.submission_review_state_in_progress_not_give_message, submissionItemData.user.fullName)
-                    } else {
-                        context.getString(reviewState.messageResId)
+                    when {
+                        givenReviewsCount < minReviewsCount && takenReviewCount < minReviewsCount ->
+                            context.getString(R.string.submission_review_state_in_progress_not_give_not_take_message, submissionItemData.user.fullName)
+                        givenReviewsCount < minReviewsCount ->
+                            context.getString(R.string.submission_review_state_in_progress_not_give_message, submissionItemData.user.fullName)
+                        else ->
+                            context.getString(reviewState.messageResId)
                     }
                 }
                 ReviewState.FINISHED,
@@ -224,7 +225,7 @@ class SubmissionDataAdapterDelegate(
 
             reviewSelectText.text = buildSpannedString {
                 append("$title\n")
-                append("$message\n")
+                if (message.isNotEmpty()) append("$message\n") else append("")
                 color(ContextCompat.getColor(context, R.color.color_overlay_violet)) {
                     append(actionTitle)
                 }
@@ -270,23 +271,25 @@ class SubmissionDataAdapterDelegate(
         }
 
         private fun getFormattedScore(itemData: SubmissionItem.Data): String? {
-            if (reviewInstructionData != null) {
-                val hasValue = itemData.reviewSessionData?.session?.isFinished == true &&
-                        itemData.submission.session != null &&
-                        itemData.reviewSessionData.submission?.session != null
+            when {
+                reviewInstructionData != null -> {
+                    val hasValue = itemData.reviewSessionData?.session?.isFinished == true &&
+                            itemData.submission.session != null &&
+                            itemData.reviewSessionData.submission?.session != null
 
-                if (hasValue) {
-                    val submissionScore = itemData.submission.score?.toFloat() ?: return null
-                    val reviewSessionScore = itemData.reviewSessionData?.session?.score ?: return null
-                    val value = (submissionScore * reviewSessionScore) / reviewInstructionData.maxScore.toFloat()
-                    return value.toFixed(context.resources.getInteger(R.integer.score_decimal_count))
-                } else {
-                    return null
+                    if (hasValue) {
+                        val submissionScore = itemData.submission.score?.toFloat() ?: return null
+                        val reviewSessionScore = itemData.reviewSessionData?.session?.score ?: return null
+                        val value = (submissionScore * reviewSessionScore) / reviewInstructionData.maxScore.toFloat()
+                        return value.toFixed(context.resources.getInteger(R.integer.score_decimal_count))
+                    } else {
+                        return null
+                    }
                 }
-            } else if (itemData.submission.status == Submission.Status.CORRECT) {
-                return getSubmissionValue(itemData.submission)
-            } else {
-                return null
+                itemData.submission.status == Submission.Status.CORRECT ->
+                    return getSubmissionValue(itemData.submission)
+                else ->
+                    return null
             }
         }
     }
