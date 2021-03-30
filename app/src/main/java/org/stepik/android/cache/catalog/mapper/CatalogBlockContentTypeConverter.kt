@@ -27,6 +27,9 @@ class CatalogBlockContentTypeConverter {
             is CatalogBlockContent.AuthorsList ->
                 CatalogBlockContent.AUTHORS
 
+            is CatalogBlockContent.RecommendedCourses ->
+                CatalogBlockContent.RECOMMENDED_COURSES
+
             else ->
                 CatalogBlockContent.UNSUPPORTED
         }
