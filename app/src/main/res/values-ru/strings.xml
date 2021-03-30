@@ -1019,4 +1019,8 @@
 
     <string name="submission_review_action_see_reviews_title">Посмотреть рецензии</string>
     <string name="submission_review_action_see_submissions_title">Посмотреть решение</string>
+
+    <string name="user_courses_empty_message">Здесь появятся\nваши Курсы</string>
+    <string name="user_courses_no_connection_message">Интернет недоступен</string>
+    <string name="user_courses_catalog_action_message">Найти курсы в Каталоге</string>
 </resources>

@@ -1066,4 +1066,9 @@
     <string name="submission_review_action_see_reviews_title">See reviews</string>
     <string name="submission_review_action_see_submissions_title">See submissions</string>
 
+    <string name="user_courses_empty_message">Your courses will\nappear here</string>
+    <string name="user_courses_no_connection_message">Connection is lost</string>
+    <string name="user_courses_catalog_action_message">Search for courses in Catalog</string>
+
+
 </resources>
