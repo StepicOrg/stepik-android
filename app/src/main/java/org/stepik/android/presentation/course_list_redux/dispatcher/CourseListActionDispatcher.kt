@@ -71,7 +71,7 @@ constructor(
                     .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
                     .concatMapSingle { sourceTypeComposition ->
                         courseRecommendationsInteractor.fetchCourseRecommendations(sourceType = sourceTypeComposition.generalSourceType)
-                            .flatMapSingle { courseRecommendations ->
+                            .flatMap { courseRecommendations ->
                                 courseListInteractor
                                     .getCourseListItems(
                                         courseRecommendations.first().courses,

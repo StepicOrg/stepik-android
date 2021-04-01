@@ -1,6 +1,6 @@
 package org.stepik.android.remote.course_recommendations
 
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.stepik.android.data.course_recommendations.source.CourseRecommendationsRemoteDataSource
 import org.stepik.android.domain.course_recommendations.model.CourseRecommendation
 import org.stepik.android.remote.course_recommendations.model.CourseRecommendationsResponse
@@ -15,7 +15,7 @@ constructor(
     companion object {
         const val LANGUAGE_QUERY_PARAM = "language"
     }
-    override fun getCourseRecommendations(language: String): Maybe<List<CourseRecommendation>> =
+    override fun getCourseRecommendations(language: String): Single<List<CourseRecommendation>> =
         courseRecommendationsService
             .getCourseRecommendations(mapOf(LANGUAGE_QUERY_PARAM to language))
             .map(CourseRecommendationsResponse::courseRecommendations)
