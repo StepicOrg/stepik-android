@@ -1,5 +1,7 @@
 package org.stepic.droid.features.stories.ui.activity
 
+import android.content.pm.ActivityInfo
+import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import org.stepic.droid.R
@@ -24,6 +26,13 @@ class StoriesActivity : FragmentActivityBase(), ReduxView<StoryFeature.State, St
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestedOrientation = if (Build.VERSION.SDK_INT == 26) {
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+
         injectComponent()
         storyViewModel.onNewMessage(StoryFeature.Message.Init)
 
