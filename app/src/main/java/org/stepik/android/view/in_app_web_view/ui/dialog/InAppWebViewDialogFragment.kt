@@ -42,6 +42,7 @@ import javax.inject.Inject
 class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     companion object {
         const val TAG = "InAppWebViewDialogFragment"
+        const val IN_APP_WEB_VIEW_DIALOG_REQUEST_CODE = 2313
 
         fun newInstance(title: String, url: String, isProvideAuth: Boolean = false): InAppWebViewDialogFragment =
             InAppWebViewDialogFragment().apply {
@@ -207,7 +208,10 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        (activity as? Callback)?.onDismissed()
+        (activity as? Callback
+            ?: parentFragment as? Callback
+            ?: targetFragment as? Callback)
+            ?.onDismissed()
         super.onDismiss(dialog)
     }
 

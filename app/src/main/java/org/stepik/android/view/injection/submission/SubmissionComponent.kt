@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.submission
 
 import dagger.Subcomponent
 import org.stepik.android.view.injection.attempt.AttemptDataModule
+import org.stepik.android.view.injection.review_session.ReviewSessionDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 
@@ -9,7 +10,8 @@ import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
     SubmissionModule::class,
     SubmissionDataModule::class,
     AttemptDataModule::class,
-    UserDataModule::class
+    UserDataModule::class,
+    ReviewSessionDataModule::class
 ])
 interface SubmissionComponent {
     @Subcomponent.Builder

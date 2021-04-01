@@ -1,17 +1,14 @@
 package org.stepik.android.view.fast_continue.ui.fragment
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -19,7 +16,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -50,17 +46,8 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
     private val fastContinuePresenter: FastContinuePresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<FastContinueView.State>
 
-    private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
-
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
-
-    private val coursePlaceholderDrawable by lazy {
-        val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
-        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
-        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
-        return@lazy circularBitmapDrawable
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +71,6 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
         viewStateDelegate.addState<FastContinueView.State.Anonymous>(fastContinuePlaceholder)
         viewStateDelegate.addState<FastContinueView.State.Content>(fastContinueMask)
 
-        courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
         fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
     }
@@ -130,9 +116,9 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
             .with(requireContext())
             .asBitmap()
             .load(courseListItem.course.cover)
-            .placeholder(coursePlaceholderDrawable)
+            .placeholder(R.drawable.general_placeholder)
             .fitCenter()
-            .into(courseCoverImageViewTarget)
+            .into(fastContinueCourseCover)
 
         fastContinueCourseName.text = courseListItem.course.title
 

@@ -65,7 +65,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
                         onSuccess = { (instruction, sessionData, progress) ->
-                            onNewMessage(StepQuizReviewFeature.Message.FetchReviewSessionSuccess(sessionData, instruction, progress.firstOrNull()))
+                            onNewMessage(StepQuizReviewFeature.Message.FetchReviewSessionSuccess(sessionData, instruction.reviewInstruction, progress.firstOrNull()))
                         },
                         onError = { onNewMessage(StepQuizReviewFeature.Message.InitialFetchError) }
                     )

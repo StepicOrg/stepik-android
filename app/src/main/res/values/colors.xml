@@ -173,4 +173,7 @@
     <!-- Stories -->
     <color name="color_stories_shadow">#33000000</color>
     <color name="color_stories_overlay">#DE000000</color>
+    
+    <!-- Fast continue -->
+    <color name="fast_continue_title_color">@color/color_violet_300</color>
 </resources>

@@ -6,6 +6,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
@@ -61,7 +62,7 @@ class CourseReviewDataDelegate(
         override fun onBind(data: CourseReviewItem) {
             data as CourseReviewItem.Data
 
-            reviewIconWrapper.setImagePath(data.user.avatar ?: "", reviewIconPlaceholder)
+            reviewIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
 
             reviewName.text = data.user.fullName
 

@@ -7,7 +7,7 @@
     android:layout_height="96dp"
     android:background="?selectableItemBackground">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/downloadedCourseImage"
         android:layout_width="@dimen/new_course_image_size"
         android:layout_height="@dimen/new_course_image_size"
@@ -16,6 +16,7 @@
         android:layout_marginTop="@dimen/course_item_space_between_items"
         android:layout_marginLeft="@dimen/course_item_space_between_items"
         android:layout_marginStart="@dimen/course_item_space_between_items"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
         tools:src="@drawable/general_placeholder" />
 
     <TextView

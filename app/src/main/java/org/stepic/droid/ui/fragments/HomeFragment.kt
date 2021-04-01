@@ -19,14 +19,16 @@ import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.util.commitNow
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
+import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalNewHomeFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
+import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFragment
 import org.stepik.android.view.stories.ui.fragment.StoriesFragment
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import javax.inject.Inject
 
-class HomeFragment : FragmentBase(), HomeStreakView {
+class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment.Callback {
     companion object {
         const val TAG = "HomeFragment"
         const val HOME_DEEPLINK_STORY_KEY = "home_deeplink_story_key"
@@ -62,15 +64,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         centeredToolbarTitle.setText(R.string.home_title)
 
         if (savedInstanceState == null) {
-            childFragmentManager.commitNow {
-                if (remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
-                    add(R.id.homeMainContainer, StoriesFragment.newInstance())
-                }
-                add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
-                add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
-                add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
-                add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
-            }
+            setupFragments(remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED))
         }
 
         homeStreakPresenter.attachView(this)
@@ -114,5 +108,33 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
     override fun onEmptyStreak() {
         homeStreak.isVisible = false
+    }
+
+    private fun setupFragments(isNewHomeScreenEnabled: Boolean) {
+        if (isNewHomeScreenEnabled) {
+            childFragmentManager.commitNow {
+                add(R.id.homeMainContainer, StoriesFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListUserHorizontalNewHomeFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
+                add(R.id.fastContinueContainer, FastContinueNewHomeFragment.newInstance())
+            }
+        } else {
+            childFragmentManager.commitNow {
+                add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
+                add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
+            }
+        }
+    }
+
+    override fun onFastContinueLoaded(isVisible: Boolean) {
+        val padding = if (isVisible) {
+            resources.getDimensionPixelOffset(R.dimen.fast_continue_widget_height)
+        } else {
+            0
+        }
+        homeNestedScrollView.setPadding(0, 0, 0, padding)
     }
 }

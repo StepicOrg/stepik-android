@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/fast_continue_widget_height"
+    android:background="@drawable/bg_fast_continue">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/fastContinueCourseCover"
+        android:layout_width="@dimen/fast_continue_course_image_size"
+        android:layout_height="@dimen/fast_continue_course_image_size"
+        android:layout_margin="12dp"
+        android:contentDescription="@string/content_course_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/fastContinueProgressView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fastContinueCourseTitle"
+        style="@style/ThemeOverlay.Violet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:textColor="@color/fast_continue_title_color"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/fastContinueCourseCover"
+        app:layout_constraintRight_toLeftOf="@id/fastContinueArrow"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Подготовка к ЕГЭ по русскому языку Подготовка к ЕГЭ по русскому языку" />
+
+    <org.stepic.droid.ui.custom.CircleProgressView
+        android:id="@+id/fastContinueProgressView"
+        android:layout_width="@dimen/course_item_progress_size"
+        android:layout_height="@dimen/course_item_progress_size"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginBottom="14dp"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/fastContinueCourseCover"
+        app:progressBarStroke="@dimen/course_item_progress_bar_size" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fastContinueProgressTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/course_item_property_text_image_margin"
+        android:layout_marginBottom="10dp"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="@color/fast_continue_title_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/fastContinueProgressView"
+        tools:text="25/116" />
+
+    <ImageView
+        android:id="@+id/fastContinueArrow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_forward"
+        app:tint="@color/fast_continue_title_color" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

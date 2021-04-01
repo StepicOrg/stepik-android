@@ -1,5 +1,6 @@
 package org.stepik.android.data.review_session.repository
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepik.android.data.base.repository.delegate.ListRepositoryDelegate
 import org.stepik.android.data.review_session.source.ReviewSessionCacheDataSource
@@ -33,4 +34,9 @@ constructor(
         sourceType: DataSourceType
     ): Single<List<ReviewSessionData>> =
         listDelegate.get(ids, sourceType, allowFallback = true)
+
+    override fun getReviewSession(instruction: Long, user: Long): Maybe<ReviewSessionData> =
+        reviewSessionRemoteDataSource
+            .getReviewSession(instruction, user)
+            .doCompletableOnSuccess { reviewSessionCacheDataSource.saveReviewSessions(listOf(it)) }
 }

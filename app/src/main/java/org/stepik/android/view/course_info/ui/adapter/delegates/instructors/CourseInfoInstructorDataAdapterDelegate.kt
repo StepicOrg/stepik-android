@@ -2,7 +2,7 @@ package org.stepik.android.view.course_info.ui.adapter.delegates.instructors
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_course_info_instructor_item.view.*
 import org.stepic.droid.R
@@ -25,9 +25,6 @@ class CourseInfoInstructorDataAdapterDelegate(
         private val instructorTitle = root.instructorTitle
         private val instructorDescription = root.instructorDescription
 
-        private val instructorIconPlaceholder =
-            ContextCompat.getDrawable(context, R.drawable.general_placeholder)
-
         private val instructorIconWrapper = instructorIcon.wrapWithGlide()
 
         init {
@@ -39,7 +36,7 @@ class CourseInfoInstructorDataAdapterDelegate(
                 instructorIconWrapper
                     .setImagePath(
                         path = data.avatar ?: "",
-                        placeholder = instructorIconPlaceholder
+                        placeholder = AppCompatResources.getDrawable(context, R.drawable.general_placeholder)
                     )
 
                 instructorTitle.text = data.fullName

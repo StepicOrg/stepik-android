@@ -67,7 +67,7 @@ class StoriesFragment : Fragment(R.layout.view_stories_container), ReduxView<Sto
         viewStateDelegate.addState<StoriesFeature.State.Loading>(storiesContainerLoadingPlaceholder)
         viewStateDelegate.addState<StoriesFeature.State.Success>(storiesRecycler)
 
-        storiesAdapter = StoriesAdapter(requireContext()) { _, position ->
+        storiesAdapter = StoriesAdapter { _, position ->
             requireContext().startActivity(
                 SharedTransitionIntentBuilder.createIntent(
                     requireContext(), StoriesActivity::class.java,

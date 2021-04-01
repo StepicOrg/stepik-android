@@ -210,7 +210,7 @@
             android:name=".features.stories.ui.activity.StoriesActivity"
             android:theme="@style/AppTheme.Stories"
             android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="unspecified"/>
 
         <activity
             android:name="org.stepik.android.view.course.ui.activity.CourseActivity">

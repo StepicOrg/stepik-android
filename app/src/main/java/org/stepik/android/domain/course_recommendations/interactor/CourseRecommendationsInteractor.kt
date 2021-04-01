@@ -1,6 +1,6 @@
 package org.stepik.android.domain.course_recommendations.interactor
 
-import io.reactivex.Maybe
+import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_recommendations.model.CourseRecommendation
@@ -13,7 +13,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val courseRecommendationsRepository: CourseRecommendationsRepository
 ) {
-    fun fetchCourseRecommendations(): Maybe<List<CourseRecommendation>> =
+    fun fetchCourseRecommendations(sourceType: DataSourceType = DataSourceType.REMOTE): Single<List<CourseRecommendation>> =
         courseRecommendationsRepository
-            .getCourseRecommendations(language = sharedPreferenceHelper.languageForFeatured, primarySourceType = DataSourceType.REMOTE)
+            .getCourseRecommendations(language = sharedPreferenceHelper.languageForFeatured, sourceType)
 }

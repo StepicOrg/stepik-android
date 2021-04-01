@@ -1011,10 +1011,18 @@
     <string name="submission_review_state_cannot_review_another_message">Другое решение отправлено.</string>
     <string name="submission_review_state_cannot_review_teacher_message">Решение преподавателя отрецензировать нельзя.</string>
     <string name="submission_review_state_cannot_review_wrong_message">Ответ неверен.</string>
+    <string name="submission_review_state_in_progress_not_give_not_take_message">%s ещё не отправил все рецензии на чужие работы и не получил рецензии на свою.</string>
+    <string name="submission_review_state_in_progress_not_give_message">%s ещё не отправил все рецензии на чужие работы.</string>
     <string name="submission_review_state_in_progress_message">Нужны ещё рецензии на это решение.</string>
     <string name="submission_review_state_not_submitted_message">Нужно отправить решение на рецензию.</string>
-    <string name="submission_review_state_finished_message">Обязательное количество рецензий на это решение получено.</string>
+    <string name="submission_review_state_finished_message" />
 
     <string name="submission_review_action_see_reviews_title">Посмотреть рецензии</string>
     <string name="submission_review_action_see_submissions_title">Посмотреть решение</string>
+
+    <string name="user_courses_empty_message">Здесь появятся\nваши Курсы</string>
+    <string name="user_courses_no_connection_message">Интернет недоступен</string>
+    <string name="user_courses_catalog_action_message">Найти курсы в Каталоге</string>
+
+    <string name="fast_continue_find_action_title">Найти свой первый курс</string>
 </resources>

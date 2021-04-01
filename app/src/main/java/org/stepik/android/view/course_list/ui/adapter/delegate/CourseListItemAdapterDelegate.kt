@@ -1,11 +1,9 @@
 package org.stepik.android.view.course_list.ui.adapter.delegate
 
-import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -13,7 +11,6 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
@@ -45,20 +42,8 @@ class CourseListItemAdapterDelegate(
     }
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
-        private val courseCoverImageTarget =
-            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.corner_radius), root.courseItemImage)
-
-        private val coursePlaceholder = BitmapFactory
-            .decodeResource(context.resources, R.drawable.general_placeholder)
-            .let { bitmap ->
-                RoundedBitmapDrawableFactory
-                    .create(context.resources, bitmap)
-                    .apply {
-                        cornerRadius = context.resources.getDimension(R.dimen.corner_radius)
-                    }
-            }
-
         private val coursePropertiesDelegate = CoursePropertiesDelegate(root, root.coursePropertiesContainer as ViewGroup)
+        private val courseItemImage = root.courseItemImage
         private val courseItemName = root.courseItemName
         private val adaptiveCourseMarker = root.adaptiveCourseMarker
         private val courseContinueButton = root.courseContinueButton
@@ -78,9 +63,9 @@ class CourseListItemAdapterDelegate(
                 .with(context)
                 .asBitmap()
                 .load(data.course.cover)
-                .placeholder(coursePlaceholder)
+                .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(courseCoverImageTarget)
+                .into(courseItemImage)
 
             courseItemName.text = data.course.title
 
