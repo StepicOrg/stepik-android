@@ -31,9 +31,9 @@ constructor(
         val blockName = stepPersistentWrapper.step.block?.name
 
         return if (instructionType != null &&
+            firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED) &&
             blockName in StepQuizReviewFragment.supportedQuizTypes &&
-            !lessonData.lesson.isTeacher &&
-            firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
+            !lessonData.lesson.isTeacher) {
             StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
         } else {
             getDefaultQuizFragment(stepPersistentWrapper)

@@ -29,20 +29,14 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
-import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
-import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
-import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
-import org.stepik.android.view.step_quiz_fill_blanks.ui.delegate.FillBlanksStepQuizFormDelegate
-import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
-import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
-import org.stepik.android.view.step_quiz_table.ui.delegate.TableStepQuizFormDelegate
-import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -104,6 +98,9 @@ class StepQuizReviewFragment :
 
     private lateinit var quizView: View
 
+    private val stepQuizFormFactory =
+        StepQuizFormReviewFactory(childFragmentManager, ::syncReplyState)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -131,7 +128,7 @@ class StepQuizReviewFragment :
             }
 
         // we don't pass [root] in order to clear margins
-        quizView = inflater.inflate(getLayoutResForStep(stepWrapper.step.block?.name), null)
+        quizView = inflater.inflate(stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name), null)
 
         inflater.inflate(layoutId, view)
             .also {
@@ -197,7 +194,7 @@ class StepQuizReviewFragment :
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
-                stepQuizFormDelegate = getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz"),
+                stepQuizFormDelegate = stepQuizFormFactory.getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz"),
                 stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
 
                 stepQuizActionButton = reviewStep1ActionButton,
@@ -217,60 +214,6 @@ class StepQuizReviewFragment :
                 stepQuizBlockDelegate
             )
     }
-
-    // todo reduce duplication from SolutionCommentDialogFragment
-    @LayoutRes
-    private fun getLayoutResForStep(blockName: String?): Int =
-        when (blockName) {
-            AppConstants.TYPE_STRING,
-            AppConstants.TYPE_NUMBER,
-            AppConstants.TYPE_MATH,
-            AppConstants.TYPE_FREE_ANSWER ->
-                R.layout.layout_step_quiz_text
-
-            AppConstants.TYPE_CHOICE ->
-                R.layout.layout_step_quiz_choice
-
-            AppConstants.TYPE_SORTING,
-            AppConstants.TYPE_MATCHING ->
-                R.layout.layout_step_quiz_sorting
-
-            AppConstants.TYPE_FILL_BLANKS ->
-                R.layout.layout_step_quiz_fill_blanks
-
-            AppConstants.TYPE_TABLE ->
-                R.layout.layout_step_quiz_table
-
-            else ->
-                R.layout.fragment_step_quiz_unsupported
-        }
-
-    private fun getDelegateForStep(blockName: String?, view: View): StepQuizFormDelegate? =
-        when (blockName) {
-            AppConstants.TYPE_STRING,
-            AppConstants.TYPE_NUMBER,
-            AppConstants.TYPE_MATH,
-            AppConstants.TYPE_FREE_ANSWER ->
-                TextStepQuizFormDelegate(view, blockName, onQuizChanged = ::syncReplyState)
-
-            AppConstants.TYPE_CHOICE ->
-                ChoiceStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
-
-            AppConstants.TYPE_SORTING ->
-                SortingStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
-
-            AppConstants.TYPE_MATCHING ->
-                MatchingStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
-
-            AppConstants.TYPE_FILL_BLANKS ->
-                FillBlanksStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)
-
-            AppConstants.TYPE_TABLE ->
-                TableStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)
-
-            else ->
-                null
-        }
 
     override fun render(state: StepQuizReviewFeature.State) {
         viewStateDelegate.switchState(state)
