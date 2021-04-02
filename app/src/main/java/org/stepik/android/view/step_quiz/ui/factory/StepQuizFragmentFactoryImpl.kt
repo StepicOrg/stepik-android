@@ -18,6 +18,7 @@ import org.stepik.android.view.step_quiz_pycharm.ui.fragment.PyCharmStepQuizFrag
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewFragment
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewTeacherFragment
 import org.stepik.android.view.step_quiz_table.ui.fragment.TableStepQuizFragment
+import timber.log.Timber
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -31,7 +32,8 @@ constructor(
 
         val blockName = stepPersistentWrapper.step.block?.name
 
-        return if (instructionType != null && firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
+        Timber.d("$instructionType, ${firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)}, ${lessonData.lesson.isTeacher}, ${blockName in StepQuizReviewTeacherFragment.supportedQuizTypes}")
+        return if (instructionType != null){ // && firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
             when {
                 lessonData.lesson.isTeacher && blockName in StepQuizReviewTeacherFragment.supportedQuizTypes ->
                     StepQuizReviewTeacherFragment.newInstance(stepPersistentWrapper.step.id, instructionType)

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/stepQuizReviewTeacherSpoiler"
+        android:background="@color/color_elevation_overlay_2dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|start"
+
+            android:text="@string/step_quiz_review_teacher_quiz_title"
+            android:textAppearance="?textAppearanceBody1"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginRight="48dp" />
+
+        <org.stepic.droid.ui.custom.ArrowImageView
+            android:id="@+id/stepQuizReviewTeacherArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            app:tint="?colorControlNormal"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:duplicateParentState="true"
+            android:background="?selectableItemBackground" />
+    </FrameLayout>
+
+    <include layout="@layout/view_divider_vertical" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/stepQuizReviewTeacherContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/stepQuizReviewTeacherDiscounting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/StepQuizReview.Title"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+            android:text="@string/step_quiz_free_answer_description" />
+
+        <include
+            android:id="@+id/stepQuizReviewTeacherFeedback"
+            layout="@layout/layout_step_quiz_feedback_block"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+            android:layout_marginLeft="@dimen/step_quiz_review_vertical_block_margin"
+            android:layout_marginRight="@dimen/step_quiz_review_vertical_block_margin" />
+
+        <include
+            layout="@layout/view_step_quiz_submit_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp" />
+
+        <include layout="@layout/view_divider_vertical" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/stepQuizReviewTeacherMessage"
+        style="@style/StepQuizFeedback.Info"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/step_quiz_review_teacher_notice_peer"
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/stepQuizReviewTeacherSubmissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:theme="@style/ThemeOverlay.Green"
+        android:layout_margin="16dp"
+
+        android:text="@string/submissions_title" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -34,6 +34,7 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
+import org.stepik.android.view.step_quiz.ui.factory.StepQuizFormFactory
 import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
 import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
@@ -98,14 +99,14 @@ class StepQuizReviewFragment :
 
     private lateinit var quizView: View
 
-    private val stepQuizFormFactory =
-        StepQuizFormReviewFactory(childFragmentManager, ::syncReplyState)
+    private lateinit var stepQuizFormFactory: StepQuizFormFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         injectComponent()
         stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
+        stepQuizFormFactory = StepQuizFormReviewFactory(childFragmentManager, ::syncReplyState)
     }
 
     private fun injectComponent() {

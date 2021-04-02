@@ -729,6 +729,7 @@
     <string name="step_quiz_review_peer_pending">Атрымайце балы, максімальная адзнака — %s</string>
     <string name="step_quiz_review_peer_completed">Ваш адказ ацанілі на %s з %s</string>
 
+    <string name="step_quiz_review_teacher_quiz_title">Поле адказу задачы</string>
     <string name="step_quiz_review_teacher_notice_peer">Навучэнцы правяраюць рашэння адзін аднаго</string>
     <string name="step_quiz_review_teacher_notice_instructors_no_submissions">Усе патрэбныя рэцэнзіі на рашэнні адпраўленыя.</string>
     <string name="step_quiz_review_teacher_notice_instructors_submissions"><b>Адрэцэнзуе %s</b>, каб навучэнцы атрымалі балы.</string>
