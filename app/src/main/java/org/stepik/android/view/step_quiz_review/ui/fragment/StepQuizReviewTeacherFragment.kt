@@ -79,7 +79,7 @@ class StepQuizReviewTeacherFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_step_quiz_review_teacher, container, false)
         val quizContainer = view.stepQuizReviewTeacherContainer
         quizView = inflater.inflate(stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name), quizContainer, false)
-        view.stepQuizReviewTeacherContainer.addView(quizView, 0)
+        view.stepQuizReviewTeacherContainer.addView(quizView, 2)
         return view
     }
 
