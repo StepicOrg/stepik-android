@@ -1,15 +1,12 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_author.*
 import kotlinx.android.synthetic.main.layout_author_properties.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -27,19 +24,6 @@ class AuthorAdapterDelegate(
     private inner class ViewHolder(
         override val containerView: View
     ) : DelegateViewHolder<CatalogAuthor>(containerView), LayoutContainer {
-        private val authorCoverImageTarget =
-            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.corner_radius), authorListImage)
-
-        private val authorPlaceholder = BitmapFactory
-            .decodeResource(context.resources, R.drawable.general_placeholder)
-            .let { bitmap ->
-                RoundedBitmapDrawableFactory
-                    .create(context.resources, bitmap)
-                    .apply {
-                        cornerRadius = context.resources.getDimension(R.dimen.corner_radius)
-                    }
-            }
-
         private val authorCourseCount = authorListPropertiesContainer.coursesCountText
         private val authorSubscriberCount = authorListPropertiesContainer.subscribersCountText
 
@@ -52,9 +36,9 @@ class AuthorAdapterDelegate(
                 .with(context)
                 .asBitmap()
                 .load(data.avatar)
-                .placeholder(authorPlaceholder)
+                .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(authorCoverImageTarget)
+                .into(authorListImage)
 
             authorListTitle.text = data.fullName
             authorCourseCount.text = context.resources.getQuantityString(R.plurals.course_count, data.createdCoursesCount, data.createdCoursesCount)

@@ -13,8 +13,10 @@
         layout="@layout/view_centered_appbar"/>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/homeNestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -31,4 +33,17 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/storyDeepLinkMockView"
+        android:layout_gravity="center"
+        android:layout_width="1dp"
+        android:layout_height="1dp" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fastContinueContainer"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

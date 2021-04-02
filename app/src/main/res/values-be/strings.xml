@@ -619,10 +619,25 @@
     <string name="lesson_error_exam_action">Адкрыць у вэб версіі</string>
     <string name="lesson_step_counter">Крок %d з %d</string>
     <!-- Step -->
-    <string name="step_disabled_title">Убачыць задачу пакуль нельга</string>
-    <string name="step_disabled_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
-    <string name="step_disabled_description_part_2">.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
-    <string name="step_disabled_pattern">%s → Крок %d</string>
+    <string name="step_disabled_teacher_title">Зараз навучэнцы не могуць прагледзець гэтую задачу</string>
+    <string name="step_disabled_teacher_plan_description_with_course">"Каб навучэнцы ўбачылі гэтую задачу, зменіце тып курсу на "</string>
+    <string name="step_disabled_teacher_plan_description_without_course">"Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у "</string>
+    <string name="step_disabled_teacher_plan_none_description_with_course">Каб навучэнцы ўбачылі гэтую задачу, зменіце тып курса.</string>
+    <string name="step_disabled_teacher_plan_none_description_without_course">Каб навучэнцы ўбачылі гэтую задачу, дадайце ўрок у курс з неабходным тыпам.</string>
+
+    <string name="step_disabled_teacher_plan_pro_with_course"><b>PRO</b> або зрабіце яго платным.</string>
+
+    <string name="step_disabled_teacher_plan_pro_without_course"><b>платны</b> или <b>PRO-курс</b>.</string>
+    <string name="step_disabled_teacher_plan_enterprise_without_course"><b>Enterprise-курс</b>.</string>
+
+    <string name="step_disabled_teacher_tariff_description">"\n\nЗа крок выкарыстаная платная функцыянальнасць "</string>
+    <string name="step_disabled_teacher_tariff_title">Аб тарыфных планах</string>
+    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/ru/articles/360012252539</string>
+
+    <string name="step_disabled_student_title">Убачыць задачу пакуль нельга</string>
+    <string name="step_disabled_student_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
+    <string name="step_disabled_student_description_part_2">.\n\nМагчыма, праз нейкі час доступ адновіцца.</string>
+    <string name="step_disabled_student_pattern">%s → Крок %d</string>
 
     <string name="step_amount_passed">Рашыла:&#160;</string>
     <string name="step_correct_submissions_percentage">Паспяховых рашэнняў:&#160;</string>
@@ -864,10 +879,18 @@
     <string name="submission_review_state_cannot_review_another_message">Іншае рашэнне адпраўлена.</string>
     <string name="submission_review_state_cannot_review_teacher_message">Рашэнне выкладчыка адрэцэнзавалі нельга.</string>
     <string name="submission_review_state_cannot_review_wrong_message">Адказ з\'яўляецца памылковым.</string>
+    <string name="submission_review_state_in_progress_not_give_not_take_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы і не атрымаў рэцэнзіі на сваю.</string>
+    <string name="submission_review_state_in_progress_not_give_message">%s яшчэ не адправіў ўсе рэцэнзіі на чужыя працы.</string>
     <string name="submission_review_state_in_progress_message">Нужны ещё рецензии на это решение.</string>
     <string name="submission_review_state_not_submitted_message">Патрэбныя яшчэ рэцэнзіі на гэтае рашэнне.</string>
-    <string name="submission_review_state_finished_message">Абавязковае колькасць рэцэнзій на гэтае рашэнне атрымана.</string>
+    <string name="submission_review_state_finished_message" />
 
     <string name="submission_review_action_see_reviews_title">Паглядзець рэцэнзіі</string>
     <string name="submission_review_action_see_submissions_title">Паглядзець рашэнне</string>
+
+    <string name="user_courses_empty_message">Тут з\'явяцца\nвашыя Курсы</string>
+    <string name="user_courses_no_connection_message">Інтэрнэт недаступны</string>
+    <string name="user_courses_catalog_action_message">Знайсці курсы ў Каталогу</string>
+
+    <string name="fast_continue_find_action_title">Знайсці свой першы курс</string>
 </resources>

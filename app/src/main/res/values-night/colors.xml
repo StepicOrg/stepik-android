@@ -42,5 +42,11 @@
     <color name="color_overlay_blue">@color/color_blue_200</color>
     <color name="color_overlay_blue_alpha_12">@color/color_blue_200_alpha_12</color>
 
+    <color name="color_overlay_red">@color/color_red_300</color>
+    <color name="color_overlay_red_alpha_12">@color/color_red_300_alpha_12</color>
+
     <color name="color_overlay_dark_surface">@color/color_surface</color>
+
+    <!-- Fast continue -->
+    <color name="fast_continue_title_color">@color/white</color>
 </resources>

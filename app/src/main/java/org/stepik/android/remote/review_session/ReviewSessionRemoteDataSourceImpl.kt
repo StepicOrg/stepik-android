@@ -1,5 +1,6 @@
 package org.stepik.android.remote.review_session
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepik.android.data.review_session.source.ReviewSessionRemoteDataSource
@@ -7,6 +8,7 @@ import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.remote.review_session.model.ReviewSessionRequest
 import org.stepik.android.remote.review_session.model.ReviewSessionResponse
 import org.stepik.android.remote.review_session.service.ReviewSessionService
+import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 class ReviewSessionRemoteDataSourceImpl
@@ -36,4 +38,20 @@ constructor(
         reviewSessionService
             .getReviewSessions(ids)
             .map(mapper)
+
+    override fun getReviewSession(instruction: Long, user: Long): Maybe<ReviewSessionData> =
+        reviewSessionService
+            .getReviewSession(instruction, user)
+            .map { response ->
+                val attempts = response.attempts.associateBy { it.id }
+                val submissions = response.submissions.associateBy { it.id }
+
+                response.reviewSessions.map { session ->
+                    val submission = submissions[session.submission]
+                    val attempt = attempts[submission?.attempt]
+
+                    ReviewSessionData(session, submission, attempt)
+                }
+            }
+            .maybeFirst()
 }

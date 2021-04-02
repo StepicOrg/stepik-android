@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/fast_continue_widget_height"
+    android:background="@drawable/bg_fast_continue">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/fastContinueInformationCover"
+        android:layout_width="@dimen/fast_continue_course_image_size"
+        android:layout_height="@dimen/fast_continue_course_image_size"
+        android:layout_margin="12dp"
+        android:background="@color/color_overlay_violet_alpha_12"
+        android:contentDescription="@string/content_course_logo"
+        android:tint="@color/fast_continue_title_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
+        app:srcCompat="@drawable/ic_plus" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/fastContinueCourseInformation"
+        style="@style/ThemeOverlay.Violet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:textColor="@color/fast_continue_title_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/fastContinueInformationCover"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/fast_continue_find_action_title"
+        tools:text="Find your first course" />
+
+    <ImageView
+        android:id="@+id/fastContinueArrow"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_forward"
+        app:tint="@color/fast_continue_title_color" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

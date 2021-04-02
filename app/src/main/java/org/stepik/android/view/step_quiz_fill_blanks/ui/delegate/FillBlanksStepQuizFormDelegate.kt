@@ -77,20 +77,23 @@ class FillBlanksStepQuizFormDelegate(
     }
 
     override fun createReply(): ReplyResult =
-        ReplyResult.Success(Reply(
-            blanks = itemsAdapter
-                .items
-                .mapNotNull { item ->
-                    when (item) {
-                        is FillBlanksItem.Text ->
-                            null
+        ReplyResult(
+            Reply(
+                blanks = itemsAdapter
+                    .items
+                    .mapNotNull { item ->
+                        when (item) {
+                            is FillBlanksItem.Text ->
+                                null
 
-                        is FillBlanksItem.Input ->
-                            item.text
+                            is FillBlanksItem.Input ->
+                                item.text
 
-                        is FillBlanksItem.Select ->
-                            item.text
+                            is FillBlanksItem.Select ->
+                                item.text
+                        }
                     }
-                }
-        ))
+            ),
+            ReplyResult.Validation.Success
+        )
 }

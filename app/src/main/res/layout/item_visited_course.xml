@@ -14,11 +14,12 @@
         android:layout_height="match_parent"
         android:layout_margin="@dimen/course_item_space_between_items">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/courseItemImage"
             android:layout_width="@dimen/new_course_image_size"
             android:layout_height="@dimen/new_course_image_size"
             android:contentDescription="@string/content_course_logo"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 

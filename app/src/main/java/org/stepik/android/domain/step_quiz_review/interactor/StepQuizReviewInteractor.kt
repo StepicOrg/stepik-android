@@ -8,6 +8,7 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.review.model.Review
 import org.stepik.android.domain.review.repository.ReviewRepository
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.domain.review_session.model.ReviewSessionData
@@ -31,10 +32,10 @@ constructor(
             .createReviewSession(submissionId)
             .flatMap { sessionData ->
                 getInstruction(sessionData.session.instruction)
-                    .map { sessionData.session to it }
+                    .map { sessionData.session to it.reviewInstruction }
             }
 
-    fun getReviewSession(stepId: Long, unitId: Long?, instructionId: Long, sessionId: Long): Single<Triple<ReviewInstruction, ReviewSessionData, List<Progress>>> =
+    fun getReviewSession(stepId: Long, unitId: Long?, instructionId: Long, sessionId: Long): Single<Triple<ReviewInstructionData, ReviewSessionData, List<Progress>>> =
         Singles
             .zip(
                 getInstruction(instructionId),
@@ -42,7 +43,7 @@ constructor(
                 getStepProgress(stepId, unitId)
             )
 
-    private fun getInstruction(instructionId: Long): Single<ReviewInstruction> =
+    private fun getInstruction(instructionId: Long): Single<ReviewInstructionData> =
         reviewInstructionRepository.getReviewInstruction(instructionId, sourceType = DataSourceType.REMOTE)
 
     fun getStepProgress(stepId: Long, unitId: Long?): Single<List<Progress>> =

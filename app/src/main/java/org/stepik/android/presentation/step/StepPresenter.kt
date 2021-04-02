@@ -157,6 +157,21 @@ constructor(
             )
     }
 
+    fun onFetchReviewInstruction(instructionId: Long) {
+        if (state !is StepView.State.Loaded) return
+
+        compositeDisposable += stepInteractor
+            .getReviewInstruction(instructionId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doOnSubscribe { isBlockingLoading = true }
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onSuccess = { view?.openShowSubmissionsWithReview(it) },
+                onError = { it.printStackTrace() }
+            )
+    }
+
     /**
      * Discussions
      */

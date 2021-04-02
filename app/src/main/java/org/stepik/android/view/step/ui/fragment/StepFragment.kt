@@ -39,11 +39,13 @@ import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.commitNow
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
@@ -148,15 +150,16 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     stepWrapper.step,
                     null,
                     discussionThread.discussionsCount == 0,
-                    lessonData.lesson.actions?.editLesson != null
+                    lessonData.lesson.isTeacher
                 )
         }
 
-        stepContentNext.isVisible = isStepContentNextVisible(stepWrapper)
+        stepContentNext.isVisible = isStepContentNextVisible(stepWrapper, lessonData)
         stepContentNext.setOnClickListener { moveNext() }
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
 
         initDisabledStep()
+        initDisabledStepTeacher()
         initStepContentFragment()
     }
 
@@ -164,7 +167,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         val lessonTitle =
             lessonTitleMapper.mapToLessonTitle(requireContext(), lessonData)
         val stepTitle =
-            getString(R.string.step_disabled_pattern, lessonTitle, stepWrapper.step.position)
+            getString(R.string.step_disabled_student_pattern, lessonTitle, stepWrapper.step.position)
 
         val stepLinkSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -178,11 +181,72 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         val placeholderMessage = stepDisabled.placeholderMessage
         placeholderMessage.text =
             buildSpannedString {
-                append(getString(R.string.step_disabled_description_part_1))
+                append(getString(R.string.step_disabled_student_description_part_1))
                 inSpans(stepLinkSpan) {
                     append(stepTitle)
                 }
-                append(getString(R.string.step_disabled_description_part_2))
+                append(getString(R.string.step_disabled_student_description_part_2))
+            }
+        placeholderMessage.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private fun initDisabledStepTeacher() {
+        val tariffTitle = getString(R.string.step_disabled_teacher_tariff_title)
+        val tariffLinkSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                val tariffInfoUrl = getString(R.string.step_disabled_teacher_tariff_url)
+
+                InAppWebViewDialogFragment
+                    .newInstance(tariffTitle, tariffInfoUrl, isProvideAuth = false)
+                    .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+            }
+        }
+
+        val isInCourse = lessonData.section != null && lessonData.unit != null
+
+        val planDescription1 = if (stepWrapper.step.needsPlan != null) {
+            if (isInCourse) {
+                getString(R.string.step_disabled_teacher_plan_description_with_course)
+            } else {
+                getString(R.string.step_disabled_teacher_plan_description_without_course)
+            }
+        } else {
+            if (isInCourse) {
+                getString(R.string.step_disabled_teacher_plan_none_description_with_course)
+            } else {
+                getString(R.string.step_disabled_teacher_plan_none_description_without_course)
+            }
+        }
+
+        val planDescription2 = when (stepWrapper.step.needsPlan) {
+            Step.PLAN_PRO -> {
+                if (isInCourse) {
+                    getText(R.string.step_disabled_teacher_plan_pro_with_course)
+                } else {
+                    getText(R.string.step_disabled_teacher_plan_pro_without_course)
+                }
+            }
+            Step.PLAN_ENTERPRISE -> {
+                if (isInCourse) {
+                    getText(R.string.step_disabled_teacher_enterprise_with_course)
+                } else {
+                    getText(R.string.step_disabled_teacher_plan_enterprise_without_course)
+                }
+            }
+            else ->
+                ""
+        }
+
+        val placeholderMessage = stepDisabledTeacher.placeholderMessage
+        placeholderMessage.text =
+            buildSpannedString {
+                append(planDescription1)
+                append(planDescription2)
+                append(getString(R.string.step_disabled_teacher_tariff_description))
+                inSpans(tariffLinkSpan) {
+                    append(tariffTitle)
+                }
+                append(getString(R.string.full_stop))
             }
         placeholderMessage.movementMethod = LinkMovementMethod.getInstance()
     }
@@ -257,7 +321,12 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             }
 
             R.id.menu_item_submissions -> {
-                showSubmissionsDialog()
+                val instructionId = stepWrapper.step.instruction
+                if (instructionId != null) {
+                    stepPresenter.onFetchReviewInstruction(instructionId)
+                } else {
+                    showSubmissionsDialog(reviewInstructionData = null)
+                }
                 true
             }
 
@@ -275,13 +344,13 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             .showIfNotExists(supportFragmentManager, StepShareDialogFragment.TAG)
     }
 
-    private fun showSubmissionsDialog() {
+    private fun showSubmissionsDialog(reviewInstructionData: ReviewInstructionData?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
             ?: return
 
         SubmissionsDialogFragment
-            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.actions?.editLesson != null)
+            .newInstance(stepWrapper.step, isTeacher = lessonData.lesson.isTeacher, reviewInstructionData = reviewInstructionData)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
 
         analytic
@@ -296,18 +365,21 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
                     state.stepWrapper.step.isEnabled == false
 
-            stepContentContainer.isGone = isStepDisabled
-            stepContentSeparator.isGone = isStepDisabled
-            stepQuizError.isGone = isStepDisabled
-            stepQuizContainer.isGone = isStepDisabled
-            stepFooter.isGone = isStepDisabled
+            val isStepUnavailable = isStepDisabled && !lessonData.lesson.isTeacher
 
-            stepDisabled.isVisible = isStepDisabled
-            stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper)
+            stepContentContainer.isGone = isStepUnavailable
+            stepContentSeparator.isGone = isStepUnavailable
+            stepQuizError.isGone = isStepUnavailable
+            stepQuizContainer.isGone = isStepUnavailable
+            stepFooter.isGone = isStepUnavailable
+
+            stepDisabled.isVisible = isStepUnavailable
+            stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.isTeacher
+            stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper, lessonData)
 
             stepWrapper = state.stepWrapper
 
-            if (!isStepDisabled) {
+            if (!isStepDisabled || lessonData.lesson.isTeacher) {
                 stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
                 when (stepWrapper.step.status) {
                     Step.Status.READY ->
@@ -323,13 +395,13 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         }
     }
 
-    private fun isStepContentNextVisible(stepWrapper: StepPersistentWrapper): Boolean {
+    private fun isStepContentNextVisible(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Boolean {
         val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
                 stepWrapper.step.isEnabled == false
 
         val isStepNotLast = stepWrapper.step.position < lessonData.lesson.steps.size
 
-        return (isStepDisabled || !stepWrapper.isStepCanHaveQuiz) && isStepNotLast
+        return ((isStepDisabled && !lessonData.lesson.isTeacher) || !stepWrapper.isStepCanHaveQuiz) && isStepNotLast
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
@@ -365,6 +437,10 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun showQuizReloadMessage() {
         view?.snackbar(messageRes = R.string.step_quiz_reload_message, length = Snackbar.LENGTH_LONG)
+    }
+
+    override fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData) {
+        showSubmissionsDialog(reviewInstructionData = reviewInstructionData)
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {

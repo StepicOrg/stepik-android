@@ -1,16 +1,12 @@
 package org.stepik.android.view.download.ui.adapter
 
-import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.downloaded_course_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
@@ -33,18 +29,6 @@ class DownloadedCoursesAdapterDelegate(
         private val downloadedCourseImage = root.downloadedCourseImage
         private val downloadedCourseStatus = root.downloadedCourseStatus
 
-        private val coursePlaceholderBitmap = BitmapFactory.decodeResource(
-            context.resources,
-            R.drawable.general_placeholder
-        )
-
-        private val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(
-            context.resources,
-            coursePlaceholderBitmap
-        )
-
-        private val imageViewTarget: BitmapImageViewTarget =  RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), downloadedCourseImage)
-
         init {
             root.setOnClickListener { itemData?.let(onItemClick) }
             downloadedCourseStatus.setOnClickListener {
@@ -52,7 +36,6 @@ class DownloadedCoursesAdapterDelegate(
                     itemData?.let(onItemRemoveClick)
                 }
             }
-            circularBitmapDrawable.cornerRadius = context.resources.getDimension(R.dimen.course_image_radius)
         }
 
         override fun onBind(data: DownloadItem) {
@@ -62,9 +45,9 @@ class DownloadedCoursesAdapterDelegate(
             Glide.with(context)
                 .asBitmap()
                 .load(data.course.cover)
-                .placeholder(circularBitmapDrawable)
+                .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(imageViewTarget)
+                .into(downloadedCourseImage)
         }
     }
 }

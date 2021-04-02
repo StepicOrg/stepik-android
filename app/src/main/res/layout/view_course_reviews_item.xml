@@ -6,23 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <org.stepic.droid.ui.custom.RoundedBorderMaskView
-        android:id="@+id/reviewIconMask"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/reviewIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="@dimen/course_review_item_margin"
         android:layout_marginLeft="@dimen/course_review_item_margin"
         android:layout_marginTop="@dimen/course_review_item_margin"
-        app:borderRadius="?cornerRadius"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-        <ImageView
-            android:id="@+id/reviewIcon"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@null"/>
-    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/reviewDate"
@@ -39,7 +34,7 @@
         android:textColor="?android:textColorSecondary"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/reviewIconMask"
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
 
         tools:text="18.09.2017 17:36" />
 
@@ -57,7 +52,7 @@
         android:textAppearance="?textAppearanceBody2"
 
         app:layout_constraintTop_toBottomOf="@id/reviewDate"
-        app:layout_constraintStart_toEndOf="@id/reviewIconMask"
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
         app:layout_constraintEnd_toEndOf="parent"
 
         tools:text="Evgeny Kubrakov" />
@@ -94,7 +89,7 @@
         android:layout_marginRight="@dimen/course_review_item_margin"
         app:layout_goneMarginBottom="@dimen/course_review_item_margin"
 
-        app:layout_constraintStart_toEndOf="@id/reviewIconMask"
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
         app:layout_constraintTop_toBottomOf="@id/reviewName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/reviewMark"
@@ -111,7 +106,7 @@
         android:layout_marginTop="@dimen/course_review_item_inner_margin"
         android:layout_marginBottom="@dimen/course_review_item_inner_margin"
 
-        app:layout_constraintStart_toEndOf="@id/reviewIconMask"
+        app:layout_constraintStart_toEndOf="@id/reviewIcon"
         app:layout_constraintTop_toBottomOf="@id/reviewText"
         app:layout_constraintBottom_toBottomOf="parent"
 

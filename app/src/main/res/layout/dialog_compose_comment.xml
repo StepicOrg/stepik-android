@@ -22,7 +22,7 @@
                 android:layout_height="48dp"
                 android:background="?selectableItemBackground"
 
-                app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+                app:layout_constraintStart_toEndOf="@id/commentUserIcon"
                 app:layout_constraintTop_toBottomOf="@id/commentText"
                 app:layout_constraintEnd_toEndOf="parent"
 

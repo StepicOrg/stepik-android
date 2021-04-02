@@ -7,20 +7,15 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_comment_item">
 
-    <org.stepic.droid.ui.custom.RoundedBorderMaskView
-        android:id="@+id/commentUserIconMask"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/commentUserIcon"
         android:layout_width="@dimen/comment_user_image_size"
         android:layout_height="@dimen/comment_user_image_size"
         android:layout_margin="@dimen/comment_item_margin"
-        app:borderRadius="?cornerRadius"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/commentUserIcon"
-            android:layout_width="@dimen/comment_user_image_size"
-            android:layout_height="@dimen/comment_user_image_size"
-            android:contentDescription="@null" />
-    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@null" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/commentMenu"
@@ -47,7 +42,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+        app:layout_constraintStart_toEndOf="@id/commentUserIcon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/commentMenu"
 
@@ -65,7 +60,7 @@
 
         android:textAppearance="?textAppearanceSubtitle1"
 
-        app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+        app:layout_constraintStart_toEndOf="@id/commentUserIcon"
         app:layout_constraintTop_toBottomOf="@id/commentTags"
         app:layout_constraintEnd_toStartOf="@id/commentMenu"
 
@@ -85,7 +80,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+        app:layout_constraintStart_toEndOf="@id/commentUserIcon"
         app:layout_constraintTop_toBottomOf="@id/commentUserName"
         app:layout_constraintEnd_toEndOf="parent"
 
@@ -103,7 +98,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_comment_item_solution"
 
-        app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+        app:layout_constraintStart_toEndOf="@id/commentUserIcon"
         app:layout_constraintTop_toBottomOf="@id/commentText"
         app:layout_constraintEnd_toEndOf="parent"
 
@@ -125,7 +120,7 @@
         android:layout_height="wrap_content"
         layout="@layout/layout_comment_actions"
 
-        app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+        app:layout_constraintStart_toEndOf="@id/commentUserIcon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/commentSolution"

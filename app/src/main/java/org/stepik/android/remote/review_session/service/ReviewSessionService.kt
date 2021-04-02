@@ -14,4 +14,10 @@ interface ReviewSessionService {
 
     @GET("api/review-sessions")
     fun getReviewSessions(@Query("ids[]") ids: List<Long>): Single<ReviewSessionResponse>
+
+    @GET("api/review-sessions")
+    fun getReviewSession(
+        @Query("instruction") instruction: Long,
+        @Query("user") user: Long
+    ): Single<ReviewSessionResponse>
 }

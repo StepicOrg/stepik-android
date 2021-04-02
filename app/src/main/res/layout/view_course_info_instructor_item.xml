@@ -8,19 +8,14 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/course_info_instructor_item_padding">
 
-    <org.stepic.droid.ui.custom.RoundedBorderMaskView
-        android:id="@+id/instructorIconMask"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/instructorIcon"
         android:layout_width="@dimen/course_info_instructor_icon_size"
         android:layout_height="@dimen/course_info_instructor_icon_size"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:borderRadius="?cornerRadius">
-        <ImageView
-            android:id="@+id/instructorIcon"
-            android:layout_width="@dimen/course_info_instructor_icon_size"
-            android:layout_height="@dimen/course_info_instructor_icon_size"
-            android:contentDescription="@null" />
-    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
+        android:contentDescription="@null" />
 
     <TextView
         android:id="@+id/instructorTitle"
@@ -31,10 +26,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:gravity="start|center_vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/instructorIconMask"
+        app:layout_constraintBottom_toBottomOf="@+id/instructorIcon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/instructorIconMask"
-        app:layout_constraintTop_toTopOf="@+id/instructorIconMask"
+        app:layout_constraintStart_toEndOf="@+id/instructorIcon"
+        app:layout_constraintTop_toTopOf="@+id/instructorIcon"
         tools:text="Игорь Капырин" />
 
     <TextView
@@ -49,7 +44,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/instructorIconMask"
+        app:layout_constraintTop_toBottomOf="@+id/instructorIcon"
         tools:text="Samsung AI Center" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
