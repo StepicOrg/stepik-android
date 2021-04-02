@@ -16,6 +16,7 @@ import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 import org.stepik.android.view.step_quiz_pycharm.ui.fragment.PyCharmStepQuizFragment
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewFragment
+import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewTeacherFragment
 import org.stepik.android.view.step_quiz_table.ui.fragment.TableStepQuizFragment
 import javax.inject.Inject
 
@@ -30,11 +31,17 @@ constructor(
 
         val blockName = stepPersistentWrapper.step.block?.name
 
-        return if (instructionType != null &&
-            firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED) &&
-            blockName in StepQuizReviewFragment.supportedQuizTypes &&
-            !lessonData.lesson.isTeacher) {
-            StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
+        return if (instructionType != null && firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
+            when {
+                lessonData.lesson.isTeacher && blockName in StepQuizReviewTeacherFragment.supportedQuizTypes ->
+                    StepQuizReviewTeacherFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
+
+                !lessonData.lesson.isTeacher && blockName in StepQuizReviewFragment.supportedQuizTypes ->
+                    StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
+
+                else ->
+                    getDefaultQuizFragment(stepPersistentWrapper)
+            }
         } else {
             getDefaultQuizFragment(stepPersistentWrapper)
         }
