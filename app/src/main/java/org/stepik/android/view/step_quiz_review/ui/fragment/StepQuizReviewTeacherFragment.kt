@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,15 +21,22 @@ import org.stepic.droid.ui.util.expand
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
+import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherFeature
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherViewModel
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFormFactory
 import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
+import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class StepQuizReviewTeacherFragment : Fragment() {
+class StepQuizReviewTeacherFragment :
+    Fragment(),
+    ReduxView<StepQuizReviewTeacherFeature.State, StepQuizReviewTeacherFeature.Action.ViewAction> {
     companion object {
         val supportedQuizTypes = StepQuizReviewFragment.supportedQuizTypes
 
@@ -52,6 +60,8 @@ class StepQuizReviewTeacherFragment : Fragment() {
     @Inject
     internal lateinit var lessonData: LessonData
 
+    private val stepQuizReviewTeacherViewModel: StepQuizReviewTeacherViewModel by reduxViewModel(this) { viewModelFactory }
+
     private var stepId: Long by argument()
     private var instructionType: ReviewStrategyType by argument()
 
@@ -60,6 +70,8 @@ class StepQuizReviewTeacherFragment : Fragment() {
     private lateinit var quizView: View
 
     private lateinit var stepQuizFormFactory: StepQuizFormFactory
+
+    private lateinit var quizDelegate: StepQuizDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +112,7 @@ class StepQuizReviewTeacherFragment : Fragment() {
         val stepQuizBlockDelegate =
             StepQuizFeedbackBlocksDelegate(stepQuizReviewTeacherFeedback, isTeacher = false, hasReview = false) {}
 
-        val quizDelegate =
+        quizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
@@ -113,14 +125,39 @@ class StepQuizReviewTeacherFragment : Fragment() {
                 stepQuizDiscountingPolicy = stepQuizReviewTeacherDiscounting,
                 stepQuizReviewTeacherMessage = null,
                 onNewMessage = {
-                    // stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(it))
+                    stepQuizReviewTeacherViewModel.onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(it))
                 }
             )
     }
 
+    override fun render(state: StepQuizReviewTeacherFeature.State) {
+        if (state is StepQuizReviewTeacherFeature.State.Data) {
+            quizDelegate.setState(state.quizState)
+
+            stepQuizReviewTeacherMessage.text =
+                when (state.instructionType) {
+                    ReviewStrategyType.INSTRUCTOR ->
+                        if (state.availableReviewCount > 0) {
+                            val submissions = resources.getQuantityString(R.plurals.solutions, state.availableReviewCount, state.availableReviewCount)
+
+                            HtmlCompat.fromHtml(getString(R.string.step_quiz_review_teacher_notice_instructors_submissions, submissions), HtmlCompat.FROM_HTML_MODE_COMPACT)
+                        } else {
+                            getString(R.string.step_quiz_review_teacher_notice_instructors_no_submissions)
+                        }
+
+                    ReviewStrategyType.PEER ->
+                        getString(R.string.step_quiz_review_teacher_notice_peer)
+                }
+        }
+    }
+
+    override fun onAction(action: StepQuizReviewTeacherFeature.Action.ViewAction) {
+
+    }
+
     private fun syncReplyState(replyResult: ReplyResult) {
-//        stepQuizReviewViewModel.onNewMessage(
-//            StepQuizReviewFeature.Message.StepQuizMessage(
-//                StepQuizFeature.Message.SyncReply(replyResult.reply)))
+        stepQuizReviewTeacherViewModel.onNewMessage(
+            StepQuizReviewTeacherFeature.Message.StepQuizMessage(
+                StepQuizFeature.Message.SyncReply(replyResult.reply)))
     }
 }
