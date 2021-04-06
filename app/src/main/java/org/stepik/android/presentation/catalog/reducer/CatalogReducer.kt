@@ -17,6 +17,7 @@ import org.stepik.android.presentation.enrollment.EnrollmentFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.progress.ProgressFeature
+import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
 import ru.nobird.android.core.model.safeCast
@@ -93,14 +94,22 @@ constructor(
             }
 
             is Message.FiltersMessage -> {
-                val (collectionsState, refreshAction) =
+                val (storiesState, collectionsState, refreshAction) =
                     if (message.message is FiltersFeature.Message.LoadFiltersSuccess) {
-                        CatalogFeature.BlocksState.Loading to setOf(Action.FetchCatalogBlocks)
+                        Triple(
+                            StoriesFeature.State.Loading,
+                            CatalogFeature.BlocksState.Loading,
+                            setOf(Action.StoriesAction(StoriesFeature.Action.FetchStories), Action.FetchCatalogBlocks)
+                        )
                     } else {
-                        state.blocksState to emptySet()
+                        Triple(
+                            state.storiesState,
+                            state.blocksState,
+                            emptySet()
+                        )
                     }
                 val (filtersState, filtersActions) = filtersReducer.reduce(state.filtersState, message.message)
-                state.copy(blocksState = collectionsState, filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
+                state.copy(storiesState = storiesState, blocksState = collectionsState, filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
             }
 
             is Message.CourseListMessage -> {
