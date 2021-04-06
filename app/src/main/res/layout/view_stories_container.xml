@@ -24,12 +24,4 @@
         <include layout="@layout/view_story_item_placeholder" />
 
     </LinearLayout>
-
-    <include
-        android:id="@+id/storiesContainerDivider"
-        android:layout_width="match_parent"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_gravity="bottom"
-        layout="@layout/view_divider_vertical" />
-
 </FrameLayout>
