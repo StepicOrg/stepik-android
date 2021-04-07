@@ -6,6 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+    <include
+        android:id="@+id/stepQuizReviewTeacherNetworkError"
+        layout="@layout/error_no_connection_with_button_small"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:visibility="gone" />
+
     <FrameLayout
         android:id="@+id/stepQuizReviewTeacherSpoiler"
         android:background="@color/color_elevation_overlay_2dp"
@@ -51,44 +60,19 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/stepQuizDescription"
-            style="@style/StepQuizReview.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:text="@string/step_quiz_free_answer_description" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/stepQuizReviewTeacherDiscounting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/StepQuizReview.Title"
-
-            android:text="@string/step_quiz_free_answer_description" />
+        <include
+            android:id="@+id/stepQuizReviewTeacherQuiz"
+            layout="@layout/fragment_step_quiz" />
 
         <include
-            android:id="@+id/stepQuizReviewTeacherFeedback"
-            layout="@layout/layout_step_quiz_feedback_block"
-
+            layout="@layout/view_divider_vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
-            android:layout_marginLeft="@dimen/step_quiz_review_vertical_block_margin"
-            android:layout_marginRight="@dimen/step_quiz_review_vertical_block_margin" />
-
-        <include
-            layout="@layout/view_step_quiz_submit_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
-
-        <include layout="@layout/view_divider_vertical" />
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginTop="16dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/stepQuizReviewTeacherMessage"
+        android:id="@+id/stepQuizReviewTeacherDescription"
         style="@style/StepQuizFeedback.Info"
         android:textAppearance="?textAppearanceSubtitle1"
         android:layout_marginTop="16dp"
@@ -106,5 +90,25 @@
         android:layout_margin="16dp"
 
         android:text="@string/submissions_title" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/stepQuizReviewTeacherQuizSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        app:radius="@dimen/corner_radius"
+        android:visibility="gone" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/stepQuizReviewTeacherButtonSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+
+        app:radius="@dimen/corner_radius"
+        android:visibility="gone" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
+import kotlinx.android.synthetic.main.fragment_step_quiz.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_teacher.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_teacher.view.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
@@ -67,8 +68,6 @@ class StepQuizReviewTeacherFragment :
 
     private lateinit var stepWrapper: StepPersistentWrapper
 
-    private lateinit var quizView: View
-
     private lateinit var stepQuizFormFactory: StepQuizFormFactory
 
     private lateinit var quizDelegate: StepQuizDelegate
@@ -89,9 +88,9 @@ class StepQuizReviewTeacherFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_step_quiz_review_teacher, container, false)
-        val quizContainer = view.stepQuizReviewTeacherContainer
-        quizView = inflater.inflate(stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name), quizContainer, false)
-        view.stepQuizReviewTeacherContainer.addView(quizView, 2)
+        val quizContainer = view.stepQuizReviewTeacherQuiz as ViewGroup
+        val quizLayoutRes = stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name)
+        quizContainer.addView(inflater.inflate(quizLayoutRes, quizContainer, false))
         return view
     }
 
@@ -109,8 +108,10 @@ class StepQuizReviewTeacherFragment :
             }
         }
 
+        stepQuizReviewTeacherMessage.isVisible = false
+
         val stepQuizBlockDelegate =
-            StepQuizFeedbackBlocksDelegate(stepQuizReviewTeacherFeedback, isTeacher = false, hasReview = false) {}
+            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, isTeacher = false, hasReview = false) {}
 
         quizDelegate =
             StepQuizDelegate(
@@ -122,7 +123,7 @@ class StepQuizReviewTeacherFragment :
                 stepQuizActionButton = stepQuizAction,
                 stepRetryButton = stepQuizRetry,
 
-                stepQuizDiscountingPolicy = stepQuizReviewTeacherDiscounting,
+                stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
                 stepQuizReviewTeacherMessage = null,
                 onNewMessage = {
                     stepQuizReviewTeacherViewModel.onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(it))
@@ -136,7 +137,7 @@ class StepQuizReviewTeacherFragment :
                 quizDelegate.setState(state.quizState)
             }
 
-            stepQuizReviewTeacherMessage.text =
+            stepQuizReviewTeacherDescription.text =
                 when (state.instructionType) {
                     ReviewStrategyType.INSTRUCTOR ->
                         if (state.availableReviewCount > 0) {
