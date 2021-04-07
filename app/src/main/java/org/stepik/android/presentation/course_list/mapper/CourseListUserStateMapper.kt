@@ -1,21 +1,22 @@
 package org.stepik.android.presentation.course_list.mapper
 
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.filterNot
+import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.mutate
-import org.stepic.droid.util.plus
-import org.stepic.droid.util.transform
+import ru.nobird.android.core.model.insert
+import ru.nobird.android.core.model.slice
+import ru.nobird.android.core.model.filterNot
+import ru.nobird.android.core.model.plus
+import ru.nobird.android.core.model.transform
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
-import ru.nobird.android.core.model.insert
-import ru.nobird.android.core.model.slice
 import java.util.Date
 import javax.inject.Inject
+import kotlin.collections.filterNot
 
 class CourseListUserStateMapper
 @Inject

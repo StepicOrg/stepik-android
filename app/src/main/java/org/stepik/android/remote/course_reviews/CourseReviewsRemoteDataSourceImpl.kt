@@ -3,7 +3,7 @@ package org.stepik.android.remote.course_reviews
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.data.course_reviews.source.CourseReviewsRemoteDataSource
 import org.stepik.android.domain.course_reviews.model.CourseReview

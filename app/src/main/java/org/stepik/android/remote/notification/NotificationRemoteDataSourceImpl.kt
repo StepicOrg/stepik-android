@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationStatuses
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.data.notification.source.NotificationRemoteDataSource
 import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.notification.model.NotificationRequest

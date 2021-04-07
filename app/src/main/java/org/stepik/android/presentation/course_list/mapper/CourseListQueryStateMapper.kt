@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.course_list.mapper
 
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.model.CourseListItem

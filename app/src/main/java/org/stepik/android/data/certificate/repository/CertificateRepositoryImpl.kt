@@ -1,7 +1,7 @@
 package org.stepik.android.data.certificate.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.certificate.source.CertificateCacheDataSource
 import org.stepik.android.data.certificate.source.CertificateRemoteDataSource

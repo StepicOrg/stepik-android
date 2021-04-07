@@ -1,8 +1,8 @@
 package org.stepik.android.remote.base
 
 import io.reactivex.Single
-import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.concatWithPagedList
+import ru.nobird.android.core.model.PagedList
+import ru.nobird.android.core.model.concatWithPagedList
 import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.base.model.MetaResponse
 
