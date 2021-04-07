@@ -57,7 +57,6 @@ constructor(
                                 ))
                             },
                             onError = {
-                                it.printStackTrace()
                                 onNewMessage(StepQuizReviewTeacherFeature.Message.FetchDataError)
                             }
                         )
