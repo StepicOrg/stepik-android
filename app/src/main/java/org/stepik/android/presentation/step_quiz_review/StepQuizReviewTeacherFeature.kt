@@ -2,7 +2,6 @@ package org.stepik.android.presentation.step_quiz_review
 
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 
@@ -27,8 +26,10 @@ interface StepQuizReviewTeacherFeature {
             val forceUpdate: Boolean = false
         ) : Message()
         data class FetchDataSuccess(
+            val stepWrapper: StepPersistentWrapper,
+            val lessonData: LessonData,
             val instructionType: ReviewStrategyType,
-            val reviewSession: ReviewSession?
+            val availableReviewCount: Int
         ) : Message()
         object FetchDataError : Message()
 

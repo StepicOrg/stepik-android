@@ -48,14 +48,26 @@ constructor(
                         .observeOn(mainScheduler)
                         .subscribeBy(
                             onSuccess = { session ->
-                                onNewMessage(StepQuizReviewTeacherFeature.Message.FetchDataSuccess(action.instructionType, session))
+                                val availableReviewCount = session.availableReviewsCount ?: 0
+                                onNewMessage(StepQuizReviewTeacherFeature.Message.FetchDataSuccess(
+                                    action.stepWrapper,
+                                    action.lessonData,
+                                    action.instructionType,
+                                    availableReviewCount
+                                ))
                             },
                             onError = {
+                                it.printStackTrace()
                                 onNewMessage(StepQuizReviewTeacherFeature.Message.FetchDataError)
                             }
                         )
                 } else {
-                    onNewMessage(StepQuizReviewTeacherFeature.Message.FetchDataSuccess(action.instructionType, reviewSession = null))
+                    onNewMessage(StepQuizReviewTeacherFeature.Message.FetchDataSuccess(
+                        action.stepWrapper,
+                        action.lessonData,
+                        action.instructionType,
+                        availableReviewCount = 0
+                    ))
                 }
             }
         }
