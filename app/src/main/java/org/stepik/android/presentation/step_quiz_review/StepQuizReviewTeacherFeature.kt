@@ -15,7 +15,7 @@ interface StepQuizReviewTeacherFeature {
         data class Data(
             val instructionType: ReviewStrategyType,
             val availableReviewCount: Int,
-            val quizState: StepQuizFeature.State.AttemptLoaded
+            val quizState: StepQuizFeature.State
         ) : State()
     }
 
@@ -28,8 +28,7 @@ interface StepQuizReviewTeacherFeature {
         ) : Message()
         data class FetchDataSuccess(
             val instructionType: ReviewStrategyType,
-            val reviewSession: ReviewSession?,
-            val quizState: StepQuizFeature.State
+            val reviewSession: ReviewSession?
         ) : Message()
         object FetchDataError : Message()
 

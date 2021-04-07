@@ -132,7 +132,9 @@ class StepQuizReviewTeacherFragment :
 
     override fun render(state: StepQuizReviewTeacherFeature.State) {
         if (state is StepQuizReviewTeacherFeature.State.Data) {
-            quizDelegate.setState(state.quizState)
+            if (state.quizState is StepQuizFeature.State.AttemptLoaded) {
+                quizDelegate.setState(state.quizState)
+            }
 
             stepQuizReviewTeacherMessage.text =
                 when (state.instructionType) {
@@ -152,7 +154,7 @@ class StepQuizReviewTeacherFragment :
     }
 
     override fun onAction(action: StepQuizReviewTeacherFeature.Action.ViewAction) {
-
+        // no op
     }
 
     private fun syncReplyState(replyResult: ReplyResult) {
