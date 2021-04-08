@@ -10,15 +10,14 @@ import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragme
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_fill_blanks.ui.fragment.FillBlanksStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment
-import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
-import org.stepik.android.view.step_quiz_sql.ui.fragment.SqlStepQuizFragment
-import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
-import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 import org.stepik.android.view.step_quiz_pycharm.ui.fragment.PyCharmStepQuizFragment
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewFragment
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewTeacherFragment
+import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
+import org.stepik.android.view.step_quiz_sql.ui.fragment.SqlStepQuizFragment
 import org.stepik.android.view.step_quiz_table.ui.fragment.TableStepQuizFragment
-import timber.log.Timber
+import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
+import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -32,8 +31,7 @@ constructor(
 
         val blockName = stepPersistentWrapper.step.block?.name
 
-        Timber.d("$instructionType, ${firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)}, ${lessonData.lesson.isTeacher}, ${blockName in StepQuizReviewTeacherFragment.supportedQuizTypes}")
-        return if (instructionType != null){ // && firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
+        return if (instructionType != null && firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
             when {
                 lessonData.lesson.isTeacher && blockName in StepQuizReviewTeacherFragment.supportedQuizTypes ->
                     StepQuizReviewTeacherFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
