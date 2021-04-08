@@ -50,8 +50,6 @@
             android:background="?selectableItemBackground" />
     </FrameLayout>
 
-    <include layout="@layout/view_divider_vertical" />
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/stepQuizReviewTeacherContainer"
         android:layout_width="match_parent"
