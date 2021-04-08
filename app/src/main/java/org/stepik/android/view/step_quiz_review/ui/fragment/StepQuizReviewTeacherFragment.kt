@@ -31,12 +31,14 @@ import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherFeature
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherViewModel
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.step.ui.interfaces.StepMenuNavigator
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFormFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizViewStateDelegateFactory
 import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.toPx
@@ -194,6 +196,17 @@ class StepQuizReviewTeacherFragment :
         stepQuizReviewTeacherNetworkError.tryAgain.setOnClickListener {
             stepQuizReviewTeacherViewModel
                 .onNewMessage(StepQuizReviewTeacherFeature.Message.InitWithStep(stepWrapper, lessonData, instructionType, forceUpdate = true))
+        }
+
+        stepQuizNetworkError.tryAgain.setOnClickListener {
+            val quizMessage = StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)
+            stepQuizReviewTeacherViewModel
+                .onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(quizMessage))
+        }
+
+        stepQuizReviewTeacherSubmissions.setOnClickListener {
+            parentFragment.safeCast<StepMenuNavigator>()
+                ?.showSubmissions()
         }
     }
 
