@@ -23,6 +23,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
+import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
@@ -240,7 +241,10 @@ class StepQuizReviewTeacherFragment :
     }
 
     override fun onAction(action: StepQuizReviewTeacherFeature.Action.ViewAction) {
-        // no op
+        when (action) {
+            StepQuizReviewTeacherFeature.Action.ViewAction.ShowNetworkError ->
+                view?.snackbar(messageRes = R.string.no_connection)
+        }
     }
 
     private fun syncReplyState(replyResult: ReplyResult) {

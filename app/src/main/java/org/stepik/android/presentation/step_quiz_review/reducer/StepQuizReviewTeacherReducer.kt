@@ -52,7 +52,18 @@ constructor(
                 if (state is State.Data) {
                     val (quizState, actions) = stepQuizReducer.reduce(state.quizState, message.message)
 
-                    state.copy(quizState = quizState) to actions.map(Action::StepQuizAction).toSet()
+                    val viewActions = actions
+                        .asSequence()
+                        .filterIsInstance<StepQuizFeature.Action.ViewAction>()
+                        .map { action ->
+                            when (action) {
+                                is StepQuizFeature.Action.ViewAction.ShowNetworkError ->
+                                    Action.ViewAction.ShowNetworkError
+                            }
+                        }
+                        .toSet()
+
+                    state.copy(quizState = quizState) to (actions.map(Action::StepQuizAction).toSet() + viewActions)
                 } else {
                     null
                 }

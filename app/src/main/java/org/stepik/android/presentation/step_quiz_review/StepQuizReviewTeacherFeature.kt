@@ -51,6 +51,8 @@ interface StepQuizReviewTeacherFeature {
          */
         data class StepQuizAction(val action: StepQuizFeature.Action) : Action()
 
-        sealed class ViewAction : Action()
+        sealed class ViewAction : Action() {
+            object ShowNetworkError : ViewAction() // error
+        }
     }
 }
