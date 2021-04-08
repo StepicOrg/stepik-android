@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz.*
+import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_teacher.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_teacher.view.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
@@ -31,10 +34,12 @@ import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFormFactory
+import org.stepik.android.view.step_quiz.ui.factory.StepQuizViewStateDelegateFactory
 import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.toPx
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
@@ -56,6 +61,9 @@ class StepQuizReviewTeacherFragment :
     internal lateinit var analytic: Analytic
 
     @Inject
+    internal lateinit var stepQuizViewStateDelegateFactory: StepQuizViewStateDelegateFactory
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
@@ -73,9 +81,11 @@ class StepQuizReviewTeacherFragment :
 
     private lateinit var stepQuizFormFactory: StepQuizFormFactory
 
+    private lateinit var quizLayout: View
     private lateinit var quizDelegate: StepQuizDelegate
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewTeacherFeature.State>
+    private lateinit var quizViewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,10 +103,33 @@ class StepQuizReviewTeacherFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_step_quiz_review_teacher, container, false)
-        val quizContainer = view.stepQuizReviewTeacherQuiz as ViewGroup
+        val quizContainer = view.stepQuizReviewTeacherQuiz as ConstraintLayout
         val quizLayoutRes = stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name)
-        quizContainer.addView(inflater.inflate(quizLayoutRes, quizContainer, false))
+        quizLayout = inflater.inflate(quizLayoutRes, quizContainer, false)
+        quizContainer.addView(quizLayout)
+        realignQuizLayout(quizContainer, quizLayout)
         return view
+    }
+
+    /**
+     * Align quiz container as vertical linear layout for smooth collapsing animation
+     */
+    private fun realignQuizLayout(quizContainer: ConstraintLayout, quizLayout: View) {
+        val feedbackBlocks = quizContainer.stepQuizFeedbackBlocks
+
+        quizLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToTop = ConstraintLayout.LayoutParams.UNSET
+        }
+        feedbackBlocks.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            bottomToTop = ConstraintLayout.LayoutParams.UNSET
+            topToBottom = quizLayout.id
+            topMargin = 16.toPx()
+        }
+        quizContainer.stepQuizActionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            topToBottom = feedbackBlocks.id
+            topMargin = 16.toPx()
+            bottomMargin = 16.toPx()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,9 +152,10 @@ class StepQuizReviewTeacherFragment :
             stepQuizReviewTeacherSubmissions
         )
 
-        val blockName = stepWrapper.step.block?.name
+        quizViewStateDelegate = stepQuizViewStateDelegateFactory
+            .create(stepQuizReviewTeacherQuiz, quizLayout)
 
-        stepQuizReviewTeacherContainer.isVisible = false
+        val blockName = stepWrapper.step.block?.name
 
         stepQuizReviewTeacherSpoiler.setOnClickListener {
             stepQuizReviewTeacherArrow.changeState()
@@ -169,6 +203,8 @@ class StepQuizReviewTeacherFragment :
             stepQuizReviewTeacherContainer.isVisible =
                 stepQuizReviewTeacherArrow.isExpanded()
 
+            quizViewStateDelegate.switchState(state.quizState)
+            stepQuizReviewTeacherMessage.isVisible = false
             if (state.quizState is StepQuizFeature.State.AttemptLoaded) {
                 quizDelegate.setState(state.quizState)
             }
