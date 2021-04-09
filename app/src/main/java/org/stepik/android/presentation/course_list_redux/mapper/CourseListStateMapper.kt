@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.course_list_redux.mapper
 
-import org.stepic.droid.util.mapPaged
+import ru.nobird.android.core.model.mapPaged
 import org.stepik.android.domain.course.mapper.CourseStatsMapper
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse

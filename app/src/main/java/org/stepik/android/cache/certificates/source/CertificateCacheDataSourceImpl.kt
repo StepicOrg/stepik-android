@@ -3,7 +3,7 @@ package org.stepik.android.cache.certificates.source
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.cache.certificates.structure.DbStructureCertificate
 import org.stepik.android.data.certificate.source.CertificateCacheDataSource
 import org.stepik.android.model.Certificate

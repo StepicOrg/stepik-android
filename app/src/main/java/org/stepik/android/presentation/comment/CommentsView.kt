@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.comment
 
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission

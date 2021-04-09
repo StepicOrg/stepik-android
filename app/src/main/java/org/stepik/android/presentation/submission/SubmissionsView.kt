@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.submission
 
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.submission.model.SubmissionItem
 

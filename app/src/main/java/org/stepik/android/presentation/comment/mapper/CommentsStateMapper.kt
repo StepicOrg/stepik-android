@@ -1,16 +1,16 @@
 package org.stepik.android.presentation.comment.mapper
 
-import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.filterNot
-import org.stepic.droid.util.mapPaged
-import org.stepic.droid.util.plus
-import org.stepic.droid.util.transform
+import ru.nobird.android.core.model.PagedList
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.core.model.mutate
+import ru.nobird.android.core.model.mapPaged
+import ru.nobird.android.core.model.transform
+import ru.nobird.android.core.model.insert
+import ru.nobird.android.core.model.plus
+import ru.nobird.android.core.model.filterNot
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
-import ru.nobird.android.core.model.PaginationDirection
-import ru.nobird.android.core.model.insert
-import ru.nobird.android.core.model.mutate
 import javax.inject.Inject
 
 class CommentsStateMapper

@@ -1,7 +1,7 @@
 package org.stepik.android.remote.user_courses
 
 import io.reactivex.Single
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.domain.rx.first
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
