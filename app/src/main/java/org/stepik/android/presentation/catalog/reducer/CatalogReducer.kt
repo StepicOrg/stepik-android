@@ -69,6 +69,9 @@ constructor(
                                 is CatalogBlockContent.RecommendedCourses ->
                                     CatalogBlockStateWrapper.RecommendedCourseList(catalogBlockItem, CourseListFeature.State.Idle)
 
+                                is CatalogBlockContent.SpecializationsList ->
+                                    CatalogBlockStateWrapper.SpecializationList(catalogBlockItem, catalogBlockItem.content)
+
                                 else ->
                                     null
                             }

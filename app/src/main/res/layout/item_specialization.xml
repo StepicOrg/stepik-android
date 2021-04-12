@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/specializations_default_height"
+
+    android:padding="8dp"
+    android:layout_margin="@dimen/course_item_margin"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="@dimen/course_item_radius"
+    tools:layout_width="154dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/specializations_default_height"
+
+        android:padding="8dp"
+        tools:layout_width="154dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/specializationTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?textAppearanceSubtitle2"
+            android:lines="2"
+            android:ellipsize="end"
+            android:gravity="start|top"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            tools:text="Big Data for Data Science"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/specializationDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/specializationPrice"
+
+            tools:text="2 недели"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/specializationPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            tools:text="18 000 ₽"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/specializationDiscountPrice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+
+            app:layout_constraintLeft_toRightOf="@id/specializationPrice"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            tools:text="16 000 ₽"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

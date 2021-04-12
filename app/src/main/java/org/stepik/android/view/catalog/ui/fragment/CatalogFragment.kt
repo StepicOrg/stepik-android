@@ -48,12 +48,15 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDele
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
@@ -201,6 +204,9 @@ class CatalogFragment :
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
+
+        // TODO APPS-3190 In app web view doesn't display Tilda correctly
+        catalogItemAdapter += SpecializationListAdapterDelegate { title, url -> openInWeb(title, url) }
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -415,5 +421,11 @@ class CatalogFragment :
     private fun logSearchEvent() {
         analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
+    }
+
+    private fun openInWeb(title: String, url: String) {
+        InAppWebViewDialogFragment
+            .newInstance(title, url, isProvideAuth = false)
+            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 }

@@ -2,4 +2,5 @@
 <resources>
     <dimen name="simple_course_list_default_height">96dp</dimen>
     <dimen name="item_author_height">96dp</dimen>
+    <dimen name="specializations_default_height">96dp</dimen>
 </resources>

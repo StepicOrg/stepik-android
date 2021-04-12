@@ -1072,4 +1072,7 @@
 
 
     <string name="fast_continue_find_action_title">Find your first course</string>
+
+    <string name="specialization_web_view_title" translatable="false">Stepik Academy</string>
+    <string name="specialization_url" translatable="false">https://academy.stepik.org/</string>
 </resources>

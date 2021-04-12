@@ -15,7 +15,7 @@ data class CatalogSpecialization(
     @SerializedName("price")
     val price: String,
     @SerializedName("discount")
-    val discount: String,
+    val discount: String?,
     @SerializedName("currency")
     val currency: String,
     @SerializedName("start_date")
