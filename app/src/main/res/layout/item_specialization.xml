@@ -48,6 +48,7 @@
             android:id="@+id/specializationPrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.Violet"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
 
             app:layout_constraintBottom_toBottomOf="parent"

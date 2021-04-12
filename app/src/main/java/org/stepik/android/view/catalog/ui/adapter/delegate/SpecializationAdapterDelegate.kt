@@ -44,7 +44,6 @@ class SpecializationAdapterDelegate(
             specializationDuration.text = data.duration
             val discount = data.discount?.toFloatOrNull() ?: 0f
 
-            // TODO APPS-3190 Find out about colors in dark theme
             if (discount > 0f && data.discount != null) {
                 specializationPrice.text = formatDisplayPrice(data.discount.removeSuffix(PRICE_SUFFIX), data.currency)
                 specializationDiscountPrice.text = buildSpannedString {
