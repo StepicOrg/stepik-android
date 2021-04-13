@@ -108,6 +108,12 @@
         <item quantity="many">Адправіць %d рашэнняў</item>
         <item quantity="other">Адправіць %d рашэнняў</item>
     </plurals>
+    <plurals name="solutions">
+        <item quantity="one">%d рашэнне</item>
+        <item quantity="few">%d рашэнні</item>
+        <item quantity="many">%d рашэнняў</item>
+        <item quantity="other">%d рашэнняў</item>
+    </plurals>
     <!-- Peer review -->
     <plurals name="reviews">
         <item quantity="one">%d рэцэнзію</item>

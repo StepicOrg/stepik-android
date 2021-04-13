@@ -10,9 +10,13 @@ import org.stepik.android.presentation.step_quiz.StepQuizViewModel
 import org.stepik.android.presentation.step_quiz.dispatcher.StepQuizActionDispatcher
 import org.stepik.android.presentation.step_quiz.reducer.StepQuizReducer
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherFeature
+import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherViewModel
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.presentation.step_quiz_review.dispatcher.StepQuizReviewActionDispatcher
+import org.stepik.android.presentation.step_quiz_review.dispatcher.StepQuizReviewTeacherActionDispatcher
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
+import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewTeacherReducer
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
 import ru.nobird.android.presentation.redux.dispatcher.tranform
@@ -52,6 +56,26 @@ object StepQuizPresentationModule {
                     stepQuizActionDispatcher.tranform(
                         transformAction = { it.safeCast<StepQuizReviewFeature.Action.StepQuizAction>()?.action },
                         transformMessage = StepQuizReviewFeature.Message::StepQuizMessage
+                    )
+                )
+                .wrapWithViewContainer()
+        )
+
+    @Provides
+    @IntoMap
+    @ViewModelKey(StepQuizReviewTeacherViewModel::class)
+    internal fun provideStepQuizReviewTeacherViewModel(
+        stepQuizReviewTeacherReducer: StepQuizReviewTeacherReducer,
+        stepQuizReviewTeacherActionDispatcher: StepQuizReviewTeacherActionDispatcher,
+        stepQuizActionDispatcher: StepQuizActionDispatcher
+    ): ViewModel =
+        StepQuizReviewTeacherViewModel(
+            ReduxFeature(StepQuizReviewTeacherFeature.State.Idle, stepQuizReviewTeacherReducer)
+                .wrapWithActionDispatcher(stepQuizReviewTeacherActionDispatcher)
+                .wrapWithActionDispatcher(
+                    stepQuizActionDispatcher.tranform(
+                        transformAction = { it.safeCast<StepQuizReviewTeacherFeature.Action.StepQuizAction>()?.action },
+                        transformMessage = StepQuizReviewTeacherFeature.Message::StepQuizMessage
                     )
                 )
                 .wrapWithViewContainer()

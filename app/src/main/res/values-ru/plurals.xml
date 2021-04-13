@@ -114,6 +114,13 @@
         <item quantity="other">Отправить %d решений</item>
     </plurals>
 
+    <plurals name="solutions">
+        <item quantity="one">%d решение</item>
+        <item quantity="few">%d решения</item>
+        <item quantity="many">%d решений</item>
+        <item quantity="other">%d решений</item>
+    </plurals>
+
     <!-- Peer review -->
     <plurals name="reviews">
         <item quantity="one">%d рецензию</item>
