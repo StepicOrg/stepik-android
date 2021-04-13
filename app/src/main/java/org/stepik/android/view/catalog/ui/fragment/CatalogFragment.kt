@@ -1,5 +1,6 @@
 package org.stepik.android.view.catalog.ui.fragment
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
@@ -49,14 +51,12 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefa
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
-import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
@@ -99,6 +99,9 @@ class CatalogFragment :
 
     @Inject
     internal lateinit var remoteConfig: FirebaseRemoteConfig
+
+    @Inject
+    internal lateinit var externalDeepLinkProcessor: ExternalDeepLinkProcessor
 
     private lateinit var searchIcon: ImageView
 
@@ -205,8 +208,7 @@ class CatalogFragment :
             }
         )
 
-        // TODO APPS-3190 In app web view doesn't display Tilda correctly
-        catalogItemAdapter += SpecializationListAdapterDelegate { title, url -> openInWeb(title, url) }
+        catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -423,9 +425,13 @@ class CatalogFragment :
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
     }
 
-    private fun openInWeb(title: String, url: String) {
-        InAppWebViewDialogFragment
-            .newInstance(title, url, isProvideAuth = false)
-            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+    private fun openInWeb(url: String) {
+        val uri = Uri
+            .parse(url)
+            .buildUpon()
+            .let(externalDeepLinkProcessor::processExternalDeepLink)
+            .build()
+
+        screenManager.openLinkInWebBrowser(requireContext(), uri)
     }
 }

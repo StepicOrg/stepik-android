@@ -12,7 +12,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class SpecializationAdapterDelegate(
-    private val onOpenLinkInWeb: (String, String) -> Unit
+    private val onOpenLinkInWeb: (String) -> Unit
 ) : AdapterDelegate<CatalogSpecialization, DelegateViewHolder<CatalogSpecialization>>() {
     companion object {
         private const val RUB_FORMAT = "RUB"
@@ -34,7 +34,7 @@ class SpecializationAdapterDelegate(
         init {
             containerView.setOnClickListener {
                 itemData?.let {
-                    onOpenLinkInWeb(it.title, it.detailsUrl)
+                    onOpenLinkInWeb(it.detailsUrl)
                 }
             }
         }

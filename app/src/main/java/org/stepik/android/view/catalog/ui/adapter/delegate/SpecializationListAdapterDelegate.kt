@@ -18,7 +18,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SpecializationListAdapterDelegate(
-    private val onOpenLinkInWeb: (String, String) -> Unit
+    private val onOpenLinkInWeb: (String) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -55,10 +55,7 @@ class SpecializationListAdapterDelegate(
             snapHelper.attachToRecyclerView(specializationListRecycler)
 
             specializationInfoAction.setOnClickListener {
-                onOpenLinkInWeb(
-                    context.getString(R.string.specialization_web_view_title),
-                    context.getString(R.string.specialization_url)
-                )
+                onOpenLinkInWeb(context.getString(R.string.specialization_url))
             }
         }
 
