@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.course_list
 
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_continue.CourseContinueView
 

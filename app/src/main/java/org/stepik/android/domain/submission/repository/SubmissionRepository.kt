@@ -2,7 +2,7 @@ package org.stepik.android.domain.submission.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.model.Submission

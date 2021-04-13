@@ -1,6 +1,6 @@
 package org.stepik.android.remote.base.mapper
 
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.remote.base.model.MetaResponse
 
 inline fun <E, R : MetaResponse> R.toPagedList(selector: (R) -> List<E>): PagedList<E> =

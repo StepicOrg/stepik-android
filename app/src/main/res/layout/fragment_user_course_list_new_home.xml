@@ -8,6 +8,13 @@
     android:background="@drawable/bg_user_course_list"
     android:orientation="vertical">
 
+    <include
+        android:id="@+id/catalogBlockContainerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_alignParentTop="true"
+        layout="@layout/view_divider_vertical" />
+
     <RelativeLayout
         android:id="@+id/rootView"
         android:layout_width="match_parent"
@@ -16,9 +23,9 @@
         <RelativeLayout
             android:id="@+id/catalogBlockContainer"
             android:background="?selectableItemBackground"
-            android:paddingTop="@dimen/course_carousel_title_top_padding"
+            android:paddingTop="16dp"
             android:visibility="visible"
-            android:paddingBottom="20dp"
+            android:paddingBottom="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -56,11 +63,10 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/containerViewAll"
-                android:layout_width="32dp"
+                android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
                 app:tint="?colorControlNormal"
                 app:srcCompat="@drawable/ic_arrow_forward"
                 android:visibility="visible"
@@ -77,7 +83,7 @@
             android:clipToPadding="false"
             android:paddingLeft="@dimen/course_list_padding"
             android:paddingRight="@dimen/course_list_padding"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="16dp" />
 
         <include
             android:id="@+id/courseListUserSkeleton"

@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.submission
 
-import org.stepic.droid.util.plus
+import ru.nobird.android.core.model.plus
 import org.stepik.android.domain.submission.interactor.SubmissionInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign

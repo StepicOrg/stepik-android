@@ -2,7 +2,6 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_stories_container.view.*
 import org.stepic.droid.R
@@ -25,14 +24,12 @@ class StoriesAdapterDelegate(
 
     class StoriesViewHolder(root: View, onStoryClicked: (Story, Int) -> Unit) : DelegateViewHolder<CatalogItem>(root) {
         private val storiesPlaceholder = root.storiesContainerLoadingPlaceholder
-        val storiesDivider = root.storiesContainerDivider
         val storiesRecycler = root.storiesRecycler
         val storiesAdapter = StoriesAdapter(onStoryClicked = onStoryClicked)
 
         private val viewStateDelegate = ViewStateDelegate<StoriesFeature.State>()
 
         init {
-            storiesDivider.isVisible = false
             storiesRecycler.itemAnimator = null
             storiesRecycler.adapter = storiesAdapter
             storiesRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)

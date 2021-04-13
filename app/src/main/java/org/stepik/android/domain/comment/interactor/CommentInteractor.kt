@@ -1,7 +1,7 @@
 package org.stepik.android.domain.comment.interactor
 
 import io.reactivex.Single
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.repository.CommentRepository

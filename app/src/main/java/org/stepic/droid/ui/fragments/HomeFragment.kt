@@ -67,6 +67,8 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             setupFragments(remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED))
         }
 
+        appBarLayout.isVisible = !remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)
+
         homeStreakPresenter.attachView(this)
         homeStreakPresenter.onNeedShowStreak()
     }

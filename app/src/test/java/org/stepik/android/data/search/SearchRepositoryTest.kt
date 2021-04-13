@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.data.search_result.repository.SearchResultRepositoryImpl
 import org.stepik.android.data.search_result.source.SearchResultRemoteDataSource
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
