@@ -29,6 +29,7 @@ import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
+import org.stepik.android.view.step_quiz.ui.factory.StepQuizViewStateDelegateFactory
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
@@ -44,6 +45,9 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
     @Inject
     internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
+
+    @Inject
+    internal lateinit var stepQuizViewStateDelegateFactory: StepQuizViewStateDelegateFactory
 
     protected lateinit var stepWrapper: StepPersistentWrapper
 
@@ -88,12 +92,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<StepQuizFeature.State.Idle>()
-        viewStateDelegate.addState<StepQuizFeature.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizFeature.State.AttemptLoading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizFeature.State.AttemptLoaded>(stepQuizReviewTeacherMessage, stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
-        viewStateDelegate.addState<StepQuizFeature.State.NetworkError>(stepQuizNetworkError)
+        viewStateDelegate = stepQuizViewStateDelegateFactory.create(view, *quizViews)
 
         stepQuizNetworkError.tryAgain.setOnClickListener {
             viewModel.onNewMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))

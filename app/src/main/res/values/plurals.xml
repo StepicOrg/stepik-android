@@ -71,6 +71,11 @@
         <item quantity="other">%d courses published</item>
     </plurals>
 
+    <plurals name="solutions">
+        <item quantity="one">%d submission</item>
+        <item quantity="other">%d submissions</item>
+    </plurals>
+
     <plurals name="submit_solutions">
         <item quantity="one">Submit %d solution</item>
         <item quantity="other">Submit %d solutions</item>
