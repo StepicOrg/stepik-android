@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.catalog.model.CatalogCourseList
+import org.stepik.android.domain.catalog.model.CatalogSpecialization
 
 class CatalogBlockContentSerializer {
     private val gson = Gson()
@@ -26,6 +27,9 @@ class CatalogBlockContentSerializer {
 
             is CatalogBlockContent.RecommendedCourses ->
                 null
+
+            is CatalogBlockContent.SpecializationsList ->
+                CatalogBlockContent.SpecializationsList::specializations::name.get()
 
             else ->
                 null
@@ -61,6 +65,9 @@ class CatalogBlockContentSerializer {
 
             CatalogBlockContent.RECOMMENDED_COURSES ->
                 CatalogBlockContent.RecommendedCourses
+
+            CatalogBlockContent.SPECIALIZATIONS ->
+                CatalogBlockContent.SpecializationsList(gson.fromJson(contentField, TypeToken.getParameterized(ArrayList::class.java, CatalogSpecialization::class.java).type))
 
             else ->
                 CatalogBlockContent.Unsupported

@@ -6,6 +6,7 @@ import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.FULL_COURSE_LISTS
 import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.RECOMMENDED_COURSES
 import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.SIMPLE_COURSE_LISTS
+import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.SPECIALIZATIONS
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import ru.nobird.android.core.model.Identifiable
 
@@ -47,5 +48,13 @@ sealed class CatalogBlockStateWrapper : Identifiable<String> {
     ) : CatalogBlockStateWrapper() {
         override val id: String
             get() = "${RECOMMENDED_COURSES}${catalogBlockItem.id}"
+    }
+
+    data class SpecializationList(
+        val catalogBlockItem: CatalogBlock,
+        val content: CatalogBlockContent.SpecializationsList
+    ) : CatalogBlockStateWrapper() {
+        override val id: String
+            get() = "${SPECIALIZATIONS}${catalogBlockItem.id}"
     }
 }

@@ -262,6 +262,9 @@
     <dimen name="similar_course_lists_top_margin">16dp</dimen>
     <dimen name="vertical_course_collection_padding">8dp</dimen>
 
+    <!-- Catalog block / specializations -->
+    <dimen name="specializations_default_height">112dp</dimen>
+
     <dimen name="submissions_search_padding_left">8dp</dimen>
     <dimen name="submissions_search_padding_with_text">28dp</dimen>
     <dimen name="submissions_search_padding_without_text">8dp</dimen>

@@ -16,6 +16,10 @@ sealed class CatalogBlockContent {
         val authors: List<CatalogAuthor>
     ) : CatalogBlockContent()
     object RecommendedCourses : CatalogBlockContent()
+    data class SpecializationsList(
+        @SerializedName("specializations")
+        val specializations: List<CatalogSpecialization>
+    ) : CatalogBlockContent()
     object Unsupported : CatalogBlockContent()
 
     companion object {
@@ -26,6 +30,7 @@ sealed class CatalogBlockContent {
         const val SIMPLE_COURSE_LISTS = "simple_course_lists"
         const val AUTHORS = "authors"
         const val RECOMMENDED_COURSES = "recommended_courses"
+        const val SPECIALIZATIONS = "specializations"
         const val UNSUPPORTED = "unsupported"
 
         /**
