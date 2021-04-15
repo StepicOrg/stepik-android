@@ -25,8 +25,18 @@ constructor(
                 reviewSessionDao
                     .getReviewSessions(ids)
                     .map { session ->
-                        val submission = submissionDao.get(DbStructureSubmission.Columns.ID, session.submission.toString())!!
-                        val attempt = attemptDao.get(DbStructureAttempt.Columns.ID, submission.attempt.toString())!!
+                        val submission =
+                            if (session.submission != 0L) {
+                                requireNotNull(submissionDao.get(DbStructureSubmission.Columns.ID, session.submission.toString()))
+                            } else {
+                                null
+                            }
+                        val attempt =
+                            if (submission != null) {
+                                requireNotNull(attemptDao.get(DbStructureAttempt.Columns.ID, submission.attempt.toString()))
+                            } else {
+                                null
+                            }
 
                         ReviewSessionData(session, submission, attempt)
                     }

@@ -30,6 +30,9 @@ class CatalogBlockContentTypeConverter {
             is CatalogBlockContent.RecommendedCourses ->
                 CatalogBlockContent.RECOMMENDED_COURSES
 
+            is CatalogBlockContent.SpecializationsList ->
+                CatalogBlockContent.SPECIALIZATIONS
+
             else ->
                 CatalogBlockContent.UNSUPPORTED
         }

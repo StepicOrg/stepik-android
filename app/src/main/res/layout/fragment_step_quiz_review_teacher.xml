@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <include
+        android:id="@+id/stepQuizReviewTeacherNetworkError"
+        layout="@layout/error_no_connection_with_button_small"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/stepQuizReviewTeacherSpoiler"
+        android:background="@color/color_elevation_overlay_2dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|start"
+
+            android:text="@string/step_quiz_review_teacher_quiz_title"
+            android:textAppearance="?textAppearanceBody1"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginRight="48dp" />
+
+        <org.stepic.droid.ui.custom.ArrowImageView
+            android:id="@+id/stepQuizReviewTeacherArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            app:tint="?colorControlNormal"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:duplicateParentState="true"
+            android:background="?selectableItemBackground" />
+    </FrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/stepQuizReviewTeacherContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <include
+            android:id="@+id/stepQuizReviewTeacherQuiz"
+            layout="@layout/fragment_step_quiz" />
+
+        <include layout="@layout/view_divider_vertical" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/stepQuizReviewTeacherDescription"
+        style="@style/StepQuizFeedback.Info"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/step_quiz_review_teacher_notice_peer"
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/stepQuizReviewTeacherSubmissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:theme="@style/ThemeOverlay.Green"
+        android:layout_margin="16dp"
+
+        android:text="@string/submissions_title" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/stepQuizReviewTeacherQuizSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        app:radius="@dimen/corner_radius"
+        android:visibility="gone" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/stepQuizReviewTeacherButtonSkeleton"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+
+        app:radius="@dimen/corner_radius"
+        android:visibility="gone" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

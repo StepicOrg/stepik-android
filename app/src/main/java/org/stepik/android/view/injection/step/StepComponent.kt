@@ -23,6 +23,7 @@ import org.stepik.android.view.step.ui.fragment.StepFragment
 import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewFragment
+import org.stepik.android.view.step_quiz_review.ui.fragment.StepQuizReviewTeacherFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 
 @Subcomponent(modules = [
@@ -64,5 +65,6 @@ interface StepComponent {
     fun inject(editStepContentDialogFragment: EditStepSourceDialogFragment)
     fun inject(defaultStepQuizFragment: DefaultStepQuizFragment)
     fun inject(stepQuizReviewFragment: StepQuizReviewFragment)
+    fun inject(stepQuizReviewTeacherFragment: StepQuizReviewTeacherFragment)
     fun inject(unsupportedStepQuizFragment: UnsupportedStepQuizFragment)
 }

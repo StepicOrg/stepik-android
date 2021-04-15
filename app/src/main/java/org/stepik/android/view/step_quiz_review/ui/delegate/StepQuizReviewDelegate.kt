@@ -163,7 +163,10 @@ class StepQuizReviewDelegate(
     }
 
     private fun setQuizViewParent(view: View, parent: ViewGroup) {
-        view.parent.safeCast<ViewGroup>()?.removeView(view)
+        val currentParentViewGroup = view.parent.safeCast<ViewGroup>()
+        if (currentParentViewGroup == parent) return
+
+        currentParentViewGroup?.removeView(view)
         parent.addView(view)
     }
 

@@ -176,4 +176,7 @@
     
     <!-- Fast continue -->
     <color name="fast_continue_title_color">@color/color_violet_300</color>
+
+    <!-- Specialization catalog block -->
+    <color name="header_background_color">@color/black</color>
 </resources>

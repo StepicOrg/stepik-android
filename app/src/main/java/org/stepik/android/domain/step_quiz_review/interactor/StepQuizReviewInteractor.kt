@@ -43,6 +43,11 @@ constructor(
                 getStepProgress(stepId, unitId)
             )
 
+    fun getReviewSession(sessionId: Long): Single<ReviewSession> =
+        reviewSessionRepository
+            .getReviewSession(sessionId, sourceType = DataSourceType.REMOTE)
+            .map { it.session }
+
     private fun getInstruction(instructionId: Long): Single<ReviewInstructionData> =
         reviewInstructionRepository.getReviewInstruction(instructionId, sourceType = DataSourceType.REMOTE)
 

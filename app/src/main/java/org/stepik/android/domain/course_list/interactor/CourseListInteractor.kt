@@ -3,7 +3,7 @@ package org.stepik.android.domain.course_list.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
-import org.stepic.droid.util.PagedList
+import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
 import org.stepik.android.domain.course.model.SourceTypeComposition

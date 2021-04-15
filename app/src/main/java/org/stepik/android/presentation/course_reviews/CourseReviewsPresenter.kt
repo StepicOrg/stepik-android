@@ -11,8 +11,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.concatWithPagedList
+import ru.nobird.android.core.model.PagedList
+import ru.nobird.android.core.model.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_reviews.interactor.ComposeCourseReviewInteractor
 import org.stepik.android.domain.course_reviews.interactor.CourseReviewsInteractor

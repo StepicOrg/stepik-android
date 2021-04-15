@@ -31,7 +31,7 @@ class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
         setImageResourceByState(IS_ARROW_BOTTOM_DEFAULT)
     }
 
-    private fun setImageResourceByState(isArrowBottomInternal: Boolean) {
+    fun setImageResourceByState(isArrowBottomInternal: Boolean) {
         val defaultDrawableRes = if (isArrowBottomInternal) {
             arrowBottomToTopRes
         } else {

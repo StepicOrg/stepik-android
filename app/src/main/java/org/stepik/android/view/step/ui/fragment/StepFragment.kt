@@ -53,6 +53,7 @@ import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
+import org.stepik.android.view.step.ui.interfaces.StepMenuNavigator
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
@@ -63,7 +64,8 @@ import javax.inject.Inject
 
 class StepFragment : Fragment(R.layout.fragment_step), StepView,
     NextMoveable,
-    Playable {
+    Playable,
+    StepMenuNavigator {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -321,12 +323,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             }
 
             R.id.menu_item_submissions -> {
-                val instructionId = stepWrapper.step.instruction
-                if (instructionId != null) {
-                    stepPresenter.onFetchReviewInstruction(instructionId)
-                } else {
-                    showSubmissionsDialog(reviewInstructionData = null)
-                }
+                showSubmissions()
                 true
             }
 
@@ -334,7 +331,16 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 super.onOptionsItemSelected(item)
         }
 
-    private fun showShareDialog() {
+    override fun showSubmissions() {
+        val instructionId = stepWrapper.step.instruction
+        if (instructionId != null) {
+            stepPresenter.onFetchReviewInstruction(instructionId)
+        } else {
+            showSubmissionsDialog(reviewInstructionData = null)
+        }
+    }
+
+    override fun showShareDialog() {
         val supportFragmentManager = activity
             ?.supportFragmentManager
             ?: return

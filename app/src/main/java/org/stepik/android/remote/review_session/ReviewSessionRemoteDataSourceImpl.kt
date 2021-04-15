@@ -22,8 +22,8 @@ constructor(
             val submissions = response.submissions.associateBy { it.id }
 
             response.reviewSessions.map { session ->
-                val submission = submissions.getValue(session.submission)
-                val attempt = attempts.getValue(submission.attempt)
+                val submission = submissions[session.submission]
+                val attempt = attempts[submission?.attempt]
 
                 ReviewSessionData(session, submission, attempt)
             }

@@ -1,5 +1,6 @@
 package org.stepik.android.view.catalog.ui.fragment
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +36,7 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
@@ -48,6 +50,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDele
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -96,6 +99,9 @@ class CatalogFragment :
 
     @Inject
     internal lateinit var remoteConfig: FirebaseRemoteConfig
+
+    @Inject
+    internal lateinit var externalDeepLinkProcessor: ExternalDeepLinkProcessor
 
     private lateinit var searchIcon: ImageView
 
@@ -201,6 +207,8 @@ class CatalogFragment :
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
             }
         )
+
+        catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -415,5 +423,15 @@ class CatalogFragment :
     private fun logSearchEvent() {
         analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
+    }
+
+    private fun openInWeb(url: String) {
+        val uri = Uri
+            .parse(url)
+            .buildUpon()
+            .let(externalDeepLinkProcessor::processExternalDeepLink)
+            .build()
+
+        screenManager.openLinkInWebBrowser(requireContext(), uri)
     }
 }
