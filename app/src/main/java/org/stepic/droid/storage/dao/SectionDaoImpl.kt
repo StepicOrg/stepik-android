@@ -48,6 +48,10 @@ constructor(
             isActive = cursor.getBoolean(DbStructureSection.Columns.IS_ACTIVE),
             actions = Actions(testSection = cursor.getString(DbStructureSection.Columns.ACTIONS_TEST_SECTION)),
             isExam = cursor.getBoolean(DbStructureSection.Columns.IS_EXAM),
+            examDurationMinutes = cursor.getInt(DbStructureSection.Columns.EXAM_DURATION_MINUTES),
+            examSession = cursor.getLong(DbStructureSection.Columns.EXAM_SESSION),
+            proctorSession = cursor.getLong(DbStructureSection.Columns.PROCTOR_SESSION),
+            isProctoringCanBeScheduled = cursor.getBoolean(DbStructureSection.Columns.IS_PROCTORING_CAN_BE_SCHEDULED),
             discountingPolicy = DiscountingPolicyType.values().getOrNull(cursor.getInt(DbStructureSection.Columns.DISCOUNTING_POLICY)),
             isRequirementSatisfied = cursor.getBoolean(DbStructureSection.Columns.IS_REQUIREMENT_SATISFIED),
             requiredSection = cursor.getLong(DbStructureSection.Columns.REQUIRED_SECTION),
@@ -74,6 +78,10 @@ constructor(
         values.put(DbStructureSection.Columns.IS_ACTIVE, section.isActive)
         values.put(DbStructureSection.Columns.ACTIONS_TEST_SECTION, section.actions?.testSection)
         values.put(DbStructureSection.Columns.IS_EXAM, section.isExam)
+        values.put(DbStructureSection.Columns.EXAM_DURATION_MINUTES, section.examDurationMinutes)
+        values.put(DbStructureSection.Columns.EXAM_SESSION, section.examSession)
+        values.put(DbStructureSection.Columns.PROCTOR_SESSION, section.proctorSession)
+        values.put(DbStructureSection.Columns.IS_PROCTORING_CAN_BE_SCHEDULED, section.isProctoringCanBeScheduled)
         values.put(DbStructureSection.Columns.DISCOUNTING_POLICY, section.discountingPolicy?.ordinal ?: -1)
         values.put(DbStructureSection.Columns.IS_REQUIREMENT_SATISFIED, section.isRequirementSatisfied)
         values.put(DbStructureSection.Columns.REQUIRED_SECTION, section.requiredSection)
