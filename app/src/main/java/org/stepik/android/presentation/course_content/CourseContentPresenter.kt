@@ -32,7 +32,6 @@ import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.course_content.mapper.CourseContentStateMapper
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseContentPresenter
@@ -118,8 +117,6 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (course, courseContent) ->
-                    val items = courseContent.filterIsInstance<CourseContentItem.SectionItem>()
-                    items.forEach { Timber.d("SectionItem: $it") }
                     state = stateMapper.mergeStateWithCourseContent(state, course, courseContent)
                     resolveDownloadProgressSubscription()
                     fetchPersonalDeadlines()
