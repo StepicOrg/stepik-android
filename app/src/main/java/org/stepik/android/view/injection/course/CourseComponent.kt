@@ -10,9 +10,11 @@ import org.stepik.android.view.injection.calendar.CalendarDataModule
 import org.stepik.android.view.injection.course_calendar.CourseCalendarDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.CourseReviewsDataModule
+import org.stepik.android.view.injection.exam_session.ExamSessionDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
+import org.stepik.android.view.injection.proctor_session.ProctorSessionDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.step.StepDataModule
@@ -36,7 +38,10 @@ import org.stepik.android.view.injection.user.UserDataModule
 
     CourseCalendarDataModule::class,
     CalendarDataModule::class,
-    ProfileDataModule::class
+    ProfileDataModule::class,
+
+    ExamSessionDataModule::class,
+    ProctorSessionDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder

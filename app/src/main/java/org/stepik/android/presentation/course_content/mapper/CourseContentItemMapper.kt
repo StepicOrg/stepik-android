@@ -1,6 +1,8 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.util.hasUserAccess
+import org.stepik.android.domain.exam_session.model.ExamSession
+import org.stepik.android.domain.proctor_session.model.ProctorSession
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -8,6 +10,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.model.RequiredSection
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseContentItemMapper
@@ -15,19 +18,23 @@ class CourseContentItemMapper
 constructor(
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
-    fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>): List<CourseContentItem> =
+    fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>, sessions: List<Pair<ExamSession, ProctorSession>>): List<CourseContentItem> =
         sections
             .flatMap { section ->
-                mapSectionWithEmptyUnits(unitItems, course, section, progresses, sections)
+                Timber.d("Sessions: $sessions")
+                val (examSession, proctorSession) = sessions.find { it.first.section == section.id || it.second.section == section.id } ?: null to null
+                mapSectionWithEmptyUnits(unitItems, course, section, progresses, sections, examSession, proctorSession)
             }
 
-    private fun mapSectionWithEmptyUnits(unitItems: List<CourseContentItem.UnitItem>, course: Course, section: Section, progresses: List<Progress>, sections: List<Section>): List<CourseContentItem> =
+    private fun mapSectionWithEmptyUnits(unitItems: List<CourseContentItem.UnitItem>, course: Course, section: Section, progresses: List<Progress>, sections: List<Section>, examSession: ExamSession?, proctorSession: ProctorSession?): List<CourseContentItem> =
         listOf(CourseContentItem.SectionItem(
             section = section,
             dates = sectionDatesMapper.mapSectionDates(section),
             progress = progresses.find { it.id == section.progress },
             isEnabled = section.hasUserAccess(course),
-            requiredSection = mapRequiredSection(section, sections, progresses)
+            requiredSection = mapRequiredSection(section, sections, progresses),
+            examSession = examSession,
+            proctorSession = proctorSession
         )) + mapSectionUnits(section.units, unitItems)
 
     private fun mapSectionUnits(unitIds: List<Long>, unitItems: List<CourseContentItem.UnitItem>): List<CourseContentItem> =
