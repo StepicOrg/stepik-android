@@ -35,4 +35,7 @@ data class ProctorSession(
     companion object {
         val EMPTY = ProctorSession(0L, 0L, 0L, null, "", "", null, null, null, "", 0f)
     }
+
+    val isFinished: Boolean
+        get() = stopDate != null || submitDate != null
 }

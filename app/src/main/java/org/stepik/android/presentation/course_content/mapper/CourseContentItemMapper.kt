@@ -29,6 +29,7 @@ constructor(
             dates = sectionDatesMapper.mapSectionDates(section),
             progress = progresses.find { it.id == section.progress },
             isEnabled = section.hasUserAccess(course),
+            isProctored = course.isProctored,
             requiredSection = mapRequiredSection(section, sections, progresses),
             examSession = sessionDataItem?.examSession,
             proctorSession = sessionDataItem?.proctorSession

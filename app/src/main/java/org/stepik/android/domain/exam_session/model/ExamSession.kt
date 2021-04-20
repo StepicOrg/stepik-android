@@ -27,4 +27,7 @@ data class ExamSession(
     companion object {
         val EMPTY = ExamSession(0L, 0L, 0L, null, null, 0f, 0)
     }
+
+    val isActive: Boolean
+        get() = timeLeft > 0
 }
