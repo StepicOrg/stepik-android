@@ -4,6 +4,7 @@ import com.google.firebase.perf.FirebasePerformance
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -12,7 +13,12 @@ import org.stepic.droid.analytic.Analytic
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_content.model.SessionData
+import org.stepik.android.domain.exam_session.model.ExamSession
+import org.stepik.android.domain.exam_session.repository.ExamSessionRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.proctor_session.model.ProctorSession
+import org.stepik.android.domain.proctor_session.repository.ProctorSessionRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
@@ -33,6 +39,8 @@ constructor(
     private val unitRepository: UnitRepository,
     private val lessonRepository: LessonRepository,
     private val progressRepository: ProgressRepository,
+    private val examSessionRepository: ExamSessionRepository,
+    private val proctorSessionRepository: ProctorSessionRepository,
 
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
@@ -91,15 +99,12 @@ constructor(
             .getSections(course.sections ?: listOf(), primarySourceType = dataSourceType)
 
     private fun populateSections(course: Course, sections: List<Section>, items: List<CourseContentItem>, dataSourceType: DataSourceType): Single<List<CourseContentItem>> =
-        if (dataSourceType == DataSourceType.CACHE) {
-            Single.just(emptyList())
-        } else {
-            progressRepository
-                .getProgresses(sections.getProgresses())
+        zip(
+            if (dataSourceType == DataSourceType.CACHE) Single.just(emptyList()) else progressRepository.getProgresses(sections.getProgresses()),
+            getSessionData(sections, dataSourceType)
+        ) { progresses, sessionData ->
+            courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, items.filterIsInstance<CourseContentItem.UnitItem>(), progresses, sessionData)
         }
-            .map { progresses ->
-                courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, items.filterIsInstance<CourseContentItem.UnitItem>(), progresses)
-            }
 
     private fun loadUnits(course: Course, items: List<CourseContentItem>, dataSourceType: DataSourceType): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable
@@ -151,4 +156,20 @@ constructor(
     private fun getUnits(unitIds: List<Long>, dataSourceType: DataSourceType): Single<List<Unit>> =
         unitRepository
             .getUnits(unitIds, primarySourceType = dataSourceType)
+
+    private fun getSessionData(sections: List<Section>, dataSourceType: DataSourceType): Single<List<SessionData>> =
+        zip(
+            examSessionRepository.getExamSessions(sections.mapNotNull(Section::examSession), dataSourceType).onErrorReturnItem(emptyList()),
+            proctorSessionRepository.getProctorSessions(sections.mapNotNull(Section::proctorSession), dataSourceType).onErrorReturnItem(emptyList())
+        ) { examSessions, proctorSessions ->
+            val examSessionsMap = examSessions.associateBy(ExamSession::section)
+            val proctorSessionsMap = proctorSessions.associateBy(ProctorSession::section)
+            sections.map { section ->
+                SessionData(
+                    sectionId = section.id,
+                    examSession = examSessionsMap[section.id],
+                    proctorSession = proctorSessionsMap[section.id]
+                )
+            }
+        }
 }
