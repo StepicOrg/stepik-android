@@ -23,8 +23,4 @@ data class ExamSession(
     val timeLeft: Float,
     @SerializedName("random_exam")
     val randomExam: Int
-) : Identifiable<Long> {
-    companion object {
-        val EMPTY = ExamSession(0L, 0L, 0L, null, null, 0f, 0)
-    }
-}
+) : Identifiable<Long>

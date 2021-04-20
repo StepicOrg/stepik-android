@@ -31,8 +31,4 @@ data class ProctorSession(
     val comment: String,
     @SerializedName("score")
     val score: Float
-) : Identifiable<Long> {
-    companion object {
-        val EMPTY = ProctorSession(0L, 0L, 0L, null, "", "", null, null, null, "", 0f)
-    }
-}
+) : Identifiable<Long>
