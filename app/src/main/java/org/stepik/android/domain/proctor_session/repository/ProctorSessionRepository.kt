@@ -5,5 +5,5 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.proctor_session.model.ProctorSession
 
 interface ProctorSessionRepository {
-    fun getProctorSession(id: Long, sourceType: DataSourceType = DataSourceType.REMOTE): Single<ProctorSession>
+    fun getProctorSessions(ids: List<Long>, sourceType: DataSourceType = DataSourceType.REMOTE): Single<List<ProctorSession>>
 }

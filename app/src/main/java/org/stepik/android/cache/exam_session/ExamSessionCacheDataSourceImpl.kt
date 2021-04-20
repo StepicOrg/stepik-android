@@ -12,9 +12,9 @@ class ExamSessionCacheDataSourceImpl
 constructor(
     private val examSessionDao: ExamSessionDao
 ) : ExamSessionCacheDataSource {
-    override fun getExamSession(id: Long): Single<ExamSession> =
-        examSessionDao.getExamSessions(id)
+    override fun getExamSessions(ids: List<Long>): Single<List<ExamSession>> =
+        examSessionDao.getExamSessions(ids)
 
-    override fun saveExamSession(item: ExamSession): Completable =
-        examSessionDao.saveExamSessions(item)
+    override fun saveExamSessions(items: List<ExamSession>): Completable =
+        examSessionDao.saveExamSessions(items)
 }

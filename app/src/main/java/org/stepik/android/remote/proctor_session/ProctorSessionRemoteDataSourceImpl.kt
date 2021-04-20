@@ -6,7 +6,6 @@ import org.stepik.android.data.proctor_session.source.ProctorSessionRemoteDataSo
 import org.stepik.android.domain.proctor_session.model.ProctorSession
 import org.stepik.android.remote.proctor_session.model.ProctorSessionResponse
 import org.stepik.android.remote.proctor_session.service.ProctorSessionService
-import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
 
 class ProctorSessionRemoteDataSourceImpl
@@ -16,9 +15,8 @@ constructor(
 ) : ProctorSessionRemoteDataSource {
     private val proctorSessionMapper = Function(ProctorSessionResponse::proctorSessions)
 
-    override fun getProctorSession(id: Long): Single<ProctorSession> =
+    override fun getProctorSessions(ids: List<Long>): Single<List<ProctorSession>> =
         proctorSessionService
-            .getProctorSession(id)
+            .getProctorSessions(ids)
             .map(proctorSessionMapper)
-            .first()
 }

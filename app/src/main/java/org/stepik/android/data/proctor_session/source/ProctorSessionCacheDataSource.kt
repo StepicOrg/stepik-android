@@ -5,6 +5,6 @@ import io.reactivex.Single
 import org.stepik.android.domain.proctor_session.model.ProctorSession
 
 interface ProctorSessionCacheDataSource {
-    fun getProctorSession(id: Long): Single<ProctorSession>
-    fun saveProctorSession(item: ProctorSession): Completable
+    fun getProctorSessions(ids: List<Long>): Single<List<ProctorSession>>
+    fun saveProctorSessions(items: List<ProctorSession>): Completable
 }

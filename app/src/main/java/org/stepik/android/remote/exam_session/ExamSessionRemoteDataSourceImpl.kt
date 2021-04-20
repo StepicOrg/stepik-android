@@ -6,7 +6,6 @@ import org.stepik.android.data.exam_session.source.ExamSessionRemoteDataSource
 import org.stepik.android.domain.exam_session.model.ExamSession
 import org.stepik.android.remote.exam_session.model.ExamSessionResponse
 import org.stepik.android.remote.exam_session.service.ExamSessionService
-import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
 
 class ExamSessionRemoteDataSourceImpl
@@ -16,9 +15,8 @@ constructor(
 ) : ExamSessionRemoteDataSource {
     private val examSessionMapper = Function(ExamSessionResponse::examSessions)
 
-    override fun getExamSession(id: Long): Single<ExamSession> =
+    override fun getExamSessions(ids: List<Long>): Single<List<ExamSession>> =
         examSessionService
-            .getExamSession(id)
+            .getExamSessions(ids)
             .map(examSessionMapper)
-            .first()
 }

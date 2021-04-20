@@ -10,9 +10,9 @@ import org.stepik.android.domain.proctor_session.model.ProctorSession
 
 @Dao
 interface ProctorSessionDao {
-    @Query("SELECT * FROM ProctorSession where id = :id")
-    fun getProctorSessions(id: Long): Single<ProctorSession>
+    @Query("SELECT * FROM ProctorSession WHERE id IN (:ids)")
+    fun getProctorSessions(ids: List<Long>): Single<List<ProctorSession>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveProctorSessions(item: ProctorSession): Completable
+    fun saveProctorSessions(items: List<ProctorSession>): Completable
 }

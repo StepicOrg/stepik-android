@@ -3,13 +3,14 @@ package org.stepik.android.domain.proctor_session.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
 @Entity
 data class ProctorSession(
     @PrimaryKey
     @SerializedName("id")
-    val id: Long,
+    override val id: Long,
     @SerializedName("user")
     val user: Long,
     @SerializedName("section")
@@ -30,7 +31,7 @@ data class ProctorSession(
     val comment: String,
     @SerializedName("score")
     val score: Float
-) {
+) : Identifiable<Long> {
     companion object {
         val EMPTY = ProctorSession(0L, 0L, 0L, null, "", "", null, null, null, "", 0f)
     }

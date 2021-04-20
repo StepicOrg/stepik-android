@@ -10,9 +10,9 @@ import org.stepik.android.domain.exam_session.model.ExamSession
 
 @Dao
 interface ExamSessionDao {
-    @Query("SELECT * FROM ExamSession where id = :id")
-    fun getExamSessions(id: Long): Single<ExamSession>
+    @Query("SELECT * FROM ExamSession WHERE id IN (:ids)")
+    fun getExamSessions(ids: List<Long>): Single<List<ExamSession>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveExamSessions(item: ExamSession): Completable
+    fun saveExamSessions(items: List<ExamSession>): Completable
 }

@@ -12,9 +12,9 @@ class ProctorSessionCacheDataSourceImpl
 constructor(
     private val proctorSessionDao: ProctorSessionDao
 ) : ProctorSessionCacheDataSource {
-    override fun getProctorSession(id: Long): Single<ProctorSession> =
-        proctorSessionDao.getProctorSessions(id)
+    override fun getProctorSessions(ids: List<Long>): Single<List<ProctorSession>> =
+        proctorSessionDao.getProctorSessions(ids)
 
-    override fun saveProctorSession(item: ProctorSession): Completable =
-        proctorSessionDao.saveProctorSessions(item)
+    override fun saveProctorSessions(items: List<ProctorSession>): Completable =
+        proctorSessionDao.saveProctorSessions(items)
 }

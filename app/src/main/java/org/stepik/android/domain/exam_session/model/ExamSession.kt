@@ -3,13 +3,14 @@ package org.stepik.android.domain.exam_session.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
 @Entity
 data class ExamSession(
     @PrimaryKey
     @SerializedName("id")
-    val id: Long,
+    override val id: Long,
     @SerializedName("user")
     val user: Long,
     @SerializedName("section")
@@ -22,7 +23,7 @@ data class ExamSession(
     val timeLeft: Float,
     @SerializedName("random_exam")
     val randomExam: Int
-) {
+) : Identifiable<Long> {
     companion object {
         val EMPTY = ExamSession(0L, 0L, 0L, null, null, 0f, 0)
     }
