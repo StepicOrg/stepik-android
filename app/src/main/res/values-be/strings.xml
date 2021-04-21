@@ -906,4 +906,5 @@
 
     <string name="section_syllabus_exam_action_start">Пачаць экзамен у Web-версіі</string>
     <string name="section_syllabus_exam_action_continue">Працягнуць экзамен у Web-версіі</string>
+    <string name="section_syllabus_exam_action_finished">Паказаць вынік в Web-версии</string>
 </resources>

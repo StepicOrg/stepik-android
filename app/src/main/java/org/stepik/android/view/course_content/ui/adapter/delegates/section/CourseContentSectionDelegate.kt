@@ -96,8 +96,8 @@ class CourseContentSectionDelegate(
 
                 setupExamViews(data)
 
-                sectionExamType.isVisible = section.isExam && isEnabled
-                sectionExamStatus.isVisible = section.isExam && isEnabled
+                sectionExamType.isVisible = section.isExam
+                sectionExamStatus.isVisible = section.isExam
 
                 sectionTitle.text = section.title
                 sectionPosition.text = section.position.toString()
@@ -273,7 +273,9 @@ class CourseContentSectionDelegate(
                     context.getString(R.string.section_syllabus_exam_action_start)
                 ExamStatus.IN_PROGRESS ->
                     context.getString(R.string.section_syllabus_exam_action_continue)
-                ExamStatus.FINISHED, ExamStatus.CANNOT_START ->
+                ExamStatus.FINISHED ->
+                    context.getString(R.string.section_syllabus_exam_action_finished)
+                ExamStatus.CANNOT_START ->
                     ""
             }
             sectionExamAction.text = examActionTitle

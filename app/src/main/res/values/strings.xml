@@ -1091,4 +1091,5 @@
 
     <string name="section_syllabus_exam_action_start">Start the Exam in the Web-Version</string>
     <string name="section_syllabus_exam_action_continue">Continue in the Web-Version</string>
+    <string name="section_syllabus_exam_action_finished">Show result in the Web-Version</string>
 </resources>
