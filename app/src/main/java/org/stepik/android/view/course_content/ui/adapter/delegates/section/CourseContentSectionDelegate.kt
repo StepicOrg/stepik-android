@@ -96,8 +96,8 @@ class CourseContentSectionDelegate(
 
                 setupExamViews(data)
 
-                sectionExamType.isVisible = section.isExam
-                sectionExamStatus.isVisible = section.isExam
+                sectionExamType.isVisible = section.isExam && isEnabled
+                sectionExamStatus.isVisible = section.isExam && isEnabled
 
                 sectionTitle.text = section.title
                 sectionPosition.text = section.position.toString()
@@ -134,8 +134,7 @@ class CourseContentSectionDelegate(
                 sectionTimeLineAdapter.dates = dates
                 sectionTimeline.isVisible = dates.isNotEmpty()
 
-                sectionDownloadStatus.isVisible = isEnabled
-                itemView.isEnabled = section.isExam
+                sectionDownloadStatus.isVisible = isEnabled && !section.isExam
 
                 val alpha = if (isEnabled) 1f else 0.4f
                 sectionTitle.alpha = alpha
@@ -278,7 +277,7 @@ class CourseContentSectionDelegate(
                     ""
             }
             sectionExamAction.text = examActionTitle
-            sectionExamAction.isVisible = examActionTitle.isNotEmpty()
+            sectionExamAction.isVisible = examActionTitle.isNotEmpty() && sectionItem.isEnabled
         }
 
         private fun getColoredDrawable(@DrawableRes resId: Int, @ColorInt color: Int): Drawable? =

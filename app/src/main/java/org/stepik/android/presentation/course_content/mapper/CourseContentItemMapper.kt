@@ -68,7 +68,7 @@ constructor(
                     if (course.enrollment == 0L && course.isPaid && lesson.actions?.learnLesson != null) {
                         CourseContentItem.UnitItem.Access.DEMO
                     } else {
-                        if (sectionItem.isEnabled) {
+                        if (sectionItem.isEnabled && !sectionItem.section.isExam) {
                             CourseContentItem.UnitItem.Access.FULL_ACCESS
                         } else {
                             CourseContentItem.UnitItem.Access.NO_ACCESS
