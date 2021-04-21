@@ -894,4 +894,17 @@
     <string name="user_courses_catalog_action_message">Знайсці курсы ў Каталогу</string>
 
     <string name="fast_continue_find_action_title">Знайсці свой першы курс</string>
+
+    <!-- Syllabus exams -->
+    <string name="section_syllabus_exam_chip_simple_title">Экзамен</string>
+    <string name="section_syllabus_exam_chip_proctored_title">Экзамен з назіраннем</string>
+
+    <string name="section_syllabus_exam_no_score_title">Адзнака за іспыт з\'явіцца пазней</string>
+
+    <string name="section_syllabus_exam_finished">Завершаны</string>
+    <string name="section_syllabus_exam_in_progress">У працэсе</string>
+
+    <string name="section_syllabus_exam_action_start">Пачаць экзамен у Web-версіі</string>
+    <string name="section_syllabus_exam_action_continue">Працягнуць экзамен у Web-версіі</string>
+    <string name="section_syllabus_exam_action_finished">Паказаць вынік в Web-версии</string>
 </resources>

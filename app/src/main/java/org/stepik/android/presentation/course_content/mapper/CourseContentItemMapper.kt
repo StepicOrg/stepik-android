@@ -29,6 +29,7 @@ constructor(
             dates = sectionDatesMapper.mapSectionDates(section),
             progress = progresses.find { it.id == section.progress },
             isEnabled = section.hasUserAccess(course),
+            isProctored = course.isProctored,
             requiredSection = mapRequiredSection(section, sections, progresses),
             examSession = sessionDataItem?.examSession,
             proctorSession = sessionDataItem?.proctorSession
@@ -67,7 +68,7 @@ constructor(
                     if (course.enrollment == 0L && course.isPaid && lesson.actions?.learnLesson != null) {
                         CourseContentItem.UnitItem.Access.DEMO
                     } else {
-                        if (sectionItem.isEnabled) {
+                        if (sectionItem.isEnabled && !sectionItem.section.isExam) {
                             CourseContentItem.UnitItem.Access.FULL_ACCESS
                         } else {
                             CourseContentItem.UnitItem.Access.NO_ACCESS

@@ -22,6 +22,7 @@ sealed class CourseContentItem {
         val dates: List<CourseContentSectionDate>,
         val progress: Progress?,
         val isEnabled: Boolean,
+        val isProctored: Boolean,
         val requiredSection: RequiredSection? = null,
         val examSession: ExamSession? = null,
         val proctorSession: ProctorSession? = null
