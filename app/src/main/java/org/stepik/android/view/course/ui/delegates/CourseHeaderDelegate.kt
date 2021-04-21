@@ -29,6 +29,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_payments.model.PromoCode
@@ -147,6 +148,7 @@ class CourseHeaderDelegate(
                 AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
                 AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
             ))
+            analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
         }
     }
 

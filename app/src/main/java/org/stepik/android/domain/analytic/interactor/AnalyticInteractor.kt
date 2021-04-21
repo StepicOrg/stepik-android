@@ -20,10 +20,15 @@ constructor(
     private val gson: Gson
 ) {
     companion object {
+        private const val CATALOG_DISPLAY_NAME = "catalog-display"
+        private const val CATALOG_CLICK_NAME = "catalog-click"
+
         private const val PARAM_DATA = "data"
         private const val PARAM_LANGUAGE = "language"
         private const val PARAM_QUERY = "query"
     }
+
+    private val requireLanguageEvents = listOf(CATALOG_DISPLAY_NAME, CATALOG_CLICK_NAME)
 
     fun logEvent(eventName: String, bundle: Bundle): Completable =
         Single
@@ -32,7 +37,9 @@ constructor(
                 bundle.keySet()?.forEach {
                     properties.add(it, gson.toJsonTree(bundle[it]))
                 }
-                setLanguageProperty(properties)
+                if (eventName in requireLanguageEvents) {
+                    setLanguageProperty(properties)
+                }
                 return@fromCallable properties
             }
             .flatMapCompletable {
