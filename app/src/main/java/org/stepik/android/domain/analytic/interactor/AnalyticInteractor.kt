@@ -60,6 +60,7 @@ constructor(
      * means that we are searching for courses in ALL languages.
      * If there is no query object we obtain the default filter language.
      */
+    @Deprecated("Replace with event processor that adds language parameter")
     private fun setLanguageProperty(properties: JsonObject) {
         val queryObject = properties
             .getAsJsonObject(PARAM_DATA)
