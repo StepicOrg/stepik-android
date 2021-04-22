@@ -23,4 +23,7 @@ data class ExamSession(
     val timeLeft: Float,
     @SerializedName("random_exam")
     val randomExam: Int
-) : Identifiable<Long>
+) : Identifiable<Long> {
+    val isActive: Boolean
+        get() = timeLeft > 0
+}
