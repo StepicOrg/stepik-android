@@ -28,8 +28,6 @@ class LatexView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
     companion object {
-        private const val KOTLIN_RUNNABLE = "kotlin-runnable"
-
         private fun TextView.setAttributes(textAttributes: TextAttributes) {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, textAttributes.textSize)
             setTextColor(textAttributes.textColor)
@@ -87,7 +85,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                     /**
                      * Kotlin Playground downloads a file with Kotlin versions which generates a mistake, if allowUniversalAccessFromFileURLs is false
                      */
-                    webView.settings.allowUniversalAccessFromFileURLs = value.header.contains(KOTLIN_RUNNABLE)
+                    webView.settings.allowUniversalAccessFromFileURLs = value.allowUniversalAccessFromFileURLs
                 }
             }
         }
