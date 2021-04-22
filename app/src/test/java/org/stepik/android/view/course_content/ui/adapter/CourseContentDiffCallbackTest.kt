@@ -17,9 +17,9 @@ class CourseContentDiffCallbackTest {
         val section = Section(id = 0)
         val dates = emptyList<CourseContentSectionDate>()
 
-        val sectionItemA = CourseContentItem.SectionItem(section, dates, null, true)
+        val sectionItemA = CourseContentItem.SectionItem(section, dates, null, isEnabled = true, isProctored = true)
 
-        val sectionItemB = CourseContentItem.SectionItem(section, listOf(CourseContentSectionDate(0, Date())), null, true)
+        val sectionItemB = CourseContentItem.SectionItem(section, listOf(CourseContentSectionDate(0, Date())), null, isEnabled = true, isProctored = true)
 
         val callback = CourseContentDiffCallback(listOf(sectionItemA), listOf(sectionItemB))
 

@@ -31,4 +31,7 @@ data class ProctorSession(
     val comment: String,
     @SerializedName("score")
     val score: Float
-) : Identifiable<Long>
+) : Identifiable<Long> {
+    val isFinished: Boolean
+        get() = stopDate != null || submitDate != null
+}

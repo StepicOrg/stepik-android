@@ -142,7 +142,7 @@ constructor(
         val sectionIds = items
             .mapNotNull { item ->
                 (item as? CourseContentItem.SectionItem)
-                    ?.takeIf(CourseContentItem.SectionItem::isEnabled)
+                    ?.takeIf { it.isEnabled && !it.section.isExam }
                     ?.section
                     ?.id
             }
