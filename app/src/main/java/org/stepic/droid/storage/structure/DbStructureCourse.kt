@@ -71,6 +71,7 @@ object DbStructureCourse {
         const val CURRENCY_CODE = "currency_code"
         const val DISPLAY_PRICE = "display_price"
         const val PRICE_TIER = "price_tier"
+        const val IS_PROCTORED = "is_proctored"
     }
 
     fun createTable(db: SupportSQLiteDatabase) {

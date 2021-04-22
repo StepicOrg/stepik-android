@@ -27,6 +27,11 @@ object DbStructureSection {
         const val IS_REQUIREMENT_SATISFIED = "is_requirement_satisfied"
         const val REQUIRED_SECTION = "required_section"
         const val REQUIRED_PERCENT = "required_percent"
+
+        const val EXAM_DURATION_MINUTES = "exam_duration_minutes"
+        const val EXAM_SESSION = "exam_session"
+        const val PROCTOR_SESSION = "proctor_session"
+        const val IS_PROCTORING_CAN_BE_SCHEDULED = "is_proctoring_can_be_scheduled"
     }
 
     fun createTable(db: SupportSQLiteDatabase) {

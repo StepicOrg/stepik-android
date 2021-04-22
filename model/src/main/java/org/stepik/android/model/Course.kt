@@ -72,6 +72,8 @@ data class Course(
     val isArchived: Boolean = false,
     @SerializedName("is_favorite")
     val isFavorite: Boolean = false,
+    @SerializedName("is_proctored")
+    val isProctored: Boolean = false,
 
     @SerializedName("certificate_distinction_threshold")
     val certificateDistinctionThreshold: Long = 0,

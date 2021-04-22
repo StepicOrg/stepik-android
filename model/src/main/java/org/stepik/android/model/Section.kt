@@ -46,6 +46,14 @@ data class Section(
     val actions: Actions? = null,
     @SerializedName("is_exam")
     val isExam: Boolean = false,
+    @SerializedName("exam_duration_minutes")
+    val examDurationMinutes: Int? = null,
+    @SerializedName("exam_session")
+    val examSession: Long? = null,
+    @SerializedName("proctor_session")
+    val proctorSession: Long? = null,
+    @SerializedName("is_proctoring_can_be_scheduled")
+    val isProctoringCanBeScheduled: Boolean = false,
     @SerializedName("discounting_policy")
     val discountingPolicy: DiscountingPolicyType? = null,
     @SerializedName("is_requirement_satisfied")

@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.util.hasUserAccess
+import org.stepik.android.domain.course_content.model.SessionData
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -15,19 +16,23 @@ class CourseContentItemMapper
 constructor(
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
-    fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>): List<CourseContentItem> =
+    fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>, sessionData: List<SessionData>): List<CourseContentItem> =
         sections
             .flatMap { section ->
-                mapSectionWithEmptyUnits(unitItems, course, section, progresses, sections)
+                val sessionDataItem = sessionData.find { it.sectionId == section.id }
+                mapSectionWithEmptyUnits(unitItems, course, section, progresses, sections, sessionDataItem)
             }
 
-    private fun mapSectionWithEmptyUnits(unitItems: List<CourseContentItem.UnitItem>, course: Course, section: Section, progresses: List<Progress>, sections: List<Section>): List<CourseContentItem> =
+    private fun mapSectionWithEmptyUnits(unitItems: List<CourseContentItem.UnitItem>, course: Course, section: Section, progresses: List<Progress>, sections: List<Section>, sessionDataItem: SessionData?): List<CourseContentItem> =
         listOf(CourseContentItem.SectionItem(
             section = section,
             dates = sectionDatesMapper.mapSectionDates(section),
             progress = progresses.find { it.id == section.progress },
             isEnabled = section.hasUserAccess(course),
-            requiredSection = mapRequiredSection(section, sections, progresses)
+            isProctored = course.isProctored,
+            requiredSection = mapRequiredSection(section, sections, progresses),
+            examSession = sessionDataItem?.examSession,
+            proctorSession = sessionDataItem?.proctorSession
         )) + mapSectionUnits(section.units, unitItems)
 
     private fun mapSectionUnits(unitIds: List<Long>, unitItems: List<CourseContentItem.UnitItem>): List<CourseContentItem> =
@@ -63,7 +68,7 @@ constructor(
                     if (course.enrollment == 0L && course.isPaid && lesson.actions?.learnLesson != null) {
                         CourseContentItem.UnitItem.Access.DEMO
                     } else {
-                        if (sectionItem.isEnabled) {
+                        if (sectionItem.isEnabled && !sectionItem.section.isExam) {
                             CourseContentItem.UnitItem.Access.FULL_ACCESS
                         } else {
                             CourseContentItem.UnitItem.Access.NO_ACCESS
