@@ -38,6 +38,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            android:lines="1"
+            android:ellipsize="end"
 
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/specializationPrice"
