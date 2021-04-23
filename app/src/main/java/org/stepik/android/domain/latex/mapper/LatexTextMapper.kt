@@ -78,7 +78,7 @@ constructor(
                 preBody = blocks.joinToString(separator = "", transform = ContentBlock::preBody),
                 body = content,
                 postBody = blocks.asReversed().joinToString(separator = "", transform = ContentBlock::postBody),
-                allowUniversalAccessFromFileURLs = primary.any { it is KotlinRunnableSamplesScriptBlock }
+                settings = primary.map(ContentBlock::settings).reduce { a, b -> a + b }
             )
         }
     }

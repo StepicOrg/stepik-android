@@ -85,7 +85,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                     /**
                      * Kotlin Playground downloads a file with Kotlin versions which generates a mistake, if allowUniversalAccessFromFileURLs is false
                      */
-                    webView.settings.allowUniversalAccessFromFileURLs = value.allowUniversalAccessFromFileURLs
+                    webView.settings.allowUniversalAccessFromFileURLs = value.settings.allowUniversalAccessFromFileURLs
                 }
             }
         }
