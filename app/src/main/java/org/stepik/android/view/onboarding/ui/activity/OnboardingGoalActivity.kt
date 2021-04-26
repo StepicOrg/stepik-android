@@ -10,9 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_onboarding_goal.*
 import kotlinx.android.synthetic.main.item_onboarding.*
 import org.stepic.droid.R
-import org.stepik.android.view.onboarding.model.OnboardingGoalItem
-import org.stepik.android.view.onboarding.ui.adapter.delegate.OnboardingItemAdapterDelegate
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
+import org.stepik.android.view.onboarding.mapper.OnboardingRemoteConfigMapper
+import org.stepik.android.view.onboarding.model.OnboardingGoal
+import org.stepik.android.view.onboarding.ui.adapter.delegate.OnboardingGoalAdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import javax.inject.Inject
 
 class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_goal) {
     companion object {
@@ -24,21 +28,23 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         }
     }
 
-    private val onboardingGoalsAdapter: DefaultDelegateAdapter<OnboardingGoalItem> = DefaultDelegateAdapter()
+    @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var onboardingRemoteConfigMapper: OnboardingRemoteConfigMapper
+
+    private val onboardingGoalsAdapter: DefaultDelegateAdapter<OnboardingGoal> = DefaultDelegateAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        App.component().inject(this)
 
-        onboardingGoalsAdapter.items = listOf(
-            OnboardingGoalItem(R.drawable.onboarding_goal_yellow_red_gradient, getString(R.string.onboarding_goal_career)),
-            OnboardingGoalItem(R.drawable.onboarding_goal_blue_violet_gradient, getString(R.string.onboarding_goal_learn_new)),
-            OnboardingGoalItem(R.drawable.onboarding_goal_yellow_green_gradient, getString(R.string.onboarding_goal_exams)),
-            OnboardingGoalItem(R.drawable.onboarding_goal_blue_violet_gradient, getString(R.string.onboarding_goal_create_courses))
-        )
-
-        onboardingGoalsAdapter += OnboardingItemAdapterDelegate { onboardingGoalItem ->
-            Toast.makeText(this, "Item chosen: ${onboardingGoalItem.itemTitle}", Toast.LENGTH_SHORT).show()
+        onboardingGoalsAdapter += OnboardingGoalAdapterDelegate { onboardingGoal ->
+            Toast.makeText(this, onboardingGoal.icon + onboardingGoal.title, Toast.LENGTH_SHORT).show()
         }
+        val items = onboardingRemoteConfigMapper.buildOnboardingGoals()
+        onboardingGoalsAdapter.items = items
 
         goalRecycler.layoutManager = LinearLayoutManager(this)
         goalRecycler.adapter = onboardingGoalsAdapter

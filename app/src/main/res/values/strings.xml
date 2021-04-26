@@ -1095,9 +1095,5 @@
 
     <!-- Personalized onboarding -->
     <string name="onboarding_goal_title" translatable="false">На Stepik\nвы можете</string>
-    <string name="onboarding_goal_career" translatable="false">&#128188; Развивать свою карьеру</string>
-    <string name="onboarding_goal_learn_new" translatable="false">&#128269; Узнать что-то новое</string>
-    <string name="onboarding_goal_exams" translatable="false">&#128218; Подготовиться к экзаменам</string>
-    <string name="onboarding_goal_create_courses" translatable="false">&#128522; Создавать свои курсы</string>
     <string name="onboarding_goal_all_courses" translatable="false">&#128640; Все курсы</string>
 </resources>
