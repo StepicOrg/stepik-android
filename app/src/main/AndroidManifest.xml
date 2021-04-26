@@ -380,6 +380,9 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="org.stepik.android.view.onboarding.ui.activity.OnboardingGoalActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

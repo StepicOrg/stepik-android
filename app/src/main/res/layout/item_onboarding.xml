@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="64dp"
+    android:layout_width="match_parent"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="@dimen/corner_radius">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="64dp"
+        android:layout_width="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/itemIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:textSize="32sp"
+            android:textColor="#FF000000"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="😊" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/itemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textAppearance="?textAppearanceSubtitle1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/itemIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/onboarding_goal_career" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
