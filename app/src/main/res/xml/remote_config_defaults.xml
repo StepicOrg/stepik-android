@@ -44,4 +44,23 @@
         <key>is_new_home_screen_enabled</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>personalized_onboarding_course_lists</key>
+        <value>
+            [
+                {
+                    "title": "Создавать свои курсы",
+                    "icon": "🎓",
+                    "course_lists": [
+                                        {
+                                            "id": 135,
+                                            "title": "Создавать свои курсы",
+                                            "icon": "🎓",
+                                            "is_featured": false
+                                        }
+                                    ]
+                }
+            ]
+        </value>
+    </entry>
 </defaultsMap>
