@@ -106,7 +106,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             onBackPressed()
         }
 
-        dismissButton.isVisible = onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized
+        dismissButton.isVisible = true
 //        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isDeferredAuth || onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized
 
         launchSignUpButton.setOnClickListener {
@@ -278,11 +278,8 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 //            deferredAuthSplitTest.currentGroup.isDeferredAuth ->
 //                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
 
-            onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized ->
-                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
-
             else ->
-                super.onBackPressed()
+                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
         }
     }
 
