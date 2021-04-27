@@ -6,10 +6,12 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.domain.filter.analytic.ContenLanguageChangedAnalyticEvent
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.PresenterBase
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class FiltersPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -61,6 +64,11 @@ constructor(
     }
 
     fun onFilterChanged(newAppliedFilters: EnumSet<StepikFilter>) {
+        val newLanguage = newAppliedFilters.firstOrNull()?.language
+        if (newLanguage != null) {
+            analytic.report(ContenLanguageChangedAnalyticEvent(newLanguage, ContenLanguageChangedAnalyticEvent.Source.SETTINGS))
+        }
+
         compositeDisposable += Completable.fromCallable { sharedPreferenceHelper.saveFilterForFeatured(newAppliedFilters) }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
