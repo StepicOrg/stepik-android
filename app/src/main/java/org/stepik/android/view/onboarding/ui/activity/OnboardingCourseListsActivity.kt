@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_onboarding_course_lists.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -46,22 +47,39 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component().inject(this)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.SCREEN_OPENED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 2))
 
         courseListsHeader.text = onboardingGoal.title
 
         courseListsAdapter += OnboardingCourseListAdapterDelegate { onboardingCourseList ->
             sharedPreferenceHelper.personalizedCourseList = onboardingCourseList.id
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Onboarding.COURSE_LIST_SELECTED,
+                mapOf(
+                    AmplitudeAnalytic.Onboarding.PARAM_COURSE_LIST_TITLE to onboardingCourseList.title,
+                    AmplitudeAnalytic.Onboarding.PARAM_COURSE_LIST_ID to onboardingCourseList.id
+                )
+            )
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.COMPLETED)
             closeOnboarding()
         }
         courseListsAdapter.items = onboardingGoal.courseLists
         courseListsRecycler.layoutManager = LinearLayoutManager(this)
         courseListsRecycler.adapter = courseListsAdapter
 
-        backAction.setOnClickListener { onBackPressed() }
+        backAction.setOnClickListener {
+            onBackPressed()
+        }
 
         dismissButton.setOnClickListener {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.CLOSED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 2))
             closeOnboarding()
         }
+    }
+
+    override fun onBackPressed() {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.BACK_TO_GOALS)
+        super.onBackPressed()
     }
 
     private fun closeOnboarding() {

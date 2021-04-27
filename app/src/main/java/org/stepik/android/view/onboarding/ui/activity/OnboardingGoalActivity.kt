@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_onboarding_goal.*
 import kotlinx.android.synthetic.main.item_onboarding.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -47,9 +48,10 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         super.onCreate(savedInstanceState)
         App.component().inject(this)
         sharedPreferenceHelper.personalizedCourseList = -1L
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.SCREEN_OPENED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 1))
 
         onboardingGoalsAdapter += OnboardingGoalAdapterDelegate { onboardingGoal ->
-            // TODO APPS-3292: Analytic for choice
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.GOAL_SELECTED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_GOAL to onboardingGoal.title))
             startActivity(OnboardingCourseListsActivity.createIntent(this, onboardingGoal))
         }
         val items = onboardingRemoteConfigMapper.buildOnboardingGoals()
@@ -71,6 +73,7 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
     }
 
     private fun closeOnboarding() {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.CLOSED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 1))
         sharedPreferenceHelper.afterPersonalizedOnboardingEngaged()
         sharedPreferenceHelper.afterOnboardingPassed()
         screenManager.showLaunchScreen(this)
