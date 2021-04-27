@@ -4,19 +4,19 @@
         <shape android:shape="rectangle" >
             <gradient
                 android:angle="360"
-                android:startColor="#00FFDC71"
-                android:endColor="#0083D683"
+                android:startColor="#FFDC71"
+                android:endColor="#83D683"
                 android:type="linear"/>
             <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>
     <item
-        android:bottom="3dp"
-        android:left="3dp"
-        android:right="3dp"
-        android:top="3dp">
+        android:bottom="2dp"
+        android:left="2dp"
+        android:right="2dp"
+        android:top="2dp">
         <shape android:shape="rectangle" >
-            <solid android:color="@color/cardview_light_background" />
+            <solid android:color="@color/color_surface" />
             <corners android:radius="@dimen/corner_radius" />
         </shape>
     </item>

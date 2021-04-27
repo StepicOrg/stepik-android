@@ -12,6 +12,7 @@
     app:cardElevation="4dp"
     app:cardCornerRadius="@dimen/corner_radius">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/itemContainer"
         android:layout_height="64dp"
         android:layout_width="match_parent">
 

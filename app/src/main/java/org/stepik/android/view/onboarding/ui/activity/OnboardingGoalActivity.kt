@@ -75,7 +75,7 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
             closeOnboarding()
         }
         allCoursesAction.setOnClickListener {
-            analytic.report(OnboardingAllCoursesAnalyticEvent())
+            analytic.report(OnboardingAllCoursesAnalyticEvent)
             closeOnboarding()
         }
     }
