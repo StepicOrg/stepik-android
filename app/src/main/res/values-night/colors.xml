@@ -52,4 +52,5 @@
 
     <!-- Specialization catalog block -->
     <color name="header_background_color">@color/color_violet_300_alpha_12</color>
+
 </resources>

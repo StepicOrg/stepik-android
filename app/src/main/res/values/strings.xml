@@ -1092,4 +1092,10 @@
     <string name="section_syllabus_exam_action_start">Start the Exam in the Web-Version</string>
     <string name="section_syllabus_exam_action_continue">Continue in the Web-Version</string>
     <string name="section_syllabus_exam_action_finished">Show result in the Web-Version</string>
+
+    <!-- Personalized onboarding -->
+    <string name="onboarding_goal_title" translatable="false">На Stepik\nвы можете</string>
+    <string name="onboarding_goal_all_courses" translatable="false">&#128640; Все курсы</string>
+
+    <string name="onboarding_restart_action" translatable="false">Подобрать первый курс</string>
 </resources>

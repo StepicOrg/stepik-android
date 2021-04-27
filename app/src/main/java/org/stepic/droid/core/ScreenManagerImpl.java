@@ -77,6 +77,7 @@ import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListVisitedActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
+import org.stepik.android.view.onboarding.ui.activity.OnboardingGoalActivity;
 import org.stepik.android.view.profile.ui.activity.ProfileActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
@@ -695,5 +696,10 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showVisitedCourses(Context context) {
         Intent intent = CourseListVisitedActivity.Companion.createIntent(context);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void showPersonalizedOnboarding(Context context) {
+        context.startActivity(OnboardingGoalActivity.Companion.createIntent(context));
     }
 }

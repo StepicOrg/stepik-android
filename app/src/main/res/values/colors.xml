@@ -179,4 +179,5 @@
 
     <!-- Specialization catalog block -->
     <color name="header_background_color">@color/black</color>
+
 </resources>

@@ -161,4 +161,5 @@ public interface ScreenManager {
     void showCoursesCollection(Context context, long courseCollectionId);
     void showUserCourses(Context context);
     void showVisitedCourses(Context context);
+    void showPersonalizedOnboarding(Context context);
 }

@@ -114,6 +114,8 @@ import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModul
 import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
+import org.stepik.android.view.onboarding.ui.activity.OnboardingCourseListsActivity
+import org.stepik.android.view.onboarding.ui.activity.OnboardingGoalActivity
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
@@ -347,4 +349,7 @@ interface AppCoreComponent {
     fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
 
     fun inject(filterBottomSheetDialogFragment: FilterBottomSheetDialogFragment)
+
+    fun inject(onboardingGoalActivity: OnboardingGoalActivity)
+    fun inject(onboardingCourseListsActivity: OnboardingCourseListsActivity)
 }

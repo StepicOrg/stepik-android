@@ -24,6 +24,7 @@ import org.stepik.android.presentation.profile_edit.ProfileEditView
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
 import org.stepik.android.view.profile_edit.ui.adapter.delegates.ProfileEditTextDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
 
@@ -66,6 +67,8 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
                     screenManager.showProfileEditPassword(this, profile.id)
             }
         }
+
+        profileEditAdapter += adapterDelegate<ProfileEditItem, ProfileEditItem>(R.layout.item_profile_edit_navigation)
 
         navigationRecycler.layoutManager = LinearLayoutManager(this)
         navigationRecycler.adapter = profileEditAdapter

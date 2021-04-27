@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Completable
@@ -94,11 +95,11 @@ constructor(
             .onErrorReturn {
                 val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                 val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
-                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
+//                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
                 when {
                     isOnboardingNotPassedYet -> SplashRoute.Onboarding
                     isLogged -> SplashRoute.Home
-                    isDeferredAuth -> SplashRoute.Catalog
+//                    isDeferredAuth -> SplashRoute.Catalog
                     else -> SplashRoute.Launch
                 }
             }
@@ -126,7 +127,7 @@ constructor(
 
     private fun checkRemoteConfigs() {
         if (googleApiChecker.checkPlayServices()) {
-            firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
+            val remoteConfigTask = firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     analytic.reportEvent(Analytic.RemoteConfig.FETCHED_SUCCESSFUL)
                 } else {
@@ -138,6 +139,11 @@ constructor(
                         RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED,
                         firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean().toString()
                     )
+            }
+            try {
+                Tasks.await(remoteConfigTask)
+            } catch (exception: Exception) {
+                // no op
             }
         }
     }

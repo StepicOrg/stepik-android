@@ -109,6 +109,7 @@ public class SharedPreferenceHelper {
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
 
     private final static String NIGHT_MODE = "night_mode";
+    private final static String PERSONALIZED_COURSE_LIST = "personalized_course_list";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -280,6 +281,14 @@ public class SharedPreferenceHelper {
 
     public int getNightMode() {
         return getInt(PreferenceType.DEVICE_SPECIFIC, NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_UNSPECIFIED);
+    }
+
+    public void setPersonalizedCourseList(long personalizedCourseListId) {
+        put(PreferenceType.DEVICE_SPECIFIC, PERSONALIZED_COURSE_LIST, personalizedCourseListId);
+    }
+
+    public long getPersonalizedCourseList() {
+        return getLong(PreferenceType.DEVICE_SPECIFIC, PERSONALIZED_COURSE_LIST, -1);
     }
 
     public int getTimeNotificationCode() {
