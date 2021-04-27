@@ -11,12 +11,16 @@ import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.activity_onboarding_course_lists.*
 import kotlinx.android.synthetic.main.item_onboarding.view.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepik.android.domain.onboarding.analytic.OnboardingOpenedAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingCourseListSelectedAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingCompletedAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingClosedAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingBackToGoalsAnalyticEvent
 import org.stepik.android.view.onboarding.model.OnboardingCourseList
 import org.stepik.android.view.onboarding.model.OnboardingGoal
 import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
@@ -52,20 +56,14 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component().inject(this)
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.SCREEN_OPENED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 2))
+        analytic.report(OnboardingOpenedAnalyticEvent(screen = 2))
 
         courseListsHeader.text = onboardingGoal.title
 
         courseListsAdapter += createCourseListsAdapterDelegate { onboardingCourseList ->
             sharedPreferenceHelper.personalizedCourseList = onboardingCourseList.id
-            analytic.reportAmplitudeEvent(
-                AmplitudeAnalytic.Onboarding.COURSE_LIST_SELECTED,
-                mapOf(
-                    AmplitudeAnalytic.Onboarding.PARAM_COURSE_LIST_TITLE to onboardingCourseList.title,
-                    AmplitudeAnalytic.Onboarding.PARAM_COURSE_LIST_ID to onboardingCourseList.id
-                )
-            )
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.COMPLETED)
+            analytic.report(OnboardingCourseListSelectedAnalyticEvent(onboardingCourseList.title, onboardingCourseList.id))
+            analytic.report(OnboardingCompletedAnalyticEvent())
             closeOnboarding()
         }
         courseListsAdapter.items = onboardingGoal.courseLists
@@ -77,13 +75,13 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
         }
 
         dismissButton.setOnClickListener {
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.CLOSED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 2))
+            analytic.report(OnboardingClosedAnalyticEvent(screen = 2))
             closeOnboarding()
         }
     }
 
     override fun onBackPressed() {
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.BACK_TO_GOALS)
+        analytic.report(OnboardingBackToGoalsAnalyticEvent())
         super.onBackPressed()
     }
 

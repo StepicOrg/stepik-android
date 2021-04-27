@@ -32,14 +32,7 @@ interface AmplitudeAnalytic {
         const val CLOSED = "Onboarding closed"
         const val COMPLETED = "Onboarding completed"
 
-        const val GOAL_SELECTED = "Onboarding goal selected"
-        const val COURSE_LIST_SELECTED = "Onboarding course list selected"
-        const val BACK_TO_GOALS = "Onboarding back to goals clicked"
-
         const val PARAM_SCREEN = "screen"
-        const val PARAM_GOAL = "goal"
-        const val PARAM_COURSE_LIST_TITLE = "course_list_title"
-        const val PARAM_COURSE_LIST_ID = "course_list_id"
     }
 
     object Auth {

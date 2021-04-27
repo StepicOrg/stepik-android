@@ -10,12 +10,15 @@ import kotlinx.android.synthetic.main.activity_onboarding_goal.*
 import kotlinx.android.synthetic.main.item_onboarding.*
 import kotlinx.android.synthetic.main.item_onboarding.view.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepik.android.domain.onboarding.analytic.OnboardingAllCoursesAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingClosedAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingGoalSelectedAnalyticEvent
+import org.stepik.android.domain.onboarding.analytic.OnboardingOpenedAnalyticEvent
 import org.stepik.android.view.onboarding.resolver.OnboardingRemoteConfigResolver
 import org.stepik.android.view.onboarding.model.IconBackground
 import org.stepik.android.view.onboarding.model.OnboardingGoal
@@ -51,10 +54,10 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         super.onCreate(savedInstanceState)
         App.component().inject(this)
         sharedPreferenceHelper.personalizedCourseList = -1L
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.SCREEN_OPENED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 1))
+        analytic.report(OnboardingOpenedAnalyticEvent(screen = 1))
 
         onboardingGoalsAdapter += createGoalsAdapterDelegate { onboardingGoal ->
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.GOAL_SELECTED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_GOAL to onboardingGoal.title))
+            analytic.report(OnboardingGoalSelectedAnalyticEvent(goalTitle = onboardingGoal.title))
             startActivity(OnboardingCourseListsActivity.createIntent(this, onboardingGoal))
         }
         val items = onboardingRemoteConfigResolver.buildOnboardingGoals()
@@ -68,9 +71,11 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         itemTitle.text = title
 
         dismissButton.setOnClickListener {
+            analytic.report(OnboardingClosedAnalyticEvent(screen = 1))
             closeOnboarding()
         }
         allCoursesAction.setOnClickListener {
+            analytic.report(OnboardingAllCoursesAnalyticEvent())
             closeOnboarding()
         }
     }
@@ -91,7 +96,6 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         }
 
     private fun closeOnboarding() {
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.CLOSED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 1))
         sharedPreferenceHelper.afterOnboardingPassed()
         val isLogged = sharedPreferenceHelper.authResponseFromStore != null
         if (isLogged) {
