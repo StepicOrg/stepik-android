@@ -1096,4 +1096,6 @@
     <!-- Personalized onboarding -->
     <string name="onboarding_goal_title" translatable="false">На Stepik\nвы можете</string>
     <string name="onboarding_goal_all_courses" translatable="false">&#128640; Все курсы</string>
+
+    <string name="onboarding_restart_action" translatable="false">Подобрать первый курс</string>
 </resources>

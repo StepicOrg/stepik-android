@@ -13,6 +13,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.view.onboarding.model.OnboardingCourseList
 import org.stepik.android.view.onboarding.model.OnboardingGoal
 import org.stepik.android.view.onboarding.ui.adapter.delegate.OnboardingCourseListAdapterDelegate
@@ -85,7 +86,12 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
     private fun closeOnboarding() {
         sharedPreferenceHelper.afterPersonalizedOnboardingEngaged()
         sharedPreferenceHelper.afterOnboardingPassed()
-        screenManager.showLaunchScreen(this)
+        val isLogged = sharedPreferenceHelper.authResponseFromStore != null
+        if (isLogged) {
+            screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+        } else {
+            screenManager.showLaunchScreen(this)
+        }
         finish()
     }
 }

@@ -14,6 +14,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.view.onboarding.mapper.OnboardingRemoteConfigMapper
 import org.stepik.android.view.onboarding.model.OnboardingGoal
 import org.stepik.android.view.onboarding.ui.adapter.delegate.OnboardingGoalAdapterDelegate
@@ -76,7 +77,12 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.CLOSED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 1))
         sharedPreferenceHelper.afterPersonalizedOnboardingEngaged()
         sharedPreferenceHelper.afterOnboardingPassed()
-        screenManager.showLaunchScreen(this)
+        val isLogged = sharedPreferenceHelper.authResponseFromStore != null
+        if (isLogged) {
+            screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+        } else {
+            screenManager.showLaunchScreen(this)
+        }
         finish()
     }
 }

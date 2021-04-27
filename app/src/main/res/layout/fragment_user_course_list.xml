@@ -106,6 +106,7 @@
             android:layout_marginLeft="@dimen/course_list_side_padding"
             android:layout_marginRight="@dimen/course_list_side_padding"
             android:layout_marginTop="@dimen/guideline_standard_padding"
+            android:layout_marginBottom="@dimen/guideline_standard_padding"
             android:visibility="visible"
             tools:visibility="visible"/>
 
@@ -117,9 +118,22 @@
             android:layout_marginLeft="@dimen/course_list_side_padding"
             android:layout_marginRight="@dimen/course_list_side_padding"
             android:layout_marginTop="@dimen/guideline_standard_padding"
+            android:layout_marginBottom="@dimen/guideline_standard_padding"
             android:visibility="visible"
             tools:visibility="visible"/>
-
     </RelativeLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/courseListPersonalOnboardingAction"
+        style="@style/Widget.AppTheme.Button.OutlinedButton"
+        android:theme="@style/ThemeOverlay.Violet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/onboarding_restart_action"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginRight="@dimen/course_list_side_padding"
+        android:layout_marginBottom="@dimen/guideline_standard_padding"
+        android:visibility="visible"
+        tools:visibility="visible" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
