@@ -95,11 +95,11 @@ constructor(
             .onErrorReturn {
                 val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                 val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
-                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
+//                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
                 when {
                     isOnboardingNotPassedYet -> SplashRoute.Onboarding
                     isLogged -> SplashRoute.Home
-                    isDeferredAuth -> SplashRoute.Catalog
+//                    isDeferredAuth -> SplashRoute.Catalog
                     else -> SplashRoute.Launch
                 }
             }

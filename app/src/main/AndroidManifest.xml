@@ -360,6 +360,9 @@
         <activity
             android:name="org.stepik.android.view.course_list.ui.activity.CourseListVisitedActivity" />
 
+        <activity
+            android:name="org.stepik.android.view.onboarding.ui.activity.OnboardingCourseListsActivity" />
+
         <activity android:name="org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity">
             <intent-filter
                 android:autoVerify="true"

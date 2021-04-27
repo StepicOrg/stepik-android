@@ -188,6 +188,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         onShowStreakSuggestion()
+        handlePersonalizedCourseList()
     }
 
     private fun openFragment(launchIntent: Intent?, forceHome: Boolean = false) {
@@ -360,6 +361,15 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             else ->
                 throw IllegalStateException()
         }
+
+    private fun handlePersonalizedCourseList() {
+        val personalizedCourseList = sharedPreferenceHelper
+            .personalizedCourseList
+            .takeIf { it != -1L }
+            ?: return
+        sharedPreferenceHelper.personalizedCourseList = -1L
+        screenManager.showCoursesCollection(this, personalizedCourseList)
+    }
 
     //RootScreen methods
     override fun showCatalog() {

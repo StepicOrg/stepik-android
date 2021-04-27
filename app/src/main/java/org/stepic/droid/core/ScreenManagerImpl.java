@@ -699,7 +699,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showPersonalizedOnboardingFirstPage(Context context) {
+    public void showPersonalizedOnboarding(Context context) {
         context.startActivity(OnboardingGoalActivity.Companion.createIntent(context));
     }
 }

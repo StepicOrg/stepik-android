@@ -52,4 +52,8 @@
 
     <!-- Specialization catalog block -->
     <color name="header_background_color">@color/color_violet_300_alpha_12</color>
+
+    <!-- Personalized onboarding -->
+    <color name="onboarding_fab_background_color">@color/color_violet_300</color>
+    <color name="onboarding_fab_icon_color">@color/white</color>
 </resources>

@@ -32,14 +32,18 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/itemTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
             android:textAppearance="?textAppearanceSubtitle1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/itemIcon"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/onboarding_goal_career" />
-
+            app:layout_constraintHorizontal_bias="0"
+            android:maxLines="2"
+            android:ellipsize="end"
+            tools:text="Все курсы все курсы все курсы все курсы все курсы" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

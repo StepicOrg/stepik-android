@@ -29,6 +29,7 @@ import kotlinx.android.synthetic.main.activity_auth_social.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -75,6 +76,9 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     lateinit var deferredAuthSplitTest: DeferredAuthSplitTest
 
     @Inject
+    lateinit var onboardingSplitTest: OnboardingSplitTest
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val socialAuthPresenter: SocialAuthPresenter by viewModels { viewModelFactory }
@@ -102,7 +106,8 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             onBackPressed()
         }
 
-        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isDeferredAuth
+        dismissButton.isVisible = onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized
+//        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isDeferredAuth || onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
@@ -270,7 +275,10 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             course != null ->
                 super.onBackPressed()
 
-            deferredAuthSplitTest.currentGroup.isDeferredAuth ->
+//            deferredAuthSplitTest.currentGroup.isDeferredAuth ->
+//                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+
+            onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized ->
                 screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
 
             else ->
