@@ -1,14 +1,13 @@
-package org.stepik.android.view.onboarding.mapper
+package org.stepik.android.view.onboarding.resolver
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.get
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.view.onboarding.model.OnboardingGoal
 import javax.inject.Inject
 
-class OnboardingRemoteConfigMapper
+class OnboardingRemoteConfigResolver
 @Inject
 constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig,

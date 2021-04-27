@@ -109,7 +109,6 @@ public class SharedPreferenceHelper {
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
 
     private final static String NIGHT_MODE = "night_mode";
-    private final static String IS_PERSONALIZED_ONBOARDING_ENGAGED = "is_personalized_onboarding_engaged";
     private final static String PERSONALIZED_COURSE_LIST = "personalized_course_list";
 
     private OAuthResponse cachedAuthStepikResponse = null;
@@ -282,14 +281,6 @@ public class SharedPreferenceHelper {
 
     public int getNightMode() {
         return getInt(PreferenceType.DEVICE_SPECIFIC, NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_UNSPECIFIED);
-    }
-
-    public void afterPersonalizedOnboardingEngaged() {
-        put(PreferenceType.DEVICE_SPECIFIC, IS_PERSONALIZED_ONBOARDING_ENGAGED, true);
-    }
-
-    public boolean isPersonalizedOnboardingEngaged() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_PERSONALIZED_ONBOARDING_ENGAGED, false);
     }
 
     public void setPersonalizedCourseList(long personalizedCourseListId) {

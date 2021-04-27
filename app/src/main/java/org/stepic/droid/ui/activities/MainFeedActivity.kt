@@ -362,6 +362,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 throw IllegalStateException()
         }
 
+    // TODO APPS-3292: Refactor this if AB test is successful
     private fun handlePersonalizedCourseList() {
         val personalizedCourseList = sharedPreferenceHelper
             .personalizedCourseList

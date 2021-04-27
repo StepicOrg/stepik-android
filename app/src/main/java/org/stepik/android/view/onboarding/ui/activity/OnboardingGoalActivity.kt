@@ -16,7 +16,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
-import org.stepik.android.view.onboarding.mapper.OnboardingRemoteConfigMapper
+import org.stepik.android.view.onboarding.resolver.OnboardingRemoteConfigResolver
 import org.stepik.android.view.onboarding.model.IconBackground
 import org.stepik.android.view.onboarding.model.OnboardingGoal
 import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
@@ -43,7 +43,7 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
-    internal lateinit var onboardingRemoteConfigMapper: OnboardingRemoteConfigMapper
+    internal lateinit var onboardingRemoteConfigResolver: OnboardingRemoteConfigResolver
 
     private val onboardingGoalsAdapter: DefaultDelegateAdapter<OnboardingGoal> = DefaultDelegateAdapter()
 
@@ -57,7 +57,7 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.GOAL_SELECTED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_GOAL to onboardingGoal.title))
             startActivity(OnboardingCourseListsActivity.createIntent(this, onboardingGoal))
         }
-        val items = onboardingRemoteConfigMapper.buildOnboardingGoals()
+        val items = onboardingRemoteConfigResolver.buildOnboardingGoals()
         onboardingGoalsAdapter.items = items
 
         goalRecycler.layoutManager = LinearLayoutManager(this)
@@ -92,7 +92,6 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
 
     private fun closeOnboarding() {
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.CLOSED, mapOf(AmplitudeAnalytic.Onboarding.PARAM_SCREEN to 1))
-        sharedPreferenceHelper.afterPersonalizedOnboardingEngaged()
         sharedPreferenceHelper.afterOnboardingPassed()
         val isLogged = sharedPreferenceHelper.authResponseFromStore != null
         if (isLogged) {

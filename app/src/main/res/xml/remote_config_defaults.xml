@@ -46,21 +46,6 @@
     </entry>
     <entry>
         <key>personalized_onboarding_course_lists</key>
-        <value>
-            [
-                {
-                    "title": "Создавать свои курсы",
-                    "icon": "🎓",
-                    "course_lists": [
-                                        {
-                                            "id": 135,
-                                            "title": "Создавать свои курсы",
-                                            "icon": "🎓",
-                                            "is_featured": false
-                                        }
-                                    ]
-                }
-            ]
-        </value>
+        <value></value>
     </entry>
 </defaultsMap>

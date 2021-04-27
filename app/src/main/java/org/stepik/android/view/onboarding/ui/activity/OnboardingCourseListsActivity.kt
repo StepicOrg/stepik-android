@@ -84,7 +84,6 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
     }
 
     private fun closeOnboarding() {
-        sharedPreferenceHelper.afterPersonalizedOnboardingEngaged()
         sharedPreferenceHelper.afterOnboardingPassed()
         val isLogged = sharedPreferenceHelper.authResponseFromStore != null
         if (isLogged) {

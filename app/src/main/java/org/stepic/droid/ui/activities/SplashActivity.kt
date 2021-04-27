@@ -10,6 +10,7 @@ import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.branch.referral.Branch
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -17,6 +18,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.BranchParams
 import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
@@ -36,6 +38,9 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     @Inject
     internal lateinit var analytics: Analytic
+
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     @Inject
     internal lateinit var onboardingSplitTest: OnboardingSplitTest
@@ -134,16 +139,19 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
     }
 
     override fun onShowOnboarding() {
-        when {
-            onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized && locale.language == RUSSIAN_LANGUAGE_CODE ->
-                screenManager.showPersonalizedOnboarding(this)
-            onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Control ->
-                screenManager.showOnboarding(this)
-            onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.None ->
-                screenManager.showLaunchFromSplash(this)
-            else ->
-                screenManager.showLaunchFromSplash(this)
+        if (locale.language == RUSSIAN_LANGUAGE_CODE && firebaseRemoteConfig.getString(RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS).isNotEmpty()) {
+            when (onboardingSplitTest.currentGroup) {
+                OnboardingSplitTest.Group.Personalized ->
+                    screenManager.showPersonalizedOnboarding(this)
+                OnboardingSplitTest.Group.Control ->
+                    screenManager.showOnboarding(this)
+                OnboardingSplitTest.Group.None ->
+                    screenManager.showLaunchFromSplash(this)
+            }
+        } else {
+            screenManager.showLaunchFromSplash(this)
         }
+
         finish()
     }
 
