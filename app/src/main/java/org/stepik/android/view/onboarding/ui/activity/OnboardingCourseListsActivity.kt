@@ -5,8 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.activity_onboarding_course_lists.*
+import kotlinx.android.synthetic.main.item_onboarding.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -16,8 +19,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.view.onboarding.model.OnboardingCourseList
 import org.stepik.android.view.onboarding.model.OnboardingGoal
-import org.stepik.android.view.onboarding.ui.adapter.delegate.OnboardingCourseListAdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.toPx
 import javax.inject.Inject
 
 class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboarding_course_lists) {
@@ -52,7 +56,7 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
 
         courseListsHeader.text = onboardingGoal.title
 
-        courseListsAdapter += OnboardingCourseListAdapterDelegate { onboardingCourseList ->
+        courseListsAdapter += createCourseListsAdapterDelegate { onboardingCourseList ->
             sharedPreferenceHelper.personalizedCourseList = onboardingCourseList.id
             analytic.reportAmplitudeEvent(
                 AmplitudeAnalytic.Onboarding.COURSE_LIST_SELECTED,
@@ -82,6 +86,26 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.BACK_TO_GOALS)
         super.onBackPressed()
     }
+
+    private fun createCourseListsAdapterDelegate(onItemClicked: (OnboardingCourseList) -> Unit) =
+        adapterDelegate<OnboardingCourseList, OnboardingCourseList>(layoutResId = R.layout.item_onboarding) {
+            val itemIcon = itemView.itemIcon
+            val itemTitle = itemView.itemTitle
+
+            itemView.setOnClickListener { item?.let(onItemClicked) }
+
+            onBind { data ->
+                itemIcon.text = data.icon
+                itemTitle.text = data.title
+                itemIcon.setBackgroundResource(R.drawable.onboarding_goal_yellow_green_gradient)
+                // TODO APPS-3292: Add gradient stroke
+                if (data.isFeatured) {
+                    val cardView = (itemView as MaterialCardView)
+                    cardView.strokeWidth = 2.toPx()
+                    cardView.strokeColor = ContextCompat.getColor(context, R.color.color_overlay_red)
+                }
+            }
+        }
 
     private fun closeOnboarding() {
         sharedPreferenceHelper.afterOnboardingPassed()
