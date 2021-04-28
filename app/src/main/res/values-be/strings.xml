@@ -558,7 +558,7 @@
     <string name="course_payments_purchase_in_app">Купіць за %s</string>
     <string name="course_payments_purchase_in_web">Купіць у вэб версіі</string>
     <string name="course_payments_purchase_in_web_with_price">Купіць за %s</string>
-    <string name="course_payments_purchase_in_web_with_price_promo">Купіць за %s %s</string>
+    <string name="course_payments_purchase_in_web_with_price_promo">"Купіць за "</string>
     <string name="course_purchase_server_error">Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і звяжыцеся з падтрымкай, калі памылка будзе паўтарацца</string>
     <string name="course_purchase_billing_error">Пры апрацоўцы плацяжу адбылася памылка</string>
     <string name="course_purchase_billing_cancelled">Плацёж быў адменены</string>

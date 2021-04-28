@@ -1,16 +1,15 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
-import android.text.Spannable
 import android.text.SpannableString
+import android.text.SpannedString
 import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StrikethroughSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.buildSpannedString
+import androidx.core.text.scale
 import androidx.core.text.strikeThrough
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
@@ -252,12 +251,17 @@ class CourseHeaderDelegate(
             shareCourseMenuItem?.isVisible = true
         }
 
-    private fun getPurchaseButtonText(originalDisplayPrice: String, promoCode: PromoCode): Spannable {
+    private fun getPurchaseButtonText(originalDisplayPrice: String, promoCode: PromoCode): SpannedString {
         val promoDisplayPrice = formatPromoDisplayPrice(promoCode)
-        val spanString = courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo, promoDisplayPrice, originalDisplayPrice)
-        return SpannableString(spanString).apply {
-            setSpan(RelativeSizeSpan(0.9f), spanString.length - promoDisplayPrice.length - 1, spanString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            setSpan(StrikethroughSpan(), spanString.length - promoDisplayPrice.length - 1, spanString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        return buildSpannedString {
+            append(courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo))
+            append(promoDisplayPrice)
+            append(" ")
+            scale(0.9f) {
+                strikeThrough {
+                    append(originalDisplayPrice)
+                }
+            }
         }
     }
 
