@@ -13,4 +13,5 @@ object RemoteConfig {
     const val IS_DISABLED_STEPS_SUPPORTED = "is_disabled_steps_supported"
     const val SEARCH_QUERY_PARAMS_ANDROID = "search_query_params_android"
     const val IS_NEW_HOME_SCREEN_ENABLED = "is_new_home_screen_enabled"
+    const val PERSONALIZED_ONBOARDING_COURSE_LISTS = "personalized_onboarding_course_lists"
 }

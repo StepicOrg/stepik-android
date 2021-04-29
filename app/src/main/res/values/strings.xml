@@ -656,7 +656,7 @@
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
     <string name="course_payments_purchase_in_web_with_price">Buy for %s</string>
-    <string name="course_payments_purchase_in_web_with_price_promo">Buy for %s %s</string>
+    <string name="course_payments_purchase_in_web_with_price_promo">"Buy for "</string>
 
     <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
     <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>
@@ -1092,4 +1092,10 @@
     <string name="section_syllabus_exam_action_start">Start the Exam in the Web-Version</string>
     <string name="section_syllabus_exam_action_continue">Continue in the Web-Version</string>
     <string name="section_syllabus_exam_action_finished">Show result in the Web-Version</string>
+
+    <!-- Personalized onboarding -->
+    <string name="onboarding_goal_title" translatable="false">На Stepik\nвы можете</string>
+    <string name="onboarding_goal_all_courses" translatable="false">&#128640; Все курсы</string>
+
+    <string name="onboarding_restart_action" translatable="false">Подобрать первый курс</string>
 </resources>

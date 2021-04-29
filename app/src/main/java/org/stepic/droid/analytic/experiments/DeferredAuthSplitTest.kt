@@ -4,6 +4,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import javax.inject.Inject
 
+// TODO APPS-3292: Stopped deferred auth test in favor of personalized course lists test
 class DeferredAuthSplitTest
 @Inject
 constructor(

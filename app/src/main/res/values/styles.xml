@@ -302,4 +302,8 @@
     <style name="ShapeAppearanceOverlay.App.RoundedCorners.StoriesThumbnail" parent="">
         <item name="cornerSize">16dp</item>
     </style>
+
+    <style name="OnboardingTitle">
+        <item name="fontFamily">@font/stories</item>
+    </style>
 </resources>

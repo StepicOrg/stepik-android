@@ -44,4 +44,8 @@
         <key>is_new_home_screen_enabled</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>personalized_onboarding_course_lists</key>
+        <value></value>
+    </entry>
 </defaultsMap>

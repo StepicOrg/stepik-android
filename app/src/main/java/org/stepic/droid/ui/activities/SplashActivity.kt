@@ -5,30 +5,47 @@ import android.annotation.TargetApi
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.content.res.Resources
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.branch.referral.Branch
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.BranchParams
+import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.defaultLocale
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.util.Arrays
 import javax.inject.Inject
 
 class SplashActivity : BackToExitActivityBase(), SplashView {
 
+    companion object {
+        private const val RUSSIAN_LANGUAGE_CODE = "ru"
+    }
+
     @Inject
     internal lateinit var splashPresenter: SplashPresenter
 
     @Inject
     internal lateinit var analytics: Analytic
+
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
+
+    @Inject
+    internal lateinit var onboardingSplitTest: OnboardingSplitTest
+
+    private val locale = Resources.getSystem().configuration.defaultLocale
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,7 +139,19 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
     }
 
     override fun onShowOnboarding() {
-        screenManager.showOnboarding(this)
+        if (locale.language == RUSSIAN_LANGUAGE_CODE && firebaseRemoteConfig.getString(RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS).isNotEmpty()) {
+            when (onboardingSplitTest.currentGroup) {
+                OnboardingSplitTest.Group.Personalized ->
+                    screenManager.showPersonalizedOnboarding(this)
+                OnboardingSplitTest.Group.Control ->
+                    screenManager.showOnboarding(this)
+                OnboardingSplitTest.Group.None ->
+                    screenManager.showLaunchFromSplash(this)
+            }
+        } else {
+            screenManager.showLaunchFromSplash(this)
+        }
+
         finish()
     }
 

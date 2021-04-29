@@ -6,10 +6,12 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.domain.filter.analytic.ContenLanguageChangedAnalyticEvent
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class FiltersActionDispatcher
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     @FiltersBus
     private val filtersObservable: Observable<EnumSet<StepikFilter>>,
@@ -48,7 +51,12 @@ constructor(
                         onError = { onNewMessage(FiltersFeature.Message.LoadFiltersError) }
                     )
 
-            is FiltersFeature.Action.ChangeFilters ->
+            is FiltersFeature.Action.ChangeFilters -> {
+                val newLanguage = action.filters.firstOrNull()?.language
+                if (newLanguage != null) {
+                    analytic.report(ContenLanguageChangedAnalyticEvent(newLanguage, ContenLanguageChangedAnalyticEvent.Source.CATALOG))
+                }
+
                 compositeDisposable += Completable.fromCallable { sharedPreferenceHelper.saveFilterForFeatured(action.filters) }
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
@@ -56,6 +64,7 @@ constructor(
                         onComplete = { onNewMessage(FiltersFeature.Message.LoadFiltersSuccess(action.filters)) },
                         onError = emptyOnErrorStub
                     )
+            }
         }
     }
 }
