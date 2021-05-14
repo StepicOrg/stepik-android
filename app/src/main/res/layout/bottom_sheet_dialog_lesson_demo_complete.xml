@@ -53,7 +53,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/demoCompleteHeader"
 
-        tools:text="Поздравляем! Вы закончили демо-модуль «Основы»." />
+        tools:text="Поздравляем! Вы закончили демо-часть курса «Основы»." />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/demoCompleteInfo"
@@ -69,24 +69,36 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/demoCompleteTitle" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/demoCompleteAction"
+    <include
+        android:id="@+id/demoCompleteDivider"
+        layout="@layout/view_divider_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
+        android:layout_height="?dividerVerticalSize"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:theme="@style/ThemeOverlay.Green"
+
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/demoCompleteInfo"
+        app:layout_constraintTop_toBottomOf="@id/demoCompleteInfo" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/demoCompleteAction"
         style="@style/Widget.AppTheme.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+
+        android:theme="@style/ThemeOverlay.Green"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/demoCompleteDivider"
         app:layout_constraintVertical_bias="0"
-        android:text="Купить за 2399 ₽"
 
         tools:text="Купить за 2399 ₽" />
 
