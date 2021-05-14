@@ -42,11 +42,13 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.model.Course
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
+import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
@@ -447,6 +449,13 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData) {
         showSubmissionsDialog(reviewInstructionData = reviewInstructionData)
+    }
+
+    override fun showDemoFinishedDialog(course: Course?) {
+        if (course == null) return
+        LessonDemoCompleteBottomSheetDialogFragment
+            .newInstance(course)
+            .showIfNotExists(childFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {

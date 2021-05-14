@@ -9,14 +9,24 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.stepic.droid.R
+import org.stepik.android.model.Course
 
 class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "LessonDemoCompleteBottomSheetDialog"
 
-        fun newInstance(): DialogFragment =
-            LessonDemoCompleteBottomSheetDialogFragment()
+        const val ARG_COURSE = "course"
+
+        fun newInstance(course: Course): DialogFragment =
+            LessonDemoCompleteBottomSheetDialogFragment().apply {
+                    this.arguments = Bundle(1)
+                        .also {
+                            it.putParcelable(ARG_COURSE, course)
+                        }
+                }
     }
+
+    private val course: Course? by lazy { arguments?.getParcelable<Course>(ARG_COURSE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

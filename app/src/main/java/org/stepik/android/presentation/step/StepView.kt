@@ -4,6 +4,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.model.Course
 import org.stepik.android.model.comments.DiscussionThread
 
 interface StepView {
@@ -24,4 +25,5 @@ interface StepView {
     fun showLesson(direction: StepNavigationDirection, lessonData: LessonData, isAutoplayEnabled: Boolean = false)
     fun showQuizReloadMessage()
     fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData)
+    fun showDemoFinishedDialog(course: Course?)
 }

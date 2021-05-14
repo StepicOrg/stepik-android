@@ -152,7 +152,13 @@ constructor(
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled) },
+                onSuccess = {
+                    if (state.lessonData.isDemo && !it.isDemo) {
+                        view?.showDemoFinishedDialog(state.lessonData.course)
+                    } else {
+                        view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled)
+                    }
+                },
                 onError = emptyOnErrorStub
             )
     }
