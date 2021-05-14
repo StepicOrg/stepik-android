@@ -909,7 +909,7 @@
     <string name="section_syllabus_exam_action_finished">Паказаць вынік в Web-версии</string>
 
     <!-- Demo complete bottom sheet dialog -->
-    <string name="demo_complete_title">Віншуем! Вы скончылі дэма-модуль «%s».</string>
+    <string name="demo_complete_title">Віншуем! Вы скончылі дэма частка курса «%s».</string>
     <string name="demo_complete_message">Для доступу да наступных ўрокаў, купіце курс</string>
     <string name="demo_complete_purchase_action">Купіць за  %s</string>
 </resources>

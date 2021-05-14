@@ -8,8 +8,10 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
 import org.stepic.droid.R
 import org.stepik.android.model.Course
+import ru.nobird.android.view.base.ui.extension.argument
 
 class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() {
     companion object {
@@ -19,14 +21,11 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
 
         fun newInstance(course: Course): DialogFragment =
             LessonDemoCompleteBottomSheetDialogFragment().apply {
-                    this.arguments = Bundle(1)
-                        .also {
-                            it.putParcelable(ARG_COURSE, course)
-                        }
-                }
+                this.course = course
+            }
     }
 
-    private val course: Course? by lazy { arguments?.getParcelable<Course>(ARG_COURSE) }
+    private var course: Course by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,5 +38,11 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
     override fun onStart() {
         super.onStart()
         (dialog as? BottomSheetDialog)?.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
+        demoCompleteAction.text = getString(R.string.demo_complete_purchase_action, course.displayPrice)
     }
 }
