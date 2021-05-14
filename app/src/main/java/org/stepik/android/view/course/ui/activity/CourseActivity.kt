@@ -61,6 +61,7 @@ import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragm
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -286,6 +287,14 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             }
         if (coursePager.currentItem == 0) {
             analyticsOnPageChangeListener.onPageSelected(0)
+        }
+
+        if (tab == CourseScreenTab.PAY) {
+            val queryParams = intent
+                ?.data
+                ?.getAllQueryParameters()
+
+            coursePresenter.openCoursePurchaseInWeb(queryParams)
         }
     }
 

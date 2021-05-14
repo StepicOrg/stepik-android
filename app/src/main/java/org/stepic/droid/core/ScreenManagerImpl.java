@@ -702,4 +702,15 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showPersonalizedOnboarding(Context context) {
         context.startActivity(OnboardingGoalActivity.Companion.createIntent(context));
     }
+
+    @Override
+    public void showCoursePurchase(Context context, long courseId, CourseViewSource courseViewSource) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainIntent = new Intent(context, MainFeedActivity.class);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, CourseScreenTab.PAY);
+        taskStackBuilder.addParentStack(MainFeedActivity.class);
+        taskStackBuilder.addNextIntent(mainIntent);
+        taskStackBuilder.addNextIntent(courseIntent);
+        taskStackBuilder.startActivities();
+    }
 }
