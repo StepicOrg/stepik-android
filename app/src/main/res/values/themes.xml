@@ -114,7 +114,7 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
-    <style name="CustomBottomSheetDialog" parent="ThemeOverlay.AppTheme.BottomSheetDialog">
+    <style name="TopCornersRoundedBottomSheetDialog" parent="ThemeOverlay.AppTheme.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/RoundedBottomSheet</item>
     </style>
 
