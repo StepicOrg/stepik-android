@@ -114,6 +114,10 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
+    <style name="TopCornersRoundedBottomSheetDialog" parent="ThemeOverlay.AppTheme.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundedBottomSheet</item>
+    </style>
+
     <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>

@@ -1098,4 +1098,9 @@
     <string name="onboarding_goal_all_courses" translatable="false">&#128640; Все курсы</string>
 
     <string name="onboarding_restart_action" translatable="false">Подобрать первый курс</string>
+
+    <!-- Demo complete bottom sheet dialog -->
+    <string name="demo_complete_title">Congratulations! You have finished the demo-module "%s".</string>
+    <string name="demo_complete_message">In order to access the remaining lesson, you must buy the course</string>
+    <string name="demo_complete_purchase_action">Buy for %s</string>
 </resources>
