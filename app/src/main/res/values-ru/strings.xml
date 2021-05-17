@@ -811,6 +811,7 @@
 
     <string name="step_quiz_review_teacher_peer_message">Следите за рецензиями учащихся в веб-версии</string>
     <string name="step_quiz_review_teacher_instructor_message">Отрецензируйте решения в веб-версии, чтобы учащиеся получили баллы</string>
+    <string name="step_navigation_action_unknown">Возникла ошибка при обработке действия</string>
 
     <!-- Peer review -->
     <string name="step_quiz_review_send_pending">Отправьте лучшее решение на проверку</string>

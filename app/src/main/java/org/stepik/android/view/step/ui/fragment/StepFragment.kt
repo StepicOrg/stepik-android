@@ -51,7 +51,7 @@ import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDia
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
-import org.stepik.android.view.step.model.NavigationAction
+import org.stepik.android.view.step.model.StepNavigationAction
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
@@ -435,28 +435,29 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         }
     }
 
-    override fun showAction(navigationAction: NavigationAction) {
-        when (navigationAction) {
-            is NavigationAction.ShowLesson -> {
-                val unit = navigationAction.lessonData.unit ?: return
-                val section = navigationAction.lessonData.section ?: return
+    override fun handleNavigationAction(stepNavigationAction: StepNavigationAction) {
+        when (stepNavigationAction) {
+            is StepNavigationAction.ShowLesson -> {
+                val unit = stepNavigationAction.lessonData.unit ?: return
+                val section = stepNavigationAction.lessonData.section ?: return
 
                 activity?.finish()
                 screenManager.showSteps(
                     activity,
                     unit,
-                    navigationAction.lessonData.lesson,
+                    stepNavigationAction.lessonData.lesson,
                     section,
-                    navigationAction.direction == StepNavigationDirection.PREV,
-                    navigationAction.isAutoplayEnabled
+                    stepNavigationAction.direction == StepNavigationDirection.PREV,
+                    stepNavigationAction.isAutoplayEnabled
                 )
             }
-            is NavigationAction.ShowLessonDemoComplete -> {
+            is StepNavigationAction.ShowLessonDemoComplete -> {
                 LessonDemoCompleteBottomSheetDialogFragment
-                    .newInstance(navigationAction.course)
+                    .newInstance(stepNavigationAction.course)
                     .showIfNotExists(childFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
             }
-            is NavigationAction.Unknown -> {}
+            is StepNavigationAction.Unknown ->
+                view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
         }
     }
 

@@ -71,7 +71,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
         private const val EXTRA_TAB = "tab"
         private const val EXTRA_SOURCE = "source"
-        private const val EXTRA_IS_FROM_LESSON_DEMO = "is_from_lesson_demo"
+        private const val EXTRA_OPEN_COURSE_PURCHASE = "open_course_purchase"
 
         private const val NO_ID = -1L
 
@@ -84,12 +84,12 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO, isFromLessonDemo: Boolean = false): Intent =
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO, openCoursePurchase: Boolean = false): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
                 .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_TAB, tab.ordinal)
-                .putExtra(EXTRA_IS_FROM_LESSON_DEMO, isFromLessonDemo)
+                .putExtra(EXTRA_OPEN_COURSE_PURCHASE, openCoursePurchase)
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -358,7 +358,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     ))
                 }
 
-                if (intent.getBooleanExtra(EXTRA_IS_FROM_LESSON_DEMO, false)) {
+                if (intent.getBooleanExtra(EXTRA_OPEN_COURSE_PURCHASE, false)) {
                     coursePresenter.openCoursePurchaseInWeb()
                 }
 

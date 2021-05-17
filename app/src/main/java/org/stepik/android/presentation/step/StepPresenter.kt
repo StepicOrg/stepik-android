@@ -164,7 +164,7 @@ constructor(
                             isAutoplayEnabled = isAutoplayEnabled
                         )
                     }
-                    view?.showAction(action)
+                    view?.handleNavigationAction(action)
                 },
                 onError = emptyOnErrorStub
             )

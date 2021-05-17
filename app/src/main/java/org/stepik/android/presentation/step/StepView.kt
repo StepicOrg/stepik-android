@@ -5,7 +5,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
-import org.stepik.android.view.step.model.NavigationAction
+import org.stepik.android.view.step.model.StepNavigationAction
 
 interface StepView {
     sealed class State {
@@ -24,5 +24,5 @@ interface StepView {
     fun setNavigation(directions: Set<StepNavigationDirection>)
     fun showQuizReloadMessage()
     fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData)
-    fun showAction(navigationAction: NavigationAction)
+    fun handleNavigationAction(stepNavigationAction: StepNavigationAction)
 }

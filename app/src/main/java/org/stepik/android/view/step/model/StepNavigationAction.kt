@@ -6,17 +6,17 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Course
 
-sealed class NavigationAction : Parcelable {
+sealed class StepNavigationAction : Parcelable {
     @Parcelize
     data class ShowLesson(
         val direction: StepNavigationDirection,
         val lessonData: LessonData,
         val isAutoplayEnabled: Boolean = false
-    ) : NavigationAction()
+    ) : StepNavigationAction()
 
     @Parcelize
-    data class ShowLessonDemoComplete(val course: Course) : NavigationAction()
+    data class ShowLessonDemoComplete(val course: Course) : StepNavigationAction()
 
     @Parcelize
-    object Unknown : NavigationAction()
+    object Unknown : StepNavigationAction()
 }
