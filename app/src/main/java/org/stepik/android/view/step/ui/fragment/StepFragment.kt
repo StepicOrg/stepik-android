@@ -42,7 +42,6 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
-import org.stepik.android.model.Course
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
@@ -52,6 +51,7 @@ import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDia
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
+import org.stepik.android.view.step.model.NavigationAction
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
@@ -435,12 +435,29 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         }
     }
 
-    override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData, isAutoplayEnabled: Boolean) {
-        val unit = lessonData.unit ?: return
-        val section = lessonData.section ?: return
+    override fun showAction(navigationAction: NavigationAction) {
+        when (navigationAction) {
+            is NavigationAction.ShowLesson -> {
+                val unit = navigationAction.lessonData.unit ?: return
+                val section = navigationAction.lessonData.section ?: return
 
-        activity?.finish()
-        screenManager.showSteps(activity, unit, lessonData.lesson, section, direction == StepNavigationDirection.PREV, isAutoplayEnabled)
+                activity?.finish()
+                screenManager.showSteps(
+                    activity,
+                    unit,
+                    navigationAction.lessonData.lesson,
+                    section,
+                    navigationAction.direction == StepNavigationDirection.PREV,
+                    navigationAction.isAutoplayEnabled
+                )
+            }
+            is NavigationAction.ShowLessonDemoComplete -> {
+                LessonDemoCompleteBottomSheetDialogFragment
+                    .newInstance(navigationAction.course)
+                    .showIfNotExists(childFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
+            }
+            is NavigationAction.Unknown -> {}
+        }
     }
 
     override fun showQuizReloadMessage() {
@@ -449,13 +466,6 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData) {
         showSubmissionsDialog(reviewInstructionData = reviewInstructionData)
-    }
-
-    override fun showDemoFinishedDialog(course: Course?) {
-        if (course == null) return
-        LessonDemoCompleteBottomSheetDialogFragment
-            .newInstance(course)
-            .showIfNotExists(childFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
