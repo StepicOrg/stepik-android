@@ -708,6 +708,7 @@
     <string name="step_quiz_reload_message">Выбачайце, заданне было зменена аўтарамі. Неабходна пачаць спачатку. Балы за мінулыя рашэнні захаваныя.</string>
     <string name="step_quiz_review_teacher_peer_message">Сачыце за рэцэнзіямі вучняў у вэб-версіі</string>
     <string name="step_quiz_review_teacher_instructor_message">Адрэцэнзуе рашэнні ў вэб-версіі, каб навучэнцы атрымалі балы</string>
+    <string name="step_navigation_action_unknown">Узнікла памылка пры апрацоўцы дзеянні</string>
     <!-- Peer review -->
     <string name="step_quiz_review_send_pending">Адпраўце лепшае рашэнне на праверку</string>
     <string name="step_quiz_review_send_in_progress">Адпраўце лепшае рашэнне на праверку. Пасля адпраўкі замяніць рашэнне нельга.</string>
@@ -909,7 +910,7 @@
     <string name="section_syllabus_exam_action_finished">Паказаць вынік в Web-версии</string>
 
     <!-- Demo complete bottom sheet dialog -->
-    <string name="demo_complete_title">Віншуем! Вы скончылі дэма-модуль «%s».</string>
+    <string name="demo_complete_title">Віншуем! Вы скончылі дэма частка курса «%s».</string>
     <string name="demo_complete_message">Для доступу да наступных ўрокаў, купіце курс</string>
     <string name="demo_complete_purchase_action">Купіць за  %s</string>
 </resources>

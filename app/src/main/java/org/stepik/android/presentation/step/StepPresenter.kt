@@ -15,6 +15,7 @@ import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.step.mapper.NavigationActionMapper
 import javax.inject.Inject
 
 class StepPresenter
@@ -24,6 +25,7 @@ constructor(
     private val stepNavigationInteractor: StepNavigationInteractor,
 
     private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
+    private val navigationActionMapper: NavigationActionMapper,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -152,7 +154,18 @@ constructor(
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled) },
+                onSuccess = {
+                    val action = if (state.lessonData.isDemo && !it.isDemo) {
+                        navigationActionMapper.mapToCoursePurchaseAction(state.lessonData.course)
+                    } else {
+                        navigationActionMapper.mapToShowLessonAction(
+                            stepNavigationDirection,
+                            lessonData = it,
+                            isAutoplayEnabled = isAutoplayEnabled
+                        )
+                    }
+                    view?.handleNavigationAction(action)
+                },
                 onError = emptyOnErrorStub
             )
     }
