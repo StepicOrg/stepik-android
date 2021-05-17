@@ -3,7 +3,6 @@ package org.stepik.android.domain.step.interactor
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -70,7 +69,7 @@ constructor(
                 getSlicedSections(direction, lessonData.section, lessonData.course)
                     .flatMapMaybe { sections ->
                         sections
-                            .firstOrNull { it.hasUserAccessAndNotEmpty(lessonData.course) }
+                            .firstOrNull()
                             .toMaybe()
                     }
                     .flatMap { section ->
@@ -109,7 +108,7 @@ constructor(
             else ->
                 getSlicedSections(direction, lessonData.section, lessonData.course)
                     .map { sections ->
-                        sections.any { it.hasUserAccessAndNotEmpty(lessonData.course) }
+                        sections.any { lessonData.course.enrollment > 0 && it.units.isNotEmpty() }
                     }
         }
 

@@ -8,13 +8,17 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.hasUserAccess
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.interactor.StepInteractor
 import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.model.Section
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.step.model.SectionUnavailableData
 import javax.inject.Inject
 
 class StepPresenter
@@ -152,7 +156,38 @@ constructor(
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled) },
+                onSuccess = {
+                    when {
+                        // TODO Exam check will be modified in APPS-3299
+                        //  to handle state when the exam has been passed.
+                        it.section.hasUserAccess(it.course) && it.section?.isExam == false ->
+                            view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled)
+
+                        it.section?.isRequirementSatisfied == false -> {
+                            if (state.lessonData.section != null) {
+                                resolveRequiredSection(state.lessonData.section, it.section)
+                            } else {
+                                SectionUnavailableData.Unknown
+                            }
+                        }
+                        it.section?.isExam == true -> {
+                            val sectionUnavailableData = if (state.lessonData.section != null) {
+                                SectionUnavailableData.RequiresExam(state.lessonData.section, it.section)
+                            } else {
+                                SectionUnavailableData.Unknown
+                            }
+                            view?.showSectionUnavailableMessage(sectionUnavailableData)
+                        }
+                        it.section?.beginDate != null && DateTimeHelper.nowUtc() < it.section.beginDate?.time!! -> {
+                            val sectionUnavailableData = if (state.lessonData.section != null) {
+                                SectionUnavailableData.RequiresDate(state.lessonData.section, it.lesson, it.section.beginDate!!)
+                            } else {
+                                SectionUnavailableData.Unknown
+                            }
+                            view?.showSectionUnavailableMessage(sectionUnavailableData)
+                        }
+                    }
+                },
                 onError = emptyOnErrorStub
             )
     }
@@ -168,6 +203,28 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { view?.openShowSubmissionsWithReview(it) },
+                onError = { it.printStackTrace() }
+            )
+    }
+
+    private fun resolveRequiredSection(currentSection: Section, targetSection: Section) {
+        compositeDisposable += stepInteractor
+            .getRequiredSection(targetSection.requiredSection)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doOnSubscribe { isBlockingLoading = true }
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onSuccess = { (requiredSection, requiredProgress) ->
+                    view?.showSectionUnavailableMessage(
+                        SectionUnavailableData.RequiresSection(
+                            currentSection,
+                            targetSection,
+                            requiredSection,
+                            requiredProgress
+                        )
+                    )
+                            },
                 onError = { it.printStackTrace() }
             )
     }
