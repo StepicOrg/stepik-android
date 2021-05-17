@@ -215,7 +215,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource) {
-        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO);
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO, false);
         context.startActivity(intent);
     }
 
@@ -514,7 +514,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep) {
-        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS);
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS, false);
         Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
         activity.startActivity(courseIntent);
         activity.startActivity(stepsIntent);
@@ -707,7 +707,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCoursePurchase(Context context, long courseId, CourseViewSource courseViewSource) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainIntent = new Intent(context, MainFeedActivity.class);
-        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, CourseScreenTab.PAY);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, CourseScreenTab.INFO, true);
         taskStackBuilder.addParentStack(MainFeedActivity.class);
         taskStackBuilder.addNextIntent(mainIntent);
         taskStackBuilder.addNextIntent(courseIntent);

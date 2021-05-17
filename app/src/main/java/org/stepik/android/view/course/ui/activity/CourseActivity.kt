@@ -61,7 +61,6 @@ import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragm
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -72,6 +71,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
         private const val EXTRA_TAB = "tab"
         private const val EXTRA_SOURCE = "source"
+        private const val EXTRA_IS_FROM_LESSON_DEMO = "is_from_lesson_demo"
 
         private const val NO_ID = -1L
 
@@ -84,11 +84,12 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO, isFromLessonDemo: Boolean = false): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
                 .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_TAB, tab.ordinal)
+                .putExtra(EXTRA_IS_FROM_LESSON_DEMO, isFromLessonDemo)
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -288,14 +289,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         if (coursePager.currentItem == 0) {
             analyticsOnPageChangeListener.onPageSelected(0)
         }
-
-        if (tab == CourseScreenTab.PAY) {
-            val queryParams = intent
-                ?.data
-                ?.getAllQueryParameters()
-
-            coursePresenter.openCoursePurchaseInWeb(queryParams)
-        }
     }
 
     private fun initViewPager(courseId: Long) {
@@ -363,6 +356,10 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                         AmplitudeAnalytic.Course.Params.COURSE to state.courseHeaderData.courseId,
                         AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.WIDGET
                     ))
+                }
+
+                if (intent.getBooleanExtra(EXTRA_IS_FROM_LESSON_DEMO, false)) {
+                    coursePresenter.openCoursePurchaseInWeb()
                 }
 
                 ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
