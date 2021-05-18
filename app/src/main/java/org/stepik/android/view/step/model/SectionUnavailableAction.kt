@@ -7,29 +7,26 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import java.util.Date
 
-sealed class SectionUnavailableData : Parcelable {
+sealed class SectionUnavailableAction : Parcelable {
     @Parcelize
     data class RequiresSection(
         val currentSection: Section,
         val targetSection: Section,
         val requiredSection: Section?,
         val requiredProgress: Progress?
-    ) : SectionUnavailableData()
+    ) : SectionUnavailableAction()
+
+    @Parcelize
+    data class RequiresExam(
+        val currentSection: Section,
+        val targetSection: Section
+    ) : SectionUnavailableAction()
 
     @Parcelize
     data class RequiresDate(
         val currentSection: Section,
         val nextLesson: Lesson,
         val date: Date
-    ) : SectionUnavailableData()
-
-    @Parcelize
-    data class RequiresExam(
-        val currentSection: Section,
-        val targetSection: Section
-    ) : SectionUnavailableData()
-
-    @Parcelize
-    object Unknown : SectionUnavailableData()
+    ) : SectionUnavailableAction()
 }
 

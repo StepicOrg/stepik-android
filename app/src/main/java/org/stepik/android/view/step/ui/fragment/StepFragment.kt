@@ -52,7 +52,6 @@ import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.step.model.StepNavigationAction
-import org.stepik.android.view.step.model.SectionUnavailableData
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
@@ -452,11 +451,17 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     stepNavigationAction.isAutoplayEnabled
                 )
             }
+
             is StepNavigationAction.ShowLessonDemoComplete -> {
                 LessonDemoCompleteBottomSheetDialogFragment
                     .newInstance(stepNavigationAction.course)
                     .showIfNotExists(childFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
             }
+
+            is StepNavigationAction.ShowSectionUnavailable -> {
+
+            }
+
             is StepNavigationAction.Unknown ->
                 view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
         }
@@ -468,16 +473,6 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData) {
         showSubmissionsDialog(reviewInstructionData = reviewInstructionData)
-    }
-
-    override fun showSectionUnavailableMessage(sectionUnavailableData: SectionUnavailableData) {
-        // TODO APPS-3275 Show relevant dialogs
-        when (sectionUnavailableData) {
-            is SectionUnavailableData.RequiresSection -> {}
-            is SectionUnavailableData.RequiresDate -> {}
-            is SectionUnavailableData.RequiresExam -> {}
-            is SectionUnavailableData.Unknown -> {}
-        }
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {

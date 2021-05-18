@@ -6,7 +6,6 @@ import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.view.step.model.StepNavigationAction
-import org.stepik.android.view.step.model.SectionUnavailableData
 
 interface StepView {
     sealed class State {
@@ -26,5 +25,4 @@ interface StepView {
     fun showQuizReloadMessage()
     fun openShowSubmissionsWithReview(reviewInstructionData: ReviewInstructionData)
     fun handleNavigationAction(stepNavigationAction: StepNavigationAction)
-    fun showSectionUnavailableMessage(sectionUnavailableData: SectionUnavailableData)
 }

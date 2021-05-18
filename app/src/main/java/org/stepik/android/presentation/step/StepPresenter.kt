@@ -9,7 +9,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.hasUserAccess
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.interactor.StepInteractor
@@ -18,8 +17,9 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Section
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.view.step.model.SectionUnavailableData
 import org.stepik.android.view.step.mapper.NavigationActionMapper
+import org.stepik.android.view.step.model.StepNavigationAction
+import timber.log.Timber
 import javax.inject.Inject
 
 class StepPresenter
@@ -159,46 +159,43 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = {
-                    val action = if (state.lessonData.isDemo && !it.isDemo) {
-                        navigationActionMapper.mapToCoursePurchaseAction(state.lessonData.course)
-                    } else {
-                        navigationActionMapper.mapToShowLessonAction(
-                            stepNavigationDirection,
-                            lessonData = it,
-                            isAutoplayEnabled = isAutoplayEnabled
-                        )
-                    }
-                    view?.handleNavigationAction(action)
-                },
-                onSuccess = {
+                    Timber.d("Current lesson: ${state.lessonData.lesson.title}")
+                    Timber.d("Next lesson: ${it.lesson.title}")
                     when {
+                        state.lessonData.isDemo && !it.isDemo ->
+                            view?.handleNavigationAction(
+                                navigationActionMapper.mapToCoursePurchaseAction(
+                                    state.lessonData.course
+                                )
+                            )
+
+                        it.section?.isRequirementSatisfied == false ->
+                            resolveRequiredSection(state.lessonData.section, it.section)
+
                         // TODO Exam check will be modified in APPS-3299
                         //  to handle state when the exam has been passed.
-                        it.section.hasUserAccess(it.course) && it.section?.isExam == false ->
-                            view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled)
+                        it.section?.isExam == true ->
+                            view?.handleNavigationAction(
+                                navigationActionMapper.mapToRequiresExamAction(
+                                state.lessonData.section, it.section
+                            ))
 
-                        it.section?.isRequirementSatisfied == false -> {
-                            if (state.lessonData.section != null) {
-                                resolveRequiredSection(state.lessonData.section, it.section)
-                            } else {
-                                SectionUnavailableData.Unknown
-                            }
-                        }
-                        it.section?.isExam == true -> {
-                            val sectionUnavailableData = if (state.lessonData.section != null) {
-                                SectionUnavailableData.RequiresExam(state.lessonData.section, it.section)
-                            } else {
-                                SectionUnavailableData.Unknown
-                            }
-                            view?.showSectionUnavailableMessage(sectionUnavailableData)
-                        }
-                        it.section?.beginDate != null && DateTimeHelper.nowUtc() < it.section.beginDate?.time!! -> {
-                            val sectionUnavailableData = if (state.lessonData.section != null) {
-                                SectionUnavailableData.RequiresDate(state.lessonData.section, it.lesson, it.section.beginDate!!)
-                            } else {
-                                SectionUnavailableData.Unknown
-                            }
-                            view?.showSectionUnavailableMessage(sectionUnavailableData)
+                        it.section?.beginDate != null && DateTimeHelper.nowUtc() < it.section.beginDate?.time!! ->
+                            view?.handleNavigationAction(
+                                navigationActionMapper.mapToRequiresDateAction(
+                                    state.lessonData.section,
+                                    it.lesson,
+                                    it.section.beginDate!!
+                                )
+                            )
+
+                        else -> {
+                            val action = navigationActionMapper.mapToShowLessonAction(
+                                stepNavigationDirection,
+                                lessonData = it,
+                                isAutoplayEnabled = isAutoplayEnabled
+                            )
+                            view?.handleNavigationAction(action)
                         }
                     }
                 },
@@ -221,7 +218,11 @@ constructor(
             )
     }
 
-    private fun resolveRequiredSection(currentSection: Section, targetSection: Section) {
+    private fun resolveRequiredSection(currentSection: Section?, targetSection: Section) {
+        if (currentSection == null) {
+            view?.handleNavigationAction(StepNavigationAction.Unknown)
+            return
+        }
         compositeDisposable += stepInteractor
             .getRequiredSection(targetSection.requiredSection)
             .subscribeOn(backgroundScheduler)
@@ -230,15 +231,14 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { (requiredSection, requiredProgress) ->
-                    view?.showSectionUnavailableMessage(
-                        SectionUnavailableData.RequiresSection(
-                            currentSection,
-                            targetSection,
-                            requiredSection,
-                            requiredProgress
-                        )
+                    val action = navigationActionMapper.mapToRequiredSectionAction(
+                        currentSection,
+                        targetSection,
+                        requiredSection,
+                        requiredProgress
                     )
-                            },
+                    view?.handleNavigationAction(action)
+                },
                 onError = { it.printStackTrace() }
             )
     }
