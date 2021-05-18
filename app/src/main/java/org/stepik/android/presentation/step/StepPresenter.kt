@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.step
 
 import com.jakewharton.rxrelay2.BehaviorRelay
+import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -14,9 +15,9 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.interactor.StepInteractor
 import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
-import org.stepik.android.model.Section
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.course_content.model.RequiredSection
 import org.stepik.android.view.step.mapper.NavigationActionMapper
 import org.stepik.android.view.step.model.StepNavigationAction
 import javax.inject.Inject
@@ -150,7 +151,6 @@ constructor(
         val state = (state as? StepView.State.Loaded)
             ?: return
 
-        // TODO APPS-3275 - clean up is necessary
         compositeDisposable += stepNavigationInteractor
             .getLessonDataForDirection(stepNavigationDirection, state.stepWrapper.step, state.lessonData)
             .subscribeOn(backgroundScheduler)
@@ -158,44 +158,14 @@ constructor(
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = {
-                    when {
-                        state.lessonData.isDemo && !it.isDemo ->
-                            view?.handleNavigationAction(
-                                navigationActionMapper.mapToCoursePurchaseAction(
-                                    state.lessonData.course
-                                )
-                            )
-
-                        // TODO Exam check will be modified in APPS-3299
-                        //  to handle state when the exam has been passed.
-                        it.section?.isExam == true ->
-                            view?.handleNavigationAction(
-                                navigationActionMapper.mapToRequiresExamAction(
-                                    state.lessonData.section, it.section
-                                ))
-
-                        it.section?.isRequirementSatisfied == false ->
-                            resolveRequiredSection(state.lessonData.section, it.section)
-
-                        it.section?.beginDate != null && DateTimeHelper.nowUtc() < it.section.beginDate?.time!! ->
-                            view?.handleNavigationAction(
-                                navigationActionMapper.mapToRequiresDateAction(
-                                    state.lessonData.section,
-                                    it.lesson,
-                                    it.section.beginDate!!
-                                )
-                            )
-
-                        else -> {
-                            val action = navigationActionMapper.mapToShowLessonAction(
-                                stepNavigationDirection,
-                                lessonData = it,
-                                isAutoplayEnabled = isAutoplayEnabled
-                            )
-                            view?.handleNavigationAction(action)
+                onSuccess = { targetLessonData ->
+                    val requiredSectionSource =
+                        if (targetLessonData.section?.isRequirementSatisfied == false) {
+                            stepInteractor.getRequiredSection(targetLessonData.section.requiredSection)
+                        } else {
+                            Maybe.empty()
                         }
-                    }
+                    resolveStepDirectionClick(stepNavigationDirection, state.lessonData, targetLessonData, requiredSectionSource, isAutoplayEnabled)
                 },
                 onError = emptyOnErrorStub
             )
@@ -216,32 +186,71 @@ constructor(
             )
     }
 
-    private fun resolveRequiredSection(currentSection: Section?, targetSection: Section) {
-        if (currentSection == null) {
-            view?.handleNavigationAction(StepNavigationAction.Unknown)
-            return
-        }
-        compositeDisposable += stepInteractor
-            .getRequiredSection(targetSection.requiredSection)
+    private fun resolveStepDirectionClick(
+        stepNavigationDirection: StepNavigationDirection,
+        currentLessonData: LessonData,
+        targetLessonData: LessonData,
+        requiredSectionSource: Maybe<RequiredSection>,
+        isAutoplayEnabled: Boolean
+    ) {
+        compositeDisposable += requiredSectionSource
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { (requiredSection, requiredProgress) ->
-                    val action = navigationActionMapper.mapToRequiredSectionAction(
-                        currentSection,
-                        targetSection,
-                        requiredSection,
-                        requiredProgress
+                onComplete = {
+                    applyStepNavigationAction(
+                        stepNavigationDirection,
+                        currentLessonData,
+                        targetLessonData,
+                        requiredSection = null,
+                        isAutoplayEnabled = isAutoplayEnabled
                     )
-                    view?.handleNavigationAction(action)
+                },
+                onSuccess = { requiredSection ->
+                    applyStepNavigationAction(
+                        stepNavigationDirection,
+                        currentLessonData,
+                        targetLessonData,
+                        requiredSection = requiredSection,
+                        isAutoplayEnabled = isAutoplayEnabled
+                    )
                 },
                 onError = {
                     view?.handleNavigationAction(StepNavigationAction.Unknown)
                     it.printStackTrace()
                 }
             )
+    }
+
+    private fun applyStepNavigationAction(
+        stepNavigationDirection: StepNavigationDirection,
+        currentLessonData: LessonData,
+        targetLessonData: LessonData,
+        requiredSection: RequiredSection?,
+        isAutoplayEnabled: Boolean
+    ) {
+        val action =
+            when {
+                currentLessonData.isDemo && !targetLessonData.isDemo ->
+                    navigationActionMapper.mapToCoursePurchaseAction(currentLessonData.course)
+
+                // TODO Exam check will be modified in APPS-3299
+                //  to handle state when the exam has been passed.
+                targetLessonData.section?.isExam == true ->
+                    navigationActionMapper.mapToRequiresExamAction(currentLessonData.section, targetLessonData.section, requiredSection)
+
+                targetLessonData.section?.isRequirementSatisfied == false ->
+                    navigationActionMapper.mapToRequiredSectionAction(currentLessonData.section, targetLessonData.section, requiredSection)
+
+                targetLessonData.section?.beginDate != null && DateTimeHelper.nowUtc() < targetLessonData.section.beginDate?.time!! ->
+                    navigationActionMapper.mapToRequiresDateAction(currentLessonData.section, targetLessonData.lesson, targetLessonData.section.beginDate!!)
+
+                else ->
+                    navigationActionMapper.mapToShowLessonAction(stepNavigationDirection, lessonData = targetLessonData, isAutoplayEnabled = isAutoplayEnabled)
+            }
+        view?.handleNavigationAction(action)
     }
 
     /**

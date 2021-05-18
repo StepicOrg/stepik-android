@@ -4,8 +4,8 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
-import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
+import org.stepik.android.view.course_content.model.RequiredSection
 import org.stepik.android.view.step.model.SectionUnavailableAction
 import org.stepik.android.view.step.model.StepNavigationAction
 import java.util.Date
@@ -29,27 +29,26 @@ constructor() {
         StepNavigationAction.ShowLesson(direction, lessonData, isAutoplayEnabled)
 
     fun mapToRequiredSectionAction(
-        currentSection: Section,
+        currentSection: Section?,
         targetSection: Section,
-        requiredSection: Section?,
-        requiredProgress: Progress?
+        requiredSection: RequiredSection?
     ): StepNavigationAction =
-        if (requiredSection == null || requiredProgress == null) {
+        if (currentSection == null || requiredSection == null) {
             StepNavigationAction.Unknown
         } else {
             StepNavigationAction.ShowSectionUnavailable(
                 SectionUnavailableAction.RequiresSection(
                     currentSection,
                     targetSection,
-                    requiredSection,
-                    requiredProgress
+                    requiredSection
                 )
             )
         }
 
     fun mapToRequiresExamAction(
         currentSection: Section?,
-        targetSection: Section
+        targetSection: Section,
+        requiredSection: RequiredSection?
     ): StepNavigationAction =
         if (currentSection == null) {
             StepNavigationAction.Unknown
@@ -57,7 +56,8 @@ constructor() {
             StepNavigationAction.ShowSectionUnavailable(
                 SectionUnavailableAction.RequiresExam(
                     currentSection,
-                    targetSection
+                    targetSection,
+                    requiredSection
                 )
             )
         }

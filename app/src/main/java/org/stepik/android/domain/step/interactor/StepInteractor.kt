@@ -14,10 +14,9 @@ import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.step.repository.StepRepository
-import org.stepik.android.model.Progress
-import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.comments.DiscussionThread
+import org.stepik.android.view.course_content.model.RequiredSection
 import org.stepik.android.view.injection.step.StepDiscussionBus
 import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
@@ -56,7 +55,7 @@ constructor(
         reviewInstructionRepository
             .getReviewInstruction(instructionId, DataSourceType.REMOTE)
 
-    fun getRequiredSection(sectionId: Long): Maybe<Pair<Section, Progress>> =
+    fun getRequiredSection(sectionId: Long): Maybe<RequiredSection> =
         sectionRepository
             .getSection(sectionId, DataSourceType.CACHE)
             .flatMap { section ->
@@ -64,7 +63,7 @@ constructor(
                     .getProgresses(listOfNotNull(section.progress), primarySourceType = DataSourceType.CACHE)
                     .maybeFirst()
                     .map { progress ->
-                        section to progress
+                        RequiredSection(section, progress)
                     }
             }
 }
