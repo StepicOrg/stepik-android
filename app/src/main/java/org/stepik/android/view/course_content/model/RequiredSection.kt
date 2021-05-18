@@ -9,4 +9,8 @@ import org.stepik.android.model.Section
 data class RequiredSection(
     val section: Section,
     val progress: Progress
-) : Parcelable
+) : Parcelable {
+    companion object {
+        val EMPTY = RequiredSection(Section(), Progress(""))
+    }
+}

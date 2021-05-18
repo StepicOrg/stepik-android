@@ -7,6 +7,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import org.stepik.android.view.course_content.model.RequiredSection
 
 @Parcelize
 data class LessonData(
@@ -17,7 +18,8 @@ data class LessonData(
 
     val stepPosition: Int = 0,
     val discussionId: Long? = null,
-    val discussionThread: String? = null
+    val discussionThread: String? = null,
+    val requiredSection: RequiredSection? = null
 ) : Parcelable {
     @IgnoredOnParcel
     val isDemo: Boolean =

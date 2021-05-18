@@ -1,7 +1,6 @@
 package org.stepik.android.presentation.step
 
 import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -18,8 +17,7 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.course_content.model.RequiredSection
-import org.stepik.android.view.step.mapper.NavigationActionMapper
-import org.stepik.android.view.step.model.StepNavigationAction
+import org.stepik.android.presentation.step.mapper.NavigationActionMapper
 import javax.inject.Inject
 
 class StepPresenter
@@ -159,13 +157,8 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { targetLessonData ->
-                    val requiredSectionSource =
-                        if (targetLessonData.section?.isRequirementSatisfied == false) {
-                            stepInteractor.getRequiredSection(targetLessonData.section.requiredSection)
-                        } else {
-                            Maybe.empty()
-                        }
-                    resolveStepDirectionClick(stepNavigationDirection, state.lessonData, targetLessonData, requiredSectionSource, isAutoplayEnabled)
+                    val requiredSection = targetLessonData.requiredSection.takeIf { it != RequiredSection.EMPTY }
+                    applyStepNavigationAction(stepNavigationDirection, state.lessonData, targetLessonData, requiredSection, isAutoplayEnabled)
                 },
                 onError = emptyOnErrorStub
             )
@@ -183,44 +176,6 @@ constructor(
             .subscribeBy(
                 onSuccess = { view?.openShowSubmissionsWithReview(it) },
                 onError = { it.printStackTrace() }
-            )
-    }
-
-    private fun resolveStepDirectionClick(
-        stepNavigationDirection: StepNavigationDirection,
-        currentLessonData: LessonData,
-        targetLessonData: LessonData,
-        requiredSectionSource: Maybe<RequiredSection>,
-        isAutoplayEnabled: Boolean
-    ) {
-        compositeDisposable += requiredSectionSource
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .doOnSubscribe { isBlockingLoading = true }
-            .doFinally { isBlockingLoading = false }
-            .subscribeBy(
-                onComplete = {
-                    applyStepNavigationAction(
-                        stepNavigationDirection,
-                        currentLessonData,
-                        targetLessonData,
-                        requiredSection = null,
-                        isAutoplayEnabled = isAutoplayEnabled
-                    )
-                },
-                onSuccess = { requiredSection ->
-                    applyStepNavigationAction(
-                        stepNavigationDirection,
-                        currentLessonData,
-                        targetLessonData,
-                        requiredSection = requiredSection,
-                        isAutoplayEnabled = isAutoplayEnabled
-                    )
-                },
-                onError = {
-                    view?.handleNavigationAction(StepNavigationAction.Unknown)
-                    it.printStackTrace()
-                }
             )
     }
 

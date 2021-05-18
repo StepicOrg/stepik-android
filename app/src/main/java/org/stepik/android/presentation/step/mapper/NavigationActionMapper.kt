@@ -1,4 +1,4 @@
-package org.stepik.android.view.step.mapper
+package org.stepik.android.presentation.step.mapper
 
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection

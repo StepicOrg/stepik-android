@@ -3,9 +3,11 @@ package org.stepik.android.domain.step.interactor
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import org.stepik.android.domain.base.DataSourceType
 import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.unit.repository.UnitRepository
@@ -14,7 +16,9 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import org.stepik.android.view.course_content.model.RequiredSection
 import ru.nobird.android.domain.rx.filterSingle
+import ru.nobird.android.domain.rx.maybeFirst
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -23,7 +27,8 @@ class StepNavigationInteractor
 constructor(
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository,
-    private val lessonRepository: LessonRepository
+    private val lessonRepository: LessonRepository,
+    private val progressRepository: ProgressRepository
 ) {
     fun getStepNavigationDirections(step: Step, lessonData: LessonData): Single<Set<StepNavigationDirection>> =
         if (lessonData.unit == null ||
@@ -69,7 +74,7 @@ constructor(
                 getSlicedSections(direction, lessonData.section, lessonData.course)
                     .flatMapMaybe { sections ->
                         sections
-                            .firstOrNull()
+                            .firstOrNull() { it.units.isNotEmpty() }
                             .toMaybe()
                     }
                     .flatMap { section ->
@@ -92,7 +97,30 @@ constructor(
                                     }
                             }
                     }
+        }.flatMap {
+            val requiredSectionSource =
+                if (it.section?.isRequirementSatisfied == false) {
+                    getRequiredSection(it.section.requiredSection).onErrorReturnItem(RequiredSection.EMPTY)
+                } else {
+                    Maybe.just(RequiredSection.EMPTY)
+                }
+
+            requiredSectionSource.map { requiredSection ->
+                it.copy(requiredSection = requiredSection)
+            }
         }
+
+    private fun getRequiredSection(sectionId: Long): Maybe<RequiredSection> =
+        sectionRepository
+            .getSection(sectionId, DataSourceType.CACHE)
+            .flatMap { section ->
+                progressRepository
+                    .getProgresses(listOfNotNull(section.progress), primarySourceType = DataSourceType.CACHE)
+                    .maybeFirst()
+                    .map { progress ->
+                        RequiredSection(section, progress)
+                    }
+            }
 
     private fun isCanMoveInDirection(direction: StepNavigationDirection, step: Step, lessonData: LessonData): Single<Boolean> =
         when {
