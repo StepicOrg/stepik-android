@@ -19,7 +19,6 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.step.mapper.NavigationActionMapper
 import org.stepik.android.view.step.model.StepNavigationAction
-import timber.log.Timber
 import javax.inject.Inject
 
 class StepPresenter
@@ -151,6 +150,7 @@ constructor(
         val state = (state as? StepView.State.Loaded)
             ?: return
 
+        // TODO APPS-3275 - clean up is necessary
         compositeDisposable += stepNavigationInteractor
             .getLessonDataForDirection(stepNavigationDirection, state.stepWrapper.step, state.lessonData)
             .subscribeOn(backgroundScheduler)
@@ -159,8 +159,6 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = {
-                    Timber.d("Current lesson: ${state.lessonData.lesson.title}")
-                    Timber.d("Next lesson: ${it.lesson.title}")
                     when {
                         state.lessonData.isDemo && !it.isDemo ->
                             view?.handleNavigationAction(
@@ -169,16 +167,16 @@ constructor(
                                 )
                             )
 
-                        it.section?.isRequirementSatisfied == false ->
-                            resolveRequiredSection(state.lessonData.section, it.section)
-
                         // TODO Exam check will be modified in APPS-3299
                         //  to handle state when the exam has been passed.
                         it.section?.isExam == true ->
                             view?.handleNavigationAction(
                                 navigationActionMapper.mapToRequiresExamAction(
-                                state.lessonData.section, it.section
-                            ))
+                                    state.lessonData.section, it.section
+                                ))
+
+                        it.section?.isRequirementSatisfied == false ->
+                            resolveRequiredSection(state.lessonData.section, it.section)
 
                         it.section?.beginDate != null && DateTimeHelper.nowUtc() < it.section.beginDate?.time!! ->
                             view?.handleNavigationAction(
@@ -239,7 +237,10 @@ constructor(
                     )
                     view?.handleNavigationAction(action)
                 },
-                onError = { it.printStackTrace() }
+                onError = {
+                    view?.handleNavigationAction(StepNavigationAction.Unknown)
+                    it.printStackTrace()
+                }
             )
     }
 

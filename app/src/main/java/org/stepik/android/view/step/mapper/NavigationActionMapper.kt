@@ -34,14 +34,18 @@ constructor() {
         requiredSection: Section?,
         requiredProgress: Progress?
     ): StepNavigationAction =
-        StepNavigationAction.ShowSectionUnavailable(
-            SectionUnavailableAction.RequiresSection(
-                currentSection,
-                targetSection,
-                requiredSection,
-                requiredProgress
+        if (requiredSection == null || requiredProgress == null) {
+            StepNavigationAction.Unknown
+        } else {
+            StepNavigationAction.ShowSectionUnavailable(
+                SectionUnavailableAction.RequiresSection(
+                    currentSection,
+                    targetSection,
+                    requiredSection,
+                    requiredProgress
+                )
             )
-        )
+        }
 
     fun mapToRequiresExamAction(
         currentSection: Section?,

@@ -38,6 +38,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.commitNow
 import org.stepic.droid.util.copyTextToClipboard
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.review_instruction.model.ReviewInstructionData
 import org.stepik.android.domain.step.analytic.reportStepEvent
@@ -45,9 +46,11 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
+import org.stepik.android.view.lesson.ui.dialog.SectionUnavailableDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
@@ -67,7 +70,8 @@ import javax.inject.Inject
 class StepFragment : Fragment(R.layout.fragment_step), StepView,
     NextMoveable,
     Playable,
-    StepMenuNavigator {
+    StepMenuNavigator,
+    SectionUnavailableDialogFragment.Callback {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -452,15 +456,15 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 )
             }
 
-            is StepNavigationAction.ShowLessonDemoComplete -> {
+            is StepNavigationAction.ShowLessonDemoComplete ->
                 LessonDemoCompleteBottomSheetDialogFragment
                     .newInstance(stepNavigationAction.course)
                     .showIfNotExists(childFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
-            }
 
-            is StepNavigationAction.ShowSectionUnavailable -> {
-
-            }
+            is StepNavigationAction.ShowSectionUnavailable ->
+                SectionUnavailableDialogFragment
+                    .newInstance(stepNavigationAction.sectionUnavailableAction)
+                    .showIfNotExists(childFragmentManager, SectionUnavailableDialogFragment.TAG)
 
             is StepNavigationAction.Unknown ->
                 view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
@@ -486,4 +490,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) as? Playable)
             ?.play()
             ?: false
+
+    override fun onSyllabusAction(courseViewSource: CourseViewSource) {
+        val course = lessonData.course ?: return
+        screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS, false)
+    }
 }

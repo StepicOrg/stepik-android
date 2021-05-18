@@ -12,8 +12,8 @@ sealed class SectionUnavailableAction : Parcelable {
     data class RequiresSection(
         val currentSection: Section,
         val targetSection: Section,
-        val requiredSection: Section?,
-        val requiredProgress: Progress?
+        val requiredSection: Section,
+        val requiredProgress: Progress
     ) : SectionUnavailableAction()
 
     @Parcelize
@@ -29,4 +29,3 @@ sealed class SectionUnavailableAction : Parcelable {
         val date: Date
     ) : SectionUnavailableAction()
 }
-

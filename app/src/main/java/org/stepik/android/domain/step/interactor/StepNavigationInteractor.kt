@@ -108,6 +108,7 @@ constructor(
             else ->
                 getSlicedSections(direction, lessonData.section, lessonData.course)
                     .map { sections ->
+                        // TODO Maybe remove enrollment!
                         sections.any { lessonData.course.enrollment > 0 && it.units.isNotEmpty() }
                     }
         }

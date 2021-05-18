@@ -704,10 +704,10 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCoursePurchase(Context context, long courseId, CourseViewSource courseViewSource) {
+    public void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, boolean openCoursePurchase) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainIntent = new Intent(context, MainFeedActivity.class);
-        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, CourseScreenTab.INFO, true);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, courseScreenTab, openCoursePurchase);
         taskStackBuilder.addParentStack(MainFeedActivity.class);
         taskStackBuilder.addNextIntent(mainIntent);
         taskStackBuilder.addNextIntent(courseIntent);
