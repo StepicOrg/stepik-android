@@ -306,4 +306,8 @@
     <style name="OnboardingTitle">
         <item name="fontFamily">@font/stories</item>
     </style>
+
+    <style name="RoundedBottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_dialog</item>
+    </style>
 </resources>

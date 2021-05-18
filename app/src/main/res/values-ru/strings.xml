@@ -1043,4 +1043,9 @@
     <string name="section_syllabus_exam_action_start">Начать экзамен в Web-версии</string>
     <string name="section_syllabus_exam_action_continue">Продолжить экзамен в Web-версии</string>
     <string name="section_syllabus_exam_action_finished">Показать результат в Web-версии</string>
+
+    <!-- Demo complete bottom sheet dialog -->
+    <string name="demo_complete_title">Поздравляем! Вы закончили демо-модуль «%s».</string>
+    <string name="demo_complete_message">Для доступа к следующим урокам, купите курс</string>
+    <string name="demo_complete_purchase_action">Купить за %s</string>
 </resources>
