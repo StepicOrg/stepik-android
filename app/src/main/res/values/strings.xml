@@ -846,6 +846,7 @@
 
     <string name="step_quiz_review_teacher_peer_message">Monitor student reviews in the web version</string>
     <string name="step_quiz_review_teacher_instructor_message">Review solutions in the web version, so that students receive points</string>
+    <string name="step_navigation_action_unknown">An error occurred while processing this action</string>
 
     <!-- Peer review -->
     <string name="step_quiz_review_send_pending">Send your best submission to review</string>
@@ -1100,7 +1101,7 @@
     <string name="onboarding_restart_action" translatable="false">Подобрать первый курс</string>
 
     <!-- Demo complete bottom sheet dialog -->
-    <string name="demo_complete_title">Congratulations! You have finished the demo-module "%s".</string>
+    <string name="demo_complete_title">Congratulations! You have finished the demo part of the course "%s".</string>
     <string name="demo_complete_message">In order to access the remaining lesson, you must buy the course</string>
     <string name="demo_complete_purchase_action">Buy for %s</string>
 </resources>

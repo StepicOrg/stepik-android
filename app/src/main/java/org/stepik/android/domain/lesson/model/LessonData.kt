@@ -1,6 +1,7 @@
 package org.stepik.android.domain.lesson.model
 
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
@@ -17,4 +18,8 @@ data class LessonData(
     val stepPosition: Int = 0,
     val discussionId: Long? = null,
     val discussionThread: String? = null
-) : Parcelable
+) : Parcelable {
+    @IgnoredOnParcel
+    val isDemo: Boolean =
+        course?.enrollment == 0L && course.isPaid && lesson.actions?.learnLesson != null
+}

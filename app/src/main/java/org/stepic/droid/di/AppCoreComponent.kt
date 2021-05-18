@@ -112,6 +112,7 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
 import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModule
 import org.stepik.android.view.latex.ui.widget.LatexView
+import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.onboarding.ui.activity.OnboardingCourseListsActivity
@@ -352,4 +353,6 @@ interface AppCoreComponent {
 
     fun inject(onboardingGoalActivity: OnboardingGoalActivity)
     fun inject(onboardingCourseListsActivity: OnboardingCourseListsActivity)
+
+    fun inject(lessonDemoCompleteBottomSheetDialogFragment: LessonDemoCompleteBottomSheetDialogFragment)
 }
