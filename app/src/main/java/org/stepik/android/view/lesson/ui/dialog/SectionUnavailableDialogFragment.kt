@@ -15,6 +15,7 @@ import org.stepik.android.view.step.model.SectionUnavailableAction
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.resolveAttribute
 import java.util.TimeZone
+import kotlin.math.roundToInt
 
 class SectionUnavailableDialogFragment : DialogFragment() {
     companion object {
@@ -45,7 +46,7 @@ class SectionUnavailableDialogFragment : DialogFragment() {
 
     private fun createRequiresSectionDialog(requiresSectionAction: SectionUnavailableAction.RequiresSection, materialAlertDialogBuilder: MaterialAlertDialogBuilder): Dialog {
         val title = getString(R.string.unavailable_section_title, requiresSectionAction.currentSection.title)
-        val requiredPoints = requiresSectionAction.requiredSection.progress.cost * requiresSectionAction.requiredSection.section.requiredPercent / 100
+        val requiredPoints = (requiresSectionAction.requiredSection.progress.cost * requiresSectionAction.targetSection.requiredPercent / 100f).roundToInt()
         val message = getString(
             R.string.unavailable_section_required_section_message,
             requiresSectionAction.targetSection.title,
@@ -119,7 +120,7 @@ class SectionUnavailableDialogFragment : DialogFragment() {
         materialAlertDialogBuilder: MaterialAlertDialogBuilder
     ): Dialog {
         val title = getString(R.string.unavailable_section_title, currentSection.title)
-        val requiredPoints = requiredSection.progress.cost * requiredSection.section.requiredPercent / 100
+        val requiredPoints = (requiredSection.progress.cost * targetSection.requiredPercent / 100f).roundToInt()
         val message = getString(
             R.string.unavailable_section_required_exam_message_with_requirements,
             targetSection.title,
