@@ -1049,4 +1049,14 @@
     <string name="demo_complete_title">Поздравляем! Вы закончили демо часть курса «%s».</string>
     <string name="demo_complete_message">Для доступа к следующим урокам, купите курс</string>
     <string name="demo_complete_purchase_action">Купить за %s</string>
+
+    <!-- Unavailable section dialogs -->
+    <string name="unavailable_section_title">Поздравляем! Вы закончили модуль «%s».</string>
+
+    <string name="unavailable_section_required_section_message">Чтобы открыть следующий модуль «%s», вам нужно набрать %s в модуле «%s».</string>
+    <string name="unavailable_section_required_exam_message">Следующий модуль «%s» является экзаменом. Вы можете начать его из Расписания курса.</string>
+    <string name="unavailable_section_required_date_message">Следующий урок (\"%s\") из этого курса будет доступен %s.</string>
+
+    <string name="unavailable_section_to_content_action">В содержание</string>
+    <string name="unavailable_section_to_tasks_action">К задачам</string>
 </resources>
