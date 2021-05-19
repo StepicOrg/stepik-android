@@ -913,4 +913,15 @@
     <string name="demo_complete_title">Віншуем! Вы скончылі дэма частка курса «%s».</string>
     <string name="demo_complete_message">Для доступу да наступных ўрокаў, купіце курс</string>
     <string name="demo_complete_purchase_action">Купіць за  %s</string>
+
+    <!-- Unavailable section dialogs -->
+    <string name="unavailable_section_title">Віншуем! Вы скончылі модуль «%s».</string>
+
+    <string name="unavailable_section_required_section_message">Каб адкрыць наступны модуль «%s», вам трэба набраць %s у модулі «%s».</string>
+    <string name="unavailable_section_required_exam_message">Наступны модуль «%s» з\'яўляецца іспытам. Вы можаце пачаць яго з Расклады курса.</string>
+    <string name="unavailable_section_required_exam_message_with_requirements">Наступны модуль «%s» з\'яўляецца іспытам. Каб пачаць экзамен, вам трэба набраць %s у модулі «%s».</string>
+    <string name="unavailable_section_required_date_message">Наступны ўрок (\"%s\") з гэтага курса будзе даступны %s.</string>
+
+    <string name="unavailable_section_to_content_action">У змест</string>
+    <string name="unavailable_section_to_tasks_action">Да задач</string>
 </resources>

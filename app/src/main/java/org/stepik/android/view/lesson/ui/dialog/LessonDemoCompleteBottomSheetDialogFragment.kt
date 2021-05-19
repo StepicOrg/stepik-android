@@ -14,6 +14,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.model.Course
+import org.stepik.android.view.course.routing.CourseScreenTab
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -53,7 +54,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
         demoCompleteAction.text = getString(R.string.demo_complete_purchase_action, course.displayPrice)
         demoCompleteAction.setOnClickListener {
-            screenManager.showCoursePurchase(requireContext(), course.id, CourseViewSource.LessonDemoDialog)
+            screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.LessonDemoDialog, CourseScreenTab.INFO, true)
         }
     }
 }
