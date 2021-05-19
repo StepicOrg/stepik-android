@@ -18,6 +18,7 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.course_content.model.RequiredSection
 import org.stepik.android.presentation.step.mapper.NavigationActionMapper
+import org.stepik.android.view.step.model.StepNavigationAction
 import javax.inject.Inject
 
 class StepPresenter
@@ -155,11 +156,12 @@ constructor(
             .observeOn(mainScheduler)
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
+            .map { stepDirectionData ->
+                val requiredSection = stepDirectionData.requiredSection.takeIf { it != RequiredSection.EMPTY }
+                mapToStepNavigationAction(stepNavigationDirection, state.lessonData, stepDirectionData.lessonData, requiredSection, isAutoplayEnabled)
+            }
             .subscribeBy(
-                onSuccess = { stepDirectionData ->
-                    val requiredSection = stepDirectionData.requiredSection.takeIf { it != RequiredSection.EMPTY }
-                    applyStepNavigationAction(stepNavigationDirection, state.lessonData, stepDirectionData.lessonData, requiredSection, isAutoplayEnabled)
-                },
+                onSuccess = { view?.handleNavigationAction(it) },
                 onError = emptyOnErrorStub
             )
     }
@@ -179,34 +181,31 @@ constructor(
             )
     }
 
-    private fun applyStepNavigationAction(
+    private fun mapToStepNavigationAction(
         stepNavigationDirection: StepNavigationDirection,
         currentLessonData: LessonData,
         targetLessonData: LessonData,
         requiredSection: RequiredSection?,
         isAutoplayEnabled: Boolean
-    ) {
-        val action =
-            when {
-                currentLessonData.isDemo && !targetLessonData.isDemo ->
-                    navigationActionMapper.mapToCoursePurchaseAction(currentLessonData.course)
+    ): StepNavigationAction =
+        when {
+            currentLessonData.isDemo && !targetLessonData.isDemo ->
+                navigationActionMapper.mapToCoursePurchaseAction(currentLessonData.course)
 
-                // TODO Exam check will be modified in APPS-3299
-                //  to handle state when the exam has been passed.
-                targetLessonData.section?.isExam == true ->
-                    navigationActionMapper.mapToRequiresExamAction(currentLessonData.section, targetLessonData.section, requiredSection)
+            // TODO Exam check will be modified in APPS-3299
+            //  to handle state when the exam has been passed.
+            targetLessonData.section?.isExam == true ->
+                navigationActionMapper.mapToRequiresExamAction(currentLessonData.section, targetLessonData.section, requiredSection)
 
-                targetLessonData.section?.isRequirementSatisfied == false ->
-                    navigationActionMapper.mapToRequiredSectionAction(currentLessonData.section, targetLessonData.section, requiredSection)
+            targetLessonData.section?.isRequirementSatisfied == false ->
+                navigationActionMapper.mapToRequiredSectionAction(currentLessonData.section, targetLessonData.section, requiredSection)
 
-                targetLessonData.section?.beginDate != null && DateTimeHelper.nowUtc() < targetLessonData.section.beginDate?.time!! ->
-                    navigationActionMapper.mapToRequiresDateAction(currentLessonData.section, targetLessonData.lesson, targetLessonData.section.beginDate!!)
+            targetLessonData.section?.beginDate != null && DateTimeHelper.nowUtc() < targetLessonData.section.beginDate?.time!! ->
+                navigationActionMapper.mapToRequiresDateAction(currentLessonData.section, targetLessonData.lesson, targetLessonData.section.beginDate!!)
 
-                else ->
-                    navigationActionMapper.mapToShowLessonAction(stepNavigationDirection, lessonData = targetLessonData, isAutoplayEnabled = isAutoplayEnabled)
-            }
-        view?.handleNavigationAction(action)
-    }
+            else ->
+                navigationActionMapper.mapToShowLessonAction(stepNavigationDirection, lessonData = targetLessonData, isAutoplayEnabled = isAutoplayEnabled)
+        }
 
     /**
      * Discussions
