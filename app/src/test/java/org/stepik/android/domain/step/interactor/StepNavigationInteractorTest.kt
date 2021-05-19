@@ -11,7 +11,9 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
+import org.stepik.android.domain.step.model.StepDirectionData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Course
@@ -19,6 +21,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import org.stepik.android.view.course_content.model.RequiredSection
 import java.util.EnumSet
 
 @RunWith(MockitoJUnitRunner::class)
@@ -33,9 +36,12 @@ class StepNavigationInteractorTest {
     @Mock
     private lateinit var lessonRepository: LessonRepository
 
+    @Mock
+    private lateinit var progressRepository: ProgressRepository
+
     @Test
     fun stepNavigationDirections_middleStep() {
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         val step = Step(id = 100, position = 2)
         val lesson = Lesson(id = 200, steps = longArrayOf(0, step.id, 2))
@@ -57,7 +63,7 @@ class StepNavigationInteractorTest {
 
     @Test
     fun stepNavigationDirections_middleUnit_singleStep() {
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         val step = Step(id = 100, position = 1)
         val lesson = Lesson(id = 200, steps = longArrayOf(step.id))
@@ -83,7 +89,7 @@ class StepNavigationInteractorTest {
 
     @Test
     fun stepNavigationDirections_firstUnit_singleStep() {
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         val step = Step(id = 100, position = 1)
         val lesson = Lesson(id = 200, steps = longArrayOf(step.id))
@@ -110,7 +116,7 @@ class StepNavigationInteractorTest {
 
     @Test
     fun stepNavigationDirections_lastUnit_singleStep() {
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         val step = Step(id = 100, position = 1)
         val lesson = Lesson(id = 200, steps = longArrayOf(step.id))
@@ -156,7 +162,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
@@ -186,7 +192,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
@@ -216,7 +222,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
@@ -245,7 +251,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
@@ -274,7 +280,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
@@ -292,14 +298,14 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.NEXT, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.NEXT, step, lessonData)
             .test()
             .assertResult()
     }
@@ -314,21 +320,21 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.PREV, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.PREV, step, lessonData)
             .test()
             .assertResult()
     }
 
     @Test
     fun lessonDateForDirection_middleUnit_singleStep_moveNext() {
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         val step = Step(id = 100, position = 1)
         val lesson = Lesson(id = 200, steps = longArrayOf(step.id))
@@ -342,6 +348,9 @@ class StepNavigationInteractorTest {
         val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(lessonRepository.getLesson(nextLesson.id)) doReturn Maybe.just(nextLesson)
         whenever(unitRepository.getUnit(nextUnit.id)) doReturn Maybe.just(nextUnit)
@@ -351,14 +360,14 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.NEXT, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.NEXT, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(lesson = nextLesson, unit = nextUnit))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(lesson = nextLesson, unit = nextUnit)))
     }
 
     @Test
     fun lessonDateForDirection_middleUnit_singleStep_movePrev() {
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         val step = Step(id = 100, position = 1)
         val prevLesson = Lesson(id = 199, steps = longArrayOf(0))
@@ -372,6 +381,9 @@ class StepNavigationInteractorTest {
         val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(lessonRepository.getLesson(prevLesson.id)) doReturn Maybe.just(prevLesson)
         whenever(unitRepository.getUnit(prevUnit.id)) doReturn Maybe.just(prevUnit)
@@ -381,9 +393,9 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.PREV, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.PREV, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(lesson = prevLesson, unit = prevUnit))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(lesson = prevLesson, unit = prevUnit)))
     }
 
     @Test
@@ -404,6 +416,9 @@ class StepNavigationInteractorTest {
         val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
         whenever(unitRepository.getUnit(nextUnit.id)) doReturn Maybe.just(nextUnit)
@@ -413,12 +428,12 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.NEXT, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.NEXT, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(section = nextSection, unit = nextUnit, lesson = nextLesson))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(section = nextSection, unit = nextUnit, lesson = nextLesson)))
     }
 
     @Test
@@ -439,6 +454,9 @@ class StepNavigationInteractorTest {
         val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
         whenever(unitRepository.getUnit(prevUnit.id)) doReturn Maybe.just(prevUnit)
@@ -448,11 +466,11 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(unitRepository)
         verifyNoMoreInteractions(lessonRepository)
 
-        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.PREV, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.PREV, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(section = prevSection, unit = prevUnit, lesson = prevLesson))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(section = prevSection, unit = prevUnit, lesson = prevLesson)))
     }
 }
