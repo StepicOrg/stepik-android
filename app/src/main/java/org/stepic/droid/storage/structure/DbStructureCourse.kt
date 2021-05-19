@@ -72,6 +72,10 @@ object DbStructureCourse {
         const val DISPLAY_PRICE = "display_price"
         const val PRICE_TIER = "price_tier"
         const val IS_PROCTORED = "is_proctored"
+        const val DEFAULT_PROMO_CODE_NAME = "default_promo_code_name"
+        const val DEFAULT_PROMO_CODE_PRICE = "default_promo_code_price"
+        const val DEFAULT_PROMO_CODE_DISCOUNT = "default_promo_code_discount"
+        const val DEFAULT_PROMO_CODE_EXPIRE_DATE = "default_promo_code_expire_date"
     }
 
     fun createTable(db: SupportSQLiteDatabase) {

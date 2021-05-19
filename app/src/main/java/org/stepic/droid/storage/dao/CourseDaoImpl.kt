@@ -5,12 +5,7 @@ import android.database.Cursor
 import com.google.gson.Gson
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCourse
-import org.stepic.droid.util.DbParseHelper
-import org.stepic.droid.util.getBoolean
-import org.stepic.droid.util.getDouble
-import org.stepic.droid.util.getLong
-import org.stepic.droid.util.getString
-import org.stepic.droid.util.toObject
+import org.stepic.droid.util.*
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.model.Course
 import org.stepik.android.model.Video
@@ -85,7 +80,11 @@ constructor(
             price = cursor.getString(DbStructureCourse.Columns.PRICE),
             currencyCode = cursor.getString(DbStructureCourse.Columns.CURRENCY_CODE),
             displayPrice = cursor.getString(DbStructureCourse.Columns.DISPLAY_PRICE),
-            priceTier = cursor.getString(DbStructureCourse.Columns.PRICE_TIER)
+            priceTier = cursor.getString(DbStructureCourse.Columns.PRICE_TIER),
+            defaultPromoCodeName = cursor.getString(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_NAME),
+            defaultPromoCodePrice = cursor.getString(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_PRICE),
+            defaultPromoCodeDiscount = cursor.getString(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_DISCOUNT),
+            defaultPromoCodeExpireDate = cursor.getDate(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_EXPIRE_DATE)
         )
 
     public override fun getContentValues(course: Course): ContentValues {
@@ -146,6 +145,10 @@ constructor(
         values.put(DbStructureCourse.Columns.CURRENCY_CODE, course.currencyCode)
         values.put(DbStructureCourse.Columns.DISPLAY_PRICE, course.displayPrice)
         values.put(DbStructureCourse.Columns.PRICE_TIER, course.priceTier)
+        values.put(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_NAME, course.defaultPromoCodeName)
+        values.put(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_PRICE, course.defaultPromoCodePrice)
+        values.put(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_DISCOUNT, course.defaultPromoCodeDiscount)
+        values.put(DbStructureCourse.Columns.DEFAULT_PROMO_CODE_EXPIRE_DATE, course.defaultPromoCodeExpireDate?.time ?: -1)
 
         return values
     }
