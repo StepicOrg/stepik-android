@@ -150,15 +150,15 @@ constructor(
             ?: return
 
         compositeDisposable += stepNavigationInteractor
-            .getLessonDataForDirection(stepNavigationDirection, state.stepWrapper.step, state.lessonData)
+            .getStepDirectionData(stepNavigationDirection, state.stepWrapper.step, state.lessonData)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { targetLessonData ->
-                    val requiredSection = targetLessonData.requiredSection.takeIf { it != RequiredSection.EMPTY }
-                    applyStepNavigationAction(stepNavigationDirection, state.lessonData, targetLessonData, requiredSection, isAutoplayEnabled)
+                onSuccess = { stepDirectionData ->
+                    val requiredSection = stepDirectionData.requiredSection.takeIf { it != RequiredSection.EMPTY }
+                    applyStepNavigationAction(stepNavigationDirection, state.lessonData, stepDirectionData.lessonData, requiredSection, isAutoplayEnabled)
                 },
                 onError = emptyOnErrorStub
             )

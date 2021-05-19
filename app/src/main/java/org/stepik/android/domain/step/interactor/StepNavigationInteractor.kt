@@ -9,6 +9,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
+import org.stepik.android.domain.step.model.StepDirectionData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Course
@@ -43,7 +44,7 @@ constructor(
                 .map { it as Set<StepNavigationDirection> }
         }
 
-    fun getLessonDataForDirection(direction: StepNavigationDirection, step: Step, lessonData: LessonData): Maybe<LessonData> =
+    fun getStepDirectionData(direction: StepNavigationDirection, step: Step, lessonData: LessonData): Maybe<StepDirectionData> =
         when {
             lessonData.unit == null ||
             lessonData.section == null ||
@@ -106,7 +107,7 @@ constructor(
                 }
 
             requiredSectionSource.map { requiredSection ->
-                it.copy(requiredSection = requiredSection)
+                StepDirectionData(lessonData = it, requiredSection = requiredSection)
             }
         }
 
@@ -115,7 +116,7 @@ constructor(
             .getSection(sectionId, DataSourceType.CACHE)
             .flatMap { section ->
                 progressRepository
-                    .getProgresses(listOfNotNull(section.progress), primarySourceType = DataSourceType.CACHE)
+                    .getProgresses(listOfNotNull(section.progress), primarySourceType = DataSourceType.REMOTE)
                     .maybeFirst()
                     .map { progress ->
                         RequiredSection(section, progress)

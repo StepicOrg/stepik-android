@@ -13,6 +13,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
+import org.stepik.android.domain.step.model.StepDirectionData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Course
@@ -304,7 +305,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.NEXT, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.NEXT, step, lessonData)
             .test()
             .assertResult()
     }
@@ -326,7 +327,7 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.PREV, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.PREV, step, lessonData)
             .test()
             .assertResult()
     }
@@ -346,7 +347,10 @@ class StepNavigationInteractorTest {
         val section = Section(id = 400, units = listOf(prevUnit.id, unit.id, nextUnit.id), position = 1)
         val course = Course(id = 500, sections = listOf(section.id))
 
-        val lessonData = LessonData(lesson, unit, section, course, requiredSection = RequiredSection.EMPTY)
+        val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(lessonRepository.getLesson(nextLesson.id)) doReturn Maybe.just(nextLesson)
         whenever(unitRepository.getUnit(nextUnit.id)) doReturn Maybe.just(nextUnit)
@@ -356,9 +360,9 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.NEXT, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.NEXT, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(lesson = nextLesson, unit = nextUnit))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(lesson = nextLesson, unit = nextUnit)))
     }
 
     @Test
@@ -376,7 +380,10 @@ class StepNavigationInteractorTest {
         val section = Section(id = 400, units = listOf(prevUnit.id, unit.id, nextUnit.id), position = 1)
         val course = Course(id = 500, sections = listOf(section.id))
 
-        val lessonData = LessonData(lesson, unit, section, course, requiredSection = RequiredSection.EMPTY)
+        val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(lessonRepository.getLesson(prevLesson.id)) doReturn Maybe.just(prevLesson)
         whenever(unitRepository.getUnit(prevUnit.id)) doReturn Maybe.just(prevUnit)
@@ -386,9 +393,9 @@ class StepNavigationInteractorTest {
         verifyNoMoreInteractions(lessonRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.PREV, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.PREV, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(lesson = prevLesson, unit = prevUnit))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(lesson = prevLesson, unit = prevUnit)))
     }
 
     @Test
@@ -408,7 +415,10 @@ class StepNavigationInteractorTest {
         val nextSection = Section(id = 401, units = listOf(nextUnit.id), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
         val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
-        val lessonData = LessonData(lesson, unit, section, course, requiredSection = RequiredSection.EMPTY)
+        val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
         whenever(unitRepository.getUnit(nextUnit.id)) doReturn Maybe.just(nextUnit)
@@ -421,9 +431,9 @@ class StepNavigationInteractorTest {
         val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.NEXT, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.NEXT, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(section = nextSection, unit = nextUnit, lesson = nextLesson))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(section = nextSection, unit = nextUnit, lesson = nextLesson)))
     }
 
     @Test
@@ -443,7 +453,10 @@ class StepNavigationInteractorTest {
         val nextSection = Section(id = 401, units = listOf(nextUnit.id), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
         val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
-        val lessonData = LessonData(lesson, unit, section, course, requiredSection = RequiredSection.EMPTY)
+        val lessonData = LessonData(lesson, unit, section, course)
+        val requiredSection = RequiredSection.EMPTY
+
+        val stepDirectionData = StepDirectionData(lessonData, requiredSection)
 
         whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
         whenever(unitRepository.getUnit(prevUnit.id)) doReturn Maybe.just(prevUnit)
@@ -456,8 +469,8 @@ class StepNavigationInteractorTest {
         val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository, progressRepository)
 
         stepNavigationInteractor
-            .getLessonDataForDirection(StepNavigationDirection.PREV, step, lessonData)
+            .getStepDirectionData(StepNavigationDirection.PREV, step, lessonData)
             .test()
-            .assertResult(lessonData.copy(section = prevSection, unit = prevUnit, lesson = prevLesson))
+            .assertResult(stepDirectionData.copy(lessonData = stepDirectionData.lessonData.copy(section = prevSection, unit = prevUnit, lesson = prevLesson)))
     }
 }
