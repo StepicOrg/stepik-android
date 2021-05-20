@@ -12,6 +12,7 @@ import org.json.JSONObject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
@@ -47,6 +48,7 @@ constructor(
     private val retentionNotificationDelegate: RetentionNotificationDelegate,
 
     private val deferredAuthSplitTest: DeferredAuthSplitTest,
+    private val onboardingSplitTest: OnboardingSplitTest,
 
     private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
 ) : PresenterBase<SplashView>() {
@@ -70,6 +72,9 @@ constructor(
                 remindRegistrationNotificationDelegate.scheduleRemindRegistrationNotification()
                 retentionNotificationDelegate.scheduleRetentionNotification(shouldResetCounter = true)
                 sharedPreferenceHelper.onNewSession()
+                if (onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.None) {
+                    sharedPreferenceHelper.afterOnboardingPassed()
+                }
             }
             .andThen(resolveSplashRoute(referringParams))
             .subscribeOn(backgroundScheduler)
