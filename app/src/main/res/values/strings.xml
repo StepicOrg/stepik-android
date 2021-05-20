@@ -846,6 +846,7 @@
 
     <string name="step_quiz_review_teacher_peer_message">Monitor student reviews in the web version</string>
     <string name="step_quiz_review_teacher_instructor_message">Review solutions in the web version, so that students receive points</string>
+    <string name="step_navigation_action_unknown">An error occurred while processing this action</string>
 
     <!-- Peer review -->
     <string name="step_quiz_review_send_pending">Send your best submission to review</string>
@@ -1098,4 +1099,20 @@
     <string name="onboarding_goal_all_courses" translatable="false">&#128640; Все курсы</string>
 
     <string name="onboarding_restart_action" translatable="false">Подобрать первый курс</string>
+
+    <!-- Demo complete bottom sheet dialog -->
+    <string name="demo_complete_title">Congratulations! You have finished the demo part of the course "%s".</string>
+    <string name="demo_complete_message">In order to access the remaining lesson, you must buy the course</string>
+    <string name="demo_complete_purchase_action">Buy for %s</string>
+
+    <!-- Unavailable section dialogs -->
+    <string name="unavailable_section_title">Congratulations! You have completed section "%s".</string>
+
+    <string name="unavailable_section_required_section_message">In order to unlock the next section \"%s\", you have to score %s points in section \"%s\".</string>
+    <string name="unavailable_section_required_exam_message">The next section \"%s\" is an exam. You can start it from the course syllabus.</string>
+    <string name="unavailable_section_required_exam_message_with_requirements">The next section \"%s\" is an exam. In order to start the exam, you have to score %s points in section \"%s\".</string>
+    <string name="unavailable_section_required_date_message">The next lesson (\"%s\") from this course will be available on %s.</string>
+
+    <string name="unavailable_section_to_content_action">To syllabus</string>
+    <string name="unavailable_section_to_tasks_action">To tasks</string>
 </resources>

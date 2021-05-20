@@ -63,8 +63,23 @@ constructor(
             }
 
     fun getLessonData(lessonDeepLinkData: LessonDeepLinkData): Maybe<LessonData> =
+        resolveLessonDataByLessonId(lessonDeepLinkData.lessonId, lessonDeepLinkData.stepPosition - 1, lessonDeepLinkData.discussionId, lessonDeepLinkData.discussionThread)
+
+    fun getLessonData(trialLessonId: Long): Maybe<LessonData> =
+        resolveLessonDataByLessonId(trialLessonId)
+
+    fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
+        discussionThreadRepository
+            .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
+
+    private fun resolveLessonDataByLessonId(
+        lessonId: Long,
+        stepPosition: Int = 0,
+        discussionId: Long? = null,
+        discussionThread: String? = null
+    ): Maybe<LessonData> =
         lessonRepository
-            .getLesson(lessonDeepLinkData.lessonId)
+            .getLesson(lessonId)
             .flatMapSingleElement { lesson ->
                 unitRepository
                     .getUnitsByLessonId(lesson.id)
@@ -80,20 +95,9 @@ constructor(
                         courseRepository
                             .getCourse(section.course)
                             .map { course ->
-                                LessonData(lesson, unit, section, course, lessonDeepLinkData.stepPosition - 1, lessonDeepLinkData.discussionId, lessonDeepLinkData.discussionThread)
+                                LessonData(lesson, unit, section, course, stepPosition, discussionId, discussionThread)
                             }
                     }
-                    .toSingle(LessonData(lesson, null, null, null, lessonDeepLinkData.stepPosition - 1, lessonDeepLinkData.discussionId, lessonDeepLinkData.discussionThread))
+                    .toSingle(LessonData(lesson, null, null, null, stepPosition, discussionId, discussionThread))
             }
-
-    fun getLessonData(trialLessonId: Long): Maybe<LessonData> =
-        lessonRepository
-            .getLesson(trialLessonId)
-            .map { lesson ->
-                LessonData(lesson, null, null, null)
-            }
-
-    fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
-        discussionThreadRepository
-            .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
 }

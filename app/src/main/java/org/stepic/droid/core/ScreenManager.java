@@ -162,4 +162,5 @@ public interface ScreenManager {
     void showUserCourses(Context context);
     void showVisitedCourses(Context context);
     void showPersonalizedOnboarding(Context context);
+    void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, boolean openCoursePurchase);
 }

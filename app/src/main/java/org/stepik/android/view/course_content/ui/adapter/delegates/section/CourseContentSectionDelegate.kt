@@ -26,6 +26,7 @@ import org.stepik.android.view.course_content.ui.adapter.decorators.CourseConten
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
+import kotlin.math.roundToInt
 
 class CourseContentSectionDelegate(
     private val sectionClickListener: CourseContentSectionClickListener,
@@ -142,7 +143,7 @@ class CourseContentSectionDelegate(
                 sectionTimeline.alpha = alpha
 
                 if (requiredSection != null) {
-                    val requiredPoints = requiredSection.progress.cost * requiredSection.section.requiredPercent / 100
+                    val requiredPoints = (requiredSection.progress.cost * section.requiredPercent / 100f).roundToInt()
 
                     sectionRequirementsDescription.text =
                         context.getString(
