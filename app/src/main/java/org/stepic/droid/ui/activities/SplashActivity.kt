@@ -149,7 +149,7 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
                     screenManager.showLaunchFromSplash(this)
             }
         } else {
-            screenManager.showLaunchFromSplash(this)
+            screenManager.showOnboarding(this)
         }
 
         finish()
