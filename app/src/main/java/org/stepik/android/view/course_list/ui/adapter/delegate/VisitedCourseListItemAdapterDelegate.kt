@@ -4,11 +4,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.text.buildSpannedString
+import androidx.core.text.strikeThrough
+import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.courseItemImage
 import kotlinx.android.synthetic.main.item_course.view.courseItemName
 import kotlinx.android.synthetic.main.item_visited_course.view.*
+import kotlinx.android.synthetic.main.item_visited_course.view.coursePrice
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
@@ -16,6 +20,7 @@ import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBat
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
+import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -44,6 +49,7 @@ class VisitedCourseListItemAdapterDelegate(
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
         private val courseItemImage = root.courseItemImage
         private val courseItemName = root.courseItemName
+        private val courseItemOldPrice = root.courseOldPrice
         private val courseItemPrice = root.coursePrice
 
         init {
@@ -62,6 +68,10 @@ class VisitedCourseListItemAdapterDelegate(
                 .into(courseItemImage)
 
             courseItemName.text = data.course.title
+
+            val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
+            val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY && defaultPromoCode.isPromoCodeValid
+
             val isEnrolled = data.course.enrollment != 0L
 
             val (@ColorRes textColor, displayPrice) =
@@ -70,7 +80,7 @@ class VisitedCourseListItemAdapterDelegate(
                         R.color.material_on_surface_disabled to context.resources.getString(R.string.visited_courses_enrolled)
 
                     data.course.isPaid ->
-                        R.color.color_overlay_violet to handleCoursePrice(data)
+                        handleCoursePrice(data, defaultPromoCode)
 
                     else ->
                         R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
@@ -79,15 +89,25 @@ class VisitedCourseListItemAdapterDelegate(
             courseItemPrice.setTextColor(AppCompatResources.getColorStateList(context, textColor))
             courseItemPrice.text = displayPrice
 
+            courseItemOldPrice.isVisible = mustShowDefaultPromoCode && !isEnrolled
+            courseItemOldPrice.text = buildSpannedString {
+                strikeThrough {
+                    append(data.course.displayPrice ?: "")
+                }
+            }
+
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
             analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))
         }
     }
 
-    private fun handleCoursePrice(data: CourseListItem.Data) =
-        if (isHandleInAppPurchase && data.course.priceTier != null) {
-            (data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice
-        } else {
-            data.course.displayPrice
+    private fun handleCoursePrice(data: CourseListItem.Data, defaultPromoCode: DefaultPromoCode): Pair<Int, String?> =
+        when {
+            isHandleInAppPurchase && data.course.priceTier != null ->
+                R.color.color_overlay_violet to ((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice)
+            defaultPromoCode != DefaultPromoCode.EMPTY && defaultPromoCode.isPromoCodeValid ->
+                R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
+            else ->
+                R.color.color_overlay_violet to data.course.displayPrice
         }
 }

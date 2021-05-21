@@ -56,9 +56,6 @@ class CourseHeaderDelegate(
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
-
-        private const val RUB_FORMAT = "RUB"
-        private const val USD_FORMAT = "USD"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -218,7 +215,7 @@ class CourseHeaderDelegate(
                 val formattedDate = DateTimeHelper.getPrintableDate(it, DateTimeHelper.DISPLAY_DAY_MONTH_PATTERN, TimeZone.getDefault())
                 getString(R.string.course_promo_code_date, formattedDate)
             }
-            courseDefaultPromoInfo.isVisible = courseHeaderData.defaultPromoCode.isPromoCodeValid
+            courseDefaultPromoInfo.isVisible = courseHeaderData.defaultPromoCode.isPromoCodeValid && courseHeaderData.course.enrollment == 0L
 
             courseBuyInWebActionDiscountedNewPrice.text =
                 getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice))
