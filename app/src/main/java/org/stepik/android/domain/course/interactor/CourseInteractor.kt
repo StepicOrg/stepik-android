@@ -7,11 +7,13 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
+import timber.log.Timber
 import javax.inject.Inject
 
 @CourseScope
@@ -21,7 +23,8 @@ constructor(
     private val courseRepository: CourseRepository,
     private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>,
-    private val courseStatsInteractor: CourseStatsInteractor
+    private val courseStatsInteractor: CourseStatsInteractor,
+    private val defaultPromoCodeMapper: DefaultPromoCodeMapper
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -49,6 +52,7 @@ constructor(
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo)
         ) { courseStats, localSubmissions, promoCode ->
+            Timber.d("${defaultPromoCodeMapper.mapToDefaultPromoCode(course)}")
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -57,7 +61,8 @@ constructor(
 
                 stats = courseStats.first(),
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
-                promoCode = promoCode
+                promoCode = promoCode,
+                defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course)
             )
         }
             .toMaybe()

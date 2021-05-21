@@ -511,6 +511,7 @@
     <string name="course_progress_solutions">Недасланыя рашэнні</string>
     <string name="course_list_free">Бясплатна</string>
     <string name="course_list_archived">У архіве</string>
+    <string name="course_promo_code_date">Зніжка дзейнічае да %s</string>
     <string name="course_try_free">Паспрабаваць бясплатна</string>
     <string name="course_info_organization_prefix">ад %s</string>
     <string name="course_info_about">Пра курс</string>
