@@ -37,6 +37,7 @@ import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
@@ -48,6 +49,7 @@ class CourseHeaderDelegate(
     private val analytic: Analytic,
     private val coursePresenter: CoursePresenter,
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
+    private val displayPriceMapper: DisplayPriceMapper,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -57,8 +59,6 @@ class CourseHeaderDelegate(
 
         private const val RUB_FORMAT = "RUB"
         private const val USD_FORMAT = "USD"
-
-        private const val QUERY_PARAMETER_PROMO = "promo"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -221,7 +221,7 @@ class CourseHeaderDelegate(
             courseDefaultPromoInfo.isVisible = courseHeaderData.defaultPromoCode.isPromoCodeValid
 
             courseBuyInWebActionDiscountedNewPrice.text =
-                getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(currencyCode, promoPrice))
+                getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice))
 
             courseBuyInWebActionDiscountedOldPrice.text =
                 buildSpannedString {
@@ -274,7 +274,7 @@ class CourseHeaderDelegate(
         }
 
     private fun getPurchaseButtonText(originalDisplayPrice: String, currencyCode: String, promoPrice: String): SpannedString {
-        val promoDisplayPrice = formatPromoDisplayPrice(currencyCode, promoPrice)
+        val promoDisplayPrice = displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice)
         return buildSpannedString {
             append(courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo))
             append(promoDisplayPrice)
@@ -286,16 +286,6 @@ class CourseHeaderDelegate(
             }
         }
     }
-
-    private fun formatPromoDisplayPrice(currencyCode: String, price: String): String =
-        when (currencyCode) {
-            RUB_FORMAT ->
-                courseActivity.getString(R.string.rub_format, price.substringBefore('.'))
-            USD_FORMAT ->
-                courseActivity.getString(R.string.usd_format, price)
-            else ->
-                "$price $currencyCode"
-        }
 
     fun showCourseShareTooltip() {
         val menuItemView = courseActivity

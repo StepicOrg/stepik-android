@@ -16,6 +16,8 @@ import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -25,6 +27,8 @@ class CourseListItemAdapterDelegate(
     private val onItemClicked: (CourseListItem.Data) -> Unit,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
     private val isHandleInAppPurchase: Boolean,
+    private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
+    private val displayPriceMapper: DisplayPriceMapper,
     private val isNeedExtraMargin: Boolean = false
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
