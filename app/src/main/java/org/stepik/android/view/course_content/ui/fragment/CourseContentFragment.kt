@@ -41,6 +41,7 @@ import org.stepic.droid.util.checkSelfPermissions
 import org.stepic.droid.util.requestMultiplePermissions
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.calendar.model.CalendarItem
+import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
@@ -97,6 +98,9 @@ class CourseContentFragment :
     @Inject
     internal lateinit var analytic: Analytic
 
+    @Inject
+    internal lateinit var examStatusResolver: ExamStatusResolver
+
     private lateinit var contentAdapter: CourseContentAdapter
     private var courseId: Long by argument()
 
@@ -141,6 +145,7 @@ class CourseContentFragment :
         with(courseContentRecycler) {
             contentAdapter =
                 CourseContentAdapter(
+                    examStatusResolver = examStatusResolver,
                     sectionClickListener =
                         CourseContentSectionClickListenerImpl(courseContentPresenter, courseDeepLinkBuilder, childFragmentManager, analytic),
                     unitClickListener =

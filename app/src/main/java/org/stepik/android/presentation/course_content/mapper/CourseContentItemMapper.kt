@@ -1,7 +1,7 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.util.hasUserAccess
-import org.stepik.android.domain.course_content.model.SessionData
+import org.stepik.android.domain.exam.model.SessionData
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress

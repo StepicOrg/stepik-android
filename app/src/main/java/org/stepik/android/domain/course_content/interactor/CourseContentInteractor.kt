@@ -13,7 +13,8 @@ import org.stepic.droid.analytic.Analytic
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.course_content.model.SessionData
+import org.stepik.android.domain.exam.interactor.ExamSessionDataInteractor
+import org.stepik.android.domain.exam.model.SessionData
 import org.stepik.android.domain.exam_session.model.ExamSession
 import org.stepik.android.domain.exam_session.repository.ExamSessionRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -39,10 +40,10 @@ constructor(
     private val unitRepository: UnitRepository,
     private val lessonRepository: LessonRepository,
     private val progressRepository: ProgressRepository,
-    private val examSessionRepository: ExamSessionRepository,
-    private val proctorSessionRepository: ProctorSessionRepository,
 
-    private val courseContentItemMapper: CourseContentItemMapper
+    private val courseContentItemMapper: CourseContentItemMapper,
+
+    private val examSessionDataInteractor: ExamSessionDataInteractor
 ) {
     companion object {
         private const val UNITS_CHUNK_SIZE = 10
@@ -101,7 +102,7 @@ constructor(
     private fun populateSections(course: Course, sections: List<Section>, items: List<CourseContentItem>, dataSourceType: DataSourceType): Single<List<CourseContentItem>> =
         zip(
             if (dataSourceType == DataSourceType.CACHE) Single.just(emptyList()) else progressRepository.getProgresses(sections.getProgresses()),
-            getSessionData(sections, dataSourceType)
+            examSessionDataInteractor.getSessionData(sections, dataSourceType)
         ) { progresses, sessionData ->
             courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, items.filterIsInstance<CourseContentItem.UnitItem>(), progresses, sessionData)
         }
@@ -156,20 +157,4 @@ constructor(
     private fun getUnits(unitIds: List<Long>, dataSourceType: DataSourceType): Single<List<Unit>> =
         unitRepository
             .getUnits(unitIds, primarySourceType = dataSourceType)
-
-    private fun getSessionData(sections: List<Section>, dataSourceType: DataSourceType): Single<List<SessionData>> =
-        zip(
-            examSessionRepository.getExamSessions(sections.mapNotNull(Section::examSession), dataSourceType).onErrorReturnItem(emptyList()),
-            proctorSessionRepository.getProctorSessions(sections.mapNotNull(Section::proctorSession), dataSourceType).onErrorReturnItem(emptyList())
-        ) { examSessions, proctorSessions ->
-            val examSessionsMap = examSessions.associateBy(ExamSession::section)
-            val proctorSessionsMap = proctorSessions.associateBy(ProctorSession::section)
-            sections.map { section ->
-                SessionData(
-                    sectionId = section.id,
-                    examSession = examSessionsMap[section.id],
-                    proctorSession = proctorSessionsMap[section.id]
-                )
-            }
-        }
 }

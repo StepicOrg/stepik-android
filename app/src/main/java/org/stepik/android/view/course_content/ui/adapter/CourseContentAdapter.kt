@@ -3,6 +3,7 @@ package org.stepik.android.view.course_content.ui.adapter
 import androidx.collection.LongSparseArray
 import androidx.recyclerview.widget.DiffUtil
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
@@ -16,6 +17,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateAdapter
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentAdapter(
+    examStatusResolver: ExamStatusResolver,
     sectionClickListener: CourseContentSectionClickListener,
     unitClickListener: CourseContentUnitClickListener,
     controlBarClickListener: CourseContentControlBarClickListener
@@ -36,7 +38,7 @@ class CourseContentAdapter(
 
     init {
         addDelegate(CourseContentControlBarDelegate(controlBarClickListener, courseDownloadStatuses))
-        addDelegate(CourseContentSectionDelegate(sectionClickListener, sectionDownloadStatuses))
+        addDelegate(CourseContentSectionDelegate(sectionClickListener, sectionDownloadStatuses, examStatusResolver))
         addDelegate(CourseContentUnitDelegate(unitClickListener, unitDownloadStatuses))
         addDelegate(CourseContentUnitPlaceholderDelegate())
     }

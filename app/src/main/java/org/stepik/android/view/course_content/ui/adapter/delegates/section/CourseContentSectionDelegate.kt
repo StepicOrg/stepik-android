@@ -18,8 +18,9 @@ import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.StartSnapHelper
-import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toFixed
+import org.stepik.android.domain.exam.model.ExamStatus
+import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
@@ -30,7 +31,8 @@ import kotlin.math.roundToInt
 
 class CourseContentSectionDelegate(
     private val sectionClickListener: CourseContentSectionClickListener,
-    private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
+    private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>,
+    private val examStatusResolver: ExamStatusResolver
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
@@ -116,7 +118,7 @@ class CourseContentSectionDelegate(
                                 score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
                             sectionTextProgress.visibility = View.VISIBLE
                         }
-                        progress.cost == 0L && data.section.isExam && getExamStatus(data) == ExamStatus.FINISHED -> {
+                        progress.cost == 0L && data.section.isExam && examStatusResolver.resolveExamStatus(data.section, data.examSession, data.proctorSession) == ExamStatus.FINISHED -> {
                             sectionTextProgress.text = context.resources.getString(R.string.section_syllabus_exam_no_score_title)
                             sectionProgress.progress = 0f
                             sectionTextProgress.visibility = View.VISIBLE
@@ -159,54 +161,6 @@ class CourseContentSectionDelegate(
             }
         }
 
-        private fun getExamStatus(sectionItem: CourseContentItem.SectionItem): ExamStatus =
-            when {
-                isExamCanStart(sectionItem) -> ExamStatus.IS_CAN_START
-                isExamActive(sectionItem) -> ExamStatus.IN_PROGRESS
-                isExamFinished(sectionItem) -> ExamStatus.FINISHED
-                else -> ExamStatus.CANNOT_START
-            }
-
-        private fun isExamCanStart(sectionItem: CourseContentItem.SectionItem): Boolean {
-            if (!sectionItem.section.isExam) {
-                return false
-            }
-
-            val isReachable = (sectionItem.section.isActive || sectionItem.section.actions?.testSection != null) && (sectionItem.section.progress != null || sectionItem.section.isExam)
-            if (!isReachable) {
-                return false
-            }
-
-            if (sectionItem.examSession != null) {
-                return false
-            }
-
-            if (sectionItem.proctorSession?.isFinished == true) {
-                return false
-            }
-
-            if (sectionItem.section.actions?.testSection != null) {
-                return false
-            }
-
-            val isExamTime = (sectionItem.section.beginDate == null || (sectionItem.section.beginDate?.time!! < DateTimeHelper.nowUtc()) && (sectionItem.section.endDate == null || (DateTimeHelper.nowUtc() < sectionItem.section.endDate?.time!!)))
-            val isRequirementSatisfied = sectionItem.section.isRequirementSatisfied
-            return isExamTime && isRequirementSatisfied
-        }
-
-        private fun isExamActive(sectionItem: CourseContentItem.SectionItem): Boolean =
-            (sectionItem.examSession?.isActive ?: false) && !(sectionItem.proctorSession?.isFinished ?: false)
-
-        private fun isExamFinished(sectionItem: CourseContentItem.SectionItem): Boolean {
-            if (isExamCanStart(sectionItem) || isExamActive(sectionItem)) {
-                return false
-            }
-
-            val flag = sectionItem.section.endDate?.let { it.time < DateTimeHelper.nowUtc() } ?: false
-
-            return flag || (sectionItem.proctorSession?.isFinished ?: false) || sectionItem.examSession?.id != null
-        }
-
         private fun setupExamViews(sectionItem: CourseContentItem.SectionItem) {
             sectionExamType.text =  if (sectionItem.isProctored) {
                 context.getString(R.string.section_syllabus_exam_chip_proctored_title)
@@ -218,7 +172,7 @@ class CourseContentSectionDelegate(
                 ContextCompat.getColor(context, R.color.color_overlay_violet_alpha_12)
             )
 
-            val examStatus = getExamStatus(sectionItem)
+            val examStatus = examStatusResolver.resolveExamStatus(sectionItem.section, sectionItem.examSession, sectionItem.proctorSession)
 
             when (examStatus) {
                 ExamStatus.IS_CAN_START, ExamStatus.CANNOT_START -> {
@@ -292,12 +246,5 @@ class CourseContentSectionDelegate(
                     DrawableCompat.setTint(it, color)
                     DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
                 }
-    }
-
-    enum class ExamStatus {
-        IS_CAN_START,
-        CANNOT_START,
-        IN_PROGRESS,
-        FINISHED
     }
 }
