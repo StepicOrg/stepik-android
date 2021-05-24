@@ -20,7 +20,6 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.exam.model.ExamStatus
-import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
@@ -31,8 +30,7 @@ import kotlin.math.roundToInt
 
 class CourseContentSectionDelegate(
     private val sectionClickListener: CourseContentSectionClickListener,
-    private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>,
-    private val examStatusResolver: ExamStatusResolver
+    private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
@@ -118,7 +116,7 @@ class CourseContentSectionDelegate(
                                 score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
                             sectionTextProgress.visibility = View.VISIBLE
                         }
-                        progress.cost == 0L && data.section.isExam && examStatusResolver.resolveExamStatus(data.section, data.examSession, data.proctorSession) == ExamStatus.FINISHED -> {
+                        progress.cost == 0L && data.section.isExam && data.examStatus == ExamStatus.FINISHED -> {
                             sectionTextProgress.text = context.resources.getString(R.string.section_syllabus_exam_no_score_title)
                             sectionProgress.progress = 0f
                             sectionTextProgress.visibility = View.VISIBLE
@@ -172,9 +170,7 @@ class CourseContentSectionDelegate(
                 ContextCompat.getColor(context, R.color.color_overlay_violet_alpha_12)
             )
 
-            val examStatus = examStatusResolver.resolveExamStatus(sectionItem.section, sectionItem.examSession, sectionItem.proctorSession)
-
-            when (examStatus) {
+            when (sectionItem.examStatus) {
                 ExamStatus.IS_CAN_START, ExamStatus.CANNOT_START -> {
                     val clockDrawable = getColoredDrawable(
                         R.drawable.ic_clock,
@@ -223,7 +219,7 @@ class CourseContentSectionDelegate(
                 }
             }
 
-            val examActionTitle = when (examStatus) {
+            val examActionTitle = when (sectionItem.examStatus) {
                 ExamStatus.IS_CAN_START ->
                     context.getString(R.string.section_syllabus_exam_action_start)
                 ExamStatus.IN_PROGRESS ->
@@ -231,6 +227,8 @@ class CourseContentSectionDelegate(
                 ExamStatus.FINISHED ->
                     context.getString(R.string.section_syllabus_exam_action_finished)
                 ExamStatus.CANNOT_START ->
+                    ""
+                null ->
                     ""
             }
             sectionExamAction.text = examActionTitle

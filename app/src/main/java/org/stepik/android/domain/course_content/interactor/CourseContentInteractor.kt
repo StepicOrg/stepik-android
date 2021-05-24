@@ -14,12 +14,7 @@ import ru.nobird.android.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.exam.interactor.ExamSessionDataInteractor
-import org.stepik.android.domain.exam.model.SessionData
-import org.stepik.android.domain.exam_session.model.ExamSession
-import org.stepik.android.domain.exam_session.repository.ExamSessionRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
-import org.stepik.android.domain.proctor_session.model.ProctorSession
-import org.stepik.android.domain.proctor_session.repository.ProctorSessionRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository

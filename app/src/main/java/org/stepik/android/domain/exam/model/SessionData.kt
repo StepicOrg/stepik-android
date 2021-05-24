@@ -7,4 +7,8 @@ data class SessionData(
     val sectionId: Long,
     val examSession: ExamSession?,
     val proctorSession: ProctorSession?
-)
+) {
+    companion object {
+        val EMPTY = SessionData(0L, null, null)
+    }
+}

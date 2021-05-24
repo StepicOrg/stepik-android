@@ -7,6 +7,8 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.code_preference.CodePreferenceDataModule
 import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataModule
+import org.stepik.android.view.injection.exam_session.ExamSessionDataModule
+import org.stepik.android.view.injection.proctor_session.ProctorSessionDataModule
 import org.stepik.android.view.injection.review.ReviewDataModule
 import org.stepik.android.view.injection.review_instruction.ReviewInstructionDataModule
 import org.stepik.android.view.injection.review_session.ReviewSessionDataModule
@@ -43,7 +45,10 @@ import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStep
     ReviewInstructionDataModule::class,
     ReviewSessionDataModule::class,
     CodePreferenceDataModule::class,
-    RubricDataModule::class
+    RubricDataModule::class,
+
+    ExamSessionDataModule::class,
+    ProctorSessionDataModule::class
 ])
 @StepScope
 interface StepComponent {

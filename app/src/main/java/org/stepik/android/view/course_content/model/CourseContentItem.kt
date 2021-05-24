@@ -1,7 +1,6 @@
 package org.stepik.android.view.course_content.model
 
-import org.stepik.android.domain.exam_session.model.ExamSession
-import org.stepik.android.domain.proctor_session.model.ProctorSession
+import org.stepik.android.domain.exam.model.ExamStatus
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -24,8 +23,7 @@ sealed class CourseContentItem {
         val isEnabled: Boolean,
         val isProctored: Boolean,
         val requiredSection: RequiredSection? = null,
-        val examSession: ExamSession? = null,
-        val proctorSession: ProctorSession? = null
+        val examStatus: ExamStatus? = null
     ) : CourseContentItem()
 
     class UnitItemPlaceholder(
