@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import ru.nobird.android.core.model.Identifiable
+import java.util.Date
 
 @Parcelize
 data class Course(
@@ -128,7 +129,15 @@ data class Course(
     @SerializedName("display_price")
     val displayPrice: String? = null,
     @SerializedName("price_tier")
-    val priceTier: String? = null
+    val priceTier: String? = null,
+    @SerializedName("default_promo_code_name")
+    val defaultPromoCodeName: String? = null,
+    @SerializedName("default_promo_code_price")
+    val defaultPromoCodePrice: String? = null,
+    @SerializedName("default_promo_code_discount")
+    val defaultPromoCodeDiscount: String? = null,
+    @SerializedName("default_promo_code_expire_date")
+    val defaultPromoCodeExpireDate: Date? = null
 ) : Progressable, Parcelable, Identifiable<Long> {
 
     val hasCertificate: Boolean

@@ -30,6 +30,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
@@ -51,6 +52,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefa
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -102,6 +104,12 @@ class CatalogFragment :
 
     @Inject
     internal lateinit var externalDeepLinkProcessor: ExternalDeepLinkProcessor
+
+    @Inject
+    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private lateinit var searchIcon: ImageView
 
@@ -164,6 +172,8 @@ class CatalogFragment :
             analytic = analytic,
             courseCountMapper = courseCountMapper,
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
                 val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
@@ -196,6 +206,8 @@ class CatalogFragment :
             analytic = analytic,
             courseCountMapper = courseCountMapper,
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper,
             onBlockSeen = { id ->
                 val courseListMessage = CourseListFeature.Message.InitMessageRecommended(id = id)
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))

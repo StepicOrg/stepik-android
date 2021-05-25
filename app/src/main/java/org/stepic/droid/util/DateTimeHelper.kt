@@ -9,6 +9,7 @@ import java.util.TimeZone
 
 object DateTimeHelper {
     const val DISPLAY_DATETIME_PATTERN = "dd MMMM yyyy HH:mm"
+    const val DISPLAY_DAY_MONTH_PATTERN = "dd MMMM"
 
     const val ISO_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ"
     private val millisecondsInHour = 1000 * 60 * 60
