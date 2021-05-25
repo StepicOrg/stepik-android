@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Completable
@@ -63,6 +64,7 @@ constructor(
     private var disposable: Disposable? = null
 
     fun onSplashCreated(referringParams: JSONObject? = null) {
+        val splashLoadingTrace = FirebasePerformance.startTrace(Analytic.Traces.SPLASH_LOADING)
         disposable = Completable
             .fromCallable {
                 countNumberOfLaunches()
@@ -79,6 +81,9 @@ constructor(
             .andThen(resolveSplashRoute(referringParams))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .doFinally {
+                splashLoadingTrace.stop()
+            }
             .subscribeBy(
                 onError = emptyOnErrorStub,
                 onSuccess = {
