@@ -18,12 +18,14 @@ import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -52,6 +54,12 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private var userId by argument<Long>()
 
@@ -87,7 +95,9 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper
         )
     }
 

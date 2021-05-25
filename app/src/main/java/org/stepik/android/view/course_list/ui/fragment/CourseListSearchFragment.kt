@@ -25,6 +25,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.search_result.mapper.SearchResultRemoteQueryParamsMapper
@@ -35,6 +36,7 @@ import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.presentation.course_list.CourseListSearchResultView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.presentation.filter.FilterQueryView
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
@@ -84,6 +86,12 @@ class CourseListSearchFragment :
 
     @Inject
     internal lateinit var searchResultRemoteQueryParamsMapper: SearchResultRemoteQueryParamsMapper
+
+    @Inject
+    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
@@ -156,7 +164,9 @@ class CourseListSearchFragment :
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper
         )
 
         courseListPresenter.fetchCourses(searchResultQuery)

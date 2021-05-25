@@ -19,12 +19,14 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -54,6 +56,12 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
@@ -115,7 +123,9 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper
         )
 
         wrapperViewStateDelegate = ViewStateDelegate()

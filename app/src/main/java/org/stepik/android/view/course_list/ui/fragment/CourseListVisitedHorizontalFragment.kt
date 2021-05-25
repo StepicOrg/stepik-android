@@ -16,9 +16,11 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.presentation.course_list.CourseListVisitedPresenter
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -44,6 +46,12 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListVisitedPresenter: CourseListVisitedPresenter by viewModels { viewModelFactory }
@@ -100,6 +108,8 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
                     )
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper,
             itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.SMALL
         )
 

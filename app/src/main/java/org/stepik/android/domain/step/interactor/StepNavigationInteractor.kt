@@ -2,8 +2,11 @@ package org.stepik.android.domain.step.interactor
 
 import io.reactivex.Maybe
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Maybes.zip
 import io.reactivex.rxkotlin.toObservable
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.exam.interactor.ExamSessionDataInteractor
+import org.stepik.android.domain.exam.model.SessionData
 import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -29,7 +32,8 @@ constructor(
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository,
     private val lessonRepository: LessonRepository,
-    private val progressRepository: ProgressRepository
+    private val progressRepository: ProgressRepository,
+    private val examSessionDataInteractor: ExamSessionDataInteractor
 ) {
     fun getStepNavigationDirections(step: Step, lessonData: LessonData): Single<Set<StepNavigationDirection>> =
         if (lessonData.unit == null ||
@@ -106,8 +110,18 @@ constructor(
                     Maybe.just(RequiredSection.EMPTY)
                 }
 
-            requiredSectionSource.map { requiredSection ->
-                StepDirectionData(lessonData = it, requiredSection = requiredSection)
+            val examSessionSource =
+                if (it.section != null) {
+                    examSessionDataInteractor.getSessionData(it.section, DataSourceType.REMOTE).onErrorReturnItem(SessionData.EMPTY)
+                } else {
+                    Single.just(SessionData.EMPTY)
+                }
+
+            zip(
+                requiredSectionSource,
+                examSessionSource.toMaybe()
+            ) { requiredSection, examSessionData ->
+                StepDirectionData(lessonData = it, requiredSection = requiredSection, examSessionData = examSessionData)
             }
         }
 
