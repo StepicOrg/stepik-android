@@ -586,6 +586,7 @@
     <string name="course_list_free">Free</string>
     <string name="course_list_archived">Archived</string>
 
+    <string name="course_promo_code_date">Discount is valid until %s</string>
     <string name="course_try_free">Try for Free</string>
 
     <string name="course_info_organization_prefix">by %s</string>

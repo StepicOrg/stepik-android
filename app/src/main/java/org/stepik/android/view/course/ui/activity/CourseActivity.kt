@@ -47,6 +47,7 @@ import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.web.CustomTabsHelper
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
@@ -155,6 +156,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     @Inject
     internal lateinit var billing: Billing
 
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
+
     private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -200,7 +204,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter, discountButtonAppearanceSplitTest,
+                this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },

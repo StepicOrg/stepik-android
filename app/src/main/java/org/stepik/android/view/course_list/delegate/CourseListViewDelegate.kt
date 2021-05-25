@@ -9,9 +9,11 @@ import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.VisitedCourseListItemAdapterDelegate
@@ -28,6 +30,8 @@ class CourseListViewDelegate(
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     onContinueCourseClicked: (CourseListItem.Data) -> Unit,
     isHandleInAppPurchase: Boolean,
+    defaultPromoCodeMapper: DefaultPromoCodeMapper,
+    displayPriceMapper: DisplayPriceMapper,
     onCourseListClicked: (CatalogCourseList) -> Unit = { _ -> },
     onAuthorClick: (Long) -> Unit = { _ -> },
     courseCountMapper: CourseCountMapper? = null,
@@ -53,6 +57,8 @@ class CourseListViewDelegate(
                         onItemClicked = courseContinueViewDelegate::onCourseClicked,
                         onContinueCourseClicked = onContinueCourseClicked,
                         isHandleInAppPurchase = isHandleInAppPurchase,
+                        defaultPromoCodeMapper = defaultPromoCodeMapper,
+                        displayPriceMapper = displayPriceMapper,
                         isNeedExtraMargin = isVerticalCourseCollection
                     ),
                     CourseListPlaceHolderAdapterDelegate()
@@ -63,7 +69,9 @@ class CourseListViewDelegate(
                     VisitedCourseListItemAdapterDelegate(
                         analytic,
                         onItemClicked = courseContinueViewDelegate::onCourseClicked,
-                        isHandleInAppPurchase = isHandleInAppPurchase
+                        isHandleInAppPurchase = isHandleInAppPurchase,
+                        defaultPromoCodeMapper =  defaultPromoCodeMapper,
+                        displayPriceMapper = displayPriceMapper
                     ),
                     VisitedCourseListPlaceHolderAdapterDelegate()
                 )

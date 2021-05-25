@@ -567,6 +567,7 @@
     <string name="course_list_free">Бесплатно</string>
     <string name="course_list_archived">В архиве</string>
 
+    <string name="course_promo_code_date">Скидка действует до %s</string>
     <string name="course_try_free">Попробовать бесплатно</string>
 
     <string name="course_info_organization_prefix">от %s</string>
