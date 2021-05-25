@@ -112,7 +112,7 @@ constructor(
 
             val examSessionSource =
                 if (it.section != null) {
-                    examSessionDataInteractor.getSessionData(it.section, DataSourceType.REMOTE)
+                    examSessionDataInteractor.getSessionData(it.section, DataSourceType.REMOTE).onErrorReturnItem(SessionData.EMPTY)
                 } else {
                     Single.just(SessionData.EMPTY)
                 }
