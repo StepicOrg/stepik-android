@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.item_visited_course.view.*
 import kotlinx.android.synthetic.main.item_visited_course.view.coursePrice
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -70,7 +71,8 @@ class VisitedCourseListItemAdapterDelegate(
             courseItemName.text = data.course.title
 
             val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
-            val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY && defaultPromoCode.isPromoCodeValid
+            val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY &&
+                    (defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc()
 
             val isEnrolled = data.course.enrollment != 0L
 
@@ -105,7 +107,7 @@ class VisitedCourseListItemAdapterDelegate(
         when {
             isHandleInAppPurchase && data.course.priceTier != null ->
                 R.color.color_overlay_violet to ((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice)
-            defaultPromoCode != DefaultPromoCode.EMPTY && defaultPromoCode.isPromoCodeValid ->
+            defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() ->
                 R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
             else ->
                 R.color.color_overlay_violet to data.course.displayPrice

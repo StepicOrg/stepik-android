@@ -13,7 +13,6 @@ import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
-import timber.log.Timber
 import javax.inject.Inject
 
 @CourseScope
@@ -52,7 +51,6 @@ constructor(
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo)
         ) { courseStats, localSubmissions, promoCode ->
-            Timber.d("${defaultPromoCodeMapper.mapToDefaultPromoCode(course)}")
             CourseHeaderData(
                 courseId = course.id,
                 course = course,

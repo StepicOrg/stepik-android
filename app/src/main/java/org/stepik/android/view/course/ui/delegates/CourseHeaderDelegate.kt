@@ -191,7 +191,9 @@ class CourseHeaderDelegate(
                 courseHeaderData.promoCode != PromoCode.EMPTY ->
                     Triple(courseHeaderData.promoCode.currencyCode, courseHeaderData.promoCode.price, true)
 
-                courseHeaderData.defaultPromoCode != DefaultPromoCode.EMPTY && courseHeaderData.defaultPromoCode.isPromoCodeValid && courseHeaderData.course.currencyCode != null ->
+                courseHeaderData.defaultPromoCode != DefaultPromoCode.EMPTY &&
+                        (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
+                        courseHeaderData.course.currencyCode != null ->
                     Triple(courseHeaderData.course.currencyCode!!, courseHeaderData.defaultPromoCode.defaultPromoCodePrice, true)
 
                 else ->
@@ -215,7 +217,9 @@ class CourseHeaderDelegate(
                 val formattedDate = DateTimeHelper.getPrintableDate(it, DateTimeHelper.DISPLAY_DAY_MONTH_PATTERN, TimeZone.getDefault())
                 getString(R.string.course_promo_code_date, formattedDate)
             }
-            courseDefaultPromoInfo.isVisible = courseHeaderData.defaultPromoCode.isPromoCodeValid && courseHeaderData.course.enrollment == 0L
+
+            courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
+                    courseHeaderData.course.enrollment == 0L
 
             courseBuyInWebActionDiscountedNewPrice.text =
                 getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice))
