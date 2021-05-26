@@ -80,7 +80,7 @@ class CourseListItemAdapterDelegate(
 
             val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
             val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY &&
-                    (defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc()
+                    (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc())
 
             val isEnrolled = data.course.enrollment != 0L
             courseContinueButton.isVisible = isEnrolled
@@ -120,7 +120,7 @@ class CourseListItemAdapterDelegate(
         when {
             isHandleInAppPurchase && data.course.priceTier != null ->
                 R.color.color_overlay_violet to ((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice)
-            defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() ->
+            defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) ->
                 R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
             else ->
                 R.color.color_overlay_violet to data.course.displayPrice

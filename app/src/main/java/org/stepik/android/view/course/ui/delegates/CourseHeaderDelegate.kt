@@ -192,7 +192,7 @@ class CourseHeaderDelegate(
                     Triple(courseHeaderData.promoCode.currencyCode, courseHeaderData.promoCode.price, true)
 
                 courseHeaderData.defaultPromoCode != DefaultPromoCode.EMPTY &&
-                        (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
+                        (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate == null || courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) &&
                         courseHeaderData.course.currencyCode != null ->
                     Triple(courseHeaderData.course.currencyCode!!, courseHeaderData.defaultPromoCode.defaultPromoCodePrice, true)
 
