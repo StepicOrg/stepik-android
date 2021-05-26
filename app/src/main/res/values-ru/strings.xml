@@ -697,6 +697,7 @@
     <string name="lesson_info_points_with_score">Вы получили %s из %s за шаг</string>
     <string name="lesson_info_points_with_score_fraction">Вы получили %s балла из %s за шаг</string>
     <string name="lesson_info_points">Вы получите %s за шаг</string>
+    <string name="lesson_info_is_exam">Вы не получите баллов за шаг</string>
     <string name="lesson_info_time_to_complete">&#8776;%s на урок</string>
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>

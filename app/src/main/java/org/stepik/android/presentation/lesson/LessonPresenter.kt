@@ -270,7 +270,13 @@ constructor(
             .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1)
+        val isExam = state
+            .lessonData
+            .section
+            ?.isExam
+            ?: false
+
+        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1, isExam)
     }
 
     /**
