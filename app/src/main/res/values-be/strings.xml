@@ -925,4 +925,12 @@
 
     <string name="unavailable_section_to_content_action">У змест</string>
     <string name="unavailable_section_to_tasks_action">Да задач</string>
+
+    <!-- Android 4 Discontinue -->
+    <string name="android_4_discontinue_title">Спыненне падтрымкі Android 4</string>
+    <string name="android_4_discontinue_message">
+        Thanks for using Stepik! Soon we will end support for Android 4 and the app will no longer receive updates on such devices.
+        You can still download the latest available version for you device from your app store.
+        To continue use latest version of Stepik please update your device to at least Android 5.
+    </string>
 </resources>
