@@ -1061,4 +1061,13 @@
 
     <string name="unavailable_section_to_content_action">В содержание</string>
     <string name="unavailable_section_to_tasks_action">К задачам</string>
+
+    <!-- Android 4 Discontinue -->
+    <string name="android_4_discontinue_title">Прекращение поддержки Android 4</string>
+    <string name="android_4_discontinue_message">
+        Спасибо, что пользуетесь Stepik! В скором времени мы прекратим поддержку Android 4 и приложение перестанет получать обновления.
+        Вы сможете без проблем продолжить пользоваться текущей версией приложения,
+        а также в любое время загрузить последнюю доступную версию для вашего устройства из магазина приложений.
+        Для работы новых версий приложения Stepik обновите свое устройство до версии не ниже Android 5.
+    </string>
 </resources>
