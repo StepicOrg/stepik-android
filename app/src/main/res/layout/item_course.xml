@@ -123,13 +123,38 @@
                 tools:text="Основы программирования на C++ на примере множества несложных практических задач…" />
 
 
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseOldPrice"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+
+                app:layout_constraintStart_toStartOf="@id/courseItemImage"
+                app:layout_constraintTop_toBottomOf="@id/courseItemImage"
+                app:layout_constraintBottom_toTopOf="@id/coursePrice"
+                app:layout_constraintEnd_toStartOf="@id/courseDescription"
+                app:layout_constraintHorizontal_bias="0"
+                android:gravity="bottom"
+
+                android:textAppearance="?textAppearanceBody2"
+                android:textColor="@color/color_secondary"
+                android:textSize="12sp"
+
+                android:lineSpacingExtra="1sp"
+                android:lines="1"
+                android:visibility="gone"
+
+                tools:visibility="visible"
+                tools:text="$ 350"/>
+
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/coursePrice"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
 
                 app:layout_constraintStart_toStartOf="@id/courseItemImage"
-                app:layout_constraintTop_toTopOf="@id/courseDescription"
+                app:layout_constraintTop_toBottomOf="@id/courseOldPrice"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/courseDescription"
                 app:layout_constraintHorizontal_bias="0"

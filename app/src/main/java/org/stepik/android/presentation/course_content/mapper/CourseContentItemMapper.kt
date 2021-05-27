@@ -1,7 +1,9 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.util.hasUserAccess
-import org.stepik.android.domain.course_content.model.SessionData
+import org.stepik.android.domain.exam.model.ExamStatus
+import org.stepik.android.domain.exam.model.SessionData
+import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -14,7 +16,8 @@ import javax.inject.Inject
 class CourseContentItemMapper
 @Inject
 constructor(
-    private val sectionDatesMapper: CourseContentSectionDatesMapper
+    private val sectionDatesMapper: CourseContentSectionDatesMapper,
+    private val examStatusResolver: ExamStatusResolver
 ) {
     fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>, sessionData: List<SessionData>): List<CourseContentItem> =
         sections
@@ -31,8 +34,11 @@ constructor(
             isEnabled = section.hasUserAccess(course),
             isProctored = course.isProctored,
             requiredSection = mapRequiredSection(section, sections, progresses),
-            examSession = sessionDataItem?.examSession,
-            proctorSession = sessionDataItem?.proctorSession
+            examStatus = if (section.isExam) {
+                examStatusResolver.resolveExamStatus(section, sessionDataItem?.examSession, sessionDataItem?.proctorSession)
+            } else {
+                null
+            }
         )) + mapSectionUnits(section.units, unitItems)
 
     private fun mapSectionUnits(unitIds: List<Long>, unitItems: List<CourseContentItem.UnitItem>): List<CourseContentItem> =
@@ -68,7 +74,7 @@ constructor(
                     if (course.enrollment == 0L && course.isPaid && lesson.actions?.learnLesson != null) {
                         CourseContentItem.UnitItem.Access.DEMO
                     } else {
-                        if (sectionItem.isEnabled && !sectionItem.section.isExam) {
+                        if (sectionItem.isEnabled && (!sectionItem.section.isExam || sectionItem.examStatus == ExamStatus.FINISHED)) {
                             CourseContentItem.UnitItem.Access.FULL_ACCESS
                         } else {
                             CourseContentItem.UnitItem.Access.NO_ACCESS

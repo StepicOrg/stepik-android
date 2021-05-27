@@ -7,6 +7,7 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
@@ -21,7 +22,8 @@ constructor(
     private val courseRepository: CourseRepository,
     private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>,
-    private val courseStatsInteractor: CourseStatsInteractor
+    private val courseStatsInteractor: CourseStatsInteractor,
+    private val defaultPromoCodeMapper: DefaultPromoCodeMapper
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -57,7 +59,8 @@ constructor(
 
                 stats = courseStats.first(),
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
-                promoCode = promoCode
+                promoCode = promoCode,
+                defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course)
             )
         }
             .toMaybe()

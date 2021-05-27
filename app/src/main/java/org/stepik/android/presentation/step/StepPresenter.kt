@@ -9,6 +9,9 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.exam.model.ExamStatus
+import org.stepik.android.domain.exam.model.SessionData
+import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.interactor.StepInteractor
@@ -29,6 +32,7 @@ constructor(
 
     private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
     private val navigationActionMapper: NavigationActionMapper,
+    private val examStatusResolver: ExamStatusResolver,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -158,7 +162,8 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .map { stepDirectionData ->
                 val requiredSection = stepDirectionData.requiredSection.takeIf { it != RequiredSection.EMPTY }
-                mapToStepNavigationAction(stepNavigationDirection, state.lessonData, stepDirectionData.lessonData, requiredSection, isAutoplayEnabled)
+                val sessionData = stepDirectionData.examSessionData.takeIf { it != SessionData.EMPTY }
+                mapToStepNavigationAction(stepNavigationDirection, state.lessonData, stepDirectionData.lessonData, requiredSection, sessionData, isAutoplayEnabled)
             }
             .subscribeBy(
                 onSuccess = { view?.handleNavigationAction(it) },
@@ -186,16 +191,21 @@ constructor(
         currentLessonData: LessonData,
         targetLessonData: LessonData,
         requiredSection: RequiredSection?,
+        sessionData: SessionData?,
         isAutoplayEnabled: Boolean
     ): StepNavigationAction =
         when {
             currentLessonData.isDemo && !targetLessonData.isDemo ->
                 navigationActionMapper.mapToCoursePurchaseAction(currentLessonData.course)
 
-            // TODO Exam check will be modified in APPS-3299
-            //  to handle state when the exam has been passed.
-            targetLessonData.section?.isExam == true ->
-                navigationActionMapper.mapToRequiresExamAction(currentLessonData.section, targetLessonData.section, requiredSection)
+            targetLessonData.section?.isExam == true && sessionData != null -> {
+                when (examStatusResolver.resolveExamStatus(targetLessonData.section, sessionData.examSession, sessionData.proctorSession)) {
+                    ExamStatus.FINISHED ->
+                        navigationActionMapper.mapToShowLessonAction(stepNavigationDirection, lessonData = targetLessonData, isAutoplayEnabled = isAutoplayEnabled)
+                    else ->
+                        navigationActionMapper.mapToRequiresExamAction(currentLessonData.section, targetLessonData.section, requiredSection)
+                }
+            }
 
             targetLessonData.section?.isRequirementSatisfied == false ->
                 navigationActionMapper.mapToRequiredSectionAction(currentLessonData.section, targetLessonData.section, requiredSection)

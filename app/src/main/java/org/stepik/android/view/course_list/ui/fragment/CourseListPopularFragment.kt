@@ -17,6 +17,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -25,6 +26,7 @@ import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -52,6 +54,12 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
+    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListQueryPresenter: CourseListQueryPresenter by viewModels { viewModelFactory }
@@ -127,7 +135,9 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            defaultPromoCodeMapper = defaultPromoCodeMapper,
+            displayPriceMapper = displayPriceMapper
         )
 
         courseListQueryPresenter.fetchCourses(courseListQuery)

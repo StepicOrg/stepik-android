@@ -36,8 +36,25 @@
             app:layout_constraintTop_toBottomOf="@+id/courseItemImage"
             app:layout_constraintRight_toRightOf="parent"
             android:ellipsize="end"
-            android:maxLines="4"
+            android:maxLines="3"
             tools:text="3456789213345678921456789213345678921334567892133456789213345678"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/courseOldPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/coursePrice"
+
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="@color/color_secondary"
+            android:textSize="12sp"
+
+            android:lineSpacingExtra="1sp"
+            android:lines="1"
+
+            tools:text="Бесплатно"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/coursePrice"

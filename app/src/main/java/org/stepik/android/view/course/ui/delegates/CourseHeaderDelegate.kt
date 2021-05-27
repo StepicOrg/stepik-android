@@ -27,17 +27,21 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
+import java.util.TimeZone
 import kotlin.math.abs
 
 class CourseHeaderDelegate(
@@ -45,15 +49,13 @@ class CourseHeaderDelegate(
     private val analytic: Analytic,
     private val coursePresenter: CoursePresenter,
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
+    private val displayPriceMapper: DisplayPriceMapper,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
-
-        private const val RUB_FORMAT = "RUB"
-        private const val USD_FORMAT = "USD"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -185,12 +187,25 @@ class CourseHeaderDelegate(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
+            val (currencyCode, promoPrice, hasPromo) = when {
+                courseHeaderData.promoCode != PromoCode.EMPTY ->
+                    Triple(courseHeaderData.promoCode.currencyCode, courseHeaderData.promoCode.price, true)
+
+                courseHeaderData.defaultPromoCode != DefaultPromoCode.EMPTY &&
+                        (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate == null || courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) &&
+                        courseHeaderData.course.currencyCode != null ->
+                    Triple(courseHeaderData.course.currencyCode!!, courseHeaderData.defaultPromoCode.defaultPromoCodePrice, true)
+
+                else ->
+                    Triple("", "", false)
+            }
+
             val courseDisplayPrice = courseHeaderData.course.displayPrice
 
             courseBuyInWebAction.text =
                 if (courseDisplayPrice != null) {
-                    if (courseHeaderData.promoCode != PromoCode.EMPTY) {
-                        getPurchaseButtonText(courseDisplayPrice, courseHeaderData.promoCode)
+                    if (hasPromo) {
+                        getPurchaseButtonText(courseDisplayPrice, currencyCode, promoPrice)
                     } else {
                         getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
                     }
@@ -198,8 +213,16 @@ class CourseHeaderDelegate(
                     getString(R.string.course_payments_purchase_in_web)
                 }
 
+            courseDefaultPromoInfo.text = courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.let {
+                val formattedDate = DateTimeHelper.getPrintableDate(it, DateTimeHelper.DISPLAY_DAY_MONTH_PATTERN, TimeZone.getDefault())
+                getString(R.string.course_promo_code_date, formattedDate)
+            }
+
+            courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
+                    courseHeaderData.course.enrollment == 0L
+
             courseBuyInWebActionDiscountedNewPrice.text =
-                getString(R.string.course_payments_purchase_in_web_with_price, formatPromoDisplayPrice(courseHeaderData.promoCode))
+                getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice))
 
             courseBuyInWebActionDiscountedOldPrice.text =
                 buildSpannedString {
@@ -208,7 +231,7 @@ class CourseHeaderDelegate(
                     }
                 }
 
-            if (courseHeaderData.course.displayPrice != null && courseHeaderData.promoCode != PromoCode.EMPTY) {
+            if (courseHeaderData.course.displayPrice != null && hasPromo) {
                 when (discountButtonAppearanceSplitTest.currentGroup) {
                     DiscountButtonAppearanceSplitTest.Group.DiscountTransparent -> {
                         courseBuyInWebAction.isVisible = false
@@ -251,8 +274,8 @@ class CourseHeaderDelegate(
             shareCourseMenuItem?.isVisible = true
         }
 
-    private fun getPurchaseButtonText(originalDisplayPrice: String, promoCode: PromoCode): SpannedString {
-        val promoDisplayPrice = formatPromoDisplayPrice(promoCode)
+    private fun getPurchaseButtonText(originalDisplayPrice: String, currencyCode: String, promoPrice: String): SpannedString {
+        val promoDisplayPrice = displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice)
         return buildSpannedString {
             append(courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo))
             append(promoDisplayPrice)
@@ -264,16 +287,6 @@ class CourseHeaderDelegate(
             }
         }
     }
-
-    private fun formatPromoDisplayPrice(promoCode: PromoCode): String =
-        when (promoCode.currencyCode) {
-            RUB_FORMAT ->
-                courseActivity.getString(R.string.rub_format, promoCode.price)
-            USD_FORMAT ->
-                courseActivity.getString(R.string.usd_format, promoCode.price)
-            else ->
-                "${promoCode.price} ${promoCode.currencyCode}"
-        }
 
     fun showCourseShareTooltip() {
         val menuItemView = courseActivity

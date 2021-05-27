@@ -11,6 +11,10 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.app_rating.interactor.AppRatingInteractor
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.exam.interactor.ExamSessionDataInteractor
+import org.stepik.android.domain.exam.model.ExamStatus
+import org.stepik.android.domain.exam.resolver.ExamStatusResolver
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
@@ -41,8 +45,10 @@ constructor(
     private val appRatingInteractor: AppRatingInteractor,
     private val feedbackInteractor: FeedbackInteractor,
     private val streakInteractor: StreakInteractor,
+    private val examSessionDataInteractor: ExamSessionDataInteractor,
 
     private val stateMapper: LessonStateMapper,
+    private val examStatsResolver: ExamStatusResolver,
 
     private val progressObservable: Observable<Progress>,
 
@@ -138,41 +144,57 @@ constructor(
         val oldState = (state as? LessonView.State.LessonLoaded)
             ?: return
 
-        val stepIds = oldState.lessonData.lesson.steps
-        val unit = oldState.lessonData.unit
-
         when {
-            oldState.lessonData.section?.isExam == true ->
-                state = oldState.copy(stepsState = LessonView.StepsState.Exam(oldState.lessonData.section.course))
+            oldState.lessonData.section?.isExam == true -> {
+                state = oldState.copy(stepsState = LessonView.StepsState.Loading)
+                compositeDisposable += examSessionDataInteractor
+                    .getSessionData(oldState.lessonData.section, DataSourceType.REMOTE)
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onSuccess = { examSessionData ->
+                            val examStatus = examStatsResolver.resolveExamStatus(oldState.lessonData.section, examSessionData.examSession, examSessionData.proctorSession)
+                            if (examStatus == ExamStatus.FINISHED) {
+                                getStepItems(oldState)
+                            } else {
+                                state = oldState.copy(stepsState = LessonView.StepsState.Exam(oldState.lessonData.section.course))
+                            }
+                        },
+                        onError = emptyOnErrorStub
+                    )
+            }
 
-            stepIds.isEmpty() ->
+            oldState.lessonData.lesson.steps.isEmpty() ->
                 state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
 
             else -> {
                 state = oldState.copy(stepsState = LessonView.StepsState.Loading)
-
-                compositeDisposable += lessonContentInteractor
-                    .getStepItems(unit, oldState.lessonData.lesson)
-                    .observeOn(mainScheduler)
-                    .subscribeOn(backgroundScheduler)
-                    .subscribeBy(
-                        onSuccess = { stepItems ->
-                            val stepsState =
-                                if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
-                                    LessonView.StepsState.AccessDenied
-                                } else {
-                                    LessonView.StepsState.Loaded(stepItems)
-                                }
-                            state = oldState.copy(stepsState = stepsState)
-                            view?.showStepAtPosition(oldState.lessonData.stepPosition)
-                            handleDiscussionId()
-                        },
-                        onError = {
-                            state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
-                        }
-                    )
+                getStepItems(oldState)
             }
         }
+    }
+
+    private fun getStepItems(oldState: LessonView.State.LessonLoaded) {
+        compositeDisposable += lessonContentInteractor
+            .getStepItems(oldState.lessonData.unit, oldState.lessonData.lesson)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = { stepItems ->
+                    val stepsState =
+                        if (stepItems.isEmpty() && oldState.lessonData.lesson.steps.isNotEmpty()) {
+                            LessonView.StepsState.AccessDenied
+                        } else {
+                            LessonView.StepsState.Loaded(stepItems)
+                        }
+                    state = oldState.copy(stepsState = stepsState)
+                    view?.showStepAtPosition(oldState.lessonData.stepPosition)
+                    handleDiscussionId()
+                },
+                onError = {
+                    state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
+                }
+            )
     }
 
     private fun handleDiscussionId() {
@@ -248,7 +270,13 @@ constructor(
             .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1)
+        val isExam = state
+            .lessonData
+            .section
+            ?.isExam
+            ?: false
+
+        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1, isExam)
     }
 
     /**

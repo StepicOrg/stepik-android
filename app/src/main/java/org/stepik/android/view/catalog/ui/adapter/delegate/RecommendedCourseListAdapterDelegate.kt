@@ -14,6 +14,7 @@ import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
@@ -22,6 +23,7 @@ import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.catalog.ui.delegate.CatalogBlockHeaderDelegate
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -33,6 +35,8 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class RecommendedCourseListAdapterDelegate(
     private val analytic: Analytic,
     private val courseCountMapper: CourseCountMapper,
+    private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
+    private val displayPriceMapper: DisplayPriceMapper,
     private val isHandleInAppPurchase: Boolean,
     private val onBlockSeen: (String) -> Unit,
     private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
@@ -73,7 +77,9 @@ class RecommendedCourseListAdapterDelegate(
                 onContinueCourseClicked = {
                     onCourseContinueClicked(it.course, CourseViewSource.Recommendation, CourseContinueInteractionSource.COURSE_WIDGET)
                 },
-                isHandleInAppPurchase = isHandleInAppPurchase
+                isHandleInAppPurchase = isHandleInAppPurchase,
+                defaultPromoCodeMapper = defaultPromoCodeMapper,
+                displayPriceMapper = displayPriceMapper
             )
 
             with(courseListCoursesRecycler) {

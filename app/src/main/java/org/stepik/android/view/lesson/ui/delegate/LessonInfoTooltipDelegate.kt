@@ -27,7 +27,8 @@ class LessonInfoTooltipDelegate(
         stepScore: Float,
         stepCost: Long,
         lessonTimeToCompleteInSeconds: Long,
-        certificateThreshold: Long
+        certificateThreshold: Long,
+        isExam: Boolean
     ) {
         val anchorView = view
             .findViewById<View>(R.id.lesson_menu_item_info)
@@ -42,9 +43,15 @@ class LessonInfoTooltipDelegate(
                 .stepWorth
                 .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.string.lesson_info_points_with_score_fraction, R.plurals.points, R.drawable.ic_check_rounded)
         } else {
-            popupView
-                .stepWorth
-                .setItem(stepCost, R.string.lesson_info_points, R.plurals.points, R.drawable.ic_check_rounded)
+            if (isExam) {
+                popupView
+                    .stepWorth
+                    .setItem(R.string.lesson_info_is_exam, R.drawable.ic_check_rounded)
+            } else {
+                popupView
+                    .stepWorth
+                    .setItem(stepCost, R.string.lesson_info_points, R.plurals.points, R.drawable.ic_check_rounded)
+            }
         }
 
         val (timeValue, @PluralsRes timeUnitPlural) =
@@ -80,6 +87,12 @@ class LessonInfoTooltipDelegate(
                 PopupWindowCompat.showAsDropDown(popupWindow, anchorView, 0, 0, Gravity.CENTER)
             }
         }
+    }
+
+    private fun AppCompatTextView.setItem(@StringRes stringRes: Int, @DrawableRes drawableRes: Int) {
+        setItemDrawable(drawableRes)
+        text = context.getString(stringRes)
+        visibility = View.VISIBLE
     }
 
     private fun AppCompatTextView.setItem(
