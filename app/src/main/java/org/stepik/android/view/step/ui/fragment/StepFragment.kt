@@ -466,6 +466,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     .newInstance(stepNavigationAction.sectionUnavailableAction)
                     .showIfNotExists(childFragmentManager, SectionUnavailableDialogFragment.TAG)
 
+            is StepNavigationAction.ShowCourseComplete ->
+                view?.snackbar("To be developed", Snackbar.LENGTH_SHORT)
+
             is StepNavigationAction.Unknown ->
                 view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
         }

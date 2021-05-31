@@ -167,7 +167,11 @@ constructor(
             }
             .subscribeBy(
                 onSuccess = { view?.handleNavigationAction(it) },
-                onError = emptyOnErrorStub
+                onError = emptyOnErrorStub,
+                onComplete = {
+                    val action = navigationActionMapper.mapToCourseCompleteAction(state.lessonData.course)
+                    view?.handleNavigationAction(action)
+                }
             )
     }
 
