@@ -46,7 +46,7 @@ constructor(
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
                 AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                AmplitudeAnalytic.Course.Params.SOURCE to interactionSource
+                AmplitudeAnalytic.Course.Params.SOURCE to interactionSource.source
             ))
 
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {

@@ -31,7 +31,7 @@ constructor(
                 analytic.reportAmplitudeEvent(
                     AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
                         AmplitudeAnalytic.Course.Params.COURSE to action.course.id,
-                        AmplitudeAnalytic.Course.Params.SOURCE to action.interactionSource
+                        AmplitudeAnalytic.Course.Params.SOURCE to action.interactionSource.source
                     ))
                 if (adaptiveCoursesResolver.isAdaptive(action.course.id)) {
                     onNewMessage(CourseContinueFeature.Message.ShowCourseContinue(action.course, action.viewSource, isAdaptive = true))
