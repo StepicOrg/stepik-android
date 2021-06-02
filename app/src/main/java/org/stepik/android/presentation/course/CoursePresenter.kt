@@ -534,18 +534,7 @@ constructor(
             ?.course
             ?: return
 
-        val action = when (userCourseAction) {
-            UserCourseAction.ADD_FAVORITE ->
-                "favorite_add"
-            UserCourseAction.REMOVE_FAVORITE ->
-                "favorite_remove"
-            UserCourseAction.ADD_ARCHIVE ->
-                "archive_add"
-            UserCourseAction.REMOVE_ARCHIVE ->
-                "archive_remove"
-        }
-
-        analytic.report(UserCourseActionEvent(action, course.id, course.title ?: "", course.isPaid, source))
+        analytic.report(UserCourseActionEvent(userCourseAction, course.id, course.title ?: "", course.isPaid, source))
     }
 
     private fun schedulePurchaseReminder() {
