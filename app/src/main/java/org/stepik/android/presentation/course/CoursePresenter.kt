@@ -16,6 +16,7 @@ import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.analytic.UserCourseActionEvent
 import org.stepik.android.domain.course.analytic.batch.CoursePreviewScreenOpenedAnalyticBatchEvent
 import org.stepik.android.domain.course.interactor.CourseBillingInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
@@ -491,7 +492,10 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { view?.showSaveUserCourseSuccess(userCourseAction) },
+                onSuccess = {
+                    logUserCourseAction(userCourseAction, viewSource)
+                    view?.showSaveUserCourseSuccess(userCourseAction)
+                },
                 onError = {
                     state = courseStateMapper.mutateEnrolledState(state) { copy(isUserCourseUpdating = false) }
                     view?.showSaveUserCourseError(userCourseAction)
@@ -522,6 +526,26 @@ constructor(
         isCoursePreviewLogged = true
         analytic.report(CoursePreviewScreenOpenedAnalyticEvent(course, source))
         analytic.report(CoursePreviewScreenOpenedAnalyticBatchEvent(course, source))
+    }
+
+    private fun logUserCourseAction(userCourseAction: UserCourseAction, source: CourseViewSource) {
+        val course = state.safeCast<CourseView.State.CourseLoaded>()
+            ?.courseHeaderData
+            ?.course
+            ?: return
+
+        val action = when (userCourseAction) {
+            UserCourseAction.ADD_FAVORITE ->
+                "favorite_add"
+            UserCourseAction.REMOVE_FAVORITE ->
+                "favorite_remove"
+            UserCourseAction.ADD_ARCHIVE ->
+                "archive_add"
+            UserCourseAction.REMOVE_ARCHIVE ->
+                "archive_remove"
+        }
+
+        analytic.report(UserCourseActionEvent(action, course.id, course.title ?: "", course.isPaid, source))
     }
 
     private fun schedulePurchaseReminder() {
