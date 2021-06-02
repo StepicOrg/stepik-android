@@ -1,13 +1,12 @@
 package org.stepik.android.domain.course.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 
 class UserCourseActionEvent(
     userCourseAction: UserCourseAction,
-    courseId: Long,
-    title: String,
-    isPaid: Boolean,
+    course: Course,
     source: CourseViewSource
 ) : AnalyticEvent {
     companion object {
@@ -33,9 +32,9 @@ class UserCourseActionEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_ACTION to mapToUserCourseActionValue(userCourseAction),
-            PARAM_COURSE to courseId,
-            PARAM_TITLE to title,
-            PARAM_IS_PAID to isPaid
+            PARAM_COURSE to course.id,
+            PARAM_TITLE to course.title.toString(),
+            PARAM_IS_PAID to course.isPaid
         ) + source.params.mapKeys { "${PARAM_SOURCE}_${it.key}" }
 
     private fun mapToUserCourseActionValue(userCourseAction: UserCourseAction) =

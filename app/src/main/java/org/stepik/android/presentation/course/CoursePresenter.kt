@@ -534,7 +534,7 @@ constructor(
             ?.course
             ?: return
 
-        analytic.report(UserCourseActionEvent(userCourseAction, course.id, course.title ?: "", course.isPaid, source))
+        analytic.report(UserCourseActionEvent(userCourseAction, course, source))
     }
 
     private fun schedulePurchaseReminder() {
