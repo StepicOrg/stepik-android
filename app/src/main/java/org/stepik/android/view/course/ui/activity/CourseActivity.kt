@@ -201,10 +201,14 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             analytic.report(PurchaseNotificationClicked(courseId))
         }
 
+        val courseViewSource = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
+            ?: intent.getCourseIdFromDeepLink()?.let { CourseViewSource.DeepLink(intent?.dataString ?: "") }
+            ?: CourseViewSource.Unknown
+
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper,
+                this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper, courseViewSource,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
@@ -216,26 +220,23 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
         hasSavedInstanceState = savedInstanceState != null
 
-        setDataToPresenter()
+        setDataToPresenter(courseViewSource)
 
-        courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
+        tryAgain.setOnClickListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
         goToCatalog.setOnClickListener {
             screenManager.showCatalog(this)
             finish()
         }
     }
 
-    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+    private fun setDataToPresenter(courseViewSource: CourseViewSource, forceUpdate: Boolean = false) {
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
-        val source = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
-            ?: intent.getCourseIdFromDeepLink()?.let { CourseViewSource.DeepLink(intent?.dataString ?: "") }
-            ?: CourseViewSource.Unknown
 
         if (course != null) {
-            coursePresenter.onCourse(course, source, forceUpdate)
+            coursePresenter.onCourse(course, courseViewSource, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, source, intent.getPromoCodeFromDeepLink(), forceUpdate)
+            coursePresenter.onCourseId(courseId, courseViewSource, intent.getPromoCodeFromDeepLink(), forceUpdate)
         }
     }
 
