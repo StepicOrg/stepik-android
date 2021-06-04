@@ -26,5 +26,5 @@ class CourseContinuePressedEvent(
             PARAM_TITLE to course.title.toString(),
             PARAM_SOURCE to source.source,
             PARAM_VIEW_SOURCE to viewSource.name
-        ) + viewSource.params.mapKeys { "${PARAM_SOURCE}_${it.key}" }
+        ) + viewSource.params.mapKeys { "${PARAM_VIEW_SOURCE}_${it.key}" }
 }
