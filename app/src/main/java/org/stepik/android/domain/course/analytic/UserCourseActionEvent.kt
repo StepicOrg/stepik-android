@@ -34,7 +34,8 @@ class UserCourseActionEvent(
             PARAM_ACTION to mapToUserCourseActionValue(userCourseAction),
             PARAM_COURSE to course.id,
             PARAM_TITLE to course.title.toString(),
-            PARAM_IS_PAID to course.isPaid
+            PARAM_IS_PAID to course.isPaid,
+            PARAM_SOURCE to source.name
         ) + source.params.mapKeys { "${PARAM_SOURCE}_${it.key}" }
 
     private fun mapToUserCourseActionValue(userCourseAction: UserCourseAction) =
