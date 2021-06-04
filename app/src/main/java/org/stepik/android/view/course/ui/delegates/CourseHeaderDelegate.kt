@@ -29,12 +29,15 @@ import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -50,6 +53,7 @@ class CourseHeaderDelegate(
     private val coursePresenter: CoursePresenter,
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
+    private val courseViewSource: CourseViewSource,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -109,10 +113,13 @@ class CourseHeaderDelegate(
                 coursePresenter.continueLearning()
 
                 courseHeaderData?.let { headerData ->
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
-                    ))
+                    analytic.report(
+                        CourseContinuePressedEvent(
+                            headerData.course,
+                            CourseContinueInteractionSource.COURSE_SCREEN,
+                            courseViewSource
+                        )
+                    )
                 }
             }
 
