@@ -1,5 +1,6 @@
 package org.stepik.android.view.course_list.ui.fragment
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -12,11 +13,13 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
@@ -39,6 +42,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     companion object {
         fun newInstance(): Fragment =
             CourseListUserHorizontalFragment()
+
+        private const val RUSSIAN_LANGUAGE_CODE = "ru"
     }
 
     @Inject
@@ -57,6 +62,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     internal lateinit var onboardingSplitTest: OnboardingSplitTest
 
     @Inject
+    internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
+
+    @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
@@ -68,6 +76,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
     private lateinit var wrapperViewStateDelegate: ViewStateDelegate<CourseListUserView.State>
+
+    private val locale = Resources.getSystem().configuration.defaultLocale
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -171,7 +181,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         courseListViewDelegate.setState(courseListState)
         wrapperViewStateDelegate.switchState(state)
         courseListPersonalOnboardingAction.isVisible = (state is CourseListUserView.State.EmptyLogin || courseListState is CourseListView.State.Empty) &&
-                onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized
+                (onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.Personalized || onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.ControlPersonalized) &&
+                sharedPreferenceHelper.authResponseFromStore != null &&
+                locale.language == RUSSIAN_LANGUAGE_CODE
     }
 
     override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {

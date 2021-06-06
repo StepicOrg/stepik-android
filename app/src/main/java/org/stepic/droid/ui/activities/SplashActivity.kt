@@ -17,6 +17,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.BranchParams
 import org.stepic.droid.analytic.experiments.OnboardingSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.SplashPresenter
@@ -44,6 +45,9 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     @Inject
     internal lateinit var onboardingSplitTest: OnboardingSplitTest
+
+    @Inject
+    internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
 
     private val locale = Resources.getSystem().configuration.defaultLocale
 
@@ -140,18 +144,20 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     override fun onShowOnboarding() {
         if (locale.language == RUSSIAN_LANGUAGE_CODE && firebaseRemoteConfig.getString(RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS).isNotEmpty()) {
-            when (onboardingSplitTest.currentGroup) {
-                OnboardingSplitTest.Group.Personalized ->
-                    screenManager.showPersonalizedOnboarding(this)
-                OnboardingSplitTest.Group.Control ->
+            when (onboardingSplitTestVersion2.currentGroup) {
+                OnboardingSplitTestVersion2.Group.Control ->
                     screenManager.showOnboarding(this)
-                OnboardingSplitTest.Group.None ->
+                OnboardingSplitTestVersion2.Group.Personalized ->
+                    screenManager.showLaunchScreen(this)
+                OnboardingSplitTestVersion2.Group.None ->
                     screenManager.showLaunchFromSplash(this)
+                OnboardingSplitTestVersion2.Group.ControlPersonalized ->
+                    screenManager.showOnboarding(this)
             }
         } else {
+            sharedPreferenceHelper.setPersonalizedOnboardingWasShown()
             screenManager.showOnboarding(this)
         }
-
         finish()
     }
 
