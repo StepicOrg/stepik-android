@@ -19,4 +19,6 @@ interface ShareHelper {
     fun getIntentForSectionSharing(section: Section): Intent
 
     fun getIntentForUserSharing(user: User): Intent
+
+    fun getIntentForCourseResultSharing(course: Course, message: String): Intent
 }

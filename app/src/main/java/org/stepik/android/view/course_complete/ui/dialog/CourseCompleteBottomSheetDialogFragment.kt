@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.bottom_sheet_dialog_course_complete.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_complete.model.CourseCompleteInfo
@@ -57,6 +58,9 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var shareHelper: ShareHelper
 
     private var course: Course by argument()
     private val viewModel: CourseCompleteViewModel by reduxViewModel(this) { viewModelFactory }
@@ -124,7 +128,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             if (dialogViewInfo == CourseCompleteDialogViewInfo.EMPTY) {
                 dismiss()
             } else {
-                setupDialogView(dialogViewInfo)
+                setupDialogView(state.courseCompleteInfo, dialogViewInfo)
             }
         }
     }
@@ -459,7 +463,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     /**
      * Setup functions for dialog view
      */
-    private fun setupDialogView(courseCompleteDialogViewInfo: CourseCompleteDialogViewInfo) {
+    private fun setupDialogView(courseCompleteInfo: CourseCompleteInfo, courseCompleteDialogViewInfo: CourseCompleteDialogViewInfo) {
         courseCompleteLogo.setImageResource(courseCompleteDialogViewInfo.headerImage)
         courseCompleteHeader.setBackgroundResource(courseCompleteDialogViewInfo.gradientRes)
         courseCompleteTitle.text = courseCompleteDialogViewInfo.title
@@ -469,6 +473,23 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
         viewCertificateAction.isVisible = courseCompleteDialogViewInfo.isViewCertificateVisible
         shareResultAction.isVisible = courseCompleteDialogViewInfo.isShareVisible
+
+        viewCertificateAction.setOnClickListener {
+            if (courseCompleteInfo.certificate == null) return@setOnClickListener
+            screenManager.showPdfInBrowserByGoogleDocs(requireActivity(), courseCompleteInfo.certificate.url)
+        }
+
+        shareResultAction.setOnClickListener {
+            val score = courseCompleteInfo
+                .courseProgress
+                .score
+                ?.toFloatOrNull()
+                ?: 0f
+
+            val cost = courseCompleteInfo.courseProgress.cost
+            val message = getString(R.string.course_complete_share_result, score.toLong(), cost, courseCompleteInfo.course.title.toString())
+            startActivity(shareHelper.getIntentForCourseResultSharing(courseCompleteInfo.course, message))
+        }
 
         if (courseCompleteDialogViewInfo.primaryActionStringRes != -1) {
             primaryAction.isVisible = true

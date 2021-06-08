@@ -1094,4 +1094,5 @@
     <string name="course_complete_subtitle_not_issued_success">Сертификат в нём не выдаётся, но вы можете поделиться своим результатом в соцсетях.</string>
     <string name="course_complete_subtitle_continue_message">Продолжите изучать этот курс или поищете другой?</string>
     <string name="course_complete_subtitle_certificate_not_ready_notify">Мы пришлём уведомление, когда сертификат будет готов.</string>
+    <string name="course_complete_share_result">Я получил(а) %d из %d в курсе «%s»</string>
 </resources>

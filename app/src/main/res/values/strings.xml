@@ -1148,4 +1148,5 @@
     <string name="course_complete_subtitle_not_issued_success">There are no certificates in this course, but you can share your result on your social networks.</string>
     <string name="course_complete_subtitle_continue_message">Continue with this course or find another one?</string>
     <string name="course_complete_subtitle_certificate_not_ready_notify">We will notify you when your certificate is ready.</string>
+    <string name="course_complete_share_result">I\'ve received %d out of %d in the course \"%s\"</string>
 </resources>

@@ -78,6 +78,19 @@ constructor(
         return getShareIntentBase(textForSharing)
     }
 
+    override fun getIntentForCourseResultSharing(course: Course, message: String): Intent {
+        val stringBuilder = java.lang.StringBuilder()
+        with(stringBuilder) {
+            append(message)
+            append("\r\n")
+            append("\r\n")
+
+            val uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.baseUrl, course.slug)).toString()
+            append(uriForSharing)
+        }
+        val textForSharing = stringBuilder.toString()
+        return getShareIntentBase(textForSharing)
+    }
 
     private fun getShareIntentBase(textForSharing: String): Intent {
         val shareIntent = Intent()
