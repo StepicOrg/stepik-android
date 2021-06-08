@@ -7,6 +7,8 @@ import androidx.annotation.StringRes
 data class CourseCompleteDialogViewInfo(
     @DrawableRes
     val headerImage: Int,
+    @DrawableRes
+    val gradientRes: Int,
     val title: String,
     val feedbackText: SpannedString,
     val subtitle: SpannedString,
@@ -20,6 +22,6 @@ data class CourseCompleteDialogViewInfo(
     val secondaryActionStringRes: Int
 ) {
     companion object {
-        val EMPTY = CourseCompleteDialogViewInfo(-1, "", SpannedString(""), SpannedString(""), false, false, -1, -1)
+        val EMPTY = CourseCompleteDialogViewInfo(-1, -1, "", SpannedString(""), SpannedString(""), false, false, -1, -1)
     }
 }

@@ -148,6 +148,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_demo_lesson,
+                    gradientRes = R.drawable.course_complete_blue_violet_gradient,
                     isSuccess = false,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -157,6 +158,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 setupNotReceivedCertificate(
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_demo_lesson,
+                    gradientRes = R.drawable.course_complete_blue_violet_gradient,
                     isSuccess = false,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -166,6 +168,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_neutral,
+                    gradientRes = R.drawable.course_complete_yellow_green_gradient,
                     isSuccess = true,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -178,6 +181,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_neutral,
+                            gradientRes = R.drawable.course_complete_yellow_green_gradient,
                             isSuccess = true,
                             primaryActionStringRes = R.string.course_complete_action_find_new_course,
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -188,6 +192,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
+                            gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -197,6 +202,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_distinction_certificate,
+                            gradientRes = R.drawable.course_complete_yellow_red_gradient,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -216,6 +222,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_success,
+                    gradientRes = R.drawable.course_complete_yellow_red_gradient,
                     isSuccess = false,
                     primaryActionStringRes = primaryAction,
                     secondaryActionStringRes = secondaryAction
@@ -234,6 +241,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_neutral,
+                            gradientRes = R.drawable.course_complete_yellow_green_gradient,
                             isSuccess = true,
                             primaryActionStringRes = primaryAction,
                             secondaryActionStringRes = secondaryAction
@@ -249,6 +257,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
+                            gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = primaryAction,
                             secondaryActionStringRes = secondaryAction
@@ -263,9 +272,10 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_distinction_certificate,
-                            SpannedString(""),
-                            primaryAction,
-                            secondaryAction
+                            gradientRes = R.drawable.course_complete_yellow_red_gradient,
+                            distinctionSubtitle = SpannedString(""),
+                            primaryActionStringRes = primaryAction,
+                            secondaryActionStringRes = secondaryAction
                         )
                     }
                     else ->
@@ -284,6 +294,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         courseCompleteInfo: CourseCompleteInfo,
         @DrawableRes
         headerImage: Int,
+        @DrawableRes
+        gradientRes: Int,
         isSuccess: Boolean,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -323,6 +335,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
         return CourseCompleteDialogViewInfo(
             headerImage,
+            gradientRes,
             title,
             SpannedString(""),
             subtitleText,
@@ -340,6 +353,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         courseCompleteInfo: CourseCompleteInfo,
         @DrawableRes
         headerImage: Int,
+        @DrawableRes
+        gradientRes: Int,
         isSuccess: Boolean,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -378,6 +393,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
         return CourseCompleteDialogViewInfo(
             headerImage,
+            gradientRes,
             title,
             feedbackText,
             subtitleText,
@@ -396,6 +412,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         courseCompleteInfo: CourseCompleteInfo,
         @DrawableRes
         headerImage: Int,
+        @DrawableRes
+        gradientRes: Int,
         distinctionSubtitle: SpannedString,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -424,6 +442,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         }
         return CourseCompleteDialogViewInfo(
             headerImage,
+            gradientRes,
             getString(
                 R.string.course_complete_title_finished_with_success_and_certificate,
                 courseCompleteInfo.course.title.toString()
@@ -442,6 +461,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
      */
     private fun setupDialogView(courseCompleteDialogViewInfo: CourseCompleteDialogViewInfo) {
         courseCompleteLogo.setImageResource(courseCompleteDialogViewInfo.headerImage)
+        courseCompleteHeader.setBackgroundResource(courseCompleteDialogViewInfo.gradientRes)
         courseCompleteTitle.text = courseCompleteDialogViewInfo.title
         courseCompleteFeedback.text = courseCompleteDialogViewInfo.feedbackText
         courseCompleteFeedback.isVisible = courseCompleteDialogViewInfo.feedbackText.isNotEmpty()
