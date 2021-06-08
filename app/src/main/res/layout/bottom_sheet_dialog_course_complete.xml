@@ -91,7 +91,10 @@
         android:theme="@style/ThemeOverlay.Green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:layout_marginTop="16dp"
         android:textAppearance="@style/TextAppearance.AppTheme.Body1"
         android:text="@string/course_complete_secondary_action_view_certificate"
@@ -99,6 +102,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:drawablePadding="4dp"
         app:drawableStartCompat="@drawable/ic_certificate"
+        android:background="?selectableItemBackground"
         app:drawableTint="@color/color_overlay_green"/>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -106,12 +110,15 @@
         android:theme="@style/ThemeOverlay.Green"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="16dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:textAppearance="@style/TextAppearance.AppTheme.Body1"
         android:text="@string/course_complete_secondary_action_share_result"
         app:layout_constraintTop_toBottomOf="@id/viewCertificateAction"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:background="?selectableItemBackground"
         android:drawablePadding="6dp"
         app:drawableStartCompat="@drawable/ic_share"
         app:drawableTint="@color/color_overlay_green"/>

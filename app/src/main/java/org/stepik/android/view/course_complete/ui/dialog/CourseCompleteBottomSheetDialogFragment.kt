@@ -159,14 +159,42 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 )
             }
             progress < 20f && courseCompleteInfo.course.hasCertificate -> {
-                setupNotReceivedCertificate(
-                    courseCompleteInfo = courseCompleteInfo,
-                    headerImage = R.drawable.ic_tak_demo_lesson,
-                    gradientRes = R.drawable.course_complete_blue_violet_gradient,
-                    isSuccess = false,
-                    primaryActionStringRes = R.string.course_complete_action_find_new_course,
-                    secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
-                )
+                val courseScore = score.toLong()
+                when {
+                    courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
+                        setupNotReceivedCertificate(
+                            courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_demo_lesson,
+                            gradientRes = R.drawable.course_complete_blue_violet_gradient,
+                            isSuccess = false,
+                            primaryActionStringRes = R.string.course_complete_action_find_new_course,
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                        )
+                    }
+                    courseScore > courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
+                        val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
+                        setupReceivedCertificate(
+                            courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_regular_certificate,
+                            gradientRes = R.drawable.course_complete_blue_violet_gradient,
+                            distinctionSubtitle = distinctionSubtitle,
+                            primaryActionStringRes = -1,
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                        )
+                    }
+                    courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
+                        setupReceivedCertificate(
+                            courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_distinction_certificate,
+                            gradientRes = R.drawable.course_complete_yellow_red_gradient,
+                            distinctionSubtitle = SpannedString(""),
+                            primaryActionStringRes = -1,
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                        )
+                    }
+                    else ->
+                        CourseCompleteDialogViewInfo.EMPTY
+                }
             }
             progress >= 20f && progress < 80f && !courseCompleteInfo.course.hasCertificate -> {
                 setupCertificateNotIssued(
@@ -191,7 +219,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
                         )
                     }
-                    courseScore > courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L)  -> {
+                    courseScore > courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
@@ -202,7 +230,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
                         )
                     }
-                    courseScore > courseCompleteInfo.course.certificateDistinctionThreshold -> {
+                    courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_distinction_certificate,
@@ -267,7 +295,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             secondaryActionStringRes = secondaryAction
                         )
                     }
-                    courseScore > courseCompleteInfo.course.certificateDistinctionThreshold -> {
+                    courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
                         val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
                             -1 to R.string.course_complete_action_find_new_course
                         } else {
