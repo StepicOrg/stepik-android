@@ -47,6 +47,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.course.routing.CourseScreenTab
+import org.stepik.android.view.course_complete.ui.dialog.CourseCompleteBottomSheetDialogFragment
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
@@ -467,7 +468,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     .showIfNotExists(childFragmentManager, SectionUnavailableDialogFragment.TAG)
 
             is StepNavigationAction.ShowCourseComplete ->
-                view?.snackbar("To be developed", Snackbar.LENGTH_SHORT)
+                CourseCompleteBottomSheetDialogFragment
+                    .newInstance(stepNavigationAction.course)
+                    .showIfNotExists(childFragmentManager, CourseCompleteBottomSheetDialogFragment.TAG)
 
             is StepNavigationAction.Unknown ->
                 view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)

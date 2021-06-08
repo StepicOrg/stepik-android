@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/courseCompleteHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/demo_lesson_bottom_sheet_header_gradient"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/courseCompleteGrip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_grip"
+            app:tint="?colorControlNormal" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/courseCompleteLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingRight="32dp"
+            android:scaleType="fitEnd"
+            app:layout_constraintTop_toBottomOf="@id/courseCompleteGrip"
+            app:srcCompat="@drawable/ic_tak_demo_lesson" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseCompleteTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@style/TextAppearance.AppTheme.Headline6"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseCompleteHeader"
+
+        tools:text="Это был последний урок курса «Свободное погружение в СУБД»." />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseCompleteFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="16dp"
+        android:background="@drawable/bg_shape_rounded"
+        android:textColor="@color/color_overlay_red"
+        android:text="@string/demo_complete_message"
+        android:textAppearance="@style/TextAppearance.AppTheme.Body1"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseCompleteTitle"
+        tools:text="Наберите ещё 75 баллов, чтобы получить сертификат."/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseCompleteSubtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/demo_complete_message"
+        android:textAppearance="@style/TextAppearance.AppTheme.Body1"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseCompleteFeedback"
+        tools:text="Вы набрали 5 баллов из 100, изучив 5% материалов курса.\n\nДобавьте сертификат в своё резюме или на страницу в соцсетях, это отличный результат и им можно гордиться!"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/viewCertificateAction"
+        android:theme="@style/ThemeOverlay.Green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppTheme.Body1"
+        android:text="@string/course_complete_secondary_action_view_certificate"
+        app:layout_constraintTop_toBottomOf="@id/courseCompleteSubtitle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:drawablePadding="4dp"
+        app:drawableStartCompat="@drawable/ic_certificate"
+        app:drawableTint="@color/color_overlay_green"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/shareResultAction"
+        android:theme="@style/ThemeOverlay.Green"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.AppTheme.Body1"
+        android:text="@string/course_complete_secondary_action_share_result"
+        app:layout_constraintTop_toBottomOf="@id/viewCertificateAction"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:drawablePadding="6dp"
+        app:drawableStartCompat="@drawable/ic_share"
+        app:drawableTint="@color/color_overlay_green"/>
+
+    <include
+        android:id="@+id/courseCompleteDivider"
+        layout="@layout/view_divider_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shareResultAction" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/primaryAction"
+        style="@style/Widget.AppTheme.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+
+        android:theme="@style/ThemeOverlay.Green"
+        app:strokeColor="@color/color_overlay_green"
+        app:strokeWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseCompleteDivider"
+        app:layout_constraintVertical_bias="0"
+
+        tools:text="Найти новый курс" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/secondaryAction"
+        style="@style/Widget.AppTheme.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+
+        android:theme="@style/ThemeOverlay.Green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/primaryAction"
+        app:layout_constraintVertical_bias="0"
+
+        tools:text="Вернуться к задачам" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/courseCompleteProgressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

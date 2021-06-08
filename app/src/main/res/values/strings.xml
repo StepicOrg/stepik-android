@@ -1125,4 +1125,27 @@
         You can still use this app and download the latest available version for your device from your app store.
         To continue using the latest version of Stepik please update your device to at least Android 5.
     </string>
+
+    <!-- Course complete information -->
+    <string name="course_complete_title_finished_course">You have passed the last lesson of course \"%s\".</string>
+    <string name="course_complete_title_with_success">Congratulations!\nYou have completed the course \"%s\".</string>
+    <string name="course_complete_title_finished_with_success_and_certificate">Congratulations!\nYou have completed the course \"%s\" and received a certificate!</string>
+    <string name="course_complete_certificate_feedback">Receive %s to get a certificate.</string>
+    
+    <string name="course_complete_action_back_to_assigments">Go Back to Assignments</string>
+    <string name="course_complete_action_find_new_course">Find a New Course</string>
+    <string name="course_complete_action_leave_review">Leave review</string>
+    <string name="course_complete_secondary_action_share_result">Share result</string>
+    <string name="course_complete_secondary_action_view_certificate">View certificate</string>
+    
+    <string name="course_complete_subtitle_progress">You have received <b>%s out of %d</b>, which makes up %d of the course material.</string>
+    <string name="course_complete_subtitle_certificate_hint">You will be able to put it in your CV or on social networks, or download and print.</string>
+    <string name="course_complete_subtitle_certificate_ready">Put your certificate in your CV or on social networks. This is an excellent result and you can be proud of it!</string>
+    <string name="course_complete_subtitle_certificate_issued">The regular certificate is issued for %s, the certificate with distinction for %d.</string>
+    <string name="course_complete_subtitle_without_distinction_issued">The regular certificate is issued for %s.</string>
+    <string name="course_complete_subtitle_distinction_need_score">To receive the certificate with distinction, you need to gain %s, <b>%d</b> now left.</string>
+    <string name="course_complete_subtitle_not_issued_neutral">There are no certificates in this course, but we don\'t only learn for formal confirmation, do we?</string>
+    <string name="course_complete_subtitle_not_issued_success">There are no certificates in this course, but you can share your result on your social networks.</string>
+    <string name="course_complete_subtitle_continue_message">Continue with this course or find another one?</string>
+    <string name="course_complete_subtitle_certificate_not_ready_notify">We will notify you when your certificate is ready.</string>
 </resources>

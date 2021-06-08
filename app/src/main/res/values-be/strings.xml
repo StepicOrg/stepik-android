@@ -935,4 +935,27 @@
         а таксама ў любы час загрузіць апошнюю даступную версію для вашага прылады з крамы прыкладанняў.
         Для працы новых версій прыкладання Stepik абновіце сваё прылада да версіі не ніжэй Android 5.
     </string>
+
+    <!-- Course complete information -->
+    <string name="course_complete_title_finished_course">Гэта быў апошні ўрок курса «%s».</string>
+    <string name="course_complete_title_with_success">Віншуем! \nВы завяршылі курс «%s».</string>
+    <string name="course_complete_title_finished_with_success_and_certificate">Віншуем!\nВы завяршылі курс «%s» і атрымалі сертыфікат!</string>
+    <string name="course_complete_certificate_feedback">Набярыце яшчэ %s, каб атрымаць сертыфікат.</string>
+
+    <string name="course_complete_action_back_to_assigments">Вярнуцца да задач</string>
+    <string name="course_complete_action_find_new_course">Знайсці новы курс</string>
+    <string name="course_complete_action_leave_review">Пакінуць водгук</string>
+    <string name="course_complete_secondary_action_share_result">Падзяліцца вынікам</string>
+    <string name="course_complete_secondary_action_view_certificate">Паглядзець сертыфікат</string>
+
+    <string name="course_complete_subtitle_progress">Вы набралі <b>%s з %d</b>, вывучыўшы %d матэрыялаў курса.</string>
+    <string name="course_complete_subtitle_certificate_hint">Потым яго можна будзе дадаць у свой рэзюмэ або на старонку ў сацсетках, спампаваць і раздрукаваць.</string>
+    <string name="course_complete_subtitle_certificate_ready">Дадайце сертыфікат ў свой рэзюмэ або на старонку ў сацсетках, гэта выдатны вынік і ім можна ганарыцца!</string>
+    <string name="course_complete_subtitle_certificate_issued">Сертыфікат выдаецца за %s, а сертыфікат з адзнакай — за %d.</string>
+    <string name="course_complete_subtitle_without_distinction_issued">Сертыфікат выдаецца за %s.</string>
+    <string name="course_complete_subtitle_distinction_need_score">Каб атрымаць сертыфікат з адзнакай, трэба набраць %s, засталося яшчэ <b>%d</b>.</string>
+    <string name="course_complete_subtitle_not_issued_neutral">Сертыфікат ў ім не выдаецца, але мы ж вучымся не толькі дзеля фармальных сведчанняў.</string>
+    <string name="course_complete_subtitle_not_issued_success">Сертыфікат ў ім не выдаецца, але вы можаце падзяліцца сваім вынікам у соцсетях.</string>
+    <string name="course_complete_subtitle_continue_message">Працягнеце вывучаць гэты курс або пашукае іншы?</string>
+    <string name="course_complete_subtitle_certificate_not_ready_notify">Мы дашлем апавяшчэнне, калі сертыфікат будзе гатовы.</string>
 </resources>

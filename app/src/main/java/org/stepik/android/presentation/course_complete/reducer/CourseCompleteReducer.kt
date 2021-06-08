@@ -9,7 +9,26 @@ import javax.inject.Inject
 class CourseCompleteReducer
 @Inject
 constructor() : StateReducer<State, Message, Action> {
-    override fun reduce(state: State, message: Message): Pair<State, Set<Action>> {
-        TODO("Not yet implemented")
-    }
+    override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
+        when (message) {
+            is Message.Init ->
+                if (state is State.Idle) {
+                    State.Loading to setOf(Action.FetchCourseCompleteInfo(message.course))
+                } else {
+                    null
+                }
+            is Message.FetchCourseCompleteInfoSuccess ->
+                if (state is State.Loading) {
+//                    State.Loading to emptySet()
+                    State.Content(message.courseCompleteInfo) to emptySet()
+                } else {
+                    null
+                }
+            is Message.FetchCourseCompleteError ->
+                if (state is State.Loading) {
+                    State.NetworkError to emptySet()
+                } else {
+                    null
+                }
+        } ?: state to emptySet()
 }

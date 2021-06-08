@@ -1,16 +1,40 @@
 package org.stepik.android.view.course_complete.ui.dialog
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.Spanned
+import android.text.SpannedString
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
+import androidx.core.text.buildSpannedString
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.button.MaterialButton
+import kotlinx.android.synthetic.main.bottom_sheet_dialog_course_complete.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepik.android.domain.course_complete.model.CourseCompleteInfo
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_complete.CourseCompleteFeature
+import org.stepik.android.presentation.course_complete.CourseCompleteViewModel
+import org.stepik.android.view.course_complete.model.CourseCompleteDialogViewInfo
+import org.stepik.android.view.course_complete.model.CourseProgressPercentage
+import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
+import javax.inject.Inject
 
-class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
+    ReduxView<CourseCompleteFeature.State, CourseCompleteFeature.Action.ViewAction> {
     companion object {
         const val TAG = "CourseCompleteBottomSheetDialogFragment"
 
@@ -22,13 +46,26 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
     }
 
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private var course: Course by argument()
+    private val viewModel: CourseCompleteViewModel by reduxViewModel(this) { viewModelFactory }
+
+    private lateinit var viewStateDelegate: ViewStateDelegate<CourseCompleteFeature.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.bottom_sheet_dialog_course_complete, container, false)
 
     private fun injectComponent() {
         App.component()
@@ -37,8 +74,467 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() {
             .inject(this)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<CourseCompleteFeature.State.Idle>()
+        viewStateDelegate.addState<CourseCompleteFeature.State.Loading>(courseCompleteProgressbar)
+        viewStateDelegate.addState<CourseCompleteFeature.State.Content>(
+            courseCompleteHeader,
+            courseCompleteTitle,
+            courseCompleteFeedback,
+            courseCompleteSubtitle,
+            viewCertificateAction,
+            shareResultAction,
+            courseCompleteDivider,
+            primaryAction,
+            secondaryAction
+        )
+        viewStateDelegate.addState<CourseCompleteFeature.State.NetworkError>()
+        viewModel.onNewMessage(CourseCompleteFeature.Message.Init(course))
+    }
+
     override fun onStart() {
         super.onStart()
         (dialog as? BottomSheetDialog)?.behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    override fun render(state: CourseCompleteFeature.State) {
+        viewStateDelegate.switchState(state)
+        if (state is CourseCompleteFeature.State.Content) {
+            resolveDialogView(state.courseCompleteInfo)
+        }
+    }
+
+    override fun onAction(action: CourseCompleteFeature.Action.ViewAction) {
+        // no op
+    }
+
+    private fun resolveDialogView(courseCompleteInfo: CourseCompleteInfo) {
+        val score = courseCompleteInfo
+            .courseProgress
+            .score
+            ?.toFloatOrNull()
+            ?: 0f
+
+        val cost = courseCompleteInfo.courseProgress.cost
+        val progress = score * 100 / cost
+
+        val model =
+            when {
+                progress < 20f && !courseCompleteInfo.course.hasCertificate -> {
+                    val subtitleText = buildSpannedString {
+                        append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+                        append(" ")
+                        append(getString(R.string.course_complete_subtitle_not_issued_neutral))
+                        append("\n\n")
+                        append(getString(R.string.course_complete_subtitle_continue_message))
+                    }
+
+                    CourseCompleteDialogViewInfo(
+                        R.drawable.ic_tak_demo_lesson,
+                        getString(
+                            R.string.course_complete_title_finished_course,
+                            courseCompleteInfo.course.title.toString()
+                        ),
+                        SpannedString(""),
+                        subtitleText,
+                        isShareVisible = false,
+                        isViewCertificateVisible = false,
+                        primaryActionStringRes = R.string.course_complete_action_find_new_course,
+                        secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                    )
+                }
+                progress < 20f && courseCompleteInfo.course.hasCertificate -> {
+                    val subtitleText = buildSpannedString {
+                        append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+                        append(" ")
+                        append(getCertificateIssuedText(courseCompleteInfo.course))
+                        append("\n\n")
+                        append(getString(R.string.course_complete_subtitle_certificate_hint))
+                    }
+
+                    val neededPoints = courseCompleteInfo.course.certificateRegularThreshold - score.toLong()
+                    val feedbackText = getFeedbackText(neededPoints)
+
+                    CourseCompleteDialogViewInfo(
+                        R.drawable.ic_tak_demo_lesson,
+                        getString(
+                            R.string.course_complete_title_finished_course,
+                            courseCompleteInfo.course.title.toString()
+                        ),
+                        feedbackText,
+                        subtitleText,
+                        isShareVisible = false,
+                        isViewCertificateVisible = false,
+                        primaryActionStringRes = R.string.course_complete_action_find_new_course,
+                        secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                    )
+                }
+                progress >= 20f && progress < 80f && !courseCompleteInfo.course.hasCertificate -> {
+                    val subtitleText = buildSpannedString {
+                        append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+                        append(" ")
+                        append(getString(R.string.course_complete_subtitle_not_issued_success))
+                    }
+
+                    CourseCompleteDialogViewInfo(
+                        R.drawable.ic_tak_demo_lesson,
+                        getString(
+                            R.string.course_complete_title_with_success,
+                            courseCompleteInfo.course.title.toString()
+                        ),
+                        SpannedString(""),
+                        subtitleText,
+                        isShareVisible = true,
+                        isViewCertificateVisible = false,
+                        primaryActionStringRes = R.string.course_complete_action_find_new_course,
+                        secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                    )
+                }
+                progress >= 20f && progress < 80f && courseCompleteInfo.course.hasCertificate -> {
+                    val courseScore = score.toLong()
+                    when {
+                        courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
+                            val subtitleText = buildSpannedString {
+                                append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+                                append(" ")
+                                append(getCertificateIssuedText(courseCompleteInfo.course))
+                                append("\n\n")
+                                append(getString(R.string.course_complete_subtitle_certificate_hint))
+                            }
+
+                            val neededPoints = courseCompleteInfo.course.certificateRegularThreshold - courseScore
+                            val feedbackText = getFeedbackText(neededPoints)
+
+                            CourseCompleteDialogViewInfo(
+                                R.drawable.ic_tak_demo_lesson,
+                                getString(
+                                    R.string.course_complete_title_with_success,
+                                    courseCompleteInfo.course.title.toString()
+                                ),
+                                feedbackText,
+                                subtitleText,
+                                isShareVisible = true,
+                                isViewCertificateVisible = false,
+                                primaryActionStringRes = R.string.course_complete_action_find_new_course,
+                                secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            )
+                        }
+                        courseScore > courseCompleteInfo.course.certificateRegularThreshold -> {
+                            val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
+                            setupReceivedCertificate(
+                                courseCompleteInfo,
+                                distinctionSubtitle,
+                                -1,
+                                R.string.course_complete_action_back_to_assigments
+                            )
+                        }
+                        courseScore > courseCompleteInfo.course.certificateDistinctionThreshold -> {
+                            setupReceivedCertificate(
+                                courseCompleteInfo,
+                                SpannedString(""),
+                                -1,
+                                R.string.course_complete_action_back_to_assigments
+                            )
+                        }
+                        else ->
+                            CourseCompleteDialogViewInfo.EMPTY
+                    }
+                }
+                progress >= 80f && !courseCompleteInfo.course.hasCertificate -> {
+                    val subtitleText = buildSpannedString {
+                        append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+                        append(" ")
+                        append(getString(R.string.course_complete_subtitle_not_issued_success))
+                    }
+
+                    val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
+                        -1 to R.string.course_complete_action_find_new_course
+                    } else {
+                        R.string.course_complete_action_find_new_course to R.string.course_complete_action_leave_review
+                    }
+
+                    CourseCompleteDialogViewInfo(
+                        R.drawable.ic_tak_demo_lesson,
+                        getString(
+                            R.string.course_complete_title_with_success,
+                            courseCompleteInfo.course.title.toString()
+                        ),
+                        SpannedString(""),
+                        subtitleText,
+                        isShareVisible = true,
+                        isViewCertificateVisible = false,
+                        primaryActionStringRes = primaryAction,
+                        secondaryActionStringRes = secondaryAction
+                    )
+                }
+
+                progress >= 80f && courseCompleteInfo.course.hasCertificate -> {
+                    val courseScore = score.toLong()
+                    when {
+                        courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
+                            val subtitleText = buildSpannedString {
+                                append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+                                append(" ")
+                                append(getCertificateIssuedText(courseCompleteInfo.course))
+                                append("\n\n")
+                                append(getString(R.string.course_complete_subtitle_certificate_hint))
+                            }
+
+                            val neededPoints = courseCompleteInfo.course.certificateRegularThreshold - score.toLong()
+                            val feedbackText = getFeedbackText(neededPoints)
+
+                            val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
+                                R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assigments
+                            } else {
+                                R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assigments
+                            }
+
+                            CourseCompleteDialogViewInfo(
+                                R.drawable.ic_tak_demo_lesson,
+                                getString(
+                                    R.string.course_complete_title_with_success,
+                                    courseCompleteInfo.course.title.toString()
+                                ),
+                                feedbackText,
+                                subtitleText,
+                                isShareVisible = true,
+                                isViewCertificateVisible = false,
+                                primaryActionStringRes = primaryAction,
+                                secondaryActionStringRes = secondaryAction
+                            )
+                        }
+                        courseScore > courseCompleteInfo.course.certificateRegularThreshold -> {
+                            val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
+                            val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
+                                R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assigments
+                            } else {
+                                R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assigments
+                            }
+                            setupReceivedCertificate(
+                                courseCompleteInfo,
+                                distinctionSubtitle,
+                                primaryAction,
+                                secondaryAction
+                            )
+                        }
+                        courseScore > courseCompleteInfo.course.certificateDistinctionThreshold -> {
+                            val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
+                                -1 to R.string.course_complete_action_find_new_course
+                            } else {
+                                R.string.course_complete_action_find_new_course to R.string.course_complete_action_leave_review
+                            }
+                            setupReceivedCertificate(
+                                courseCompleteInfo,
+                                SpannedString(""),
+                                primaryAction,
+                                secondaryAction
+                            )
+                        }
+                        else ->
+                            CourseCompleteDialogViewInfo.EMPTY
+                    }
+                }
+                else ->
+                    CourseCompleteDialogViewInfo.EMPTY
+            }
+
+        setupDialogView(model)
+    }
+
+    private fun getSubtitleTextBeginning(score: Int, progress: Int, cost: Long): Spanned =
+        HtmlCompat.fromHtml(
+            getString(
+                R.string.course_complete_subtitle_progress,
+                resources.getQuantityString(
+                    R.plurals.points,
+                    score,
+                    score
+                ),
+                cost,
+                progress
+            ),
+            HtmlCompat.FROM_HTML_MODE_COMPACT
+        )
+
+    private fun getCertificateIssuedText(course: Course): String =
+        if (course.certificateDistinctionThreshold == 0L) {
+            getString(
+                R.string.course_complete_subtitle_without_distinction_issued,
+                resources.getQuantityString(R.plurals.points, course.certificateRegularThreshold.toInt(), course.certificateRegularThreshold)
+            )
+        } else {
+            getString(
+                R.string.course_complete_subtitle_certificate_issued,
+                resources.getQuantityString(R.plurals.points, course.certificateRegularThreshold.toInt(), course.certificateRegularThreshold),
+                course.certificateDistinctionThreshold
+            )
+        }
+
+    private fun getFeedbackText(neededPoints: Long): SpannedString =
+        buildSpannedString {
+            append(
+                getString(
+                    R.string.course_complete_certificate_feedback,
+                    resources.getQuantityString(R.plurals.points, neededPoints.toInt(), neededPoints)
+                )
+            )
+        }
+
+    private fun getCertificateDistinction(currentScore: Long, certificateDistinctionThreshold: Long): SpannedString =
+        if (certificateDistinctionThreshold == 0L) {
+            SpannedString("")
+        } else {
+            val neededScore = certificateDistinctionThreshold - currentScore
+            buildSpannedString {
+                getString(
+                    R.string.course_complete_subtitle_distinction_need_score,
+                    resources.getQuantityString(R.plurals.points, certificateDistinctionThreshold.toInt(), certificateDistinctionThreshold),
+                    neededScore
+                )
+            }
+        }
+
+    private fun setupNotCertificateNotIssued(
+        courseCompleteInfo: CourseCompleteInfo,
+        primaryActionStringRes: Int,
+        secondaryActionStringRes: Int
+    ) {
+        val score = courseCompleteInfo
+            .courseProgress
+            .score
+            ?.toFloatOrNull()
+            ?: 0f
+
+        val cost = courseCompleteInfo.courseProgress.cost
+        val progress = score * 100 / cost
+
+        val title = if (progress < 20f) {
+            getString(
+                R.string.course_complete_title_finished_course,
+                courseCompleteInfo.course.title.toString()
+            )
+        } else {
+            getString(
+                R.string.course_complete_title_with_success,
+                courseCompleteInfo.course.title.toString()
+            )
+        }
+
+        val subtitleText = buildSpannedString {
+            append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+            append(" ")
+            if (progress < 20f) {
+                append(getString(R.string.course_complete_subtitle_not_issued_neutral))
+                append("\n\n")
+                append(getString(R.string.course_complete_subtitle_continue_message))
+            } else {
+                append(getString(R.string.course_complete_subtitle_not_issued_success))
+            }
+        }
+
+        CourseCompleteDialogViewInfo(
+            R.drawable.ic_tak_demo_lesson,
+            title,
+            SpannedString(""),
+            subtitleText,
+            isShareVisible = progress > 20f,
+            isViewCertificateVisible = false,
+            primaryActionStringRes = primaryActionStringRes,
+            secondaryActionStringRes = secondaryActionStringRes
+        )
+    }
+
+    private fun setupReceivedCertificate(
+        courseCompleteInfo: CourseCompleteInfo,
+        distinctionSubtitle: SpannedString,
+        primaryActionStringRes: Int,
+        secondaryActionStringRes: Int
+    ): CourseCompleteDialogViewInfo {
+        val score = courseCompleteInfo
+            .courseProgress
+            .score
+            ?.toFloatOrNull()
+            ?: 0f
+
+        val cost = courseCompleteInfo.courseProgress.cost
+        val progress = score * 100 / cost
+
+        val subtitleText = buildSpannedString {
+            append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
+            if (distinctionSubtitle.isNotEmpty()) {
+                append(" ")
+                append(distinctionSubtitle)
+            }
+            append("\n\n")
+            if (courseCompleteInfo.certificate != null) {
+                append(getString(R.string.course_complete_subtitle_certificate_ready))
+            } else {
+                append(getString(R.string.course_complete_subtitle_certificate_not_ready_notify))
+            }
+        }
+        return CourseCompleteDialogViewInfo(
+            R.drawable.ic_tak_demo_lesson,
+            getString(
+                R.string.course_complete_title_finished_with_success_and_certificate,
+                courseCompleteInfo.course.title.toString()
+            ),
+            SpannedString(""),
+            subtitleText,
+            isShareVisible = true,
+            isViewCertificateVisible = courseCompleteInfo.certificate != null,
+            primaryActionStringRes = primaryActionStringRes,
+            secondaryActionStringRes = secondaryActionStringRes
+        )
+    }
+
+    private fun setupDialogView(courseCompleteDialogViewInfo: CourseCompleteDialogViewInfo) {
+        courseCompleteTitle.text = courseCompleteDialogViewInfo.title
+        courseCompleteFeedback.text = courseCompleteDialogViewInfo.feedbackText
+        courseCompleteFeedback.isVisible = courseCompleteDialogViewInfo.feedbackText.isNotEmpty()
+        courseCompleteSubtitle.text = courseCompleteDialogViewInfo.subtitle
+
+        viewCertificateAction.isVisible = courseCompleteDialogViewInfo.isViewCertificateVisible
+        shareResultAction.isVisible = courseCompleteDialogViewInfo.isShareVisible
+
+        if (courseCompleteDialogViewInfo.primaryActionStringRes != -1) {
+            primaryAction.isVisible = true
+            primaryAction.setText(courseCompleteDialogViewInfo.primaryActionStringRes)
+            setupOnActionClickListener(
+                courseCompleteDialogViewInfo.primaryActionStringRes,
+                primaryAction
+            )
+        } else {
+            primaryAction.isVisible = false
+        }
+
+        if (courseCompleteDialogViewInfo.secondaryActionStringRes != -1) {
+            secondaryAction.isVisible = true
+            secondaryAction.setText(courseCompleteDialogViewInfo.secondaryActionStringRes)
+            setupOnActionClickListener(
+                courseCompleteDialogViewInfo.secondaryActionStringRes,
+                secondaryAction
+            )
+        } else {
+            secondaryAction.isVisible = false
+        }
+
+        courseCompleteDivider.isVisible = primaryAction.isVisible || secondaryAction.isVisible
+
+    }
+
+    private fun setupOnActionClickListener(actionStringRes: Int, actionButton: MaterialButton) {
+        actionButton.setOnClickListener {
+            when (actionStringRes) {
+                R.string.course_complete_action_back_to_assigments -> {
+                }
+                R.string.course_complete_action_find_new_course -> {
+                }
+                R.string.course_complete_action_leave_review -> {
+                }
+            }
+        }
     }
 }

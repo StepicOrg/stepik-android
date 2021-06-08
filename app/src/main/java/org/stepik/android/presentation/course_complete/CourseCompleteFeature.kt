@@ -7,7 +7,7 @@ interface CourseCompleteFeature {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        data class Content(val courseCompleteInfo: CourseCompleteInfo)
+        data class Content(val courseCompleteInfo: CourseCompleteInfo) : State()
         object NetworkError : State()
     }
 
