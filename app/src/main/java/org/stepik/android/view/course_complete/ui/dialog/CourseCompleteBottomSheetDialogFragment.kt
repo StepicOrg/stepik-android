@@ -7,6 +7,7 @@ import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -146,6 +147,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             progress < 20f && !courseCompleteInfo.course.hasCertificate -> {
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
+                    headerImage = R.drawable.ic_tak_demo_lesson,
                     isSuccess = false,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -154,6 +156,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             progress < 20f && courseCompleteInfo.course.hasCertificate -> {
                 setupNotReceivedCertificate(
                     courseCompleteInfo = courseCompleteInfo,
+                    headerImage = R.drawable.ic_tak_demo_lesson,
                     isSuccess = false,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -162,6 +165,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             progress >= 20f && progress < 80f && !courseCompleteInfo.course.hasCertificate -> {
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
+                    headerImage = R.drawable.ic_tak_neutral,
                     isSuccess = true,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -173,6 +177,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_neutral,
                             isSuccess = true,
                             primaryActionStringRes = R.string.course_complete_action_find_new_course,
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -182,6 +187,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_regular_certificate,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
@@ -189,10 +195,11 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     }
                     courseScore > courseCompleteInfo.course.certificateDistinctionThreshold -> {
                         setupReceivedCertificate(
-                            courseCompleteInfo,
-                            SpannedString(""),
-                            -1,
-                            R.string.course_complete_action_back_to_assigments
+                            courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_distinction_certificate,
+                            distinctionSubtitle = SpannedString(""),
+                            primaryActionStringRes = -1,
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
                         )
                     }
                     else ->
@@ -208,6 +215,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
+                    headerImage = R.drawable.ic_tak_success,
                     isSuccess = false,
                     primaryActionStringRes = primaryAction,
                     secondaryActionStringRes = secondaryAction
@@ -225,6 +233,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         }
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_neutral,
                             isSuccess = true,
                             primaryActionStringRes = primaryAction,
                             secondaryActionStringRes = secondaryAction
@@ -238,10 +247,11 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assigments
                         }
                         setupReceivedCertificate(
-                            courseCompleteInfo,
-                            distinctionSubtitle,
-                            primaryAction,
-                            secondaryAction
+                            courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_regular_certificate,
+                            distinctionSubtitle = distinctionSubtitle,
+                            primaryActionStringRes = primaryAction,
+                            secondaryActionStringRes = secondaryAction
                         )
                     }
                     courseScore > courseCompleteInfo.course.certificateDistinctionThreshold -> {
@@ -251,7 +261,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             R.string.course_complete_action_find_new_course to R.string.course_complete_action_leave_review
                         }
                         setupReceivedCertificate(
-                            courseCompleteInfo,
+                            courseCompleteInfo = courseCompleteInfo,
+                            headerImage = R.drawable.ic_tak_distinction_certificate,
                             SpannedString(""),
                             primaryAction,
                             secondaryAction
@@ -271,6 +282,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
      */
     private fun setupCertificateNotIssued(
         courseCompleteInfo: CourseCompleteInfo,
+        @DrawableRes
+        headerImage: Int,
         isSuccess: Boolean,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -309,7 +322,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         }
 
         return CourseCompleteDialogViewInfo(
-            R.drawable.ic_tak_demo_lesson,
+            headerImage,
             title,
             SpannedString(""),
             subtitleText,
@@ -325,6 +338,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
      */
     private fun setupNotReceivedCertificate(
         courseCompleteInfo: CourseCompleteInfo,
+        @DrawableRes
+        headerImage: Int,
         isSuccess: Boolean,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -362,7 +377,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         val feedbackText = getFeedbackText(neededPoints)
 
         return CourseCompleteDialogViewInfo(
-            R.drawable.ic_tak_demo_lesson,
+            headerImage,
             title,
             feedbackText,
             subtitleText,
@@ -379,6 +394,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     private fun setupReceivedCertificate(
         courseCompleteInfo: CourseCompleteInfo,
+        @DrawableRes
+        headerImage: Int,
         distinctionSubtitle: SpannedString,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -406,7 +423,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             }
         }
         return CourseCompleteDialogViewInfo(
-            R.drawable.ic_tak_demo_lesson,
+            headerImage,
             getString(
                 R.string.course_complete_title_finished_with_success_and_certificate,
                 courseCompleteInfo.course.title.toString()
@@ -424,6 +441,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
      * Setup functions for dialog view
      */
     private fun setupDialogView(courseCompleteDialogViewInfo: CourseCompleteDialogViewInfo) {
+        courseCompleteLogo.setImageResource(courseCompleteDialogViewInfo.headerImage)
         courseCompleteTitle.text = courseCompleteDialogViewInfo.title
         courseCompleteFeedback.text = courseCompleteDialogViewInfo.feedbackText
         courseCompleteFeedback.isVisible = courseCompleteDialogViewInfo.feedbackText.isNotEmpty()
