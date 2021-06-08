@@ -63,10 +63,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:padding="16dp"
-        android:background="@drawable/bg_shape_rounded"
-        android:textColor="@color/color_overlay_red"
         android:text="@string/demo_complete_message"
-        android:textAppearance="@style/TextAppearance.AppTheme.Body1"
+        android:textAppearance="@style/TextAppearance.AppTheme.Subtitle2"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
