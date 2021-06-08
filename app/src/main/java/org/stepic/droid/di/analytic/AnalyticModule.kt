@@ -45,4 +45,9 @@ abstract class AnalyticModule {
     @Binds
     @IntoSet
     internal abstract fun bindOnboardingSplitTest(onboardingSplitTest: OnboardingSplitTest): SplitTest<*>
+
+    @AppSingleton
+    @Binds
+    @IntoSet
+    internal abstract fun bindOnboardingSplitTestVersion2(onboardingSplitTestVersion2: OnboardingSplitTestVersion2): SplitTest<*>
 }

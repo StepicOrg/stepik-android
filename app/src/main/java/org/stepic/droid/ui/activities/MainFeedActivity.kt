@@ -12,6 +12,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.configuration.RemoteConfig
@@ -112,6 +113,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     @Inject
     internal lateinit var analytic: Analytic
 
+    @Inject
+    internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         notificationClickedCheck(intent)
@@ -197,6 +201,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         onShowStreakSuggestion()
+        handleShowPersonalizedOnboarding()
         handlePersonalizedCourseList()
     }
 
@@ -379,6 +384,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
     // TODO APPS-3292: Refactor this if AB test is successful
+    private fun handleShowPersonalizedOnboarding() {
+        if (sharedPreferenceHelper.isPersonalizedOnboardingWasShown ||
+            onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.Control) {
+                return
+        }
+        screenManager.showPersonalizedOnboarding(this)
+    }
     private fun handlePersonalizedCourseList() {
         val personalizedCourseList = sharedPreferenceHelper
             .personalizedCourseList
