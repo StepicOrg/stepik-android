@@ -3,7 +3,6 @@ package org.stepic.droid.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.gson.Gson;
@@ -112,6 +111,7 @@ public class SharedPreferenceHelper {
 
     private final static String NIGHT_MODE = "night_mode";
     private final static String PERSONALIZED_COURSE_LIST = "personalized_course_list";
+    private final static String IS_PERSONALIZED_ONBOARDING_WAS_SHOWN = "is_personalized_onboarding_was_shown";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -495,6 +495,14 @@ public class SharedPreferenceHelper {
 
     public boolean isAndroid4DiscontinueDialogWasShown() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_ANDROID_4_DISCONTINUE_DIALOG_WAS_SHOWN, false);
+    }
+
+    public void setPersonalizedOnboardingWasShown() {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_PERSONALIZED_ONBOARDING_WAS_SHOWN, true);
+    }
+
+    public boolean isPersonalizedOnboardingWasShown() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_PERSONALIZED_ONBOARDING_WAS_SHOWN, false);
     }
 
     public boolean isNeedToShowVideoQualityExplanation() {

@@ -1,5 +1,6 @@
 package org.stepic.droid.core.presenters
 
+import android.content.res.Resources
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -14,6 +15,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
@@ -24,6 +26,7 @@ import org.stepic.droid.di.splash.SplashScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.defaultLocale
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
@@ -50,6 +53,7 @@ constructor(
 
     private val deferredAuthSplitTest: DeferredAuthSplitTest,
     private val onboardingSplitTest: OnboardingSplitTest,
+    private val onboardingSplitTestVersion2: OnboardingSplitTestVersion2,
 
     private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
 ) : PresenterBase<SplashView>() {
@@ -60,6 +64,11 @@ constructor(
         object Catalog : SplashRoute()
         class DeepLink(val route: BranchRoute) : SplashRoute()
     }
+    companion object {
+        private const val RUSSIAN_LANGUAGE_CODE = "ru"
+    }
+
+    private val locale = Resources.getSystem().configuration.defaultLocale
 
     private var disposable: Disposable? = null
 
@@ -74,8 +83,12 @@ constructor(
                 remindRegistrationNotificationDelegate.scheduleRemindRegistrationNotification()
                 retentionNotificationDelegate.scheduleRetentionNotification(shouldResetCounter = true)
                 sharedPreferenceHelper.onNewSession()
-                if (onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.None) {
+                if (onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.None && locale.language == RUSSIAN_LANGUAGE_CODE) {
                     sharedPreferenceHelper.afterOnboardingPassed()
+                    sharedPreferenceHelper.setPersonalizedOnboardingWasShown()
+                }
+                if (sharedPreferenceHelper.isEverLogged) {
+                    sharedPreferenceHelper.setPersonalizedOnboardingWasShown()
                 }
             }
             .andThen(resolveSplashRoute(referringParams))
@@ -104,7 +117,7 @@ constructor(
             .map { SplashRoute.DeepLink(it) as SplashRoute }
             .onErrorReturn {
                 val isLogged = sharedPreferenceHelper.authResponseFromStore != null
-                val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
+                val isOnboardingNotPassedYet = resolveIsOnboardingNotPassedYet()
 //                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
                 when {
                     isOnboardingNotPassedYet -> SplashRoute.Onboarding
@@ -113,6 +126,24 @@ constructor(
                     else -> SplashRoute.Launch
                 }
             }
+
+    private fun resolveIsOnboardingNotPassedYet(): Boolean {
+        // Guard so that this works as usual for every locale except RU
+        if (locale.language != RUSSIAN_LANGUAGE_CODE) {
+            return sharedPreferenceHelper.isOnboardingNotPassedYet
+        }
+        return when (onboardingSplitTestVersion2.currentGroup) {
+            OnboardingSplitTestVersion2.Group.Control ->
+                sharedPreferenceHelper.isOnboardingNotPassedYet
+            OnboardingSplitTestVersion2.Group.Personalized ->
+                !sharedPreferenceHelper.isPersonalizedOnboardingWasShown
+            OnboardingSplitTestVersion2.Group.None ->
+                false
+            OnboardingSplitTestVersion2.Group.ControlPersonalized ->
+                sharedPreferenceHelper.isOnboardingNotPassedYet || !sharedPreferenceHelper.isPersonalizedOnboardingWasShown
+        }
+    }
+
 
     private fun resolveBranchRoute(referringParams: JSONObject?): Single<BranchRoute> =
         if (referringParams == null) {

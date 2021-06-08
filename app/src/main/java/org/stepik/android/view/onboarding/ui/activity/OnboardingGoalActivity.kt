@@ -72,12 +72,24 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
 
         dismissButton.setOnClickListener {
             analytic.report(OnboardingClosedAnalyticEvent(screen = 1))
-            closeOnboarding()
+            onBackPressed()
         }
         allCoursesAction.setOnClickListener {
             analytic.report(OnboardingAllCoursesAnalyticEvent)
-            closeOnboarding()
+            onBackPressed()
         }
+    }
+
+    override fun onBackPressed() {
+        sharedPreferenceHelper.afterOnboardingPassed()
+        sharedPreferenceHelper.setPersonalizedOnboardingWasShown()
+        val isLogged = sharedPreferenceHelper.authResponseFromStore != null
+        if (isLogged) {
+            screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+        } else {
+            screenManager.showLaunchScreen(this)
+        }
+        finish()
     }
 
     private fun createGoalsAdapterDelegate(onItemClicked: (OnboardingGoal) -> Unit) =
@@ -94,15 +106,4 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
                 itemIcon.setBackgroundResource(backgroundRes)
             }
         }
-
-    private fun closeOnboarding() {
-        sharedPreferenceHelper.afterOnboardingPassed()
-        val isLogged = sharedPreferenceHelper.authResponseFromStore != null
-        if (isLogged) {
-            screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
-        } else {
-            screenManager.showLaunchScreen(this)
-        }
-        finish()
-    }
 }
