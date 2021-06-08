@@ -22,9 +22,6 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     @Inject
     lateinit var deferredAuthSplitsTest: DeferredAuthSplitTest
 
-    @Inject
-    lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

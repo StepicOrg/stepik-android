@@ -117,7 +117,7 @@ constructor(
             .map { SplashRoute.DeepLink(it) as SplashRoute }
             .onErrorReturn {
                 val isLogged = sharedPreferenceHelper.authResponseFromStore != null
-                val isOnboardingNotPassedYet = resolveIsOnboardingPassedYet()
+                val isOnboardingNotPassedYet = resolveIsOnboardingNotPassedYet()
 //                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
                 when {
                     isOnboardingNotPassedYet -> SplashRoute.Onboarding
@@ -127,7 +127,7 @@ constructor(
                 }
             }
 
-    private fun resolveIsOnboardingPassedYet(): Boolean {
+    private fun resolveIsOnboardingNotPassedYet(): Boolean {
         // Guard so that this works as usual for every locale except RU
         if (locale.language != RUSSIAN_LANGUAGE_CODE) {
             return sharedPreferenceHelper.isOnboardingNotPassedYet
