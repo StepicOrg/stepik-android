@@ -46,7 +46,6 @@ interface AmplitudeAnalytic {
     object Course {
         const val JOINED = "Course joined"
         const val UNSUBSCRIBED = "Course unsubscribed"
-        const val CONTINUE_PRESSED = "Continue course pressed"
         const val BUY_COURSE_PRESSED = "Buy course pressed"
 
         object Params {
@@ -61,16 +60,6 @@ interface AmplitudeAnalytic {
             const val COURSE_WIDGET = "course_widget"
             const val HOME_WIDGET = "home_widget"
             const val COURSE_SCREEN = "course_screen"
-        }
-    }
-
-    object CoursePreview {
-        const val COURSE_PREVIEW_SCREEN_OPENED = "Course preview screen opened"
-
-        object Params {
-            const val COURSE = "course"
-            const val TITLE = "title"
-            const val IS_PAID = "is_paid"
         }
     }
 
