@@ -948,7 +948,7 @@
     <string name="course_complete_secondary_action_share_result">Падзяліцца вынікам</string>
     <string name="course_complete_secondary_action_view_certificate">Паглядзець сертыфікат</string>
 
-    <string name="course_complete_subtitle_progress">Вы набралі <b>%s з %d</b>, вывучыўшы %d\%% матэрыялаў курса.</string>
+    <string name="course_complete_subtitle_progress">Вы набралі <b>%s з %d</b>, вывучыўшы %d%% матэрыялаў курса.</string>
     <string name="course_complete_subtitle_certificate_hint">Потым яго можна будзе дадаць у свой рэзюмэ або на старонку ў сацсетках, спампаваць і раздрукаваць.</string>
     <string name="course_complete_subtitle_certificate_ready">Дадайце сертыфікат ў свой рэзюмэ або на старонку ў сацсетках, гэта выдатны вынік і ім можна ганарыцца!</string>
     <string name="course_complete_subtitle_certificate_issued">Сертыфікат выдаецца за %s, а сертыфікат з адзнакай — за %d.</string>

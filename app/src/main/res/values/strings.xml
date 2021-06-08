@@ -1138,7 +1138,7 @@
     <string name="course_complete_secondary_action_share_result">Share result</string>
     <string name="course_complete_secondary_action_view_certificate">View certificate</string>
     
-    <string name="course_complete_subtitle_progress">You have received <b>%s out of %d</b>, which makes up %d\%% of the course material.</string>
+    <string name="course_complete_subtitle_progress">You have received <b>%s out of %d</b>, which makes up %d%% of the course material.</string>
     <string name="course_complete_subtitle_certificate_hint">You will be able to put it in your CV or on social networks, or download and print.</string>
     <string name="course_complete_subtitle_certificate_ready">Put your certificate in your CV or on social networks. This is an excellent result and you can be proud of it!</string>
     <string name="course_complete_subtitle_certificate_issued">The regular certificate is issued for %s, the certificate with distinction for %d.</string>

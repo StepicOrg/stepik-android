@@ -1084,7 +1084,7 @@
     <string name="course_complete_secondary_action_share_result">Поделиться результатом</string>
     <string name="course_complete_secondary_action_view_certificate">Посмотреть сертификат</string>
 
-    <string name="course_complete_subtitle_progress">Вы набрали <b>%s из %d</b>, изучив %d\%% материалов курса.</string>
+    <string name="course_complete_subtitle_progress">Вы набрали <b>%s из %d</b>, изучив %d%% материалов курса.</string>
     <string name="course_complete_subtitle_certificate_hint">Потом его можно будет добавить в своё резюме или на страницу в соцсетях, скачать и распечатать.</string>
     <string name="course_complete_subtitle_certificate_ready">Добавьте сертификат в своё резюме или на страницу в соцсетях, это отличный результат и им можно гордиться!</string>
     <string name="course_complete_subtitle_certificate_issued">Сертификат выдаётся за %s, а сертификат с отличием — за %d.</string>
