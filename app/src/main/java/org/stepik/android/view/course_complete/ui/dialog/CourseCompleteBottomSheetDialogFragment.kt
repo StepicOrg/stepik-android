@@ -126,6 +126,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         if (state is CourseCompleteFeature.State.Content) {
             val dialogViewInfo = mapToDialogViewInfo(state.courseCompleteInfo)
             if (dialogViewInfo == CourseCompleteDialogViewInfo.EMPTY) {
+                (parentFragment as? Callback)?.showErrorMessage()
                 dismiss()
             } else {
                 setupDialogView(state.courseCompleteInfo, dialogViewInfo)
@@ -134,7 +135,10 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     }
 
     override fun onAction(action: CourseCompleteFeature.Action.ViewAction) {
-        // no op
+        if (action is CourseCompleteFeature.Action.ViewAction.ShowNetworkError) {
+            (parentFragment as? Callback)?.showErrorMessage()
+            dismiss()
+        }
     }
 
     private fun mapToDialogViewInfo(courseCompleteInfo: CourseCompleteInfo): CourseCompleteDialogViewInfo {
@@ -171,7 +175,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
                         )
                     }
-                    courseScore > courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
+                    courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
@@ -219,7 +223,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
                         )
                     }
-                    courseScore > courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
+                    courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
@@ -548,13 +552,13 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         actionButton.setOnClickListener {
             when (actionStringRes) {
                 R.string.course_complete_action_back_to_assigments -> {
-                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.Unknown, CourseScreenTab.SYLLABUS, false)
+                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.SYLLABUS, false)
                 }
                 R.string.course_complete_action_find_new_course -> {
                     screenManager.showMainFeed(requireActivity(), MainFeedActivity.CATALOG_INDEX)
                 }
                 R.string.course_complete_action_leave_review -> {
-                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.Unknown, CourseScreenTab.REVIEWS, false)
+                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.REVIEWS, false)
                 }
             }
         }
@@ -610,11 +614,17 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         } else {
             val neededScore = certificateDistinctionThreshold - currentScore
             buildSpannedString {
-                getString(
-                    R.string.course_complete_subtitle_distinction_need_score,
-                    resources.getQuantityString(R.plurals.points, certificateDistinctionThreshold.toInt(), certificateDistinctionThreshold),
-                    neededScore
+                append(
+                    getString(
+                        R.string.course_complete_subtitle_distinction_need_score,
+                        resources.getQuantityString(R.plurals.points, certificateDistinctionThreshold.toInt(), certificateDistinctionThreshold),
+                        neededScore
+                    )
                 )
             }
         }
+
+    interface Callback {
+        fun showErrorMessage()
+    }
 }

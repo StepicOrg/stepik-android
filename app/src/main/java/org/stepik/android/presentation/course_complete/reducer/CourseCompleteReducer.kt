@@ -19,14 +19,13 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             is Message.FetchCourseCompleteInfoSuccess ->
                 if (state is State.Loading) {
-//                    State.Loading to emptySet()
                     State.Content(message.courseCompleteInfo) to emptySet()
                 } else {
                     null
                 }
             is Message.FetchCourseCompleteError ->
                 if (state is State.Loading) {
-                    State.NetworkError to emptySet()
+                    State.NetworkError to setOf(Action.ViewAction.ShowNetworkError)
                 } else {
                     null
                 }

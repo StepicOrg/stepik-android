@@ -19,6 +19,8 @@ interface CourseCompleteFeature {
 
     sealed class Action {
         data class FetchCourseCompleteInfo(val course: Course) : Action()
-        sealed class ViewAction : Action()
+        sealed class ViewAction : Action() {
+            object ShowNetworkError : ViewAction()
+        }
     }
 }

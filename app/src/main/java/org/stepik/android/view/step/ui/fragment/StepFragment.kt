@@ -72,7 +72,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     NextMoveable,
     Playable,
     StepMenuNavigator,
-    SectionUnavailableDialogFragment.Callback {
+    SectionUnavailableDialogFragment.Callback,
+    CourseCompleteBottomSheetDialogFragment.Callback {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -500,5 +501,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     override fun onSyllabusAction(courseViewSource: CourseViewSource) {
         val course = lessonData.course ?: return
         screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS, false)
+    }
+
+    override fun showErrorMessage() {
+        view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
     }
 }
