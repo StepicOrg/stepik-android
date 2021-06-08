@@ -4,11 +4,11 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
+import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
@@ -28,11 +28,7 @@ constructor(
         when (action) {
             is CourseContinueFeature.Action.ContinueCourse -> {
                 analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-                analytic.reportAmplitudeEvent(
-                    AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to action.course.id,
-                        AmplitudeAnalytic.Course.Params.SOURCE to action.interactionSource
-                    ))
+                analytic.report(CourseContinuePressedEvent(action.course, action.interactionSource, action.viewSource))
                 if (adaptiveCoursesResolver.isAdaptive(action.course.id)) {
                     onNewMessage(CourseContinueFeature.Message.ShowCourseContinue(action.course, action.viewSource, isAdaptive = true))
                 } else {
