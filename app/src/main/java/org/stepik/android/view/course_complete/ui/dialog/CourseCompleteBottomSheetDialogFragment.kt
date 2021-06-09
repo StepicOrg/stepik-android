@@ -2,7 +2,6 @@ package org.stepik.android.view.course_complete.ui.dialog
 
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Spanned
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.text.HtmlCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
@@ -567,20 +565,20 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     /**
      * Setup functions for ui elements
      */
-    private fun getSubtitleTextBeginning(score: Int, progress: Int, cost: Long): Spanned =
-        HtmlCompat.fromHtml(
-            getString(
-                R.string.course_complete_subtitle_progress,
-                resources.getQuantityString(
-                    R.plurals.points,
-                    score,
-                    score
-                ),
-                cost,
-                progress
-            ),
-            HtmlCompat.FROM_HTML_MODE_COMPACT
-        )
+    private fun getSubtitleTextBeginning(score: Int, progress: Int, cost: Long): SpannedString =
+        buildSpannedString {
+            append(getString(R.string.course_complete_subtitle_progress_part_1))
+            bold {
+                append(
+                    getString(
+                        R.string.course_complete_subtitle_progress_part_2,
+                        resources.getQuantityString(R.plurals.points, score, score),
+                        cost
+                    )
+                )
+            }
+            append(getString(R.string.course_complete_subtitle_progress_part_3, progress))
+        }
 
     private fun getCertificateIssuedText(course: Course): String =
         if (course.certificateDistinctionThreshold == 0L) {
@@ -614,13 +612,10 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         } else {
             val neededScore = certificateDistinctionThreshold - currentScore
             buildSpannedString {
-                append(
-                    getString(
-                        R.string.course_complete_subtitle_distinction_need_score,
-                        resources.getQuantityString(R.plurals.points, certificateDistinctionThreshold.toInt(), certificateDistinctionThreshold),
-                        neededScore
-                    )
-                )
+                append(getString(R.string.course_complete_subtitle_distinction_need_score_part_1,                         resources.getQuantityString(R.plurals.points, certificateDistinctionThreshold.toInt(), certificateDistinctionThreshold)))
+                bold { append(neededScore.toString()) }
+                append(getString(R.string.course_complete_subtitle_distinction_need_score_part_2))
+                append(".")
             }
         }
 
