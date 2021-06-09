@@ -1132,7 +1132,7 @@
     <string name="course_complete_title_finished_with_success_and_certificate">Congratulations!\nYou have completed the course \"%s\" and received a certificate!</string>
     <string name="course_complete_certificate_feedback">Receive %s to get a certificate.</string>
     
-    <string name="course_complete_action_back_to_assigments">Go Back to Assignments</string>
+    <string name="course_complete_action_back_to_assignments">Go Back to Assignments</string>
     <string name="course_complete_action_find_new_course">Find a New Course</string>
     <string name="course_complete_action_leave_review">Leave review</string>
     <string name="course_complete_secondary_action_share_result">Share result</string>

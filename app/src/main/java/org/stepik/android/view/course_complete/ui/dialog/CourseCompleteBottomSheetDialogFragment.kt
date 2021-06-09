@@ -22,11 +22,18 @@ import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_course_complete.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_complete.analytic.FinishedStepsBackToAssignmentsPressedAnalyticEvent
+import org.stepik.android.domain.course_complete.analytic.FinishedStepsFindNewCoursePressedAnalyticEvent
+import org.stepik.android.domain.course_complete.analytic.FinishedStepsLeaveReviewPressedAnalyticEvent
+import org.stepik.android.domain.course_complete.analytic.FinishedStepsScreenOpenedAnalyticEvent
+import org.stepik.android.domain.course_complete.analytic.FinishedStepsSharePressedAnalyticEvent
+import org.stepik.android.domain.course_complete.analytic.FinishedStepsViewCertificatePressedAnalyticEvent
 import org.stepik.android.domain.course_complete.model.CourseCompleteInfo
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_complete.CourseCompleteFeature
@@ -59,6 +66,9 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
     internal lateinit var shareHelper: ShareHelper
 
     private var course: Course by argument()
@@ -72,11 +82,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.bottom_sheet_dialog_course_complete, container, false)
 
     private fun injectComponent() {
@@ -89,6 +95,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        analytic.report(FinishedStepsScreenOpenedAnalyticEvent(course))
         courseCompleteFeedback.background = AppCompatResources
             .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
             ?.mutate()
@@ -157,7 +164,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     gradientRes = R.drawable.course_complete_blue_violet_gradient,
                     isSuccess = false,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
-                    secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                    secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                 )
             }
             progress < 20f && courseCompleteInfo.course.hasCertificate -> {
@@ -170,7 +177,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             isSuccess = false,
                             primaryActionStringRes = R.string.course_complete_action_find_new_course,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                         )
                     }
                     courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
@@ -181,7 +188,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                         )
                     }
                     courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
@@ -191,7 +198,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_yellow_red_gradient,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                         )
                     }
                     else ->
@@ -205,7 +212,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     gradientRes = R.drawable.course_complete_yellow_green_gradient,
                     isSuccess = true,
                     primaryActionStringRes = R.string.course_complete_action_find_new_course,
-                    secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                    secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                 )
             }
             progress >= 20f && progress < 80f && courseCompleteInfo.course.hasCertificate -> {
@@ -218,7 +225,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_yellow_green_gradient,
                             isSuccess = true,
                             primaryActionStringRes = R.string.course_complete_action_find_new_course,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                         )
                     }
                     courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
@@ -229,7 +236,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                         )
                     }
                     courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
@@ -239,7 +246,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_yellow_red_gradient,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assigments
+                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                         )
                     }
                     else ->
@@ -268,9 +275,9 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 when {
                     courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
                         val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
-                            R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assigments
+                            R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assignments
                         } else {
-                            R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assigments
+                            R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assignments
                         }
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
@@ -284,9 +291,9 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
                         val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
-                            R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assigments
+                            R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assignments
                         } else {
-                            R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assigments
+                            R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assignments
                         }
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
@@ -504,19 +511,23 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         viewCertificateAction.isVisible = courseCompleteDialogViewInfo.isViewCertificateVisible
         shareResultAction.isVisible = courseCompleteDialogViewInfo.isShareVisible
 
+        val score = courseCompleteInfo
+            .courseProgress
+            .score
+            ?.toFloatOrNull()
+            ?: 0f
+
+        val cost = courseCompleteInfo.courseProgress.cost
+        val completeRate = (score * 100 / cost) / 100f
+
         viewCertificateAction.setOnClickListener {
             if (courseCompleteInfo.certificate == null) return@setOnClickListener
+            analytic.report(FinishedStepsViewCertificatePressedAnalyticEvent(courseCompleteInfo.course, completeRate))
             screenManager.showPdfInBrowserByGoogleDocs(requireActivity(), courseCompleteInfo.certificate.url)
         }
 
         shareResultAction.setOnClickListener {
-            val score = courseCompleteInfo
-                .courseProgress
-                .score
-                ?.toFloatOrNull()
-                ?: 0f
-
-            val cost = courseCompleteInfo.courseProgress.cost
+            analytic.report(FinishedStepsSharePressedAnalyticEvent(courseCompleteInfo.course, completeRate))
             val message = getString(R.string.course_complete_share_result, score.toLong(), cost, courseCompleteInfo.course.title.toString())
             startActivity(shareHelper.getIntentForCourseResultSharing(courseCompleteInfo.course, message))
         }
@@ -526,6 +537,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             primaryAction.setText(courseCompleteDialogViewInfo.primaryActionStringRes)
             setupOnActionClickListener(
                 courseCompleteDialogViewInfo.primaryActionStringRes,
+                courseCompleteInfo.course,
+                completeRate,
                 primaryAction
             )
         } else {
@@ -537,6 +550,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             secondaryAction.setText(courseCompleteDialogViewInfo.secondaryActionStringRes)
             setupOnActionClickListener(
                 courseCompleteDialogViewInfo.secondaryActionStringRes,
+                courseCompleteInfo.course,
+                completeRate,
                 secondaryAction
             )
         } else {
@@ -546,16 +561,19 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         courseCompleteDivider.isVisible = primaryAction.isVisible || secondaryAction.isVisible
     }
 
-    private fun setupOnActionClickListener(actionStringRes: Int, actionButton: MaterialButton) {
+    private fun setupOnActionClickListener(actionStringRes: Int, course: Course, completeRate: Float, actionButton: MaterialButton) {
         actionButton.setOnClickListener {
             when (actionStringRes) {
-                R.string.course_complete_action_back_to_assigments -> {
+                R.string.course_complete_action_back_to_assignments -> {
+                    analytic.report(FinishedStepsBackToAssignmentsPressedAnalyticEvent(course, completeRate))
                     screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.SYLLABUS, false)
                 }
                 R.string.course_complete_action_find_new_course -> {
+                    analytic.report(FinishedStepsFindNewCoursePressedAnalyticEvent(course, completeRate))
                     screenManager.showMainFeed(requireActivity(), MainFeedActivity.CATALOG_INDEX)
                 }
                 R.string.course_complete_action_leave_review -> {
+                    analytic.report(FinishedStepsLeaveReviewPressedAnalyticEvent(course, completeRate))
                     screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.REVIEWS, false)
                 }
             }
@@ -612,7 +630,16 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         } else {
             val neededScore = certificateDistinctionThreshold - currentScore
             buildSpannedString {
-                append(getString(R.string.course_complete_subtitle_distinction_need_score_part_1,                         resources.getQuantityString(R.plurals.points, certificateDistinctionThreshold.toInt(), certificateDistinctionThreshold)))
+                append(
+                    getString(
+                        R.string.course_complete_subtitle_distinction_need_score_part_1,
+                        resources.getQuantityString(
+                            R.plurals.points,
+                            certificateDistinctionThreshold.toInt(),
+                            certificateDistinctionThreshold
+                        )
+                    )
+                )
                 bold { append(neededScore.toString()) }
                 append(getString(R.string.course_complete_subtitle_distinction_need_score_part_2))
                 append(".")

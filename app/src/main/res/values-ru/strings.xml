@@ -1078,7 +1078,7 @@
     <string name="course_complete_title_finished_with_success_and_certificate">Поздравляем!\nВы завершили курс «%s» и получили сертификат!</string>
     <string name="course_complete_certificate_feedback">Наберите ещё %s, чтобы получить сертификат.</string>
 
-    <string name="course_complete_action_back_to_assigments">Вернуться к задачам</string>
+    <string name="course_complete_action_back_to_assignments">Вернуться к задачам</string>
     <string name="course_complete_action_find_new_course">Найти новый курс</string>
     <string name="course_complete_action_leave_review">Оставить отзыв</string>
     <string name="course_complete_secondary_action_share_result">Поделиться результатом</string>
