@@ -12,15 +12,13 @@ interface CourseCompleteFeature {
     }
 
     sealed class Message {
-        data class Init(val course: Course) : Message()
+        data class Init(val course: Course, val forceUpdate: Boolean = false) : Message()
         data class FetchCourseCompleteInfoSuccess(val courseCompleteInfo: CourseCompleteInfo) : Message()
         object FetchCourseCompleteError : Message()
     }
 
     sealed class Action {
         data class FetchCourseCompleteInfo(val course: Course) : Action()
-        sealed class ViewAction : Action() {
-            object ShowNetworkError : ViewAction()
-        }
+        sealed class ViewAction : Action()
     }
 }

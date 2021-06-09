@@ -12,7 +12,7 @@ constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.Init ->
-                if (state is State.Idle) {
+                if (state is State.Idle || state is State.NetworkError && message.forceUpdate) {
                     State.Loading to setOf(Action.FetchCourseCompleteInfo(message.course))
                 } else {
                     null
@@ -25,7 +25,7 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             is Message.FetchCourseCompleteError ->
                 if (state is State.Loading) {
-                    State.NetworkError to setOf(Action.ViewAction.ShowNetworkError)
+                    State.NetworkError to emptySet()
                 } else {
                     null
                 }

@@ -22,6 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_course_complete.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -112,8 +113,10 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             primaryAction,
             secondaryAction
         )
-        viewStateDelegate.addState<CourseCompleteFeature.State.NetworkError>()
+        viewStateDelegate.addState<CourseCompleteFeature.State.NetworkError>(courseCompleteNetworkError)
         viewModel.onNewMessage(CourseCompleteFeature.Message.Init(course))
+
+        tryAgain.setOnClickListener { viewModel.onNewMessage(CourseCompleteFeature.Message.Init(course, forceUpdate = true)) }
     }
 
     override fun onStart() {
@@ -135,10 +138,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     }
 
     override fun onAction(action: CourseCompleteFeature.Action.ViewAction) {
-        if (action is CourseCompleteFeature.Action.ViewAction.ShowNetworkError) {
-            (parentFragment as? Callback)?.showErrorMessage()
-            dismiss()
-        }
+        // no op
     }
 
     private fun mapToDialogViewInfo(courseCompleteInfo: CourseCompleteInfo): CourseCompleteDialogViewInfo {
