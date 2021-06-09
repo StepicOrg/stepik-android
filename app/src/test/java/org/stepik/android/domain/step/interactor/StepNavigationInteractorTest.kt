@@ -152,7 +152,7 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertResult(EnumSet.of(StepNavigationDirection.PREV))
+            .assertResult(EnumSet.allOf(StepNavigationDirection::class.java))
     }
 
     @Test
@@ -304,7 +304,7 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertResult(EnumSet.of(StepNavigationDirection.PREV))
+            .assertResult(EnumSet.allOf(StepNavigationDirection::class.java))
     }
 
     @Test

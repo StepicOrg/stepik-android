@@ -47,6 +47,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.course.routing.CourseScreenTab
+import org.stepik.android.view.course_complete.ui.dialog.CourseCompleteBottomSheetDialogFragment
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
@@ -71,7 +72,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     NextMoveable,
     Playable,
     StepMenuNavigator,
-    SectionUnavailableDialogFragment.Callback {
+    SectionUnavailableDialogFragment.Callback,
+    CourseCompleteBottomSheetDialogFragment.Callback {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -466,6 +468,11 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     .newInstance(stepNavigationAction.sectionUnavailableAction)
                     .showIfNotExists(childFragmentManager, SectionUnavailableDialogFragment.TAG)
 
+            is StepNavigationAction.ShowCourseComplete ->
+                CourseCompleteBottomSheetDialogFragment
+                    .newInstance(stepNavigationAction.course)
+                    .showIfNotExists(childFragmentManager, CourseCompleteBottomSheetDialogFragment.TAG)
+
             is StepNavigationAction.Unknown ->
                 view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
         }
@@ -494,5 +501,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     override fun onSyllabusAction(courseViewSource: CourseViewSource) {
         val course = lessonData.course ?: return
         screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS, false)
+    }
+
+    override fun showErrorMessage() {
+        view?.snackbar(messageRes = R.string.step_navigation_action_unknown, length = Snackbar.LENGTH_LONG)
     }
 }

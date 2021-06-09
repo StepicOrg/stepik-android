@@ -1,5 +1,6 @@
 package org.stepik.android.data.certificate.repository
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
@@ -16,6 +17,25 @@ constructor(
     private val certificateCacheDataSource: CertificateCacheDataSource,
     private val certificateRemoteDataSource: CertificateRemoteDataSource
 ) : CertificateRepository {
+    override fun getCertificate(userId: Long, courseId: Long, sourceType: DataSourceType): Maybe<Certificate> {
+        val remoteSource = certificateRemoteDataSource
+            .getCertificate(userId, courseId)
+            .doCompletableOnSuccess(certificateCacheDataSource::saveCertificate)
+
+        val cacheSource = certificateCacheDataSource
+            .getCertificate(userId, courseId)
+
+        return when (sourceType) {
+            DataSourceType.CACHE ->
+                cacheSource.switchIfEmpty(remoteSource)
+
+            DataSourceType.REMOTE ->
+                remoteSource
+
+            else -> throw IllegalArgumentException("Unsupported source type = $sourceType")
+        }
+    }
+
     override fun getCertificates(userId: Long, page: Int, sourceType: DataSourceType): Single<PagedList<Certificate>> =
         when (sourceType) {
             DataSourceType.REMOTE ->

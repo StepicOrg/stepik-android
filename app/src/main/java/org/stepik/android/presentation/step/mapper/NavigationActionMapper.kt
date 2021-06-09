@@ -77,4 +77,11 @@ constructor() {
                 )
             )
         }
+
+    fun mapToCourseCompleteAction(course: Course?): StepNavigationAction =
+        if (course == null) {
+            StepNavigationAction.Unknown
+        } else {
+            StepNavigationAction.ShowCourseComplete(course)
+        }
 }
