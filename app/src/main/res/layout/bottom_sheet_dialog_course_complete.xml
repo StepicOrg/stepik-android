@@ -117,6 +117,7 @@
             android:paddingRight="16dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
+            app:layout_goneMarginTop="16dp"
             android:textAppearance="?textAppearanceBody1"
             android:text="@string/course_complete_secondary_action_share_result"
             app:layout_constraintTop_toBottomOf="@id/viewCertificateAction"

@@ -264,7 +264,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_success,
                     gradientRes = R.drawable.course_complete_yellow_red_gradient,
-                    isSuccess = false,
+                    isSuccess = true,
                     primaryActionStringRes = primaryAction,
                     secondaryActionStringRes = secondaryAction
                 )
