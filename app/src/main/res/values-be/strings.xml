@@ -940,6 +940,7 @@
     <string name="course_complete_title_finished_course">Гэта быў апошні ўрок курса «%s».</string>
     <string name="course_complete_title_with_success">Віншуем! \nВы завяршылі курс «%s».</string>
     <string name="course_complete_title_finished_with_success_and_certificate">Віншуем!\nВы завяршылі курс «%s» і атрымалі сертыфікат!</string>
+    <string name="course_complete_title_finished_with_success_and_certificate_with_distinction">Віншуем!\nВы завяршылі курс «%s» і атрымалі сертыфікат з адзнакай!</string>
     <string name="course_complete_certificate_feedback">Набярыце яшчэ %s, каб атрымаць сертыфікат.</string>
 
     <string name="course_complete_action_back_to_assignments">Вярнуцца да задач</string>

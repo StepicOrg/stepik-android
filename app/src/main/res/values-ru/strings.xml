@@ -1076,6 +1076,7 @@
     <string name="course_complete_title_finished_course">Это был последний урок курса «%s».</string>
     <string name="course_complete_title_with_success">Поздравляем!\nВы завершили курс «%s».</string>
     <string name="course_complete_title_finished_with_success_and_certificate">Поздравляем!\nВы завершили курс «%s» и получили сертификат!</string>
+    <string name="course_complete_title_finished_with_success_and_certificate_with_distinction">Поздравляем!\nВы завершили курс «%s» и получили сертификат с отличием!</string>
     <string name="course_complete_certificate_feedback">Наберите ещё %s, чтобы получить сертификат.</string>
 
     <string name="course_complete_action_back_to_assignments">Вернуться к задачам</string>

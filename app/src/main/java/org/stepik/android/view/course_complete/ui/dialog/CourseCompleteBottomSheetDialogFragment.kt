@@ -192,6 +192,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
+                            isDistinct = false,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = secondaryActionStringRes
@@ -202,6 +203,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_distinction_certificate,
                             gradientRes = R.drawable.course_complete_yellow_red_gradient,
+                            isDistinct = true,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
@@ -246,6 +248,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
+                            isDistinct = false,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = secondaryActionStringRes
@@ -256,6 +259,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_distinction_certificate,
                             gradientRes = R.drawable.course_complete_yellow_red_gradient,
+                            isDistinct = true,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = -1,
                             secondaryActionStringRes = R.string.course_complete_action_find_new_course
@@ -320,6 +324,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
+                            isDistinct = false,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = primaryAction,
                             secondaryActionStringRes = secondaryAction
@@ -335,6 +340,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_distinction_certificate,
                             gradientRes = R.drawable.course_complete_yellow_red_gradient,
+                            isDistinct = true,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = primaryAction,
                             secondaryActionStringRes = secondaryAction
@@ -484,6 +490,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         headerImage: Int,
         @DrawableRes
         gradientRes: Int,
+        isDistinct: Boolean,
         distinctionSubtitle: SpannedString,
         primaryActionStringRes: Int,
         secondaryActionStringRes: Int
@@ -496,6 +503,18 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
         val cost = courseCompleteInfo.courseProgress.cost
         val progress = score * 100 / cost
+
+        val title = if (isDistinct) {
+            getString(
+                R.string.course_complete_title_finished_with_success_and_certificate_with_distinction,
+                courseCompleteInfo.course.title.toString()
+            )
+        } else {
+            getString(
+                R.string.course_complete_title_finished_with_success_and_certificate,
+                courseCompleteInfo.course.title.toString()
+            )
+        }
 
         val subtitleText = buildSpannedString {
             append(getSubtitleTextBeginning(score.toInt(), progress.toInt(), cost))
@@ -515,10 +534,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         return CourseCompleteDialogViewInfo(
             headerImage,
             gradientRes,
-            getString(
-                R.string.course_complete_title_finished_with_success_and_certificate,
-                courseCompleteInfo.course.title.toString()
-            ),
+            title,
             SpannedString(""),
             subtitleText,
             isShareVisible = true,

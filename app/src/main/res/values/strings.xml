@@ -1130,6 +1130,7 @@
     <string name="course_complete_title_finished_course">You have passed the last lesson of course \"%s\".</string>
     <string name="course_complete_title_with_success">Congratulations!\nYou have completed the course \"%s\".</string>
     <string name="course_complete_title_finished_with_success_and_certificate">Congratulations!\nYou have completed the course \"%s\" and received a certificate!</string>
+    <string name="course_complete_title_finished_with_success_and_certificate_with_distinction">Congratulations!\nYou have completed the course \"%s\" and received a certificate with distinction!</string>
     <string name="course_complete_certificate_feedback">Receive %s to get a certificate.</string>
     
     <string name="course_complete_action_back_to_assignments">Go Back to Assignments</string>
