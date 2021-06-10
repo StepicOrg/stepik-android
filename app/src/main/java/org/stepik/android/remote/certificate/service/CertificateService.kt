@@ -8,4 +8,7 @@ import retrofit2.http.Query
 interface CertificateService {
     @GET("api/certificates")
     fun getCertificates(@Query("user") userId: Long, @Query("page") page: Int): Single<CertificateResponse>
+
+    @GET("api/certificates")
+    fun getCertificate(@Query("user") userId: Long, @Query("course") courseId: Long): Single<CertificateResponse>
 }

@@ -30,8 +30,10 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.model.Credentials
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
@@ -79,7 +81,13 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     lateinit var onboardingSplitTest: OnboardingSplitTest
 
     @Inject
+    lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     private val socialAuthPresenter: SocialAuthPresenter by viewModels { viewModelFactory }
 
@@ -275,6 +283,9 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             course != null ->
                 super.onBackPressed()
 
+            (onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.Personalized ||
+                    onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.ControlPersonalized) && !sharedPreferenceHelper.isPersonalizedOnboardingWasShown ->
+                screenManager.showPersonalizedOnboarding(this)
 //            deferredAuthSplitTest.currentGroup.isDeferredAuth ->
 //                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
 

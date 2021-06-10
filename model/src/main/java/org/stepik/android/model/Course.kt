@@ -144,7 +144,7 @@ data class Course(
         get() = certificate?.let {
             val hasText = it.isNotEmpty()
             val anyCertificateThreshold = certificateRegularThreshold > 0 || certificateDistinctionThreshold > 0
-            anyCertificateThreshold && (hasText || (isCertificateAutoIssued && isCertificateIssued))
+            anyCertificateThreshold && (hasText || isCertificateAutoIssued || isCertificateIssued)
         } ?: false
 
     companion object {

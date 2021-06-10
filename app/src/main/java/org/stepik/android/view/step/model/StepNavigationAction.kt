@@ -21,5 +21,8 @@ sealed class StepNavigationAction : Parcelable {
     data class ShowSectionUnavailable(val sectionUnavailableAction: SectionUnavailableAction) : StepNavigationAction()
 
     @Parcelize
+    data class ShowCourseComplete(val course: Course) : StepNavigationAction()
+
+    @Parcelize
     object Unknown : StepNavigationAction()
 }

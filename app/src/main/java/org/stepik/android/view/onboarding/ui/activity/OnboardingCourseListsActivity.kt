@@ -102,6 +102,7 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
 
     private fun closeOnboarding() {
         sharedPreferenceHelper.afterOnboardingPassed()
+        sharedPreferenceHelper.setPersonalizedOnboardingWasShown()
         val isLogged = sharedPreferenceHelper.authResponseFromStore != null
         if (isLogged) {
             screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)

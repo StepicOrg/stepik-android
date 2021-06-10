@@ -1071,4 +1071,37 @@
         а также в любое время загрузить последнюю доступную версию для вашего устройства из магазина приложений.
         Для работы новых версий приложения Stepik обновите свое устройство до версии не ниже Android 5.
     </string>
+
+    <!-- Course complete information -->
+    <string name="course_complete_title_finished_course">Это был последний урок курса «%s».</string>
+    <string name="course_complete_title_with_success">Поздравляем!\nВы завершили курс «%s».</string>
+    <string name="course_complete_title_finished_with_success_and_certificate">Поздравляем!\nВы завершили курс «%s» и получили сертификат!</string>
+    <string name="course_complete_title_finished_with_success_and_certificate_with_distinction">Поздравляем!\nВы завершили курс «%s» и получили сертификат с отличием!</string>
+    <string name="course_complete_certificate_feedback">Наберите ещё %s, чтобы получить сертификат.</string>
+
+    <string name="course_complete_action_back_to_assignments">Вернуться к задачам</string>
+    <string name="course_complete_action_find_new_course">Найти новый курс</string>
+    <string name="course_complete_action_leave_review">Оставить отзыв</string>
+    <string name="course_complete_secondary_action_share_result">Поделиться результатом</string>
+    <string name="course_complete_secondary_action_view_certificate">Посмотреть сертификат</string>
+
+    <string name="course_complete_subtitle_progress_part_1">"Вы набрали "</string>
+    <string name="course_complete_subtitle_progress_part_2">%s из %d</string>
+    <string name="course_complete_subtitle_progress_part_3">", изучив %d%% материалов курса."</string>
+
+    <string name="course_complete_subtitle_certificate_hint">Потом его можно будет добавить в своё резюме или на страницу в соцсетях, скачать и распечатать.</string>
+    <string name="course_complete_subtitle_certificate_ready">Добавьте сертификат в своё резюме или на страницу в соцсетях, это отличный результат и им можно гордиться!</string>
+    
+    <string name="course_complete_subtitle_certificate_issued">Сертификат выдаётся за %s, а сертификат с отличием — за %d.</string>
+    <string name="course_complete_subtitle_without_distinction_issued">Сертификат выдаётся за %s.</string>
+    <string name="course_complete_subtitle_without_regular_issued">Сертификат с отличием выдаётся за %s.</string>
+
+    <string name="course_complete_subtitle_distinction_need_score_part_1">"Чтобы получить сертификат с отличием, нужно набрать %s, осталось ещё "</string>
+    <string name="course_complete_subtitle_distinction_need_score_part_2" />
+    <string name="course_complete_subtitle_not_issued_neutral">Сертификат в нём не выдаётся, но мы же учимся не только ради формальных свидетельств.</string>
+    <string name="course_complete_subtitle_not_issued_success">Сертификат в нём не выдаётся, но вы можете поделиться своим результатом в соцсетях.</string>
+    <string name="course_complete_subtitle_continue_message">Продолжите изучать этот курс или поищете другой?</string>
+    <string name="course_complete_subtitle_certificate_not_ready_notify">Мы пришлём уведомление, когда сертификат будет готов.</string>
+    <string name="course_complete_share_result">Я получил(а) %d из %d в курсе «%s»</string>
+    <string name="course_complete_share_result_with_certificate">Мой сертификат за прохождение курса «%s»</string>
 </resources>

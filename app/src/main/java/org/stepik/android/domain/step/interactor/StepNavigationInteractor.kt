@@ -151,7 +151,7 @@ constructor(
             else ->
                 getSlicedSections(direction, lessonData.section, lessonData.course)
                     .map { sections ->
-                        sections.any { it.units.isNotEmpty() }
+                        sections.any { it.units.isNotEmpty() } || direction == StepNavigationDirection.NEXT
                     }
         }
 
