@@ -182,7 +182,6 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         wrapperViewStateDelegate.switchState(state)
         courseListPersonalOnboardingAction.isVisible = (state is CourseListUserView.State.EmptyLogin || courseListState is CourseListView.State.Empty) &&
                 (onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.Personalized || onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.ControlPersonalized) &&
-                sharedPreferenceHelper.authResponseFromStore != null &&
                 locale.language == RUSSIAN_LANGUAGE_CODE
     }
 

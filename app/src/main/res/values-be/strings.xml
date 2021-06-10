@@ -962,4 +962,5 @@
     <string name="course_complete_subtitle_continue_message">Працягнеце вывучаць гэты курс або пашукае іншы?</string>
     <string name="course_complete_subtitle_certificate_not_ready_notify">Мы дашлем апавяшчэнне, калі сертыфікат будзе гатовы.</string>
     <string name="course_complete_share_result">Я атрымаў/атрымала %d з %d ў курсе «%s»</string>
+    <string name="course_complete_share_result_with_certificate">Мой сертыфікат за праходжанне курса \"%s\"</string>
 </resources>

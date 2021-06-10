@@ -182,13 +182,18 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     }
                     courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
+                        val secondaryActionStringRes = if (courseCompleteInfo.course.certificateDistinctionThreshold == 0L) {
+                            R.string.course_complete_action_find_new_course
+                        } else {
+                            R.string.course_complete_action_back_to_assignments
+                        }
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
+                            secondaryActionStringRes = secondaryActionStringRes
                         )
                     }
                     courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
@@ -246,7 +251,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                             gradientRes = R.drawable.course_complete_yellow_red_gradient,
                             distinctionSubtitle = SpannedString(""),
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
+                            secondaryActionStringRes = R.string.course_complete_action_find_new_course
                         )
                     }
                     else ->
@@ -479,6 +484,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 append(getString(R.string.course_complete_subtitle_certificate_ready))
             } else {
                 append(getString(R.string.course_complete_subtitle_certificate_not_ready_notify))
+                append(" ")
+                append(getString(R.string.course_complete_subtitle_certificate_hint))
             }
         }
         return CourseCompleteDialogViewInfo(
@@ -528,8 +535,13 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
         shareResultAction.setOnClickListener {
             analytic.report(FinishedStepsSharePressedAnalyticEvent(courseCompleteInfo.course, completeRate))
-            val message = getString(R.string.course_complete_share_result, score.toLong(), cost, courseCompleteInfo.course.title.toString())
-            startActivity(shareHelper.getIntentForCourseResultSharing(courseCompleteInfo.course, message))
+            if (courseCompleteInfo.certificate != null) {
+                val message = getString(R.string.course_complete_share_result_with_certificate, courseCompleteInfo.course.title.toString())
+                startActivity(shareHelper.getIntentForCourseResultCertificateSharing(courseCompleteInfo.certificate, message))
+            } else {
+                val message = getString(R.string.course_complete_share_result, score.toLong(), cost, courseCompleteInfo.course.title.toString())
+                startActivity(shareHelper.getIntentForCourseResultSharing(courseCompleteInfo.course, message))
+            }
         }
 
         if (courseCompleteDialogViewInfo.primaryActionStringRes != -1) {

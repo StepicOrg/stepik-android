@@ -9,10 +9,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
-import org.stepik.android.model.Course
-import org.stepik.android.model.Lesson
-import org.stepik.android.model.Section
-import org.stepik.android.model.Step
+import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import org.stepik.android.model.user.User
 import javax.inject.Inject
@@ -79,7 +76,7 @@ constructor(
     }
 
     override fun getIntentForCourseResultSharing(course: Course, message: String): Intent {
-        val stringBuilder = java.lang.StringBuilder()
+        val stringBuilder = StringBuilder()
         with(stringBuilder) {
             append(message)
             append("\r\n")
@@ -87,6 +84,18 @@ constructor(
 
             val uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.baseUrl, course.slug)).toString()
             append(uriForSharing)
+        }
+        val textForSharing = stringBuilder.toString()
+        return getShareIntentBase(textForSharing)
+    }
+
+    override fun getIntentForCourseResultCertificateSharing(certificate: Certificate, message: String): Intent {
+        val stringBuilder = StringBuilder()
+        with(stringBuilder) {
+            append(message)
+            append("\r\n")
+            append("\r\n")
+            append(certificate.url ?: "")
         }
         val textForSharing = stringBuilder.toString()
         return getShareIntentBase(textForSharing)
