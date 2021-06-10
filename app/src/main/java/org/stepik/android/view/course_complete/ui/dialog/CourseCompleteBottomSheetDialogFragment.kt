@@ -304,9 +304,17 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
                         val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
-                            R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assignments
+                            if (courseCompleteInfo.course.certificateDistinctionThreshold == 0L) {
+                                -1 to R.string.course_complete_action_find_new_course
+                            } else {
+                                R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assignments
+                            }
                         } else {
-                            R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assignments
+                            if (courseCompleteInfo.course.certificateDistinctionThreshold == 0L) {
+                                R.string.course_complete_action_find_new_course to R.string.course_complete_action_leave_review
+                            } else {
+                                R.string.course_complete_action_leave_review to R.string.course_complete_action_back_to_assignments
+                            }
                         }
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
