@@ -1144,8 +1144,11 @@
 
     <string name="course_complete_subtitle_certificate_hint">You will be able to put it in your CV or on social networks, or download and print.</string>
     <string name="course_complete_subtitle_certificate_ready">Put your certificate in your CV or on social networks. This is an excellent result and you can be proud of it!</string>
+
     <string name="course_complete_subtitle_certificate_issued">The regular certificate is issued for %s, the certificate with distinction for %d.</string>
     <string name="course_complete_subtitle_without_distinction_issued">The regular certificate is issued for %s.</string>
+    <string name="course_complete_subtitle_without_regular_issued">The certificate with distinction is issued for %s.</string>
+
     <string name="course_complete_subtitle_distinction_need_score_part_1">"To receive the certificate with distinction, you need to gain %s, "</string>
     <string name="course_complete_subtitle_distinction_need_score_part_2">" now left"</string>
     <string name="course_complete_subtitle_not_issued_neutral">There are no certificates in this course, but we don\'t only learn for formal confirmation, do we?</string>

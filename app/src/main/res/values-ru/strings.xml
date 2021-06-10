@@ -1090,8 +1090,11 @@
 
     <string name="course_complete_subtitle_certificate_hint">Потом его можно будет добавить в своё резюме или на страницу в соцсетях, скачать и распечатать.</string>
     <string name="course_complete_subtitle_certificate_ready">Добавьте сертификат в своё резюме или на страницу в соцсетях, это отличный результат и им можно гордиться!</string>
+    
     <string name="course_complete_subtitle_certificate_issued">Сертификат выдаётся за %s, а сертификат с отличием — за %d.</string>
     <string name="course_complete_subtitle_without_distinction_issued">Сертификат выдаётся за %s.</string>
+    <string name="course_complete_subtitle_without_regular_issued">Сертификат с отличием выдаётся за %s.</string>
+
     <string name="course_complete_subtitle_distinction_need_score_part_1">"Чтобы получить сертификат с отличием, нужно набрать %s, осталось ещё "</string>
     <string name="course_complete_subtitle_distinction_need_score_part_2" />
     <string name="course_complete_subtitle_not_issued_neutral">Сертификат в нём не выдаётся, но мы же учимся не только ради формальных свидетельств.</string>

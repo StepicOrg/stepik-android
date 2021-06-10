@@ -170,7 +170,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             progress < 20f && courseCompleteInfo.course.hasCertificate -> {
                 val courseScore = score.toLong()
                 when {
-                    courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
+                    (courseCompleteInfo.course.certificateRegularThreshold != 0L && courseScore < courseCompleteInfo.course.certificateRegularThreshold) ||
+                            (courseCompleteInfo.course.certificateRegularThreshold == 0L && courseCompleteInfo.course.certificateDistinctionThreshold != 0L && courseScore < courseCompleteInfo.course.certificateDistinctionThreshold) -> {
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_demo_lesson,
@@ -223,7 +224,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             progress >= 20f && progress < 80f && courseCompleteInfo.course.hasCertificate -> {
                 val courseScore = score.toLong()
                 when {
-                    courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
+                    (courseCompleteInfo.course.certificateRegularThreshold != 0L && courseScore < courseCompleteInfo.course.certificateRegularThreshold) ||
+                            (courseCompleteInfo.course.certificateRegularThreshold == 0L && courseCompleteInfo.course.certificateDistinctionThreshold != 0L && courseScore < courseCompleteInfo.course.certificateDistinctionThreshold) -> {
                         setupNotReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_neutral,
@@ -235,13 +237,18 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     }
                     courseScore >= courseCompleteInfo.course.certificateRegularThreshold && (courseScore < courseCompleteInfo.course.certificateDistinctionThreshold || courseCompleteInfo.course.certificateDistinctionThreshold == 0L) -> {
                         val distinctionSubtitle = getCertificateDistinction(score.toLong(), courseCompleteInfo.course.certificateDistinctionThreshold)
+                        val secondaryActionStringRes = if (courseCompleteInfo.course.certificateDistinctionThreshold == 0L) {
+                            R.string.course_complete_action_find_new_course
+                        } else {
+                            R.string.course_complete_action_back_to_assignments
+                        }
                         setupReceivedCertificate(
                             courseCompleteInfo = courseCompleteInfo,
                             headerImage = R.drawable.ic_tak_regular_certificate,
                             gradientRes = R.drawable.course_complete_blue_violet_gradient,
                             distinctionSubtitle = distinctionSubtitle,
                             primaryActionStringRes = -1,
-                            secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
+                            secondaryActionStringRes = secondaryActionStringRes
                         )
                     }
                     courseScore >= courseCompleteInfo.course.certificateDistinctionThreshold -> {
@@ -278,7 +285,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             progress >= 80f && courseCompleteInfo.course.hasCertificate -> {
                 val courseScore = score.toLong()
                 when {
-                    courseScore < courseCompleteInfo.course.certificateRegularThreshold -> {
+                    (courseCompleteInfo.course.certificateRegularThreshold != 0L && courseScore < courseCompleteInfo.course.certificateRegularThreshold) ||
+                            (courseCompleteInfo.course.certificateRegularThreshold == 0L && courseCompleteInfo.course.certificateDistinctionThreshold != 0L && courseScore < courseCompleteInfo.course.certificateDistinctionThreshold) -> {
                         val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
                             R.string.course_complete_action_find_new_course to R.string.course_complete_action_back_to_assignments
                         } else {
@@ -434,7 +442,15 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             append(getString(R.string.course_complete_subtitle_certificate_hint))
         }
 
-        val neededPoints = courseCompleteInfo.course.certificateRegularThreshold - score.toLong()
+        val neededPoints = when {
+            courseCompleteInfo.course.certificateRegularThreshold > 0L ->
+                courseCompleteInfo.course.certificateRegularThreshold - score.toLong()
+            courseCompleteInfo.course.certificateDistinctionThreshold > 0L ->
+                courseCompleteInfo.course.certificateDistinctionThreshold - score.toLong()
+            else ->
+                0L
+        }
+
         val feedbackText = getFeedbackText(neededPoints)
 
         return CourseCompleteDialogViewInfo(
@@ -611,17 +627,23 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         }
 
     private fun getCertificateIssuedText(course: Course): String =
-        if (course.certificateDistinctionThreshold == 0L) {
-            getString(
-                R.string.course_complete_subtitle_without_distinction_issued,
-                resources.getQuantityString(R.plurals.points, course.certificateRegularThreshold.toInt(), course.certificateRegularThreshold)
-            )
-        } else {
-            getString(
-                R.string.course_complete_subtitle_certificate_issued,
-                resources.getQuantityString(R.plurals.points, course.certificateRegularThreshold.toInt(), course.certificateRegularThreshold),
-                course.certificateDistinctionThreshold
-            )
+        when {
+            course.certificateDistinctionThreshold == 0L ->
+                getString(
+                    R.string.course_complete_subtitle_without_distinction_issued,
+                    resources.getQuantityString(R.plurals.points, course.certificateRegularThreshold.toInt(), course.certificateRegularThreshold)
+                )
+            course.certificateRegularThreshold == 0L ->
+                getString(
+                    R.string.course_complete_subtitle_without_regular_issued,
+                    resources.getQuantityString(R.plurals.points, course.certificateDistinctionThreshold.toInt(), course.certificateDistinctionThreshold)
+                )
+            else ->
+                getString(
+                    R.string.course_complete_subtitle_certificate_issued,
+                    resources.getQuantityString(R.plurals.points, course.certificateRegularThreshold.toInt(), course.certificateRegularThreshold),
+                    course.certificateDistinctionThreshold
+                )
         }
 
     private fun getFeedbackText(neededPoints: Long): SpannedString =
