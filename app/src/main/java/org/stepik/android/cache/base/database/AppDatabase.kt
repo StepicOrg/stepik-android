@@ -45,7 +45,7 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
         WishlistEntity::class
     ],
     version = AppDatabase.VERSION,
-    exportSchema = true
+    exportSchema = false
 )
 @TypeConverters(
     CollectionConverter::class,
