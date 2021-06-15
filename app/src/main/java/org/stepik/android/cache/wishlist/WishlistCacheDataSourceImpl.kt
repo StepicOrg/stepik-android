@@ -2,8 +2,8 @@ package org.stepik.android.cache.wishlist
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.cache.wishlist.dao.WishlistDao
 import org.stepik.android.cache.wishlist.mapper.WishlistEntityMapper
 import org.stepik.android.data.wishlist.KIND_WISHLIST
 import org.stepik.android.data.wishlist.source.WishlistCacheDataSource
@@ -13,12 +13,12 @@ import javax.inject.Inject
 class WishlistCacheDataSourceImpl
 @Inject
 constructor(
-    private val wishlistDao: WishlistDao,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val wishlistEntityMapper: WishlistEntityMapper
 ) : WishlistCacheDataSource {
     override fun getWishlistRecord(): Maybe<StorageRecord<WishlistWrapper>> =
-        wishlistDao
-            .getWishlistEntity()
+        Maybe
+            .fromCallable { sharedPreferenceHelper.wishlist }
             .map {
                 StorageRecord(
                     id = it.recordId,
@@ -28,6 +28,9 @@ constructor(
             }
 
     override fun saveWishlistRecord(wishlistRecord: StorageRecord<WishlistWrapper>): Completable =
-        wishlistDao
-            .saveWishlistEntity(wishlistEntityMapper.mapToEntity(wishlistRecord))
+        Completable
+            .fromAction {
+                sharedPreferenceHelper
+                    .storeWishlist(wishlistEntityMapper.mapToEntity(wishlistRecord))
+            }
 }

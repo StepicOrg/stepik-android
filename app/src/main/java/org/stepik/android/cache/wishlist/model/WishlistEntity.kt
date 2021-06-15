@@ -1,11 +1,10 @@
 package org.stepik.android.cache.wishlist.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
-@Entity
 data class WishlistEntity(
-    @PrimaryKey
+    @SerializedName("recordId")
     val recordId: Long,
+    @SerializedName("courses")
     val courses: List<Long>
 )
