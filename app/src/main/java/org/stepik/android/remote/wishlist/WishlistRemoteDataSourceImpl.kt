@@ -3,7 +3,7 @@ package org.stepik.android.remote.wishlist
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.data.wishlist.getKindWishlist
+import org.stepik.android.data.wishlist.KIND_WISHLIST
 import org.stepik.android.data.wishlist.source.WishlistRemoteDataSource
 import org.stepik.android.domain.wishlist.model.WishlistWrapper
 import org.stepik.android.remote.remote_storage.service.RemoteStorageService
@@ -20,7 +20,7 @@ constructor(
 
     override fun getWishlistRecord(): Single<StorageRecord<WishlistWrapper>> =
         remoteStorageService
-            .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, kind = getKindWishlist())
+            .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, kind = KIND_WISHLIST)
             .map { response ->
                 wishlistMapper.mapToStorageRecord(response)
             }

@@ -1,4 +1,3 @@
 package org.stepik.android.data.wishlist
 
-fun getKindWishlist(): String =
-    "wishlist"
+const val KIND_WISHLIST = "wishlist"
