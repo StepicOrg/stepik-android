@@ -22,6 +22,8 @@ import org.stepik.android.cache.course_recommendations.dao.CourseRecommendations
 import org.stepik.android.cache.exam_session.dao.ExamSessionDao
 import org.stepik.android.cache.proctor_session.dao.ProctorSessionDao
 import org.stepik.android.cache.rubric.dao.RubricDao
+import org.stepik.android.cache.wishlist.dao.WishlistDao
+import org.stepik.android.cache.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course_recommendations.model.CourseRecommendation
 import org.stepik.android.domain.exam_session.model.ExamSession
 import org.stepik.android.domain.proctor_session.model.ProctorSession
@@ -39,10 +41,11 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
         CourseRecommendation::class,
         Rubric::class,
         ExamSession::class,
-        ProctorSession::class
+        ProctorSession::class,
+        WishlistEntity::class
     ],
     version = AppDatabase.VERSION,
-    exportSchema = false
+    exportSchema = true
 )
 @TypeConverters(
     CollectionConverter::class,
@@ -53,7 +56,7 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val VERSION = 69
+        const val VERSION = 70
         const val NAME = "stepic_database.db"
     }
 
@@ -67,4 +70,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun rubricDao(): RubricDao
     abstract fun examSessionDao(): ExamSessionDao
     abstract fun proctorSessionDao(): ProctorSessionDao
+    abstract fun wishlistDao(): WishlistDao
 }
