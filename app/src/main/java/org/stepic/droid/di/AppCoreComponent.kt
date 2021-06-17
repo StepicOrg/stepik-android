@@ -79,6 +79,7 @@ import org.stepik.android.view.injection.feedback.FeedbackComponent
 import org.stepik.android.view.injection.filter.FilterComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.in_app_web_view.InAppWebViewComponent
+import org.stepik.android.view.injection.learning_actions.LearningActionsComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.magic_links.MagicLinksComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
@@ -267,6 +268,8 @@ interface AppCoreComponent {
     fun storiesComponentBuilder(): StoriesComponent.Builder
 
     fun courseCompleteComponentBuilder(): CourseCompleteComponent.Builder
+
+    fun learningActionsComponentBuilder(): LearningActionsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
