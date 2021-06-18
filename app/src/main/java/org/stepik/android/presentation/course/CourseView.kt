@@ -6,6 +6,7 @@ import org.stepik.android.presentation.billing.BillingView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 
 interface CourseView : CourseContinueView, BillingView {
     sealed class State {
@@ -25,6 +26,8 @@ interface CourseView : CourseContinueView, BillingView {
 
     fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction)
     fun showSaveUserCourseError(userCourseAction: UserCourseAction)
+    fun showWishlistActionSuccess(wishlistAction: WishlistAction)
+    fun showWishlistActionFailure(wishlistAction: WishlistAction)
 
     fun shareCourse(course: Course)
     fun showCourseShareTooltip()

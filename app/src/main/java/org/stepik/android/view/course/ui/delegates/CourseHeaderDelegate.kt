@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.scale
 import androidx.core.text.strikeThrough
@@ -39,6 +40,7 @@ import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -69,6 +71,7 @@ class CourseHeaderDelegate(
         }
 
     private var dropCourseMenuItem: MenuItem? = null
+    private var wishListMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
@@ -346,6 +349,20 @@ class CourseHeaderDelegate(
         dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorError)), 0, dropCourseMenuItemSpan.length, 0)
         dropCourseMenuItem?.title = dropCourseMenuItemSpan
 
+        menu.findItem(R.id.wishlist_course)
+            ?.let { wishlistCourseMenuItem ->
+                wishlistCourseMenuItem.isVisible = courseHeaderData != null
+                wishlistCourseMenuItem.isEnabled = courseHeaderData?.isWishlistUpdating == false
+                val (icon, title) =
+                    if (courseHeaderData?.stats?.isWishlisted == true) {
+                        ContextCompat.getDrawable(courseActivity, R.drawable.ic_wishlist_active) to courseActivity.getString(R.string.wishlist_add_action)
+                    } else {
+                        ContextCompat.getDrawable(courseActivity, R.drawable.ic_wishlist_inactive) to courseActivity.getString(R.string.wishlist_remove_action)
+                    }
+                wishlistCourseMenuItem.icon = icon
+                wishlistCourseMenuItem.title = title
+            }
+
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
@@ -391,6 +408,20 @@ class CourseHeaderDelegate(
                 }
                 true
             }
+
+            R.id.wishlist_course -> {
+                courseHeaderData?.stats?.let {
+                    val action =
+                        if (it.isWishlisted) {
+                            WishlistAction.REMOVE
+                        } else {
+                            WishlistAction.ADD
+                        }
+                    coursePresenter.toggleWishlist(action)
+                }
+                true
+            }
+
             R.id.share_course -> {
                 coursePresenter.shareCourse()
                 true

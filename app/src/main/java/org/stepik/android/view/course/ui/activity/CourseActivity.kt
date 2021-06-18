@@ -46,6 +46,7 @@ import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.web.CustomTabsHelper
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
@@ -463,6 +464,28 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
                 UserCourseAction.REMOVE_ARCHIVE ->
                     R.string.course_action_archive_remove_failure
+            }
+        coursePager.snackbar(messageRes = errorMessage)
+    }
+
+    override fun showWishlistActionSuccess(wishlistAction: WishlistAction) {
+        @StringRes
+        val successMessage =
+            if (wishlistAction == WishlistAction.ADD) {
+                R.string.wishlist_action_add_success
+            } else {
+                R.string.wishlist_action_remove_success
+            }
+        coursePager.snackbar(messageRes = successMessage)
+    }
+
+    override fun showWishlistActionFailure(wishlistAction: WishlistAction) {
+        @StringRes
+        val errorMessage =
+            if (wishlistAction == WishlistAction.ADD) {
+                R.string.wishlist_action_add_failure
+            } else {
+                R.string.wishlist_action_remove_failure
             }
         coursePager.snackbar(messageRes = errorMessage)
     }

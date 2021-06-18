@@ -5,13 +5,15 @@ import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.injection.course_recommendations.CourseRecommendationsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
+import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @Subcomponent(modules = [
     CatalogBlockPresentationModule::class,
     CatalogDataModule::class,
     ProfileDataModule::class,
     LastStepDataModule::class,
-    CourseRecommendationsDataModule::class
+    CourseRecommendationsDataModule::class,
+    WishlistDataModule::class
 ])
 interface CatalogComponent {
     @Subcomponent.Builder

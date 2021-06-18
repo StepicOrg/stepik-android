@@ -971,4 +971,12 @@
     <!-- Wishlist -->
     <string name="wishlist_title">Спіс жаданняў</string>
     <string name="wishlist_empty">Няма курсаў</string>
+
+    <string name="wishlist_add_action">Дадаць у спіс жаданняў</string>
+    <string name="wishlist_remove_action">Прыбраць са спісу жаданняў</string>
+
+    <string name="wishlist_action_add_success">Курс паспяхова дададзены ў спіс жаданняў</string>
+    <string name="wishlist_action_remove_success">Курс паспяхова прыбраны са спісу жаданняў</string>
+    <string name="wishlist_action_add_failure">Не атрымалася дадаць курс у спіс жаданняў</string>
+    <string name="wishlist_action_remove_failure">Не атрымалася прыбраць курс з спісу жаданняў</string>
 </resources>

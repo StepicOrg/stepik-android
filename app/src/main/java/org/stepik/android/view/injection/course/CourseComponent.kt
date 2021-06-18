@@ -19,6 +19,7 @@ import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.user.UserDataModule
+import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @CourseScope
 @Subcomponent(modules = [
@@ -41,7 +42,9 @@ import org.stepik.android.view.injection.user.UserDataModule
     ProfileDataModule::class,
 
     ExamSessionDataModule::class,
-    ProctorSessionDataModule::class
+    ProctorSessionDataModule::class,
+
+    WishlistDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder

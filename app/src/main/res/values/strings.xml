@@ -1162,4 +1162,12 @@
     <!-- Wishlist -->
     <string name="wishlist_title">Wishlist</string>
     <string name="wishlist_empty">No courses</string>
+
+    <string name="wishlist_add_action">Add to Wishlist</string>
+    <string name="wishlist_remove_action">Remove from Wishlist</string>
+
+    <string name="wishlist_action_add_success">Course successfully added to Wishlist</string>
+    <string name="wishlist_action_remove_success">Course successfully removed from Wishlist</string>
+    <string name="wishlist_action_add_failure">Failed to add course to Wishlist</string>
+    <string name="wishlist_action_remove_failure">Failed to remove course from Wishlist</string>
 </resources>
