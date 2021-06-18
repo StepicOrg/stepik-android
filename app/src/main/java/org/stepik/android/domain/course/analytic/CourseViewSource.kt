@@ -115,6 +115,11 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
             "course_complete_dialog"
     }
 
+    object Wishlist : CourseViewSource() {
+        override val name: String =
+            "wishlist"
+    }
+
     object Unknown : CourseViewSource() {
         override val name: String =
             "unknown"

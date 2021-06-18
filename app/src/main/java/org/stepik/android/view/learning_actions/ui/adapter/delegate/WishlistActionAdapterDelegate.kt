@@ -12,7 +12,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 
-class WishlistActionAdapterDelegate : AdapterDelegate<LearningActionsItem, DelegateViewHolder<LearningActionsItem>>() {
+class WishlistActionAdapterDelegate(private val onClick: () -> Unit) : AdapterDelegate<LearningActionsItem, DelegateViewHolder<LearningActionsItem>>() {
     override fun isForViewType(position: Int, data: LearningActionsItem): Boolean =
         data is LearningActionsItem.Wishlist
 
@@ -22,11 +22,12 @@ class WishlistActionAdapterDelegate : AdapterDelegate<LearningActionsItem, Deleg
         val itemView = createView(parent, R.layout.item_learning_action_wishlist)
         val itemWidth = parentWidth / 2 - itemMargin
         itemView.updateLayoutParams { width = itemWidth }
-        return ViewHolder(itemView)
+        return ViewHolder(itemView, onClick)
     }
 
     private class ViewHolder(
-        override val containerView: View
+        override val containerView: View,
+        private val onClick: () -> Unit
     ) : DelegateViewHolder<LearningActionsItem>(containerView), LayoutContainer {
 
         private val viewStateDelegate = ViewStateDelegate<WishlistFeature.State>()
@@ -37,6 +38,7 @@ class WishlistActionAdapterDelegate : AdapterDelegate<LearningActionsItem, Deleg
             viewStateDelegate.addState<WishlistFeature.State.Loading>(wishlistActionTitle, wishlistActionLoadingView)
             viewStateDelegate.addState<WishlistFeature.State.Error>(wishlistActionTitle)
             viewStateDelegate.addState<WishlistFeature.State.Content>(wishlistActionTitle, wishlistActionCourseCount)
+            containerView.setOnClickListener { onClick() }
         }
 
         override fun onBind(data: LearningActionsItem) {

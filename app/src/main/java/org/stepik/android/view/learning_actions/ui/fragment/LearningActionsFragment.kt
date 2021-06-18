@@ -61,7 +61,7 @@ class LearningActionsFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        learningActionsItemAdapter += WishlistActionAdapterDelegate()
+        learningActionsItemAdapter += WishlistActionAdapterDelegate { screenManager.showWishlist(requireContext()) }
         with(learningActionsRecycler) {
             adapter = learningActionsItemAdapter
             layoutManager = LinearLayoutManager(context)
