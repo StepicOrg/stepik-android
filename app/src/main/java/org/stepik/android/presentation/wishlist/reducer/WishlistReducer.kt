@@ -24,7 +24,7 @@ constructor() : StateReducer<State, Message, Action> {
                     if (message.wishListRecord.data.courses.isNullOrEmpty()) {
                         State.Empty to emptySet()
                     } else {
-                        State.Content(message.wishListRecord) to emptySet()
+                        State.Content(message.wishListRecord.data.courses) to emptySet()
                     }
                 } else {
                     null
@@ -33,7 +33,7 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchWishListError -> {
                 if (state is State.Loading) {
-                    State.Empty to emptySet()
+                    State.Error to emptySet()
                 } else {
                     null
                 }

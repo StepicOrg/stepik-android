@@ -26,9 +26,9 @@ constructor(
     fun mapToStorageRequest(record: StorageRecord<WishlistWrapper>): StorageRequest =
         StorageRequest(record.wrap(gson))
 
-    fun mapToStorageRecord(response: StorageResponse): StorageRecord<WishlistWrapper> =
+    fun mapToStorageRecord(response: StorageResponse): StorageRecord<WishlistWrapper>? =
         response
             .records
-            .first()
-            .unwrap(gson)
+            .firstOrNull()
+            ?.unwrap(gson)
 }

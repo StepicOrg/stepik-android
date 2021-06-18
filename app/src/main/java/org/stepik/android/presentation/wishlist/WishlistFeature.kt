@@ -8,8 +8,9 @@ interface WishlistFeature {
         object Idle : State()
         object Loading : State()
         object Empty : State()
+        object Error : State()
 
-        data class Content(val wishListRecord: StorageRecord<WishlistWrapper>) : State()
+        data class Content(val wishListCourses: List<Long>) : State()
     }
 
     sealed class Message {

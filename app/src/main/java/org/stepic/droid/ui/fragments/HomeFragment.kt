@@ -23,6 +23,7 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalN
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFragment
+import org.stepik.android.view.learning_actions.ui.fragment.LearningActionsFragment
 import org.stepik.android.view.stories.ui.fragment.StoriesFragment
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
@@ -125,6 +126,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             childFragmentManager.commitNow {
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
+                add(R.id.homeMainContainer, LearningActionsFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
             }

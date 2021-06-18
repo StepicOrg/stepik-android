@@ -8,6 +8,7 @@ import org.stepik.android.data.wishlist.source.WishlistRemoteDataSource
 import org.stepik.android.domain.wishlist.model.WishlistWrapper
 import org.stepik.android.remote.remote_storage.service.RemoteStorageService
 import org.stepik.android.remote.wishlist.mapper.WishlistMapper
+import ru.nobird.android.domain.rx.toMaybe
 import javax.inject.Inject
 
 class WishlistRemoteDataSourceImpl
@@ -21,10 +22,12 @@ constructor(
     override fun getWishlistRecord(): Single<StorageRecord<WishlistWrapper>> =
         remoteStorageService
             .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, kind = KIND_WISHLIST)
-            .map { response ->
-                wishlistMapper.mapToStorageRecord(response)
+            .flatMapMaybe { response ->
+                wishlistMapper
+                    .mapToStorageRecord(response)
+                    .toMaybe()
             }
-            .doOnError { createWishlistRecord(WishlistWrapper.EMPTY) }
+            .switchIfEmpty(createWishlistRecord(WishlistWrapper.EMPTY))
 
     override fun createWishlistRecord(wishlistWrapper: WishlistWrapper): Single<StorageRecord<WishlistWrapper>> =
         remoteStorageService
