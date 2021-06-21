@@ -7,8 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_user_course_list_new_home.*
-import kotlinx.android.synthetic.main.view_user_course_list_empty.*
-import kotlinx.android.synthetic.main.view_user_course_list_network_error.*
+import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
+import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
@@ -86,10 +86,24 @@ class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_
         }
 
         catalogBlockContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
-        userCoursesListEmptyAction.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        userCoursesListNetworkErrorAction.setOnClickListener {
-            setDataToPresenter(forceUpdate = true)
-        }
+        courseListPlaceholderEmpty
+            .userCoursesListEmptyAction
+            .setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListPlaceholderEmptyWrapper
+            .userCoursesListEmptyAction
+            .setOnClickListener { screenManager.showCatalog(requireContext()) }
+
+
+        courseListPlaceholderNoConnection.
+            userCoursesListNetworkErrorAction
+            .setOnClickListener {
+                setDataToPresenter(forceUpdate = true)
+            }
+        courseListPlaceholderNoConnectionWrapper.
+        userCoursesListNetworkErrorAction
+            .setOnClickListener {
+                setDataToPresenter(forceUpdate = true)
+            }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
