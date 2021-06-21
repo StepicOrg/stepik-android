@@ -101,6 +101,7 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
                 analytic = analytic,
                 screenManager = screenManager
             ),
+            courseListSwipeRefresh = courseListSwipeRefresh,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
