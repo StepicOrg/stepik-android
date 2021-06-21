@@ -1,4 +1,4 @@
-package org.stepik.android.cache.wishlist.model
+package org.stepik.android.domain.wishlist.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

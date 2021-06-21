@@ -4,10 +4,10 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.cache.wishlist.mapper.WishlistEntityMapper
+import org.stepik.android.domain.wishlist.mapper.WishlistEntityMapper
 import org.stepik.android.data.wishlist.KIND_WISHLIST
 import org.stepik.android.data.wishlist.source.WishlistCacheDataSource
-import org.stepik.android.domain.wishlist.model.WishlistWrapper
+import org.stepik.android.remote.wishlist.model.WishlistWrapper
 import javax.inject.Inject
 
 class WishlistCacheDataSourceImpl

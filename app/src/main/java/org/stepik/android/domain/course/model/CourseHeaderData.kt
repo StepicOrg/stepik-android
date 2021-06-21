@@ -2,7 +2,7 @@ package org.stepik.android.domain.course.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.stepik.android.cache.wishlist.model.WishlistEntity
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.model.Course

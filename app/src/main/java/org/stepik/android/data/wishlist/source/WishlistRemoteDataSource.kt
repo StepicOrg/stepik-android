@@ -2,7 +2,7 @@ package org.stepik.android.data.wishlist.source
 
 import io.reactivex.Single
 import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.domain.wishlist.model.WishlistWrapper
+import org.stepik.android.remote.wishlist.model.WishlistWrapper
 
 interface WishlistRemoteDataSource {
     fun getWishlistRecord(): Single<StorageRecord<WishlistWrapper>>

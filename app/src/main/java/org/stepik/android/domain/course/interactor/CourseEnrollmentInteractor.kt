@@ -13,7 +13,7 @@ import org.stepik.android.domain.course.repository.EnrollmentRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
-import org.stepik.android.domain.wishlist.WishlistInteractor
+import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException

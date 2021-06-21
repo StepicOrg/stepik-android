@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.wishlist.WishlistInteractor
+import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.wishlist.WishlistFeature
 import org.stepik.android.view.injection.course_list.WishlistOperationBus

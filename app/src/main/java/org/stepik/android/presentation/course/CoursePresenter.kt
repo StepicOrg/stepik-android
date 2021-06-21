@@ -14,7 +14,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.plus
-import org.stepik.android.cache.wishlist.model.WishlistEntity
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.UserCourseActionEvent
@@ -33,7 +33,7 @@ import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.visited_courses.interactor.VisitedCoursesInteractor
-import org.stepik.android.domain.wishlist.WishlistInteractor
+import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError

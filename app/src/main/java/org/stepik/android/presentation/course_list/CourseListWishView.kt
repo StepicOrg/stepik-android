@@ -1,8 +1,7 @@
 package org.stepik.android.presentation.course_list
 
-import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.wishlist.model.WishlistWrapper
 import org.stepik.android.presentation.course_continue.CourseContinueView
 
 interface CourseListWishView : CourseContinueView {
@@ -10,7 +9,7 @@ interface CourseListWishView : CourseContinueView {
         object Idle : State()
         object Loading : State()
         data class Data(
-            val wishlistRecord: StorageRecord<WishlistWrapper>,
+            val wishlistEntity: WishlistEntity,
             val courseListViewState: CourseListView.State,
             val sourceType: DataSourceType? = null
         ) : State()

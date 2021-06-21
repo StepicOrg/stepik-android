@@ -4,7 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepik.android.cache.wishlist.mapper.WishlistEntityMapper
+import org.stepik.android.domain.wishlist.mapper.WishlistEntityMapper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository

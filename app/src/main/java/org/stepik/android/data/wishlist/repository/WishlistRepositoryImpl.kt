@@ -5,7 +5,7 @@ import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.data.wishlist.source.WishlistCacheDataSource
 import org.stepik.android.data.wishlist.source.WishlistRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.wishlist.model.WishlistWrapper
+import org.stepik.android.remote.wishlist.model.WishlistWrapper
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import javax.inject.Inject

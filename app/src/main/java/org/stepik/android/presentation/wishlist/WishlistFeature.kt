@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.wishlist
 
-import org.stepik.android.cache.wishlist.model.WishlistEntity
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 
 interface WishlistFeature {

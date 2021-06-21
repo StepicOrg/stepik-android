@@ -1,9 +1,9 @@
-package org.stepik.android.domain.wishlist
+package org.stepik.android.domain.wishlist.interactor
 
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import org.stepik.android.cache.wishlist.mapper.WishlistEntityMapper
-import org.stepik.android.cache.wishlist.model.WishlistEntity
+import org.stepik.android.domain.wishlist.mapper.WishlistEntityMapper
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
