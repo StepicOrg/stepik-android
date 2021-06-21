@@ -42,25 +42,33 @@ constructor() : StateReducer<State, Message, Action> {
             }
 
             is Message.WishlistOperationUpdate -> {
-                if (state is State.Content) {
-                    val resultingList =
-                        if (message.wishlistOperationData.wishlistAction == WishlistAction.ADD) {
-                            state.wishListCourses.mutate { add(message.wishlistOperationData.courseId) }
-                        } else {
-                            state.wishListCourses.mutate { remove(message.wishlistOperationData.courseId) }
-                        }
+                val resultingState =
+                    when (state) {
+                        is State.Content -> {
+                            val resultingList =
+                                if (message.wishlistOperationData.wishlistAction == WishlistAction.ADD) {
+                                    state.wishListCourses.mutate { add(message.wishlistOperationData.courseId) }
+                                } else {
+                                    state.wishListCourses.mutate { remove(message.wishlistOperationData.courseId) }
+                                }
 
-                    val resultingState =
-                        if (resultingList.isEmpty()) {
-                            State.Empty
-                        } else {
-                            State.Content(wishListCourses = resultingList)
+                            if (resultingList.isEmpty()) {
+                                State.Empty
+                            } else {
+                                State.Content(wishListCourses = resultingList)
+                            }
                         }
-
-                    resultingState to emptySet()
-                } else {
-                    null
-                }
+                        is State.Empty -> {
+                            if (message.wishlistOperationData.wishlistAction == WishlistAction.ADD) {
+                                State.Content(listOf(message.wishlistOperationData.courseId))
+                            } else {
+                                state
+                            }
+                        }
+                        else ->
+                            state
+                    }
+                resultingState to emptySet()
             }
         } ?: state to emptySet()
 }

@@ -7,5 +7,5 @@ import org.stepik.android.domain.wishlist.model.WishlistWrapper
 
 interface WishlistRepository {
     fun updateWishlistRecord(record: StorageRecord<WishlistWrapper>): Single<StorageRecord<WishlistWrapper>>
-    fun getWishlistRecord(sourceType: DataSourceType, allowFallback: Boolean = false): Single<StorageRecord<WishlistWrapper>>
+    fun getWishlistRecord(sourceType: DataSourceType): Single<StorageRecord<WishlistWrapper>>
 }

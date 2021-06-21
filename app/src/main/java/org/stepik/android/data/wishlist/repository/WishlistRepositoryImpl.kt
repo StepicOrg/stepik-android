@@ -21,7 +21,7 @@ constructor(
             .updateWishlistRecord(record)
             .doCompletableOnSuccess(wishlistCacheDataSource::saveWishlistRecord)
 
-    override fun getWishlistRecord(sourceType: DataSourceType, allowFallback: Boolean): Single<StorageRecord<WishlistWrapper>> {
+    override fun getWishlistRecord(sourceType: DataSourceType): Single<StorageRecord<WishlistWrapper>> {
         val remote = wishlistRemoteDataSource
             .getWishlistRecord()
             .doCompletableOnSuccess(wishlistCacheDataSource::saveWishlistRecord)
@@ -30,18 +30,10 @@ constructor(
 
         return when (sourceType) {
             DataSourceType.REMOTE ->
-                if (allowFallback) {
-                    remote.onErrorResumeNext(cache.toSingle())
-                } else {
-                    remote
-                }
+                remote.onErrorResumeNext(cache.toSingle())
 
             DataSourceType.CACHE ->
-                if (allowFallback) {
                     cache.switchIfEmpty(remote)
-                } else {
-                    cache.toSingle()
-                }
 
             else ->
                 throw IllegalArgumentException("Unsupported sourceType = $sourceType")

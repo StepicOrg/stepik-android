@@ -19,7 +19,7 @@ constructor(
     @WishlistOperationBus
     private val wishlistOperationPublisher: PublishSubject<WishlistOperationData>
 ) {
-    fun getWishlist(dataSourceType: DataSourceType = DataSourceType.REMOTE): Single<WishlistEntity> =
+    fun getWishlist(dataSourceType: DataSourceType = DataSourceType.CACHE): Single<WishlistEntity> =
         wishlistRepository
             .getWishlistRecord(dataSourceType)
             .map(wishlistEntityMapper::mapToEntity)

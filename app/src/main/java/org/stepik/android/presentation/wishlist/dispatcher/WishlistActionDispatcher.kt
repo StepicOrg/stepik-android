@@ -1,11 +1,13 @@
 package org.stepik.android.presentation.wishlist.dispatcher
 
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.wishlist.WishlistInteractor
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.wishlist.WishlistFeature
@@ -37,12 +39,15 @@ constructor(
     override fun handleAction(action: WishlistFeature.Action) {
         when (action) {
             is WishlistFeature.Action.FetchWishList -> {
-                compositeDisposable += wishlistInteractor
-                    .getWishlist()
+                compositeDisposable += Flowable
+                    .fromArray(DataSourceType.CACHE, DataSourceType.REMOTE)
+                    .concatMapSingle { sourceType ->
+                        wishlistInteractor.getWishlist(sourceType)
+                    }
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(WishlistFeature.Message.FetchWishlistSuccess(it)) },
+                        onNext = { onNewMessage(WishlistFeature.Message.FetchWishlistSuccess(it)) },
                         onError = { onNewMessage(WishlistFeature.Message.FetchWishListError) }
                     )
             }
