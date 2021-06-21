@@ -2,7 +2,7 @@ package org.stepik.android.view.injection.course_list.user
 
 import dagger.Subcomponent
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserFragment
-import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalNewHomeFragment
+import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
@@ -22,5 +22,5 @@ interface CourseListUserComponent {
         fun build(): CourseListUserComponent
     }
     fun inject(courseListUserFragment: CourseListUserFragment)
-    fun inject(courseListUserHorizontalNewHomeFragment: CourseListUserHorizontalNewHomeFragment)
+    fun inject(courseListUserHorizontalFragment: CourseListUserHorizontalFragment)
 }

@@ -35,10 +35,10 @@ import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 
-class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_course_list_new_home), CourseListUserView {
+class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_list_new_home), CourseListUserView {
     companion object {
         fun newInstance(): Fragment =
-            CourseListUserHorizontalNewHomeFragment()
+            CourseListUserHorizontalFragment()
 
         private val OnboardingSplitTestVersion2.Group.isPersonalized: Boolean
             get() = this == OnboardingSplitTestVersion2.Group.Personalized || this == OnboardingSplitTestVersion2.Group.ControlPersonalized
