@@ -33,6 +33,8 @@ import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.visited_courses.interactor.VisitedCoursesInteractor
+import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
+import org.stepik.android.domain.wishlist.analytic.CourseWishlistRemovedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
@@ -557,6 +559,7 @@ constructor(
                     val oldState = state.safeCast<CourseView.State.CourseLoaded>()
                         ?: return@subscribeBy
                     state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(wishlistEntity = it))
+                    logWishlistAction(wishlistAction, viewSource)
                     if (mustShowSnackbar) {
                         view?.showWishlistActionSuccess(wishlistAction)
                     }
@@ -624,6 +627,21 @@ constructor(
             ?: return
 
         analytic.report(UserCourseActionEvent(userCourseAction, course, source))
+    }
+
+    private fun logWishlistAction(wishlistAction: WishlistAction, source: CourseViewSource) {
+        val course = state.safeCast<CourseView.State.CourseLoaded>()
+            ?.courseHeaderData
+            ?.course
+            ?: return
+
+        val event =
+            if (wishlistAction == WishlistAction.ADD) {
+                CourseWishlistAddedEvent(course, source)
+            } else {
+                CourseWishlistRemovedEvent(course, source)
+            }
+        analytic.report(event)
     }
 
     private fun schedulePurchaseReminder() {

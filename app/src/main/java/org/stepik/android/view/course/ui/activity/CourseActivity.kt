@@ -38,6 +38,7 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
@@ -358,10 +359,13 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
                     coursePresenter.autoEnroll()
 
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to state.courseHeaderData.courseId,
-                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.WIDGET
-                    ))
+                    analytic.report(
+                        CourseJoinedEvent(
+                            CourseJoinedEvent.SOURCE_WIDGET,
+                            state.courseHeaderData.course,
+                            state.courseHeaderData.stats.isWishlisted
+                        )
+                    )
                 }
 
                 if (intent.getBooleanExtra(EXTRA_OPEN_COURSE_PURCHASE, false)) {

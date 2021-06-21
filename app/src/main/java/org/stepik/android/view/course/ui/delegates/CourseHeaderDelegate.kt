@@ -30,6 +30,8 @@ import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.course.analytic.BuyCoursePressedEvent
+import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -104,10 +106,13 @@ class CourseHeaderDelegate(
                 coursePresenter.enrollCourse()
 
                 courseHeaderData?.let { headerData ->
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.PREVIEW
-                    ))
+                    analytic.report(
+                        CourseJoinedEvent(
+                            CourseJoinedEvent.SOURCE_PREVIEW,
+                            headerData.course,
+                            headerData.stats.isWishlisted
+                        )
+                    )
                 }
             }
 
@@ -154,10 +159,7 @@ class CourseHeaderDelegate(
         coursePresenter.openCoursePurchaseInWeb(queryParams)
 
         courseHeaderData?.let { headerData ->
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.BUY_COURSE_PRESSED, mapOf(
-                AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
-            ))
+            analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
             analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
         }
     }

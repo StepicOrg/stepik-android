@@ -20,6 +20,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.wishlist.analytic.WishlistOpenedEvent
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListView
@@ -66,6 +67,7 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+        analytic.report(WishlistOpenedEvent)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
