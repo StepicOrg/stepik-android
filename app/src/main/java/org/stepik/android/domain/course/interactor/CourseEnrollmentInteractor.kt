@@ -75,15 +75,6 @@ constructor(
             .andThen(lessonRepository.removeCachedLessons(courseId))
             .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
-//            .doOnSuccess(
-//                wishlistInteractor.getWishlist(DataSourceType.CACHE)
-//                    .flatMap { wishlistEntity ->
-//                        val updatedWishlistEntity = wishlistEntity.copy(courses = wishlistEntity.courses.mutate { remove(courseId) })
-//                        val wishlistOperationData = WishlistOperationData(courseId, WishlistAction.REMOVE)
-//                        Timber.d("Handle enrollment: $updatedWishlistEntity")
-//                        wishlistInteractor.updateWishlistRecord(updatedWishlistEntity, wishlistOperationData)
-//                    }
-//            )
 
     fun dropCourse(courseId: Long): Single<Course> =
         requireAuthorization then

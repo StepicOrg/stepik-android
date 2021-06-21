@@ -532,7 +532,7 @@ constructor(
 
         val updatedWishlist =
             if (wishlistAction == WishlistAction.ADD) {
-                wishlist.apply { add(courseId) }
+                wishlist.apply { add(0, courseId) }
             } else {
                 wishlist.apply { remove(courseId) }
             }

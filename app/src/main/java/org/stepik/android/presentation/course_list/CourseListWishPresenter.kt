@@ -91,7 +91,7 @@ constructor(
             .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
             .concatMapSingle { sourceType ->
                 courseListWishInteractor
-                    .getWishlistStorageRecord(sourceType.generalSourceType)
+                    .getWishlistEntity(sourceType.generalSourceType)
                     .flatMap { wishlistEntity ->
                         if (wishlistEntity.courses.isEmpty()) {
                             Single.just(CourseListView.State.Empty to sourceType.generalSourceType)

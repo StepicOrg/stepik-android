@@ -19,7 +19,7 @@ constructor(
     private val wishlistRepository: WishlistRepository,
     private val wishlistEntityMapper: WishlistEntityMapper
 ) {
-    fun getWishlistStorageRecord(dataSourceType: DataSourceType): Single<WishlistEntity> =
+    fun getWishlistEntity(dataSourceType: DataSourceType): Single<WishlistEntity> =
         wishlistRepository
             .getWishlistRecord(dataSourceType)
             .map(wishlistEntityMapper::mapToEntity)

@@ -47,7 +47,7 @@ constructor() : StateReducer<State, Message, Action> {
                         is State.Content -> {
                             val resultingList =
                                 if (message.wishlistOperationData.wishlistAction == WishlistAction.ADD) {
-                                    state.wishListCourses.mutate { add(message.wishlistOperationData.courseId) }
+                                    state.wishListCourses.mutate { add(0, message.wishlistOperationData.courseId) }
                                 } else {
                                     state.wishListCourses.mutate { remove(message.wishlistOperationData.courseId) }
                                 }

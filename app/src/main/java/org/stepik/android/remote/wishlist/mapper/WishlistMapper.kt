@@ -24,11 +24,19 @@ constructor(
         )
 
     fun mapToStorageRequest(record: StorageRecord<WishlistWrapper>): StorageRequest =
-        StorageRequest(record.wrap(gson))
+        StorageRequest(record.let(::reverseCoursesInStorageRecord).wrap(gson))
 
     fun mapToStorageRecord(response: StorageResponse): StorageRecord<WishlistWrapper>? =
         response
             .records
             .firstOrNull()
-            ?.unwrap(gson)
+            ?.unwrap<WishlistWrapper>(gson)
+            ?.let(::reverseCoursesInStorageRecord)
+
+    private fun reverseCoursesInStorageRecord(wishlistStorageRecord: StorageRecord<WishlistWrapper>): StorageRecord<WishlistWrapper> =
+        wishlistStorageRecord.copy(
+            data = wishlistStorageRecord.data.copy(
+                courses = wishlistStorageRecord.data.courses?.reversed()
+            )
+        )
 }
