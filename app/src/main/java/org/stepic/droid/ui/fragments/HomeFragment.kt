@@ -18,7 +18,6 @@ import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.util.commitNow
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
-import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalNewHomeFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment

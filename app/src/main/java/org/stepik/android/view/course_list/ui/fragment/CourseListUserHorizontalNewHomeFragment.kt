@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
+import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -37,6 +38,9 @@ class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_
     companion object {
         fun newInstance(): Fragment =
             CourseListUserHorizontalNewHomeFragment()
+
+        private val OnboardingSplitTestVersion2.Group.isPersonalized: Boolean
+            get() = this == OnboardingSplitTestVersion2.Group.Personalized || this == OnboardingSplitTestVersion2.Group.ControlPersonalized
     }
 
     @Inject
@@ -56,6 +60,9 @@ class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_
 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
+
+    @Inject
+    internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
@@ -86,12 +93,32 @@ class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_
         }
 
         catalogBlockContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
-        courseListPlaceholderEmpty
-            .userCoursesListEmptyAction
-            .setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListPlaceholderEmptyWrapper
-            .userCoursesListEmptyAction
-            .setOnClickListener { screenManager.showCatalog(requireContext()) }
+
+        /**
+         * Empty user courses action
+         */
+        val userCoursesListEmptyActionListener = View.OnClickListener {
+            if (onboardingSplitTestVersion2.currentGroup.isPersonalized) {
+                screenManager.showPersonalizedOnboarding(requireContext())
+            } else {
+                screenManager.showCatalog(requireContext())
+            }
+        }
+        val userCoursesListEmptyActionText =
+            if (onboardingSplitTestVersion2.currentGroup.isPersonalized) {
+                R.string.onboarding_restart_action
+            } else {
+                R.string.user_courses_catalog_action_message
+            }
+
+        with(courseListPlaceholderEmpty.userCoursesListEmptyAction) {
+            setOnClickListener(userCoursesListEmptyActionListener)
+            setText(userCoursesListEmptyActionText)
+        }
+        with(courseListPlaceholderEmptyWrapper.userCoursesListEmptyAction) {
+            setOnClickListener(userCoursesListEmptyActionListener)
+            setText(userCoursesListEmptyActionText)
+        }
 
 
         courseListPlaceholderNoConnection.
