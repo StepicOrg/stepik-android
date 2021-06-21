@@ -71,5 +71,24 @@ abstract class CourseListBusModule {
             scheduler: Scheduler
         ): Observable<UserCourse> =
             userCoursesOperationPublisher.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @WishlistOperationBus
+        internal fun provideWishlistOperationPublisher(): PublishSubject<Long> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @WishlistOperationBus
+        internal fun provideWishlistOperationObservable(
+            @WishlistOperationBus
+            wishlistOperationPublisher: PublishSubject<Long>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<Long> =
+            wishlistOperationPublisher.observeOn(scheduler)
     }
 }

@@ -38,5 +38,28 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+
+            is Message.WishlistOperationUpdate -> {
+                if (state is State.Content) {
+                    val wishlistSet = state.wishListCourses.toMutableSet()
+                    val resultingSet =
+                        if (wishlistSet.contains(message.courseId)) {
+                            wishlistSet.apply { remove(message.courseId) }
+                        } else {
+                            wishlistSet.apply { add(message.courseId) }
+                        }
+
+                    val resultingState =
+                        if (resultingSet.isEmpty()) {
+                            State.Empty
+                        } else {
+                            State.Content(wishListCourses = resultingSet.toList())
+                        }
+
+                    resultingState to emptySet()
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 }

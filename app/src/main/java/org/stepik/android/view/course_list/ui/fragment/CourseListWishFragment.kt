@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
@@ -16,7 +16,6 @@ import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
@@ -26,7 +25,6 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.presentation.course_list.CourseListWishPresenter
 import org.stepik.android.presentation.course_list.CourseListWishView
-import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -76,12 +74,8 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
         initCenteredToolbar(R.string.wishlist_title, true)
 
         with(courseListCoursesRecycler) {
-            val rowCount = resources.getInteger(R.integer.course_list_rows)
-            val columnsCount = resources.getInteger(R.integer.course_list_columns)
-            layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
-            itemAnimator?.changeDuration = 0
-            val snapHelper = CoursesSnapHelper(rowCount)
-            snapHelper.attachToRecyclerView(this)
+            layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
+            itemAnimator = null
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
                     courseListWishPresenter.fetchNextPage()

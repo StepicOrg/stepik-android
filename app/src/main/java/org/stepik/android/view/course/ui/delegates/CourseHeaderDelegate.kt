@@ -71,7 +71,6 @@ class CourseHeaderDelegate(
         }
 
     private var dropCourseMenuItem: MenuItem? = null
-    private var wishListMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 

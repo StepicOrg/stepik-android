@@ -535,10 +535,9 @@ constructor(
         saveWishlistAction(updatedWishlistEntity, wishlistAction)
     }
 
-    // TODO APPS-3355: Add Wishlist bus
     private fun saveWishlistAction(wishlistEntity: WishlistEntity, wishlistAction: WishlistAction) {
         compositeDisposable += wishlistInteractor
-            .updateWishlistRecord(wishlistEntity)
+            .updateWishlistRecord(wishlistEntity, updatedCourseId = courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

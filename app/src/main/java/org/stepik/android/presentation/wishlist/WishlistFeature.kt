@@ -17,6 +17,7 @@ interface WishlistFeature {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchWishlistSuccess(val wishListRecord: StorageRecord<WishlistWrapper>) : Message()
         object FetchWishListError : Message()
+        data class WishlistOperationUpdate(val courseId: Long) : Message()
     }
 
     sealed class Action {
