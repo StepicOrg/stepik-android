@@ -127,14 +127,13 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             setText(userCoursesListEmptyActionText)
         }
 
-
-        courseListPlaceholderNoConnection.
-            userCoursesListNetworkErrorAction
+        courseListPlaceholderNoConnection
+            .userCoursesListNetworkErrorAction
             .setOnClickListener {
                 setDataToPresenter(forceUpdate = true)
             }
-        courseListPlaceholderNoConnectionWrapper.
-        userCoursesListNetworkErrorAction
+        courseListPlaceholderNoConnectionWrapper
+            .userCoursesListNetworkErrorAction
             .setOnClickListener {
                 setDataToPresenter(forceUpdate = true)
             }
