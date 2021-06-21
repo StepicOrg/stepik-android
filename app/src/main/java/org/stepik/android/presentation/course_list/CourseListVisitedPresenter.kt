@@ -16,6 +16,7 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
@@ -35,6 +36,8 @@ constructor(
     private val enrollmentUpdatesObservable: Observable<Course>,
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
+    @WishlistOperationBus
+    private val wishlistOperationObservable: Observable<Long>,
     viewContainer: PresenterViewContainer<CourseListView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
 ) : PresenterBase<CourseListView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
@@ -51,6 +54,7 @@ constructor(
     init {
         subscribeForEnrollmentUpdates()
         subscribeForUserCourseOperationUpdates()
+        subscribeForWishlistOperationUpdates()
     }
 
     override fun attachView(view: CourseListView) {
@@ -132,6 +136,19 @@ constructor(
                 onNext = { userCourse ->
                     state = courseListStateMapper.mapToUserCourseUpdate(state, userCourse)
                 },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * Wishlist updates
+     */
+    private fun subscribeForWishlistOperationUpdates() {
+        compositeDisposable += wishlistOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { state = courseListStateMapper.mapToWishlistUpdate(state, it) },
                 onError = emptyOnErrorStub
             )
     }

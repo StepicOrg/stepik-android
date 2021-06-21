@@ -27,6 +27,7 @@ import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
+import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import retrofit2.HttpException
 import ru.nobird.android.core.model.slice
 import ru.nobird.android.presentation.base.PresenterBase
@@ -55,6 +56,8 @@ constructor(
     private val userCoursesUpdateObservable: Observable<Course>,
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
+    @WishlistOperationBus
+    private val wishlistOperationObservable: Observable<Long>,
 
     private val progressObservable: Observable<Progress>,
 
@@ -83,6 +86,7 @@ constructor(
         subscribeForContinueCourseUpdates()
         subscribeForUserCourseOperationUpdates()
         subscribeForProgressesUpdates()
+        subscribeForWishlistOperationUpdates()
     }
 
     override fun attachView(view: CourseListUserView) {
@@ -228,6 +232,24 @@ constructor(
                     if (isNeedLoadCourse) {
                         fetchPlaceholder(userCourse.course)
                     }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * Wishlist updates
+     */
+    private fun subscribeForWishlistOperationUpdates() {
+        compositeDisposable += wishlistOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = {
+                    val oldState = (state as? CourseListUserView.State.Data)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToWishlistUpdate(oldState.courseListViewState, it))
                 },
                 onError = emptyOnErrorStub
             )

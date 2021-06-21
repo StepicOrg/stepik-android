@@ -23,6 +23,7 @@ import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import ru.nobird.android.core.model.cast
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -45,6 +46,8 @@ constructor(
     private val enrollmentUpdatesObservable: Observable<Course>,
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
+    @WishlistOperationBus
+    private val wishlistOperationObservable: Observable<Long>,
 
     viewContainer: PresenterViewContainer<CourseListQueryView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -68,6 +71,7 @@ constructor(
         compositeDisposable += paginationDisposable
         subscribeForEnrollmentUpdates()
         subscribeForUserCourseOperationUpdates()
+        subscribeForWishlistOperationUpdates()
     }
 
     override fun attachView(view: CourseListQueryView) {
@@ -229,6 +233,24 @@ constructor(
                         ?: return@subscribeBy
 
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapToUserCourseUpdate(oldState.courseListViewState, userCourse))
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * Wishlist updates
+     */
+    private fun subscribeForWishlistOperationUpdates() {
+        compositeDisposable += wishlistOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = {
+                    val oldState = (state as? CourseListQueryView.State.Data)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToWishlistUpdate(oldState.courseListViewState, it))
                 },
                 onError = emptyOnErrorStub
             )

@@ -21,6 +21,7 @@ import org.stepik.android.presentation.course_list.mapper.CourseListCollectionSt
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import ru.nobird.android.core.model.cast
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.core.model.slice
@@ -44,6 +45,8 @@ constructor(
     private val enrollmentUpdatesObservable: Observable<Course>,
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
+    @WishlistOperationBus
+    private val wishlistOperationObservable: Observable<Long>,
 
     viewContainer: PresenterViewContainer<CourseListCollectionView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -67,6 +70,7 @@ constructor(
         compositeDisposable += paginationDisposable
         subscribeForEnrollmentUpdates()
         subscribeForUserCourseOperationUpdates()
+        subscribeForWishlistOperationUpdates()
     }
 
     override fun attachView(view: CourseListCollectionView) {
@@ -212,6 +216,24 @@ constructor(
                         ?: return@subscribeBy
 
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapToUserCourseUpdate(oldState.courseListViewState, userCourse))
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * Wishlist updates
+     */
+    private fun subscribeForWishlistOperationUpdates() {
+        compositeDisposable += wishlistOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = {
+                    val oldState = (state as? CourseListCollectionView.State.Data)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToWishlistUpdate(oldState.courseListViewState, it))
                 },
                 onError = emptyOnErrorStub
             )

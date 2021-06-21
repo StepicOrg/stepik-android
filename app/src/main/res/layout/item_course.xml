@@ -62,7 +62,7 @@
                 android:layout_marginRight="@dimen/course_item_space_between_items"
 
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/courseListWishlist"
 
                 app:tint="?colorOnSurface"
                 android:alpha="?alphaEmphasisMedium" />

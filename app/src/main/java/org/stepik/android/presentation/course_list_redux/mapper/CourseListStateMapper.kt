@@ -54,6 +54,19 @@ constructor(
         }
 
     /**
+     * Wishlist
+     */
+    fun mapToWishlistUpdate(state: CourseListFeature.State, courseId: Long): CourseListFeature.State =
+        mapCourseDataItems(state) { mergeCourseDataItemWithWishlist(it, courseId) }
+
+    private fun mergeCourseDataItemWithWishlist(item: CourseListItem.Data, courseId: Long): CourseListItem.Data =
+        if (item.course.id == courseId) {
+            item.copy(courseStats = item.courseStats.copy(isWishlisted = !item.courseStats.isWishlisted))
+        } else {
+            item
+        }
+
+    /**
      * Common
      */
     private inline fun mapCourseDataItems(state: CourseListFeature.State, transform: (CourseListItem.Data) -> CourseListItem.Data): CourseListFeature.State {
