@@ -16,6 +16,7 @@ import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
@@ -41,6 +42,8 @@ class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_
 
         private val OnboardingSplitTestVersion2.Group.isPersonalized: Boolean
             get() = this == OnboardingSplitTestVersion2.Group.Personalized || this == OnboardingSplitTestVersion2.Group.ControlPersonalized
+
+        private const val RUSSIAN_LANGUAGE_CODE = "ru"
     }
 
     @Inject
@@ -97,15 +100,19 @@ class CourseListUserHorizontalNewHomeFragment : Fragment(R.layout.fragment_user_
         /**
          * Empty user courses action
          */
+        val isShowPersonalizedOnboarding =
+            resources.configuration.defaultLocale.language == RUSSIAN_LANGUAGE_CODE &&
+                    onboardingSplitTestVersion2.currentGroup.isPersonalized
+
         val userCoursesListEmptyActionListener = View.OnClickListener {
-            if (onboardingSplitTestVersion2.currentGroup.isPersonalized) {
+            if (isShowPersonalizedOnboarding) {
                 screenManager.showPersonalizedOnboarding(requireContext())
             } else {
                 screenManager.showCatalog(requireContext())
             }
         }
         val userCoursesListEmptyActionText =
-            if (onboardingSplitTestVersion2.currentGroup.isPersonalized) {
+            if (isShowPersonalizedOnboarding) {
                 R.string.onboarding_restart_action
             } else {
                 R.string.user_courses_catalog_action_message
