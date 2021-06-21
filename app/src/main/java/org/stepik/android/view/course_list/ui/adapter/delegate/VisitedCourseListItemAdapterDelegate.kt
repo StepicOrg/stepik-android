@@ -49,6 +49,7 @@ class VisitedCourseListItemAdapterDelegate(
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
         private val courseItemImage = root.courseItemImage
+        private val courseListWishlist = root.courseListWishlist
         private val courseItemName = root.courseItemName
         private val courseItemOldPrice = root.courseOldPrice
         private val courseItemPrice = root.coursePrice
@@ -97,6 +98,8 @@ class VisitedCourseListItemAdapterDelegate(
                     append(data.course.displayPrice ?: "")
                 }
             }
+
+            courseListWishlist.isVisible = !isEnrolled && data.courseStats.isWishlisted
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
             analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))
