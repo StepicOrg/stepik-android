@@ -4,6 +4,9 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.data.wishlist.KIND_WISHLIST
 import org.stepik.android.domain.wishlist.mapper.WishlistEntityMapper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -14,6 +17,7 @@ import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
+import org.stepik.android.remote.wishlist.model.WishlistWrapper
 import org.stepik.android.view.injection.course.CourseScope
 import javax.inject.Inject
 
@@ -27,7 +31,8 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val wishlistRepository: WishlistRepository,
-    private val wishlistEntityMapper: WishlistEntityMapper
+    private val wishlistEntityMapper: WishlistEntityMapper,
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -54,7 +59,7 @@ constructor(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo),
-            wishlistRepository.getWishlistRecord(DataSourceType.CACHE)
+            if (sharedPreferenceHelper.authResponseFromStore != null) wishlistRepository.getWishlistRecord(DataSourceType.CACHE) else Single.just(StorageRecord(data = WishlistWrapper.EMPTY, kind = KIND_WISHLIST))
         ) { courseStats, localSubmissions, promoCode, wishlistRecord ->
             CourseHeaderData(
                 courseId = course.id,

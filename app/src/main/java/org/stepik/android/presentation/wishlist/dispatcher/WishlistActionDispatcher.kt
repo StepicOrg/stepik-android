@@ -40,7 +40,7 @@ constructor(
         when (action) {
             is WishlistFeature.Action.FetchWishList -> {
                 compositeDisposable += Flowable
-                    .fromArray(DataSourceType.CACHE, DataSourceType.REMOTE)
+                    .fromArray(DataSourceType.REMOTE)
                     .concatMapSingle { sourceType ->
                         wishlistInteractor.getWishlist(sourceType)
                     }

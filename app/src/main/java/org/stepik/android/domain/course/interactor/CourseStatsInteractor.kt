@@ -5,6 +5,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.domain.billing.repository.BillingRepository
@@ -35,7 +36,8 @@ constructor(
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
     private val profileRepository: ProfileRepository,
-    private val wishlistRepository: WishlistRepository
+    private val wishlistRepository: WishlistRepository,
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
     companion object {
         private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -92,10 +94,14 @@ constructor(
             .toList()
 
     private fun resolveWishlistStates(sourceType: DataSourceType): Single<List<Long>> =
-        wishlistRepository
-            .getWishlistRecord(sourceType)
-            .map { it.data.courses ?: emptyList() }
-            .onErrorReturnItem(emptyList())
+        if (sharedPreferenceHelper.authResponseFromStore != null) {
+            wishlistRepository
+                .getWishlistRecord(sourceType)
+                .map { it.data.courses ?: emptyList() }
+                .onErrorReturnItem(emptyList())
+        } else {
+            Single.just(emptyList())
+        }
 
     private fun resolveCourseEnrollmentState(course: Course, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
         when {
