@@ -4,9 +4,11 @@ import ru.nobird.android.core.model.mapPaged
 import org.stepik.android.domain.course.mapper.CourseStatsMapper
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import javax.inject.Inject
 
 /***
@@ -56,12 +58,12 @@ constructor(
     /**
      * Wishlist
      */
-    fun mapToWishlistUpdate(state: CourseListFeature.State, courseId: Long): CourseListFeature.State =
-        mapCourseDataItems(state) { mergeCourseDataItemWithWishlist(it, courseId) }
+    fun mapToWishlistUpdate(state: CourseListFeature.State, wishlistOperationData: WishlistOperationData): CourseListFeature.State =
+        mapCourseDataItems(state) { mergeCourseDataItemWithWishlist(it, wishlistOperationData) }
 
-    private fun mergeCourseDataItemWithWishlist(item: CourseListItem.Data, courseId: Long): CourseListItem.Data =
-        if (item.course.id == courseId) {
-            item.copy(courseStats = item.courseStats.copy(isWishlisted = !item.courseStats.isWishlisted))
+    private fun mergeCourseDataItemWithWishlist(item: CourseListItem.Data, wishlistOperationData: WishlistOperationData): CourseListItem.Data =
+        if (item.course.id == wishlistOperationData.courseId) {
+            item.copy(courseStats = item.courseStats.copy(isWishlisted = wishlistOperationData.wishlistAction == WishlistAction.ADD))
         } else {
             item
         }

@@ -3,6 +3,8 @@ package org.stepik.android.presentation.wishlist.reducer
 import org.stepik.android.presentation.wishlist.WishlistFeature.State
 import org.stepik.android.presentation.wishlist.WishlistFeature.Message
 import org.stepik.android.presentation.wishlist.WishlistFeature.Action
+import org.stepik.android.presentation.wishlist.model.WishlistAction
+import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
@@ -21,10 +23,10 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchWishlistSuccess -> {
                 if (state is State.Loading) {
-                    if (message.wishListRecord.data.courses.isNullOrEmpty()) {
+                    if (message.wishlistEntity.courses.isNullOrEmpty()) {
                         State.Empty to emptySet()
                     } else {
-                        State.Content(message.wishListRecord.data.courses) to emptySet()
+                        State.Content(message.wishlistEntity.courses) to emptySet()
                     }
                 } else {
                     null
@@ -41,19 +43,18 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.WishlistOperationUpdate -> {
                 if (state is State.Content) {
-                    val wishlistSet = state.wishListCourses.toMutableSet()
-                    val resultingSet =
-                        if (wishlistSet.contains(message.courseId)) {
-                            wishlistSet.apply { remove(message.courseId) }
+                    val resultingList =
+                        if (message.wishlistOperationData.wishlistAction == WishlistAction.ADD) {
+                            state.wishListCourses.mutate { add(message.wishlistOperationData.courseId) }
                         } else {
-                            wishlistSet.apply { add(message.courseId) }
+                            state.wishListCourses.mutate { remove(message.wishlistOperationData.courseId) }
                         }
 
                     val resultingState =
-                        if (resultingSet.isEmpty()) {
+                        if (resultingList.isEmpty()) {
                             State.Empty
                         } else {
-                            State.Content(wishListCourses = resultingSet.toList())
+                            State.Content(wishListCourses = resultingList)
                         }
 
                     resultingState to emptySet()

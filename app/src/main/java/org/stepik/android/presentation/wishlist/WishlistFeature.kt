@@ -1,7 +1,7 @@
 package org.stepik.android.presentation.wishlist
 
-import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.domain.wishlist.model.WishlistWrapper
+import org.stepik.android.cache.wishlist.model.WishlistEntity
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 
 interface WishlistFeature {
     sealed class State {
@@ -15,9 +15,9 @@ interface WishlistFeature {
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
-        data class FetchWishlistSuccess(val wishListRecord: StorageRecord<WishlistWrapper>) : Message()
+        data class FetchWishlistSuccess(val wishlistEntity: WishlistEntity) : Message()
         object FetchWishListError : Message()
-        data class WishlistOperationUpdate(val courseId: Long) : Message()
+        data class WishlistOperationUpdate(val wishlistOperationData: WishlistOperationData) : Message()
     }
 
     sealed class Action {

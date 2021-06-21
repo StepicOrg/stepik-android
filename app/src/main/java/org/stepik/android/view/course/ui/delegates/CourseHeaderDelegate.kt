@@ -350,7 +350,7 @@ class CourseHeaderDelegate(
 
         menu.findItem(R.id.wishlist_course)
             ?.let { wishlistCourseMenuItem ->
-                wishlistCourseMenuItem.isVisible = courseHeaderData != null
+                wishlistCourseMenuItem.isVisible = courseHeaderData != null && courseHeaderData?.course?.enrollment == 0L
                 wishlistCourseMenuItem.isEnabled = courseHeaderData?.isWishlistUpdating == false
                 val (icon, title) =
                     if (courseHeaderData?.stats?.isWishlisted == true) {

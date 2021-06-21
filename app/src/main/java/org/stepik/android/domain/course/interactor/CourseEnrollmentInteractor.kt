@@ -13,6 +13,7 @@ import org.stepik.android.domain.course.repository.EnrollmentRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
+import org.stepik.android.domain.wishlist.WishlistInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
@@ -34,7 +35,8 @@ constructor(
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>,
 
-    private val userCoursesInteractor: UserCoursesInteractor
+    private val userCoursesInteractor: UserCoursesInteractor,
+    private val wishlistInteractor: WishlistInteractor
 ) {
     companion object {
         private val UNAUTHORIZED_EXCEPTION_STUB =
@@ -73,6 +75,15 @@ constructor(
             .andThen(lessonRepository.removeCachedLessons(courseId))
             .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
+//            .doOnSuccess(
+//                wishlistInteractor.getWishlist(DataSourceType.CACHE)
+//                    .flatMap { wishlistEntity ->
+//                        val updatedWishlistEntity = wishlistEntity.copy(courses = wishlistEntity.courses.mutate { remove(courseId) })
+//                        val wishlistOperationData = WishlistOperationData(courseId, WishlistAction.REMOVE)
+//                        Timber.d("Handle enrollment: $updatedWishlistEntity")
+//                        wishlistInteractor.updateWishlistRecord(updatedWishlistEntity, wishlistOperationData)
+//                    }
+//            )
 
     fun dropCourse(courseId: Long): Single<Course> =
         requireAuthorization then

@@ -280,5 +280,5 @@ constructor(
         courseListStateMapper.mapToEnrollmentUpdateState(courseListState, message.enrolledCourse)
 
     private fun mapWishlistMessageToCourseListState(courseListState: CourseListFeature.State, message: WishlistFeature.Message.WishlistOperationUpdate): CourseListFeature.State =
-        courseListStateMapper.mapToWishlistUpdate(courseListState, message.courseId)
+        courseListStateMapper.mapToWishlistUpdate(courseListState, message.wishlistOperationData)
 }

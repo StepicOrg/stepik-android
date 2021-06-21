@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.wishlist.WishlistInteractor
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.wishlist.WishlistFeature
 import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -18,7 +19,7 @@ class WishlistActionDispatcher
 constructor(
     private val wishlistInteractor: WishlistInteractor,
     @WishlistOperationBus
-    private val wishlistOperationObservable: Observable<Long>,
+    private val wishlistOperationObservable: Observable<WishlistOperationData>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler

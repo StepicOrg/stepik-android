@@ -17,6 +17,7 @@ import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
@@ -57,7 +58,7 @@ constructor(
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
     @WishlistOperationBus
-    private val wishlistOperationObservable: Observable<Long>,
+    private val wishlistOperationObservable: Observable<WishlistOperationData>,
 
     private val progressObservable: Observable<Progress>,
 

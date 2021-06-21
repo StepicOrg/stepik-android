@@ -15,6 +15,7 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
@@ -47,7 +48,7 @@ constructor(
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
     @WishlistOperationBus
-    private val wishlistOperationObservable: Observable<Long>,
+    private val wishlistOperationObservable: Observable<WishlistOperationData>,
 
     viewContainer: PresenterViewContainer<CourseListQueryView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
