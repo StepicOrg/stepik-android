@@ -720,12 +720,12 @@ public class SharedPreferenceHelper {
     public void storeWishlist(WishlistEntity wishlistEntity) {
         Gson gson = new Gson();
         String json = gson.toJson(wishlistEntity);
-        put(PreferenceType.DEVICE_SPECIFIC, WISHLIST, json);
+        put(PreferenceType.LOGIN, WISHLIST, json);
     }
 
     @Nullable
     public WishlistEntity getWishlist() {
-        String json = getString(PreferenceType.DEVICE_SPECIFIC, WISHLIST);
+        String json = getString(PreferenceType.LOGIN, WISHLIST);
         if (json == null) {
             return null;
         }

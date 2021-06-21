@@ -126,7 +126,9 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             childFragmentManager.commitNow {
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
-                add(R.id.homeMainContainer, LearningActionsFragment.newInstance())
+                if (sharedPreferenceHelper.authResponseFromStore != null) {
+                    add(R.id.homeMainContainer, LearningActionsFragment.newInstance())
+                }
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
             }

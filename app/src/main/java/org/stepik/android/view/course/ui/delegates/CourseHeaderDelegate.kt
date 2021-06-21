@@ -58,6 +58,7 @@ class CourseHeaderDelegate(
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
     private val courseViewSource: CourseViewSource,
+    private val isAuthorized: Boolean,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -352,7 +353,7 @@ class CourseHeaderDelegate(
 
         menu.findItem(R.id.wishlist_course)
             ?.let { wishlistCourseMenuItem ->
-                wishlistCourseMenuItem.isVisible = courseHeaderData != null && courseHeaderData?.course?.enrollment == 0L
+                wishlistCourseMenuItem.isVisible = courseHeaderData != null && courseHeaderData?.course?.enrollment == 0L && isAuthorized
                 wishlistCourseMenuItem.isEnabled = courseHeaderData?.isWishlistUpdating == false
                 val (icon, title) =
                     if (courseHeaderData?.stats?.isWishlisted == true) {

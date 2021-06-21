@@ -211,6 +211,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         courseHeaderDelegate =
             CourseHeaderDelegate(
                 this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper, courseViewSource,
+                isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
