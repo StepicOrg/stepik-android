@@ -5,7 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.fragment_user_course_list_new_home.*
+import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
 import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
 import org.stepic.droid.R
@@ -14,6 +15,7 @@ import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -24,10 +26,13 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 
 class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_list), CourseListUserView {
