@@ -544,7 +544,7 @@ constructor(
 
     private fun saveWishlistAction(wishlistEntity: WishlistEntity, wishlistAction: WishlistAction) {
         compositeDisposable += wishlistInteractor
-            .updateWishlistRecord(wishlistEntity, wishlistOperationData = WishlistOperationData(courseId, wishlistAction))
+            .updateWishlistWithOperation(wishlistEntity, wishlistOperationData = WishlistOperationData(courseId, wishlistAction))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

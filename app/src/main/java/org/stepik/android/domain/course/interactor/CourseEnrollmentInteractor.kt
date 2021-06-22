@@ -99,7 +99,7 @@ constructor(
                     courses = wishlistEntity.courses.mutate { remove(courseId) }
                 )
                 wishlistInteractor
-                    .updateWishlistRecord(updatedWishlist, WishlistOperationData(courseId, WishlistAction.REMOVE))
+                    .updateWishlistWithOperation(updatedWishlist, WishlistOperationData(courseId, WishlistAction.REMOVE))
                     .ignoreElement()
             }
 }

@@ -23,11 +23,14 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchWishlistSuccess -> {
                 if (state is State.Loading) {
-                    if (message.wishlistEntity.courses.isNullOrEmpty()) {
-                        State.Empty to emptySet()
-                    } else {
-                        State.Content(message.wishlistEntity.courses) to emptySet()
-                    }
+                    val newState =
+                        if (message.wishlistEntity.courses.isNullOrEmpty()) {
+                            State.Empty
+                        } else {
+                            State.Content(message.wishlistEntity.courses)
+                        }
+
+                    newState to setOf(Action.SaveWishlistEntity(message.wishlistEntity))
                 } else {
                     null
                 }

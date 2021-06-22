@@ -22,6 +22,7 @@ interface WishlistFeature {
 
     sealed class Action {
         object FetchWishList : Action()
+        data class SaveWishlistEntity(val wishlistEntity: WishlistEntity) : Action()
         sealed class ViewAction : Action()
     }
 }

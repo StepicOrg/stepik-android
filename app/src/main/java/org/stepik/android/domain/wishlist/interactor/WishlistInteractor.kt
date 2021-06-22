@@ -21,8 +21,12 @@ constructor(
         wishlistRepository
             .getWishlistRecord(dataSourceType)
 
-    fun updateWishlistRecord(wishlistEntity: WishlistEntity, wishlistOperationData: WishlistOperationData): Single<WishlistEntity> =
+    fun updateWishlistWithOperation(wishlistEntity: WishlistEntity, wishlistOperationData: WishlistOperationData): Single<WishlistEntity> =
         wishlistRepository
             .updateWishlistRecord(wishlistEntity)
             .doOnSuccess { wishlistOperationPublisher.onNext(wishlistOperationData) }
+
+    fun updateWishlist(wishlistEntity: WishlistEntity): Single<WishlistEntity> =
+        wishlistRepository
+            .updateWishlistRecord(wishlistEntity)
 }
