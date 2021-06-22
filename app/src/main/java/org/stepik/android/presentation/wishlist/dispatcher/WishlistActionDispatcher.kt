@@ -46,16 +46,6 @@ constructor(
                         onError = { onNewMessage(WishlistFeature.Message.FetchWishListError) }
                     )
             }
-
-            is WishlistFeature.Action.SaveWishlistEntity -> {
-                compositeDisposable += wishlistInteractor
-                    .updateWishlist(action.wishlistEntity)
-                    .subscribeOn(backgroundScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onError = emptyOnErrorStub
-                    )
-            }
         }
     }
 }

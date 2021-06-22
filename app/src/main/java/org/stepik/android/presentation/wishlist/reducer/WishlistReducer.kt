@@ -30,7 +30,7 @@ constructor() : StateReducer<State, Message, Action> {
                             State.Content(message.wishlistEntity.courses)
                         }
 
-                    newState to setOf(Action.SaveWishlistEntity(message.wishlistEntity))
+                    newState to emptySet()
                 } else {
                     null
                 }

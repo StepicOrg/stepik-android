@@ -33,6 +33,7 @@ constructor(
             val updatedWishlistEntity = wishlistEntity.copy(courses = updatedWishlistCourses)
             updatedWishlistEntity
         }
+        .flatMap { wishlistRepository.updateWishlistRecord(it) }
 
     fun getWishlist(dataSourceType: DataSourceType = DataSourceType.CACHE): Single<WishlistEntity> =
         wishlistRepository
@@ -42,8 +43,4 @@ constructor(
         wishlistRepository
             .updateWishlistRecord(wishlistEntity)
             .doOnSuccess { wishlistOperationPublisher.onNext(wishlistOperationData) }
-
-    fun updateWishlist(wishlistEntity: WishlistEntity): Single<WishlistEntity> =
-        wishlistRepository
-            .updateWishlistRecord(wishlistEntity)
 }
