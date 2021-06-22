@@ -20,7 +20,6 @@ import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.home.interactor.HomeInteractor
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
-import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalNewHomeFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFragment
@@ -121,7 +120,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
         if (isNewHomeScreenEnabled) {
             childFragmentManager.commitNow {
                 add(R.id.homeMainContainer, StoriesFragment.newInstance())
-                add(R.id.homeMainContainer, CourseListUserHorizontalNewHomeFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
                 add(R.id.fastContinueContainer, FastContinueNewHomeFragment.newInstance())
