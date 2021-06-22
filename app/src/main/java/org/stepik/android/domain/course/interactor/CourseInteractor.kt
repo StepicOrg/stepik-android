@@ -1,13 +1,13 @@
 package org.stepik.android.domain.course.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
+import okhttp3.ResponseBody
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.storage.model.StorageRecord
-import org.stepik.android.data.wishlist.KIND_WISHLIST
-import org.stepik.android.domain.wishlist.mapper.WishlistEntityMapper
+import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -15,10 +15,13 @@ import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
-import org.stepik.android.remote.wishlist.model.WishlistWrapper
 import org.stepik.android.view.injection.course.CourseScope
+import retrofit2.HttpException
+import retrofit2.Response
+import java.net.HttpURLConnection
 import javax.inject.Inject
 
 @CourseScope
@@ -31,11 +34,12 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val wishlistRepository: WishlistRepository,
-    private val wishlistEntityMapper: WishlistEntityMapper,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
+        private val UNAUTHORIZED_EXCEPTION_STUB =
+            HttpException(Response.error<Nothing>(HttpURLConnection.HTTP_UNAUTHORIZED, ResponseBody.create(null, "")))
     }
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -59,8 +63,9 @@ constructor(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo),
-            if (sharedPreferenceHelper.authResponseFromStore != null) wishlistRepository.getWishlistRecord(DataSourceType.CACHE) else Single.just(StorageRecord(data = WishlistWrapper.EMPTY, kind = KIND_WISHLIST))
-        ) { courseStats, localSubmissions, promoCode, wishlistRecord ->
+            (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
+//            if (sharedPreferenceHelper.authResponseFromStore != null) wishlistRepository.getWishlistRecord(DataSourceType.CACHE) else Single.just(WishlistEntity.EMPTY)
+        ) { courseStats, localSubmissions, promoCode, wishlistEntity ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -72,8 +77,17 @@ constructor(
                 promoCode = promoCode,
                 defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course),
                 isWishlistUpdating = false,
-                wishlistEntity = wishlistEntityMapper.mapToEntity(wishlistRecord)
+                wishlistEntity = wishlistEntity
             )
         }
             .toMaybe()
+
+    private fun requireAuthorization(): Completable =
+        Completable.create { emitter ->
+            if (sharedPreferenceHelper.authResponseFromStore != null) {
+                emitter.onComplete()
+            } else {
+                emitter.onError(UNAUTHORIZED_EXCEPTION_STUB)
+            }
+        }
 }

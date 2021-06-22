@@ -362,7 +362,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
                     analytic.report(
                         CourseJoinedEvent(
-                            CourseJoinedEvent.SOURCE_WIDGET,
+                            CourseJoinedEvent.SOURCE_PREVIEW,
                             state.courseHeaderData.course,
                             state.courseHeaderData.stats.isWishlisted
                         )

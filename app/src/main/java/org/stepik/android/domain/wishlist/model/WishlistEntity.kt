@@ -10,4 +10,8 @@ data class WishlistEntity(
     val recordId: Long,
     @SerializedName("courses")
     val courses: List<Long>
-) : Parcelable
+) : Parcelable {
+    companion object {
+        val EMPTY = WishlistEntity(-1, emptyList())
+    }
+}

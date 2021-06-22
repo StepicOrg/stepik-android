@@ -14,7 +14,6 @@ class CourseJoinedEvent(
         private const val PARAM_TITLE = "title"
         private const val PARAM_IS_WISHLISTED = "is_wishlisted"
 
-        const val SOURCE_WIDGET = "widget"
         const val SOURCE_PREVIEW = "preview"
     }
 

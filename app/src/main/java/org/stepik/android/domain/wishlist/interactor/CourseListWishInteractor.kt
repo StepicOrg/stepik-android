@@ -1,7 +1,6 @@
 package org.stepik.android.domain.wishlist.interactor
 
 import io.reactivex.Single
-import org.stepik.android.domain.wishlist.mapper.WishlistEntityMapper
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -16,13 +15,11 @@ class CourseListWishInteractor
 @Inject
 constructor(
     private val courseListInteractor: CourseListInteractor,
-    private val wishlistRepository: WishlistRepository,
-    private val wishlistEntityMapper: WishlistEntityMapper
+    private val wishlistRepository: WishlistRepository
 ) {
     fun getWishlistEntity(dataSourceType: DataSourceType): Single<WishlistEntity> =
         wishlistRepository
             .getWishlistRecord(dataSourceType)
-            .map(wishlistEntityMapper::mapToEntity)
 
     fun getCourseListItems(
         courseIds: List<Long>,

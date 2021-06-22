@@ -57,7 +57,6 @@ constructor(
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
             val progressMaps = courseProgresses.associateBy(Progress::id)
             val enrollmentMap = enrollmentStates.toMap()
-            val wishlistSet = wishlistStates.toSet()
 
             courses.map { course ->
                 CourseStats(
@@ -66,7 +65,7 @@ constructor(
                     readiness = course.readiness,
                     progress = course.progress?.let(progressMaps::get),
                     enrollmentState = enrollmentMap.getValue(course.id),
-                    isWishlisted = wishlistSet.contains(course.id)
+                    isWishlisted = wishlistStates.contains(course.id)
                 )
             }
         }
@@ -93,14 +92,14 @@ constructor(
             .flatMapSingle { resolveCourseEnrollmentState(it, sourceType, resolveEnrollmentState) }
             .toList()
 
-    private fun resolveWishlistStates(sourceType: DataSourceType): Single<List<Long>> =
+    private fun resolveWishlistStates(sourceType: DataSourceType): Single<Set<Long>> =
         if (sharedPreferenceHelper.authResponseFromStore != null) {
             wishlistRepository
                 .getWishlistRecord(sourceType)
-                .map { it.data.courses ?: emptyList() }
-                .onErrorReturnItem(emptyList())
+                .map { it.courses.toSet() }
+                .onErrorReturnItem(emptySet())
         } else {
-            Single.just(emptyList())
+            Single.just(emptySet())
         }
 
     private fun resolveCourseEnrollmentState(course: Course, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
