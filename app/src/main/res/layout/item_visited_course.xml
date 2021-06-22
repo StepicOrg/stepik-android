@@ -25,6 +25,18 @@
 
             tools:src="@drawable/general_placeholder"/>
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/courseListWishlist"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:srcCompat="@drawable/ic_course_list_wishlist"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:tint="?colorOnSurface"
+            android:alpha="?alphaEmphasisMedium" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/courseItemName"
             android:layout_width="match_parent"

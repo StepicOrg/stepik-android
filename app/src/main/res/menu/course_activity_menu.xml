@@ -11,6 +11,13 @@
         android:id="@+id/drop_course"
         android:title="@string/drop_course"/>
     <item
+        android:id="@+id/wishlist_course"
+        android:title="@string/wishlist_title"
+        android:icon="@drawable/ic_wishlist_active"
+        app:iconTint="?colorControlNormal"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/share_course"
         android:title="@string/share_title"
         android:icon="@drawable/ic_share_dark"

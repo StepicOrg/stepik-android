@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.recyclerview.widget.RecyclerView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/learningActionsRecycler"
+    android:paddingLeft="@dimen/course_list_padding"
+    android:paddingRight="@dimen/course_list_padding"
+    android:paddingBottom="16dp" />

@@ -7,6 +7,7 @@ import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModul
 import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_profile.UserProfileDataModule
+import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @MainScreenScope
 @Subcomponent(modules = [
@@ -14,7 +15,8 @@ import org.stepik.android.view.injection.user_profile.UserProfileDataModule
     CoursePaymentsDataModule::class,
     UserDataModule::class,
     UserProfileDataModule::class,
-    ProfileDataModule::class
+    ProfileDataModule::class,
+    WishlistDataModule::class
 ])
 interface MainScreenComponent {
 

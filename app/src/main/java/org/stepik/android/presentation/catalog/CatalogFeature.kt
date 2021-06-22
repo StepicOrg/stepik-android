@@ -9,6 +9,7 @@ import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
+import org.stepik.android.presentation.wishlist.WishlistFeature
 
 interface CatalogFeature {
     data class State(
@@ -40,6 +41,7 @@ interface CatalogFeature {
         data class UserCourseMessage(val message: UserCoursesFeature.Message) : Message()
         data class ProgressMessage(val message: ProgressFeature.Message) : Message()
         data class EnrollmentMessage(val message: EnrollmentFeature.Message) : Message()
+        data class WishlistMessage(val message: WishlistFeature.Message) : Message()
     }
 
     sealed class Action {

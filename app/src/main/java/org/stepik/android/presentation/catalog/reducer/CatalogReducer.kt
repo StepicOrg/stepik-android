@@ -20,6 +20,7 @@ import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
+import org.stepik.android.presentation.wishlist.WishlistFeature
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
@@ -235,6 +236,26 @@ constructor(
                     null
                 }
             }
+
+            is Message.WishlistMessage -> {
+                if (state.blocksState is CatalogFeature.BlocksState.Content &&
+                        message.message is WishlistFeature.Message.WishlistOperationUpdate
+                ) {
+                    val updatedCollection = updateCourseLists(state.blocksState.blocks) { item ->
+                        when (item) {
+                            is CatalogBlockStateWrapper.FullCourseList ->
+                                item.copy(state = mapWishlistMessageToCourseListState(item.state, message.message))
+                            is CatalogBlockStateWrapper.RecommendedCourseList ->
+                                item.copy(state = mapWishlistMessageToCourseListState(item.state, message.message))
+                            else ->
+                                return@updateCourseLists null
+                        }
+                    }
+                    state.copy(blocksState = state.blocksState.copy(blocks = updatedCollection)) to emptySet()
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 
     private fun updateCourseLists(
@@ -257,4 +278,7 @@ constructor(
 
     private fun mapEnrollmentMessageToCourseListState(courseListState: CourseListFeature.State, message: EnrollmentFeature.Message.EnrollmentMessage): CourseListFeature.State =
         courseListStateMapper.mapToEnrollmentUpdateState(courseListState, message.enrolledCourse)
+
+    private fun mapWishlistMessageToCourseListState(courseListState: CourseListFeature.State, message: WishlistFeature.Message.WishlistOperationUpdate): CourseListFeature.State =
+        courseListStateMapper.mapToWishlistUpdate(courseListState, message.wishlistOperationData)
 }
