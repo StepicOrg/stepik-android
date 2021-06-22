@@ -5,7 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_user_course_list"
     android:orientation="vertical">
+
+    <include
+        android:id="@+id/catalogBlockContainerDivider"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_alignParentTop="true"
+        layout="@layout/view_divider_vertical" />
 
     <RelativeLayout
         android:id="@+id/rootView"
@@ -86,54 +94,60 @@
             android:layout_marginLeft="@dimen/course_list_padding"
             layout="@layout/item_course_loading_skeleton_container" />
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
+        <include
+            layout="@layout/view_user_course_list_network_error"
             android:id="@+id/courseListPlaceholderNoConnection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/course_list_side_padding"
-            android:layout_marginRight="@dimen/course_list_side_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@id/catalogBlockContainer"
             android:visibility="visible"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
+        <include
+            layout="@layout/view_user_course_list_network_error"
+            android:id="@+id/courseListPlaceholderNoConnectionWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@id/catalogBlockContainer"
+            android:visibility="visible"
+            tools:visibility="visible" />
+
+
+        <include
+            layout="@layout/view_user_course_list_empty"
             android:id="@+id/courseListPlaceholderEmpty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/internet_problem"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/course_list_side_padding"
-            android:layout_marginRight="@dimen/course_list_side_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:layout_marginBottom="@dimen/guideline_standard_padding"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@id/catalogBlockContainer"
             android:visibility="visible"
-            tools:visibility="visible"/>
+            tools:visibility="visible" />
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListWrapperPlaceholderEmptyLogin"
+
+        <include
+            layout="@layout/view_user_course_list_empty"
+            android:id="@+id/courseListPlaceholderEmptyWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/course_list_side_padding"
-            android:layout_marginRight="@dimen/course_list_side_padding"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:layout_marginBottom="@dimen/guideline_standard_padding"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_below="@id/catalogBlockContainer"
             android:visibility="visible"
-            tools:visibility="visible"/>
-    </RelativeLayout>
+            tools:visibility="visible" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/courseListPersonalOnboardingAction"
-        style="@style/Widget.AppTheme.Button.OutlinedButton"
-        android:theme="@style/ThemeOverlay.Violet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/onboarding_restart_action"
-        android:layout_marginLeft="@dimen/course_list_side_padding"
-        android:layout_marginRight="@dimen/course_list_side_padding"
-        android:layout_marginBottom="@dimen/guideline_standard_padding"
-        android:visibility="visible"
-        tools:visibility="visible" />
+    </RelativeLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
