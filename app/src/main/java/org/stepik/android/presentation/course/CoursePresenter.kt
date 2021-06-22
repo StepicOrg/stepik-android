@@ -277,14 +277,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = {
-                    state = CourseView.State.CourseLoaded(it)
-                    continueLearning()
-                    resolveCourseShareTooltip(it)
-                    if (it.course.enrollment > 0L && it.stats.isWishlisted) {
-                        toggleWishlist(WishlistAction.REMOVE, mustShowSnackbar = false)
-                    }
-                },
+                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }
@@ -522,7 +515,7 @@ constructor(
             )
     }
 
-    fun toggleWishlist(wishlistAction: WishlistAction, mustShowSnackbar: Boolean = true) {
+    fun toggleWishlist(wishlistAction: WishlistAction) {
         val courseHeaderData = state.safeCast<CourseView.State.CourseLoaded>()
             ?.courseHeaderData
             ?: return
@@ -546,10 +539,10 @@ constructor(
                 isWishlistUpdating = true
             )
         )
-        saveWishlistAction(updatedWishlistEntity, wishlistAction, mustShowSnackbar)
+        saveWishlistAction(updatedWishlistEntity, wishlistAction)
     }
 
-    private fun saveWishlistAction(wishlistEntity: WishlistEntity, wishlistAction: WishlistAction, mustShowSnackbar: Boolean = true) {
+    private fun saveWishlistAction(wishlistEntity: WishlistEntity, wishlistAction: WishlistAction) {
         compositeDisposable += wishlistInteractor
             .updateWishlistRecord(wishlistEntity, wishlistOperationData = WishlistOperationData(courseId, wishlistAction))
             .subscribeOn(backgroundScheduler)
@@ -560,9 +553,6 @@ constructor(
                         ?: return@subscribeBy
                     state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(wishlistEntity = it))
                     logWishlistAction(wishlistAction, viewSource)
-                    if (mustShowSnackbar) {
-                        view?.showWishlistActionSuccess(wishlistAction)
-                    }
                 },
                 onError = {
                     val oldState = state.safeCast<CourseView.State.CourseLoaded>()

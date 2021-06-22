@@ -14,10 +14,13 @@ import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
 import retrofit2.Response
+import ru.nobird.android.core.model.mutate
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -73,6 +76,7 @@ constructor(
             .addEnrollment(courseId)
             .andThen(userCoursesInteractor.addUserCourse(courseId))
             .andThen(lessonRepository.removeCachedLessons(courseId))
+            .andThen(removeCourseFromWishlist(courseId))
             .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
@@ -86,4 +90,16 @@ constructor(
             .andThen(lessonRepository.removeCachedLessons(courseId))
             .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
+
+    private fun removeCourseFromWishlist(courseId: Long): Completable =
+        wishlistInteractor
+            .getWishlist(dataSourceType = DataSourceType.CACHE)
+            .flatMapCompletable { wishlistEntity ->
+                val updatedWishlist = wishlistEntity.copy(
+                    courses = wishlistEntity.courses.mutate { remove(courseId) }
+                )
+                wishlistInteractor
+                    .updateWishlistRecord(updatedWishlist, WishlistOperationData(courseId, WishlistAction.REMOVE))
+                    .ignoreElement()
+            }
 }
