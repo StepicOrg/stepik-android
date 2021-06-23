@@ -27,13 +27,9 @@ import org.stepic.droid.base.ListenerContainerImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.DefaultFilter
-import org.stepic.droid.core.DefaultFilterImpl
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.LocalLessonSessionManagerImpl
-import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.core.ScreenManagerImpl
 import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.core.ShareHelperImpl
 import org.stepic.droid.core.StepikDevicePoster
@@ -43,6 +39,8 @@ import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.di.qualifiers.PersonalOffersScheduler
+import org.stepic.droid.di.qualifiers.WishlistScheduler
 import org.stepic.droid.notifications.BlockNotificationIntervalProvider
 import org.stepic.droid.notifications.NotificationTimeChecker
 import org.stepic.droid.notifications.NotificationTimeCheckerImpl
@@ -53,14 +51,11 @@ import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.resolvers.text.TextResolverImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
-import org.stepik.android.remote.base.UserAgentProvider
-import org.stepik.android.remote.base.UserAgentProviderImpl
 import org.stepik.android.view.injection.billing.PublicLicenseKey
 import org.stepik.android.view.injection.qualifiers.AuthLock
+import org.stepik.android.view.injection.wishlist.WishlistLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.Executors
-import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
 
@@ -117,6 +112,18 @@ abstract class AppCoreModule {
         @JvmStatic
         @BackgroundScheduler
         internal fun provideBackgroundScheduler(): Scheduler = Schedulers.io()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @WishlistScheduler
+        internal fun provideWishlistScheduler(): Scheduler = Schedulers.single()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @PersonalOffersScheduler
+        internal fun providePersonalOffersScheduler(): Scheduler = Schedulers.single()
 
         @Provides
         @JvmStatic
@@ -204,6 +211,13 @@ abstract class AppCoreModule {
         @PublicLicenseKey
         internal fun providePublicLicenseKey(config: Config): String =
             config.appPublicLicenseKey
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @WishlistLock
+        internal fun provideWishlistLock(): ReentrantReadWriteLock =
+            ReentrantReadWriteLock()
     }
 
 }

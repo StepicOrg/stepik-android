@@ -4,7 +4,6 @@ import dagger.Subcomponent
 import org.stepik.android.view.auth.ui.activity.SocialAuthActivity
 import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity
 import org.stepik.android.view.auth.ui.activity.RegistrationActivity
-import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_profile.UserProfileDataModule
 
@@ -12,8 +11,7 @@ import org.stepik.android.view.injection.user_profile.UserProfileDataModule
     modules = [
         AuthModule::class,
         UserDataModule::class,
-        UserProfileDataModule::class,
-        ProfileDataModule::class
+        UserProfileDataModule::class
     ]
 )
 interface AuthComponent {

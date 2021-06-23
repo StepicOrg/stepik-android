@@ -5,7 +5,6 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListWishFragment
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
-import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @CourseListWishScope
@@ -14,8 +13,7 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
     WishlistDataModule::class,
     CourseDataModule::class,
     CoursePaymentsDataModule::class,
-    LastStepDataModule::class,
-    ProfileDataModule::class
+    LastStepDataModule::class
 ])
 interface CourseListWishComponent {
     @Subcomponent.Builder

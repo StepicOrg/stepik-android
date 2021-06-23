@@ -90,6 +90,7 @@ import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDat
 import org.stepik.android.view.injection.personal_offers.PersonalOffersDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile.ProfileComponent
+import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.purchase_notification.PurchaseNotificationDataModule
@@ -173,7 +174,8 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 
         CoursePaymentsDataModule::class,
         PurchaseNotificationDataModule::class,
-        VisitedCoursesDataModule::class
+        VisitedCoursesDataModule::class,
+        ProfileDataModule::class
     ]
 )
 interface AppCoreComponent {

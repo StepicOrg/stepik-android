@@ -15,7 +15,6 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
     CoursePaymentsDataModule::class,
     UserDataModule::class,
     UserProfileDataModule::class,
-    ProfileDataModule::class,
     WishlistDataModule::class
 ])
 interface MainScreenComponent {
