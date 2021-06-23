@@ -38,6 +38,7 @@ class CoursePropertiesDelegate(
     private val courseArchiveText = view.courseArchiveText
 
     private val courseFavoriteImage = root.courseListFavorite
+    private val courseWishlistImage = root.courseListWishlist
 
     fun setStats(courseListItem: CourseListItem.Data) {
         setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)
@@ -45,6 +46,7 @@ class CoursePropertiesDelegate(
         setRating(courseListItem.courseStats)
         setCertificate(courseListItem.course)
         setUserCourse(courseListItem.courseStats.enrollmentState.safeCast<EnrollmentState.Enrolled>()?.userCourse)
+        setWishlist(courseListItem.course.enrollment > 0L, courseListItem.courseStats.isWishlisted)
 
         view.isVisible = view.children.any(View::isVisible)
     }
@@ -108,5 +110,9 @@ class CoursePropertiesDelegate(
         val isArchived = userCourse?.isArchived == true
         courseArchiveImage.isVisible = isArchived
         courseArchiveText.isVisible = isArchived
+    }
+
+    private fun setWishlist(isEnrolled: Boolean, isWishlisted: Boolean) {
+        courseWishlistImage.isVisible = !isEnrolled && isWishlisted
     }
 }

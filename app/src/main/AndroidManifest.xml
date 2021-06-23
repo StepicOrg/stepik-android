@@ -386,6 +386,9 @@
         <activity
             android:name="org.stepik.android.view.onboarding.ui.activity.OnboardingGoalActivity" />
 
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListWishActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

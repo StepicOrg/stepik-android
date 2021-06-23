@@ -12,10 +12,5 @@ constructor(
     private val personalOffersRemoteDataSource: PersonalOffersRemoteDataSource
 ) : PersonalOffersRepository {
     override fun getPersonalOffers(): Single<PersonalOffers> =
-        personalOffersRemoteDataSource
-            .getPersonalOffers()
-            .switchIfEmpty(createOffersRecord())
-
-    private fun createOffersRecord(): Single<PersonalOffers> =
-        personalOffersRemoteDataSource.createPersonalOffers()
+        personalOffersRemoteDataSource.getPersonalOffers()
 }

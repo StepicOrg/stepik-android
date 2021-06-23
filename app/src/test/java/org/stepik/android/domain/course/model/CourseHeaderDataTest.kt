@@ -6,6 +6,7 @@ import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.assertThatObjectParcelable
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 
@@ -32,11 +33,14 @@ class CourseHeaderDataTest {
                 learnersCount = 100,
                 readiness = 1.0,
                 progress = Progress(id = "1"),
-                enrollmentState = EnrollmentState.NotEnrolledWeb
+                enrollmentState = EnrollmentState.NotEnrolledWeb,
+                isWishlisted = false
             ),
             localSubmissionsCount = 5,
             promoCode = PromoCode("200", "RUB"),
-            defaultPromoCode = DefaultPromoCode.EMPTY
+            defaultPromoCode = DefaultPromoCode.EMPTY,
+            isWishlistUpdating = false,
+            wishlistEntity = WishlistEntity(-1, emptyList())
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()

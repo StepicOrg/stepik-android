@@ -38,6 +38,7 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
@@ -46,6 +47,7 @@ import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.web.CustomTabsHelper
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
@@ -209,6 +211,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         courseHeaderDelegate =
             CourseHeaderDelegate(
                 this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper, courseViewSource,
+                isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
@@ -357,10 +360,13 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     intent.removeExtra(EXTRA_AUTO_ENROLL)
                     coursePresenter.autoEnroll()
 
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to state.courseHeaderData.courseId,
-                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.WIDGET
-                    ))
+                    analytic.report(
+                        CourseJoinedEvent(
+                            CourseJoinedEvent.SOURCE_PREVIEW,
+                            state.courseHeaderData.course,
+                            state.courseHeaderData.stats.isWishlisted
+                        )
+                    )
                 }
 
                 if (intent.getBooleanExtra(EXTRA_OPEN_COURSE_PURCHASE, false)) {
@@ -463,6 +469,28 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
                 UserCourseAction.REMOVE_ARCHIVE ->
                     R.string.course_action_archive_remove_failure
+            }
+        coursePager.snackbar(messageRes = errorMessage)
+    }
+
+    override fun showWishlistActionSuccess(wishlistAction: WishlistAction) {
+        @StringRes
+        val successMessage =
+            if (wishlistAction == WishlistAction.ADD) {
+                R.string.wishlist_action_add_success
+            } else {
+                R.string.wishlist_action_remove_success
+            }
+        coursePager.snackbar(messageRes = successMessage)
+    }
+
+    override fun showWishlistActionFailure(wishlistAction: WishlistAction) {
+        @StringRes
+        val errorMessage =
+            if (wishlistAction == WishlistAction.ADD) {
+                R.string.wishlist_action_add_failure
+            } else {
+                R.string.wishlist_action_remove_failure
             }
         coursePager.snackbar(messageRes = errorMessage)
     }

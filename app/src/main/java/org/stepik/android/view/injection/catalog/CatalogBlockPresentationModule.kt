@@ -19,6 +19,7 @@ import org.stepik.android.presentation.progress.dispatcher.ProgressActionDispatc
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.stories.dispatcher.StoriesActionDispatcher
 import org.stepik.android.presentation.user_courses.dispatcher.UserCoursesActionDispatcher
+import org.stepik.android.presentation.wishlist.dispatcher.WishlistActionDispatcher
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
 import ru.nobird.android.presentation.redux.dispatcher.tranform
@@ -39,7 +40,8 @@ object CatalogBlockPresentationModule {
         courseContinueActionDispatcher: CourseContinueActionDispatcher,
         userCoursesActionDispatcher: UserCoursesActionDispatcher,
         progressActionDispatcher: ProgressActionDispatcher,
-        enrollmentActionDispatcher: EnrollmentActionDispatcher
+        enrollmentActionDispatcher: EnrollmentActionDispatcher,
+        wishlistActionDispatcher: WishlistActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
@@ -91,6 +93,12 @@ object CatalogBlockPresentationModule {
                     enrollmentActionDispatcher.tranform(
                         transformAction = { null },
                         transformMessage = CatalogFeature.Message::EnrollmentMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    wishlistActionDispatcher.tranform(
+                        transformAction = { null },
+                        transformMessage = CatalogFeature.Message::WishlistMessage
                     )
                 )
                 .wrapWithViewContainer()

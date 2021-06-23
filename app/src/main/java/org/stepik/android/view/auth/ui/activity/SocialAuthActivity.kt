@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.activity_auth_social.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
-import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.model.Credentials
@@ -76,9 +75,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
     @Inject
     lateinit var deferredAuthSplitTest: DeferredAuthSplitTest
-
-    @Inject
-    lateinit var onboardingSplitTest: OnboardingSplitTest
 
     @Inject
     lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2

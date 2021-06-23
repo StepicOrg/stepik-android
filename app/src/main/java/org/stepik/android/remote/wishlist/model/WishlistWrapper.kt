@@ -1,4 +1,4 @@
-package org.stepik.android.domain.wishlist.model
+package org.stepik.android.remote.wishlist.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -14,7 +14,6 @@ import org.json.JSONObject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
-import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.GoogleApiChecker
@@ -52,7 +51,6 @@ constructor(
     private val retentionNotificationDelegate: RetentionNotificationDelegate,
 
     private val deferredAuthSplitTest: DeferredAuthSplitTest,
-    private val onboardingSplitTest: OnboardingSplitTest,
     private val onboardingSplitTestVersion2: OnboardingSplitTestVersion2,
 
     private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
