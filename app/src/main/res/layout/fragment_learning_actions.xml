@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/learningActionsRecycler"
+    android:background="@drawable/bg_user_course_list"
     android:paddingLeft="@dimen/course_list_padding"
     android:paddingRight="@dimen/course_list_padding"
     android:paddingBottom="16dp" />
