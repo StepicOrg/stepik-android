@@ -553,6 +553,7 @@ constructor(
                         ?: return@subscribeBy
                     state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(wishlistEntity = it))
                     logWishlistAction(wishlistAction, viewSource)
+                    view?.showWishlistActionSuccess(wishlistAction)
                 },
                 onError = {
                     val oldState = state.safeCast<CourseView.State.CourseLoaded>()
