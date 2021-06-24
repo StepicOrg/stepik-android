@@ -50,6 +50,7 @@ import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
 import org.stepik.android.presentation.video_player.VideoPlayerView
+import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
@@ -89,12 +90,12 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         private const val AUTOPLAY_ANIMATION_DURATION_MS = 7200L
 
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
-        private const val EXTRA_VIDEO_MOVE_NEXT_INTENT = "video_player_move_next_intent"
+        private const val EXTRA_VIDEO_MOVEMENT_BUNDLE = "video_player_move_next_intent"
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonMoveNextIntent: Intent? = null): Intent =
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonMovementBundle: Bundle? = null): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
-                .putExtra(EXTRA_VIDEO_MOVE_NEXT_INTENT, lessonMoveNextIntent)
+                .putExtra(EXTRA_VIDEO_MOVEMENT_BUNDLE, lessonMovementBundle)
     }
 
     @Inject
@@ -103,7 +104,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val lessonMoveNextIntent: Intent? by lazy { intent.getParcelableExtra(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
+    private val lessonMoveNextIntent: Intent? by lazy {
+        intent.getBundleExtra(EXTRA_VIDEO_MOVEMENT_BUNDLE)?.let {
+            Intent(this, LessonActivity::class.java)
+                .putExtras(it)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+    }
     private val isAutoplayEnabled: Boolean by lazy { lessonMoveNextIntent != null }
 
     private lateinit var labelPlay: String

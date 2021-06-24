@@ -156,10 +156,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         }
 
         injectComponent()
-        // TODO APPS-3278 For testings purposes
-//        LessonDemoCompleteBottomSheetDialogFragment
-//            .newInstance()
-//            .showIfNotExists(supportFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
 
         initCenteredToolbar(R.string.lesson_title, showHomeButton = true)
 
