@@ -89,13 +89,13 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/video_player_skip_margin"
             android:layout_marginRight="@dimen/video_player_skip_margin"
-            android:layout_toLeftOf="@id/exo_rew"
-            android:layout_toStartOf="@id/exo_rew"
+            android:layout_toLeftOf="@id/rewind"
+            android:layout_toStartOf="@id/rewind"
             android:padding="4dp"
             app:srcCompat="@drawable/ic_skip_previous_48dp"/>
 
         <ImageView
-            android:id="@id/exo_rew"
+            android:id="@+id/rewind"
             android:layout_width="@dimen/video_player_rewind_size"
             android:layout_height="@dimen/video_player_rewind_size"
             android:layout_centerVertical="true"
@@ -123,7 +123,7 @@
 
 
         <ImageView
-            android:id="@id/exo_ffwd"
+            android:id="@+id/forward"
             android:layout_width="@dimen/video_player_rewind_size"
             android:layout_height="@dimen/video_player_rewind_size"
             android:layout_centerVertical="true"
@@ -141,8 +141,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/video_player_skip_margin"
             android:layout_marginStart="@dimen/video_player_skip_margin"
-            android:layout_toEndOf="@id/exo_ffwd"
-            android:layout_toRightOf="@id/exo_ffwd"
+            android:layout_toEndOf="@id/forward"
+            android:layout_toRightOf="@id/forward"
             android:padding="4dp"
             app:srcCompat="@drawable/ic_skip_next_48dp"/>
     </RelativeLayout>

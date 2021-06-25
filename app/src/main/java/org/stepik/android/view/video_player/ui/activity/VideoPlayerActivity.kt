@@ -20,17 +20,21 @@ import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.view.GestureDetector
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.MotionEvent
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -46,8 +50,10 @@ import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
+import org.stepic.droid.util.DisplayUtils
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.video_player.analytic.PIPActivated
+import org.stepik.android.domain.video_player.analytic.VideoPlayerControlClickedEvent
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
@@ -58,6 +64,7 @@ import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 import javax.inject.Inject
+import kotlin.math.abs
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
@@ -106,6 +113,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private var isPlaying: Boolean = false
+        set(value) {
+            if (field != value) {
+                if (value) {
+                    analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PLAY))
+                } else {
+                    analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PAUSE))
+                }
+            }
+            field = value
+        }
+
     private val lessonMoveNextIntent: Intent? by lazy {
         intent.getBundleExtra(EXTRA_VIDEO_MOVEMENT_BUNDLE)?.let {
             Intent(this, LessonActivity::class.java)
@@ -114,6 +133,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
     private val isAutoplayEnabled: Boolean by lazy { lessonMoveNextIntent != null }
+    private val screenMiddlePointX = DisplayUtils.getScreenWidth() / 2
 
     private lateinit var labelPlay: String
     private lateinit var labelPause: String
@@ -161,6 +181,12 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                when {
+                    playbackState == Player.STATE_READY && playWhenReady ->
+                        isPlaying = true
+                    playbackState == Player.STATE_READY && !playWhenReady ->
+                        isPlaying = false
+                }
                 videoPlayerPresenter.onPlayerStateChanged(playbackState, isAutoplayEnabled)
             }
         }
@@ -179,10 +205,47 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                         exoPlayer?.playWhenReady = true
                     }
                     CONTROL_TYPE_PAUSE -> exoPlayer?.playWhenReady = false
-                    CONTROL_TYPE_REWIND -> exoPlayer?.let { it.seekTo(it.currentPosition - JUMP_TIME_MILLIS) }
-                    CONTROL_TYPE_FORWARD -> exoPlayer?.let { it.seekTo(it.currentPosition + JUMP_TIME_MILLIS) }
+                    CONTROL_TYPE_REWIND -> exoPlayer?.let {
+                        analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_REWIND))
+                        it.seekTo(it.currentPosition - JUMP_TIME_MILLIS)
+                    }
+                    CONTROL_TYPE_FORWARD -> exoPlayer?.let {
+                        analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_FORWARD))
+                        it.seekTo(it.currentPosition + JUMP_TIME_MILLIS)
+                    }
                 }
             }
+        }
+    }
+
+    private val controlDispatcher = object : DefaultControlDispatcher() {
+        override fun dispatchSeekTo(player: Player?, windowIndex: Int, positionMs: Long): Boolean {
+            val current = player?.currentPosition ?: 0L
+            val difference = current - positionMs
+            val action =
+                if (difference > 0L) {
+                    VideoPlayerControlClickedEvent.ACTION_SEEK_BACK
+                } else {
+                    VideoPlayerControlClickedEvent.ACTION_SEEK_FORWARD
+                }
+            if (abs(difference) != JUMP_TIME_MILLIS.toLong()) {
+                analytic.report(VideoPlayerControlClickedEvent(action))
+            }
+            return super.dispatchSeekTo(player, windowIndex, positionMs)
+        }
+    }
+
+    private lateinit var gestureDetector: GestureDetectorCompat
+
+    private val onSimpleGestureListener = object : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            val action = if (e.rawX > screenMiddlePointX) {
+                VideoPlayerControlClickedEvent.ACTION_DOUBLE_CLICK_RIGHT
+            } else {
+                VideoPlayerControlClickedEvent.ACTION_DOUBLE_CLICK_LEFT
+            }
+            analytic.report(VideoPlayerControlClickedEvent(action))
+            return super.onDoubleTap(e)
         }
     }
 
@@ -212,6 +275,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+        gestureDetector = GestureDetectorCompat(this, onSimpleGestureListener)
 
         labelPlay = getString(R.string.pip_play_label)
         labelPause = getString(R.string.pip_stop_label)
@@ -235,9 +299,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         videoRateChooser.setOnClickListener {
             showChooseRateMenu(it)
         }
+        playerView.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                v.performClick()
+            }
+            gestureDetector.onTouchEvent(event)
+            true
+        }
 
         qualityView.isVisible = false
 
+        playerView.setControlDispatcher(controlDispatcher)
         playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
@@ -272,11 +344,23 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
         }
 
+        rewind.setOnClickListener {
+            analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_REWIND))
+            exoPlayer?.let { player -> player.seekTo(player.currentPosition - JUMP_TIME_MILLIS) }
+        }
+
+        forward.setOnClickListener {
+            analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_FORWARD))
+            exoPlayer?.let { player -> player.seekTo(player.currentPosition + JUMP_TIME_MILLIS) }
+        }
+
         skip_prev.setOnClickListener {
+            analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PREVIOS))
             move(StepNavigationDirection.PREV)
         }
 
         skip_next.setOnClickListener {
+            analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_NEXT))
             move(StepNavigationDirection.NEXT)
         }
 
@@ -568,10 +652,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         skip_prev.layoutParams = (skip_prev.layoutParams as ViewGroup.MarginLayoutParams).apply {
             rightMargin = skipMargin
         }
-        exo_rew.layoutParams = (exo_rew.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        rewind.layoutParams = (rewind.layoutParams as ViewGroup.MarginLayoutParams).apply {
             rightMargin = rewindMargin
         }
-        exo_ffwd.layoutParams = (exo_ffwd.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        forward.layoutParams = (forward.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = rewindMargin
         }
         skip_next.layoutParams = (skip_next.layoutParams as ViewGroup.MarginLayoutParams).apply {
