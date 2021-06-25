@@ -6,4 +6,7 @@
 
     <dimen name="achievement_details_icon_size">164dp</dimen>
     <dimen name="achievement_details_dialog_width">480dp</dimen>
+
+    <dimen name="video_player_rewind_margin">45dp</dimen>
+    <dimen name="video_player_skip_margin">40dp</dimen>
 </resources>

@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -45,6 +46,7 @@ import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
+import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.video_player.analytic.PIPActivated
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
@@ -260,8 +262,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
         autoplay_controller_panel.setOnClickListener {
-            moveNext()
-//            videoPlayerPresenter.onAutoplayNext()
+            move(StepNavigationDirection.NEXT)
         }
         autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
         autoplayCancel.setOnClickListener { videoPlayerPresenter.stayOnThisStep() }
@@ -269,6 +270,14 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             if (autoplaySwitch.isUserTriggered) {
                 videoPlayerPresenter.setAutoplayEnabled(isChecked)
             }
+        }
+
+        skip_prev.setOnClickListener {
+            move(StepNavigationDirection.PREV)
+        }
+
+        skip_next.setOnClickListener {
+            move(StepNavigationDirection.NEXT)
         }
 
         viewStateDelegate = ViewStateDelegate()
@@ -378,7 +387,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
 
             VideoPlayerView.State.AutoplayNext ->
-                moveNext()
+                move(StepNavigationDirection.NEXT)
         }
     }
 
@@ -474,6 +483,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        resolveControlMargins()
+    }
+
     override fun onBackPressed() {
         if (isLandscapeVideo) {
             changeVideoRotation()
@@ -538,12 +552,31 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private fun isSupportPIP(): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
-    private fun moveNext() {
+    private fun move(stepNavigationDirection: StepNavigationDirection) {
         if (isPIPModeActive) return
         lessonMoveNextIntent?.let {
+            it.putExtra(LessonActivity.EXTRA_MOVE_STEP_NAVIGATION_DIRECTION, stepNavigationDirection.ordinal)
             startActivity(it)
         }
         finish()
+    }
+
+    private fun resolveControlMargins() {
+        val (rewindMargin, skipMargin) =
+            resources.getDimensionPixelOffset(R.dimen.video_player_rewind_margin) to resources.getDimensionPixelOffset(R.dimen.video_player_skip_margin)
+
+        skip_prev.layoutParams = (skip_prev.layoutParams as ViewGroup.MarginLayoutParams).apply {
+            rightMargin = skipMargin
+        }
+        exo_rew.layoutParams = (exo_rew.layoutParams as ViewGroup.MarginLayoutParams).apply {
+            rightMargin = rewindMargin
+        }
+        exo_ffwd.layoutParams = (exo_ffwd.layoutParams as ViewGroup.MarginLayoutParams).apply {
+            leftMargin = rewindMargin
+        }
+        skip_next.layoutParams = (skip_next.layoutParams as ViewGroup.MarginLayoutParams).apply {
+            leftMargin = skipMargin
+        }
     }
 
     override fun finish() {

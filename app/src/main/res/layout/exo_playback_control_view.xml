@@ -83,6 +83,18 @@
             android:visibility="invisible"/>
 
         <ImageView
+            android:id="@+id/skip_prev"
+            android:layout_width="@dimen/video_player_rewind_size"
+            android:layout_height="@dimen/video_player_rewind_size"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/video_player_skip_margin"
+            android:layout_marginRight="@dimen/video_player_skip_margin"
+            android:layout_toLeftOf="@id/exo_rew"
+            android:layout_toStartOf="@id/exo_rew"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_skip_previous_48dp"/>
+
+        <ImageView
             android:id="@id/exo_rew"
             android:layout_width="@dimen/video_player_rewind_size"
             android:layout_height="@dimen/video_player_rewind_size"
@@ -121,6 +133,18 @@
             android:layout_toRightOf="@+id/centered_anchor"
             android:padding="4dp"
             android:src="@drawable/ic_forward_10_white_48dp"/>
+
+        <ImageView
+            android:id="@+id/skip_next"
+            android:layout_width="@dimen/video_player_rewind_size"
+            android:layout_height="@dimen/video_player_rewind_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/video_player_skip_margin"
+            android:layout_marginStart="@dimen/video_player_skip_margin"
+            android:layout_toEndOf="@id/exo_ffwd"
+            android:layout_toRightOf="@id/exo_ffwd"
+            android:padding="4dp"
+            app:srcCompat="@drawable/ic_skip_next_48dp"/>
     </RelativeLayout>
 
     <FrameLayout

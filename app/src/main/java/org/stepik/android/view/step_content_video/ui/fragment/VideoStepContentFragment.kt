@@ -97,7 +97,6 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
             val lessonMovementBundle = Bundle()
                 lessonMovementBundle.putAll(requireActivity().intent.extras)
                 lessonMovementBundle.putInt(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
-                lessonMovementBundle.putBoolean(LessonActivity.EXTRA_AUTOPLAY_MOVE_NEXT, true)
 
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
