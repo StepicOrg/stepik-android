@@ -5,6 +5,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.domain.billing.repository.BillingRepository
@@ -19,6 +20,7 @@ import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
@@ -33,7 +35,9 @@ constructor(
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
-    private val profileRepository: ProfileRepository
+    private val profileRepository: ProfileRepository,
+    private val wishlistRepository: WishlistRepository,
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
     companion object {
         private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -47,8 +51,9 @@ constructor(
         zip(
             resolveCourseReview(courses, sourceTypeComposition.generalSourceType),
             resolveCourseProgress(courses, sourceTypeComposition.generalSourceType),
-            resolveCoursesEnrollmentStates(courses, sourceTypeComposition.enrollmentSourceType, resolveEnrollmentState)
-        ) { courseReviews, courseProgresses, enrollmentStates ->
+            resolveCoursesEnrollmentStates(courses, sourceTypeComposition.enrollmentSourceType, resolveEnrollmentState),
+            resolveWishlistStates(sourceTypeComposition.generalSourceType)
+        ) { courseReviews, courseProgresses, enrollmentStates, wishlistStates ->
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
             val progressMaps = courseProgresses.associateBy(Progress::id)
             val enrollmentMap = enrollmentStates.toMap()
@@ -59,7 +64,8 @@ constructor(
                     learnersCount = course.learnersCount,
                     readiness = course.readiness,
                     progress = course.progress?.let(progressMaps::get),
-                    enrollmentState = enrollmentMap.getValue(course.id)
+                    enrollmentState = enrollmentMap.getValue(course.id),
+                    isWishlisted = wishlistStates.contains(course.id)
                 )
             }
         }
@@ -85,6 +91,16 @@ constructor(
             .toObservable()
             .flatMapSingle { resolveCourseEnrollmentState(it, sourceType, resolveEnrollmentState) }
             .toList()
+
+    private fun resolveWishlistStates(sourceType: DataSourceType): Single<Set<Long>> =
+        if (sharedPreferenceHelper.authResponseFromStore != null) {
+            wishlistRepository
+                .getWishlistRecord(sourceType)
+                .map { it.courses.toSet() }
+                .onErrorReturnItem(emptySet())
+        } else {
+            Single.just(emptySet())
+        }
 
     private fun resolveCourseEnrollmentState(course: Course, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
         when {

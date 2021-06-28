@@ -1,23 +1,20 @@
 package org.stepik.android.view.course_list.ui.fragment
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_user_course_list.*
+import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
+import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
-import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -43,6 +40,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         fun newInstance(): Fragment =
             CourseListUserHorizontalFragment()
 
+        private val OnboardingSplitTestVersion2.Group.isPersonalized: Boolean
+            get() = this == OnboardingSplitTestVersion2.Group.Personalized || this == OnboardingSplitTestVersion2.Group.ControlPersonalized
+
         private const val RUSSIAN_LANGUAGE_CODE = "ru"
     }
 
@@ -59,25 +59,17 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
-    internal lateinit var onboardingSplitTest: OnboardingSplitTest
-
-    @Inject
-    internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
-
-    @Inject
-    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
-
-    @Inject
     internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
 
+    @Inject
+    internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
     private lateinit var wrapperViewStateDelegate: ViewStateDelegate<CourseListUserView.State>
-
-    private val locale = Resources.getSystem().configuration.defaultLocale
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,27 +96,55 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         }
 
         catalogBlockContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
-        courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
-        courseListPlaceholderNoConnection.setOnClickListener {
-            setDataToPresenter(forceUpdate = true)
-        }
-        courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
-            analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER)
-            screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
-        }
-        courseListPlaceholderNoConnection.setText(R.string.internet_problem)
-        courseListWrapperPlaceholderEmptyLogin.setPlaceholderText(R.string.empty_courses_anonymous)
 
-        courseListPersonalOnboardingAction.setOnClickListener { screenManager.showPersonalizedOnboarding(requireContext()) }
+        /**
+         * Empty user courses action
+         */
+        val isShowPersonalizedOnboarding =
+            resources.configuration.defaultLocale.language == RUSSIAN_LANGUAGE_CODE &&
+                    onboardingSplitTestVersion2.currentGroup.isPersonalized
+
+        val userCoursesListEmptyActionListener = View.OnClickListener {
+            if (isShowPersonalizedOnboarding) {
+                screenManager.showPersonalizedOnboarding(requireContext())
+            } else {
+                screenManager.showCatalog(requireContext())
+            }
+        }
+        val userCoursesListEmptyActionText =
+            if (isShowPersonalizedOnboarding) {
+                R.string.onboarding_restart_action
+            } else {
+                R.string.user_courses_catalog_action_message
+            }
+
+        with(courseListPlaceholderEmpty.userCoursesListEmptyAction) {
+            setOnClickListener(userCoursesListEmptyActionListener)
+            setText(userCoursesListEmptyActionText)
+        }
+        with(courseListPlaceholderEmptyWrapper.userCoursesListEmptyAction) {
+            setOnClickListener(userCoursesListEmptyActionListener)
+            setText(userCoursesListEmptyActionText)
+        }
+
+        courseListPlaceholderNoConnection
+            .userCoursesListNetworkErrorAction
+            .setOnClickListener {
+                setDataToPresenter(forceUpdate = true)
+            }
+        courseListPlaceholderNoConnectionWrapper
+            .userCoursesListNetworkErrorAction
+            .setOnClickListener {
+                setDataToPresenter(forceUpdate = true)
+            }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
-        viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(catalogBlockContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(catalogBlockContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
+        viewStateDelegate.addState<CourseListView.State.Idle>(catalogBlockContainer, containerTitle)
+        viewStateDelegate.addState<CourseListView.State.Loading>(catalogBlockContainer, containerTitle, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(catalogBlockContainer, containerTitle, containerCarouselCount, containerViewAll, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(catalogBlockContainer, containerTitle, courseListPlaceholderEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(catalogBlockContainer, containerTitle, courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -151,8 +171,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         wrapperViewStateDelegate = ViewStateDelegate()
         wrapperViewStateDelegate.addState<CourseListUserView.State.Idle>()
         wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
-        wrapperViewStateDelegate.addState<CourseListUserView.State.EmptyLogin>(courseListWrapperPlaceholderEmptyLogin)
-        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnection)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.EmptyLogin>(courseListPlaceholderEmptyWrapper)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnectionWrapper)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
         setDataToPresenter()
@@ -170,6 +190,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     }
 
     override fun setState(state: CourseListUserView.State) {
+        catalogBlockContainer.isEnabled = (state as? CourseListUserView.State.Data)?.courseListViewState is CourseListView.State.Content
         if (state is CourseListUserView.State.Data) {
             containerCarouselCount.text = requireContext().resources.getQuantityString(
                 R.plurals.course_count,
@@ -180,9 +201,6 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         val courseListState = (state as? CourseListUserView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
         courseListViewDelegate.setState(courseListState)
         wrapperViewStateDelegate.switchState(state)
-        courseListPersonalOnboardingAction.isVisible = (state is CourseListUserView.State.EmptyLogin || courseListState is CourseListView.State.Empty) &&
-                (onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.Personalized || onboardingSplitTestVersion2.currentGroup == OnboardingSplitTestVersion2.Group.ControlPersonalized) &&
-                locale.language == RUSSIAN_LANGUAGE_CODE
     }
 
     override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {

@@ -16,7 +16,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.BranchParams
-import org.stepic.droid.analytic.experiments.OnboardingSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
@@ -42,9 +41,6 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     @Inject
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
-
-    @Inject
-    internal lateinit var onboardingSplitTest: OnboardingSplitTest
 
     @Inject
     internal lateinit var onboardingSplitTestVersion2: OnboardingSplitTestVersion2

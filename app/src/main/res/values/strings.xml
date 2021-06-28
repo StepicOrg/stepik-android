@@ -1158,4 +1158,16 @@
     <string name="course_complete_subtitle_certificate_not_ready_notify">We will notify you when your certificate is ready.</string>
     <string name="course_complete_share_result">I\'ve received %d out of %d in the course \"%s\"</string>
     <string name="course_complete_share_result_with_certificate">My certificate for passing the course \"%s\"</string>
+
+    <!-- Wishlist -->
+    <string name="wishlist_title">Wishlist</string>
+    <string name="wishlist_empty">No courses</string>
+
+    <string name="wishlist_add_action">Add to Wishlist</string>
+    <string name="wishlist_remove_action">Remove from Wishlist</string>
+
+    <string name="wishlist_action_add_success">Course successfully added to Wishlist</string>
+    <string name="wishlist_action_remove_success">Course successfully removed from Wishlist</string>
+    <string name="wishlist_action_add_failure">Failed to add course to Wishlist</string>
+    <string name="wishlist_action_remove_failure">Failed to remove course from Wishlist</string>
 </resources>

@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.scale
 import androidx.core.text.strikeThrough
@@ -29,6 +30,8 @@ import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.course.analytic.BuyCoursePressedEvent
+import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -39,6 +42,7 @@ import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -54,6 +58,7 @@ class CourseHeaderDelegate(
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
     private val courseViewSource: CourseViewSource,
+    private val isAuthorized: Boolean,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -102,10 +107,13 @@ class CourseHeaderDelegate(
                 coursePresenter.enrollCourse()
 
                 courseHeaderData?.let { headerData ->
-                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.JOINED, mapOf(
-                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.PREVIEW
-                    ))
+                    analytic.report(
+                        CourseJoinedEvent(
+                            CourseJoinedEvent.SOURCE_PREVIEW,
+                            headerData.course,
+                            headerData.stats.isWishlisted
+                        )
+                    )
                 }
             }
 
@@ -152,10 +160,7 @@ class CourseHeaderDelegate(
         coursePresenter.openCoursePurchaseInWeb(queryParams)
 
         courseHeaderData?.let { headerData ->
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.BUY_COURSE_PRESSED, mapOf(
-                AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
-                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
-            ))
+            analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
             analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
         }
     }
@@ -346,6 +351,20 @@ class CourseHeaderDelegate(
         dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorError)), 0, dropCourseMenuItemSpan.length, 0)
         dropCourseMenuItem?.title = dropCourseMenuItemSpan
 
+        menu.findItem(R.id.wishlist_course)
+            ?.let { wishlistCourseMenuItem ->
+                wishlistCourseMenuItem.isVisible = courseHeaderData != null && courseHeaderData?.course?.enrollment == 0L && isAuthorized
+                wishlistCourseMenuItem.isEnabled = courseHeaderData?.isWishlistUpdating == false
+                val (icon, title) =
+                    if (courseHeaderData?.stats?.isWishlisted == true) {
+                        ContextCompat.getDrawable(courseActivity, R.drawable.ic_wishlist_active) to courseActivity.getString(R.string.wishlist_add_action)
+                    } else {
+                        ContextCompat.getDrawable(courseActivity, R.drawable.ic_wishlist_inactive) to courseActivity.getString(R.string.wishlist_remove_action)
+                    }
+                wishlistCourseMenuItem.icon = icon
+                wishlistCourseMenuItem.title = title
+            }
+
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
@@ -391,6 +410,20 @@ class CourseHeaderDelegate(
                 }
                 true
             }
+
+            R.id.wishlist_course -> {
+                courseHeaderData?.stats?.let {
+                    val action =
+                        if (it.isWishlisted) {
+                            WishlistAction.REMOVE
+                        } else {
+                            WishlistAction.ADD
+                        }
+                    coursePresenter.toggleWishlist(action)
+                }
+                true
+            }
+
             R.id.share_course -> {
                 coursePresenter.shareCourse()
                 true

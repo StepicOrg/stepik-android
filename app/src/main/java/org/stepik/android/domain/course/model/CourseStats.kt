@@ -10,5 +10,6 @@ data class CourseStats(
     val learnersCount: Long,
     val readiness: Double,
     val progress: Progress?,
-    val enrollmentState: EnrollmentState
+    val enrollmentState: EnrollmentState,
+    val isWishlisted: Boolean
 ) : Parcelable

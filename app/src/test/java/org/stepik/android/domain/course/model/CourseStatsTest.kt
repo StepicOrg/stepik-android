@@ -47,6 +47,7 @@ class CourseStatsTest {
                 nStepsPassed = 102,
                 isPassed = true
             ),
-            enrollmentState = enrollmentState
+            enrollmentState = enrollmentState,
+            isWishlisted = false
         )
 }

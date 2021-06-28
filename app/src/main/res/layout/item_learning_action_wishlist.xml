@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="94dp"
+
+    android:layout_margin="@dimen/course_item_margin"
+    android:padding="8dp"
+    app:cardCornerRadius="@dimen/course_item_radius"
+    app:cardElevation="4dp"
+    tools:layout_width="154dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
+
+        android:padding="8dp"
+        tools:layout_width="154dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/wishlistActionIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_learning_action_wishlist" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/wishlistActionTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/wishlist_title"
+            android:textAppearance="?textAppearanceSubtitle2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wishlistActionIcon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/wishlistActionCourseCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/wishlistActionTitle"
+            tools:text="8 курсов" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/wishlistActionLoadingView"
+            android:layout_width="64dp"
+            android:layout_height="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

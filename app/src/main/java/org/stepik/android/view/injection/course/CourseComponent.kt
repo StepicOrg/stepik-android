@@ -15,10 +15,10 @@ import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.proctor_session.ProctorSessionDataModule
-import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.user.UserDataModule
+import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @CourseScope
 @Subcomponent(modules = [
@@ -38,10 +38,11 @@ import org.stepik.android.view.injection.user.UserDataModule
 
     CourseCalendarDataModule::class,
     CalendarDataModule::class,
-    ProfileDataModule::class,
 
     ExamSessionDataModule::class,
-    ProctorSessionDataModule::class
+    ProctorSessionDataModule::class,
+
+    WishlistDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder

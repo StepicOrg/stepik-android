@@ -14,6 +14,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.plus
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.UserCourseActionEvent
@@ -32,6 +33,10 @@ import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.visited_courses.interactor.VisitedCoursesInteractor
+import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
+import org.stepik.android.domain.wishlist.analytic.CourseWishlistRemovedEvent
+import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -39,8 +44,10 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.core.model.safeCast
@@ -68,6 +75,7 @@ constructor(
     private val solutionsInteractor: SolutionsInteractor,
     private val userCoursesInteractor: UserCoursesInteractor,
     private val visitedCoursesInteractor: VisitedCoursesInteractor,
+    private val wishlistInteractor: WishlistInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
     private val coursePurchaseReminderInteractor: PurchaseReminderInteractor,
@@ -83,6 +91,9 @@ constructor(
 
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
+
+    @WishlistOperationBus
+    private val wishlistOperationObservable: Observable<WishlistOperationData>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -113,6 +124,7 @@ constructor(
         subscriberForEnrollmentUpdates()
         subscribeForLocalSubmissionsUpdates()
         subscribeForUserCoursesUpdates()
+        subscribeForWishlistUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -503,6 +515,55 @@ constructor(
             )
     }
 
+    fun toggleWishlist(wishlistAction: WishlistAction) {
+        val courseHeaderData = state.safeCast<CourseView.State.CourseLoaded>()
+            ?.courseHeaderData
+            ?: return
+
+        val wishlist = courseHeaderData
+            .wishlistEntity
+            .courses
+            .toMutableList()
+
+        val updatedWishlist =
+            if (wishlistAction == WishlistAction.ADD) {
+                wishlist.apply { add(0, courseId) }
+            } else {
+                wishlist.apply { remove(courseId) }
+            }
+
+        val updatedWishlistEntity = courseHeaderData.wishlistEntity.copy(courses = updatedWishlist)
+
+        state = CourseView.State.CourseLoaded(
+            courseHeaderData = courseHeaderData.copy(
+                isWishlistUpdating = true
+            )
+        )
+        saveWishlistAction(updatedWishlistEntity, wishlistAction)
+    }
+
+    private fun saveWishlistAction(wishlistEntity: WishlistEntity, wishlistAction: WishlistAction) {
+        compositeDisposable += wishlistInteractor
+            .updateWishlistWithOperation(wishlistEntity, wishlistOperationData = WishlistOperationData(courseId, wishlistAction))
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    val oldState = state.safeCast<CourseView.State.CourseLoaded>()
+                        ?: return@subscribeBy
+                    state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(wishlistEntity = it))
+                    logWishlistAction(wishlistAction, viewSource)
+                    view?.showWishlistActionSuccess(wishlistAction)
+                },
+                onError = {
+                    val oldState = state.safeCast<CourseView.State.CourseLoaded>()
+                        ?: return@subscribeBy
+                    state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(isWishlistUpdating = false))
+                    view?.showWishlistActionFailure(wishlistAction)
+                }
+            )
+    }
+
     private fun subscribeForUserCoursesUpdates() {
         compositeDisposable += userCourseOperationObservable
             .filter { it.course == courseId }
@@ -511,6 +572,28 @@ constructor(
             .subscribeBy(
                 onNext = { userCourse ->
                     state = courseStateMapper.mutateEnrolledState(state) { copy(userCourse = userCourse, isUserCourseUpdating = false) }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun subscribeForWishlistUpdates() {
+        compositeDisposable += wishlistOperationObservable
+            .filter { it.courseId == courseId }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { wishlistOperation ->
+                    val oldState = state.safeCast<CourseView.State.CourseLoaded>()
+                        ?: return@subscribeBy
+                    val isWishlisted = wishlistOperation.wishlistAction == WishlistAction.ADD
+
+                    state = CourseView.State.CourseLoaded(
+                        courseHeaderData = oldState.courseHeaderData.copy(
+                            stats = oldState.courseHeaderData.stats.copy(isWishlisted = isWishlisted),
+                            isWishlistUpdating = false
+                        )
+                    )
                 },
                 onError = emptyOnErrorStub
             )
@@ -535,6 +618,21 @@ constructor(
             ?: return
 
         analytic.report(UserCourseActionEvent(userCourseAction, course, source))
+    }
+
+    private fun logWishlistAction(wishlistAction: WishlistAction, source: CourseViewSource) {
+        val course = state.safeCast<CourseView.State.CourseLoaded>()
+            ?.courseHeaderData
+            ?.course
+            ?: return
+
+        val event =
+            if (wishlistAction == WishlistAction.ADD) {
+                CourseWishlistAddedEvent(course, source)
+            } else {
+                CourseWishlistRemovedEvent(course, source)
+            }
+        analytic.report(event)
     }
 
     private fun schedulePurchaseReminder() {

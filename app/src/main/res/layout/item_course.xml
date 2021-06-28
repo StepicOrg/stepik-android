@@ -62,6 +62,22 @@
                 android:layout_marginRight="@dimen/course_item_space_between_items"
 
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/courseListWishlist"
+
+                app:tint="?colorOnSurface"
+                android:alpha="?alphaEmphasisMedium" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/courseListWishlist"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:srcCompat="@drawable/ic_course_list_wishlist"
+
+                android:layout_marginTop="@dimen/course_item_space_between_items"
+                android:layout_marginEnd="@dimen/course_item_space_between_items"
+                android:layout_marginRight="@dimen/course_item_space_between_items"
+
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
 
                 app:tint="?colorOnSurface"

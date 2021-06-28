@@ -2,6 +2,7 @@ package org.stepik.android.domain.course.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.model.Course
@@ -16,5 +17,7 @@ data class CourseHeaderData(
     val stats: CourseStats,
     val localSubmissionsCount: Int,
     val promoCode: PromoCode,
-    val defaultPromoCode: DefaultPromoCode
+    val defaultPromoCode: DefaultPromoCode,
+    val isWishlistUpdating: Boolean,
+    val wishlistEntity: WishlistEntity
 ) : Parcelable
