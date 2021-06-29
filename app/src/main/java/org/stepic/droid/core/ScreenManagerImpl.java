@@ -314,7 +314,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable Intent lessonMoveNextIntent) {
+    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable Bundle lessonMovementBundle) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -326,7 +326,7 @@ public class ScreenManagerImpl implements ScreenManager {
         final Context context = sourceFragment.requireContext();
 
         if (!isOpenExternal) {
-            sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, lessonMoveNextIntent));
+            sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, lessonMovementBundle));
             sourceFragment.requireActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         } else {
             @Nullable

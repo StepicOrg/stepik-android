@@ -1,6 +1,5 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -95,17 +94,16 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail
 
-            val lessonMoveNextIntent = Intent(requireActivity().intent)
-                .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
-                .putExtra(LessonActivity.EXTRA_AUTOPLAY_MOVE_NEXT, true)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val lessonMovementBundle = Bundle()
+                lessonMovementBundle.putAll(requireActivity().intent.extras)
+                lessonMovementBundle.putInt(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
 
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
                 title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ), lessonMoveNextIntent)
+            ), lessonMovementBundle)
         }
     }
 

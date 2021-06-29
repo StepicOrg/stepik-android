@@ -28,12 +28,17 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.util.Util
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
+import org.stepik.android.domain.video_player.analytic.VideoPlayerControlClickedEvent
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.ui.adapter.VideoPlayerMediaDescriptionAdapter
 import org.stepik.android.view.video_player.ui.receiver.HeadphonesReceiver
 import org.stepik.android.view.video_player.ui.receiver.InternetConnectionReceiverCompat
+import javax.inject.Inject
 
 class VideoPlayerForegroundService : Service() {
     companion object {
@@ -46,6 +51,8 @@ class VideoPlayerForegroundService : Service() {
 
         private const val BACK_BUFFER_DURATION_MS = 60 * 1000
 
+        private const val JUMP_TIME_MILLIS = 10000L
+
         fun createIntent(context: Context, videoPlayerData: VideoPlayerData): Intent =
             Intent(context, VideoPlayerForegroundService::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerData)
@@ -53,6 +60,9 @@ class VideoPlayerForegroundService : Service() {
         fun createBindingIntent(context: Context): Intent =
             Intent(context, VideoPlayerForegroundService::class.java)
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     private var player: SimpleExoPlayer? = null
     private lateinit var playerNotificationManager: PlayerNotificationManager
@@ -80,8 +90,13 @@ class VideoPlayerForegroundService : Service() {
     private val mediaButtonReceiver =
         MediaButtonReceiver()
 
+    private fun injectComponent() {
+        App.component().inject(this)
+    }
+
     override fun onCreate() {
         internetConnectionReceiverCompat.registerReceiver(this)
+        injectComponent()
         createPlayer()
     }
 
@@ -138,6 +153,23 @@ class VideoPlayerForegroundService : Service() {
         playerNotificationManager.setSmallIcon(R.drawable.ic_player_notification)
         playerNotificationManager.setUseStopAction(false)
         playerNotificationManager.setPlayer(player)
+        playerNotificationManager.setRewindIncrementMs(JUMP_TIME_MILLIS)
+        playerNotificationManager.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
+        playerNotificationManager.setUseNavigationActions(false)
+        playerNotificationManager.setControlDispatcher(object : DefaultControlDispatcher() {
+            override fun dispatchSeekTo(player: Player?, windowIndex: Int, positionMs: Long): Boolean {
+                val currentPosition = player?.currentPosition ?: 0L
+                val difference = currentPosition - positionMs
+                val action =
+                    if (difference > 0L) {
+                        VideoPlayerControlClickedEvent.ACTION_REWIND
+                    } else {
+                        VideoPlayerControlClickedEvent.ACTION_FORWARD
+                    }
+                analytic.report(VideoPlayerControlClickedEvent(action))
+                return super.dispatchSeekTo(player, windowIndex, positionMs)
+            }
+        })
 
         mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
@@ -201,6 +233,7 @@ class VideoPlayerForegroundService : Service() {
         mediaSessionConnector.setPlayer(null)
 
         playerNotificationManager.setPlayer(null)
+        playerNotificationManager.setControlDispatcher(null)
         player?.release()
         player = null
     }

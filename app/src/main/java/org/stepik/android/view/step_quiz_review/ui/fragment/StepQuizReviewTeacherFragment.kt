@@ -31,7 +31,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherFeature
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewTeacherViewModel
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.Moveable
 import org.stepik.android.view.step.ui.interfaces.StepMenuNavigator
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -190,7 +190,7 @@ class StepQuizReviewTeacherFragment :
                     stepQuizReviewTeacherViewModel.onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(it))
                 },
                 onNextClicked = {
-                    (parentFragment as? NextMoveable)?.moveNext()
+                    (parentFragment as? Moveable)?.move()
                 }
             )
 

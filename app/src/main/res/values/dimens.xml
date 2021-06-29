@@ -135,7 +135,9 @@
     <dimen name="video_player_seek_bar_margin">8dp</dimen>
     <dimen name="video_player_seek_bar_thumb_size">18dp</dimen>
     <dimen name="video_player_rewind_size">48dp</dimen>
-    <dimen name="video_player_rewind_margin">56dp</dimen>
+    <dimen name="video_player_rewind_margin">25dp</dimen>
+    <dimen name="video_player_skip_size">48dp</dimen>
+    <dimen name="video_player_skip_margin">20dp</dimen>
 
     <!-- Course info -->
     <dimen name="course_info_height_expanded">36dp</dimen>

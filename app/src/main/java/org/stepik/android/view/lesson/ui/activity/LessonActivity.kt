@@ -43,6 +43,7 @@ import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
@@ -56,7 +57,7 @@ import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.Moveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
@@ -67,7 +68,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
-    NextMoveable,
+    Moveable,
     RateAppDialog.Companion.Callback,
     TimeIntervalPickerDialogFragment.Companion.Callback,
     StreakNotificationDialogFragment.Callback {
@@ -83,7 +84,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
 
         const val EXTRA_AUTOPLAY_STEP_POSITION = "autoplay_step_position"
-        const val EXTRA_AUTOPLAY_MOVE_NEXT = "autoplay_move_next"
+        const val EXTRA_MOVE_STEP_NAVIGATION_DIRECTION = "move_step_navigation_direction"
 
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
@@ -156,10 +157,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         }
 
         injectComponent()
-        // TODO APPS-3278 For testings purposes
-//        LessonDemoCompleteBottomSheetDialogFragment
-//            .newInstance()
-//            .showIfNotExists(supportFragmentManager, LessonDemoCompleteBottomSheetDialogFragment.TAG)
 
         initCenteredToolbar(R.string.lesson_title, showHomeButton = true)
 
@@ -276,11 +273,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+
         if (intent != null) {
+            val stepNavigationDirection = intent.getIntExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION, -1)
             when {
-                intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false) -> {
-                    lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
-                    intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+                stepNavigationDirection != -1 -> {
+                    lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? Moveable)?.move(isAutoplayEnabled = true, stepNavigationDirection = StepNavigationDirection.values()[stepNavigationDirection]) }
+                    intent.removeExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION)
                 }
 
                 intent.data != null -> {
@@ -313,9 +312,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         intent.removeExtra(EXTRA_AUTOPLAY)
                     }
 
-                    if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
-                        lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
-                        intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+                    val stepNavigationDirectionExtra = intent.getIntExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION, -1)
+                    if (stepNavigationDirectionExtra != -1) {
+                        lessonPager.post {
+                            (stepsAdapter.activeFragments[lessonPager.currentItem] as? Moveable)
+                                ?.move(isAutoplayEnabled = true, stepNavigationDirection = StepNavigationDirection.values()[stepNavigationDirectionExtra])
+                        }
+                        intent.removeExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION)
                     }
                 } else {
                     if (state.stepsState is LessonView.StepsState.Exam) {
@@ -390,22 +393,34 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold, isExam)
     }
 
-    override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
+    override fun move(
+        isAutoplayEnabled: Boolean,
+        stepNavigationDirection: StepNavigationDirection
+    ): Boolean {
         val itemCount = lessonPager
             .adapter
             ?.count
             ?: return false
 
-        val isNotLastItem = lessonPager.currentItem < itemCount - 1
-
-        if (isNotLastItem) {
-            lessonPager.currentItem++
-            if (isAutoplayEnabled) {
-                playCurrentStep()
+        return if (stepNavigationDirection == StepNavigationDirection.NEXT) {
+            val isNotLastItem = lessonPager.currentItem < itemCount - 1
+            if (isNotLastItem) {
+                lessonPager.currentItem++
+                if (isAutoplayEnabled) {
+                    playCurrentStep()
+                }
             }
+            isNotLastItem
+        } else {
+            val isNotFirstItem = lessonPager.currentItem > 0
+            if (isNotFirstItem) {
+                lessonPager.currentItem--
+                if (isAutoplayEnabled) {
+                    playCurrentStep()
+                }
+            }
+            isNotFirstItem
         }
-
-        return isNotLastItem
     }
 
     private fun playCurrentStep() {
