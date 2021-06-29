@@ -115,12 +115,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private var isPlaying: Boolean = false
         set(value) {
+            // When seeking in video, isPlaying get set to `true` twice
             if (field != value) {
-                if (value) {
-                    analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PLAY))
-                } else {
-                    analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PAUSE))
-                }
+                logIsPlayingEvent(value)
             }
             field = value
         }
@@ -661,6 +658,15 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         skip_next.layoutParams = (skip_next.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = skipMargin
         }
+    }
+
+    private fun logIsPlayingEvent(isPlaying: Boolean) {
+        val event = if (isPlaying) {
+            VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PLAY)
+        } else {
+            VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PAUSE)
+        }
+        analytic.report(event)
     }
 
     override fun finish() {
