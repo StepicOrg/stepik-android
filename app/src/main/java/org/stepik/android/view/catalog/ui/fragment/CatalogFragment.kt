@@ -31,6 +31,7 @@ import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
@@ -53,19 +54,22 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGrid
 import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class CatalogFragment :
     Fragment(R.layout.fragment_catalog),
     ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>,
-    AutoCompleteSearchView.FocusCallback {
+    AutoCompleteSearchView.FocusCallback,
+    FilterBottomSheetDialogFragment.Callback {
 
     companion object {
         const val TAG = "CatalogFragment"
@@ -389,8 +393,13 @@ class CatalogFragment :
         }
     }
 
+    override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        TODO("Not yet implemented")
+    }
+
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
+        filterIcon.isVisible = true
         searchViewToolbar.isVisible = true
         searchViewToolbar.onActionViewExpanded()
         searchViewToolbar.clearFocus()
@@ -401,6 +410,11 @@ class CatalogFragment :
             searchViewToolbar.onActionViewCollapsed()
             searchViewToolbar.onActionViewExpanded()
             searchViewToolbar.clearFocus()
+        }
+        filterIcon.setOnClickListener {
+            FilterBottomSheetDialogFragment
+                .newInstance(CourseListFilterQuery())
+                .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
         }
     }
 
