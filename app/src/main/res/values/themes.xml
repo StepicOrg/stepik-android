@@ -80,6 +80,8 @@
         <item name="isNightMode">@bool/is_night_mode</item>
 
         <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
+        
+        <item name="android:forceDarkAllowed">false</item>
     </style>
 
     <style name="AppTheme.Translucent" parent="Base.AppTheme">

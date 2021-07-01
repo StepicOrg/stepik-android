@@ -125,6 +125,7 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
+import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 
 @AppSingleton
 @Component(
@@ -366,4 +367,5 @@ interface AppCoreComponent {
     fun inject(onboardingCourseListsActivity: OnboardingCourseListsActivity)
 
     fun inject(lessonDemoCompleteBottomSheetDialogFragment: LessonDemoCompleteBottomSheetDialogFragment)
+    fun inject(videoPlayerForegroundService: VideoPlayerForegroundService)
 }

@@ -52,7 +52,7 @@ import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragm
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 import org.stepik.android.view.lesson.ui.dialog.SectionUnavailableDialogFragment
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.Moveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.lesson.ui.mapper.LessonTitleMapper
 import org.stepik.android.view.step.model.StepNavigationAction
@@ -69,7 +69,7 @@ import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
 class StepFragment : Fragment(R.layout.fragment_step), StepView,
-    NextMoveable,
+    Moveable,
     Playable,
     StepMenuNavigator,
     SectionUnavailableDialogFragment.Callback,
@@ -165,7 +165,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         }
 
         stepContentNext.isVisible = isStepContentNextVisible(stepWrapper, lessonData)
-        stepContentNext.setOnClickListener { moveNext() }
+        stepContentNext.setOnClickListener { move() }
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
 
         initDisabledStep()
@@ -486,9 +486,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         showSubmissionsDialog(reviewInstructionData = reviewInstructionData)
     }
 
-    override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
-        if ((activity as? NextMoveable)?.moveNext(isAutoplayEnabled) != true) {
-            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT, isAutoplayEnabled)
+    override fun move(isAutoplayEnabled: Boolean, stepNavigationDirection: StepNavigationDirection): Boolean {
+        if ((activity as? Moveable)?.move(isAutoplayEnabled, stepNavigationDirection) != true) {
+            stepPresenter.onStepDirectionClicked(stepNavigationDirection, isAutoplayEnabled)
         }
         return true
     }
