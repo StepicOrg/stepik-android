@@ -979,4 +979,13 @@
     <string name="wishlist_action_remove_success">Курс паспяхова прыбраны са спісу жаданняў</string>
     <string name="wishlist_action_add_failure">Не атрымалася дадаць курс у спіс жаданняў</string>
     <string name="wishlist_action_remove_failure">Не атрымалася прыбраць курс з спісу жаданняў</string>
+
+    <!-- Course benefits -->
+    <string name="course_benefits_revenue_title">Даход</string>
+    <string name="course_benefits_earnings_title">Ваш даход за %s</string>
+    <string name="course_benefits_earnings_empty">Тут будзе ваш прыбытак</string>
+    <string name="course_benefits_earnings_disclaimer">Заўвага: Усе аперацыі праходзяць па маскоўскім часе (МСК,  UTC+3).</string>
+
+    <string name="course_benefits_purchases_and_refunds_tab">Пакупкі і звароты</string>
+    <string name="course_benefits_monthly_tab">Па месяцах</string>
 </resources>

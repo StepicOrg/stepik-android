@@ -6,7 +6,7 @@ import java.util.Date
 data class CourseBenefitSummary(
     @SerializedName("id")
     val id: Long,
-    @SerializedName("being_payment_date")
+    @SerializedName("begin_payment_date")
     val beginPaymentDate: Date,
     @SerializedName("current_date")
     val currentDate: Date,
@@ -24,4 +24,8 @@ data class CourseBenefitSummary(
     val monthUserIncome: String,
     @SerializedName("currency_code")
     val currencyCode: String
-)
+) {
+    companion object {
+        val EMPTY = CourseBenefitSummary(-1L, Date(0), Date(0), "", "", "", "", "", "", "")
+    }
+}

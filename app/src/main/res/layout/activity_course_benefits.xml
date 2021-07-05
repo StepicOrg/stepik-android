@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/courseBenefitsAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:liftOnScroll="false"
+        android:stateListAnimator="@null"
+        android:elevation="?appBarElevation"
+        tools:targetApi="lollipop">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/courseBenefitsCollapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleEnabled="false"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <include android:id="@+id/courseBenefitSummaryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="?actionBarSize"
+                layout="@layout/view_course_benefit_summary" />
+
+            <View
+                android:id="@+id/courseBenefitsToolbarScrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:colorBackground"
+                android:alpha="0" />
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/courseBenefitToolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    android:layout_gravity="top"
+                    android:elevation="?appBarElevation"
+                    app:title="">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/courseToolbarTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/course_benefits_revenue_title"
+                        android:textAppearance="@style/StepikToolbarTextAppearance"/>
+                </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/courseBenefitsTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="scrollable"
+            app:tabPaddingStart="24dp"
+            app:tabPaddingEnd="24dp" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/courseBenefitsOperationsViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <include
+        android:id="@+id/coursesBenefitsLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        layout="@layout/error_no_connection_with_button" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
