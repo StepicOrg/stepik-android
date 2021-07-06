@@ -1,5 +1,6 @@
 package org.stepik.android.view.course_list.ui.fragment
 
+import android.app.SearchManager
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
-import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import kotlinx.android.synthetic.main.view_search_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
@@ -264,6 +265,7 @@ class CourseListSearchFragment :
     }
 
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
+        requireActivity().intent.putExtra(SearchManager.QUERY, searchViewToolbar.query.toString())
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)
             .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)

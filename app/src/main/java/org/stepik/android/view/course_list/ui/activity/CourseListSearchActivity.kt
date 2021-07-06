@@ -15,12 +15,16 @@ class CourseListSearchActivity : FragmentActivityBase(), FilterBottomSheetDialog
     private var query: String? = null
     private var filterQuery: CourseListFilterQuery? = null
 
+    companion object {
+        const val EXTRA_COURSE_LIST_FILTER_QUERY = "course_list_filter_query"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTitle(R.string.search_title)
         setContentView(R.layout.activity_search_courses)
         query = intent.getStringExtra(SearchManager.QUERY)
-        filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
+        filterQuery = intent.getParcelableExtra(EXTRA_COURSE_LIST_FILTER_QUERY) ?: CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
         initOrTryRestoreFragment()
     }
 
