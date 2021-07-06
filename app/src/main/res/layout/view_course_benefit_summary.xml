@@ -14,7 +14,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardCornerRadius="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -57,13 +57,14 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
         app:cardCornerRadius="8dp"
+        android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="80dp">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/courseBenefitSummaryEarningsCurrentIcon"
@@ -113,6 +114,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="courseBenefitSummaryEmpty,courseBenefitSummaryInformation" />
     <include
         android:id="@+id/courseBenefitSummaryLoading"
         layout="@layout/view_course_summary_loading" />
@@ -127,7 +134,7 @@
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         app:drawableLeftCompat="@drawable/ic_default_promo_info"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryInformation"
         tools:text="Примечание: Все операции проходят по московскому времени (МСК,  UTC+3). " />
 </androidx.constraintlayout.widget.ConstraintLayout>
