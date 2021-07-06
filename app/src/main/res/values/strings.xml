@@ -1175,7 +1175,11 @@
     <string name="course_benefits_revenue_title">Revenue</string>
     <string name="course_benefits_earnings_title">Your earnings for %s</string>
     <string name="course_benefits_earnings_empty">Your earnings will be here</string>
+    
     <string name="course_benefits_earning_current_month">Your earnings for %s</string>
+    <string name="course_benefits_turnover_current_month">Your sales for %s</string>
+    <string name="course_benefits_earnings_total">Your earnings since %s</string>
+    <string name="course_beneifts_turnover_total">Sales since %s</string>
     <string name="course_benefits_earnings_disclaimer">Important: All operations are carried out Moscow Time (MSK, UTC+3)</string>
 
     <string name="course_benefits_purchases_and_refunds_tab">Purchases and refunds</string>

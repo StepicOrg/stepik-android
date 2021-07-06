@@ -56,8 +56,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
-        app:cardCornerRadius="8dp"
         android:visibility="visible"
+        app:cardCornerRadius="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -105,8 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginBottom="16dp"
-                android:textAppearance="?textAppearanceHeadline6"
+                android:layout_marginBottom="14dp"
+                android:textAppearance="?textAppearanceHeadline5"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/courseBenefitSummaryEarningsCurrentIcon"
@@ -114,12 +114,129 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/courseBenefitSummaryInformationExpansion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryInformation">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseBenefitSummaryTurnoverCurrentMonthText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
+                android:text="@string/course_benefits_earnings_title"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Продажи за Май 2021" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseBenefitSummaryTurnoverCurrentMonthValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="?textAppearanceHeadline6"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryTurnoverCurrentMonthText"
+                tools:text="129 000 ₽" />
+
+            <include
+                android:id="@+id/courseBenefitSummaryInformationDivider"
+                layout="@layout/view_divider_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="?dividerVerticalSize"
+                android:layout_marginTop="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryTurnoverCurrentMonthValue" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/courseBenefitSummaryEarningsTotalIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryInformationDivider"
+                app:srcCompat="@drawable/ic_earnings_total" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseBenefitSummaryEarningsTotalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/course_benefits_earnings_title"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                app:layout_constraintLeft_toRightOf="@id/courseBenefitSummaryEarningsTotalIcon"
+                app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryInformationDivider"
+                tools:text="Ваш доход за Май 2021" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseBenefitSummaryEarningsTotalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="?textAppearanceHeadline5"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/courseBenefitSummaryEarningsTotalIcon"
+                app:layout_constraintTop_toBottomOf="@id/courseBenefitSummaryEarningsTotalText"
+                tools:text="129 000 ₽" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseBenefitSummaryTurnoverTotalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
+                android:text="@string/course_benefits_earnings_title"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                app:layout_constraintBottom_toTopOf="@id/courseBenefitSummaryTurnoverTotalValue"
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:text="Продажи за Май 2021" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/courseBenefitSummaryTurnoverTotalValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:layout_marginLeft="72dp"
+                android:layout_marginBottom="16dp"
+                android:textAppearance="?textAppearanceHeadline6"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:text="129 000 ₽" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="courseBenefitSummaryEmpty,courseBenefitSummaryInformation" />
+        app:constraint_referenced_ids="courseBenefitSummaryEmpty,courseBenefitSummaryInformation, courseBenefitSummaryInformationExpansion" />
+
     <include
         android:id="@+id/courseBenefitSummaryLoading"
         layout="@layout/view_course_summary_loading" />
@@ -134,7 +251,7 @@
         android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
         app:drawableLeftCompat="@drawable/ic_default_promo_info"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/barrier"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier"
         tools:text="Примечание: Все операции проходят по московскому времени (МСК,  UTC+3). " />
 </androidx.constraintlayout.widget.ConstraintLayout>
