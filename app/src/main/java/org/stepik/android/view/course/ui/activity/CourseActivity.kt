@@ -212,6 +212,10 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             CourseHeaderDelegate(
                 this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper, courseViewSource,
                 isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
+                mustShowCourseBenefits = true,
+                // TODO APPS-3336 Uncomment code
+//                mustShowCourseBenefits = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID) && course?.actions?.viewRevenue?.enabled == true,
+                showCourseBenefitsAction = { screenManager.showCourseBenefits(this, courseId) },
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
@@ -225,7 +229,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
         setDataToPresenter(courseViewSource)
 
-        courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
+        courseSwipeRefresh.setOnRefreshListener {
+            setDataToPresenter(courseViewSource, forceUpdate = true)
+        }
         tryAgain.setOnClickListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
         goToCatalog.setOnClickListener {
             screenManager.showCatalog(this)

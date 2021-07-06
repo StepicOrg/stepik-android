@@ -59,6 +59,8 @@ class CourseHeaderDelegate(
     private val displayPriceMapper: DisplayPriceMapper,
     private val courseViewSource: CourseViewSource,
     private val isAuthorized: Boolean,
+    private val mustShowCourseBenefits: Boolean,
+    private val showCourseBenefitsAction: () -> Unit,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -73,6 +75,7 @@ class CourseHeaderDelegate(
             value?.let(::setCourseData)
         }
 
+    private var courseBenefitsMenuItem: MenuItem? = null
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
@@ -320,6 +323,9 @@ class CourseHeaderDelegate(
     fun onOptionsMenuCreated(menu: Menu) {
         val userCourseState = courseHeaderData?.enrolledState
 
+        courseBenefitsMenuItem = menu.findItem(R.id.course_benefits)
+        courseBenefitsMenuItem?.isVisible = mustShowCourseBenefits
+
         menu.findItem(R.id.favorite_course)
             ?.let { favoriteCourseMenuItem ->
 
@@ -374,6 +380,10 @@ class CourseHeaderDelegate(
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
+            R.id.course_benefits -> {
+                showCourseBenefitsAction()
+                true
+            }
             R.id.drop_course -> {
                 coursePresenter.dropCourse()
 

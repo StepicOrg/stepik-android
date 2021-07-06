@@ -71,6 +71,7 @@ import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
+import org.stepik.android.view.course_benefits.ui.activity.CourseBenefitsActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
@@ -718,5 +719,10 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showWishlist(Context context) {
         context.startActivity(CourseListWishActivity.Companion.createIntent(context));
+    }
+
+    @Override
+    public void showCourseBenefits(Context context, long courseId) {
+        context.startActivity(CourseBenefitsActivity.Companion.createIntent(context, courseId));
     }
 }

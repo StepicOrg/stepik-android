@@ -2,6 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/course_benefits"
+        android:title="@string/course_benefits_revenue_title" />
+    <item
         android:id="@+id/favorite_course"
         android:title="@string/course_action_favorites_add" />
     <item
