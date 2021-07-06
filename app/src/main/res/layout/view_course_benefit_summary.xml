@@ -113,6 +113,10 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <include
+        android:id="@+id/courseBenefitSummaryLoading"
+        layout="@layout/view_course_summary_loading" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/courseBenefitOperationDisclaimer"
         android:layout_width="match_parent"

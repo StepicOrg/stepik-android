@@ -8,6 +8,7 @@ import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 class CourseBenefitSummaryViewDelegate(
     containerView: View
 ) {
+    private val courseBenefitsSummaryLoading = containerView.courseBenefitSummaryLoading
     private val courseBenefitSummaryEmpty = containerView.courseBenefitSummaryEmpty
     private val courseBenefitSummaryContainer = containerView.courseBenefitSummaryInformation
     private val courseBenefitOperationDisclaimer = containerView.courseBenefitOperationDisclaimer
@@ -17,7 +18,7 @@ class CourseBenefitSummaryViewDelegate(
     private val viewStateDelegate = ViewStateDelegate<CourseBenefitSummaryFeature.State>()
 
     init {
-        viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Loading>()
+        viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Loading>(courseBenefitsSummaryLoading)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Empty>(courseBenefitSummaryEmpty, courseBenefitOperationDisclaimer)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Content>(courseBenefitSummaryContainer, courseBenefitOperationDisclaimer)
     }
