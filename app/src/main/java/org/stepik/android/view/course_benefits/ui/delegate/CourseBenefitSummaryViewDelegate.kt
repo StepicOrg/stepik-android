@@ -1,8 +1,11 @@
 package org.stepik.android.view.course_benefits.ui.delegate
 
 import android.view.View
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.android.synthetic.main.view_course_benefit_summary.view.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.presentation.course_benefits.CourseBenefitSummaryFeature
@@ -22,6 +25,7 @@ class CourseBenefitSummaryViewDelegate(
     private val courseBenefitSummaryContainer = containerView.courseBenefitSummaryInformation
     private val courseBenefitSummaryInformationExpansion = containerView.courseBenefitSummaryInformationExpansion
 
+    private val courseBenefitSummaryArrow = containerView.courseBenefitSummaryArrow
     private val courseBenefitOperationDisclaimer = containerView.courseBenefitOperationDisclaimer
 
     private val courseBenefitCurrentEarningsTitle = containerView.courseBenefitSummaryEarningsCurrentMonthText
@@ -42,9 +46,15 @@ class CourseBenefitSummaryViewDelegate(
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Loading>(courseBenefitsSummaryLoading)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Empty>(courseBenefitSummaryEmpty, courseBenefitOperationDisclaimer)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Content>(courseBenefitSummaryContainer, courseBenefitOperationDisclaimer)
-
         courseBenefitSummaryContainer.setOnClickListener {
-            courseBenefitSummaryInformationExpansion.expand()
+            courseBenefitSummaryArrow.changeState()
+            val isExpanded = courseBenefitSummaryArrow.isExpanded()
+            courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
+            if (isExpanded) {
+                courseBenefitSummaryInformationExpansion.expand()
+            } else {
+                courseBenefitSummaryInformationExpansion.collapse()
+            }
         }
     }
 
@@ -76,4 +86,18 @@ class CourseBenefitSummaryViewDelegate(
             courseBenefitTotalTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalTurnover)
         }
     }
+
+    private fun getShapeAppearanceModel(isExpanded: Boolean): ShapeAppearanceModel =
+        if (isExpanded) {
+            courseBenefitSummaryContainer.shapeAppearanceModel.toBuilder()
+                .setBottomLeftCorner(CornerFamily.ROUNDED, 0f)
+                .setBottomRightCorner(CornerFamily.ROUNDED, 0f)
+                .setTopLeftCorner(CornerFamily.ROUNDED, context.resources.getDimension(R.dimen.corner_radius))
+                .setTopRightCorner(CornerFamily.ROUNDED, context.resources.getDimension(R.dimen.corner_radius))
+                .build()
+        } else {
+            courseBenefitSummaryContainer.shapeAppearanceModel.toBuilder()
+                .setAllCornerSizes(context.resources.getDimension(R.dimen.corner_radius))
+                .build()
+        }
 }
