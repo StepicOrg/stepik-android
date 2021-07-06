@@ -13,6 +13,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsViewModel
+import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_benefits.ui.adapter.CourseBenefitPagerAdapter
 import org.stepik.android.view.course_benefits.ui.delegate.CourseBenefitSummaryViewDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -39,6 +40,9 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     private val courseBenefitsViewModel: CourseBenefitsViewModel by reduxViewModel(this) { viewModelFactory }
 
@@ -68,7 +72,7 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
         initViewPager()
         initViewStateDelegate()
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
-        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer)
+        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, displayPriceMapper)
         courseBenefitsViewModel.onNewMessage(CourseBenefitsFeature.Message.InitMessage(courseId, forceUpdate = false))
     }
 

@@ -1121,6 +1121,7 @@
     <string name="course_benefits_revenue_title">Доход</string>
     <string name="course_benefits_earnings_title">Ваш доход за %s</string>
     <string name="course_benefits_earnings_empty">Здесь будет ваш доход</string>
+    <string name="course_benefits_earning_current_month">Ваш доход за %s</string>
     <string name="course_benefits_earnings_disclaimer">Примечание: Все операции проходят по московскому времени (МСК,  UTC+3).</string>
 
     <string name="course_benefits_purchases_and_refunds_tab">Покупки и возвраты</string>

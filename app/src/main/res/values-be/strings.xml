@@ -984,6 +984,7 @@
     <string name="course_benefits_revenue_title">Даход</string>
     <string name="course_benefits_earnings_title">Ваш даход за %s</string>
     <string name="course_benefits_earnings_empty">Тут будзе ваш прыбытак</string>
+    <string name="course_benefits_earning_current_month">Ваш даход за %s</string>
     <string name="course_benefits_earnings_disclaimer">Заўвага: Усе аперацыі праходзяць па маскоўскім часе (МСК,  UTC+3).</string>
 
     <string name="course_benefits_purchases_and_refunds_tab">Пакупкі і звароты</string>
