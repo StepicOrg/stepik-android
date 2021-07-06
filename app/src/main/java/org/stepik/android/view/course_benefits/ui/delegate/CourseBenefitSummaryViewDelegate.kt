@@ -1,6 +1,8 @@
 package org.stepik.android.view.course_benefits.ui.delegate
 
 import android.view.View
+import android.view.animation.Animation
+import androidx.core.view.isVisible
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.android.synthetic.main.view_course_benefit_summary.view.*
@@ -22,6 +24,8 @@ class CourseBenefitSummaryViewDelegate(
 
     private val courseBenefitsSummaryLoading = containerView.courseBenefitSummaryLoading
     private val courseBenefitSummaryEmpty = containerView.courseBenefitSummaryEmpty
+
+    private val expandedSummaryClickView = containerView.expandedSummaryClickView
     private val courseBenefitSummaryContainer = containerView.courseBenefitSummaryInformation
     private val courseBenefitSummaryInformationExpansion = containerView.courseBenefitSummaryInformationExpansion
 
@@ -46,14 +50,32 @@ class CourseBenefitSummaryViewDelegate(
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Loading>(courseBenefitsSummaryLoading)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Empty>(courseBenefitSummaryEmpty, courseBenefitOperationDisclaimer)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Content>(courseBenefitSummaryContainer, courseBenefitOperationDisclaimer)
+
         courseBenefitSummaryContainer.setOnClickListener {
             courseBenefitSummaryArrow.changeState()
             val isExpanded = courseBenefitSummaryArrow.isExpanded()
             courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
             if (isExpanded) {
-                courseBenefitSummaryInformationExpansion.expand()
-            } else {
+                courseBenefitSummaryInformationExpansion.expand(object : Animation.AnimationListener {
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                    override fun onAnimationEnd(animation: Animation?) {
+                        expandedSummaryClickView.isVisible = true
+                        courseBenefitSummaryContainer.isEnabled = false
+                    }
+
+                    override fun onAnimationStart(animation: Animation?) {}
+                })
+            }
+        }
+
+        expandedSummaryClickView.setOnClickListener {
+            courseBenefitSummaryArrow.changeState()
+            val isExpanded = courseBenefitSummaryArrow.isExpanded()
+            courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
+            if (!isExpanded) {
                 courseBenefitSummaryInformationExpansion.collapse()
+                expandedSummaryClickView.isVisible = false
+                courseBenefitSummaryContainer.isEnabled = true
             }
         }
     }
@@ -68,7 +90,7 @@ class CourseBenefitSummaryViewDelegate(
             ).capitalize(Locale.ROOT)
 
             val totalDate = DateTimeHelper.getPrintableDate(
-                state.courseBenefitSummary.currentDate,
+                state.courseBenefitSummary.beginPaymentDate,
                 DateTimeHelper.DISPLAY_MONTH_YEAR_GENITIVE_PATTERN,
                 TimeZone.getDefault()
             ).capitalize(Locale.ROOT)
