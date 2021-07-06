@@ -65,6 +65,7 @@ object DbStructureCourse {
 
         const val TIME_TO_COMPLETE = "time_to_complete"
         const val OPTIONS = "options"
+        const val ACTIONS = "actions"
 
         const val IS_PAID = "is_paid"
         const val PRICE = "price"

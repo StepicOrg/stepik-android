@@ -75,6 +75,7 @@ constructor(
             reviewSummary = cursor.getLong(DbStructureCourse.Columns.REVIEW_SUMMARY),
             timeToComplete = cursor.getLong(DbStructureCourse.Columns.TIME_TO_COMPLETE),
             courseOptions = cursor.getString(DbStructureCourse.Columns.OPTIONS)?.toObject(gson),
+            actions = cursor.getString(DbStructureCourse.Columns.ACTIONS)?.toObject(gson),
 
             isPaid = cursor.getBoolean(DbStructureCourse.Columns.IS_PAID),
             price = cursor.getString(DbStructureCourse.Columns.PRICE),
@@ -139,6 +140,7 @@ constructor(
         values.put(DbStructureCourse.Columns.REVIEW_SUMMARY, course.reviewSummary)
         values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.timeToComplete)
         values.put(DbStructureCourse.Columns.OPTIONS, course.courseOptions?.let(gson::toJson))
+        values.put(DbStructureCourse.Columns.ACTIONS, course.actions?.let(gson::toJson))
 
         values.put(DbStructureCourse.Columns.IS_PAID, course.isPaid)
         values.put(DbStructureCourse.Columns.PRICE, course.price)
