@@ -48,4 +48,8 @@
         <key>personalized_onboarding_course_lists</key>
         <value></value>
     </entry>
+    <entry>
+        <key>is_course_revenue_available_android</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>
