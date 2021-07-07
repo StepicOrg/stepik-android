@@ -18,7 +18,8 @@ import java.util.Locale
 
 class CourseBenefitSummaryViewDelegate(
     containerView: View,
-    private val displayPriceMapper: DisplayPriceMapper
+    private val displayPriceMapper: DisplayPriceMapper,
+    private val onCourseSummaryClicked: (Boolean) -> Unit
 ) {
     private val context = containerView.context
 
@@ -54,6 +55,8 @@ class CourseBenefitSummaryViewDelegate(
         courseBenefitSummaryContainer.setOnClickListener {
             courseBenefitSummaryArrow.changeState()
             val isExpanded = courseBenefitSummaryArrow.isExpanded()
+
+            onCourseSummaryClicked(isExpanded)
             courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
             if (isExpanded) {
                 courseBenefitSummaryInformationExpansion.expand(object : Animation.AnimationListener {
@@ -72,6 +75,7 @@ class CourseBenefitSummaryViewDelegate(
             courseBenefitSummaryArrow.changeState()
             val isExpanded = courseBenefitSummaryArrow.isExpanded()
 
+            onCourseSummaryClicked(isExpanded)
             if (!isExpanded) {
                 courseBenefitSummaryInformationExpansion.collapse(object : Animation.AnimationListener {
                     override fun onAnimationRepeat(animation: Animation?) {}

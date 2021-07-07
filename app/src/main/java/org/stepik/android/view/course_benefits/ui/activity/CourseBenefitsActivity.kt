@@ -9,8 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_course_benefits.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepik.android.domain.course_benefits.analytic.CourseBenefitsScreenOpenedEvent
+import org.stepik.android.domain.course_benefits.analytic.CourseBenefitsSummaryClicked
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -36,6 +39,10 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     }
 
     private var courseId: Long = NO_ID
+    private lateinit var courseTitle: String
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -55,6 +62,7 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course_benefits)
+        injectComponent()
 
         setSupportActionBar(courseBenefitToolbar)
         val actionBar = this.supportActionBar
@@ -64,8 +72,11 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
+        courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
+        courseTitle = intent.getStringExtra(EXTRA_COURSE_TITLE).orEmpty()
 
-        val courseTitle = intent.getStringExtra(EXTRA_COURSE_TITLE).orEmpty()
+        analytic.report(CourseBenefitsScreenOpenedEvent(courseId, courseTitle))
+
         courseBenefitToolbarTitle.text = getString(R.string.course_benefits_toolbar_title, courseTitle)
 
         courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
@@ -73,11 +84,9 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
             courseBenefitsToolbarScrim.alpha = ratio * 1.5f
         })
 
-        injectComponent()
         initViewPager()
         initViewStateDelegate()
-        courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
-        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, displayPriceMapper)
+        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, displayPriceMapper) { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) }
         courseBenefitsViewModel.onNewMessage(CourseBenefitsFeature.Message.InitMessage(courseId, forceUpdate = false))
     }
 
