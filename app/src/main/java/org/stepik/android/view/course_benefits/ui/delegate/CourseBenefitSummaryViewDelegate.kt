@@ -71,9 +71,16 @@ class CourseBenefitSummaryViewDelegate(
         expandedSummaryClickView.setOnClickListener {
             courseBenefitSummaryArrow.changeState()
             val isExpanded = courseBenefitSummaryArrow.isExpanded()
-            courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
+
             if (!isExpanded) {
-                courseBenefitSummaryInformationExpansion.collapse()
+                courseBenefitSummaryInformationExpansion.collapse(object : Animation.AnimationListener {
+                    override fun onAnimationRepeat(animation: Animation?) {}
+                    override fun onAnimationEnd(animation: Animation?) {
+                        courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
+                    }
+
+                    override fun onAnimationStart(animation: Animation?) {}
+                })
                 expandedSummaryClickView.isVisible = false
                 courseBenefitSummaryContainer.isEnabled = true
             }
