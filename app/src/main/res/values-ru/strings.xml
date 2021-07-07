@@ -1119,6 +1119,7 @@
 
     <!-- Course benefits -->
     <string name="course_benefits_revenue_title">Доход</string>
+    <string name="course_benefits_toolbar_title">Доход за курс «%s»</string>
     <string name="course_benefits_earnings_title">Ваш доход за %s</string>
     <string name="course_benefits_earnings_empty">Здесь будет ваш доход</string>
     <string name="course_benefits_earning_current_month">Ваш доход за %s</string>

@@ -43,13 +43,13 @@
                     android:elevation="?appBarElevation"
                     app:title="">
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/courseToolbarTitle"
+                        android:id="@+id/courseBenefitToolbarTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="@string/course_benefits_revenue_title"
+                        android:layout_marginRight="56dp"
                         android:textAppearance="@style/StepikToolbarTextAppearance"/>
                 </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.CollapsingToolbarLayout>

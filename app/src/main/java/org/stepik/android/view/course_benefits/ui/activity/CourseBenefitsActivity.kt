@@ -25,12 +25,14 @@ import kotlin.math.abs
 class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeature.State, CourseBenefitsFeature.Action.ViewAction> {
     companion object {
         private const val EXTRA_COURSE_ID = "course_id"
+        private const val EXTRA_COURSE_TITLE = "course_title"
 
         private const val NO_ID = -1L
 
-        fun createIntent(context: Context, courseId: Long): Intent =
+        fun createIntent(context: Context, courseId: Long, courseTitle: String): Intent =
             Intent(context, CourseBenefitsActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_COURSE_TITLE, courseTitle)
     }
 
     private var courseId: Long = NO_ID
@@ -62,6 +64,9 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
+
+        val courseTitle = intent.getStringExtra(EXTRA_COURSE_TITLE).orEmpty()
+        courseBenefitToolbarTitle.text = getString(R.string.course_benefits_toolbar_title, courseTitle)
 
         courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             val ratio = abs(verticalOffset).toFloat() / (courseBenefitsCollapsingToolbar.height - courseBenefitToolbar.height)
