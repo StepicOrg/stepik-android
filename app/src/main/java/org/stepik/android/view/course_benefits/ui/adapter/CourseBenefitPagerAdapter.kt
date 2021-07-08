@@ -13,7 +13,7 @@ class CourseBenefitPagerAdapter(
 ) : PagerAdapter() {
     private val layouts: List<Pair<View, String>> = listOf(
         inflateLayout(R.layout.layout_purchases_and_refunds, R.string.course_benefits_purchases_and_refunds_tab),
-        inflateLayout(R.layout.layout_purchases_and_refunds, R.string.course_benefits_monthly_tab)
+        inflateLayout(R.layout.layout_purchases_and_refunds, R.string.course_benefits_payments_tab)
     )
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
