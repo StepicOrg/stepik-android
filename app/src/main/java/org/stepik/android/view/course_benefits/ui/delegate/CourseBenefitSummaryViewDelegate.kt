@@ -63,11 +63,11 @@ class CourseBenefitSummaryViewDelegate(
                     override fun onAnimationRepeat(animation: Animation?) {}
                     override fun onAnimationEnd(animation: Animation?) {
                         expandedSummaryClickView.isVisible = true
-                        courseBenefitSummaryContainer.isEnabled = false
                     }
 
                     override fun onAnimationStart(animation: Animation?) {}
                 })
+                courseBenefitSummaryContainer.isEnabled = false
             }
         }
 
@@ -107,13 +107,15 @@ class CourseBenefitSummaryViewDelegate(
             ).capitalize(Locale.ROOT)
 
             courseBenefitCurrentEarningsTitle.text = context.getString(R.string.course_benefits_earning_current_month, currentMonthDate)
-            courseBenefitCurrentEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthIncome)
+            courseBenefitCurrentEarningsValue.text = "129000 ₽"
+//            courseBenefitCurrentEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthIncome)
 
             courseBenefitCurrentTurnoverTitle.text = context.getString(R.string.course_benefits_turnover_current_month, currentMonthDate)
             courseBenefitCurrentTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthTurnover)
 
             courseBenefitTotalEarningsTitle.text = context.getString(R.string.course_benefits_earnings_total, totalDate)
-            courseBenefitTotalEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalIncome)
+            courseBenefitTotalEarningsValue.text = "129000 ₽"
+//            courseBenefitTotalEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalIncome)
 
             courseBenefitTotalTurnoverTitle.text = context.getString(R.string.course_beneifts_turnover_total, totalDate)
             courseBenefitTotalTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalTurnover)
