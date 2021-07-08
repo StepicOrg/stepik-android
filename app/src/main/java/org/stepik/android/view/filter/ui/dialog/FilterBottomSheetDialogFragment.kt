@@ -17,6 +17,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
+import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -93,7 +94,7 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         applyFilterAction.setOnClickListener {
             val newFilterQuery = mapFiltersToQuery()
-            if (newFilterQuery != filterQuery) {
+            if (newFilterQuery != filterQuery || parentFragment is CatalogFragment) {
                 (activity.safeCast<Callback>() ?: parentFragment.safeCast<Callback>())
                     ?.onSyncFilterQueryWithParent(newFilterQuery)
             }
