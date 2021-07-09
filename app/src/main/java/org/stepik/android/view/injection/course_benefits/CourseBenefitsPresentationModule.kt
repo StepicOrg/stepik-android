@@ -7,8 +7,10 @@ import dagger.multibindings.IntoMap
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_benefits.CourseBenefitSummaryFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
+import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsViewModel
 import org.stepik.android.presentation.course_benefits.dispatcher.CourseBenefitSummaryActionDispatcher
+import org.stepik.android.presentation.course_benefits.dispatcher.CourseBenefitsPurchasesAndRefundsActionDispatcher
 import org.stepik.android.presentation.course_benefits.reducer.CourseBenefitsReducer
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
@@ -26,17 +28,25 @@ object CourseBenefitsPresentationModule {
     @ViewModelKey(CourseBenefitsViewModel::class)
     internal fun provideCourseBenefitsPresenter(
         courseBenefitsReducer: CourseBenefitsReducer,
-        courseBenefitSummaryActionDispatcher: CourseBenefitSummaryActionDispatcher
+        courseBenefitSummaryActionDispatcher: CourseBenefitSummaryActionDispatcher,
+        courseBenefitsPurchasesAndRefundsActionDispatcher: CourseBenefitsPurchasesAndRefundsActionDispatcher
     ): ViewModel =
         CourseBenefitsViewModel(
             ReduxFeature(CourseBenefitsFeature.State(
                 courseBenefitState = CourseBenefitsFeature.CourseBenefitState.Idle,
-                courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading
+                courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
+                courseBenefitsPurchasesAndRefundsState = CourseBenefitsPurchasesAndRefundsFeature.State.Loading
             ), courseBenefitsReducer)
                 .wrapWithActionDispatcher(
                     courseBenefitSummaryActionDispatcher.tranform(
                         transformAction = { it.safeCast<CourseBenefitsFeature.Action.CourseBenefitSummaryAction>()?.action },
                         transformMessage = CourseBenefitsFeature.Message::CourseBenefitSummaryMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    courseBenefitsPurchasesAndRefundsActionDispatcher.tranform(
+                        transformAction = { it.safeCast<CourseBenefitsFeature.Action.CourseBenefitsPurchasesAndRefundsAction>()?.action },
+                        transformMessage = CourseBenefitsFeature.Message::CourseBenefitsPurchasesAndRefundsMessage
                     )
                 )
                 .wrapWithViewContainer()

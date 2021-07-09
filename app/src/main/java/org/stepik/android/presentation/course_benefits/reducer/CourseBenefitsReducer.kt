@@ -5,13 +5,15 @@ import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature.State
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature.Message
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature.Action
+import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseBenefitsReducer
 @Inject
 constructor(
-    private val courseBenefitSummaryReducer: CourseBenefitSummaryReducer
+    private val courseBenefitSummaryReducer: CourseBenefitSummaryReducer,
+    private val courseBenefitsPurchasesAndRefundsReducer: CourseBenefitsPurchasesAndRefundsReducer
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
@@ -20,8 +22,12 @@ constructor(
                     state.courseBenefitState is CourseBenefitsFeature.CourseBenefitState.Error && message.forceUpdate) {
                         State(
                             courseBenefitState = CourseBenefitsFeature.CourseBenefitState.Loading,
-                            courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading
-                        ) to setOf(Action.CourseBenefitSummaryAction(CourseBenefitSummaryFeature.Action.FetchCourseBenefitSummary(message.courseId)))
+                            courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
+                            courseBenefitsPurchasesAndRefundsState = CourseBenefitsPurchasesAndRefundsFeature.State.Loading
+                        ) to setOf(
+                            Action.CourseBenefitSummaryAction(CourseBenefitSummaryFeature.Action.FetchCourseBenefitSummary(message.courseId)),
+                            Action.CourseBenefitsPurchasesAndRefundsAction(CourseBenefitsPurchasesAndRefundsFeature.Action.FetchCourseBenefits)
+                        )
                 } else {
                     null
                 }
@@ -31,14 +37,22 @@ constructor(
                 if (courseBenefitSummaryState is CourseBenefitSummaryFeature.State.Error) {
                     State(
                         courseBenefitState = CourseBenefitsFeature.CourseBenefitState.Error,
-                        courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading
+                        courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
+                        courseBenefitsPurchasesAndRefundsState = CourseBenefitsPurchasesAndRefundsFeature.State.Loading
                     ) to emptySet()
                 } else {
                     State(
                         courseBenefitState = CourseBenefitsFeature.CourseBenefitState.Content,
-                        courseBenefitSummaryState = courseBenefitSummaryState
+                        courseBenefitSummaryState = courseBenefitSummaryState,
+                        courseBenefitsPurchasesAndRefundsState = state.courseBenefitsPurchasesAndRefundsState
                     ) to courseBenefitSummaryActions.map(Action::CourseBenefitSummaryAction).toSet()
                 }
+            }
+            is Message.CourseBenefitsPurchasesAndRefundsMessage -> {
+                val (courseBenefitsPurchasesAndRefundsState, courseBenefitsPurchasesAndRefundsActions) =
+                    courseBenefitsPurchasesAndRefundsReducer.reduce(state.courseBenefitsPurchasesAndRefundsState, message.message)
+                state.copy(courseBenefitsPurchasesAndRefundsState = courseBenefitsPurchasesAndRefundsState) to
+                        courseBenefitsPurchasesAndRefundsActions.map(Action::CourseBenefitsPurchasesAndRefundsAction).toSet()
             }
         } ?: state to emptySet()
 }

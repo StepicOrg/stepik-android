@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_course_benefits.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -17,9 +18,12 @@ import org.stepik.android.domain.course_benefits.analytic.CourseBenefitsSummaryC
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
-import org.stepik.android.view.course_benefits.ui.adapter.CourseBenefitPagerAdapter
+import org.stepik.android.view.course_benefits.ui.CourseBenefitOperationItem
+import org.stepik.android.view.course_benefits.ui.adapter.delegate.CourseBenefitsPurchasesAndRefundAdapterDelegate
 import org.stepik.android.view.course_benefits.ui.delegate.CourseBenefitSummaryViewDelegate
+import org.stepik.android.view.course_benefits.ui.model.CourseBenefitsTabs
 import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
@@ -58,6 +62,8 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     private lateinit var courseBenefitSummaryDelegate: CourseBenefitSummaryViewDelegate
 
     private val viewStateDelegate = ViewStateDelegate<CourseBenefitsFeature.CourseBenefitState>()
+
+    private val courseBenefitsOperationsItemAdapter: DefaultDelegateAdapter<CourseBenefitOperationItem> = DefaultDelegateAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,10 +119,11 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     }
 
     private fun initViewPager() {
-        val pagerAdapter = CourseBenefitPagerAdapter(this)
-
-        courseBenefitsOperationsViewPager.adapter = pagerAdapter
-        courseBenefitsTabs.setupWithViewPager(courseBenefitsOperationsViewPager)
+        courseBenefitsOperationsItemAdapter += CourseBenefitsPurchasesAndRefundAdapterDelegate()
+        courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
+        TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
+            tab.text = getString(CourseBenefitsTabs.values()[position].titleStringRes)
+        }.attach()
     }
 
     override fun onAction(action: CourseBenefitsFeature.Action.ViewAction) {
@@ -126,5 +133,6 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     override fun render(state: CourseBenefitsFeature.State) {
         viewStateDelegate.switchState(state.courseBenefitState)
         courseBenefitSummaryDelegate.render(state.courseBenefitSummaryState)
+        courseBenefitsOperationsItemAdapter.items = listOf(CourseBenefitOperationItem.PurchasesAndRefunds(state.courseBenefitsPurchasesAndRefundsState))
     }
 }

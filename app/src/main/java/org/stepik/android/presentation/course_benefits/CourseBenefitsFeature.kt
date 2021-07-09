@@ -3,7 +3,8 @@ package org.stepik.android.presentation.course_benefits
 interface CourseBenefitsFeature {
     data class State(
         val courseBenefitState: CourseBenefitState,
-        val courseBenefitSummaryState: CourseBenefitSummaryFeature.State
+        val courseBenefitSummaryState: CourseBenefitSummaryFeature.State,
+        val courseBenefitsPurchasesAndRefundsState: CourseBenefitsPurchasesAndRefundsFeature.State
     )
 
     sealed class CourseBenefitState {
@@ -19,6 +20,7 @@ interface CourseBenefitsFeature {
          * Message Wrappers
          */
         data class CourseBenefitSummaryMessage(val message: CourseBenefitSummaryFeature.Message) : Message()
+        data class CourseBenefitsPurchasesAndRefundsMessage(val message: CourseBenefitsPurchasesAndRefundsFeature.Message) : Message()
     }
 
     sealed class Action {
@@ -27,5 +29,6 @@ interface CourseBenefitsFeature {
          * Action Wrappers
          */
         data class CourseBenefitSummaryAction(val action: CourseBenefitSummaryFeature.Action) : Action()
+        data class CourseBenefitsPurchasesAndRefundsAction(val action: CourseBenefitsPurchasesAndRefundsFeature.Action) : Action()
     }
 }
