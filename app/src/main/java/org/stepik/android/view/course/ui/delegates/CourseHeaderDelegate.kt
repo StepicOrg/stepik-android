@@ -19,6 +19,8 @@ import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
@@ -51,18 +53,20 @@ import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
 import java.util.TimeZone
 import kotlin.math.abs
 
-class CourseHeaderDelegate(
-    private val courseActivity: Activity,
+class CourseHeaderDelegate
+@AssistedInject
+constructor(
+    @Assisted private val courseActivity: Activity,
     private val analytic: Analytic,
-    private val coursePresenter: CoursePresenter,
+    @Assisted private val coursePresenter: CoursePresenter,
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
-    private val courseViewSource: CourseViewSource,
-    private val isAuthorized: Boolean,
-    private val mustShowCourseBenefits: Boolean,
-    private val showCourseBenefitsAction: () -> Unit,
-    onSubmissionCountClicked: () -> Unit,
-    isLocalSubmissionsEnabled: Boolean
+    @Assisted private val courseViewSource: CourseViewSource,
+    @Assisted private val isAuthorized: Boolean,
+    @Assisted private val mustShowCourseBenefits: Boolean,
+    @Assisted private val showCourseBenefitsAction: () -> Unit,
+    @Assisted onSubmissionCountClicked: () -> Unit,
+    @Assisted isLocalSubmissionsEnabled: Boolean
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
