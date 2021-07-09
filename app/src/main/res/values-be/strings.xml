@@ -993,4 +993,6 @@
 
     <string name="course_benefits_purchases_and_refunds_tab">Пакупкі і звароты</string>
     <string name="course_benefits_payments_tab">Выплаты</string>
+
+    <string name="course_benefits_empty">Па дадзеным запыце плацяжоў не знойдзена</string>
 </resources>

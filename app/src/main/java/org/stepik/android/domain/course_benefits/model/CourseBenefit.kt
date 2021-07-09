@@ -8,6 +8,8 @@ data class CourseBenefit(
     val id: Long,
     @SerializedName("user")
     val user: Long,
+    @SerializedName("buyer")
+    val buyer: Long,
     @SerializedName("course")
     val course: Long,
     @SerializedName("time")
@@ -16,12 +18,16 @@ data class CourseBenefit(
     val status: Status,
     @SerializedName("amount")
     val amount: String,
+    @SerializedName("payment_amount")
+    val paymentAmount: String,
     @SerializedName("currency_code")
     val currencyCode: String,
-    @SerializedName("total_income")
-    val totalIncome: String,
     @SerializedName("is_z_link_used")
     val isZLinkUsed: Boolean,
+    @SerializedName("is_invoice_payment")
+    val isInvoicePayment: Boolean,
+    @SerializedName("seats_count")
+    val seatsCount: Int,
     @SerializedName("promo_code")
     val promoCode: String?
 ) {

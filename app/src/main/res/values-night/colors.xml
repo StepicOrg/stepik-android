@@ -18,6 +18,7 @@
 
     <color name="color_on_surface">@color/white</color>
     <color name="color_on_surface_alpha_12">#30FFFFFF</color>
+    <color name="color_on_surface_alpha_38">#61FFFFFF</color>
     <color name="color_on_surface_emphasis_medium">#99FFFFFF</color>
     <color name="color_elevation_overlay_1dp">#12FFFFFF</color>
     <color name="color_elevation_overlay_2dp">#17FFFFFF</color>

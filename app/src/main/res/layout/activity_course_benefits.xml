@@ -40,7 +40,6 @@
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     android:layout_gravity="top"
-                    android:elevation="?appBarElevation"
                     app:title="">
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/courseBenefitToolbarTitle"

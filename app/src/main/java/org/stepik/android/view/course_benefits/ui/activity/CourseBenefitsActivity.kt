@@ -19,7 +19,7 @@ import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_benefits.ui.CourseBenefitOperationItem
-import org.stepik.android.view.course_benefits.ui.adapter.delegate.CourseBenefitsPurchasesAndRefundAdapterDelegate
+import org.stepik.android.view.course_benefits.ui.adapter.delegate.CourseBenefitsPurchasesAndRefundListAdapterDelegate
 import org.stepik.android.view.course_benefits.ui.delegate.CourseBenefitSummaryViewDelegate
 import org.stepik.android.view.course_benefits.ui.model.CourseBenefitsTabs
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -119,7 +119,7 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     }
 
     private fun initViewPager() {
-        courseBenefitsOperationsItemAdapter += CourseBenefitsPurchasesAndRefundAdapterDelegate()
+        courseBenefitsOperationsItemAdapter += CourseBenefitsPurchasesAndRefundListAdapterDelegate(displayPriceMapper)
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
             tab.text = getString(CourseBenefitsTabs.values()[position].titleStringRes)

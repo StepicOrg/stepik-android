@@ -1185,4 +1185,9 @@
 
     <string name="course_benefits_purchases_and_refunds_tab">Purchases and refunds</string>
     <string name="course_benefits_payments_tab">Payments</string>
+
+    <string name="course_benefits_empty">No payments found\nfor this request</string>
+
+    <string name="course_benefits_debited" translatable="false">+%s</string>
+    <string name="course_benefits_refunded" translatable="false">-%s</string>
 </resources>
