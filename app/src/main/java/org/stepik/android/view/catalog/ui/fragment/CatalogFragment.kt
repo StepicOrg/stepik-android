@@ -1,7 +1,10 @@
 package org.stepik.android.view.catalog.ui.fragment
 
+import android.app.SearchManager
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -31,6 +34,7 @@ import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
@@ -53,19 +57,23 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGrid
 import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class CatalogFragment :
     Fragment(R.layout.fragment_catalog),
     ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>,
-    AutoCompleteSearchView.FocusCallback {
+    AutoCompleteSearchView.FocusCallback,
+    FilterBottomSheetDialogFragment.Callback {
 
     companion object {
         const val TAG = "CatalogFragment"
@@ -389,8 +397,17 @@ class CatalogFragment :
         }
     }
 
+    override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        val query = searchViewToolbar.query.toString()
+        val intent = createSearchViewIntent(query, filterQuery)
+        searchViewToolbar.onSubmitted(query)
+        collapseSearchView()
+        startActivity(intent)
+    }
+
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
+        filterIcon.isVisible = true
         searchViewToolbar.isVisible = true
         searchViewToolbar.onActionViewExpanded()
         searchViewToolbar.clearFocus()
@@ -398,9 +415,12 @@ class CatalogFragment :
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setFocusCallback(this)
         backIcon.setOnClickListener {
-            searchViewToolbar.onActionViewCollapsed()
-            searchViewToolbar.onActionViewExpanded()
-            searchViewToolbar.clearFocus()
+            collapseSearchView()
+        }
+        filterIcon.setOnClickListener {
+            FilterBottomSheetDialogFragment
+                .newInstance(CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
+                .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
         }
     }
 
@@ -418,10 +438,10 @@ class CatalogFragment :
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    searchView.onActionViewCollapsed()
-                    searchView.onActionViewExpanded()
-                    searchView.clearFocus()
-                    return false
+                    collapseSearchView()
+                    val intent = createSearchViewIntent(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
+                    startActivity(intent)
+                    return true
                 }
 
                 override fun onQueryTextChange(query: String): Boolean {
@@ -445,5 +465,19 @@ class CatalogFragment :
             .build()
 
         screenManager.openLinkInWebBrowser(requireContext(), uri)
+    }
+
+    private fun createSearchViewIntent(query: String, filterQuery: CourseListFilterQuery): Intent {
+        val intent = Intent(requireContext(), CourseListSearchActivity::class.java)
+        intent.putExtra(SearchManager.QUERY, query)
+        intent.putExtra(CourseListSearchActivity.EXTRA_COURSE_LIST_FILTER_QUERY, filterQuery as Parcelable)
+        intent.action = Intent.ACTION_SEARCH
+        return intent
+    }
+
+    private fun collapseSearchView() {
+        searchViewToolbar.onActionViewCollapsed()
+        searchViewToolbar.onActionViewExpanded()
+        searchViewToolbar.clearFocus()
     }
 }

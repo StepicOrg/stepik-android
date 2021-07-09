@@ -41,6 +41,6 @@
         </FrameLayout>
     </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
 
-    <include layout="@layout/view_catalog_search_toolbar" />
+    <include layout="@layout/view_search_toolbar" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
