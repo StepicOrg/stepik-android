@@ -1,4 +1,4 @@
-package org.stepik.android.view.course_benefits.ui
+package org.stepik.android.view.course_benefits.model
 
 import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature
 import ru.nobird.android.core.model.Identifiable

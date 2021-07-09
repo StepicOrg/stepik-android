@@ -18,10 +18,10 @@ import org.stepik.android.domain.course_benefits.analytic.CourseBenefitsSummaryC
 import org.stepik.android.presentation.course_benefits.CourseBenefitsFeature
 import org.stepik.android.presentation.course_benefits.CourseBenefitsViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
-import org.stepik.android.view.course_benefits.ui.CourseBenefitOperationItem
+import org.stepik.android.view.course_benefits.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_benefits.ui.adapter.delegate.CourseBenefitsPurchasesAndRefundListAdapterDelegate
 import org.stepik.android.view.course_benefits.ui.delegate.CourseBenefitSummaryViewDelegate
-import org.stepik.android.view.course_benefits.ui.model.CourseBenefitsTabs
+import org.stepik.android.view.course_benefits.model.CourseBenefitsTabs
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate

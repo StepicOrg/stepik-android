@@ -12,7 +12,7 @@ import org.stepic.droid.R
 import org.stepik.android.domain.course_benefits.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
-import org.stepik.android.view.course_benefits.ui.CourseBenefitOperationItem
+import org.stepik.android.view.course_benefits.model.CourseBenefitOperationItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter

@@ -1,4 +1,4 @@
-package org.stepik.android.view.course_benefits.ui.model
+package org.stepik.android.view.course_benefits.model
 
 import androidx.annotation.StringRes
 import org.stepic.droid.R
