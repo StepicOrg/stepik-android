@@ -77,7 +77,11 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
 
         analytic.report(CourseBenefitsScreenOpenedEvent(courseId, courseTitle))
 
-        courseBenefitToolbarTitle.text = getString(R.string.course_benefits_toolbar_title, courseTitle)
+        courseBenefitToolbarTitle.text = if (courseTitle.isNullOrBlank()) {
+            getString(R.string.course_benefits_revenue_title)
+        } else {
+            getString(R.string.course_benefits_toolbar_title, courseTitle)
+        }
 
         courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             val ratio = abs(verticalOffset).toFloat() / (courseBenefitsCollapsingToolbar.height - courseBenefitToolbar.height)
