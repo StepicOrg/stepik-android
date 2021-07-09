@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_benefits.reducer
 
+import org.stepik.android.domain.course_benefits.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature.State
 import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature.Message
 import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature.Action
@@ -17,7 +18,8 @@ constructor() : StateReducer<State, Message, Action> {
                         if (message.courseBenefits.isEmpty()) {
                             State.Empty
                         } else {
-                            State.Content(message.courseBenefits)
+                            val courseBenefitListItems = message.courseBenefits.map { CourseBenefitListItem.Data(it) }
+                            State.Content(courseBenefitListItems)
                         }
                     courseBenefitsPurchasesAndRefundsState to emptySet()
                 } else {

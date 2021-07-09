@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.item_purchase_refund.*
 import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_benefits.model.CourseBenefit
+import org.stepik.android.domain.course_benefits.model.CourseBenefitListItem
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -17,42 +18,43 @@ import java.util.TimeZone
 
 class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper
-) : AdapterDelegate<CourseBenefit, DelegateViewHolder<CourseBenefit>>() {
-    override fun isForViewType(position: Int, data: CourseBenefit): Boolean =
-        true
+) : AdapterDelegate<CourseBenefitListItem, DelegateViewHolder<CourseBenefitListItem>>() {
+    override fun isForViewType(position: Int, data: CourseBenefitListItem): Boolean =
+        data is CourseBenefitListItem.Data
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseBenefit> =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseBenefitListItem> =
         ViewHolder(createView(parent, R.layout.item_purchase_refund))
 
     private inner class ViewHolder(
         override val containerView: View
-    ) : DelegateViewHolder<CourseBenefit>(containerView), LayoutContainer {
-        override fun onBind(data: CourseBenefit) {
-            purchaseRefundIcon.setImageResource(getIconRes(data))
-            purchaseRefundName.text = data.buyer.toString()
+    ) : DelegateViewHolder<CourseBenefitListItem>(containerView), LayoutContainer {
+        override fun onBind(data: CourseBenefitListItem) {
+            data as CourseBenefitListItem.Data
+            purchaseRefundIcon.setImageResource(getIconRes(data.courseBenefit))
+            purchaseRefundName.text = data.courseBenefit.buyer.toString()
             purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
-                data.time,
+                data.courseBenefit.time,
                 DateTimeHelper.DISPLAY_DATETIME_PATTERN,
                 TimeZone.getDefault()
             )
 
-            val amount = displayPriceMapper.mapToDisplayPrice(data.currencyCode, data.amount)
-            val resolvedAmount = if (data.status == CourseBenefit.Status.DEBITED) {
+            val amount = displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.amount)
+            val resolvedAmount = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 context.getString(R.string.course_benefits_debited, amount)
             } else {
                 context.getString(R.string.course_benefits_refunded, amount)
             }
 
-            val textColor = if (data.status == CourseBenefit.Status.DEBITED) {
+            val textColor = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 ContextCompat.getColor(context, R.color.material_on_background_emphasis_high_type)
             } else {
                 ContextCompat.getColor(context, R.color.color_overlay_red_alpha_12)
             }
             purchaseRefundIncomeSum.setTextColor(textColor)
-            purchaseRefundTransactionSum.text = displayPriceMapper.mapToDisplayPrice(data.currencyCode, data.paymentAmount)
+            purchaseRefundTransactionSum.text = displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.paymentAmount)
             purchaseRefundIncomeSum.text = resolvedAmount
-            purchaseRefundPromocode.text = data.promoCode
-            purchaseRefundPromocode.isVisible = data.promoCode != null
+            purchaseRefundPromocode.text = data.courseBenefit.promoCode
+            purchaseRefundPromocode.isVisible = data.courseBenefit.promoCode != null
         }
 
         private fun getIconRes(data: CourseBenefit): Int =

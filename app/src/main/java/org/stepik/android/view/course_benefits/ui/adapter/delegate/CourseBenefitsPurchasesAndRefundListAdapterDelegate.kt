@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_course_benefits_purchases_and_refunds.*
 import org.stepic.droid.R
-import org.stepik.android.domain.course_benefits.model.CourseBenefit
+import org.stepik.android.domain.course_benefits.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_benefits.CourseBenefitsPurchasesAndRefundsFeature
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_benefits.ui.CourseBenefitOperationItem
@@ -17,6 +17,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
+import timber.log.Timber
 
 class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper
@@ -34,13 +35,14 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
     ) : DelegateViewHolder<CourseBenefitOperationItem>(containerView), LayoutContainer {
 
         private val viewStateDelegate = ViewStateDelegate<CourseBenefitsPurchasesAndRefundsFeature.State>()
-        private val adapter = DefaultDelegateAdapter<CourseBenefit>()
+        private val adapter = DefaultDelegateAdapter<CourseBenefitListItem>()
             .also {
+                it += CourseBenefitsPurchasesAndRefundsLoadingAdapterDelegate()
                 it += CourseBenefitsPurchasesAndRefundsAdapterDelegate(displayPriceMapper)
             }
 
         init {
-            viewStateDelegate.addState<CourseBenefitsPurchasesAndRefundsFeature.State.Loading>()
+            viewStateDelegate.addState<CourseBenefitsPurchasesAndRefundsFeature.State.Loading>(purchaseRefundRecycler)
             viewStateDelegate.addState<CourseBenefitsPurchasesAndRefundsFeature.State.Empty>(purchaseEmpty)
             viewStateDelegate.addState<CourseBenefitsPurchasesAndRefundsFeature.State.Error>(purchaseRefundError)
             viewStateDelegate.addState<CourseBenefitsPurchasesAndRefundsFeature.State.Content>(purchaseRefundRecycler)
@@ -60,6 +62,17 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
 
         private fun render(state: CourseBenefitsPurchasesAndRefundsFeature.State) {
             viewStateDelegate.switchState(state)
+            Timber.d("State: $state")
+            if (state is CourseBenefitsPurchasesAndRefundsFeature.State.Loading) {
+                adapter.items = listOf(
+                    CourseBenefitListItem.Placeholder,
+                    CourseBenefitListItem.Placeholder,
+                    CourseBenefitListItem.Placeholder,
+                    CourseBenefitListItem.Placeholder,
+                    CourseBenefitListItem.Placeholder
+                )
+                Timber.d("Adapter Items; ${adapter.items}")
+            }
             if (state is CourseBenefitsPurchasesAndRefundsFeature.State.Content) {
                 adapter.items = state.courseBenefits
             }
