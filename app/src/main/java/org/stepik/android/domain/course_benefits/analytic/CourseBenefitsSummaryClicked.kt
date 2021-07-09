@@ -4,7 +4,7 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class CourseBenefitsSummaryClicked(
     courseId: Long,
-    courseTitle: String,
+    courseTitle: String?,
     isExpanded: Boolean
 ) : AnalyticEvent {
     companion object {
@@ -19,7 +19,7 @@ class CourseBenefitsSummaryClicked(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_COURSE to courseId,
-            PARAM_COURSE_TITLE to courseTitle,
+            PARAM_COURSE_TITLE to courseTitle.orEmpty(),
             PARAM_IS_EXPANDED to isExpanded
         )
 }

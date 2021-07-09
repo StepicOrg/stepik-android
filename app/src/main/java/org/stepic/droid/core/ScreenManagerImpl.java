@@ -722,7 +722,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseBenefits(Context context, long courseId, String courseTitle) {
+    public void showCourseBenefits(Context context, long courseId, @Nullable String courseTitle) {
         context.startActivity(CourseBenefitsActivity.Companion.createIntent(context, courseId, courseTitle));
     }
 }

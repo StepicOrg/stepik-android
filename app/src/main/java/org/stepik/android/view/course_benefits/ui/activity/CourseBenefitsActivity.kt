@@ -32,14 +32,14 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
 
         private const val NO_ID = -1L
 
-        fun createIntent(context: Context, courseId: Long, courseTitle: String): Intent =
+        fun createIntent(context: Context, courseId: Long, courseTitle: String?): Intent =
             Intent(context, CourseBenefitsActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
                 .putExtra(EXTRA_COURSE_TITLE, courseTitle)
     }
 
     private var courseId: Long = NO_ID
-    private lateinit var courseTitle: String
+    private var courseTitle: String? = null
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -73,7 +73,7 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
             setDisplayHomeAsUpEnabled(true)
         }
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
-        courseTitle = intent.getStringExtra(EXTRA_COURSE_TITLE).orEmpty()
+        courseTitle = intent.getStringExtra(EXTRA_COURSE_TITLE)
 
         analytic.report(CourseBenefitsScreenOpenedEvent(courseId, courseTitle))
 

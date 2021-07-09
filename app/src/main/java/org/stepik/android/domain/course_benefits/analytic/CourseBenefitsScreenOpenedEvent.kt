@@ -4,7 +4,7 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class CourseBenefitsScreenOpenedEvent(
     courseId: Long,
-    courseTitle: String
+    courseTitle: String?
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
@@ -17,6 +17,6 @@ class CourseBenefitsScreenOpenedEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_COURSE to courseId,
-            PARAM_COURSE_TITLE to courseTitle
+            PARAM_COURSE_TITLE to courseTitle.orEmpty()
         )
 }
