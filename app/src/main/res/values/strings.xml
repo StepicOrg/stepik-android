@@ -1188,6 +1188,8 @@
 
     <string name="course_benefits_empty">No payments found\nfor this request</string>
 
-    <string name="course_benefits_debited" translatable="false">+%s</string>
-    <string name="course_benefits_refunded" translatable="false">-%s</string>
+    <string name="course_benefits_with_debited_prefix" translatable="false">+%s</string>
+    <string name="course_benefits_with_refunded_prefix" translatable="false">-%s</string>
+
+    <string name="course_benefits_refund">Refund</string>
 </resources>

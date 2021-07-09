@@ -17,7 +17,6 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
-import timber.log.Timber
 
 class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper
@@ -62,7 +61,6 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
 
         private fun render(state: CourseBenefitsPurchasesAndRefundsFeature.State) {
             viewStateDelegate.switchState(state)
-            Timber.d("State: $state")
             if (state is CourseBenefitsPurchasesAndRefundsFeature.State.Loading) {
                 adapter.items = listOf(
                     CourseBenefitListItem.Placeholder,
@@ -71,7 +69,6 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
                     CourseBenefitListItem.Placeholder,
                     CourseBenefitListItem.Placeholder
                 )
-                Timber.d("Adapter Items; ${adapter.items}")
             }
             if (state is CourseBenefitsPurchasesAndRefundsFeature.State.Content) {
                 adapter.items = state.courseBenefits

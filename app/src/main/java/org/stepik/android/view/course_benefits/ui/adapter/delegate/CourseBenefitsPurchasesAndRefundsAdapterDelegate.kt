@@ -38,11 +38,17 @@ class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
                 TimeZone.getDefault()
             )
 
+            val transactionSum = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
+                displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.paymentAmount)
+            } else {
+                context.getString(R.string.course_benefits_refund)
+            }
+
             val amount = displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.amount)
             val resolvedAmount = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
-                context.getString(R.string.course_benefits_debited, amount)
+                context.getString(R.string.course_benefits_with_debited_prefix, amount)
             } else {
-                context.getString(R.string.course_benefits_refunded, amount)
+                context.getString(R.string.course_benefits_with_refunded_prefix, amount)
             }
 
             val textColor = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
@@ -51,7 +57,7 @@ class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
                 ContextCompat.getColor(context, R.color.color_overlay_red_alpha_12)
             }
             purchaseRefundIncomeSum.setTextColor(textColor)
-            purchaseRefundTransactionSum.text = displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.paymentAmount)
+            purchaseRefundTransactionSum.text = transactionSum
             purchaseRefundIncomeSum.text = resolvedAmount
             purchaseRefundPromocode.text = data.courseBenefit.promoCode
             purchaseRefundPromocode.isVisible = data.courseBenefit.promoCode != null

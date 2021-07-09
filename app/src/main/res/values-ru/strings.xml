@@ -1132,4 +1132,5 @@
     <string name="course_benefits_payments_tab">Выплаты</string>
 
     <string name="course_benefits_empty">По данному запросу\nплатежей не найдено</string>
+    <string name="course_benefits_refund">Возврат</string>
 </resources>
