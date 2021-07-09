@@ -1,10 +1,6 @@
 package org.stepik.android.view.course_benefits.ui.delegate
 
 import android.view.View
-import android.view.animation.Animation
-import androidx.core.view.isVisible
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.ShapeAppearanceModel
 import kotlinx.android.synthetic.main.view_course_benefit_summary.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.collapse
@@ -26,7 +22,6 @@ class CourseBenefitSummaryViewDelegate(
     private val courseBenefitsSummaryLoading = containerView.courseBenefitSummaryLoading
     private val courseBenefitSummaryEmpty = containerView.courseBenefitSummaryEmpty
 
-    private val expandedSummaryClickView = containerView.expandedSummaryClickView
     private val courseBenefitSummaryContainer = containerView.courseBenefitSummaryInformation
     private val courseBenefitSummaryInformationExpansion = containerView.courseBenefitSummaryInformationExpansion
 
@@ -55,38 +50,11 @@ class CourseBenefitSummaryViewDelegate(
         courseBenefitSummaryContainer.setOnClickListener {
             courseBenefitSummaryArrow.changeState()
             val isExpanded = courseBenefitSummaryArrow.isExpanded()
-
             onCourseSummaryClicked(isExpanded)
-            courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
             if (isExpanded) {
-                courseBenefitSummaryInformationExpansion.expand(object : Animation.AnimationListener {
-                    override fun onAnimationRepeat(animation: Animation?) {}
-                    override fun onAnimationEnd(animation: Animation?) {
-                        expandedSummaryClickView.isVisible = true
-                    }
-
-                    override fun onAnimationStart(animation: Animation?) {}
-                })
-                courseBenefitSummaryContainer.isEnabled = false
-            }
-        }
-
-        expandedSummaryClickView.setOnClickListener {
-            courseBenefitSummaryArrow.changeState()
-            val isExpanded = courseBenefitSummaryArrow.isExpanded()
-
-            onCourseSummaryClicked(isExpanded)
-            if (!isExpanded) {
-                courseBenefitSummaryInformationExpansion.collapse(object : Animation.AnimationListener {
-                    override fun onAnimationRepeat(animation: Animation?) {}
-                    override fun onAnimationEnd(animation: Animation?) {
-                        courseBenefitSummaryContainer.shapeAppearanceModel = getShapeAppearanceModel(isExpanded)
-                    }
-
-                    override fun onAnimationStart(animation: Animation?) {}
-                })
-                expandedSummaryClickView.isVisible = false
-                courseBenefitSummaryContainer.isEnabled = true
+                courseBenefitSummaryInformationExpansion.expand()
+            } else {
+                courseBenefitSummaryInformationExpansion.collapse()
             }
         }
     }
@@ -107,32 +75,16 @@ class CourseBenefitSummaryViewDelegate(
             ).capitalize(Locale.ROOT)
 
             courseBenefitCurrentEarningsTitle.text = context.getString(R.string.course_benefits_earning_current_month, currentMonthDate)
-            courseBenefitCurrentEarningsValue.text = "129000 ₽"
-//            courseBenefitCurrentEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthIncome)
+            courseBenefitCurrentEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthUserIncome)
 
             courseBenefitCurrentTurnoverTitle.text = context.getString(R.string.course_benefits_turnover_current_month, currentMonthDate)
             courseBenefitCurrentTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthTurnover)
 
             courseBenefitTotalEarningsTitle.text = context.getString(R.string.course_benefits_earnings_total, totalDate)
-            courseBenefitTotalEarningsValue.text = "129000 ₽"
-//            courseBenefitTotalEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalIncome)
+            courseBenefitTotalEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalUserIncome)
 
             courseBenefitTotalTurnoverTitle.text = context.getString(R.string.course_beneifts_turnover_total, totalDate)
             courseBenefitTotalTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalTurnover)
         }
     }
-
-    private fun getShapeAppearanceModel(isExpanded: Boolean): ShapeAppearanceModel =
-        if (isExpanded) {
-            courseBenefitSummaryContainer.shapeAppearanceModel.toBuilder()
-                .setBottomLeftCorner(CornerFamily.ROUNDED, 0f)
-                .setBottomRightCorner(CornerFamily.ROUNDED, 0f)
-                .setTopLeftCorner(CornerFamily.ROUNDED, context.resources.getDimension(R.dimen.corner_radius))
-                .setTopRightCorner(CornerFamily.ROUNDED, context.resources.getDimension(R.dimen.corner_radius))
-                .build()
-        } else {
-            courseBenefitSummaryContainer.shapeAppearanceModel.toBuilder()
-                .setAllCornerSizes(context.resources.getDimension(R.dimen.corner_radius))
-                .build()
-        }
 }
