@@ -390,7 +390,7 @@
             android:name="org.stepik.android.view.course_list.ui.activity.CourseListWishActivity" />
 
         <activity
-            android:name="org.stepik.android.view.course_benefits.ui.activity.CourseBenefitsActivity" />
+            android:name="org.stepik.android.view.course_revenue.ui.activity.CourseRevenueActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

@@ -47,7 +47,7 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
-import org.stepik.android.view.course_benefits.ui.dialog.TransactionBottomSheetDialogFragment
+import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.achievements.AchievementsComponent
@@ -62,7 +62,7 @@ import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
-import org.stepik.android.view.injection.course_benefits.CourseBenefitsComponent
+import org.stepik.android.view.injection.course_revenue.CourseRevenueComponent
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
 import org.stepik.android.view.injection.course_complete.CourseCompleteComponent
 import org.stepik.android.view.injection.course_list.CourseListBusModule
@@ -279,7 +279,7 @@ interface AppCoreComponent {
 
     fun courseListWishComponentBuilder(): CourseListWishComponent.Builder
 
-    fun courseBenefitsComponentBuilder(): CourseBenefitsComponent.Builder
+    fun courseBenefitsComponentBuilder(): CourseRevenueComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
