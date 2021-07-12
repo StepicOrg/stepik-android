@@ -21,7 +21,7 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
-import org.stepik.android.view.course_revenue.model.CourseBenefitsTabs
+import org.stepik.android.view.course_revenue.model.CourseRevenueTabs
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -128,7 +128,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         }
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
-            tab.text = getString(CourseBenefitsTabs.values()[position].titleStringRes)
+            tab.text = getString(CourseRevenueTabs.values()[position].titleStringRes)
         }.attach()
     }
 

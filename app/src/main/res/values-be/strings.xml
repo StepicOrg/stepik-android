@@ -991,7 +991,7 @@
     <string name="course_beneifts_turnover_total">Продажу з %s</string>
     <string name="course_benefits_earnings_disclaimer">Заўвага: Усе аперацыі праходзяць па маскоўскім часе (МСК,  UTC+3).</string>
 
-    <string name="course_benefits_purchases_and_refunds_tab">Пакупкі і звароты</string>
+    <string name="course_benefits_tab">Пакупкі і звароты</string>
     <string name="course_benefits_payments_tab">Выплаты</string>
 
     <string name="course_benefits_empty">Па дадзеным запыце плацяжоў не знойдзена</string>

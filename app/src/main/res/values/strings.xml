@@ -1183,7 +1183,7 @@
     <string name="course_beneifts_turnover_total">Sales since %s</string>
     <string name="course_benefits_earnings_disclaimer">Important: All operations are carried out Moscow Time (MSK, UTC+3)</string>
 
-    <string name="course_benefits_purchases_and_refunds_tab">Purchases and refunds</string>
+    <string name="course_benefits_tab">Purchases and refunds</string>
     <string name="course_benefits_payments_tab">Payments</string>
 
     <string name="course_benefits_empty">No payments found\nfor this request</string>
