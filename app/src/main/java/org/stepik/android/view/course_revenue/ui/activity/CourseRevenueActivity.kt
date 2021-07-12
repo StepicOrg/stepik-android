@@ -126,6 +126,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
                 .newInstance(it.courseBenefit, it.user, courseTitle)
                 .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
         }
+
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
             tab.text = getString(CourseRevenueTabs.values()[position].titleStringRes)

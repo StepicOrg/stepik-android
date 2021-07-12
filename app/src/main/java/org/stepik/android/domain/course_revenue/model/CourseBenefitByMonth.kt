@@ -3,7 +3,7 @@ package org.stepik.android.domain.course_revenue.model
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-class CourseBenefitByMonth(
+data class CourseBenefitByMonth(
     @SerializedName("id")
     val id: String,
     @SerializedName("user")

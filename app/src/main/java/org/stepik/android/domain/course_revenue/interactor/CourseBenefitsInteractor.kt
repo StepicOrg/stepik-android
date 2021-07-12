@@ -2,8 +2,10 @@ package org.stepik.android.domain.course_revenue.interactor
 
 import io.reactivex.Maybe
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
+import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListItem
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
 import org.stepik.android.domain.course_revenue.model.CourseBenefitSummary
+import org.stepik.android.domain.course_revenue.repository.CourseBenefitByMonthsRepository
 import org.stepik.android.domain.course_revenue.repository.CourseBenefitSummariesRepository
 import org.stepik.android.domain.course_revenue.repository.CourseBenefitsRepository
 import org.stepik.android.domain.user.repository.UserRepository
@@ -16,6 +18,7 @@ class CourseBenefitsInteractor
 constructor(
     private val courseBenefitSummariesRepository: CourseBenefitSummariesRepository,
     private val courseBenefitsRepository: CourseBenefitsRepository,
+    private val courseBenefitsByMonthsRepository: CourseBenefitByMonthsRepository,
     private val userRepository: UserRepository
 ) {
     fun getCourseBenefitSummary(courseId: Long): Maybe<CourseBenefitSummary> =
@@ -27,6 +30,13 @@ constructor(
         courseBenefitsRepository
             .getCourseBenefits(courseId)
             .flatMap { resolveCourseBenefitListItems(it) }
+
+    fun getCourseBenefitsByMonths(courseId: Long): Maybe<List<CourseBenefitByMonthListItem.Data>> =
+        courseBenefitsByMonthsRepository
+            .getCourseBenefitByMonths(courseId)
+            .map { courseBenefitsByMonths ->
+                courseBenefitsByMonths.map { CourseBenefitByMonthListItem.Data(it) }
+            }
 
     private fun resolveCourseBenefitListItems(courseBenefits: List<CourseBenefit>): Maybe<List<CourseBenefitListItem.Data>> =
         userRepository
