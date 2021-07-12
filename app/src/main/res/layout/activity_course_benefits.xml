@@ -27,20 +27,12 @@
                 android:layout_marginTop="?actionBarSize"
                 layout="@layout/view_course_benefit_summary" />
 
-            <View
-                android:id="@+id/courseBenefitsToolbarScrim"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?android:colorBackground"
-                android:alpha="0" />
-
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/courseBenefitToolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     android:layout_gravity="top"
-                    android:elevation="?appBarElevation"
                     app:title="">
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/courseBenefitToolbarTitle"
@@ -75,5 +67,12 @@
         android:layout_width="match_parent"
         android:layout_gravity="center"
         layout="@layout/error_no_connection_with_button" />
+
+    <include
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_marginTop="?actionBarSize"
+        layout="@layout/view_divider_vertical" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

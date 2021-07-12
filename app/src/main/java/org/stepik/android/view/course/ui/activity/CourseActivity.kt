@@ -211,9 +211,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     coursePresenter = coursePresenter,
                     courseViewSource = courseViewSource,
                     isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
-                    mustShowCourseBenefits = true,
+//                    mustShowCourseBenefits = true,
                     // TODO APPS-3336 Uncomment code
-//                    mustShowCourseBenefits = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID) && course?.actions?.viewRevenue?.enabled == true,
+                    mustShowCourseBenefits = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID) && course?.actions?.viewRevenue?.enabled == true,
                     showCourseBenefitsAction = { screenManager.showCourseBenefits(this, courseId, course?.title) },
                     onSubmissionCountClicked = {
                         screenManager.showCachedAttempts(this, courseId)

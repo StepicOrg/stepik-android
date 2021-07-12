@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_course_benefits.*
@@ -85,8 +86,10 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
 
         courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             val ratio = abs(verticalOffset).toFloat() / (courseBenefitsCollapsingToolbar.height - courseBenefitToolbar.height)
-            courseBenefitsToolbarScrim.alpha = ratio * 1.5f
+            courseBenefitSummaryContainer.alpha = 1f - (ratio * 1.5f)
         })
+
+        ViewCompat.setTranslationZ(divider, ViewCompat.getElevation(courseBenefitsAppBar))
 
         initViewPager()
         initViewStateDelegate()
