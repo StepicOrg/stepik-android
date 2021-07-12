@@ -71,7 +71,7 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
                 )
             }
             if (state is CourseBenefitsPurchasesAndRefundsFeature.State.Content) {
-                adapter.items = state.courseBenefits
+                adapter.items = state.courseBenefitListItems
             }
         }
     }

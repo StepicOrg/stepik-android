@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_benefits
 
-import org.stepik.android.domain.course_benefits.model.CourseBenefit
 import org.stepik.android.domain.course_benefits.model.CourseBenefitListItem
 
 interface CourseBenefitsPurchasesAndRefundsFeature {
@@ -8,11 +7,11 @@ interface CourseBenefitsPurchasesAndRefundsFeature {
         object Loading : State()
         object Empty : State()
         object Error : State()
-        data class Content(val courseBenefits: List<CourseBenefitListItem.Data>) : State()
+        data class Content(val courseBenefitListItems: List<CourseBenefitListItem.Data>) : State()
     }
 
     sealed class Message {
-        data class FetchCourseBenefitsSuccess(val courseBenefits: List<CourseBenefit>) : Message()
+        data class FetchCourseBenefitsSuccess(val courseBenefitListItems: List<CourseBenefitListItem.Data>) : Message()
         object FetchCourseBenefitsFailure : Message()
     }
 

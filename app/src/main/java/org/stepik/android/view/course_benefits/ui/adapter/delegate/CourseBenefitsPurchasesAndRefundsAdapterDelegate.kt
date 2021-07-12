@@ -31,7 +31,7 @@ class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
         override fun onBind(data: CourseBenefitListItem) {
             data as CourseBenefitListItem.Data
             purchaseRefundIcon.setImageResource(getIconRes(data.courseBenefit))
-            purchaseRefundName.text = data.courseBenefit.buyer.toString()
+            purchaseRefundName.text = data.user?.fullName ?: data.courseBenefit.buyer.toString()
             purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
                 data.courseBenefit.time,
                 DateTimeHelper.DISPLAY_DATETIME_PATTERN,
