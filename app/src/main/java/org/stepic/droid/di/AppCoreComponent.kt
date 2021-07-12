@@ -61,6 +61,7 @@ import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
+import org.stepik.android.view.injection.course_benefits.CourseBenefitsComponent
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
 import org.stepik.android.view.injection.course_complete.CourseCompleteComponent
 import org.stepik.android.view.injection.course_list.CourseListBusModule
@@ -276,6 +277,8 @@ interface AppCoreComponent {
     fun learningActionsComponentBuilder(): LearningActionsComponent.Builder
 
     fun courseListWishComponentBuilder(): CourseListWishComponent.Builder
+
+    fun courseBenefitsComponentBuilder(): CourseBenefitsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

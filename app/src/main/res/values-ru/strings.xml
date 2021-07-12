@@ -1116,4 +1116,18 @@
     <string name="wishlist_action_remove_success">Курс успешно убран из списка желаний</string>
     <string name="wishlist_action_add_failure">Не удалось добавить курс в список желаний</string>
     <string name="wishlist_action_remove_failure">Не удалось убрать курс из списка желаний</string>
+
+    <!-- Course benefits -->
+    <string name="course_benefits_revenue_title">Доход</string>
+    <string name="course_benefits_toolbar_title">Доход за курс «%s»</string>
+    <string name="course_benefits_earnings_title">Ваш доход за %s</string>
+    <string name="course_benefits_earnings_empty">Здесь будет ваш доход</string>
+    <string name="course_benefits_earning_current_month">Ваш доход за %s</string>
+    <string name="course_benefits_turnover_current_month">Продажи за %s</string>
+    <string name="course_benefits_earnings_total">Доход с %s</string>
+    <string name="course_beneifts_turnover_total">Продажи с %s</string>
+    <string name="course_benefits_earnings_disclaimer">Примечание: Все операции проходят по московскому времени (МСК,  UTC+3).</string>
+
+    <string name="course_benefits_purchases_and_refunds_tab">Покупки и возвраты</string>
+    <string name="course_benefits_payments_tab">Выплаты</string>
 </resources>

@@ -53,7 +53,6 @@ import org.stepic.droid.util.resolvers.text.TextResolverImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.view.injection.billing.PublicLicenseKey
 import org.stepik.android.view.injection.qualifiers.AuthLock
-import org.stepik.android.view.injection.wishlist.WishlistLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -211,13 +210,6 @@ abstract class AppCoreModule {
         @PublicLicenseKey
         internal fun providePublicLicenseKey(config: Config): String =
             config.appPublicLicenseKey
-
-        @Provides
-        @JvmStatic
-        @AppSingleton
-        @WishlistLock
-        internal fun provideWishlistLock(): ReentrantReadWriteLock =
-            ReentrantReadWriteLock()
     }
 
 }
