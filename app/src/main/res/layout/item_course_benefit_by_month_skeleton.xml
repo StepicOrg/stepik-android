@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/courseBenefitByMonthSummaryLoading"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/bg_course_item_placeholder"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="100dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="140dp"
+            android:layout_height="12dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="80dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="96dp"
+            android:layout_height="12dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthSalesTitleLoading"
+        android:layout_width="96dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSummaryLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthSalesValueLoading"
+        android:layout_width="96dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSummaryLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthRefundsTitleLoading"
+        android:layout_width="96dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSalesTitleLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthRefundsValueLoading"
+        android:layout_width="76dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSalesValueLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthPaymentsCountTitleLoading"
+        android:layout_width="96dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthRefundsTitleLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthPaymentsCountValueLoading"
+        android:layout_width="76dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthRefundsValueLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/stepikPaymentsIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthPaymentsCountTitleLoading"
+        app:radius="32dp" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthStepikPaymentsTitleLoading"
+        android:layout_width="140dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toRightOf="@id/stepikPaymentsIcon"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthPaymentsCountTitleLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthStepikPaymentsValueLoading"
+        android:layout_width="60dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthPaymentsCountValueLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/ZLinkPaymentsIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthStepikPaymentsTitleLoading"
+        app:radius="32dp" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthZLinkPaymentsTitleLoading"
+        android:layout_width="140dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/stepikPaymentsIcon"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthStepikPaymentsTitleLoading" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/courseBenefitByMonthZLinkPaymentsValueLoading"
+        android:layout_width="60dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthStepikPaymentsValueLoading" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

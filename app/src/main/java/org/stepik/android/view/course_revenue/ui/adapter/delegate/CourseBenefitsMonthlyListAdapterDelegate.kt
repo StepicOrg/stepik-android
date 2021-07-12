@@ -36,6 +36,7 @@ class CourseBenefitsMonthlyListAdapterDelegate(
         private val viewStateDelegate = ViewStateDelegate<CourseBenefitsMonthlyFeature.State>()
         private val adapter = DefaultDelegateAdapter<CourseBenefitByMonthListItem>()
             .also {
+                it += CourseBenefitsMonthlyLoadingAdapterDelegate()
                 it += CourseBenefitsMonthlyAdapterDelegate(displayPriceMapper)
             }
 
