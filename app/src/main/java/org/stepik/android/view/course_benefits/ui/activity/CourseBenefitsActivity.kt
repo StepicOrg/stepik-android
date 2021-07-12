@@ -22,9 +22,11 @@ import org.stepik.android.view.course_benefits.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_benefits.ui.adapter.delegate.CourseBenefitsPurchasesAndRefundListAdapterDelegate
 import org.stepik.android.view.course_benefits.ui.delegate.CourseBenefitSummaryViewDelegate
 import org.stepik.android.view.course_benefits.model.CourseBenefitsTabs
+import org.stepik.android.view.course_benefits.ui.dialog.TransactionBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import kotlin.math.abs
@@ -119,7 +121,11 @@ class CourseBenefitsActivity : AppCompatActivity(), ReduxView<CourseBenefitsFeat
     }
 
     private fun initViewPager() {
-        courseBenefitsOperationsItemAdapter += CourseBenefitsPurchasesAndRefundListAdapterDelegate(displayPriceMapper)
+        courseBenefitsOperationsItemAdapter += CourseBenefitsPurchasesAndRefundListAdapterDelegate(displayPriceMapper) {
+            TransactionBottomSheetDialogFragment
+                .newInstance(it.courseBenefit, it.user, courseTitle)
+                .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
+        }
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
             tab.text = getString(CourseBenefitsTabs.values()[position].titleStringRes)

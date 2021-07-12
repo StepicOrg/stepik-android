@@ -1133,4 +1133,19 @@
 
     <string name="course_benefits_empty">По данному запросу\nплатежей не найдено</string>
     <string name="course_benefits_refund">Возврат</string>
+
+    <!-- Transaction bottom sheet -->
+    <string name="transaction_title_purchase">Детали покупки</string>
+    <string name="transaction_title_refund">Детали возврата</string>
+    <string name="transaction_date">Дата</string>
+    <string name="transaction_course">Курс</string>
+    <string name="transaction_buyer">Покупатель</string>
+    <string name="transaction_payment">Платеж</string>
+    <string name="transaction_promo_code">Промокод</string>
+    <string name="transaction_channel">Канал</string>
+    <string name="transaction_stepik_channel">Переход через Stepik</string>
+    <string name="transaction_z_link_channel">Переход через Z-link</string>
+    <string name="transaction_share">Ваш процент</string>
+    <string name="transaction_share_value">%s%% с продаж за вычетом комиссии</string>
+    <string name="transaction_income">Ваш доход</string>
 </resources>

@@ -19,7 +19,8 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 
 class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
-    private val displayPriceMapper: DisplayPriceMapper
+    private val displayPriceMapper: DisplayPriceMapper,
+    private val onItemClick: (CourseBenefitListItem.Data) -> Unit
 ) : AdapterDelegate<CourseBenefitOperationItem, DelegateViewHolder<CourseBenefitOperationItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -37,7 +38,7 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
         private val adapter = DefaultDelegateAdapter<CourseBenefitListItem>()
             .also {
                 it += CourseBenefitsPurchasesAndRefundsLoadingAdapterDelegate()
-                it += CourseBenefitsPurchasesAndRefundsAdapterDelegate(displayPriceMapper)
+                it += CourseBenefitsPurchasesAndRefundsAdapterDelegate(displayPriceMapper, onItemClick)
             }
 
         init {

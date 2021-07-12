@@ -1192,4 +1192,19 @@
     <string name="course_benefits_with_refunded_prefix" translatable="false">-%s</string>
 
     <string name="course_benefits_refund">Refund</string>
+
+    <!-- Transaction bottom sheet -->
+    <string name="transaction_title_purchase">Purchase details</string>
+    <string name="transaction_title_refund">Refund details</string>
+    <string name="transaction_date">Date</string>
+    <string name="transaction_course">Course</string>
+    <string name="transaction_buyer">Customer</string>
+    <string name="transaction_payment">Payment</string>
+    <string name="transaction_promo_code">Promo code</string>
+    <string name="transaction_channel">Channel</string>
+    <string name="transaction_stepik_channel">Came via Stepik</string>
+    <string name="transaction_z_link_channel">Came via Z-link</string>
+    <string name="transaction_share">Your share</string>
+    <string name="transaction_share_value">%s%% of sales revenue minus Stepik\'s fee</string>
+    <string name="transaction_income">Your earnings</string>
 </resources>

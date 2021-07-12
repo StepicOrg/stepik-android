@@ -47,6 +47,7 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepik.android.view.injection.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.course_benefits.ui.dialog.TransactionBottomSheetDialogFragment
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.achievements.AchievementsComponent
@@ -370,5 +371,6 @@ interface AppCoreComponent {
     fun inject(onboardingCourseListsActivity: OnboardingCourseListsActivity)
 
     fun inject(lessonDemoCompleteBottomSheetDialogFragment: LessonDemoCompleteBottomSheetDialogFragment)
+    fun inject(transactionBottomSheetDialogFragmentFragment: TransactionBottomSheetDialogFragment)
     fun inject(videoPlayerForegroundService: VideoPlayerForegroundService)
 }

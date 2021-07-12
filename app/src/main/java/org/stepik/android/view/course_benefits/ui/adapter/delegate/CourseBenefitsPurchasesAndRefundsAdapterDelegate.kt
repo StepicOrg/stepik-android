@@ -17,7 +17,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import java.util.TimeZone
 
 class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
-    private val displayPriceMapper: DisplayPriceMapper
+    private val displayPriceMapper: DisplayPriceMapper,
+    private val onItemClick: (CourseBenefitListItem.Data) -> Unit
 ) : AdapterDelegate<CourseBenefitListItem, DelegateViewHolder<CourseBenefitListItem>>() {
     override fun isForViewType(position: Int, data: CourseBenefitListItem): Boolean =
         data is CourseBenefitListItem.Data
@@ -28,6 +29,11 @@ class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
     private inner class ViewHolder(
         override val containerView: View
     ) : DelegateViewHolder<CourseBenefitListItem>(containerView), LayoutContainer {
+
+        init {
+            itemView.setOnClickListener { (itemData as? CourseBenefitListItem.Data)?.let { onItemClick(it) } }
+        }
+
         override fun onBind(data: CourseBenefitListItem) {
             data as CourseBenefitListItem.Data
             purchaseRefundIcon.setImageResource(getIconRes(data.courseBenefit))
