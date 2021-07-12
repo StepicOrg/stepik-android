@@ -19,7 +19,7 @@ constructor(
             .getCourseBenefitSummaries(courseId)
             .maybeFirst()
 
-    fun getCourseBenefits(): Maybe<List<CourseBenefit>> =
+    fun getCourseBenefits(courseId: Long): Maybe<List<CourseBenefit>> =
         courseBenefitsRepository
-            .getCourseBenefits()
+            .getCourseBenefits(courseId)
 }

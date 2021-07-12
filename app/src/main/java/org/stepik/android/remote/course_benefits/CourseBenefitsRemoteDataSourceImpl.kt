@@ -12,8 +12,8 @@ class CourseBenefitsRemoteDataSourceImpl
 constructor(
     private val courseBenefitsService: CourseBenefitsService
 ) : CourseBenefitsRemoteDataSource {
-    override fun getCourseBenefits(): Maybe<List<CourseBenefit>> =
+    override fun getCourseBenefits(courseId: Long): Maybe<List<CourseBenefit>> =
         courseBenefitsService
-            .getCourseBenefits()
+            .getCourseBenefits(courseId)
             .map(CourseBenefitsResponse::courseBenefits)
 }

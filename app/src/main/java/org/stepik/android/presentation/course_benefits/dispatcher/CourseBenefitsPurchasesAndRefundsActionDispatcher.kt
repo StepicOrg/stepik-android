@@ -23,7 +23,7 @@ constructor(
         when (action) {
             is CourseBenefitsPurchasesAndRefundsFeature.Action.FetchCourseBenefits -> {
                 compositeDisposable += courseBenefitsInteractor
-                    .getCourseBenefits()
+                    .getCourseBenefits(action.courseId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

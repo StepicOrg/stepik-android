@@ -26,7 +26,7 @@ constructor(
                             courseBenefitsPurchasesAndRefundsState = CourseBenefitsPurchasesAndRefundsFeature.State.Loading
                         ) to setOf(
                             Action.CourseBenefitSummaryAction(CourseBenefitSummaryFeature.Action.FetchCourseBenefitSummary(message.courseId)),
-                            Action.CourseBenefitsPurchasesAndRefundsAction(CourseBenefitsPurchasesAndRefundsFeature.Action.FetchCourseBenefits)
+                            Action.CourseBenefitsPurchasesAndRefundsAction(CourseBenefitsPurchasesAndRefundsFeature.Action.FetchCourseBenefits(message.courseId))
                         )
                 } else {
                     null

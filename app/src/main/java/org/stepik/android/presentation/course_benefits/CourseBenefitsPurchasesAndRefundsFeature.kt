@@ -17,7 +17,7 @@ interface CourseBenefitsPurchasesAndRefundsFeature {
     }
 
     sealed class Action {
-        object FetchCourseBenefits : Action()
+        data class FetchCourseBenefits(val courseId: Long) : Action()
         sealed class ViewAction : Action()
     }
 }
