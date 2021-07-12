@@ -2,16 +2,16 @@ package org.stepik.android.presentation.course_revenue
 
 interface CourseRevenueFeature {
     data class State(
-        val courseBenefitState: CourseBenefitState,
+        val courseRevenueState: CourseRevenueState,
         val courseBenefitSummaryState: CourseBenefitSummaryFeature.State,
         val courseBenefitsState: CourseBenefitsFeature.State
     )
 
-    sealed class CourseBenefitState {
-        object Idle : CourseBenefitState()
-        object Loading : CourseBenefitState()
-        object Error : CourseBenefitState()
-        object Content : CourseBenefitState()
+    sealed class CourseRevenueState {
+        object Idle : CourseRevenueState()
+        object Loading : CourseRevenueState()
+        object Error : CourseRevenueState()
+        object Content : CourseRevenueState()
     }
 
     sealed class Message {

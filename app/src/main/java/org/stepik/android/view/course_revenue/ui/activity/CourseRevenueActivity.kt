@@ -63,7 +63,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private lateinit var courseBenefitSummaryDelegate: CourseBenefitSummaryViewDelegate
 
-    private val viewStateDelegate = ViewStateDelegate<CourseRevenueFeature.CourseBenefitState>()
+    private val viewStateDelegate = ViewStateDelegate<CourseRevenueFeature.CourseRevenueState>()
 
     private val courseBenefitsOperationsItemAdapter: DefaultDelegateAdapter<CourseBenefitOperationItem> = DefaultDelegateAdapter()
 
@@ -114,10 +114,10 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     }
 
     private fun initViewStateDelegate() {
-        viewStateDelegate.addState<CourseRevenueFeature.CourseBenefitState.Idle>()
-        viewStateDelegate.addState<CourseRevenueFeature.CourseBenefitState.Loading>(courseBenefitsTabs, courseBenefitSummaryContainer, courseBenefitsOperationsViewPager)
-        viewStateDelegate.addState<CourseRevenueFeature.CourseBenefitState.Error>(coursesBenefitsLoadingError)
-        viewStateDelegate.addState<CourseRevenueFeature.CourseBenefitState.Content>(courseBenefitsTabs, courseBenefitSummaryContainer, courseBenefitsOperationsViewPager)
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Idle>()
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Loading>(courseBenefitsTabs, courseBenefitSummaryContainer, courseBenefitsOperationsViewPager)
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Error>(coursesBenefitsLoadingError)
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Content>(courseBenefitsTabs, courseBenefitSummaryContainer, courseBenefitsOperationsViewPager)
     }
 
     private fun initViewPager() {
@@ -137,7 +137,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     }
 
     override fun render(state: CourseRevenueFeature.State) {
-        viewStateDelegate.switchState(state.courseBenefitState)
+        viewStateDelegate.switchState(state.courseRevenueState)
         courseBenefitSummaryDelegate.render(state.courseBenefitSummaryState)
         courseBenefitsOperationsItemAdapter.items = listOf(CourseBenefitOperationItem.PurchasesAndRefunds(state.courseBenefitsState))
     }

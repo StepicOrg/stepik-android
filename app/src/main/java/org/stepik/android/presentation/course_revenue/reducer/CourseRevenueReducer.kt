@@ -18,10 +18,10 @@ constructor(
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                if (state.courseBenefitState is CourseRevenueFeature.CourseBenefitState.Idle ||
-                    state.courseBenefitState is CourseRevenueFeature.CourseBenefitState.Error && message.forceUpdate) {
+                if (state.courseRevenueState is CourseRevenueFeature.CourseRevenueState.Idle ||
+                    state.courseRevenueState is CourseRevenueFeature.CourseRevenueState.Error && message.forceUpdate) {
                         State(
-                            courseBenefitState = CourseRevenueFeature.CourseBenefitState.Loading,
+                            courseRevenueState = CourseRevenueFeature.CourseRevenueState.Loading,
                             courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
                             courseBenefitsState = CourseBenefitsFeature.State.Loading
                         ) to setOf(
@@ -36,13 +36,13 @@ constructor(
                 val (courseBenefitSummaryState, courseBenefitSummaryActions) = courseBenefitSummaryReducer.reduce(state.courseBenefitSummaryState, message.message)
                 if (courseBenefitSummaryState is CourseBenefitSummaryFeature.State.Error) {
                     State(
-                        courseBenefitState = CourseRevenueFeature.CourseBenefitState.Error,
+                        courseRevenueState = CourseRevenueFeature.CourseRevenueState.Error,
                         courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
                         courseBenefitsState = CourseBenefitsFeature.State.Loading
                     ) to emptySet()
                 } else {
                     State(
-                        courseBenefitState = CourseRevenueFeature.CourseBenefitState.Content,
+                        courseRevenueState = CourseRevenueFeature.CourseRevenueState.Content,
                         courseBenefitSummaryState = courseBenefitSummaryState,
                         courseBenefitsState = state.courseBenefitsState
                     ) to courseBenefitSummaryActions.map(Action::CourseBenefitSummaryAction).toSet()

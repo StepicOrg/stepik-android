@@ -33,7 +33,7 @@ object CourseRevenuePresentationModule {
     ): ViewModel =
         CourseRevenueViewModel(
             ReduxFeature(CourseRevenueFeature.State(
-                courseBenefitState = CourseRevenueFeature.CourseBenefitState.Idle,
+                courseRevenueState = CourseRevenueFeature.CourseRevenueState.Idle,
                 courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
                 courseBenefitsState = CourseBenefitsFeature.State.Loading
             ), courseRevenueReducer)
