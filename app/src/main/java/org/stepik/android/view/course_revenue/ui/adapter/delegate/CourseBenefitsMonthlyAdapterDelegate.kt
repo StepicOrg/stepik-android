@@ -12,6 +12,7 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListIt
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import java.util.Locale
 import java.util.TimeZone
 
 class CourseBenefitsMonthlyAdapterDelegate(
