@@ -19,7 +19,7 @@ import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
-import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsPurchasesAndRefundListAdapterDelegate
+import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
 import org.stepik.android.view.course_revenue.model.CourseBenefitsTabs
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
@@ -121,7 +121,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     }
 
     private fun initViewPager() {
-        courseBenefitsOperationsItemAdapter += CourseBenefitsPurchasesAndRefundListAdapterDelegate(displayPriceMapper) {
+        courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(displayPriceMapper) {
             TransactionBottomSheetDialogFragment
                 .newInstance(it.courseBenefit, it.user, courseTitle)
                 .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)

@@ -3,10 +3,9 @@ package org.stepik.android.view.course_revenue.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-
 import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_purchase_refund.*
+import kotlinx.android.synthetic.main.item_course_benefit.*
 import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
@@ -16,7 +15,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import java.util.TimeZone
 
-class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
+class CourseBenefitsAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper,
     private val onItemClick: (CourseBenefitListItem.Data) -> Unit
 ) : AdapterDelegate<CourseBenefitListItem, DelegateViewHolder<CourseBenefitListItem>>() {
@@ -24,7 +23,7 @@ class CourseBenefitsPurchasesAndRefundsAdapterDelegate(
         data is CourseBenefitListItem.Data
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseBenefitListItem> =
-        ViewHolder(createView(parent, R.layout.item_purchase_refund))
+        ViewHolder(createView(parent, R.layout.item_course_benefit))
 
     private inner class ViewHolder(
         override val containerView: View

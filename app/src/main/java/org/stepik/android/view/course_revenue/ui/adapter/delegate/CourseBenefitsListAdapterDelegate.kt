@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_course_benefits_purchases_and_refunds.*
+import kotlinx.android.synthetic.main.item_course_benefits.*
 import org.stepic.droid.R
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
@@ -18,7 +18,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 
-class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
+class CourseBenefitsListAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper,
     private val onItemClick: (CourseBenefitListItem.Data) -> Unit
 ) : AdapterDelegate<CourseBenefitOperationItem, DelegateViewHolder<CourseBenefitOperationItem>>() {
@@ -28,7 +28,7 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
         data is CourseBenefitOperationItem.PurchasesAndRefunds
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseBenefitOperationItem> =
-        ViewHolder(createView(parent, R.layout.item_course_benefits_purchases_and_refunds))
+        ViewHolder(createView(parent, R.layout.item_course_benefits))
 
     private inner class ViewHolder(
         override val containerView: View
@@ -37,8 +37,8 @@ class CourseBenefitsPurchasesAndRefundListAdapterDelegate(
         private val viewStateDelegate = ViewStateDelegate<CourseBenefitsFeature.State>()
         private val adapter = DefaultDelegateAdapter<CourseBenefitListItem>()
             .also {
-                it += CourseBenefitsPurchasesAndRefundsLoadingAdapterDelegate()
-                it += CourseBenefitsPurchasesAndRefundsAdapterDelegate(displayPriceMapper, onItemClick)
+                it += CourseBenefitsListLoadingAdapterDelegate()
+                it += CourseBenefitsAdapterDelegate(displayPriceMapper, onItemClick)
             }
 
         init {
