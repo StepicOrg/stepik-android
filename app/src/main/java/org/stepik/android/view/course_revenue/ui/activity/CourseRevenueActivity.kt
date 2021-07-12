@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -86,12 +87,18 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
         analytic.report(CourseBenefitsScreenOpenedEvent(courseId, courseTitle))
 
-        courseBenefitToolbarTitle.text = getString(R.string.course_benefits_toolbar_title, courseTitle)
+        courseBenefitToolbarTitle.text = if (courseTitle.isNullOrBlank()) {
+            getString(R.string.course_benefits_revenue_title)
+        } else {
+            getString(R.string.course_benefits_toolbar_title, courseTitle)
+        }
 
         courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             val ratio = abs(verticalOffset).toFloat() / (courseBenefitsCollapsingToolbar.height - courseBenefitToolbar.height)
-            courseBenefitsToolbarScrim.alpha = ratio * 1.5f
+            courseBenefitSummaryContainer.alpha = 1f - (ratio * 1.5f)
         })
+
+        ViewCompat.setTranslationZ(divider, ViewCompat.getElevation(courseBenefitsAppBar))
 
         initViewPager()
         initViewStateDelegate()
