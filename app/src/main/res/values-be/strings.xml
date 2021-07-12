@@ -1011,4 +1011,12 @@
     <string name="transaction_share">Ваш працэнт</string>
     <string name="transaction_share_value">%s%% з продажаў за вылікам камісіі</string>
     <string name="transaction_income">Ваш даход</string>
+
+    <!-- Course benefit by month item -->
+    <string name="course_benefit_by_month_payout">Чаканая выплата</string>
+    <string name="course_benefit_by_month_sales">Продажу</string>
+    <string name="course_benefit_by_month_refunds">Звароты</string>
+    <string name="course_benefit_by_month_purchases">Пакупкі</string>
+    <string name="course_benefit_by_month_channel_stepik">Пераходы праз Stepik</string>
+    <string name="course_benefit_by_month_channel_z_link">Пераходы праз Z-Link</string>
 </resources>

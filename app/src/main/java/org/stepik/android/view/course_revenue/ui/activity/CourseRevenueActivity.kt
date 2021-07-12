@@ -22,6 +22,7 @@ import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
 import org.stepik.android.view.course_revenue.model.CourseRevenueTabs
+import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsMonthlyListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -127,6 +128,8 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
                 .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
         }
 
+        courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(displayPriceMapper)
+
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
             tab.text = getString(CourseRevenueTabs.values()[position].titleStringRes)
@@ -140,6 +143,9 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     override fun render(state: CourseRevenueFeature.State) {
         viewStateDelegate.switchState(state.courseRevenueState)
         courseBenefitSummaryDelegate.render(state.courseBenefitSummaryState)
-        courseBenefitsOperationsItemAdapter.items = listOf(CourseBenefitOperationItem.PurchasesAndRefunds(state.courseBenefitsState))
+        courseBenefitsOperationsItemAdapter.items = listOf(
+            CourseBenefitOperationItem.CourseBenefits(state.courseBenefitsState),
+            CourseBenefitOperationItem.CourseBenefitsMonthly(state.courseBenefitsMonthlyState)
+        )
     }
 }

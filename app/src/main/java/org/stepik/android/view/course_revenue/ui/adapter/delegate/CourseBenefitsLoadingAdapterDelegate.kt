@@ -7,7 +7,7 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
-class CourseBenefitsListLoadingAdapterDelegate : AdapterDelegate<CourseBenefitListItem, DelegateViewHolder<CourseBenefitListItem>>() {
+class CourseBenefitsLoadingAdapterDelegate : AdapterDelegate<CourseBenefitListItem, DelegateViewHolder<CourseBenefitListItem>>() {
     override fun isForViewType(position: Int, data: CourseBenefitListItem): Boolean =
         data is CourseBenefitListItem.Placeholder
 

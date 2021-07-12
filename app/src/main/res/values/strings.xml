@@ -1207,4 +1207,12 @@
     <string name="transaction_share">Your share</string>
     <string name="transaction_share_value">%s%% of sales revenue minus Stepik\'s fee</string>
     <string name="transaction_income">Your earnings</string>
+
+    <!-- Course benefit by month item -->
+    <string name="course_benefit_by_month_payout">Expected payout</string>
+    <string name="course_benefit_by_month_sales">Sales</string>
+    <string name="course_benefit_by_month_refunds">Refunds</string>
+    <string name="course_benefit_by_month_purchases">Purchases</string>
+    <string name="course_benefit_by_month_channel_stepik">Came via Stepik</string>
+    <string name="course_benefit_by_month_channel_z_link">Came via Z-Link</string>
 </resources>
