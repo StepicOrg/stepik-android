@@ -86,7 +86,7 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionBuyerValue.text = user?.fullName.orEmpty()
         transactionBuyerTitle.isVisible = user != null
         transactionBuyerValue.isVisible = user != null
-        transactionBuyerValue.setOnClickListener { user?.let { screenManager.openProfile(requireContext(), it.id) } }
+        buyerOverlayView.setOnClickListener { user?.let { screenManager.openProfile(requireContext(), it.id) } }
 
         transactionPaymentValue.text = displayPriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, courseBenefit.paymentAmount)
 
