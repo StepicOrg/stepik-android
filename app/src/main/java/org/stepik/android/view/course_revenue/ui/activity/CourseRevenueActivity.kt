@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_course_benefits.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -22,7 +21,6 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
-import org.stepik.android.view.course_revenue.model.CourseRevenueTabs
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -134,9 +132,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
                 .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
         }
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
-        TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
-            tab.text = getString(CourseRevenueTabs.values()[position].titleStringRes)
-        }.attach()
+        courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
     }
 
     override fun onAction(action: CourseRevenueFeature.Action.ViewAction) {
