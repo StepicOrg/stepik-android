@@ -1019,4 +1019,5 @@
     <string name="course_benefit_by_month_purchases">Пакупкі</string>
     <string name="course_benefit_by_month_channel_stepik">Пераходы праз Stepik</string>
     <string name="course_benefit_by_month_channel_z_link">Пераходы праз Z-Link</string>
+    <string name="course_benefit_by_month_channel_invoice">Аплата па ліку</string>
 </resources>

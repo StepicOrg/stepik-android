@@ -16,6 +16,8 @@ data class CourseBenefitByMonth(
     val month: Int,
     @SerializedName("count_payments")
     val countPayments: Int,
+    @SerializedName("count_invoice_payments")
+    val countInvoicePayments: Int,
     @SerializedName("count_z_payments")
     val countZPayments: Int,
     @SerializedName("count_non_z_payments")

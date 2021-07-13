@@ -45,6 +45,7 @@ class CourseBenefitsMonthlyAdapterDelegate(
             courseBenefitByMonthCountPaymentsCountValue.text = data.courseBenefitByMonth.countPayments.toString()
             courseBenefitByMonthStepikPaymentsValue.text = data.courseBenefitByMonth.countNonZPayments.toString()
             courseBenefitByMonthZLinkPaymentsValue.text = data.courseBenefitByMonth.countZPayments.toString()
+            courseBenefitByMonthInvoicePaymentsValue.text = data.courseBenefitByMonth.countInvoicePayments.toString()
         }
 
         private fun resolveIncomeString(totalUserIncome: String, totalRefunds: String, currencyCode: String): Pair<String, Int> {
