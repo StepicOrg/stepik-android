@@ -11,6 +11,8 @@ import org.stepik.android.domain.course_revenue.repository.CourseBenefitSummarie
 import org.stepik.android.domain.course_revenue.repository.CourseBenefitsRepository
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.user.User
+import ru.nobird.android.core.model.PagedList
+import ru.nobird.android.core.model.transform
 import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
@@ -32,11 +34,13 @@ constructor(
             .getCourseBenefits(courseId)
             .flatMap { resolveCourseBenefitListItems(it) }
 
-    fun getCourseBenefitsByMonths(courseId: Long): Single<List<CourseBenefitByMonthListItem.Data>> =
+    fun getCourseBenefitsByMonths(courseId: Long): Single<PagedList<CourseBenefitByMonthListItem.Data>> =
         courseBenefitsByMonthsRepository
             .getCourseBenefitByMonths(courseId)
             .map { courseBenefitsByMonths ->
-                courseBenefitsByMonths.map { CourseBenefitByMonthListItem.Data(it) }
+                courseBenefitsByMonths.transform {
+                    map { CourseBenefitByMonthListItem.Data(it) }
+                }
             }
 
     private fun resolveCourseBenefitListItems(courseBenefits: List<CourseBenefit>): Maybe<List<CourseBenefitListItem.Data>> =

@@ -1,17 +1,18 @@
 package org.stepik.android.presentation.course_revenue
 
 import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListItem
+import ru.nobird.android.core.model.PagedList
 
 interface CourseBenefitsMonthlyFeature {
     sealed class State {
         object Loading : State()
         object Empty : State()
         object Error : State()
-        data class Content(val courseBenefitByMonthListItems: List<CourseBenefitByMonthListItem.Data>) : State()
+        data class Content(val courseBenefitByMonthListItems: PagedList<CourseBenefitByMonthListItem.Data>) : State()
     }
 
     sealed class Message {
-        data class FetchCourseBenefitsByMonthsSuccess(val courseBenefitByMonthListItems: List<CourseBenefitByMonthListItem.Data>) : Message()
+        data class FetchCourseBenefitsByMonthsSuccess(val courseBenefitByMonthListItems: PagedList<CourseBenefitByMonthListItem.Data>) : Message()
         object FetchCourseBenefitsByMonthsFailure : Message()
     }
 
