@@ -29,7 +29,7 @@ constructor(
             .getCourseBenefitSummaries(courseId)
             .maybeFirst()
 
-    fun getCourseBenefits(courseId: Long): Maybe<List<CourseBenefitListItem.Data>> =
+    fun getCourseBenefits(courseId: Long): Single<List<CourseBenefitListItem.Data>> =
         courseBenefitsRepository
             .getCourseBenefits(courseId)
             .flatMap { resolveCourseBenefitListItems(it) }
@@ -42,12 +42,11 @@ constructor(
                     .getCourseBeneficiary(courseId, profile.id)
             }
 
-    private fun resolveCourseBenefitListItems(courseBenefits: List<CourseBenefit>): Maybe<List<CourseBenefitListItem.Data>> =
+    private fun resolveCourseBenefitListItems(courseBenefits: List<CourseBenefit>): Single<List<CourseBenefitListItem.Data>> =
         userRepository
             .getUsers(courseBenefits.map(CourseBenefit::buyer))
             .map { users ->
                 val userMap = users.associateBy(User::id)
                 courseBenefits.map { CourseBenefitListItem.Data(it, userMap[it.buyer]) }
             }
-            .toMaybe()
 }

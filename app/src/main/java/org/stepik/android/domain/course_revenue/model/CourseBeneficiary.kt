@@ -16,8 +16,4 @@ data class CourseBeneficiary(
     val percent: String,
     @SerializedName("is_valid")
     val isValid: Boolean
-) : Parcelable {
-    companion object {
-        val EMPTY = CourseBeneficiary(-1L, -1L, -1L, "", false)
-    }
-}
+) : Parcelable
