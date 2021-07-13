@@ -23,7 +23,7 @@ constructor(
         when (action) {
             is CourseBenefitsMonthlyFeature.Action.FetchCourseBenefitsByMonths -> {
                 compositeDisposable += courseBenefitsInteractor
-                    .getCourseBenefitsByMonths(action.courseId)
+                    .getCourseBenefitsByMonths(action.courseId, action.page)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

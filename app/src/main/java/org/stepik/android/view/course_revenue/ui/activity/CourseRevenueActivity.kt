@@ -19,6 +19,7 @@ import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpe
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsSummaryClicked
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
+import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -143,7 +144,9 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
             onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.FetchNextPage(courseId))) }
         )
 
-        courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(displayPriceMapper)
+        courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(displayPriceMapper) {
+            courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthNext(courseId)))
+        }
 
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))

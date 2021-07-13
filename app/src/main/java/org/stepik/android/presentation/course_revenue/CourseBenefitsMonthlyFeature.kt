@@ -8,16 +8,20 @@ interface CourseBenefitsMonthlyFeature {
         object Loading : State()
         object Empty : State()
         object Error : State()
-        data class Content(val courseBenefitByMonthListItems: PagedList<CourseBenefitByMonthListItem.Data>) : State()
+        data class Content(
+            val courseBenefitByMonthListDataItems: PagedList<CourseBenefitByMonthListItem.Data>,
+            val courseBenefitByMonthListItems: List<CourseBenefitByMonthListItem>
+        ) : State()
     }
 
     sealed class Message {
-        data class FetchCourseBenefitsByMonthsSuccess(val courseBenefitByMonthListItems: PagedList<CourseBenefitByMonthListItem.Data>) : Message()
+        data class FetchCourseBenefitsByMonthNext(val courseId: Long) : Message()
+        data class FetchCourseBenefitsByMonthsSuccess(val courseBenefitByMonthListDataItems: PagedList<CourseBenefitByMonthListItem.Data>) : Message()
         object FetchCourseBenefitsByMonthsFailure : Message()
     }
 
     sealed class Action {
-        data class FetchCourseBenefitsByMonths(val courseId: Long) : Action()
+        data class FetchCourseBenefitsByMonths(val courseId: Long, val page: Int = 1) : Action()
         sealed class ViewAction : Action()
     }
 }
