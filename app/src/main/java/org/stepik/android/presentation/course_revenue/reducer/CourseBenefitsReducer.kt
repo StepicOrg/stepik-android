@@ -17,7 +17,7 @@ constructor() : StateReducer<State, Message, Action> {
                         if (message.courseBenefitListItems.isEmpty()) {
                             State.Empty
                         } else {
-                            State.Content(message.courseBenefitListItems)
+                            State.Content(message.courseBenefitListItems, message.courseBeneficiary)
                         }
                     courseBenefitsPurchasesAndRefundsState to emptySet()
                 } else {

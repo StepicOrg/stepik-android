@@ -13,9 +13,9 @@ class CourseBeneficiariesRemoteDataSourceImpl
 constructor(
     private val courseBeneficiariesService: CourseBeneficiariesService
 ) : CourseBeneficiariesRemoteDataSource {
-    override fun getCourseBeneficiary(courseId: Long): Single<CourseBeneficiary> =
+    override fun getCourseBeneficiary(courseId: Long, userId: Long): Single<CourseBeneficiary> =
         courseBeneficiariesService
-            .getCourseBeneficiaries(courseId)
+            .getCourseBeneficiaries(courseId, userId)
             .map(CourseBeneficiariesResponse::courseBeneficiaries)
             .first()
 }

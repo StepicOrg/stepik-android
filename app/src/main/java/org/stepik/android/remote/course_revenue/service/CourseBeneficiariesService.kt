@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface CourseBeneficiariesService {
     @GET("/api/course-beneficiaries")
-    fun getCourseBeneficiaries(@Query("course") courseId: Long): Single<CourseBeneficiariesResponse>
+    fun getCourseBeneficiaries(@Query("course") courseId: Long, @Query("user") userId: Long): Single<CourseBeneficiariesResponse>
 }

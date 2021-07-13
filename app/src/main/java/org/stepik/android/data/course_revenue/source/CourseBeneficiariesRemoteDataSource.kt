@@ -4,5 +4,5 @@ import io.reactivex.Single
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 
 interface CourseBeneficiariesRemoteDataSource {
-    fun getCourseBeneficiary(courseId: Long): Single<CourseBeneficiary>
+    fun getCourseBeneficiary(courseId: Long, userId: Long): Single<CourseBeneficiary>
 }

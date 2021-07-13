@@ -14,7 +14,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.toFixed
+import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -29,16 +29,20 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         private const val ARG_USER = "user"
         private const val ARG_COURSE_TITLE = "course_title"
 
-        fun newInstance(courseBenefit: CourseBenefit, user: User?, courseTitle: String?): DialogFragment =
+        private const val PERCENTAGE_SUFFIX = ".00"
+
+        fun newInstance(courseBenefit: CourseBenefit, courseBeneficiary: CourseBeneficiary, user: User?, courseTitle: String?): DialogFragment =
             TransactionBottomSheetDialogFragment()
                 .apply {
                     this.courseBenefit = courseBenefit
+                    this.courseBeneficiary = courseBeneficiary
                     this.arguments?.putParcelable(ARG_USER, user)
                     this.arguments?.putString(ARG_COURSE_TITLE, courseTitle)
                 }
     }
 
     private var courseBenefit: CourseBenefit by argument()
+    private var courseBeneficiary: CourseBeneficiary by argument()
     private var user: User? = null
     private var courseTitle: String? = null
 
@@ -97,13 +101,7 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 getString(R.string.transaction_stepik_channel)
             }
 
-        courseBenefit.amountPercent?.let {
-            transactionPercentageValue.text = getString(R.string.transaction_share_value, it.toFixed(2))
-        }
-
-        transactionPercentageTitle.isVisible = courseBenefit.amountPercent != null
-        transactionPercentageValue.isVisible = courseBenefit.amountPercent != null
-
+        transactionPercentageValue.text = getString(R.string.transaction_share_value, courseBeneficiary.percent.removeSuffix(PERCENTAGE_SUFFIX))
         transactionIncomeValue.text = displayPriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, courseBenefit.amount)
     }
 }

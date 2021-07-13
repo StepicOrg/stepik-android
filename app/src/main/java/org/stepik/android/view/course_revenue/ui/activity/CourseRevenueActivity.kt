@@ -15,6 +15,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpenedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsSummaryClicked
+import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
+import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -45,6 +47,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private var courseId: Long = NO_ID
     private var courseTitle: String? = null
+    private var courseBeneficiary: CourseBeneficiary? = null
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -127,8 +130,9 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private fun initViewPager() {
         courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(displayPriceMapper) {
+            val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
             TransactionBottomSheetDialogFragment
-                .newInstance(it.courseBenefit, it.user, courseTitle)
+                .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
                 .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
         }
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
@@ -143,5 +147,8 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         viewStateDelegate.switchState(state.courseRevenueState)
         courseBenefitSummaryDelegate.render(state.courseBenefitSummaryState)
         courseBenefitsOperationsItemAdapter.items = listOf(CourseBenefitOperationItem.PurchasesAndRefunds(state.courseBenefitsState))
+        if (state.courseBenefitsState is CourseBenefitsFeature.State.Content) {
+            courseBeneficiary = state.courseBenefitsState.courseBeneficiary
+        }
     }
 }

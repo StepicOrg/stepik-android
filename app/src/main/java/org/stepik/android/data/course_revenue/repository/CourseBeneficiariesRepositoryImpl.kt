@@ -11,6 +11,6 @@ class CourseBeneficiariesRepositoryImpl
 constructor(
     private val courseBeneficiariesRemoteDataSource: CourseBeneficiariesRemoteDataSource
 ) : CourseBeneficiariesRepository {
-    override fun getCourseBeneficiaries(courseId: Long): Single<CourseBeneficiary> =
-        courseBeneficiariesRemoteDataSource.getCourseBeneficiary(courseId)
+    override fun getCourseBeneficiary(courseId: Long, userId: Long): Single<CourseBeneficiary> =
+        courseBeneficiariesRemoteDataSource.getCourseBeneficiary(courseId, userId)
 }

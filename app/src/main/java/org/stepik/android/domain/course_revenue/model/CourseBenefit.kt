@@ -2,7 +2,6 @@ package org.stepik.android.domain.course_revenue.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
@@ -41,16 +40,4 @@ data class CourseBenefit(
         @SerializedName("refunded")
         REFUNDED("refunded")
     }
-
-    @IgnoredOnParcel
-    val amountPercent: Float?
-        get() {
-            val amountFloat = amount.toFloatOrNull()
-            val paymentAmountFloat = paymentAmount.toFloatOrNull()
-            return if (amountFloat != null && paymentAmountFloat != null) {
-                (amountFloat / paymentAmountFloat) * 100f
-            } else {
-                null
-            }
-        }
 }
