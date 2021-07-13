@@ -34,7 +34,7 @@ constructor(
             .getCourseBenefitSummaries(courseId)
             .maybeFirst()
 
-    fun getCourseBenefits(courseId: Long): Single<List<CourseBenefitListItem.Data>> =
+    fun getCourseBenefits(courseId: Long): Single<PagedList<CourseBenefitListItem.Data>> =
         courseBenefitsRepository
             .getCourseBenefits(courseId)
             .flatMap { resolveCourseBenefitListItems(it) }
@@ -56,11 +56,13 @@ constructor(
                 }
             }
 
-    private fun resolveCourseBenefitListItems(courseBenefits: List<CourseBenefit>): Single<List<CourseBenefitListItem.Data>> =
+    private fun resolveCourseBenefitListItems(courseBenefits: PagedList<CourseBenefit>): Single<PagedList<CourseBenefitListItem.Data>> =
         userRepository
             .getUsers(courseBenefits.map(CourseBenefit::buyer))
             .map { users ->
                 val userMap = users.associateBy(User::id)
-                courseBenefits.map { CourseBenefitListItem.Data(it, userMap[it.buyer]) }
+                courseBenefits.transform {
+                    map { CourseBenefitListItem.Data(it, userMap[it.buyer]) }
+                }
             }
 }
