@@ -1183,6 +1183,28 @@
     <string name="course_beneifts_turnover_total">Sales since %s</string>
     <string name="course_benefits_earnings_disclaimer">Important: All operations are carried out Moscow Time (MSK, UTC+3)</string>
 
-    <string name="course_benefits_purchases_and_refunds_tab">Purchases and refunds</string>
+    <string name="course_benefits_tab">Purchases and refunds</string>
     <string name="course_benefits_payments_tab">Payments</string>
+
+    <string name="course_benefits_empty">No payments found\nfor this request</string>
+
+    <string name="course_benefits_with_debited_prefix" translatable="false">+%s</string>
+    <string name="course_benefits_with_refunded_prefix" translatable="false">-%s</string>
+
+    <string name="course_benefits_refund">Refund</string>
+
+    <!-- Transaction bottom sheet -->
+    <string name="transaction_title_purchase">Purchase details</string>
+    <string name="transaction_title_refund">Refund details</string>
+    <string name="transaction_date">Date</string>
+    <string name="transaction_course">Course</string>
+    <string name="transaction_buyer">Customer</string>
+    <string name="transaction_payment">Payment</string>
+    <string name="transaction_promo_code">Promo code</string>
+    <string name="transaction_channel">Channel</string>
+    <string name="transaction_stepik_channel">Came via Stepik</string>
+    <string name="transaction_z_link_channel">Came via Z-link</string>
+    <string name="transaction_share">Your share</string>
+    <string name="transaction_share_value">%s%% of sales revenue minus Stepik\'s fee</string>
+    <string name="transaction_income">Your earnings</string>
 </resources>

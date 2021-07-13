@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:minHeight="73dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/purchaseRefundIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_purchase_stepik" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/purchaseRefundDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        app:layout_constraintBottom_toTopOf="@id/purchaseRefundName"
+        app:layout_constraintLeft_toRightOf="@id/purchaseRefundIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="February 10, 2021, 23:52" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/purchaseRefundName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintLeft_toRightOf="@id/purchaseRefundIcon"
+        app:layout_constraintTop_toBottomOf="@id/purchaseRefundDate"
+        app:layout_goneMarginBottom="16dp"
+        tools:text="Aurora Ventas" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/purchaseRefundPromocode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="@color/color_on_surface_alpha_38"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/purchaseRefundIcon"
+        app:layout_constraintTop_toBottomOf="@id/purchaseRefundName"
+        tools:text="PROMOCODENAME" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/purchaseRefundTransactionSum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="3 500 ₽" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/purchaseRefundIncomeSum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="?textAppearanceSubtitle1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/purchaseRefundTransactionSum"
+        tools:text="+3 200 ₽" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
