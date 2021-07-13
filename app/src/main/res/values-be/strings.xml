@@ -991,6 +991,24 @@
     <string name="course_beneifts_turnover_total">Продажу з %s</string>
     <string name="course_benefits_earnings_disclaimer">Заўвага: Усе аперацыі праходзяць па маскоўскім часе (МСК,  UTC+3).</string>
 
-    <string name="course_benefits_purchases_and_refunds_tab">Пакупкі і звароты</string>
+    <string name="course_benefits_tab">Пакупкі і звароты</string>
     <string name="course_benefits_payments_tab">Выплаты</string>
+
+    <string name="course_benefits_empty">Па дадзеным запыце плацяжоў не знойдзена</string>
+    <string name="course_benefits_refund">Вяртанне</string>
+
+    <!-- Transaction bottom sheet -->
+    <string name="transaction_title_purchase">Дэталі пакупкі</string>
+    <string name="transaction_title_refund">Дэталі вяртання</string>
+    <string name="transaction_date">Дата</string>
+    <string name="transaction_course">Курс</string>
+    <string name="transaction_buyer">Пакупнік</string>
+    <string name="transaction_payment">Плацёж</string>
+    <string name="transaction_promo_code">Промокод</string>
+    <string name="transaction_channel">Канал</string>
+    <string name="transaction_stepik_channel">Пераход праз Stepik</string>
+    <string name="transaction_z_link_channel">Пераход праз Z-link</string>
+    <string name="transaction_share">Ваш працэнт</string>
+    <string name="transaction_share_value">%s%% з продажаў за вылікам камісіі</string>
+    <string name="transaction_income">Ваш даход</string>
 </resources>

@@ -13,8 +13,8 @@ interface CourseHeaderDelegateFactory {
         coursePresenter: CoursePresenter,
         courseViewSource: CourseViewSource,
         isAuthorized: Boolean,
-        mustShowCourseBenefits: Boolean,
-        showCourseBenefitsAction: () -> Unit,
+        mustShowCourseRevenue: Boolean,
+        showCourseRevenueAction: () -> Unit,
         onSubmissionCountClicked: () -> Unit,
         isLocalSubmissionsEnabled: Boolean
     ): CourseHeaderDelegate
