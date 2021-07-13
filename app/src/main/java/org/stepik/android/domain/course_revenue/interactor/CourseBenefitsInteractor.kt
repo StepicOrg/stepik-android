@@ -47,7 +47,6 @@ constructor(
                     .getCourseBeneficiary(courseId, profile.id)
             }
 
-
     fun getCourseBenefitsByMonths(courseId: Long): Single<PagedList<CourseBenefitByMonthListItem.Data>> =
         courseBenefitsByMonthsRepository
             .getCourseBenefitByMonths(courseId)

@@ -141,6 +141,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
+        courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(R.string.course_benefits_monthly_tab))
     }
 
     override fun onAction(action: CourseRevenueFeature.Action.ViewAction) {
