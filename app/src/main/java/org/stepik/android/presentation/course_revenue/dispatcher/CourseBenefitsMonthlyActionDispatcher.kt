@@ -28,7 +28,6 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { onNewMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthsSuccess(it)) },
-                        onComplete = { onNewMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthsSuccess(emptyList())) },
                         onError = { onNewMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthsFailure) }
                     )
             }

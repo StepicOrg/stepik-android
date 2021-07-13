@@ -1,6 +1,7 @@
 package org.stepik.android.domain.course_revenue.interactor
 
 import io.reactivex.Maybe
+import io.reactivex.Single
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
 import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListItem
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
@@ -31,7 +32,7 @@ constructor(
             .getCourseBenefits(courseId)
             .flatMap { resolveCourseBenefitListItems(it) }
 
-    fun getCourseBenefitsByMonths(courseId: Long): Maybe<List<CourseBenefitByMonthListItem.Data>> =
+    fun getCourseBenefitsByMonths(courseId: Long): Single<List<CourseBenefitByMonthListItem.Data>> =
         courseBenefitsByMonthsRepository
             .getCourseBenefitByMonths(courseId)
             .map { courseBenefitsByMonths ->
