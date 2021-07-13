@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.item_course_benefits.*
 import org.stepic.droid.R
 import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListItem
@@ -22,7 +23,8 @@ import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 
 class CourseBenefitsMonthlyListAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper,
-    private val onFetchNextPage: () -> Unit
+    private val onFetchNextPage: () -> Unit,
+    private val reloadListAction: () -> Unit
 ) : AdapterDelegate<CourseBenefitOperationItem, DelegateViewHolder<CourseBenefitOperationItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -66,6 +68,8 @@ class CourseBenefitsMonthlyListAdapterDelegate(
                     }
                 }
             }
+
+            tryAgain.setOnClickListener { reloadListAction() }
         }
 
         override fun onBind(data: CourseBenefitOperationItem) {

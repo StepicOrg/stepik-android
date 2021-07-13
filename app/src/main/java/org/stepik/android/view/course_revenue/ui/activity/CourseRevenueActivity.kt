@@ -11,6 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_course_benefits.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -108,6 +109,8 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         initViewStateDelegate()
         courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, displayPriceMapper) { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) }
         courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = false))
+
+        tryAgain.setOnClickListener { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = true)) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -141,12 +144,15 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
                     .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
                     .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
             },
-            onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.FetchNextPage(courseId))) }
+            onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.FetchNextPage(courseId))) },
+            reloadListAction = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.TryAgain(courseId))) }
         )
 
-        courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(displayPriceMapper) {
-            courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthNext(courseId)))
-        }
+        courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(
+            displayPriceMapper,
+            onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthNext(courseId))) },
+            reloadListAction = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.TryAgain(courseId))) }
+        )
 
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))

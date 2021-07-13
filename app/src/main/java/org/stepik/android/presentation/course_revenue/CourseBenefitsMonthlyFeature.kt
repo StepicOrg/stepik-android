@@ -15,6 +15,7 @@ interface CourseBenefitsMonthlyFeature {
     }
 
     sealed class Message {
+        data class TryAgain(val courseId: Long) : Message()
         data class FetchCourseBenefitsByMonthNext(val courseId: Long) : Message()
         data class FetchCourseBenefitsByMonthsSuccess(val courseBenefitByMonthListDataItems: PagedList<CourseBenefitByMonthListItem.Data>) : Message()
         object FetchCourseBenefitsByMonthsFailure : Message()

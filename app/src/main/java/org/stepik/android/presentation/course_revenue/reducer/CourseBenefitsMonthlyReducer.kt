@@ -56,5 +56,12 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.TryAgain -> {
+                if (state is State.Error) {
+                    State.Loading to setOf(Action.FetchCourseBenefitsByMonths(message.courseId))
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 }

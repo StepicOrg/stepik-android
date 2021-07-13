@@ -17,6 +17,7 @@ interface CourseBenefitsFeature {
     }
 
     sealed class Message {
+        data class TryAgain(val courseId: Long) : Message()
         data class FetchNextPage(val courseId: Long) : Message()
         data class FetchCourseBenefitsSuccess(
             val courseBenefitListDataItems: PagedList<CourseBenefitListItem.Data>,
