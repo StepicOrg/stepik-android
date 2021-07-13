@@ -7,7 +7,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_course_benefits.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -142,6 +144,24 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
         courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(R.string.course_benefits_monthly_tab))
+        courseBenefitsTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val position = tab?.position ?: return
+                courseBenefitsOperationsViewPager.currentItem = position
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // no op
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // no op
+            }
+        })
+        courseBenefitsOperationsViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                courseBenefitsTabs.selectTab(courseBenefitsTabs.getTabAt(position))
+            }
+        })
     }
 
     override fun onAction(action: CourseRevenueFeature.Action.ViewAction) {
