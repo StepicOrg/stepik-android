@@ -132,12 +132,16 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     }
 
     private fun initViewPager() {
-        courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(displayPriceMapper) {
-            val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
-            TransactionBottomSheetDialogFragment
-                .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
-                .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
-        }
+        courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(
+            displayPriceMapper,
+            onItemClick = {
+                val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
+                TransactionBottomSheetDialogFragment
+                    .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
+                    .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
+            },
+            onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.FetchNextPage(courseId))) }
+        )
 
         courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(displayPriceMapper)
 

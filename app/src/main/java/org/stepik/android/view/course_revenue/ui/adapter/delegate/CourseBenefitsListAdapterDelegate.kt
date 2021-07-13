@@ -13,14 +13,17 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
+import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 
 class CourseBenefitsListAdapterDelegate(
     private val displayPriceMapper: DisplayPriceMapper,
-    private val onItemClick: (CourseBenefitListItem.Data) -> Unit
+    private val onItemClick: (CourseBenefitListItem.Data) -> Unit,
+    private val onFetchNextPage: () -> Unit
 ) : AdapterDelegate<CourseBenefitOperationItem, DelegateViewHolder<CourseBenefitOperationItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -53,6 +56,12 @@ class CourseBenefitsListAdapterDelegate(
             courseBenefitsRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
+
+            courseBenefitsRecycler.setOnPaginationListener { direction ->
+                if (direction == PaginationDirection.NEXT) {
+                    onFetchNextPage()
+                }
+            }
         }
 
         override fun onBind(data: CourseBenefitOperationItem) {

@@ -10,21 +10,26 @@ interface CourseBenefitsFeature {
         object Empty : State()
         object Error : State()
         data class Content(
-            val courseBenefitListItems: PagedList<CourseBenefitListItem.Data>,
+            val courseBenefitListDataItems: PagedList<CourseBenefitListItem.Data>,
+            val courseBenefitListItems: List<CourseBenefitListItem>,
             val courseBeneficiary: CourseBeneficiary
         ) : State()
     }
 
     sealed class Message {
+        data class FetchNextPage(val courseId: Long) : Message()
         data class FetchCourseBenefitsSuccess(
-            val courseBenefitListItems: PagedList<CourseBenefitListItem.Data>,
+            val courseBenefitListDataItems: PagedList<CourseBenefitListItem.Data>,
             val courseBeneficiary: CourseBeneficiary
         ) : Message()
+        data class FetchCourseBenefitsNextSuccess(val courseBenefitListDataItems: PagedList<CourseBenefitListItem.Data>) : Message()
         object FetchCourseBenefitsFailure : Message()
+        object FetchCourseBenefitsNextFailure : Message()
     }
 
     sealed class Action {
         data class FetchCourseBenefits(val courseId: Long) : Action()
+        data class FetchCourseBenefitsNext(val courseId: Long, val page: Int) : Action()
         sealed class ViewAction : Action()
     }
 }

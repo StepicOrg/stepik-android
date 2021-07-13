@@ -34,6 +34,16 @@ constructor(
                     onError = { onNewMessage(CourseBenefitsFeature.Message.FetchCourseBenefitsFailure) }
                 )
             }
+            is CourseBenefitsFeature.Action.FetchCourseBenefitsNext -> {
+                compositeDisposable += courseBenefitsInteractor
+                    .getCourseBenefits(action.courseId, action.page)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { onNewMessage(CourseBenefitsFeature.Message.FetchCourseBenefitsNextSuccess(it)) },
+                        onError = { onNewMessage(CourseBenefitsFeature.Message.FetchCourseBenefitsNextFailure) }
+                    )
+            }
         }
     }
 }

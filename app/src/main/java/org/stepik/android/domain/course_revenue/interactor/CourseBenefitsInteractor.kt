@@ -34,9 +34,9 @@ constructor(
             .getCourseBenefitSummaries(courseId)
             .maybeFirst()
 
-    fun getCourseBenefits(courseId: Long): Single<PagedList<CourseBenefitListItem.Data>> =
+    fun getCourseBenefits(courseId: Long, page: Int = 1): Single<PagedList<CourseBenefitListItem.Data>> =
         courseBenefitsRepository
-            .getCourseBenefits(courseId)
+            .getCourseBenefits(courseId, page)
             .flatMap { resolveCourseBenefitListItems(it) }
 
     fun getCourseBeneficiary(courseId: Long): Single<CourseBeneficiary> =
