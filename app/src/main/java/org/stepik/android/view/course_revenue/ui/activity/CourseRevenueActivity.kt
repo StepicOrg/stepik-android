@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.activity_course_benefits.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -16,13 +15,14 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpenedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsSummaryClicked
+import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
+import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
-import org.stepik.android.view.course_revenue.model.CourseRevenueTabs
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsMonthlyListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
@@ -48,6 +48,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private var courseId: Long = NO_ID
     private var courseTitle: String? = null
+    private var courseBeneficiary: CourseBeneficiary? = null
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -130,17 +131,16 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private fun initViewPager() {
         courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(displayPriceMapper) {
+            val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
             TransactionBottomSheetDialogFragment
-                .newInstance(it.courseBenefit, it.user, courseTitle)
+                .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
                 .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
         }
 
         courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(displayPriceMapper)
 
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
-        TabLayoutMediator(courseBenefitsTabs, courseBenefitsOperationsViewPager) { tab, position ->
-            tab.text = getString(CourseRevenueTabs.values()[position].titleStringRes)
-        }.attach()
+        courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
     }
 
     override fun onAction(action: CourseRevenueFeature.Action.ViewAction) {
@@ -154,5 +154,8 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
             CourseBenefitOperationItem.CourseBenefits(state.courseBenefitsState),
             CourseBenefitOperationItem.CourseBenefitsMonthly(state.courseBenefitsMonthlyState)
         )
+        if (state.courseBenefitsState is CourseBenefitsFeature.State.Content) {
+            courseBeneficiary = state.courseBenefitsState.courseBeneficiary
+        }
     }
 }

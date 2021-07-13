@@ -9,6 +9,7 @@ import org.stepik.android.view.injection.user.UserDataModule
     CourseBenefitSummariesDataModule::class,
     CourseBenefitsDataModule::class,
     CourseBenefitByMonthsDataModule::class,
+    CourseBeneficiariesDataModule::class,
     UserDataModule::class
 ])
 interface CourseRevenueComponent {
