@@ -32,7 +32,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/purchaseRefundName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -40,7 +40,10 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintBottom_toTopOf="@id/purchaseRefundPromocode"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toRightOf="@id/purchaseRefundIcon"
+        app:layout_constraintRight_toLeftOf="@id/purchaseRefundIncomeSum"
         app:layout_constraintTop_toBottomOf="@id/purchaseRefundDate"
         app:layout_goneMarginBottom="16dp"
         tools:text="Aurora Ventas" />
@@ -76,6 +79,7 @@
         android:id="@+id/purchaseRefundIncomeSum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
         android:textAppearance="?textAppearanceSubtitle1"
