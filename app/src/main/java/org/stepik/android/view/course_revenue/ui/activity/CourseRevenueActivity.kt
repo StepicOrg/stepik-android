@@ -7,22 +7,28 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_course_benefits.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepik.android.domain.course_revenue.analytic.CourseBenefitClickedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpenedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsSummaryClicked
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
+import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
+import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsMonthlyListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -104,6 +110,8 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         initViewStateDelegate()
         courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, displayPriceMapper) { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) }
         courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = false))
+
+        tryAgain.setOnClickListener { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = true)) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -129,14 +137,53 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     }
 
     private fun initViewPager() {
-        courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(displayPriceMapper) {
-            val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
-            TransactionBottomSheetDialogFragment
-                .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
-                .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
-        }
+        courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(
+            displayPriceMapper,
+            onItemClick = {
+                val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
+                analytic.report(
+                    CourseBenefitClickedEvent(
+                        it.courseBenefit.id,
+                        it.courseBenefit.status,
+                        courseId,
+                        courseTitle
+                    )
+                )
+                TransactionBottomSheetDialogFragment
+                    .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
+                    .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
+            },
+            onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.FetchNextPage(courseId))) },
+            reloadListAction = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMessage(CourseBenefitsFeature.Message.TryAgain(courseId))) }
+        )
+
+        courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(
+            displayPriceMapper,
+            onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthNext(courseId))) },
+            reloadListAction = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.TryAgain(courseId))) }
+        )
+
         courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
         courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
+        courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(R.string.course_benefits_monthly_tab))
+        courseBenefitsTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val position = tab?.position ?: return
+                courseBenefitsOperationsViewPager.currentItem = position
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                // no op
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                // no op
+            }
+        })
+        courseBenefitsOperationsViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                courseBenefitsTabs.selectTab(courseBenefitsTabs.getTabAt(position))
+            }
+        })
     }
 
     override fun onAction(action: CourseRevenueFeature.Action.ViewAction) {
@@ -146,7 +193,10 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     override fun render(state: CourseRevenueFeature.State) {
         viewStateDelegate.switchState(state.courseRevenueState)
         courseBenefitSummaryDelegate.render(state.courseBenefitSummaryState)
-        courseBenefitsOperationsItemAdapter.items = listOf(CourseBenefitOperationItem.PurchasesAndRefunds(state.courseBenefitsState))
+        courseBenefitsOperationsItemAdapter.items = listOf(
+            CourseBenefitOperationItem.CourseBenefits(state.courseBenefitsState),
+            CourseBenefitOperationItem.CourseBenefitsMonthly(state.courseBenefitsMonthlyState)
+        )
         if (state.courseBenefitsState is CourseBenefitsFeature.State.Content) {
             courseBeneficiary = state.courseBenefitsState.courseBeneficiary
         }

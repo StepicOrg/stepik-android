@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface CourseBenefitByMonthsService {
     @GET(" /api/course-benefit-by-months")
-    fun getCourseBenefitByMonths(@Query("course") courseId: Long): Single<CourseBenefitByMonthsResponse>
+    fun getCourseBenefitByMonths(@Query("course") courseId: Long, @Query("page") page: Int): Single<CourseBenefitByMonthsResponse>
 }

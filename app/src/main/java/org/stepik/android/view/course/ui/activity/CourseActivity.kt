@@ -211,8 +211,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     coursePresenter = coursePresenter,
                     courseViewSource = courseViewSource,
                     isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
-//                    mustShowCourseRevenue = true,
-                    // TODO APPS-3336 Uncomment code
                     mustShowCourseRevenue = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID) && course?.actions?.viewRevenue?.enabled == true,
                     showCourseRevenueAction = { screenManager.showCourseRevenue(this, courseId, course?.title) },
                     onSubmissionCountClicked = {
