@@ -16,6 +16,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepik.android.domain.course_revenue.analytic.CourseBenefitClickedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpenedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsSummaryClicked
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
@@ -140,6 +141,14 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
             displayPriceMapper,
             onItemClick = {
                 val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
+                analytic.report(
+                    CourseBenefitClickedEvent(
+                        it.courseBenefit.id,
+                        it.courseBenefit.status,
+                        courseId,
+                        courseTitle
+                    )
+                )
                 TransactionBottomSheetDialogFragment
                     .newInstance(it.courseBenefit, courseBeneficiary, it.user, courseTitle)
                     .showIfNotExists(supportFragmentManager, TransactionBottomSheetDialogFragment.TAG)
