@@ -1146,7 +1146,7 @@
     <string name="transaction_stepik_channel">Переход через Stepik</string>
     <string name="transaction_z_link_channel">Переход через Z-link</string>
     <string name="transaction_share">Ваш процент</string>
-    <string name="transaction_share_value">%s%% с продаж за вычетом комиссии</string>
+    <string name="transaction_share_value">%s%% с продаж за вычетом комиссии Stepik</string>
     <string name="transaction_income">Ваш доход</string>
 
     <!-- Course benefit by month item -->
@@ -1155,6 +1155,6 @@
     <string name="course_benefit_by_month_refunds">Возвраты</string>
     <string name="course_benefit_by_month_purchases">Покупки</string>
     <string name="course_benefit_by_month_channel_stepik">Переходы через Stepik</string>
-    <string name="course_benefit_by_month_channel_z_link">Переходы через Z-Link</string>
+    <string name="course_benefit_by_month_channel_z_link">Переходы по z-ссылке</string>
     <string name="course_benefit_by_month_channel_invoice">Оплата по счету</string>
 </resources>
