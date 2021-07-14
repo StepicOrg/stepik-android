@@ -28,7 +28,7 @@ constructor(
                         append("+")
                     }
                     append(first)
-                    scale(0.9f) {
+                    scale(0.85f) {
                         append(second)
                         append(" ")
                         append(Currency.getInstance(currencyCode).symbol)
