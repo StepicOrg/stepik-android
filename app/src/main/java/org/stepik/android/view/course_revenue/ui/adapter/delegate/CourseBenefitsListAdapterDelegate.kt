@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_course_benefits.*
 import org.stepic.droid.R
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -22,7 +22,7 @@ import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 
 class CourseBenefitsListAdapterDelegate(
-    private val displayPriceMapper: DisplayPriceMapper,
+    private val revenuePriceMapper: RevenuePriceMapper,
     private val onItemClick: (CourseBenefitListItem.Data) -> Unit,
     private val onFetchNextPage: () -> Unit,
     private val reloadListAction: () -> Unit
@@ -43,7 +43,7 @@ class CourseBenefitsListAdapterDelegate(
         private val adapter = DefaultDelegateAdapter<CourseBenefitListItem>()
             .also {
                 it += CourseBenefitsLoadingAdapterDelegate()
-                it += CourseBenefitsAdapterDelegate(displayPriceMapper, onItemClick)
+                it += CourseBenefitsAdapterDelegate(revenuePriceMapper, onItemClick)
             }
 
         init {

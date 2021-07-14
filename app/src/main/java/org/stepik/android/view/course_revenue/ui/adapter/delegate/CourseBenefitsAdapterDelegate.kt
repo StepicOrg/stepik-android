@@ -10,13 +10,15 @@ import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import java.text.DecimalFormat
+import java.util.Currency
 import java.util.TimeZone
 
 class CourseBenefitsAdapterDelegate(
-    private val displayPriceMapper: DisplayPriceMapper,
+    private val revenuePriceMapper: RevenuePriceMapper,
     private val onItemClick: (CourseBenefitListItem.Data) -> Unit
 ) : AdapterDelegate<CourseBenefitListItem, DelegateViewHolder<CourseBenefitListItem>>() {
     override fun isForViewType(position: Int, data: CourseBenefitListItem): Boolean =
@@ -35,6 +37,11 @@ class CourseBenefitsAdapterDelegate(
 
         override fun onBind(data: CourseBenefitListItem) {
             data as CourseBenefitListItem.Data
+
+            val currency = Currency.getInstance(data.courseBenefit.currencyCode)
+            val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
+            decimalFormat.minimumFractionDigits = 2
+
             purchaseRefundIcon.setImageResource(getIconRes(data.courseBenefit))
             purchaseRefundName.text = data.user?.fullName ?: data.courseBenefit.buyer.toString()
             purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
@@ -44,12 +51,12 @@ class CourseBenefitsAdapterDelegate(
             )
 
             val transactionSum = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
-                displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.paymentAmount)
+                revenuePriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, decimalFormat.format(data.courseBenefit.paymentAmount.toDoubleOrNull() ?: 0.0))
             } else {
                 context.getString(R.string.course_benefits_refund)
             }
 
-            val amount = displayPriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, data.courseBenefit.amount)
+            val amount = revenuePriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, decimalFormat.format(data.courseBenefit.amount.toDoubleOrNull() ?: 0.0))
             val resolvedAmount = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 context.getString(R.string.course_benefits_with_debited_prefix, amount)
             } else {

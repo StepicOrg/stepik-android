@@ -7,14 +7,16 @@ import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.presentation.course_revenue.CourseBenefitSummaryFeature
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
+import java.text.DecimalFormat
+import java.util.Currency
 import java.util.TimeZone
 import java.util.Locale
 
 class CourseBenefitSummaryViewDelegate(
     containerView: View,
-    private val displayPriceMapper: DisplayPriceMapper,
+    private val revenuePriceMapper: RevenuePriceMapper,
     private val onCourseSummaryClicked: (Boolean) -> Unit
 ) {
     private val context = containerView.context
@@ -62,6 +64,10 @@ class CourseBenefitSummaryViewDelegate(
     fun render(state: CourseBenefitSummaryFeature.State) {
         viewStateDelegate.switchState(state)
         if (state is CourseBenefitSummaryFeature.State.Content) {
+            val currency = Currency.getInstance(state.courseBenefitSummary.currencyCode)
+            val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
+            decimalFormat.minimumFractionDigits = 2
+
             val currentMonthDate = DateTimeHelper.getPrintableDate(
                 state.courseBenefitSummary.currentDate,
                 DateTimeHelper.DISPLAY_MONTH_YEAR_NOMINAL_PATTERN,
@@ -75,16 +81,16 @@ class CourseBenefitSummaryViewDelegate(
             ).capitalize(Locale.ROOT)
 
             courseBenefitCurrentEarningsTitle.text = context.getString(R.string.course_benefits_earning_current_month, currentMonthDate)
-            courseBenefitCurrentEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthUserIncome)
+            courseBenefitCurrentEarningsValue.text = revenuePriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, decimalFormat.format(state.courseBenefitSummary.monthUserIncome.toDoubleOrNull() ?: 0.0))
 
             courseBenefitCurrentTurnoverTitle.text = context.getString(R.string.course_benefits_turnover_current_month, currentMonthDate)
-            courseBenefitCurrentTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.monthTurnover)
+            courseBenefitCurrentTurnoverValue.text = revenuePriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, decimalFormat.format(state.courseBenefitSummary.monthTurnover.toDoubleOrNull() ?: 0.0))
 
             courseBenefitTotalEarningsTitle.text = context.getString(R.string.course_benefits_earnings_total, totalDate)
-            courseBenefitTotalEarningsValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalUserIncome)
+            courseBenefitTotalEarningsValue.text = revenuePriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, decimalFormat.format(state.courseBenefitSummary.totalUserIncome.toDoubleOrNull() ?: 0.0))
 
             courseBenefitTotalTurnoverTitle.text = context.getString(R.string.course_beneifts_turnover_total, totalDate)
-            courseBenefitTotalTurnoverValue.text = displayPriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, state.courseBenefitSummary.totalTurnover)
+            courseBenefitTotalTurnoverValue.text = revenuePriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, decimalFormat.format(state.courseBenefitSummary.totalTurnover.toDoubleOrNull() ?: 0.0))
         }
     }
 }

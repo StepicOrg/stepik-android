@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_course_benefits.*
 import org.stepic.droid.R
 import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListItem
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -22,7 +22,7 @@ import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 
 class CourseBenefitsMonthlyListAdapterDelegate(
-    private val displayPriceMapper: DisplayPriceMapper,
+    private val revenuePriceMapper: RevenuePriceMapper,
     private val onFetchNextPage: () -> Unit,
     private val reloadListAction: () -> Unit
 ) : AdapterDelegate<CourseBenefitOperationItem, DelegateViewHolder<CourseBenefitOperationItem>>() {
@@ -42,7 +42,7 @@ class CourseBenefitsMonthlyListAdapterDelegate(
         private val adapter = DefaultDelegateAdapter<CourseBenefitByMonthListItem>()
             .also {
                 it += CourseBenefitsMonthlyLoadingAdapterDelegate()
-                it += CourseBenefitsMonthlyAdapterDelegate(displayPriceMapper)
+                it += CourseBenefitsMonthlyAdapterDelegate(revenuePriceMapper)
             }
 
         init {

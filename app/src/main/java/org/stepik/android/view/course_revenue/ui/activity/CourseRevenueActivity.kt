@@ -24,7 +24,7 @@ import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
@@ -65,7 +65,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    internal lateinit var displayPriceMapper: DisplayPriceMapper
+    internal lateinit var revenuePriceMapper: RevenuePriceMapper
 
     private val courseRevenueViewModel: CourseRevenueViewModel by reduxViewModel(this) { viewModelFactory }
 
@@ -108,7 +108,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
         initViewPager()
         initViewStateDelegate()
-        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, displayPriceMapper) { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) }
+        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, revenuePriceMapper) { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) }
         courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = false))
 
         tryAgain.setOnClickListener { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = true)) }
@@ -138,7 +138,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private fun initViewPager() {
         courseBenefitsOperationsItemAdapter += CourseBenefitsListAdapterDelegate(
-            displayPriceMapper,
+            revenuePriceMapper,
             onItemClick = {
                 val courseBeneficiary = courseBeneficiary ?: return@CourseBenefitsListAdapterDelegate
                 analytic.report(
@@ -158,7 +158,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         )
 
         courseBenefitsOperationsItemAdapter += CourseBenefitsMonthlyListAdapterDelegate(
-            displayPriceMapper,
+            revenuePriceMapper,
             onFetchNextPage = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.FetchCourseBenefitsByMonthNext(courseId))) },
             reloadListAction = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.TryAgain(courseId))) }
         )

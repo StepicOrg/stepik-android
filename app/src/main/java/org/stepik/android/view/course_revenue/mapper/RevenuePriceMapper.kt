@@ -1,10 +1,10 @@
-package org.stepik.android.view.course.mapper
+package org.stepik.android.view.course_revenue.mapper
 
 import android.content.Context
 import org.stepic.droid.R
 import javax.inject.Inject
 
-class DisplayPriceMapper
+class RevenuePriceMapper
 @Inject
 constructor(
     private val context: Context
@@ -15,8 +15,10 @@ constructor(
     }
     fun mapToDisplayPrice(currencyCode: String, price: String): String =
         when (currencyCode) {
-            RUB_FORMAT ->
-                context.getString(R.string.rub_format, price.substringBefore('.'))
+            RUB_FORMAT -> {
+                context.getString(R.string.rub_format, price)
+            }
+
             USD_FORMAT ->
                 context.getString(R.string.usd_format, price)
             else ->
