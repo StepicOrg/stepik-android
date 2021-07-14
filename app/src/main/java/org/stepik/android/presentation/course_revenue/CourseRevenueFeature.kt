@@ -1,5 +1,7 @@
 package org.stepik.android.presentation.course_revenue
 
+import org.stepik.android.domain.feedback.model.SupportEmailData
+
 interface CourseRevenueFeature {
     data class State(
         val courseRevenueState: CourseRevenueState,
@@ -17,6 +19,8 @@ interface CourseRevenueFeature {
 
     sealed class Message {
         data class InitMessage(val courseId: Long, val forceUpdate: Boolean = false) : Message()
+        data class SetupFeedback(val subject: String, val deviceInfo: String) : Message()
+        data class SetupFeedbackSuccess(val supportEmailData: SupportEmailData) : Message()
         /**
          * Message Wrappers
          */
@@ -26,7 +30,10 @@ interface CourseRevenueFeature {
     }
 
     sealed class Action {
-        sealed class ViewAction : Action()
+        data class GenerateSupportEmailData(val subject: String, val deviceInfo: String) : Action()
+        sealed class ViewAction : Action() {
+            data class ShowContactSupport(val supportEmailData: SupportEmailData) : ViewAction()
+        }
         /**
          * Action Wrappers
          */

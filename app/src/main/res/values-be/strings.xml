@@ -997,6 +997,10 @@
     <string name="course_benefits_empty">Па дадзеным запыце плацяжоў не знойдзена</string>
     <string name="course_benefits_refund">Вяртанне</string>
 
+    <string name="course_benefits_contact_support_part_1">"Старонка ў распрацоўцы. "</string>
+    <string name="course_benefits_contact_support_part_2">"Калі вы заўважылі памылкі ў дадзеных, паведаміце аб гэтым у "</string>
+    <string name="course_benefits_contact_support_part_3">нашу падтрымку</string>
+
     <!-- Transaction bottom sheet -->
     <string name="transaction_title_purchase">Дэталі пакупкі</string>
     <string name="transaction_title_refund">Дэталі вяртання</string>

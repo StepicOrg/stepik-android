@@ -1193,6 +1193,10 @@
 
     <string name="course_benefits_refund">Refund</string>
 
+    <string name="course_benefits_contact_support_part_1">"This page is under development. "</string>
+    <string name="course_benefits_contact_support_part_2">"If you noticed any mistakes in the data, please "</string>
+    <string name="course_benefits_contact_support_part_3">contact our support</string>
+
     <!-- Transaction bottom sheet -->
     <string name="transaction_title_purchase">Purchase details</string>
     <string name="transaction_title_refund">Refund details</string>

@@ -13,6 +13,7 @@ import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitSummaryActionDispatcher
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitsActionDispatcher
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitsMonthlyActionDispatcher
+import org.stepik.android.presentation.course_revenue.dispatcher.CourseRevenueActionDispatcher
 import org.stepik.android.presentation.course_revenue.reducer.CourseRevenueReducer
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
@@ -30,6 +31,7 @@ object CourseRevenuePresentationModule {
     @ViewModelKey(CourseRevenueViewModel::class)
     internal fun provideCourseBenefitsPresenter(
         courseRevenueReducer: CourseRevenueReducer,
+        courseRevenueActionDispatcher: CourseRevenueActionDispatcher,
         courseBenefitSummaryActionDispatcher: CourseBenefitSummaryActionDispatcher,
         courseBenefitsActionDispatcher: CourseBenefitsActionDispatcher,
         courseBenefitsMonthlyActionDispatcher: CourseBenefitsMonthlyActionDispatcher
@@ -41,6 +43,7 @@ object CourseRevenuePresentationModule {
                 courseBenefitsState = CourseBenefitsFeature.State.Loading,
                 courseBenefitsMonthlyState = CourseBenefitsMonthlyFeature.State.Loading
             ), courseRevenueReducer)
+                .wrapWithActionDispatcher(courseRevenueActionDispatcher)
                 .wrapWithActionDispatcher(
                     courseBenefitSummaryActionDispatcher.tranform(
                         transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitSummaryAction>()?.action },

@@ -16,6 +16,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.util.DeviceInfoUtil
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitClickedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpenedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsSummaryClicked
@@ -108,7 +109,19 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
         initViewPager()
         initViewStateDelegate()
-        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer, revenuePriceMapper) { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) }
+        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer,
+            revenuePriceMapper,
+            onCourseSummaryClicked = { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) },
+            onContactSupportClicked = {
+                courseRevenueViewModel.onNewMessage(
+                    CourseRevenueFeature.Message.SetupFeedback(
+                        getString(R.string.feedback_subject),
+                        DeviceInfoUtil.getInfosAboutDevice(this, "\n"
+                        )
+                    )
+                )
+            }
+        )
         courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = false))
 
         tryAgain.setOnClickListener { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = true)) }
@@ -187,7 +200,9 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
     }
 
     override fun onAction(action: CourseRevenueFeature.Action.ViewAction) {
-        // no op
+        if (action is CourseRevenueFeature.Action.ViewAction.ShowContactSupport) {
+            screenManager.openTextFeedBack(this, action.supportEmailData)
+        }
     }
 
     override fun render(state: CourseRevenueFeature.State) {

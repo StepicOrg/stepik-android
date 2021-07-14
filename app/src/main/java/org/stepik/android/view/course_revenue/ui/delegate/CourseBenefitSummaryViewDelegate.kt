@@ -1,6 +1,10 @@
 package org.stepik.android.view.course_revenue.ui.delegate
 
 import android.view.View
+import androidx.core.content.ContextCompat
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import kotlinx.android.synthetic.main.view_course_benefit_summary.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.collapse
@@ -17,7 +21,8 @@ import java.util.Locale
 class CourseBenefitSummaryViewDelegate(
     containerView: View,
     private val revenuePriceMapper: RevenuePriceMapper,
-    private val onCourseSummaryClicked: (Boolean) -> Unit
+    private val onCourseSummaryClicked: (Boolean) -> Unit,
+    private val onContactSupportClicked: () -> Unit
 ) {
     private val context = containerView.context
 
@@ -28,6 +33,7 @@ class CourseBenefitSummaryViewDelegate(
     private val courseBenefitSummaryInformationExpansion = containerView.courseBenefitSummaryInformationExpansion
 
     private val courseBenefitSummaryArrow = containerView.courseBenefitSummaryArrow
+    private val courseBenefitExperimentDisclaimer = containerView.courseBenefitExperimentDisclaimer
     private val courseBenefitOperationDisclaimer = containerView.courseBenefitOperationDisclaimer
 
     private val courseBenefitCurrentEarningsTitle = containerView.courseBenefitSummaryEarningsCurrentMonthText
@@ -48,6 +54,17 @@ class CourseBenefitSummaryViewDelegate(
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Loading>(courseBenefitsSummaryLoading)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Empty>(courseBenefitSummaryEmpty, courseBenefitOperationDisclaimer)
         viewStateDelegate.addState<CourseBenefitSummaryFeature.State.Content>(courseBenefitSummaryContainer, courseBenefitOperationDisclaimer)
+
+        courseBenefitExperimentDisclaimer.text = buildSpannedString {
+            bold { append(context.getString(R.string.course_benefits_contact_support_part_1)) }
+            append(context.getString(R.string.course_benefits_contact_support_part_2))
+            color(ContextCompat.getColor(context, R.color.color_overlay_violet)) {
+                append(context.getString(R.string.course_benefits_contact_support_part_3))
+            }
+            append(".")
+        }
+
+        courseBenefitExperimentDisclaimer.setOnClickListener { onContactSupportClicked() }
 
         courseBenefitSummaryContainer.setOnClickListener {
             courseBenefitSummaryArrow.changeState()

@@ -36,6 +36,12 @@ constructor(
                     null
                 }
             }
+            is Message.SetupFeedback -> {
+                state to setOf(Action.GenerateSupportEmailData(message.subject, message.deviceInfo))
+            }
+            is Message.SetupFeedbackSuccess -> {
+                state to setOf(Action.ViewAction.ShowContactSupport(message.supportEmailData))
+            }
             is Message.CourseBenefitSummaryMessage -> {
                 val (courseBenefitSummaryState, courseBenefitSummaryActions) = courseBenefitSummaryReducer.reduce(state.courseBenefitSummaryState, message.message)
                 if (courseBenefitSummaryState is CourseBenefitSummaryFeature.State.Error) {

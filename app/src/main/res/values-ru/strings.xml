@@ -1134,6 +1134,10 @@
     <string name="course_benefits_empty">По данному запросу\nплатежей не найдено</string>
     <string name="course_benefits_refund">Возврат</string>
 
+    <string name="course_benefits_contact_support_part_1">"Страница в разработке. "</string>
+    <string name="course_benefits_contact_support_part_2">"Если вы заметили ошибки в данных, сообщите об этом в "</string>
+    <string name="course_benefits_contact_support_part_3">нашу поддержку</string>
+
     <!-- Transaction bottom sheet -->
     <string name="transaction_title_purchase">Детали покупки</string>
     <string name="transaction_title_refund">Детали возврата</string>
