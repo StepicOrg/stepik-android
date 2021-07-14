@@ -5,12 +5,16 @@ import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeatu
 import ru.nobird.android.core.model.Identifiable
 
 sealed class CourseBenefitOperationItem {
-    class CourseBenefits(val state: CourseBenefitsFeature.State) : CourseBenefitOperationItem(), Identifiable<String> {
+    data class CourseBenefits(
+        val state: CourseBenefitsFeature.State
+    ) : CourseBenefitOperationItem(), Identifiable<String> {
         override val id: String =
             "course_benefits"
     }
 
-    class CourseBenefitsMonthly(val state: CourseBenefitsMonthlyFeature.State) : CourseBenefitOperationItem(), Identifiable<String> {
+    data class CourseBenefitsMonthly(
+        val state: CourseBenefitsMonthlyFeature.State
+    ) : CourseBenefitOperationItem(), Identifiable<String> {
         override val id: String =
             "course_benefits_monthly"
     }
