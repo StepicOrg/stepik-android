@@ -1,7 +1,11 @@
 package org.stepik.android.view.course_revenue.mapper
 
 import android.content.Context
+import android.text.SpannedString
+import androidx.core.text.buildSpannedString
+import androidx.core.text.scale
 import org.stepic.droid.R
+import java.util.Currency
 import javax.inject.Inject
 
 class RevenuePriceMapper
@@ -11,17 +15,29 @@ constructor(
 ) {
     companion object {
         private const val RUB_FORMAT = "RUB"
-        private const val USD_FORMAT = "USD"
     }
-    fun mapToDisplayPrice(currencyCode: String, price: String): String =
+    fun mapToDisplayPrice(currencyCode: String, price: String, debitPrefixRequired: Boolean = false): SpannedString =
         when (currencyCode) {
             RUB_FORMAT -> {
-                context.getString(R.string.rub_format, price)
-            }
+                val first = price.substring(0, price.lastIndex - 1)
+                val second = price.takeLast(2)
 
-            USD_FORMAT ->
-                context.getString(R.string.usd_format, price)
+                context.getString(R.string.rub_format, price)
+                buildSpannedString {
+                    if (debitPrefixRequired) {
+                        append("+")
+                    }
+                    append(first)
+                    scale(0.9f) {
+                        append(second)
+                        append(" ")
+                        append(Currency.getInstance(currencyCode).symbol)
+                    }
+                }
+            }
             else ->
-                "$price $currencyCode"
+                buildSpannedString {
+                    append("$price $currencyCode")
+                }
         }
 }

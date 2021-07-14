@@ -1,5 +1,6 @@
 package org.stepik.android.view.course_revenue.ui.adapter.delegate
 
+import android.text.SpannedString
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -54,11 +55,11 @@ class CourseBenefitsMonthlyAdapterDelegate(
             courseBenefitByMonthInvoicePaymentsValue.text = data.courseBenefitByMonth.countInvoicePayments.toString()
         }
 
-        private fun resolveIncomeString(totalUserIncome: String, currencyCode: String, decimalFormat: DecimalFormat): Pair<String, Int> {
+        private fun resolveIncomeString(totalUserIncome: String, currencyCode: String, decimalFormat: DecimalFormat): Pair<SpannedString, Int> {
             val totalUserIncomeFloat = totalUserIncome.toFloatOrNull() ?: 0f
             return when {
                 totalUserIncomeFloat > 0f -> {
-                    context.getString(R.string.course_benefits_with_debited_prefix, revenuePriceMapper.mapToDisplayPrice(currencyCode, decimalFormat.format(totalUserIncome.toDouble()))) to
+                    revenuePriceMapper.mapToDisplayPrice(currencyCode, decimalFormat.format(totalUserIncome.toDouble()), debitPrefixRequired = true) to
                             ContextCompat.getColor(context, R.color.color_overlay_green)
                 }
                 totalUserIncomeFloat < 0f -> {
@@ -66,7 +67,7 @@ class CourseBenefitsMonthlyAdapterDelegate(
                             ContextCompat.getColor(context, R.color.color_overlay_red)
                 }
                 else -> {
-                    context.getString(R.string.course_benefits_with_debited_prefix, revenuePriceMapper.mapToDisplayPrice(currencyCode, decimalFormat.format(totalUserIncome.toDouble()))) to
+                    revenuePriceMapper.mapToDisplayPrice(currencyCode, decimalFormat.format(totalUserIncome.toDouble()), debitPrefixRequired = true) to
                             ContextCompat.getColor(context, context.resolveResourceIdAttribute(android.R.attr.textColorPrimary))
                 }
             }
