@@ -59,13 +59,7 @@ class CourseBenefitsMonthlyListAdapterDelegate(
             })
             courseBenefitsRecycler.setOnPaginationListener { direction ->
                 if (direction == PaginationDirection.NEXT) {
-                    val state = ((itemData as? CourseBenefitOperationItem.CourseBenefitsMonthly)
-                        ?.state as? CourseBenefitsMonthlyFeature.State.Content)
-                        ?: return@setOnPaginationListener
-
-                    if (state.courseBenefitByMonthListDataItems.hasNext) {
-                        onFetchNextPage()
-                    }
+                    onFetchNextPage()
                 }
             }
 
