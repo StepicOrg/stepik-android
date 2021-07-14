@@ -37,7 +37,7 @@ class CourseBenefitsMonthlyAdapterDelegate(
                 TimeZone.getDefault()
             ).capitalize(Locale.ROOT)
 
-            val (incomeString, incomeStringColor) = resolveIncomeString(data.courseBenefitByMonth.totalUserIncome, data.courseBenefitByMonth.totalRefunds, data.courseBenefitByMonth.currencyCode)
+            val (incomeString, incomeStringColor) = resolveIncomeString(data.courseBenefitByMonth.totalUserIncome, data.courseBenefitByMonth.currencyCode)
             courseBenefitByMonthIncome.text = incomeString
             courseBenefitByMonthIncome.setTextColor(incomeStringColor)
             courseBenefitByMonthSalesValue.text = displayPriceMapper.mapToDisplayPrice(data.courseBenefitByMonth.currencyCode, data.courseBenefitByMonth.totalTurnover)
@@ -48,16 +48,15 @@ class CourseBenefitsMonthlyAdapterDelegate(
             courseBenefitByMonthInvoicePaymentsValue.text = data.courseBenefitByMonth.countInvoicePayments.toString()
         }
 
-        private fun resolveIncomeString(totalUserIncome: String, totalRefunds: String, currencyCode: String): Pair<String, Int> {
-            val totalUserIncomeLong = totalUserIncome.toFloatOrNull() ?: 0f
-            val totalRefundsLong = totalRefunds.toFloatOrNull() ?: 0f
+        private fun resolveIncomeString(totalUserIncome: String, currencyCode: String): Pair<String, Int> {
+            val totalUserIncomeFloat = totalUserIncome.toFloatOrNull() ?: 0f
             return when {
-                totalUserIncomeLong > totalRefundsLong -> {
+                totalUserIncomeFloat > 0f -> {
                     context.getString(R.string.course_benefits_with_debited_prefix, displayPriceMapper.mapToDisplayPrice(currencyCode, totalUserIncome)) to
                             ContextCompat.getColor(context, R.color.color_overlay_green)
                 }
-                totalUserIncomeLong < totalRefundsLong -> {
-                    context.getString(R.string.course_benefits_with_refunded_prefix, displayPriceMapper.mapToDisplayPrice(currencyCode, totalRefunds)) to
+                totalUserIncomeFloat < 0f -> {
+                    displayPriceMapper.mapToDisplayPrice(currencyCode, totalUserIncome) to
                             ContextCompat.getColor(context, R.color.color_overlay_red)
                 }
                 else -> {

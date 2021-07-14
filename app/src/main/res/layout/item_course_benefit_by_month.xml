@@ -182,7 +182,7 @@
         android:text="@string/course_benefit_by_month_channel_invoice"
         android:textAppearance="?textAppearanceBody1"
         app:drawableLeftCompat="@drawable/ic_purchase_stepik"
-        app:drawableTint="@color/black"
+        app:drawableTint="@color/color_on_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthZLinkPaymentsTitle"
