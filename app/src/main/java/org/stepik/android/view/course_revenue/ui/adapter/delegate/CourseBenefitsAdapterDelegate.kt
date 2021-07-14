@@ -53,13 +53,13 @@ class CourseBenefitsAdapterDelegate(
             val resolvedAmount = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 context.getString(R.string.course_benefits_with_debited_prefix, amount)
             } else {
-                context.getString(R.string.course_benefits_with_refunded_prefix, amount)
+                amount
             }
 
             val textColor = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 ContextCompat.getColor(context, R.color.material_on_background_emphasis_high_type)
             } else {
-                ContextCompat.getColor(context, R.color.color_overlay_red_alpha_12)
+                ContextCompat.getColor(context, R.color.color_overlay_red)
             }
             purchaseRefundIncomeSum.setTextColor(textColor)
             purchaseRefundTransactionSum.text = transactionSum
