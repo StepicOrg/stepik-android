@@ -4,7 +4,8 @@ interface CourseRevenueFeature {
     data class State(
         val courseRevenueState: CourseRevenueState,
         val courseBenefitSummaryState: CourseBenefitSummaryFeature.State,
-        val courseBenefitsState: CourseBenefitsFeature.State
+        val courseBenefitsState: CourseBenefitsFeature.State,
+        val courseBenefitsMonthlyState: CourseBenefitsMonthlyFeature.State
     )
 
     sealed class CourseRevenueState {
@@ -21,6 +22,7 @@ interface CourseRevenueFeature {
          */
         data class CourseBenefitSummaryMessage(val message: CourseBenefitSummaryFeature.Message) : Message()
         data class CourseBenefitsMessage(val message: CourseBenefitsFeature.Message) : Message()
+        data class CourseBenefitsMonthlyMessage(val message: CourseBenefitsMonthlyFeature.Message) : Message()
     }
 
     sealed class Action {
@@ -30,5 +32,6 @@ interface CourseRevenueFeature {
          */
         data class CourseBenefitSummaryAction(val action: CourseBenefitSummaryFeature.Action) : Action()
         data class CourseBenefitsAction(val action: CourseBenefitsFeature.Action) : Action()
+        data class CourseBenefitsMonthlyAction(val action: CourseBenefitsMonthlyFeature.Action) : Action()
     }
 }
