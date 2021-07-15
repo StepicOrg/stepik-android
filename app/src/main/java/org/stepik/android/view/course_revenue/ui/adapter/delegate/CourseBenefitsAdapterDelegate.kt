@@ -1,8 +1,12 @@
 package org.stepik.android.view.course_revenue.ui.adapter.delegate
 
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_course_benefit.*
@@ -42,7 +46,7 @@ class CourseBenefitsAdapterDelegate(
             val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
             decimalFormat.minimumFractionDigits = 2
 
-            purchaseRefundIcon.setImageResource(getIconRes(data.courseBenefit))
+            purchaseRefundIcon.setImageDrawable(getIconDrawable(data.courseBenefit))
             purchaseRefundName.text = data.user?.fullName ?: data.courseBenefit.buyer.toString()
             purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
                 data.courseBenefit.time,
@@ -74,15 +78,27 @@ class CourseBenefitsAdapterDelegate(
             purchaseRefundPromocode.isVisible = data.courseBenefit.promoCode != null
         }
 
-        private fun getIconRes(data: CourseBenefit): Int =
+        private fun getIconDrawable(data: CourseBenefit): Drawable? =
             if (data.status == CourseBenefit.Status.DEBITED) {
-                if (data.isZLinkUsed) {
-                    R.drawable.ic_purchase_z_link
-                } else {
-                    R.drawable.ic_purchase_stepik
+                when {
+                    data.isZLinkUsed == true ->
+                        AppCompatResources.getDrawable(context, R.drawable.ic_purchase_z_link)
+
+                    data.isInvoicePayment -> {
+                        AppCompatResources
+                            .getDrawable(context, R.drawable.ic_purchase_stepik)
+                            ?.mutate()
+                            ?.let { DrawableCompat.wrap(it) }
+                            ?.also {
+                                DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.color_on_background))
+                                DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+                            }
+                    }
+                    else ->
+                        AppCompatResources.getDrawable(context, R.drawable.ic_purchase_stepik)
                 }
             } else {
-                R.drawable.ic_refund
+                AppCompatResources.getDrawable(context, R.drawable.ic_refund)
             }
     }
 }

@@ -20,6 +20,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
+import timber.log.Timber
 
 class CourseBenefitsListAdapterDelegate(
     private val revenuePriceMapper: RevenuePriceMapper,
@@ -86,6 +87,7 @@ class CourseBenefitsListAdapterDelegate(
             }
             if (state is CourseBenefitsFeature.State.Content) {
                 adapter.items = state.courseBenefitListItems
+                state.courseBenefitListDataItems.forEach { Timber.d("Item: $it") }
             }
         }
     }

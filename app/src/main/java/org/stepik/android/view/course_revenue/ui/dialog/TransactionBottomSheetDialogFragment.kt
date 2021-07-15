@@ -95,10 +95,13 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionPromoCodeValue.isVisible = courseBenefit.promoCode != null
 
         transactionChannelValue.text =
-            if (courseBenefit.isZLinkUsed) {
-                getString(R.string.transaction_z_link_channel)
-            } else {
-                getString(R.string.transaction_stepik_channel)
+            when {
+                courseBenefit.isZLinkUsed == true ->
+                    getString(R.string.transaction_z_link_channel)
+                courseBenefit.isInvoicePayment ->
+                    getString(R.string.transaction_invoice_channel)
+                else ->
+                    getString(R.string.transaction_stepik_channel)
             }
 
         transactionPercentageValue.text = getString(R.string.transaction_share_value, courseBeneficiary.percent.removeSuffix(PERCENTAGE_SUFFIX))

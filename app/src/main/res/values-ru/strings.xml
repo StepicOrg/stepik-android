@@ -1148,7 +1148,8 @@
     <string name="transaction_promo_code">Промокод</string>
     <string name="transaction_channel">Канал</string>
     <string name="transaction_stepik_channel">Переход через Stepik</string>
-    <string name="transaction_z_link_channel">Переход через Z-link</string>
+    <string name="transaction_z_link_channel">Переход по z-ссылке</string>
+    <string name="transaction_invoice_channel">Оплата по счету</string>
     <string name="transaction_share">Ваш процент</string>
     <string name="transaction_share_value">%s%% с продаж за вычетом комиссии Stepik</string>
     <string name="transaction_income">Ваш доход</string>
@@ -1160,5 +1161,5 @@
     <string name="course_benefit_by_month_purchases">Покупки</string>
     <string name="course_benefit_by_month_channel_stepik">Переходы через Stepik</string>
     <string name="course_benefit_by_month_channel_z_link">Переходы по z-ссылке</string>
-    <string name="course_benefit_by_month_channel_invoice">Оплата по счету</string>
+    <string name="course_benefit_by_month_channel_invoice">Оплаты по счету</string>
 </resources>
