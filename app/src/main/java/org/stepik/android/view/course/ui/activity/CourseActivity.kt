@@ -28,7 +28,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
-import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -49,7 +48,6 @@ import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.web.CustomTabsHelper
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
@@ -61,6 +59,7 @@ import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
+import org.stepik.android.view.injection.course.CourseHeaderDelegateFactory
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -150,16 +149,13 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
-    internal lateinit var discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest
-
-    @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
     @Inject
     internal lateinit var billing: Billing
 
     @Inject
-    internal lateinit var displayPriceMapper: DisplayPriceMapper
+    internal lateinit var courseHeaderDelegateFactory: CourseHeaderDelegateFactory
 
     private lateinit var uiCheckout: UiCheckout
 
@@ -209,14 +205,20 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
-            CourseHeaderDelegate(
-                this, analytic, coursePresenter, discountButtonAppearanceSplitTest, displayPriceMapper, courseViewSource,
-                isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
-                onSubmissionCountClicked = {
-                    screenManager.showCachedAttempts(this, courseId)
-                },
-                isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
-            )
+            courseHeaderDelegateFactory
+                .create(
+                    courseActivity = this,
+                    coursePresenter = coursePresenter,
+                    courseViewSource = courseViewSource,
+                    isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
+                    mustShowCourseRevenue = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID) && course?.actions?.viewRevenue?.enabled == true,
+                    showCourseRevenueAction = { screenManager.showCourseRevenue(this, courseId, course?.title) },
+                    onSubmissionCountClicked = {
+                        screenManager.showCachedAttempts(this, courseId)
+                    },
+                    isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
+                )
+
         uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId)
         initViewStateDelegate()
@@ -225,7 +227,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
         setDataToPresenter(courseViewSource)
 
-        courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
+        courseSwipeRefresh.setOnRefreshListener {
+            setDataToPresenter(courseViewSource, forceUpdate = true)
+        }
         tryAgain.setOnClickListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
         goToCatalog.setOnClickListener {
             screenManager.showCatalog(this)

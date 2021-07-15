@@ -20,6 +20,7 @@
 
     <color name="color_on_surface">@color/black</color>
     <color name="color_on_surface_alpha_12">#30000000</color>
+    <color name="color_on_surface_alpha_38">#61000000</color>
     <color name="color_on_surface_emphasis_medium">#99000000</color>
     <color name="color_elevation_overlay_1dp">#12000000</color>
     <color name="color_elevation_overlay_2dp">#17000000</color>

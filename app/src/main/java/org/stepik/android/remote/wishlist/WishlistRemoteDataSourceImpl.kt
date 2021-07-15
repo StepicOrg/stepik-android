@@ -11,9 +11,7 @@ import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.remote.wishlist.model.WishlistWrapper
 import org.stepik.android.remote.remote_storage.service.RemoteStorageService
 import org.stepik.android.remote.wishlist.mapper.WishlistMapper
-import org.stepik.android.view.injection.wishlist.WishlistLock
 import ru.nobird.android.domain.rx.toMaybe
-import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
 
 class WishlistRemoteDataSourceImpl
@@ -22,8 +20,6 @@ constructor(
     private val profileRepository: ProfileRepository,
     private val remoteStorageService: RemoteStorageService,
     private val wishlistMapper: WishlistMapper,
-    @WishlistLock
-    private val wishlistRWLock: ReentrantReadWriteLock,
     @WishlistScheduler
     private val scheduler: Scheduler
 ) : WishlistRemoteDataSource {

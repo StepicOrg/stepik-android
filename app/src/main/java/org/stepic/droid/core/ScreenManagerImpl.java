@@ -52,7 +52,6 @@ import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
-import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -71,6 +70,7 @@ import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
+import org.stepik.android.view.course_revenue.ui.activity.CourseRevenueActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
@@ -718,5 +718,10 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showWishlist(Context context) {
         context.startActivity(CourseListWishActivity.Companion.createIntent(context));
+    }
+
+    @Override
+    public void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle) {
+        context.startActivity(CourseRevenueActivity.Companion.createIntent(context, courseId, courseTitle));
     }
 }

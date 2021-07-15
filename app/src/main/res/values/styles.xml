@@ -310,4 +310,16 @@
     <style name="RoundedBottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet_dialog</item>
     </style>
+
+    <style name="MaterialCardViewBottomCornersRounded_8DP" parent="Widget.MaterialComponents.CardView">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlayRoundedBottomCorners_8DP</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlayRoundedBottomCorners_8DP" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeBottomRight">8dp</item>
+        <item name="cornerSizeBottomLeft">8dp</item>
+    </style>
 </resources>

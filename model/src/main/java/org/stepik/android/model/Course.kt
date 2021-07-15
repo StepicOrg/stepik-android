@@ -117,6 +117,9 @@ data class Course(
     @SerializedName("options")
     val courseOptions: CourseOptions? = null,
 
+    @SerializedName("actions")
+    val actions: CourseActions? = null,
+
     /**
      * Paid courses fields
      */

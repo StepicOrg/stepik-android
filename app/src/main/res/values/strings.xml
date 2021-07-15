@@ -1170,4 +1170,55 @@
     <string name="wishlist_action_remove_success">Course successfully removed from Wishlist</string>
     <string name="wishlist_action_add_failure">Failed to add course to Wishlist</string>
     <string name="wishlist_action_remove_failure">Failed to remove course from Wishlist</string>
+
+    <!-- Course benefits -->
+    <string name="course_benefits_revenue_title">Revenue</string>
+    <string name="course_benefits_toolbar_title">Revenue for course \"%s\"</string>
+    <string name="course_benefits_earnings_title">Your earnings for %s</string>
+    <string name="course_benefits_earnings_empty">Your earnings will be here</string>
+    
+    <string name="course_benefits_earning_current_month">Your earnings for %s</string>
+    <string name="course_benefits_turnover_current_month">Your sales for %s</string>
+    <string name="course_benefits_earnings_total">Your earnings since %s</string>
+    <string name="course_beneifts_turnover_total">Sales since %s</string>
+    <string name="course_benefits_earnings_disclaimer">Important: All operations are carried out Moscow Time (MSK, UTC+3)</string>
+
+    <string name="course_benefits_tab">Purchases and refunds</string>
+    <string name="course_benefits_monthly_tab">Monthly</string>
+
+    <string name="course_benefits_empty">No payments found\nfor this request</string>
+
+    <string name="course_benefits_with_debited_prefix" translatable="false">+%s</string>
+    <string name="course_benefits_with_refunded_prefix" translatable="false">-%s</string>
+
+    <string name="course_benefits_refund">Refund</string>
+
+    <string name="course_benefits_contact_support_part_1">"This page is under development. "</string>
+    <string name="course_benefits_contact_support_part_2">"If you noticed any mistakes in the data, please "</string>
+    <string name="course_benefits_contact_support_part_3">contact our support</string>
+
+    <!-- Transaction bottom sheet -->
+    <string name="transaction_title_purchase">Purchase details</string>
+    <string name="transaction_title_refund">Refund details</string>
+    <string name="transaction_date">Date</string>
+    <string name="transaction_course">Course</string>
+    <string name="transaction_buyer">Customer</string>
+    <string name="transaction_payment">Payment</string>
+    <string name="transaction_promo_code">Promo code</string>
+    <string name="transaction_channel">Channel</string>
+    <string name="transaction_stepik_channel">Came via Stepik</string>
+    <string name="transaction_z_link_channel">Came via Z-link</string>
+    <string name="transaction_invoice_channel">Payment on account</string>
+    <string name="transaction_share">Your share</string>
+    <string name="transaction_share_value">%s%% of sales revenue minus Stepik\'s fee</string>
+    <string name="transaction_income">Your earnings</string>
+
+    <!-- Course benefit by month item -->
+    <string name="course_benefit_by_month_payout">Expected payout</string>
+    <string name="course_benefit_by_month_sales">Sales</string>
+    <string name="course_benefit_by_month_refunds">Refunds</string>
+    <string name="course_benefit_by_month_purchases">Purchases</string>
+    <string name="course_benefit_by_month_channel_stepik">Came via Stepik</string>
+    <string name="course_benefit_by_month_channel_z_link">Came via Z-link</string>
+    <string name="course_benefit_by_month_channel_invoice">Payments on account</string>
 </resources>

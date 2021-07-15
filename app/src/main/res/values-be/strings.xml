@@ -979,4 +979,50 @@
     <string name="wishlist_action_remove_success">Курс паспяхова прыбраны са спісу жаданняў</string>
     <string name="wishlist_action_add_failure">Не атрымалася дадаць курс у спіс жаданняў</string>
     <string name="wishlist_action_remove_failure">Не атрымалася прыбраць курс з спісу жаданняў</string>
+
+    <!-- Course benefits -->
+    <string name="course_benefits_revenue_title">Даход</string>
+    <string name="course_benefits_toolbar_title">Даход за курс «%s»</string>
+    <string name="course_benefits_earnings_title">Ваш даход за %s</string>
+    <string name="course_benefits_earnings_empty">Тут будзе ваш прыбытак</string>
+    <string name="course_benefits_earning_current_month">Ваш даход за %s</string>
+    <string name="course_benefits_turnover_current_month">Продажу за %s</string>
+    <string name="course_benefits_earnings_total">Даход з %s</string>
+    <string name="course_beneifts_turnover_total">Продажу з %s</string>
+    <string name="course_benefits_earnings_disclaimer">Заўвага: Усе аперацыі праходзяць па маскоўскім часе (МСК,  UTC+3).</string>
+
+    <string name="course_benefits_tab">Пакупкі і звароты</string>
+    <string name="course_benefits_monthly_tab">Па месяцах</string>
+
+    <string name="course_benefits_empty">Па дадзеным запыце плацяжоў не знойдзена</string>
+    <string name="course_benefits_refund">Вяртанне</string>
+
+    <string name="course_benefits_contact_support_part_1">"Старонка ў распрацоўцы. "</string>
+    <string name="course_benefits_contact_support_part_2">"Калі вы заўважылі памылкі ў дадзеных, паведаміце аб гэтым у "</string>
+    <string name="course_benefits_contact_support_part_3">нашу падтрымку</string>
+
+    <!-- Transaction bottom sheet -->
+    <string name="transaction_title_purchase">Дэталі пакупкі</string>
+    <string name="transaction_title_refund">Дэталі вяртання</string>
+    <string name="transaction_date">Дата</string>
+    <string name="transaction_course">Курс</string>
+    <string name="transaction_buyer">Пакупнік</string>
+    <string name="transaction_payment">Плацёж</string>
+    <string name="transaction_promo_code">Промокод</string>
+    <string name="transaction_channel">Канал</string>
+    <string name="transaction_stepik_channel">Пераход праз Stepik</string>
+    <string name="transaction_z_link_channel">Пераход па z-спасылцы</string>
+    <string name="transaction_invoice_channel">Аплаты па ліку</string>
+    <string name="transaction_share">Ваш працэнт</string>
+    <string name="transaction_share_value">%s%% з продажаў за вылікам камісіі Stepik</string>
+    <string name="transaction_income">Ваш даход</string>
+
+    <!-- Course benefit by month item -->
+    <string name="course_benefit_by_month_payout">Чаканая выплата</string>
+    <string name="course_benefit_by_month_sales">Продажу</string>
+    <string name="course_benefit_by_month_refunds">Звароты</string>
+    <string name="course_benefit_by_month_purchases">Пакупкі</string>
+    <string name="course_benefit_by_month_channel_stepik">Пераходы праз Stepik</string>
+    <string name="course_benefit_by_month_channel_z_link">Пераходы па z-спасылцы</string>
+    <string name="course_benefit_by_month_channel_invoice">Аплата па ліку</string>
 </resources>
