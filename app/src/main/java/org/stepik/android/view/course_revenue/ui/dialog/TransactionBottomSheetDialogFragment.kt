@@ -94,6 +94,8 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionPromoCodeTitle.isVisible = courseBenefit.promoCode != null
         transactionPromoCodeValue.isVisible = courseBenefit.promoCode != null
 
+        transactionChannelTitle.isVisible = courseBenefit.status == CourseBenefit.Status.DEBITED
+        transactionChannelValue.isVisible = courseBenefit.status == CourseBenefit.Status.DEBITED
         transactionChannelValue.text =
             when {
                 courseBenefit.isZLinkUsed == true ->

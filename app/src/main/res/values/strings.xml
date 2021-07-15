@@ -1219,6 +1219,6 @@
     <string name="course_benefit_by_month_refunds">Refunds</string>
     <string name="course_benefit_by_month_purchases">Purchases</string>
     <string name="course_benefit_by_month_channel_stepik">Came via Stepik</string>
-    <string name="course_benefit_by_month_channel_z_link">Came via Z-Link</string>
-    <string name="course_benefit_by_month_channel_invoice">Payment on account</string>
+    <string name="course_benefit_by_month_channel_z_link">Came via Z-link</string>
+    <string name="course_benefit_by_month_channel_invoice">Payments on account</string>
 </resources>
