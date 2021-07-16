@@ -3,6 +3,8 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.*
@@ -32,15 +34,17 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
-class RecommendedCourseListAdapterDelegate(
+class RecommendedCourseListAdapterDelegate
+@AssistedInject
+constructor(
     private val analytic: Analytic,
     private val courseCountMapper: CourseCountMapper,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
-    private val isHandleInAppPurchase: Boolean,
-    private val onBlockSeen: (String) -> Unit,
-    private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-    private val onCourseClicked: (CourseListItem.Data) -> Unit
+    @Assisted private val isHandleInAppPurchase: Boolean,
+    @Assisted private val onBlockSeen: (String) -> Unit,
+    @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
+    @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 

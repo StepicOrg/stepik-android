@@ -1,8 +1,12 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
+import android.content.res.Configuration
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R
@@ -31,16 +35,18 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
-class CourseListAdapterDelegate(
+class CourseListAdapterDelegate
+@AssistedInject
+constructor(
     private val analytic: Analytic,
     private val courseCountMapper: CourseCountMapper,
-    private val isHandleInAppPurchase: Boolean,
+    @Assisted private val isHandleInAppPurchase: Boolean,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
-    private val onTitleClick: (Long) -> Unit,
-    private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
-    private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-    private val onCourseClicked: (CourseListItem.Data) -> Unit
+    @Assisted private val onTitleClick: (Long) -> Unit,
+    @Assisted private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
+    @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
+    @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
