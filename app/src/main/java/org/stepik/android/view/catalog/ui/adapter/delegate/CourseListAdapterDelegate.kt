@@ -1,6 +1,5 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.content.res.Configuration
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +25,7 @@ import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.catalog.ui.delegate.CatalogBlockHeaderDelegate
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_list.resolver.TableLayoutHorizontalSpanCountResolver
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListViewAllAdapterDelegate
@@ -46,7 +46,8 @@ constructor(
     @Assisted private val onTitleClick: (Long) -> Unit,
     @Assisted private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
     @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-    @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit
+    @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit,
+    private val tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -74,6 +75,8 @@ constructor(
         private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
         private val viewStateDelegate = ViewStateDelegate<CourseListFeature.State>()
 
+        private var tableLayoutManager: TableLayoutManager
+
         init {
             viewStateDelegate.addState<CourseListFeature.State.Idle>(courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
@@ -98,16 +101,17 @@ constructor(
                 onTitleClick(block.courseList.id)
             }
 
+            val rowCount = context.resources.getInteger(R.integer.course_list_rows)
+            val columnsCount = context.resources.getInteger(R.integer.course_list_columns)
+            tableLayoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
+
             with(courseListCoursesRecycler) {
                 adapter = courseItemAdapter
-                val rowCount = resources.getInteger(R.integer.course_list_rows)
-                val columnsCount = resources.getInteger(R.integer.course_list_columns)
-                layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
+                layoutManager = tableLayoutManager
                 itemAnimator?.changeDuration = 0
                 val snapHelper = CoursesSnapHelper(rowCount)
                 snapHelper.attachToRecyclerView(this)
                 setRecycledViewPool(sharedViewPool)
-                setHasFixedSize(true)
             }
         }
 
@@ -148,6 +152,12 @@ constructor(
                             state.courseListItems
                         }
                     } ?: state.courseListItems
+
+                    tableLayoutHorizontalSpanCountResolver.resolveSpanCount(courseItemAdapter.itemCount).let { resolvedSpanCount ->
+                        if (tableLayoutManager.spanCount != resolvedSpanCount) {
+                            tableLayoutManager.spanCount = resolvedSpanCount
+                        }
+                    }
                 }
 
                 else ->

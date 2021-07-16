@@ -33,7 +33,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
@@ -54,7 +53,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.AuthorListAdapterDele
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
