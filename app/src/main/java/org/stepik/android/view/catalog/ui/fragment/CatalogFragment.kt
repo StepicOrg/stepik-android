@@ -246,7 +246,6 @@ class CatalogFragment :
             SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
                 SharedTransitionContainerDelegate {
                 override fun getSharedView(position: Int): View? {
-                    if (catalogRecyclerView == null) return null
                     val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
                         CATALOG_STORIES_INDEX
                     ) as? StoriesAdapterDelegate.StoriesViewHolder
@@ -260,7 +259,6 @@ class CatalogFragment :
                 }
 
                 override fun onPositionChanged(position: Int) {
-                    if (catalogRecyclerView == null) return
                     val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
                         CATALOG_STORIES_INDEX
                     ) as? StoriesAdapterDelegate.StoriesViewHolder

@@ -210,7 +210,6 @@
             android:name=".features.stories.ui.activity.StoriesActivity"
             android:theme="@style/AppTheme.Stories"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation"
             android:screenOrientation="unspecified"/>
 
         <activity
