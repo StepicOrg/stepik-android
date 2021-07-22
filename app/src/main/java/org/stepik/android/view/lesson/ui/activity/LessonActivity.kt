@@ -83,6 +83,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
 
+        private const val EXTRA_LESSON_DATA = "lesson_data"
+
         const val EXTRA_AUTOPLAY_STEP_POSITION = "autoplay_step_position"
         const val EXTRA_MOVE_STEP_NAVIGATION_DIRECTION = "move_step_navigation_direction"
 
@@ -93,6 +95,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 .putExtra(EXTRA_LESSON, lesson)
                 .putExtra(EXTRA_BACK_ANIMATION, isNeedBackAnimation)
                 .putExtra(EXTRA_AUTOPLAY, isAutoplayEnabled)
+
+        fun createIntent(context: Context, lessonData: LessonData): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_LESSON_DATA, lessonData)
 
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
@@ -222,6 +228,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, -1L)
 
+        val lessonData = intent.getParcelableExtra<LessonData>(EXTRA_LESSON_DATA)
+
         when {
             lastStep != null ->
                 lessonPresenter.onLastStep(lastStep, forceUpdate)
@@ -234,6 +242,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
             trialLessonId != -1L ->
                 lessonPresenter.onTrialLesson(trialLessonId, forceUpdate)
+
+            lessonData != null ->
+                lessonPresenter.onLessonData(lessonData)
 
             else ->
                 lessonPresenter.onEmptyData()

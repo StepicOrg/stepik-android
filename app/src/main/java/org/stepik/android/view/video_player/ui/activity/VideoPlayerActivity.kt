@@ -125,14 +125,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private val lessonMoveNextIntent: Intent? by lazy {
         intent.getParcelableExtra<LessonData>(EXTRA_LESSON_DATA)?.let { lessonData ->
-            LessonActivity.createIntent(
-                this,
-                lessonData.section!!,
-                lessonData.unit!!,
-                lessonData.lesson
-            )
-            .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.stepPosition)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            LessonActivity
+                .createIntent(this, lessonData)
+                .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.stepPosition)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
     private val isAutoplayEnabled: Boolean by lazy { lessonMoveNextIntent != null }
