@@ -8,9 +8,12 @@ import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_revenue.CourseBenefitSummaryFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
+import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
 import org.stepik.android.presentation.course_revenue.CourseRevenueViewModel
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitSummaryActionDispatcher
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitsActionDispatcher
+import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitsMonthlyActionDispatcher
+import org.stepik.android.presentation.course_revenue.dispatcher.CourseRevenueActionDispatcher
 import org.stepik.android.presentation.course_revenue.reducer.CourseRevenueReducer
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
@@ -28,15 +31,19 @@ object CourseRevenuePresentationModule {
     @ViewModelKey(CourseRevenueViewModel::class)
     internal fun provideCourseBenefitsPresenter(
         courseRevenueReducer: CourseRevenueReducer,
+        courseRevenueActionDispatcher: CourseRevenueActionDispatcher,
         courseBenefitSummaryActionDispatcher: CourseBenefitSummaryActionDispatcher,
-        courseBenefitsActionDispatcher: CourseBenefitsActionDispatcher
+        courseBenefitsActionDispatcher: CourseBenefitsActionDispatcher,
+        courseBenefitsMonthlyActionDispatcher: CourseBenefitsMonthlyActionDispatcher
     ): ViewModel =
         CourseRevenueViewModel(
             ReduxFeature(CourseRevenueFeature.State(
                 courseRevenueState = CourseRevenueFeature.CourseRevenueState.Idle,
                 courseBenefitSummaryState = CourseBenefitSummaryFeature.State.Loading,
-                courseBenefitsState = CourseBenefitsFeature.State.Loading
+                courseBenefitsState = CourseBenefitsFeature.State.Loading,
+                courseBenefitsMonthlyState = CourseBenefitsMonthlyFeature.State.Loading
             ), courseRevenueReducer)
+                .wrapWithActionDispatcher(courseRevenueActionDispatcher)
                 .wrapWithActionDispatcher(
                     courseBenefitSummaryActionDispatcher.tranform(
                         transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitSummaryAction>()?.action },
@@ -47,6 +54,12 @@ object CourseRevenuePresentationModule {
                     courseBenefitsActionDispatcher.tranform(
                         transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitsAction>()?.action },
                         transformMessage = CourseRevenueFeature.Message::CourseBenefitsMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    courseBenefitsMonthlyActionDispatcher.tranform(
+                        transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitsMonthlyAction>()?.action },
+                        transformMessage = CourseRevenueFeature.Message::CourseBenefitsMonthlyMessage
                     )
                 )
                 .wrapWithViewContainer()

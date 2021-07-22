@@ -26,7 +26,7 @@ data class CourseBenefit(
     @SerializedName("currency_code")
     val currencyCode: String,
     @SerializedName("is_z_link_used")
-    val isZLinkUsed: Boolean,
+    val isZLinkUsed: Boolean?,
     @SerializedName("is_invoice_payment")
     val isInvoicePayment: Boolean,
     @SerializedName("seats_count")

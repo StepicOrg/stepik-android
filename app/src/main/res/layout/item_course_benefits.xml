@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <include
-        android:id="@+id/purchaseRefundError"
+        android:id="@+id/courseBenefitsError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <include
-        android:id="@+id/purchaseEmpty"
+        android:id="@+id/courseBenefitsEmpty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/purchaseRefundRecycler"
+        android:id="@+id/courseBenefitsRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -1129,10 +1129,14 @@
     <string name="course_benefits_earnings_disclaimer">Примечание: Все операции проходят по московскому времени (МСК,  UTC+3).</string>
 
     <string name="course_benefits_tab">Покупки и возвраты</string>
-    <string name="course_benefits_payments_tab">Выплаты</string>
+    <string name="course_benefits_monthly_tab">По месяцам</string>
 
     <string name="course_benefits_empty">По данному запросу\nплатежей не найдено</string>
     <string name="course_benefits_refund">Возврат</string>
+
+    <string name="course_benefits_contact_support_part_1">"Страница в разработке. "</string>
+    <string name="course_benefits_contact_support_part_2">"Если вы заметили ошибки в данных, сообщите об этом в "</string>
+    <string name="course_benefits_contact_support_part_3">нашу поддержку</string>
 
     <!-- Transaction bottom sheet -->
     <string name="transaction_title_purchase">Детали покупки</string>
@@ -1144,8 +1148,18 @@
     <string name="transaction_promo_code">Промокод</string>
     <string name="transaction_channel">Канал</string>
     <string name="transaction_stepik_channel">Переход через Stepik</string>
-    <string name="transaction_z_link_channel">Переход через Z-link</string>
+    <string name="transaction_z_link_channel">Переход по z-ссылке</string>
+    <string name="transaction_invoice_channel">Оплата по счету</string>
     <string name="transaction_share">Ваш процент</string>
-    <string name="transaction_share_value">%s%% с продаж за вычетом комиссии</string>
+    <string name="transaction_share_value">%s%% с продаж за вычетом комиссии Stepik</string>
     <string name="transaction_income">Ваш доход</string>
+
+    <!-- Course benefit by month item -->
+    <string name="course_benefit_by_month_payout">Ожидаемая выплата</string>
+    <string name="course_benefit_by_month_sales">Продажи</string>
+    <string name="course_benefit_by_month_refunds">Возвраты</string>
+    <string name="course_benefit_by_month_purchases">Покупки</string>
+    <string name="course_benefit_by_month_channel_stepik">Переходы через Stepik</string>
+    <string name="course_benefit_by_month_channel_z_link">Переходы по z-ссылке</string>
+    <string name="course_benefit_by_month_channel_invoice">Оплаты по счету</string>
 </resources>

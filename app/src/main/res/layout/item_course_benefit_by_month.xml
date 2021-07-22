@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/courseBenefitByMonthSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/bg_course_item_placeholder"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/courseBenefitByMonthCurrentMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:textAppearance="?textAppearanceSubtitle1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Июнь 2021" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/courseBenefitByMonthIncome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:textAppearance="?textAppearanceSubtitle1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="+771 500 ₽" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthSalesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/course_benefit_by_month_sales"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSummary"
+        tools:text="Продажи" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthSalesValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="32dp"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSummary"
+        tools:text="817 500 ₽" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthRefundsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/course_benefit_by_month_refunds"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSalesTitle"
+        tools:text="Возвраты" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthRefundsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthSalesValue"
+        tools:text="1 500 ₽" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthPaymentsCountTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/course_benefit_by_month_purchases"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthRefundsTitle"
+        tools:text="Покупки" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthCountPaymentsCountValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="32dp"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthRefundsValue"
+        tools:text="500" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthStepikPaymentsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/course_benefit_by_month_channel_stepik"
+        android:textAppearance="?textAppearanceBody1"
+        app:drawableLeftCompat="@drawable/ic_purchase_stepik"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthPaymentsCountTitle"
+        tools:text="Переходы через Stepik" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthStepikPaymentsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="32dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintBottom_toBottomOf="@id/courseBenefitByMonthStepikPaymentsTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/courseBenefitByMonthStepikPaymentsTitle"
+        tools:text="290" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthZLinkPaymentsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/course_benefit_by_month_channel_z_link"
+        android:textAppearance="?textAppearanceBody1"
+        app:drawableLeftCompat="@drawable/ic_purchase_z_link"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthStepikPaymentsTitle"
+        tools:text="Переходы через Z-Link" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthZLinkPaymentsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="32dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintBottom_toBottomOf="@id/courseBenefitByMonthZLinkPaymentsTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/courseBenefitByMonthZLinkPaymentsTitle"
+        tools:text="210" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthInvoicePaymentsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/course_benefit_by_month_channel_invoice"
+        android:textAppearance="?textAppearanceBody1"
+        app:drawableLeftCompat="@drawable/ic_purchase_stepik"
+        app:drawableTint="@color/color_on_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthZLinkPaymentsTitle"
+        tools:text="Оплата по счету" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseBenefitByMonthInvoicePaymentsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="32dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?textAppearanceBody1"
+        app:layout_constraintBottom_toBottomOf="@id/courseBenefitByMonthInvoicePaymentsTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/courseBenefitByMonthInvoicePaymentsTitle"
+        tools:text="210" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

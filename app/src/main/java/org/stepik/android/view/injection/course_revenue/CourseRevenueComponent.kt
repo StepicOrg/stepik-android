@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.course_revenue
 
 import dagger.Subcomponent
 import org.stepik.android.view.course_revenue.ui.activity.CourseRevenueActivity
+import org.stepik.android.view.injection.feedback.FeedbackDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 
 @Subcomponent(modules = [
@@ -10,7 +11,8 @@ import org.stepik.android.view.injection.user.UserDataModule
     CourseBenefitsDataModule::class,
     CourseBenefitByMonthsDataModule::class,
     CourseBeneficiariesDataModule::class,
-    UserDataModule::class
+    UserDataModule::class,
+    FeedbackDataModule::class
 ])
 interface CourseRevenueComponent {
     @Subcomponent.Builder
