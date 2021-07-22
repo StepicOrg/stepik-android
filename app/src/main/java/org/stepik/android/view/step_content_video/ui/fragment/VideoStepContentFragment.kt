@@ -21,7 +21,6 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
-import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import ru.nobird.android.view.base.ui.extension.argument
@@ -94,16 +93,12 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail
 
-            val lessonMovementBundle = Bundle()
-                lessonMovementBundle.putAll(requireActivity().intent.extras)
-                lessonMovementBundle.putInt(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
-
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
                 title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ), lessonMovementBundle)
+            ), lessonData.copy(stepPosition = lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id }.takeIf { it != -1 } ?: 0))
         }
     }
 
