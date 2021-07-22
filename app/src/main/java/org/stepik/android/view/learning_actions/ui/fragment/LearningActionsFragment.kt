@@ -63,11 +63,10 @@ class LearningActionsFragment :
         learningActionsItemAdapter += WishlistActionAdapterDelegate { screenManager.showWishlist(requireContext()) }
         with(learningActionsRecycler) {
             adapter = learningActionsItemAdapter
-            layoutManager = object : LinearLayoutManager(context, HORIZONTAL, false) {
-                override fun canScrollHorizontally(): Boolean = false
-            }
+            layoutManager = LinearLayoutManager(context)
             itemAnimator = null
             setHasFixedSize(true)
+            isNestedScrollingEnabled = false
         }
     }
 

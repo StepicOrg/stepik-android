@@ -127,7 +127,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         intent.getParcelableExtra<LessonData>(EXTRA_LESSON_DATA)?.let { lessonData ->
             LessonActivity
                 .createIntent(this, lessonData)
-                .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.stepPosition)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
