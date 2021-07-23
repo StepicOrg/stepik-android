@@ -83,7 +83,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
 
-        const val EXTRA_AUTOPLAY_STEP_POSITION = "autoplay_step_position"
+        private const val EXTRA_LESSON_DATA = "lesson_data"
+
         const val EXTRA_MOVE_STEP_NAVIGATION_DIRECTION = "move_step_navigation_direction"
 
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
@@ -93,6 +94,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 .putExtra(EXTRA_LESSON, lesson)
                 .putExtra(EXTRA_BACK_ANIMATION, isNeedBackAnimation)
                 .putExtra(EXTRA_AUTOPLAY, isAutoplayEnabled)
+
+        fun createIntent(context: Context, lessonData: LessonData): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_LESSON_DATA, lessonData)
 
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
@@ -222,6 +227,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, -1L)
 
+        val lessonData = intent.getParcelableExtra<LessonData>(EXTRA_LESSON_DATA)
+
         when {
             lastStep != null ->
                 lessonPresenter.onLastStep(lastStep, forceUpdate)
@@ -234,6 +241,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
             trialLessonId != -1L ->
                 lessonPresenter.onTrialLesson(trialLessonId, forceUpdate)
+
+            lessonData != null ->
+                lessonPresenter.onLessonData(lessonData)
 
             else ->
                 lessonPresenter.onEmptyData()
@@ -379,13 +389,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showStepAtPosition(position: Int) {
-        val stepPosition = intent
-            .getIntExtra(EXTRA_AUTOPLAY_STEP_POSITION, -1)
-            .takeIf { it != -1 }
-            ?: position
-
-        lessonPager.currentItem = stepPosition
-        lessonPresenter.onStepOpened(stepPosition)
+        lessonPager.currentItem = position
+        lessonPresenter.onStepOpened(position)
     }
 
     override fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long, isExam: Boolean) {
