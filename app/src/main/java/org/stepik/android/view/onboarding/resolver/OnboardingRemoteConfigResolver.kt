@@ -24,7 +24,7 @@ constructor(
         return try {
             gson.fromJson(onboardingGoalsString, TypeToken.getParameterized(ArrayList::class.java, OnboardingGoal::class.java).type)
         } catch (e: Exception) {
-            analytic.report(OnboardingParseErrorAnalyticEvent(onboardingGoalsString, sharedPreferenceHelper.isOnboardingNotPassedYet))
+            analytic.report(OnboardingParseErrorAnalyticEvent(onboardingGoalsString, sharedPreferenceHelper.wasSplashSeen()))
             gson.fromJson(ONBOARDING_GOALS_FALLBACK, TypeToken.getParameterized(ArrayList::class.java, OnboardingGoal::class.java).type)
         }
     }

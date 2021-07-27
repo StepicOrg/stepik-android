@@ -114,6 +114,7 @@ public class SharedPreferenceHelper {
     private final static String PERSONALIZED_COURSE_LIST = "personalized_course_list";
     private final static String IS_PERSONALIZED_ONBOARDING_WAS_SHOWN = "is_personalized_onboarding_was_shown";
     private final static String WISHLIST = "wishlist";
+    private final static String SPLASH_WAS_SEEN = "splash_was_seen";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -894,6 +895,14 @@ public class SharedPreferenceHelper {
     @Nullable
     public String getCookiesHeader() {
         return getString(PreferenceType.LOGIN, COOKIES_HEADER);
+    }
+
+    public void afterSplashWasSeen() {
+        put(PreferenceType.DEVICE_SPECIFIC, SPLASH_WAS_SEEN, true);
+    }
+
+    public boolean wasSplashSeen() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, SPLASH_WAS_SEEN);
     }
 
     private void put(PreferenceType type, String key, String value) {

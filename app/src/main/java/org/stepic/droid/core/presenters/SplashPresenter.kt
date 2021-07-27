@@ -93,6 +93,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally {
+                sharedPreferenceHelper.afterSplashWasSeen()
                 splashLoadingTrace.stop()
             }
             .subscribeBy(
