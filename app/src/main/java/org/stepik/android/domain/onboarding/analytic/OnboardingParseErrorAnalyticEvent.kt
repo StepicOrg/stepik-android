@@ -4,11 +4,11 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class OnboardingParseErrorAnalyticEvent(
     json: String,
-    isFirstLaunch: Boolean
+    lastSessionTimestamp: Long
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_JSON = "json"
-        private const val PARAM_IS_FIRST_LAUNCH = "is_first_launch"
+        private const val PARAM_LAST_SESSION_TIMESTAMP = "last_session_timestamp"
     }
 
     override val name: String =
@@ -17,6 +17,6 @@ class OnboardingParseErrorAnalyticEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_JSON to json,
-            PARAM_IS_FIRST_LAUNCH to isFirstLaunch
+            PARAM_LAST_SESSION_TIMESTAMP to lastSessionTimestamp
         )
 }
