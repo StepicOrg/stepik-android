@@ -36,9 +36,9 @@ constructor(
                 "    \"icon\": \"\uD83D\uDD0D\",\n" +
                 "    \"course_lists\": [\n" +
                 "      {\n" +
-                "        \"id\": 136,\n" +
-                "        \"title\": \"Творчество\",\n" +
-                "        \"icon\": \"\uD83C\uDFA8\",\n" +
+                "        \"id\": 3,\n" +
+                "        \"title\": \"Умный досуг\",\n" +
+                "        \"icon\": \"\uD83C\uDFAE\",\n" +
                 "        \"is_featured\": false\n" +
                 "      },\n" +
                 "      {\n" +
@@ -54,9 +54,9 @@ constructor(
                 "        \"is_featured\": false\n" +
                 "      },\n" +
                 "      {\n" +
-                "        \"id\": 3,\n" +
-                "        \"title\": \"Умный досуг\",\n" +
-                "        \"icon\": \"\uD83C\uDFAE\",\n" +
+                "        \"id\": 26,\n" +
+                "        \"title\": \"Учим языки\",\n" +
+                "        \"icon\": \"\uD83C\uDF0D\",\n" +
                 "        \"is_featured\": false\n" +
                 "      },\n" +
                 "      {\n" +
@@ -78,7 +78,7 @@ constructor(
                 "    \"icon\": \"\uD83D\uDCDA\",\n" +
                 "    \"course_lists\": [\n" +
                 "      {\n" +
-                "        \"id\": 86,\n" +
+                "        \"id\": 20,\n" +
                 "        \"title\": \"Подготовка к ЕГЭ\",\n" +
                 "        \"icon\": \"\uD83D\uDCD6\",\n" +
                 "        \"is_featured\": true\n" +
@@ -96,7 +96,7 @@ constructor(
                 "        \"is_featured\": false\n" +
                 "      },\n" +
                 "      {\n" +
-                "        \"id\": 36,\n" +
+                "        \"id\": 55,\n" +
                 "        \"title\": \"Английский язык\",\n" +
                 "        \"icon\": \"\uD83C\uDDEC\uD83C\uDDE7\",\n" +
                 "        \"is_featured\": false\n" +
@@ -138,7 +138,7 @@ constructor(
                 "        \"is_featured\": false\n" +
                 "      },\n" +
                 "      {\n" +
-                "        \"id\": 33,\n" +
+                "        \"id\": 76,\n" +
                 "        \"title\": \"Маркетинг\",\n" +
                 "        \"icon\": \"\uD83C\uDFAF\",\n" +
                 "        \"is_featured\": false\n" +
