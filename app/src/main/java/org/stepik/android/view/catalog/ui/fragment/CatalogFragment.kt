@@ -2,6 +2,7 @@ package org.stepik.android.view.catalog.ui.fragment
 
 import android.app.SearchManager
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -58,6 +59,7 @@ import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
 import org.stepik.android.view.injection.course_list.factory.RecommendedCourseListAdapterDelegateFactory
 import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
@@ -260,17 +262,7 @@ class CatalogFragment :
 
                     if (position != -1) {
                         val story = storiesViewHolder.storiesAdapter.stories[position]
-                        catalogViewModel.onNewMessage(
-                            CatalogFeature.Message.StoriesMessage(
-                                StoriesFeature.Message.StoryViewed(story.id)
-                            )
-                        )
-                        analytic.reportAmplitudeEvent(
-                            AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
-                                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                                AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
-                            )
-                        )
+                        logStoryEvent(story)
                     }
                 }
             })
@@ -363,6 +355,14 @@ class CatalogFragment :
 
         val stories = storiesViewHolder.storiesAdapter.stories
 
+        /**
+         * onPositionChanged has null catalogRecyclerView when logging position 0 in landscape
+         * so we use this hack instead
+         */
+        if (position == 0 && resources.configuration.orientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            logStoryEvent(stories[position])
+        }
+
         requireContext().startActivity(
             SharedTransitionIntentBuilder.createIntent(
                 requireContext(), StoriesActivity::class.java,
@@ -394,6 +394,20 @@ class CatalogFragment :
         searchViewToolbar.onSubmitted(query)
         collapseSearchView()
         startActivity(intent)
+    }
+
+    private fun logStoryEvent(story: Story) {
+        catalogViewModel.onNewMessage(
+            CatalogFeature.Message.StoriesMessage(
+                StoriesFeature.Message.StoryViewed(story.id)
+            )
+        )
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
+            )
+        )
     }
 
     private fun setupSearchBar() {
