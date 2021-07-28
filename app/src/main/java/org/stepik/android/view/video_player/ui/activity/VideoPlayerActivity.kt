@@ -51,6 +51,7 @@ import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DisplayUtils
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.domain.video_player.analytic.PIPActivated
 import org.stepik.android.domain.video_player.analytic.VideoPlayerControlClickedEvent
@@ -99,12 +100,12 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         private const val AUTOPLAY_ANIMATION_DURATION_MS = 7200L
 
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
-        private const val EXTRA_VIDEO_MOVEMENT_BUNDLE = "video_player_move_next_intent"
+        private const val EXTRA_LESSON_DATA = "lesson_data"
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonMovementBundle: Bundle? = null): Intent =
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonData: LessonData? = null): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
-                .putExtra(EXTRA_VIDEO_MOVEMENT_BUNDLE, lessonMovementBundle)
+                .putExtra(EXTRA_LESSON_DATA, lessonData)
     }
 
     @Inject
@@ -123,9 +124,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
     private val lessonMoveNextIntent: Intent? by lazy {
-        intent.getBundleExtra(EXTRA_VIDEO_MOVEMENT_BUNDLE)?.let {
-            Intent(this, LessonActivity::class.java)
-                .putExtras(it)
+        intent.getParcelableExtra<LessonData>(EXTRA_LESSON_DATA)?.let { lessonData ->
+            LessonActivity
+                .createIntent(this, lessonData)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
     }
