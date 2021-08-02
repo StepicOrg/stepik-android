@@ -2,6 +2,7 @@ package org.stepik.android.view.catalog.ui.fragment
 
 import android.app.SearchManager
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -33,7 +34,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
@@ -51,15 +51,15 @@ import org.stepik.android.view.catalog.mapper.AuthorCountMapper
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.catalog.ui.adapter.delegate.AuthorListAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefaultAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
+import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
+import org.stepik.android.view.injection.course_list.factory.RecommendedCourseListAdapterDelegateFactory
 import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
@@ -114,10 +114,10 @@ class CatalogFragment :
     internal lateinit var externalDeepLinkProcessor: ExternalDeepLinkProcessor
 
     @Inject
-    internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
+    internal lateinit var courseListAdapterDelegateFactory: CourseListAdapterDelegateFactory
 
     @Inject
-    internal lateinit var displayPriceMapper: DisplayPriceMapper
+    internal lateinit var recommendedCourseListAdapterDelegateFactory: RecommendedCourseListAdapterDelegateFactory
 
     private lateinit var searchIcon: ImageView
 
@@ -176,12 +176,8 @@ class CatalogFragment :
             catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage(forceUpdate = true))
         }
         catalogItemAdapter += LoadingAdapterDelegate()
-        catalogItemAdapter += CourseListAdapterDelegate(
-            analytic = analytic,
-            courseCountMapper = courseCountMapper,
+        catalogItemAdapter += courseListAdapterDelegateFactory.create(
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
-            defaultPromoCodeMapper = defaultPromoCodeMapper,
-            displayPriceMapper = displayPriceMapper,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
                 val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
@@ -209,13 +205,8 @@ class CatalogFragment :
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) }
         )
 
-        // TODO Create delegate builder or use assisted injection
-        catalogItemAdapter += RecommendedCourseListAdapterDelegate(
-            analytic = analytic,
-            courseCountMapper = courseCountMapper,
+        catalogItemAdapter += recommendedCourseListAdapterDelegateFactory.create(
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
-            defaultPromoCodeMapper = defaultPromoCodeMapper,
-            displayPriceMapper = displayPriceMapper,
             onBlockSeen = { id ->
                 val courseListMessage = CourseListFeature.Message.InitMessageRecommended(id = id)
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))
@@ -246,6 +237,7 @@ class CatalogFragment :
             SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
                 SharedTransitionContainerDelegate {
                 override fun getSharedView(position: Int): View? {
+                    if (catalogRecyclerView == null) return null
                     val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
                         CATALOG_STORIES_INDEX
                     ) as? StoriesAdapterDelegate.StoriesViewHolder
@@ -259,6 +251,7 @@ class CatalogFragment :
                 }
 
                 override fun onPositionChanged(position: Int) {
+                    if (catalogRecyclerView == null) return
                     val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
                         CATALOG_STORIES_INDEX
                     ) as? StoriesAdapterDelegate.StoriesViewHolder
@@ -269,17 +262,7 @@ class CatalogFragment :
 
                     if (position != -1) {
                         val story = storiesViewHolder.storiesAdapter.stories[position]
-                        catalogViewModel.onNewMessage(
-                            CatalogFeature.Message.StoriesMessage(
-                                StoriesFeature.Message.StoryViewed(story.id)
-                            )
-                        )
-                        analytic.reportAmplitudeEvent(
-                            AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
-                                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                                AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
-                            )
-                        )
+                        logStoryEvent(story)
                     }
                 }
             })
@@ -372,6 +355,14 @@ class CatalogFragment :
 
         val stories = storiesViewHolder.storiesAdapter.stories
 
+        /**
+         * onPositionChanged has null catalogRecyclerView when logging position 0 in landscape
+         * so we use this hack instead
+         */
+        if (position == 0 && resources.configuration.orientation != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+            logStoryEvent(stories[position])
+        }
+
         requireContext().startActivity(
             SharedTransitionIntentBuilder.createIntent(
                 requireContext(), StoriesActivity::class.java,
@@ -403,6 +394,20 @@ class CatalogFragment :
         searchViewToolbar.onSubmitted(query)
         collapseSearchView()
         startActivity(intent)
+    }
+
+    private fun logStoryEvent(story: Story) {
+        catalogViewModel.onNewMessage(
+            CatalogFeature.Message.StoriesMessage(
+                StoriesFeature.Message.StoryViewed(story.id)
+            )
+        )
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                AmplitudeAnalytic.Stories.Values.SOURCE to AmplitudeAnalytic.Stories.Values.Source.CATALOG
+            )
+        )
     }
 
     private fun setupSearchBar() {

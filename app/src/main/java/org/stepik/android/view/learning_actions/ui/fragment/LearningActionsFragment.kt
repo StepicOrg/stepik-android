@@ -66,6 +66,7 @@ class LearningActionsFragment :
             layoutManager = LinearLayoutManager(context)
             itemAnimator = null
             setHasFixedSize(true)
+            isNestedScrollingEnabled = false
         }
     }
 
