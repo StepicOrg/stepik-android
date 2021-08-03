@@ -38,7 +38,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.compatibility.ui.dialog.Android4DiscontinueDialogFragment
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
-import org.stepik.android.view.debug.ui.fragment.DebugFragment
+import org.stepik.android.view.debug.ui.fragment.DebugMenu
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.story_deeplink.routing.getStoryId
 import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragment
@@ -369,7 +369,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 NotificationsFragment.TAG
 
             R.id.debug ->
-                DebugFragment.TAG
+                DebugMenu.TAG
 
 
             else ->
@@ -391,7 +391,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 NotificationsFragment.newInstance()
 
             R.id.debug ->
-                DebugFragment.newInstance()
+                DebugMenu.newInstance()
 
             else ->
                 throw IllegalStateException()

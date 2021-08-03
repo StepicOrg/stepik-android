@@ -20,10 +20,10 @@ import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class DebugFragment : Fragment(R.layout.fragment_debug),
-    ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction> {
-    companion object {
-        const val TAG = "DebugFragment"
+    ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction>
+{
 
+    companion object {
         fun newInstance(): Fragment =
             DebugFragment()
     }
