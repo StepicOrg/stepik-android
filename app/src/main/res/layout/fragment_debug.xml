@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/catalogRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,26 +10,44 @@
 
     <include
         android:id="@+id/appBarLayout"
-        layout="@layout/view_centered_appbar"/>
+        layout="@layout/view_centered_appbar" />
 
     <FrameLayout
-        android:id="@+id/debugContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <include layout="@layout/progress_bar_on_empty_screen" />
+
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/debugContent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="FCM Token"/>
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_fcm_token"
+                android:textAppearance="?textAppearanceSubtitle1" />
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/debugFcmTokenValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackground"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                tools:text="-R14wi1KMnR6kHaN4dA34HlabxB49HshJfAAzMWWvJVS-K3qyvGfUpXW9ldFHeWJqeDMpQ_8YhzWlJyiqw46iPTRlifgIlped5S5OBlL6-RqcTG4:APA91bGa6FCM7MTY5MACPI9YcSEpaHu4EJPWggfQ-XVvxpGOGT" />
+
+            <include layout="@layout/view_divider_vertical" />
         </androidx.appcompat.widget.LinearLayoutCompat>
-
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
