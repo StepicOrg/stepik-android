@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_debug.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -53,6 +54,8 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
             )
             true
         }
+
+        tryAgain.setOnClickListener { debugViewModel.onNewMessage(DebugFeature.Message.InitMessage(forceUpdate = true)) }
     }
 
     private fun injectComponent() {
@@ -65,7 +68,7 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<DebugFeature.State.Idle>()
         viewStateDelegate.addState<DebugFeature.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<DebugFeature.State.Error>()
+        viewStateDelegate.addState<DebugFeature.State.Error>(debugLoadingError)
         viewStateDelegate.addState<DebugFeature.State.Content>(debugContent)
     }
 
