@@ -37,6 +37,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.compatibility.ui.dialog.Android4DiscontinueDialogFragment
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
+import org.stepik.android.view.debug.ui.fragment.DebugFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.story_deeplink.routing.getStoryId
 import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragment
@@ -71,6 +72,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val NOTIFICATIONS_INDEX: Int = 4
+        const val DEBUG_INDEX: Int = 5
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -253,6 +255,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
             NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
+            DEBUG_INDEX -> navigationView.selectedItemId = R.id.debug
             else -> {
                 //do nothing
             }
@@ -361,6 +364,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             R.id.notifications ->
                 NotificationsFragment.TAG
 
+            R.id.debug ->
+                DebugFragment.TAG
+
+
             else ->
                 throw IllegalStateException()
         }
@@ -378,6 +385,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
             R.id.notifications ->
                 NotificationsFragment.newInstance()
+
+            R.id.debug ->
+                DebugFragment.newInstance()
 
             else ->
                 throw IllegalStateException()
