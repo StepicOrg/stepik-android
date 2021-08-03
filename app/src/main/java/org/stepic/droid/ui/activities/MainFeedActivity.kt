@@ -69,7 +69,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         private const val CATALOG_DEEPLINK = "catalog"
         private const val NOTIFICATIONS_DEEPLINK = "notifications"
 
-        private const val RELEASE_BUILD_TYPE = "release"
+        private const val DEBUG_BUILD_TYPE = "debug"
 
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
@@ -289,7 +289,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     private fun initNavigation() {
         navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
         navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
-        navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE != RELEASE_BUILD_TYPE
+        navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE == DEBUG_BUILD_TYPE
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
