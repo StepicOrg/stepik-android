@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_main_feed.*
+import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
@@ -67,6 +68,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         private const val STORY_DEEPLINK = "story-template"
         private const val CATALOG_DEEPLINK = "catalog"
         private const val NOTIFICATIONS_DEEPLINK = "notifications"
+
+        private const val RELEASE_BUILD_TYPE = "release"
 
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
@@ -286,6 +289,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     private fun initNavigation() {
         navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
         navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
+        navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE != RELEASE_BUILD_TYPE
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
