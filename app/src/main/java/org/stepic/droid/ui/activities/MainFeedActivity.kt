@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_main_feed.*
+import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
@@ -37,6 +38,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.compatibility.ui.dialog.Android4DiscontinueDialogFragment
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
+import org.stepik.android.view.debug.ui.fragment.DebugMenu
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.story_deeplink.routing.getStoryId
 import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragment
@@ -67,10 +69,13 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         private const val CATALOG_DEEPLINK = "catalog"
         private const val NOTIFICATIONS_DEEPLINK = "notifications"
 
+        private const val DEBUG_BUILD_TYPE = "debug"
+
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
         const val NOTIFICATIONS_INDEX: Int = 4
+        const val DEBUG_INDEX: Int = 5
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -253,6 +258,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
             NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
+            DEBUG_INDEX -> navigationView.selectedItemId = R.id.debug
             else -> {
                 //do nothing
             }
@@ -283,6 +289,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     private fun initNavigation() {
         navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
         navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
+        navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE == DEBUG_BUILD_TYPE
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
@@ -361,6 +368,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             R.id.notifications ->
                 NotificationsFragment.TAG
 
+            R.id.debug ->
+                DebugMenu.TAG
+
+
             else ->
                 throw IllegalStateException()
         }
@@ -378,6 +389,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
             R.id.notifications ->
                 NotificationsFragment.newInstance()
+
+            R.id.debug ->
+                DebugMenu.newInstance()
 
             else ->
                 throw IllegalStateException()
