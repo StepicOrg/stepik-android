@@ -15,4 +15,5 @@
     app:drawableLeftCompat="@drawable/ic_certificate"
     app:drawableStartCompat="@drawable/ic_certificate"
     android:background="?selectableItemBackground"
-    tools:text="Certificate with distinction" />
+    tools:text="Certificate with distinction"
+    tools:viewBindingIgnore="true"/>

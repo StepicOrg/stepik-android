@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackground"
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/tableColumnSelectionCheckBox"

@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:parentTag="android.widget.FrameLayout">
+    tools:parentTag="android.widget.FrameLayout"
+    tools:viewBindingIgnore="true">
     <TextView
         android:id="@+id/peerReviewStatusText"
         android:layout_width="match_parent"

@@ -2,10 +2,12 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/course_item_height"
     android:layout_margin="@dimen/course_item_margin"
-    android:background="@drawable/bg_course_item_placeholder">
+    android:background="@drawable/bg_course_item_placeholder"
+    tools:viewBindingIgnore="true">
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseImagePlaceholder"

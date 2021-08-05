@@ -8,7 +8,8 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:visibility="gone"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:viewBindingIgnore="true">
 
     <com.google.android.material.textview.MaterialTextView
         style="@style/StepQuizFeedback.Wrong"

@@ -10,7 +10,8 @@
     android:paddingRight="?dialogPreferredPadding"
 
     android:paddingTop="16dp"
-    android:paddingBottom="16dp">
+    android:paddingBottom="16dp"
+    tools:viewBindingIgnore="true">
 
     <TextView
         android:id="@+id/sectionTitle"

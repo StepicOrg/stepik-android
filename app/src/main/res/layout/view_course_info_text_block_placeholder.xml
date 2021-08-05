@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/course_info_block_margin">
+    android:layout_margin="@dimen/course_info_block_margin"
+    tools:viewBindingIgnore="true">
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/blockTitle"

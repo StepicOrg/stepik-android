@@ -4,4 +4,6 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:minHeight="@dimen/course_collection_header_min_height"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"/>

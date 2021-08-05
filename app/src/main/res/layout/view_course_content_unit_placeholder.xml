@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackground"
+    tools:viewBindingIgnore="true">
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/unitIcon"
