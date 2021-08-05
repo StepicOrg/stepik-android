@@ -21,4 +21,11 @@
         android:checkable="false"
         android:icon="@drawable/ic_mobile_notifications"
         android:title="@string/main_tab_notifications" />
+
+    <item
+        android:id="@+id/debug"
+        android:checkable="false"
+        android:visible="false"
+        android:icon="@drawable/ic_settings_dark"
+        android:title="@string/main_tab_debug"/>
 </menu>

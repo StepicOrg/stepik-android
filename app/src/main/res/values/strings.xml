@@ -919,6 +919,7 @@
     <string name="main_tab_catalog">Catalog</string>
     <string name="main_tab_profile">Profile</string>
     <string name="main_tab_notifications">Notifications</string>
+    <string name="main_tab_debug" translatable="false">Debug</string>
 
     <!-- Settings -->
     <string name="setting_section_learning">Learning</string>
@@ -1221,4 +1222,8 @@
     <string name="course_benefit_by_month_channel_stepik">Came via Stepik</string>
     <string name="course_benefit_by_month_channel_z_link">Came via Z-link</string>
     <string name="course_benefit_by_month_channel_invoice">Payments on account</string>
+
+    <!-- Debug menu -->
+    <string name="debug_toolbar_title" translatable="false">Debug</string>
+    <string name="debug_fcm_token">FCM Token</string>
 </resources>
