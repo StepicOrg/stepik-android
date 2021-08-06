@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.user_courses
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.stepic.droid.di.AppSingleton
 import org.stepik.android.cache.user_courses.UserCoursesCacheDataSourceImpl
 import org.stepik.android.data.user_courses.repository.UserCoursesRepositoryImpl
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
@@ -16,6 +17,7 @@ import retrofit2.Retrofit
 @Module
 abstract class UserCoursesDataModule {
     @Binds
+    @AppSingleton
     internal abstract fun bindUserCoursesRepository(
         userCoursesRepositoryImpl: UserCoursesRepositoryImpl
     ): UserCoursesRepository
