@@ -8,6 +8,8 @@ import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.learning_actions.LearningActionsFeature
 import org.stepik.android.presentation.learning_actions.LearningActionsViewModel
 import org.stepik.android.presentation.learning_actions.reducer.LearningActionsReducer
+import org.stepik.android.presentation.user_reviews.UserReviewsFeature
+import org.stepik.android.presentation.user_reviews.dispatcher.UserReviewsActionDispatcher
 import org.stepik.android.presentation.wishlist.WishlistFeature
 import org.stepik.android.presentation.wishlist.dispatcher.WishlistActionDispatcher
 import ru.nobird.android.core.model.safeCast
@@ -26,12 +28,14 @@ object LearningActionsPresentationModule {
     @ViewModelKey(LearningActionsViewModel::class)
     internal fun provideLearningActionsPresenter(
         learningActionsReducer: LearningActionsReducer,
-        wishlistActionDispatcher: WishlistActionDispatcher
+        wishlistActionDispatcher: WishlistActionDispatcher,
+        userReviewsActionDispatcher: UserReviewsActionDispatcher
     ): ViewModel =
         LearningActionsViewModel(
             ReduxFeature(
                 LearningActionsFeature.State(
-                    wishlistState = WishlistFeature.State.Idle
+                    wishlistState = WishlistFeature.State.Idle,
+                    userReviewsState = UserReviewsFeature.State.Idle
                 ), learningActionsReducer
             )
                 .wrapWithActionDispatcher(
@@ -39,6 +43,12 @@ object LearningActionsPresentationModule {
                         transformAction = { it.safeCast<LearningActionsFeature.Action.WishlistAction>()?.action },
                         transformMessage = LearningActionsFeature.Message::WishlistMessage
                     ))
+                .wrapWithActionDispatcher(
+                    userReviewsActionDispatcher.tranform(
+                        transformAction = { it.safeCast<LearningActionsFeature.Action.UserReviewsAction>()?.action },
+                        transformMessage = LearningActionsFeature.Message::UserReviewsMessage
+                    )
+                )
                 .wrapWithViewContainer()
         )
 }

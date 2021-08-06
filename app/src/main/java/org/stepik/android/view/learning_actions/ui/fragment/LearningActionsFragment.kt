@@ -13,12 +13,15 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.presentation.learning_actions.LearningActionsFeature
 import org.stepik.android.presentation.learning_actions.LearningActionsViewModel
+import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.wishlist.WishlistFeature
 import org.stepik.android.view.learning_actions.model.LearningActionsItem
+import org.stepik.android.view.learning_actions.ui.adapter.delegate.UserReviewsActionAdapterDelegate
 import org.stepik.android.view.learning_actions.ui.adapter.delegate.WishlistActionAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class LearningActionsFragment :
@@ -46,6 +49,7 @@ class LearningActionsFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.WishlistMessage(WishlistFeature.Message.InitMessage(forceUpdate = false)))
+        learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.UserReviewsMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false)))
     }
 
     private fun injectComponent() {
@@ -61,9 +65,10 @@ class LearningActionsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         learningActionsItemAdapter += WishlistActionAdapterDelegate { screenManager.showWishlist(requireContext()) }
+        learningActionsItemAdapter += UserReviewsActionAdapterDelegate()
         with(learningActionsRecycler) {
             adapter = learningActionsItemAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = null
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
@@ -75,7 +80,11 @@ class LearningActionsFragment :
     }
 
     override fun render(state: LearningActionsFeature.State) {
+        Timber.d("State: $state")
         learningActionsItemAdapter.items =
-            listOf(LearningActionsItem.Wishlist(state.wishlistState))
+            listOf(
+                LearningActionsItem.Wishlist(state.wishlistState),
+                LearningActionsItem.UserReviews(state.userReviewsState)
+            )
     }
 }

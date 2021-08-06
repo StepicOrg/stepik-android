@@ -76,7 +76,7 @@ constructor(
             .concatMapSingle {
                 courseReviewsRepository.getCourseReviewsByUserId(
                     userId,
-                    sourceType = DataSourceType.REMOTE
+                    sourceType = primaryDataSourceType
                 )
             }
             .takeUntil { !it.hasNext }

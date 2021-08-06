@@ -1226,4 +1226,9 @@
     <!-- Debug menu -->
     <string name="debug_toolbar_title" translatable="false">Debug</string>
     <string name="debug_fcm_token">FCM Token</string>
+
+    <!-- User course reviews -->
+    <string name="user_review_title">User reviews</string>
+    <string name="user_review_learning_action_empty">No reviews</string>
+    <string name="user_review_potential_learning_action_count" translatable="false">(+%d)</string>
 </resources>
