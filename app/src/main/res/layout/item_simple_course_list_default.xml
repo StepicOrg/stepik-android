@@ -7,7 +7,8 @@
     android:padding="16dp"
     android:background="@drawable/bg_catalog_course_list_default"
     android:layout_margin="@dimen/course_item_margin"
-    tools:layout_width="154dp">
+    tools:layout_width="154dp"
+    tools:viewBindingIgnore="true">
 
     <TextView
         android:id="@+id/simpleCourseListTitle"

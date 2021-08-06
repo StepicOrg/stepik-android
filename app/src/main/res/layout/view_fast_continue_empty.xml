@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/fast_continue_widget_height"
-    android:background="@drawable/bg_fast_continue">
+    android:background="@drawable/bg_fast_continue"
+    tools:viewBindingIgnore="true">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/fastContinueInformationCover"

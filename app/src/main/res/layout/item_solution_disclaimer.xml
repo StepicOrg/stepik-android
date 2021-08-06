@@ -2,10 +2,12 @@
 <androidx.appcompat.widget.AppCompatTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/solutionsFeedback"
     style="@style/StepQuizFeedback.Info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     android:text="@string/solutions_information_block"
-    app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
+    app:drawableStartCompat="@drawable/ic_step_quiz_validation"
+    tools:viewBindingIgnore="true" />

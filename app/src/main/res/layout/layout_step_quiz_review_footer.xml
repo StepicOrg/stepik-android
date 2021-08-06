@@ -2,6 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:viewBindingIgnore="true"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <!-- Step 5 -->

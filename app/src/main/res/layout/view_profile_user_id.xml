@@ -12,4 +12,5 @@
     android:alpha="?alphaEmphasisDisabled"
     tools:text="User ID: 1287351251"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" />
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"/>

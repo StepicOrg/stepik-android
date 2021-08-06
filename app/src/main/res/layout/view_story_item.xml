@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/stories_size"
     android:layout_height="@dimen/stories_size"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
-    android:foreground="@drawable/story_view_foreground">
+    android:foreground="@drawable/story_view_foreground"
+    tools:viewBindingIgnore="true">
 
     <View
         android:id="@+id/activeStoryMarker"
