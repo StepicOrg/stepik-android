@@ -9,7 +9,8 @@
     android:paddingRight="@dimen/settings_offset_horizontal"
     android:paddingTop="@dimen/settings_offset_vertical"
     android:paddingBottom="@dimen/settings_offset_vertical"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackground"
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"

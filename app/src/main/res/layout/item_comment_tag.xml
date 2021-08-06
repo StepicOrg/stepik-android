@@ -17,4 +17,5 @@
     tools:ignore="SmallSp"
     tools:background="@drawable/bg_comment_tag_pinned"
     tools:drawableStart="@drawable/ic_comment_tag_pinned"
-    tools:text="Pinned" />
+    tools:text="Pinned"
+    tools:viewBindingIgnore="true" />

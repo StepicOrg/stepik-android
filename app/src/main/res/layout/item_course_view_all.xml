@@ -16,4 +16,5 @@
     app:iconGravity="textEnd"
     app:iconPadding="8dp"
     app:iconTint="?colorPrimary"
-    tools:text="@string/view_all_courses" />
+    tools:text="@string/view_all_courses"
+    tools:viewBindingIgnore="true" />

@@ -9,7 +9,8 @@
     android:layout_height="match_parent"
     android:background="?android:colorBackground"
     android:visibility="gone"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:viewBindingIgnore="true">
 
     <ImageView
         android:id="@+id/placeholderIcon"
