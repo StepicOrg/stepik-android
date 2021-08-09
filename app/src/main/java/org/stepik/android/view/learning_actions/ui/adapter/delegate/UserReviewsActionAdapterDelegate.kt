@@ -18,7 +18,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 
-class UserReviewsActionAdapterDelegate : AdapterDelegate<LearningActionsItem, DelegateViewHolder<LearningActionsItem>>() {
+class UserReviewsActionAdapterDelegate(private val onClick: () -> Unit) : AdapterDelegate<LearningActionsItem, DelegateViewHolder<LearningActionsItem>>() {
     override fun isForViewType(position: Int, data: LearningActionsItem): Boolean =
         data is LearningActionsItem.UserReviews
 
@@ -28,10 +28,13 @@ class UserReviewsActionAdapterDelegate : AdapterDelegate<LearningActionsItem, De
         val itemView = createView(parent, R.layout.item_learning_action_user_reviews)
         val itemWidth = parentWidth / 2 - itemMargin
         itemView.updateLayoutParams { width = itemWidth }
-        return ViewHolder(itemView)
+        return ViewHolder(itemView, onClick)
     }
 
-    private class ViewHolder(override val containerView: View) : DelegateViewHolder<LearningActionsItem>(containerView), LayoutContainer {
+    private class ViewHolder(
+        override val containerView: View,
+        private val onClick: () -> Unit
+    ) : DelegateViewHolder<LearningActionsItem>(containerView), LayoutContainer {
         private val viewStateDelegate = ViewStateDelegate<UserReviewsFeature.State>()
 
         init {
@@ -39,7 +42,7 @@ class UserReviewsActionAdapterDelegate : AdapterDelegate<LearningActionsItem, De
             viewStateDelegate.addState<UserReviewsFeature.State.Loading>(userReviewsActionTitle, userReviewsActionLoadingView)
             viewStateDelegate.addState<UserReviewsFeature.State.Error>(userReviewsActionTitle)
             viewStateDelegate.addState<UserReviewsFeature.State.Content>(userReviewsActionTitle, userReviewsActionCourseCount)
-            containerView.setOnClickListener {  }
+            containerView.setOnClickListener { onClick() }
         }
 
         override fun onBind(data: LearningActionsItem) {
