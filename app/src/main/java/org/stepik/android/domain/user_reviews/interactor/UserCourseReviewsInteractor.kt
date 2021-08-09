@@ -14,8 +14,10 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
+import org.stepik.android.view.injection.user_reviews.LearningActionsScope
 import javax.inject.Inject
 
+@LearningActionsScope
 class UserCourseReviewsInteractor
 @Inject
 constructor(

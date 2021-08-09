@@ -114,7 +114,6 @@ import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.injection.user_code_run.UserCodeRunComponent
 import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
-import org.stepik.android.view.injection.user_reviews.UserReviewsComponent
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
@@ -285,7 +284,6 @@ interface AppCoreComponent {
 
     fun debugComponentBuilder(): DebugComponent.Builder
 
-    fun userReviewsComponentBuilder(): UserReviewsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

@@ -1,10 +1,10 @@
 package org.stepik.android.data.user_courses.repository
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
@@ -23,10 +23,26 @@ constructor(
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
 
-    private var userCoursesObservable: BehaviorSubject<List<UserCourse>> = BehaviorSubject.create()
+    sealed class Either {
+        class Error(val exception: Throwable) : Either()
+        class Success(val data: List<UserCourse>) : Either()
+    }
+
+    private val userCoursesObservable: BehaviorRelay<Either> = BehaviorRelay.create()
 
     override fun getUserCoursesShared(): Single<List<UserCourse>> =
-        userCoursesObservable.firstOrError()
+        userCoursesObservable
+            .firstOrError()
+            .flatMap { either ->
+                when (either) {
+                    is Either.Error -> {
+                        Single.error(either.exception)
+                    }
+                    is Either.Success -> {
+                        Single.just(either.data)
+                    }
+                }
+            }
 
     override fun getUserCoursesShared(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<List<UserCourse>> =
         Observable.range(1, Int.MAX_VALUE)
@@ -34,11 +50,10 @@ constructor(
             .takeUntil { !it.hasNext }
             .reduce(emptyList<UserCourse>()) { a, b -> a + b }
             .doOnError {
-                userCoursesObservable.onError(it)
-                userCoursesObservable = BehaviorSubject.create()
+                userCoursesObservable.accept(Either.Error(it))
             }
             .doAfterSuccess {
-                userCoursesObservable.onNext(it)
+                userCoursesObservable.accept(Either.Success(it))
             }
 
     override fun getUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {

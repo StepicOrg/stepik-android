@@ -52,9 +52,8 @@ class LearningActionsFragment :
     }
 
     private fun injectComponent() {
-        App.component()
-            .learningActionsComponentBuilder()
-            .build()
+        App.componentManager()
+            .learningActionsComponent()
             .inject(this)
     }
 
