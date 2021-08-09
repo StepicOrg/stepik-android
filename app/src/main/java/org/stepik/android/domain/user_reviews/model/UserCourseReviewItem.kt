@@ -11,7 +11,7 @@ sealed class UserCourseReviewItem {
             course.id
     }
     data class ReviewedHeader(val reviewedCount: Int) : UserCourseReviewItem()
-    data class ReviewedItem(val courseReview: CourseReview) : UserCourseReviewItem(), Identifiable<Long> {
+    data class ReviewedItem(val course: Course, val courseReview: CourseReview) : UserCourseReviewItem(), Identifiable<Long> {
         override val id: Long =
             courseReview.course
     }

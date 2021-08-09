@@ -1,5 +1,6 @@
 package org.stepik.android.domain.user_reviews.interactor
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
@@ -28,6 +29,18 @@ constructor(
     private val progressRepository: ProgressRepository
 ) {
 
+    private val userCourseReviewItemBehaviorRelay: BehaviorRelay<Result<List<UserCourseReviewItem>>> = BehaviorRelay.create()
+
+    fun getUserCourseReviewItems(): Single<List<UserCourseReviewItem>> =
+        userCourseReviewItemBehaviorRelay
+            .firstOrError()
+            .flatMap { result ->
+                result.fold(
+                    onSuccess = { Single.just(it) },
+                    onFailure = { Single.error(it) }
+                )
+            }
+
     fun fetchUserCourseReviewItems(primaryDataSourceType: DataSourceType): Single<List<UserCourseReviewItem>> =
         zip(
             courseListUserInteractor.getUserCoursesShared(),
@@ -35,11 +48,11 @@ constructor(
         ).flatMap { (userCourses, courseReviews) ->
             val userCoursesIds = userCourses.map(UserCourse::course)
             val courseWithReviewsIds = courseReviews.map(CourseReview::course)
-            val coursesIdsToFetch = userCoursesIds - courseWithReviewsIds
             courseRepository
-                .getCourses(coursesIdsToFetch, primarySourceType = primaryDataSourceType)
+                .getCourses(userCoursesIds, primarySourceType = primaryDataSourceType)
                 .flatMap { courses ->
                     val progresses = courses.mapNotNull { it.progress }
+                    val coursesById = courses.associateBy(Course::id)
                     val coursesByProgress = courses
                         .filter { it.progress != null }
                         .associateBy { it.progress!! }
@@ -48,7 +61,7 @@ constructor(
                         .getProgresses(progresses, primarySourceType = primaryDataSourceType)
                         .map { resultProgresses ->
                             val reviewedItems =
-                                courseReviews.map { UserCourseReviewItem.ReviewedItem(it) }
+                                courseReviews.map { UserCourseReviewItem.ReviewedItem(course = coursesById.getValue(it.course), courseReview = it) }
                             val potentialReviewItems =
                                 resolvePotentialReviewItems(resultProgresses, coursesByProgress)
                             listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = potentialReviewItems.size)) +
@@ -57,6 +70,8 @@ constructor(
                         }
                 }
         }
+            .doOnError { userCourseReviewItemBehaviorRelay.accept(Result.failure(it)) }
+            .doOnSuccess { userCourseReviewItemBehaviorRelay.accept(Result.success(it)) }
 
     private fun resolvePotentialReviewItems(resultProgresses: List<Progress>, coursesByProgress: Map<String, Course>): List<UserCourseReviewItem.PotentialReviewItem> =
         resultProgresses.mapNotNull {

@@ -23,25 +23,16 @@ constructor(
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
 
-    sealed class Either {
-        class Error(val exception: Throwable) : Either()
-        class Success(val data: List<UserCourse>) : Either()
-    }
-
-    private val userCoursesObservable: BehaviorRelay<Either> = BehaviorRelay.create()
+    private val userCoursesObservable: BehaviorRelay<Result<List<UserCourse>>> = BehaviorRelay.create()
 
     override fun getUserCoursesShared(): Single<List<UserCourse>> =
         userCoursesObservable
             .firstOrError()
-            .flatMap { either ->
-                when (either) {
-                    is Either.Error -> {
-                        Single.error(either.exception)
-                    }
-                    is Either.Success -> {
-                        Single.just(either.data)
-                    }
-                }
+            .flatMap { result ->
+                result.fold(
+                    onSuccess = { Single.just(it) },
+                    onFailure = { Single.error(it) }
+                )
             }
 
     override fun getUserCoursesShared(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<List<UserCourse>> =
@@ -49,12 +40,8 @@ constructor(
             .concatMapSingle { getUserCourses(userCourseQuery.copy(page = it), sourceType = sourceType) }
             .takeUntil { !it.hasNext }
             .reduce(emptyList<UserCourse>()) { a, b -> a + b }
-            .doOnError {
-                userCoursesObservable.accept(Either.Error(it))
-            }
-            .doAfterSuccess {
-                userCoursesObservable.accept(Either.Success(it))
-            }
+            .doOnError { userCoursesObservable.accept(Result.failure(it)) }
+            .doAfterSuccess { userCoursesObservable.accept(Result.success(it)) }
 
     override fun getUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
         val remoteSource = userCoursesRemoteDataSource

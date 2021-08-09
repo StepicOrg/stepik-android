@@ -19,6 +19,14 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
 
+            is Message.InitListeningMessage -> {
+                if (state is State.Idle) {
+                    State.Loading to setOf(Action.ListenForUserReviews)
+                } else {
+                    null
+                }
+            }
+
             is Message.FetchUserReviewsSuccess -> {
                 if (state is State.Loading) {
                     State.Content(message.userCourseReviewItems) to emptySet()

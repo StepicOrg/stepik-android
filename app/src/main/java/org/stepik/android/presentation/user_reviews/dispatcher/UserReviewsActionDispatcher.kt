@@ -32,6 +32,17 @@ constructor(
                         onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
                     )
             }
+
+            is UserReviewsFeature.Action.ListenForUserReviews -> {
+                compositeDisposable += userCourseReviewsInteractor
+                    .getUserCourseReviewItems()
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
+                        onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
+                    )
+            }
         }
     }
 }

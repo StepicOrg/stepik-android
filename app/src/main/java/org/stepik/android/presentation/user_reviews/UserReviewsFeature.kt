@@ -13,12 +13,14 @@ interface UserReviewsFeature {
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
+        object InitListeningMessage : Message()
         data class FetchUserReviewsSuccess(val userCourseReviewItems: List<UserCourseReviewItem>) : Message()
         object FetchUserReviewsError : Message()
     }
 
     sealed class Action {
         object FetchUserReviews : Action()
+        object ListenForUserReviews : Action()
         sealed class ViewAction : Action()
     }
 }
