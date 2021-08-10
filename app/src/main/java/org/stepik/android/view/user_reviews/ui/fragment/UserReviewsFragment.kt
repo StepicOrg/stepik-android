@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_user_reviews.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
@@ -64,6 +65,9 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             ))
         }
         userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitListeningMessage)
+        tryAgain.setOnClickListener {
+            userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = true))
+        }
     }
 
     private fun injectComponent() {
