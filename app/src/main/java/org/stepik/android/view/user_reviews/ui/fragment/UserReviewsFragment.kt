@@ -2,6 +2,7 @@ package org.stepik.android.view.user_reviews.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
+import org.stepik.android.view.user_reviews.ui.adapter.decorator.UserCourseReviewItemDecoration
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPotentialAdapterDelegate
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPotentialHeaderAdapterDelegate
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsReviewedAdapterDelegate
@@ -21,7 +23,6 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<UserReviewsFeature.State, UserReviewsFeature.Action.ViewAction> {
@@ -57,6 +58,10 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             adapter = userReviewItemAdapter
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
+            addItemDecoration(UserCourseReviewItemDecoration(
+                separatorColor = ContextCompat.getColor(context, R.color.color_divider),
+                UserCourseReviewItemDecoration.SeparatorSize(resources.getDimensionPixelSize(R.dimen.comment_item_separator_big))
+            ))
         }
         userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitListeningMessage)
     }
@@ -81,7 +86,6 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
     override fun render(state: UserReviewsFeature.State) {
         viewStateDelegate.switchState(state)
         if (state is UserReviewsFeature.State.Content) {
-            Timber.d("Items: ${state.userCourseReviewItems}")
             userReviewItemAdapter.items = state.userCourseReviewItems
         }
     }

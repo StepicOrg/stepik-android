@@ -64,6 +64,7 @@ constructor(
                                 courseReviews.map { UserCourseReviewItem.ReviewedItem(course = coursesById.getValue(it.course), courseReview = it) }
                             val potentialReviewItems =
                                 resolvePotentialReviewItems(resultProgresses, coursesByProgress)
+
                             listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = potentialReviewItems.size)) +
                                     potentialReviewItems +
                                     listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = reviewedItems.size)) + reviewedItems
