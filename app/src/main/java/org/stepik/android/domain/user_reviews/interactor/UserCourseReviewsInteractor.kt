@@ -33,13 +33,12 @@ constructor(
 
     private val userCourseReviewItemBehaviorRelay: BehaviorRelay<Result<UserCourseReviewsResult>> = BehaviorRelay.create()
 
-    fun getUserCourseReviewItems(): Single<UserCourseReviewsResult> =
+    fun getUserCourseReviewItems(): Observable<UserCourseReviewsResult> =
         userCourseReviewItemBehaviorRelay
-            .firstOrError()
             .flatMap { result ->
                 result.fold(
-                    onSuccess = { Single.just(it) },
-                    onFailure = { Single.error(it) }
+                    onSuccess = { Observable.just(it) },
+                    onFailure = { Observable.error(it) }
                 )
             }
 

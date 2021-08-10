@@ -25,12 +25,10 @@ constructor(
             is UserReviewsFeature.Action.FetchUserReviews -> {
                 compositeDisposable += userCourseReviewsInteractor
                     .fetchUserCourseReviewItems(primaryDataSourceType = DataSourceType.REMOTE)
+                    .ignoreElement()
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onSuccess = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
-                        onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
-                    )
+                    .subscribeBy()
             }
 
             is UserReviewsFeature.Action.ListenForUserReviews -> {
@@ -39,7 +37,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
+                        onNext = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
                         onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
                     )
             }

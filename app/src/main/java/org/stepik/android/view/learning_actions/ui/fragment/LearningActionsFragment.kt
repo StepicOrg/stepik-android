@@ -49,8 +49,8 @@ class LearningActionsFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.WishlistMessage(WishlistFeature.Message.InitMessage(forceUpdate = false)))
-        learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.UserReviewsMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false)))
         learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.UserReviewsMessage(UserReviewsFeature.Message.InitListeningMessage))
+        learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.UserReviewsMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false)))
     }
 
     private fun injectComponent() {
@@ -80,7 +80,6 @@ class LearningActionsFragment :
     }
 
     override fun render(state: LearningActionsFeature.State) {
-        Timber.d("Items: ${state.userReviewsState}")
         learningActionsItemAdapter.items =
             listOf(
                 LearningActionsItem.Wishlist(state.wishlistState),

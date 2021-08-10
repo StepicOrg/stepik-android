@@ -16,7 +16,7 @@ constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                if (state is State.Idle || state is State.Error && message.forceUpdate) {
+                if (state is State.Idle || state is State.Loading || state is State.Error && message.forceUpdate) {
                     State.Loading to setOf(Action.FetchUserReviews)
                 } else {
                     null
@@ -32,7 +32,7 @@ constructor() : StateReducer<State, Message, Action> {
             }
 
             is Message.FetchUserReviewsSuccess -> {
-                if (state is State.Loading) {
+                if (state is State.Loading || state is State.Content) {
                     State.Content(message.userCourseReviewsResult) to emptySet()
                 } else {
                     null
