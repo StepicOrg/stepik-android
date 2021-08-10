@@ -81,8 +81,8 @@ class LearningActionsFragment :
     override fun render(state: LearningActionsFeature.State) {
         learningActionsItemAdapter.items =
             listOf(
-                LearningActionsItem.Wishlist(state.wishlistState),
-                LearningActionsItem.UserReviews(state.userReviewsState)
+                LearningActionsItem.UserReviews(state.userReviewsState),
+                LearningActionsItem.Wishlist(state.wishlistState)
             )
     }
 }
