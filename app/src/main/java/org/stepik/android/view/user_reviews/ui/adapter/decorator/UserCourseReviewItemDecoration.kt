@@ -65,7 +65,7 @@ class UserCourseReviewItemDecoration(
     }
 
     private fun isItem(item: UserCourseReviewItem) =
-        item is UserCourseReviewItem.PotentialReviewItem || item is UserCourseReviewItem.ReviewedItem
+        item is UserCourseReviewItem.PotentialReviewItem || item is UserCourseReviewItem.ReviewedItem || item is UserCourseReviewItem.Placeholder
 
     class SeparatorSize(val size: Int)
 }

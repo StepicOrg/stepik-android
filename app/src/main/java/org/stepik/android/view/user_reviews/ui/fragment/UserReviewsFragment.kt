@@ -22,6 +22,7 @@ import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
 import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.user_reviews.ui.adapter.decorator.UserCourseReviewItemDecoration
+import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPlaceholderAdapterDelegate
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPotentialAdapterDelegate
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPotentialHeaderAdapterDelegate
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsReviewedAdapterDelegate
@@ -61,6 +62,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.user_review_title, true)
         initViewStateDelegate()
+        userReviewItemAdapter += UserReviewsPlaceholderAdapterDelegate()
         userReviewItemAdapter += UserReviewsPotentialHeaderAdapterDelegate()
         userReviewItemAdapter += UserReviewsPotentialAdapterDelegate(
             onCourseTitleClicked = { course ->
@@ -103,7 +105,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<UserReviewsFeature.State.Idle>()
-        viewStateDelegate.addState<UserReviewsFeature.State.Loading>(loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<UserReviewsFeature.State.Loading>(userReviewsRecycler)
         viewStateDelegate.addState<UserReviewsFeature.State.Error>(userReviewsError)
         viewStateDelegate.addState<UserReviewsFeature.State.Content>(userReviewsRecycler)
     }
@@ -114,6 +116,16 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
 
     override fun render(state: UserReviewsFeature.State) {
         viewStateDelegate.switchState(state)
+        if (state is UserReviewsFeature.State.Loading) {
+            userReviewItemAdapter.items = listOf(
+                UserCourseReviewItem.Placeholder(),
+                UserCourseReviewItem.Placeholder(),
+                UserCourseReviewItem.Placeholder(),
+                UserCourseReviewItem.Placeholder(),
+                UserCourseReviewItem.Placeholder(),
+                UserCourseReviewItem.Placeholder()
+            )
+        }
         if (state is UserReviewsFeature.State.Content) {
             userReviewItemAdapter.items = state.userCourseReviewItems
         }
