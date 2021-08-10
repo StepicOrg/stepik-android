@@ -28,11 +28,11 @@ constructor() {
 
             state.copy(
                 userCourseReviewsResult = state.userCourseReviewsResult.copy(
-                    userCourseReviewItems = updatedReviewedHeader + updatedReviewedItems + updatedPotentialReviewHeader + updatedPotentialReviews,
-                    reviewedHeader = updatedReviewedHeader,
-                    reviewedReviewItems = updatedReviewedItems,
+                    userCourseReviewItems = updatedPotentialReviewHeader + updatedPotentialReviews + updatedReviewedHeader + updatedReviewedItems,
                     potentialHeader = updatedPotentialReviewHeader,
-                    potentialReviewItems = updatedPotentialReviews
+                    potentialReviewItems = updatedPotentialReviews,
+                    reviewedHeader = updatedReviewedHeader,
+                    reviewedReviewItems = updatedReviewedItems
                 )
             )
         }
@@ -78,11 +78,11 @@ constructor() {
 
             state.copy(
                 userCourseReviewsResult = state.userCourseReviewsResult.copy(
-                    userCourseReviewItems = updatedReviewedHeader + updatedReviewedItems + updatedPotentialReviewHeader + updatedPotentialItems,
-                    reviewedHeader = updatedReviewedHeader,
-                    reviewedReviewItems = updatedReviewedItems,
+                    userCourseReviewItems = updatedPotentialReviewHeader + updatedPotentialItems + updatedReviewedHeader + updatedReviewedItems,
                     potentialHeader = updatedPotentialReviewHeader,
-                    potentialReviewItems = updatedPotentialItems
+                    potentialReviewItems = updatedPotentialItems,
+                    reviewedHeader = updatedReviewedHeader,
+                    reviewedReviewItems = updatedReviewedItems
                 )
             )
         }
