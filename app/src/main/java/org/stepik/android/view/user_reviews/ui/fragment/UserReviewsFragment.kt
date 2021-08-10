@@ -1,5 +1,7 @@
 package org.stepik.android.view.user_reviews.ui.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -14,9 +16,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
+import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.user_reviews.ui.adapter.decorator.UserCourseReviewItemDecoration
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPotentialAdapterDelegate
 import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsPotentialHeaderAdapterDelegate
@@ -25,6 +29,7 @@ import org.stepik.android.view.user_reviews.ui.adapter.delegate.UserReviewsRevie
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
@@ -61,12 +66,18 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
-            onWriteReviewClicked = {}
+            onWriteReviewClicked = { courseId ->
+                showCourseReviewEditDialog(courseId, courseReview = null)
+            }
         )
         userReviewItemAdapter += UserReviewsReviewedHeaderAdapterDelegate()
         userReviewItemAdapter += UserReviewsReviewedAdapterDelegate(
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
+            },
+            onEditReviewClicked = { courseReview -> showCourseReviewEditDialog(courseReview.course, courseReview) },
+            onRemoveReviewClicked = { courseReview ->
+                // TODO Remove message
             }
         )
         with(userReviewsRecycler) {
@@ -105,6 +116,44 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         viewStateDelegate.switchState(state)
         if (state is UserReviewsFeature.State.Content) {
             userReviewItemAdapter.items = state.userCourseReviewItems
+        }
+    }
+
+    private fun showCourseReviewEditDialog(courseId: Long, courseReview: CourseReview?) {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?: return
+
+        val requestCode =
+            if (courseReview == null) {
+                ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE
+            } else {
+                ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE
+            }
+
+        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
+        dialog.setTargetFragment(this, requestCode)
+        dialog.showIfNotExists(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
+                    ?.let {
+                        // TODO onCourseReviewCreated message
+                    }
+
+            ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
+                    ?.let {
+                        // TODO onCourseReviewUpdated message
+                    }
+
+            else ->
+                super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }

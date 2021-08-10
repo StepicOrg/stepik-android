@@ -4,9 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_user_review_potential.userReviewCourseTitle
-import kotlinx.android.synthetic.main.item_user_review_potential.userReviewIcon
-import kotlinx.android.synthetic.main.item_user_review_potential.userReviewRating
+import kotlinx.android.synthetic.main.item_user_review_potential.*
 import org.stepic.droid.R
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.model.Course
@@ -15,7 +13,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class UserReviewsPotentialAdapterDelegate(
     private val onCourseTitleClicked: (Course) -> Unit,
-    private val onWriteReviewClicked: () -> Unit
+    private val onWriteReviewClicked: (Long) -> Unit
 ) : AdapterDelegate<UserCourseReviewItem, DelegateViewHolder<UserCourseReviewItem>>() {
     override fun isForViewType(position: Int, data: UserCourseReviewItem): Boolean =
         data is UserCourseReviewItem.PotentialReviewItem
@@ -28,6 +26,7 @@ class UserReviewsPotentialAdapterDelegate(
         init {
             userReviewIcon.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
             userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
+            userReviewWriteAction.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.id?.let(onWriteReviewClicked) }
         }
 
 //        private val reviewIconWrapper = userReviewIcon.wrapWithGlide()
