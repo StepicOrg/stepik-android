@@ -1,6 +1,7 @@
 package org.stepik.android.domain.user_reviews.interactor
 
 import com.jakewharton.rxrelay2.BehaviorRelay
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
@@ -76,6 +77,11 @@ constructor(
         }
             .doOnError { userCourseReviewItemBehaviorRelay.accept(Result.failure(it)) }
             .doOnSuccess { userCourseReviewItemBehaviorRelay.accept(Result.success(it)) }
+
+    fun publishChanges(userCoursesReviewsItems: List<UserCourseReviewItem>): Completable =
+        Completable.fromCallable {
+            userCourseReviewItemBehaviorRelay.accept(Result.success(userCoursesReviewsItems))
+        }
 
     private fun resolvePotentialReviewItems(resultProgresses: List<Progress>, coursesByProgress: Map<String, Course>): List<UserCourseReviewItem.PotentialReviewItem> =
         resultProgresses.mapNotNull {

@@ -43,6 +43,14 @@ constructor(
                         onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
                     )
             }
+
+            is UserReviewsFeature.Action.PublishChanges -> {
+                compositeDisposable += userCourseReviewsInteractor
+                    .publishChanges(action.userCourseReviewItems)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy()
+            }
         }
     }
 }

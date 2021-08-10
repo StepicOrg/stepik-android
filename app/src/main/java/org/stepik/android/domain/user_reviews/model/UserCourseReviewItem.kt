@@ -17,7 +17,7 @@ sealed class UserCourseReviewItem {
             courseReview.course
     }
 
-    data class Placeholder(val courseId: Long = -1L) : UserCourseReviewItem(), Identifiable<Long> {
+    data class Placeholder(val courseId: Long = -1L, val course: Course? = null) : UserCourseReviewItem(), Identifiable<Long> {
         override val id: Long =
             courseId
     }

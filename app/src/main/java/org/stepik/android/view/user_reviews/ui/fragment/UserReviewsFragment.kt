@@ -79,7 +79,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             },
             onEditReviewClicked = { courseReview -> showCourseReviewEditDialog(courseReview.course, courseReview) },
             onRemoveReviewClicked = { courseReview ->
-                // TODO Remove message
+            // TODO Remove message
             }
         )
         with(userReviewsRecycler) {
@@ -153,16 +153,12 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             ComposeCourseReviewDialogFragment.CREATE_REVIEW_REQUEST_CODE ->
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                     ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
-                    ?.let {
-                        // TODO onCourseReviewCreated message
-                    }
+                    ?.let { userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.NewReviewSubmission(it)) }
 
             ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE ->
                 data?.takeIf { resultCode == Activity.RESULT_OK }
                     ?.getParcelableExtra<CourseReview>(ComposeCourseReviewDialogFragment.ARG_COURSE_REVIEW)
-                    ?.let {
-                        // TODO onCourseReviewUpdated message
-                    }
+                    ?.let { userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.EditReviewSubmission(it)) }
 
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
