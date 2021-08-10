@@ -48,11 +48,14 @@ constructor(
         ).flatMap { (userCourses, courseReviews) ->
             val userCoursesIds = userCourses.map(UserCourse::course)
             val courseWithReviewsIds = courseReviews.map(CourseReview::course)
+            val coursesWithoutReviews = (userCoursesIds - courseWithReviewsIds).toSet()
             courseRepository
                 .getCourses(userCoursesIds, primarySourceType = primaryDataSourceType)
                 .flatMap { courses ->
-                    val progresses = courses.mapNotNull { it.progress }
-                    val coursesById = courses.associateBy(Course::id)
+                    val progresses = courses
+                        .filter { course -> coursesWithoutReviews.contains(course.id) }
+                        .mapNotNull { it.progress }
+                    val coursesById = courses.associateBy { it.id }
                     val coursesByProgress = courses
                         .filter { it.progress != null }
                         .associateBy { it.progress!! }
