@@ -2,11 +2,12 @@ package org.stepik.android.view.user_reviews.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
+import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user_review_reviewed.*
 import kotlinx.android.synthetic.main.item_user_review_reviewed.userReviewCourseTitle
 import kotlinx.android.synthetic.main.item_user_review_reviewed.userReviewIcon
+import kotlinx.android.synthetic.main.item_user_review_reviewed.userReviewRating
 import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
@@ -29,7 +30,15 @@ class UserReviewsReviewedAdapterDelegate : AdapterDelegate<UserCourseReviewItem,
             data as UserCourseReviewItem.ReviewedItem
             userReviewCourseTitle.text = data.course.title
             userReviewText.text = data.courseReview.text
-            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
+            // TODO Decide what to do with reviewIconWrapper
+            Glide
+                .with(context)
+                .asBitmap()
+                .load(data.course.cover)
+                .placeholder(R.drawable.general_placeholder)
+                .fitCenter()
+                .into(userReviewIcon)
+//            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
             userReviewTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.courseReview.updateDate?.time ?: 0)
             userReviewRating.progress = data.courseReview.score
             userReviewRating.total = 5

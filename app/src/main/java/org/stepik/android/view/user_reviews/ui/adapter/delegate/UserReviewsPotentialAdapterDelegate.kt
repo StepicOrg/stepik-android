@@ -2,12 +2,11 @@ package org.stepik.android.view.user_reviews.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
+import com.bumptech.glide.Glide
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_user_review_potential.*
 import org.stepic.droid.R
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
-import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
@@ -24,12 +23,22 @@ class UserReviewsPotentialAdapterDelegate : AdapterDelegate<UserCourseReviewItem
             containerView.setOnClickListener {  }
         }
 
-        private val reviewIconWrapper = userReviewIcon.wrapWithGlide()
+//        private val reviewIconWrapper = userReviewIcon.wrapWithGlide()
 
         override fun onBind(data: UserCourseReviewItem) {
             data as UserCourseReviewItem.PotentialReviewItem
             userReviewCourseTitle.text = data.course.title
-            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
+
+            // TODO Decide what to do with reviewIconWrapper
+            Glide
+                .with(context)
+                .asBitmap()
+                .load(data.course.cover)
+                .placeholder(R.drawable.general_placeholder)
+                .fitCenter()
+                .into(userReviewIcon)
+
+//            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.ic_skip_previous_48dp))
             userReviewRating.total = 5
         }
     }
