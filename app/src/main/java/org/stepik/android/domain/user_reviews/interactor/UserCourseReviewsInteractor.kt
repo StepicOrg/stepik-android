@@ -14,6 +14,7 @@ import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
+import org.stepik.android.domain.user_reviews.model.UserCourseReviewsResult
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.view.injection.user_reviews.LearningActionsScope
@@ -30,9 +31,9 @@ constructor(
     private val progressRepository: ProgressRepository
 ) {
 
-    private val userCourseReviewItemBehaviorRelay: BehaviorRelay<Result<List<UserCourseReviewItem>>> = BehaviorRelay.create()
+    private val userCourseReviewItemBehaviorRelay: BehaviorRelay<Result<UserCourseReviewsResult>> = BehaviorRelay.create()
 
-    fun getUserCourseReviewItems(): Single<List<UserCourseReviewItem>> =
+    fun getUserCourseReviewItems(): Single<UserCourseReviewsResult> =
         userCourseReviewItemBehaviorRelay
             .firstOrError()
             .flatMap { result ->
@@ -42,7 +43,7 @@ constructor(
                 )
             }
 
-    fun fetchUserCourseReviewItems(primaryDataSourceType: DataSourceType): Single<List<UserCourseReviewItem>> =
+    fun fetchUserCourseReviewItems(primaryDataSourceType: DataSourceType): Single<UserCourseReviewsResult> =
         zip(
             courseListUserInteractor.getUserCoursesShared(),
             fetchUserCourseReviews(primaryDataSourceType)
@@ -64,23 +65,40 @@ constructor(
                     progressRepository
                         .getProgresses(progresses, primarySourceType = primaryDataSourceType)
                         .map { resultProgresses ->
-                            val reviewedItems =
-                                courseReviews.map { UserCourseReviewItem.ReviewedItem(course = coursesById.getValue(it.course), courseReview = it) }
                             val potentialReviewItems =
                                 resolvePotentialReviewItems(resultProgresses, coursesByProgress)
 
-                            listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = potentialReviewItems.size)) +
-                                    potentialReviewItems +
-                                    listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = reviewedItems.size)) + reviewedItems
+                            val reviewedItems =
+                                courseReviews.map { UserCourseReviewItem.ReviewedItem(course = coursesById.getValue(it.course), courseReview = it) }
+
+                            val potentialHeader = if (potentialReviewItems.isNotEmpty()) {
+                                listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = potentialReviewItems.size))
+                            } else {
+                                emptyList()
+                            }
+
+                            val reviewHeader = if (reviewedItems.isNotEmpty()) {
+                                listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = reviewedItems.size))
+                            } else {
+                                emptyList()
+                            }
+
+                            UserCourseReviewsResult(
+                                potentialHeader + potentialReviewItems + reviewHeader + reviewedItems,
+                                potentialHeader,
+                                potentialReviewItems,
+                                reviewHeader,
+                                reviewedItems
+                            )
                         }
                 }
         }
             .doOnError { userCourseReviewItemBehaviorRelay.accept(Result.failure(it)) }
             .doOnSuccess { userCourseReviewItemBehaviorRelay.accept(Result.success(it)) }
 
-    fun publishChanges(userCoursesReviewsItems: List<UserCourseReviewItem>): Completable =
+    fun publishChanges(UserCourseReviewsResult: UserCourseReviewsResult): Completable =
         Completable.fromCallable {
-            userCourseReviewItemBehaviorRelay.accept(Result.success(userCoursesReviewsItems))
+            userCourseReviewItemBehaviorRelay.accept(Result.success(UserCourseReviewsResult))
         }
 
     private fun resolvePotentialReviewItems(resultProgresses: List<Progress>, coursesByProgress: Map<String, Course>): List<UserCourseReviewItem.PotentialReviewItem> =

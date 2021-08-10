@@ -25,11 +25,12 @@ constructor(
             is UserReviewsFeature.Action.FetchUserReviews -> {
                 compositeDisposable += userCourseReviewsInteractor
                     .fetchUserCourseReviewItems(primaryDataSourceType = DataSourceType.REMOTE)
+                    .ignoreElement()
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
-                        onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
+//                        onSuccess = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
+//                        onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
                     )
             }
 
@@ -46,7 +47,7 @@ constructor(
 
             is UserReviewsFeature.Action.PublishChanges -> {
                 compositeDisposable += userCourseReviewsInteractor
-                    .publishChanges(action.userCourseReviewItems)
+                    .publishChanges(action.userCourseReviewsResult)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy()

@@ -21,6 +21,7 @@ import org.stepik.android.view.learning_actions.ui.adapter.delegate.WishlistActi
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class LearningActionsFragment :
@@ -49,6 +50,7 @@ class LearningActionsFragment :
         injectComponent()
         learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.WishlistMessage(WishlistFeature.Message.InitMessage(forceUpdate = false)))
         learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.UserReviewsMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false)))
+        learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.UserReviewsMessage(UserReviewsFeature.Message.InitListeningMessage))
     }
 
     private fun injectComponent() {
@@ -78,6 +80,7 @@ class LearningActionsFragment :
     }
 
     override fun render(state: LearningActionsFeature.State) {
+        Timber.d("Items: ${state.userReviewsState}")
         learningActionsItemAdapter.items =
             listOf(
                 LearningActionsItem.Wishlist(state.wishlistState),

@@ -33,7 +33,7 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchUserReviewsSuccess -> {
                 if (state is State.Loading) {
-                    State.Content(message.userCourseReviewItems) to emptySet()
+                    State.Content(message.userCourseReviewsResult) to emptySet()
                 } else {
                     null
                 }
@@ -49,15 +49,36 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.NewReviewSubmission -> {
                 if (state is State.Content) {
-//                    val indexOf = state.userCourseReviewItems.indexOfFirst { it is UserCourseReviewItem.ReviewedHeader }
-//                    if (indexOf == -1) {
-//                        state.copy(
-//                            userCourseReviewItems = state.userCourseReviewItems + listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = 1), UserCourseReviewItem.ReviewedItem())
-//                        )
-//                    } else {
-//
-//                    }
-                    null
+                    val updatedReviewedHeader = if (state.userCourseReviewsResult.reviewedHeader.isEmpty()) {
+                        listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = 1))
+                    } else {
+                        listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = state.userCourseReviewsResult.reviewedReviewItems.size + 1))
+                    }
+
+                    val indexOfReviewedCourse = state.userCourseReviewsResult.potentialReviewItems.indexOfFirst { it.id == message.courseReview.course }
+                    val newState = if (indexOfReviewedCourse == -1) {
+                        null
+                    } else {
+                        val reviewedCourse = state.userCourseReviewsResult.potentialReviewItems[indexOfReviewedCourse]
+                        val updatedReviewedItems = state.userCourseReviewsResult.reviewedReviewItems.mutate { add(0, UserCourseReviewItem.ReviewedItem(reviewedCourse.course, message.courseReview)) }
+
+                        val updatedPotentialReviews = state.userCourseReviewsResult.potentialReviewItems.mutate { removeAt(indexOfReviewedCourse) }
+                        val potentialReviewHeader = if (updatedPotentialReviews.isEmpty()) {
+                            emptyList()
+                        } else {
+                            listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = updatedPotentialReviews.size))
+                        }
+                        state.copy(
+                            userCourseReviewsResult = state.userCourseReviewsResult.copy(
+                                userCourseReviewItems = updatedReviewedHeader + updatedReviewedItems + potentialReviewHeader + updatedPotentialReviews,
+                                reviewedHeader = updatedReviewedHeader,
+                                reviewedReviewItems = updatedReviewedItems,
+                                potentialHeader = potentialReviewHeader,
+                                potentialReviewItems = updatedPotentialReviews
+                            )
+                        )
+                    }
+                    newState?.let { it to setOf(Action.PublishChanges(it.userCourseReviewsResult)) }
                 } else {
                     null
                 }
@@ -65,20 +86,25 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.EditReviewSubmission -> {
                 if (state is State.Content) {
-                    val indexOf = state.userCourseReviewItems.indexOfFirst { it is UserCourseReviewItem.ReviewedItem && it.id == message.courseReview.course }
+                    val indexOf = state.userCourseReviewsResult.reviewedReviewItems.indexOfFirst { it.id == message.courseReview.course }
                     val newState = if (indexOf == -1) {
                         null
                     } else {
+                        val updatedReviewedItems = state
+                            .userCourseReviewsResult
+                            .reviewedReviewItems
+                            .mutate {
+                                val oldItem = get(indexOf)
+                                set(indexOf, oldItem.copy(courseReview = message.courseReview))
+                            }
                         state.copy(
-                            userCourseReviewItems = state
-                                .userCourseReviewItems
-                                .mutate {
-                                    val oldItem = get(indexOf) as UserCourseReviewItem.ReviewedItem
-                                    set(indexOf, oldItem.copy(courseReview = message.courseReview))
-                                }
+                            userCourseReviewsResult = state.userCourseReviewsResult.copy(
+                                userCourseReviewItems = with(state.userCourseReviewsResult) { potentialHeader + potentialReviewItems + reviewedHeader + updatedReviewedItems },
+                                reviewedReviewItems = updatedReviewedItems
+                            )
                         )
                     }
-                    newState?.let { it to setOf(Action.PublishChanges(it.userCourseReviewItems)) }
+                    newState?.let { it to setOf(Action.PublishChanges(it.userCourseReviewsResult)) }
                 } else {
                     null
                 }

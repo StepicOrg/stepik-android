@@ -127,7 +127,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             )
         }
         if (state is UserReviewsFeature.State.Content) {
-            userReviewItemAdapter.items = state.userCourseReviewItems
+            userReviewItemAdapter.items = state.userCourseReviewsResult.userCourseReviewItems
         }
     }
 

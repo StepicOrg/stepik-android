@@ -11,7 +11,6 @@ import androidx.core.view.updateLayoutParams
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_learning_action_user_reviews.*
 import org.stepic.droid.R
-import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.view.learning_actions.model.LearningActionsItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -55,17 +54,12 @@ class UserReviewsActionAdapterDelegate(private val onClick: () -> Unit) : Adapte
             userReviewsActionCourseCount.text =
                 when (state) {
                     is UserReviewsFeature.State.Content -> {
-                        val reviewedHeader = state.userCourseReviewItems.find { it is UserCourseReviewItem.ReviewedHeader }
-                        val reviewedCount = (reviewedHeader as? UserCourseReviewItem.ReviewedHeader)?.reviewedCount ?: 0
-                        val potentialHeader = state.userCourseReviewItems.find { it is UserCourseReviewItem.PotentialReviewHeader }
-                        val potentialCount = (potentialHeader as? UserCourseReviewItem.PotentialReviewHeader)?.potentialReviewCount ?: 0
+                        userReviewsPotentialIcon.isVisible = state.userCourseReviewsResult.potentialReviewItems.isNotEmpty()
 
-                        userReviewsPotentialIcon.isVisible = potentialCount != 0
-
-                        if (reviewedCount == 0 && potentialCount == 0) {
+                        if (state.userCourseReviewsResult.potentialReviewItems.isEmpty() && state.userCourseReviewsResult.reviewedReviewItems.isEmpty()) {
                             context.getString(R.string.user_review_learning_action_empty)
                         } else {
-                            resolveActionTitle(reviewedCount, potentialCount)
+                            resolveActionTitle(state.userCourseReviewsResult.reviewedReviewItems.size, state.userCourseReviewsResult.potentialReviewItems.size)
                         }
                     }
                     else ->
