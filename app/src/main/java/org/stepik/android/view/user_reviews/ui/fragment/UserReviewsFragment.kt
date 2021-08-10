@@ -78,9 +78,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
             onEditReviewClicked = { courseReview -> showCourseReviewEditDialog(courseReview.course, courseReview) },
-            onRemoveReviewClicked = { courseReview ->
-            // TODO Remove message
-            }
+            onRemoveReviewClicked = { courseReview -> userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.DeletedReview(courseReview)) }
         )
         with(userReviewsRecycler) {
             adapter = userReviewItemAdapter

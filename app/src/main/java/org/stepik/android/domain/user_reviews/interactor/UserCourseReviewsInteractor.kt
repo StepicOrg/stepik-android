@@ -101,6 +101,9 @@ constructor(
             userCourseReviewItemBehaviorRelay.accept(Result.success(UserCourseReviewsResult))
         }
 
+    fun removeCourseReview(courseReview: CourseReview): Completable =
+        courseReviewsRepository.removeCourseReview(courseReview.id)
+
     private fun resolvePotentialReviewItems(resultProgresses: List<Progress>, coursesByProgress: Map<String, Course>): List<UserCourseReviewItem.PotentialReviewItem> =
         resultProgresses.mapNotNull {
             val canWriteReview = it.nStepsPassed * 100 / it.nSteps > 80

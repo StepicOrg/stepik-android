@@ -19,11 +19,13 @@ interface UserReviewsFeature {
         object FetchUserReviewsError : Message()
         data class NewReviewSubmission(val courseReview: CourseReview) : Message()
         data class EditReviewSubmission(val courseReview: CourseReview) : Message()
+        data class DeletedReview(val courseReview: CourseReview) : Message()
     }
 
     sealed class Action {
         object FetchUserReviews : Action()
         object ListenForUserReviews : Action()
+        data class DeleteReview(val courseReview: CourseReview) : Action()
         data class PublishChanges(val userCourseReviewsResult: UserCourseReviewsResult) : Action()
         sealed class ViewAction : Action()
     }

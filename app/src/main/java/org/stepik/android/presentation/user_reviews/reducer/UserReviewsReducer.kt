@@ -109,5 +109,36 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+
+            is Message.DeletedReview -> {
+                if (state is State.Content) {
+                    val indexOfDeletedReview = state.userCourseReviewsResult.reviewedReviewItems.indexOfFirst { it.id == message.courseReview.course }
+                    val newState = if (indexOfDeletedReview == -1) {
+                        null
+                    } else {
+                        val deletedReviewItems = state.userCourseReviewsResult.reviewedReviewItems[indexOfDeletedReview]
+                        val updatedReviewedItems = state.userCourseReviewsResult.reviewedReviewItems.mutate { removeAt(indexOfDeletedReview) }
+                        val updatedReviewedHeader = if (updatedReviewedItems.isEmpty()) {
+                            emptyList()
+                        } else {
+                            listOf(UserCourseReviewItem.ReviewedHeader(reviewedCount = updatedReviewedItems.size))
+                        }
+                        val updatedPotentialItems = state.userCourseReviewsResult.potentialReviewItems.mutate { add(UserCourseReviewItem.PotentialReviewItem(deletedReviewItems.course)) }
+                        val updatedPotentialReviewHeader = listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = updatedPotentialItems.size))
+                        state.copy(
+                            userCourseReviewsResult = state.userCourseReviewsResult.copy(
+                                userCourseReviewItems = updatedReviewedHeader + updatedReviewedItems + updatedPotentialReviewHeader + updatedPotentialItems,
+                                reviewedHeader = updatedReviewedHeader,
+                                reviewedReviewItems = updatedReviewedItems,
+                                potentialHeader = updatedPotentialReviewHeader,
+                                potentialReviewItems = updatedPotentialItems
+                            )
+                        )
+                    }
+                    newState?.let { it to setOf(Action.PublishChanges(it.userCourseReviewsResult), Action.DeleteReview(message.courseReview)) }
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 }
