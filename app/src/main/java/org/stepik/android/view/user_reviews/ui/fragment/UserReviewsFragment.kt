@@ -11,7 +11,9 @@ import kotlinx.android.synthetic.main.fragment_user_reviews.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
@@ -34,6 +36,9 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
     }
 
     @Inject
+    internal lateinit var screenManager: ScreenManager
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val userReviewsViewModel: UserReviewsViewModel by reduxViewModel(this) { viewModelFactory }
@@ -52,9 +57,18 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         initCenteredToolbar(R.string.user_review_title, true)
         initViewStateDelegate()
         userReviewItemAdapter += UserReviewsPotentialHeaderAdapterDelegate()
-        userReviewItemAdapter += UserReviewsPotentialAdapterDelegate()
+        userReviewItemAdapter += UserReviewsPotentialAdapterDelegate(
+            onCourseTitleClicked = { course ->
+                screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
+            },
+            onWriteReviewClicked = {}
+        )
         userReviewItemAdapter += UserReviewsReviewedHeaderAdapterDelegate()
-        userReviewItemAdapter += UserReviewsReviewedAdapterDelegate()
+        userReviewItemAdapter += UserReviewsReviewedAdapterDelegate(
+            onCourseTitleClicked = { course ->
+                screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
+            }
+        )
         with(userReviewsRecycler) {
             adapter = userReviewItemAdapter
             layoutManager = LinearLayoutManager(context)
