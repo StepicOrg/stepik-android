@@ -4,13 +4,16 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_reviews.interactor.ComposeCourseReviewInteractor
 import org.stepik.android.domain.course_reviews.model.CourseReview
+import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.injection.user_reviews.UserCourseReviewOperationBus
 import javax.inject.Inject
 
 class ComposeCourseReviewPresenter
@@ -19,6 +22,8 @@ constructor(
     private val analytic: Analytic,
     private val composeCourseReviewInteractor: ComposeCourseReviewInteractor,
 
+    @UserCourseReviewOperationBus
+    private val userCourseReviewOperationSubject: PublishSubject<UserCourseReviewOperation>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -47,6 +52,7 @@ constructor(
                             AmplitudeAnalytic.CourseReview.Params.RATING to it.score
                         )
                     )
+                userCourseReviewOperationSubject.onNext(UserCourseReviewOperation.CreateReviewOperation(it))
             }
         replaceCourseReview(courseReviewSource)
     }
@@ -64,6 +70,7 @@ constructor(
                             AmplitudeAnalytic.CourseReview.Params.TO_RATING to it.score
                         )
                     )
+                userCourseReviewOperationSubject.onNext(UserCourseReviewOperation.EditReviewOperation(it))
             }
         replaceCourseReview(courseReviewSource)
     }

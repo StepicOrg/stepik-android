@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -18,8 +19,10 @@ import org.stepik.android.domain.course_reviews.interactor.ComposeCourseReviewIn
 import org.stepik.android.domain.course_reviews.interactor.CourseReviewsInteractor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
+import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course_reviews.mapper.CourseReviewsStateMapper
+import org.stepik.android.view.injection.user_reviews.UserCourseReviewOperationBus
 import javax.inject.Inject
 
 class CourseReviewsPresenter
@@ -34,6 +37,8 @@ constructor(
     private val composeCourseReviewInteractor: ComposeCourseReviewInteractor,
     private val courseReviewsStateMapper: CourseReviewsStateMapper,
 
+    @UserCourseReviewOperationBus
+    private val userCourseReviewOperationSubject: PublishSubject<UserCourseReviewOperation>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -243,6 +248,7 @@ constructor(
                             AmplitudeAnalytic.CourseReview.Params.RATING to courseReview.score
                         )
                     )
+                userCourseReviewOperationSubject.onNext(UserCourseReviewOperation.RemoveReviewOperation(courseReview))
             }
             .subscribeBy(
                 onSuccess = { state = courseReviewsStateMapper.mergeStateWithCurrentUserReview(it, state) },
