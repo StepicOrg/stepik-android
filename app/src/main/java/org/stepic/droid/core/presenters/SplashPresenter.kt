@@ -31,6 +31,7 @@ import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
 import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @SplashScope
@@ -180,7 +181,7 @@ constructor(
                     )
             }
             try {
-                Tasks.await(remoteConfigTask)
+                Tasks.await(remoteConfigTask, 1L, TimeUnit.SECONDS)
             } catch (exception: Exception) {
                 // no op
             }

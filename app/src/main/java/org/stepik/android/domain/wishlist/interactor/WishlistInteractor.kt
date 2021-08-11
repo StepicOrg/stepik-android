@@ -6,7 +6,6 @@ import io.reactivex.subjects.PublishSubject
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
-import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
@@ -24,7 +23,7 @@ constructor(
 ) {
     fun getWishlistSyncedWithUserCourses(dataSourceType: DataSourceType = DataSourceType.REMOTE): Single<WishlistEntity> =
         zip(
-            courseListUserInteractor.getAllUserCourses(userCourseQuery = UserCourseQuery(page = 1, isArchived = false), sourceType = dataSourceType),
+            courseListUserInteractor.getUserCoursesShared(),
             getWishlist(dataSourceType = dataSourceType)
         ) { userCourses, wishlistEntity ->
             val enrolledCourseIds = userCourses.map(UserCourse::course).toSet()

@@ -25,6 +25,12 @@ interface CourseReviewService {
         @Query("user") user: Long
     ): Single<CourseReviewsResponse>
 
+    @GET("api/course-reviews")
+    fun getCourseReviewsByUserId(
+        @Query("user") user: Long,
+        @Query("page") page: Int
+    ): Single<CourseReviewsResponse>
+
     @POST("api/course-reviews")
     fun createCourseReview(
         @Body request: CourseReviewRequest

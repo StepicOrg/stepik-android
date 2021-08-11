@@ -1,7 +1,6 @@
 package org.stepik.android.domain.course_list.interactor
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.ResponseBody
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -40,12 +39,13 @@ constructor(
             }
         }
 
+    fun getUserCoursesShared(): Single<List<UserCourse>> =
+        userCoursesRepository.getUserCoursesShared()
+
     fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<UserCourse>> =
         requireAuthorization then
-        Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle { userCoursesRepository.getUserCourses(userCourseQuery.copy(page = it), sourceType = sourceType) }
-            .takeUntil { !it.hasNext }
-            .reduce(emptyList()) { a, b -> a + b }
+            userCoursesRepository
+                .getUserCoursesShared(userCourseQuery, sourceType)
 
     fun getCourseListItems(courseId: List<Long>, sourceType: DataSourceType = DataSourceType.CACHE): Single<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
         courseListInteractor
