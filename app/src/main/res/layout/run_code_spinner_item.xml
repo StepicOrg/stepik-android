@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@android:id/text1"
     android:padding="12dp"
     android:textAppearance="?textAppearanceBody1"
@@ -8,4 +9,5 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:background="?selectableItemBackground"
-    android:textAlignment="inherit"/>
+    android:textAlignment="inherit"
+    tools:viewBindingIgnore="true" />

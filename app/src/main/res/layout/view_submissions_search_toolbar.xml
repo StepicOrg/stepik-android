@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?colorSurface"
-    android:elevation="?appBarElevation">
+    android:elevation="?appBarElevation"
+    tools:viewBindingIgnore="true">
 
     <include layout="@layout/view_centered_toolbar"/>
 

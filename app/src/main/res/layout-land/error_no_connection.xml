@@ -8,7 +8,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:visibility="gone"
-    tools:visibility="visible">
+    tools:visibility="visible"
+    tools:viewBindingIgnore="true">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/centerGuideline"

@@ -10,4 +10,5 @@
     android:visibility="gone"
     style="@style/VideoTimeThumbnail"
     tools:text="1:24:08"
-    tools:visibility="visible" />
+    tools:visibility="visible"
+    tools:viewBindingIgnore="true" />

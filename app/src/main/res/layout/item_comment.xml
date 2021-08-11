@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_comment_item">
+    android:background="@drawable/bg_comment_item"
+    tools:viewBindingIgnore="true">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/commentUserIcon"

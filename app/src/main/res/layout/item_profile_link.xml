@@ -12,4 +12,5 @@
     android:textColor="?colorSecondary"
     android:background="?selectableItemBackground"
     tools:drawableStart="@drawable/ic_profile_web"
-    tools:text="Some link" />
+    tools:text="Some link"
+    tools:viewBindingIgnore="true"/>

@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_elevation_overlay_1dp"
-    android:foreground="?selectableItemBackground">
+    android:foreground="?selectableItemBackground"
+    tools:viewBindingIgnore="true">
 
     <TextView
         android:id="@+id/sectionPosition"

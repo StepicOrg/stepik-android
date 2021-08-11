@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
-    android:background="@drawable/bg_item_adaptive_rating">
+    android:background="@drawable/bg_item_adaptive_rating"
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"

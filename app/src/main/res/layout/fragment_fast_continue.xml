@@ -6,7 +6,8 @@
     android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/course_list_side_padding">
+    android:padding="@dimen/course_list_side_padding"
+    tools:viewBindingIgnore="true">
 
     <org.stepic.droid.ui.custom.RoundedBorderMaskView
         android:id="@+id/fastContinueMask"

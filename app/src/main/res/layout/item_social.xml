@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:layout_margin="12dp">
+    android:layout_margin="12dp"
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/social_item"

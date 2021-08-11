@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
 
     android:padding="16dp"
-    android:background="?selectableItemBackground">
+    android:background="?selectableItemBackground"
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="wrap_content"

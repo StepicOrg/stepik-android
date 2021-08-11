@@ -10,7 +10,8 @@
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"
     app:cardElevation="4dp"
-    app:cardCornerRadius="@dimen/corner_radius">
+    app:cardCornerRadius="@dimen/corner_radius"
+    tools:viewBindingIgnore="true">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/itemContainer"
         android:layout_height="64dp"

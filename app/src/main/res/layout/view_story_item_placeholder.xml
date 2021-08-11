@@ -2,7 +2,9 @@
 <org.stepic.droid.ui.custom.LoadingView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/stories_size"
     android:layout_height="@dimen/stories_size"
     android:layout_margin="8dp"
-    app:radius="@dimen/stories_default_corner_radius" />
+    app:radius="@dimen/stories_default_corner_radius"
+    tools:viewBindingIgnore="true" />
