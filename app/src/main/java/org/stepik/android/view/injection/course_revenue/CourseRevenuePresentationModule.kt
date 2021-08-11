@@ -17,7 +17,7 @@ import org.stepik.android.presentation.course_revenue.dispatcher.CourseRevenueAc
 import org.stepik.android.presentation.course_revenue.reducer.CourseRevenueReducer
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.tranform
+import ru.nobird.android.presentation.redux.dispatcher.transform
 import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
 import ru.nobird.android.presentation.redux.feature.ReduxFeature
 
@@ -45,19 +45,19 @@ object CourseRevenuePresentationModule {
             ), courseRevenueReducer)
                 .wrapWithActionDispatcher(courseRevenueActionDispatcher)
                 .wrapWithActionDispatcher(
-                    courseBenefitSummaryActionDispatcher.tranform(
+                    courseBenefitSummaryActionDispatcher.transform(
                         transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitSummaryAction>()?.action },
                         transformMessage = CourseRevenueFeature.Message::CourseBenefitSummaryMessage
                     )
                 )
                 .wrapWithActionDispatcher(
-                    courseBenefitsActionDispatcher.tranform(
+                    courseBenefitsActionDispatcher.transform(
                         transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitsAction>()?.action },
                         transformMessage = CourseRevenueFeature.Message::CourseBenefitsMessage
                     )
                 )
                 .wrapWithActionDispatcher(
-                    courseBenefitsMonthlyActionDispatcher.tranform(
+                    courseBenefitsMonthlyActionDispatcher.transform(
                         transformAction = { it.safeCast<CourseRevenueFeature.Action.CourseBenefitsMonthlyAction>()?.action },
                         transformMessage = CourseRevenueFeature.Message::CourseBenefitsMonthlyMessage
                     )
