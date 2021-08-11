@@ -13,4 +13,5 @@
     android:padding="@dimen/half_padding"
     android:textStyle="bold"
     android:textAppearance="?textAppearanceBody2"
-    tools:text="TAB"/>
+    tools:text="TAB"
+    tools:viewBindingIgnore="true" />

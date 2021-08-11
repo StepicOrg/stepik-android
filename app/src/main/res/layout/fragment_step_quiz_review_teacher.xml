@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:viewBindingIgnore="true">
     <include
         android:id="@+id/stepQuizReviewTeacherNetworkError"
         layout="@layout/error_no_connection_with_button_small"

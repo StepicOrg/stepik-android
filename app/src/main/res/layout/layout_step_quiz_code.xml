@@ -17,7 +17,8 @@
     app:layout_constraintTop_toBottomOf="@id/stepQuizDiscountingPolicy"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks">
+    app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks"
+    tools:viewBindingIgnore="true">
 
     <FrameLayout
         android:id="@+id/stepQuizCodeDetails"

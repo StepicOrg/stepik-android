@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:overScrollMode="never"
+    tools:viewBindingIgnore="true"
     tools:context="org.stepik.android.view.auth.ui.activity.SocialAuthActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout

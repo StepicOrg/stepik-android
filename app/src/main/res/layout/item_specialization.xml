@@ -10,7 +10,8 @@
     android:layout_margin="@dimen/course_item_margin"
     app:cardElevation="4dp"
     app:cardCornerRadius="@dimen/course_item_radius"
-    tools:layout_width="154dp">
+    tools:layout_width="154dp"
+    tools:viewBindingIgnore="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

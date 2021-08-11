@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/course_info_block_margin">
+    android:layout_margin="@dimen/course_info_block_margin"
+    tools:viewBindingIgnore="true">
 
     <include layout="@layout/view_course_info_block" />
 

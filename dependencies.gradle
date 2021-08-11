@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2214,
-        name                 : '1.181',
+        code                 : 2218,
+        name                 : '1.185',
 
         minSdk               : 16,
         targetSdk            : 29,
@@ -41,7 +41,7 @@ ext.versions = [
         presentationBase     : '1.1.1',
         presentationRedux    : '1.1.0',
         viewUI               : '1.0.11',
-        viewRedux            : '1.0.8',
+        viewRedux            : '1.0.9',
         model                : '1.0.6',
         domainRx             : '1.0.1',
 

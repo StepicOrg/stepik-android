@@ -14,7 +14,8 @@
 
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:id="@+id/relativeLayout">
+    android:id="@+id/relativeLayout"
+    tools:viewBindingIgnore="true">
 
     <ImageView
         android:id="@+id/icon"

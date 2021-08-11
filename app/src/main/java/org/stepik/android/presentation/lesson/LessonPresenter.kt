@@ -112,6 +112,10 @@ constructor(
         obtainLessonData(lessonInteractor.getLessonData(trialLessonId), forceUpdate)
     }
 
+    fun onLessonData(lessonData: LessonData, forceUpdate: Boolean = false) {
+        obtainLessonData(Maybe.just(lessonData), forceUpdate)
+    }
+
     fun onEmptyData() {
         if (state == LessonView.State.Idle) {
             state = LessonView.State.LessonNotFound

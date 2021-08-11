@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/stepQuizFillBlanksText"
     android:layout_width="wrap_content"
     android:layout_height="36dp"
@@ -17,4 +18,5 @@
     android:paddingRight="12dp"
     android:singleLine="true"
     android:textAppearance="?textAppearanceBody1"
-    app:drawableEndCompat="@drawable/ic_arrow_bottom" />
+    app:drawableEndCompat="@drawable/ic_arrow_bottom"
+    tools:viewBindingIgnore="true" />

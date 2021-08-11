@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingEnd="8dp"
-    android:paddingStart="8dp">
+    android:paddingStart="8dp"
+    tools:viewBindingIgnore="true">
 
     <View
         android:id="@+id/arrowView"

@@ -8,7 +8,8 @@
     android:layout_marginTop="@dimen/course_list_side_padding"
     android:layout_marginLeft="@dimen/course_list_side_padding"
     android:layout_marginRight="@dimen/course_list_side_padding"
-    android:background="@drawable/background_home_streak_view">
+    android:background="@drawable/background_home_streak_view"
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/streakLightingIcon"
