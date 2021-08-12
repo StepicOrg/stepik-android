@@ -14,7 +14,7 @@ import org.stepik.android.presentation.wishlist.WishlistFeature
 import org.stepik.android.presentation.wishlist.dispatcher.WishlistActionDispatcher
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.tranform
+import ru.nobird.android.presentation.redux.dispatcher.transform
 import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
 import ru.nobird.android.presentation.redux.feature.ReduxFeature
 
@@ -39,7 +39,7 @@ object LearningActionsPresentationModule {
                 ), learningActionsReducer
             )
                 .wrapWithActionDispatcher(
-                    wishlistActionDispatcher.tranform(
+                    wishlistActionDispatcher.transform(
                         transformAction = { it.safeCast<LearningActionsFeature.Action.WishlistAction>()?.action },
                         transformMessage = LearningActionsFeature.Message::WishlistMessage
                     ))
