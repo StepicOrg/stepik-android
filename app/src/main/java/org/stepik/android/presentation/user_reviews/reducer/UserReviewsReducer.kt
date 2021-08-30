@@ -4,11 +4,9 @@ import org.stepik.android.presentation.user_reviews.UserReviewsFeature.State
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature.Message
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature.Action
 import org.stepik.android.presentation.user_reviews.mapper.UserReviewsStateMapper
-import org.stepik.android.view.injection.user_reviews.LearningActionsScope
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
-@LearningActionsScope
 class UserReviewsReducer
 @Inject
 constructor(
@@ -68,11 +66,40 @@ constructor(
                 }
             }
 
-            is Message.DeletedReview -> {
+            is Message.DeletedReviewSubmission -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithDeletedReview(state, message.courseReview)?.let { newState ->
+                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                    }
+                } else {
+                    null
+                }
+            }
+
+            is Message.DeletedReviewUserReviews -> {
+                if (state is State.Content) {
+                    userReviewsStateMapper.mergeStateWithDeletedReviewPlaceholder(state, message.courseReview)?.let { newState ->
                         newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult), Action.DeleteReview(message.courseReview))
                     }
+                } else {
+                    null
+                }
+            }
+
+            is Message.DeletedReviewUserReviewsSuccess -> {
+                if (state is State.Content) {
+                    userReviewsStateMapper.mergeStateWithDeletedReviewToSuccess(state, message.courseReview)?.let { newState ->
+                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                    }
+                } else {
+                    null
+                }
+            }
+
+            is Message.DeletedReviewUserReviewsError -> {
+                if (state is State.Content) {
+                    val newState = userReviewsStateMapper.mergeStateWithDeletedReviewToError(state)
+                    newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
                 } else {
                     null
                 }

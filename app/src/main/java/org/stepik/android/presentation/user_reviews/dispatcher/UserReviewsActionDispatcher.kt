@@ -41,7 +41,7 @@ constructor(
                                 UserReviewsFeature.Message.EditReviewSubmission(userCourseReviewOperation.courseReview)
 
                             is UserCourseReviewOperation.RemoveReviewOperation ->
-                                UserReviewsFeature.Message.DeletedReview(userCourseReviewOperation.courseReview)
+                                UserReviewsFeature.Message.DeletedReviewSubmission(userCourseReviewOperation.courseReview)
                     }
                     onNewMessage(message)
                 },
@@ -86,7 +86,8 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onError = emptyOnErrorStub
+                        onComplete = { onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviewsSuccess(action.courseReview)) },
+                        onError = { onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviewsError(action.courseReview)) }
                     )
             }
         }

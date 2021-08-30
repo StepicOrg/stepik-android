@@ -17,9 +17,20 @@ interface UserReviewsFeature {
         object InitListeningMessage : Message()
         data class FetchUserReviewsSuccess(val userCourseReviewsResult: UserCourseReviewsResult) : Message()
         object FetchUserReviewsError : Message()
+
+        /***
+         * Handling operations from course screen
+         */
         data class NewReviewSubmission(val courseReview: CourseReview) : Message()
         data class EditReviewSubmission(val courseReview: CourseReview) : Message()
-        data class DeletedReview(val courseReview: CourseReview) : Message()
+        data class DeletedReviewSubmission(val courseReview: CourseReview) : Message()
+
+        /**
+         * Deletion operations
+         */
+        data class DeletedReviewUserReviews(val courseReview: CourseReview) : Message()
+        data class DeletedReviewUserReviewsSuccess(val courseReview: CourseReview) : Message()
+        data class DeletedReviewUserReviewsError(val courseReview: CourseReview) : Message()
     }
 
     sealed class Action {
