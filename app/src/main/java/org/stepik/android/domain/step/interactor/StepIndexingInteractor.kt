@@ -7,7 +7,7 @@ import com.google.firebase.appindexing.FirebaseUserActions
 import com.google.firebase.appindexing.Indexable
 import com.google.firebase.appindexing.builders.Actions
 import com.google.firebase.appindexing.builders.Indexables
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.util.StringUtil
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Step
@@ -18,7 +18,7 @@ class StepIndexingInteractor
 @Inject
 constructor(
     private val context: Context,
-    private val config: Config
+    private val endpointResolver: EndpointResolver
 ) {
     private var action: Action? = null
 
@@ -37,12 +37,12 @@ constructor(
     private fun newAction(unit: Unit?, lesson: Lesson, step: Step): Action =
         Actions.newView(
             StringUtil.getTitleForStep(context, lesson, step.position),
-            StringUtil.getUriForStep(config.baseUrl, lesson, unit, step)
+            StringUtil.getUriForStep(endpointResolver.getBaseUrl(), lesson, unit, step)
         )
 
     private fun newIndexable(unit: Unit?, lesson: Lesson, step: Step): Indexable =
         Indexables.newSimple(
             StringUtil.getTitleForStep(context, lesson, step.position),
-            StringUtil.getUriForStep(config.baseUrl, lesson, unit, step)
+            StringUtil.getUriForStep(endpointResolver.getBaseUrl(), lesson, unit, step)
         )
 }

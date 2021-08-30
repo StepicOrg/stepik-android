@@ -6,56 +6,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:colorBackground"
-    android:orientation="vertical"
-    tools:viewBindingIgnore="true">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/appBarLayout"
         layout="@layout/view_centered_appbar" />
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/progress_bar_on_empty_screen" />
-
-        <include
-            android:id="@+id/debugLoadingError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            layout="@layout/error_no_connection_with_button_small" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/debugContent"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
+            <include
+                android:id="@+id/debugProgressBar"
+                layout="@layout/progress_bar_on_empty_screen" />
+
+            <include
+                android:id="@+id/debugLoadingError"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/debug_fcm_token"
-                android:textAppearance="?textAppearanceSubtitle1" />
+                android:layout_gravity="center"
+                layout="@layout/error_no_connection_with_button_small" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/debugFcmTokenValue"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/debugContent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?selectableItemBackground"
-                android:paddingLeft="16dp"
-                android:paddingTop="8dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="8dp"
-                tools:text="-R14wi1KMnR6kHaN4dA34HlabxB49HshJfAAzMWWvJVS-K3qyvGfUpXW9ldFHeWJqeDMpQ_8YhzWlJyiqw46iPTRlifgIlped5S5OBlL6-RqcTG4:APA91bGa6FCM7MTY5MACPI9YcSEpaHu4EJPWggfQ-XVvxpGOGT" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            <include layout="@layout/view_divider_vertical" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </FrameLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/debug_fcm_token"
+                    android:textAppearance="?textAppearanceSubtitle1" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/debugFcmTokenValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    tools:text="-R14wi1KMnR6kHaN4dA34HlabxB49HshJfAAzMWWvJVS-K3qyvGfUpXW9ldFHeWJqeDMpQ_8YhzWlJyiqw46iPTRlifgIlped5S5OBlL6-RqcTG4:APA91bGa6FCM7MTY5MACPI9YcSEpaHu4EJPWggfQ-XVvxpGOGT" />
+
+                <include layout="@layout/view_divider_vertical" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/debug_base_url"
+                    android:textAppearance="?textAppearanceSubtitle1" />
+
+                <RadioGroup
+                    android:id="@+id/debugBaseUrlRadioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="16dp">
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/debugDevBaseUrlButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="@string/debug_base_url_dev"/>
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/debugProductionBaseUrlButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="@string/debug_base_url_production"/>
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/debugReleaseBaseUrlButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:text="@string/debug_base_url_release"/>
+                </RadioGroup>
+
+                <include layout="@layout/view_divider_vertical" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,13 +2,12 @@ package org.stepik.android.view.debug.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.debug.fragment_debug.*
-import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.copyTextToClipboard
@@ -18,11 +17,13 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
+import android.content.Intent
 
-class DebugFragment : Fragment(R.layout.fragment_debug),
-    ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction>
-{
+import android.content.Context
+import by.kirich1409.viewbindingdelegate.viewBinding
+import org.stepic.droid.databinding.FragmentDebugBinding
 
+class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction> {
     companion object {
         fun newInstance(): Fragment =
             DebugFragment()
@@ -35,6 +36,8 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
 
     private val viewStateDelegate = ViewStateDelegate<DebugFeature.State>()
 
+    private val debugBinding: FragmentDebugBinding by viewBinding(FragmentDebugBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -42,11 +45,11 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        centeredToolbarTitle.setText(R.string.debug_toolbar_title)
+        debugBinding.appBarLayout.viewCenteredToolbar.centeredToolbarTitle.setText(R.string.debug_toolbar_title)
         initViewStateDelegate()
         debugViewModel.onNewMessage(DebugFeature.Message.InitMessage())
 
-        debugFcmTokenValue.setOnLongClickListener {
+        debugBinding.debugFcmTokenValue.setOnLongClickListener {
             val textToCopy = (it as AppCompatTextView).text.toString()
             requireContext().copyTextToClipboard(
                 textToCopy = textToCopy,
@@ -55,7 +58,15 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
             true
         }
 
-        tryAgain.setOnClickListener { debugViewModel.onNewMessage(DebugFeature.Message.InitMessage(forceUpdate = true)) }
+        debugBinding.debugBaseUrlRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            val checkedRadioButton = group.findViewById<RadioButton>(checkedId)
+            val position = group.indexOfChild(checkedRadioButton)
+            // or
+            val position2 = getRadioButtonPosition(checkedId)
+            debugViewModel.onNewMessage(DebugFeature.Message.RadioButtonSelectionMessage(getRadioButtonPosition(checkedId)))
+        }
+
+        debugBinding.debugLoadingError.tryAgain.setOnClickListener { debugViewModel.onNewMessage(DebugFeature.Message.InitMessage(forceUpdate = true)) }
     }
 
     private fun injectComponent() {
@@ -67,19 +78,48 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<DebugFeature.State.Idle>()
-        viewStateDelegate.addState<DebugFeature.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<DebugFeature.State.Error>(debugLoadingError)
-        viewStateDelegate.addState<DebugFeature.State.Content>(debugContent)
+        viewStateDelegate.addState<DebugFeature.State.Loading>(debugBinding.debugProgressBar.loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<DebugFeature.State.Error>(debugBinding.debugLoadingError.errorNoConnection)
+        viewStateDelegate.addState<DebugFeature.State.Content>(debugBinding.debugContent)
     }
 
     override fun onAction(action: DebugFeature.Action.ViewAction) {
-        // no op
+        if (action is DebugFeature.Action.ViewAction.RestartApplication) {
+            Toast.makeText(requireContext(), R.string.debug_restarting_message, Toast.LENGTH_SHORT).show()
+            view?.postDelayed({ triggerApplicationRestart(requireContext()) }, 1500)
+        }
     }
 
     override fun render(state: DebugFeature.State) {
         viewStateDelegate.switchState(state)
         if (state is DebugFeature.State.Content) {
-            debugFcmTokenValue.text = state.fcmToken
+            debugBinding.debugFcmTokenValue.text = state.fcmToken
+            setRadioButtonSelection(state.endpointConfig.ordinal)
         }
     }
+
+    private fun triggerApplicationRestart(context: Context) {
+        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
+        val componentName = intent?.component
+        val mainIntent = Intent.makeRestartActivityTask(componentName)
+        context.startActivity(mainIntent)
+        Runtime.getRuntime().exit(0)
+    }
+
+    private fun setRadioButtonSelection(itemPosition: Int) {
+        val targetRadioButton = debugBinding.debugBaseUrlRadioGroup[itemPosition] as RadioButton
+        targetRadioButton.isChecked = true
+    }
+
+    private fun getRadioButtonPosition(checkedRadioButtonId: Int): Int =
+        when (checkedRadioButtonId) {
+            R.id.debugDevBaseUrlButton ->
+                0
+            R.id.debugProductionBaseUrlButton ->
+                1
+            R.id.debugReleaseBaseUrlButton ->
+                2
+            else ->
+                throw IllegalArgumentException("Radio button does not exist")
+        }
 }

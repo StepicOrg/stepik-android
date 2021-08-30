@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.appbar.MaterialToolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/centeredToolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:layout_gravity="center"
-    tools:viewBindingIgnore="true">
+    android:layout_gravity="center">
 
     <TextView
         android:id="@+id/centeredToolbarTitle"

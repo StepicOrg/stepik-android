@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.debug.reducer
 
+import org.stepik.android.domain.debug.model.EndpointConfig
 import org.stepik.android.presentation.debug.DebugFeature.State
 import org.stepik.android.presentation.debug.DebugFeature.Message
 import org.stepik.android.presentation.debug.DebugFeature.Action
@@ -21,7 +22,16 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchDebugSettingsSuccess -> {
                 if (state is State.Loading) {
-                    State.Content(message.debugSettings.fcmToken) to emptySet()
+                    State.Content(message.debugSettings.fcmToken, message.debugSettings.endpointConfig) to emptySet()
+                } else {
+                    null
+                }
+            }
+
+            is Message.RadioButtonSelectionMessage -> {
+                if (state is State.Content && state.endpointConfig.ordinal != message.position) {
+                    val updatedDebugBaseUrl = EndpointConfig.values()[message.position]
+                    state.copy(endpointConfig = updatedDebugBaseUrl) to setOf(Action.UpdateEndpointConfig(updatedDebugBaseUrl), Action.ViewAction.RestartApplication)
                 } else {
                     null
                 }

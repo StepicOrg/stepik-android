@@ -13,7 +13,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
-import org.stepic.droid.configuration.Config;
+import org.stepic.droid.configuration.EndpointResolver;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.util.ContextExtensionsKt;
@@ -43,7 +43,7 @@ public class StepShareDialog extends BottomSheetDialog {
     ScreenManager screenManager;
 
     @Inject
-    Config config;
+    EndpointResolver endpointResolver;
 
     public StepShareDialog(@NonNull Context context, Step step, Lesson lesson, Unit unit) {
         super(context);
@@ -88,7 +88,7 @@ public class StepShareDialog extends BottomSheetDialog {
                 ContextExtensionsKt.copyTextToClipboard(
                         context,
                         App.Companion.getAppContext().getString(R.string.copy_link_title),
-                        StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step),
+                        StringUtil.getUriForStep(endpointResolver.getBaseUrl(), lesson, unit, step),
                         context.getResources().getString(R.string.link_copied_title)
                 );
             }

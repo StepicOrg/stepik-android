@@ -1225,5 +1225,10 @@
 
     <!-- Debug menu -->
     <string name="debug_toolbar_title" translatable="false">Debug</string>
-    <string name="debug_fcm_token">FCM Token</string>
+    <string name="debug_fcm_token" translatable="false">FCM Token</string>
+    <string name="debug_base_url" translatable="false">API Base Url</string>
+    <string name="debug_base_url_dev" translatable="false">Dev</string>
+    <string name="debug_base_url_production" translatable="false">Production</string>
+    <string name="debug_base_url_release" translatable="false">Release</string>
+    <string name="debug_restarting_message" translatable="false">Restarting application</string>
 </resources>

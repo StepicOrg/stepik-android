@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addUserAgent
@@ -47,6 +48,7 @@ constructor(
     private val userAgentProvider: UserAgentProvider,
     private val converterFactory: Converter.Factory,
     private val cookieHelper: CookieHelper,
+    private val endpointResolver: EndpointResolver,
     private val config: Config,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : AuthRemoteDataSource {
@@ -121,7 +123,7 @@ constructor(
                 .addQueryParameter("csrfmiddlewaretoken", csrftoken)
                 .build()
             newRequest = newRequest.newBuilder()
-                .addHeader("referer", config.baseUrl)
+                .addHeader("referer", endpointResolver.getBaseUrl())
                 .addHeader("X-CSRFToken", csrftoken)
                 .addHeader("Cookie", cookieResult)
                 .url(url)
@@ -133,7 +135,7 @@ constructor(
         okHttpBuilder.addNetworkInterceptor(interceptor)
         okHttpBuilder.setTimeoutsInSeconds(TIMEOUT_IN_SECONDS)
         val notLogged =
-            NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
+            NetworkFactory.createRetrofit(endpointResolver.getBaseUrl(), okHttpBuilder.build(), converterFactory)
         val tempService = notLogged.create(EmptyAuthService::class.java)
         return tempService.remindPassword(encodedEmail)
     }

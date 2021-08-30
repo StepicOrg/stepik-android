@@ -3,8 +3,8 @@ package org.stepic.droid.di
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.concurrency.MainHandlerImpl
+import org.stepic.droid.configuration.EndpointResolver
+import org.stepic.droid.configuration.EndpointResolverImpl
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.DefaultFilter
@@ -27,6 +27,9 @@ abstract class ConfigModule {
     @Binds
     @AppSingleton
     internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
+    @Binds
+    @AppSingleton
+    internal abstract fun provideBaseUrlResolver(baseUrlResolverImpl: EndpointResolverImpl): EndpointResolver
     @Module
     companion object {
         //it is good for many short lived, which should do async

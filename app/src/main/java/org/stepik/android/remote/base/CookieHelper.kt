@@ -1,7 +1,7 @@
 package org.stepik.android.remote.base
 
 import okhttp3.Request
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.remote.auth.service.EmptyAuthService
@@ -16,7 +16,7 @@ class CookieHelper
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val emptyAuthService: EmptyAuthService,
-    private val config: Config
+    private val endpointResolver: EndpointResolver
 ) {
     companion object {
         private const val COOKIE_SEPARATOR = "|"
@@ -41,7 +41,7 @@ constructor(
         val header = getCookieHeader(cookies)
 
         return request.newBuilder()
-            .addHeader(AppConstants.refererHeaderName, config.baseUrl)
+            .addHeader(AppConstants.refererHeaderName, endpointResolver.getBaseUrl())
             .addHeader(AppConstants.csrfTokenHeaderName, csrftoken)
             .addHeader(AppConstants.cookieHeaderName, header)
             .build()
@@ -54,7 +54,7 @@ constructor(
         val cookieManager = java.net.CookieManager()
         val myUri: URI
         try {
-            myUri = URI(config.baseUrl)
+            myUri = URI(endpointResolver.getBaseUrl())
         } catch (e: URISyntaxException) {
             return null
         }
