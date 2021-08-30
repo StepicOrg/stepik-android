@@ -24,8 +24,8 @@ constructor(
         Singles.zip(
             getFirebaseToken(),
             getEndpointConfig()
-        ) { fcmToken, debugBaseUrl ->
-            DebugSettings(fcmToken, debugBaseUrl)
+        ) { fcmToken, endpointConfig ->
+            DebugSettings(fcmToken, endpointConfig, endpointConfigSelection = endpointConfig.ordinal)
         }
 
     fun updateEndpointConfig(endpointConfig: EndpointConfig): Completable =

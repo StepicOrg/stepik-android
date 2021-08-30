@@ -73,14 +73,14 @@
                     android:textAppearance="?textAppearanceSubtitle1" />
 
                 <RadioGroup
-                    android:id="@+id/debugBaseUrlRadioGroup"
+                    android:id="@+id/debugEndpointRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="16dp">
                     <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/debugDevBaseUrlButton"
+                        android:id="@+id/debugDevEndpointButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="8dp"
@@ -88,7 +88,7 @@
                         android:text="@string/debug_base_url_dev"/>
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/debugProductionBaseUrlButton"
+                        android:id="@+id/debugProductionEndpointButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="8dp"
@@ -96,7 +96,7 @@
                         android:text="@string/debug_base_url_production"/>
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/debugReleaseBaseUrlButton"
+                        android:id="@+id/debugReleaseEndpointButton"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingLeft="8dp"
@@ -105,6 +105,21 @@
                 </RadioGroup>
 
                 <include layout="@layout/view_divider_vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/debugApplySettingsAction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+
+                    style="@style/Widget.AppTheme.Button"
+
+                    android:visibility="gone"
+                    android:text="@string/debug_apply_settings_action_title"
+                    android:theme="@style/ThemeOverlay.Violet" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </FrameLayout>

@@ -18,8 +18,8 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import android.content.Intent
-
 import android.content.Context
+import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
 
@@ -58,15 +58,19 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
             true
         }
 
-        debugBinding.debugBaseUrlRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        debugBinding.debugEndpointRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             val checkedRadioButton = group.findViewById<RadioButton>(checkedId)
             val position = group.indexOfChild(checkedRadioButton)
-            // or
-            val position2 = getRadioButtonPosition(checkedId)
-            debugViewModel.onNewMessage(DebugFeature.Message.RadioButtonSelectionMessage(getRadioButtonPosition(checkedId)))
+            debugViewModel.onNewMessage(DebugFeature.Message.RadioButtonSelectionMessage(position))
         }
 
-        debugBinding.debugLoadingError.tryAgain.setOnClickListener { debugViewModel.onNewMessage(DebugFeature.Message.InitMessage(forceUpdate = true)) }
+        debugBinding.debugApplySettingsAction.setOnClickListener {
+            debugViewModel.onNewMessage(DebugFeature.Message.ApplySettingsMessage)
+        }
+
+        debugBinding.debugLoadingError.tryAgain.setOnClickListener {
+            debugViewModel.onNewMessage(DebugFeature.Message.InitMessage(forceUpdate = true))
+        }
     }
 
     private fun injectComponent() {
@@ -94,7 +98,8 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
         viewStateDelegate.switchState(state)
         if (state is DebugFeature.State.Content) {
             debugBinding.debugFcmTokenValue.text = state.fcmToken
-            setRadioButtonSelection(state.endpointConfig.ordinal)
+            setRadioButtonSelection(state.endpointConfigSelection)
+            debugBinding.debugApplySettingsAction.isVisible = state.currentEndpointConfig.ordinal != state.endpointConfigSelection
         }
     }
 
@@ -107,19 +112,7 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
     }
 
     private fun setRadioButtonSelection(itemPosition: Int) {
-        val targetRadioButton = debugBinding.debugBaseUrlRadioGroup[itemPosition] as RadioButton
+        val targetRadioButton = debugBinding.debugEndpointRadioGroup[itemPosition] as RadioButton
         targetRadioButton.isChecked = true
     }
-
-    private fun getRadioButtonPosition(checkedRadioButtonId: Int): Int =
-        when (checkedRadioButtonId) {
-            R.id.debugDevBaseUrlButton ->
-                0
-            R.id.debugProductionBaseUrlButton ->
-                1
-            R.id.debugReleaseBaseUrlButton ->
-                2
-            else ->
-                throw IllegalArgumentException("Radio button does not exist")
-        }
 }

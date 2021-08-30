@@ -8,13 +8,14 @@ interface DebugFeature {
         object Idle : State()
         object Loading : State()
         object Error : State()
-        data class Content(val fcmToken: String, val endpointConfig: EndpointConfig) : State()
+        data class Content(val fcmToken: String, val currentEndpointConfig: EndpointConfig, val endpointConfigSelection: Int) : State()
     }
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchDebugSettingsSuccess(val debugSettings: DebugSettings) : Message()
         data class RadioButtonSelectionMessage(val position: Int) : Message()
+        object ApplySettingsMessage : Message()
         object FetchDebugSettingsFailure : Message()
     }
 

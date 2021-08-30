@@ -22,16 +22,24 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchDebugSettingsSuccess -> {
                 if (state is State.Loading) {
-                    State.Content(message.debugSettings.fcmToken, message.debugSettings.endpointConfig) to emptySet()
+                    State.Content(message.debugSettings.fcmToken, message.debugSettings.currentEndpointConfig, message.debugSettings.endpointConfigSelection) to emptySet()
                 } else {
                     null
                 }
             }
 
             is Message.RadioButtonSelectionMessage -> {
-                if (state is State.Content && state.endpointConfig.ordinal != message.position) {
-                    val updatedDebugBaseUrl = EndpointConfig.values()[message.position]
-                    state.copy(endpointConfig = updatedDebugBaseUrl) to setOf(Action.UpdateEndpointConfig(updatedDebugBaseUrl), Action.ViewAction.RestartApplication)
+                if (state is State.Content) {
+                    state.copy(endpointConfigSelection = message.position) to emptySet()
+                } else {
+                    null
+                }
+            }
+
+            is Message.ApplySettingsMessage -> {
+                if (state is State.Content) {
+                    val updatedEndpointConfig = EndpointConfig.values()[state.endpointConfigSelection]
+                    state to setOf(Action.UpdateEndpointConfig(updatedEndpointConfig), Action.ViewAction.RestartApplication)
                 } else {
                     null
                 }
