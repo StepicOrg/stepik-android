@@ -44,7 +44,7 @@ object LearningActionsPresentationModule {
                         transformMessage = LearningActionsFeature.Message::WishlistMessage
                     ))
                 .wrapWithActionDispatcher(
-                    userReviewsActionDispatcher.tranform(
+                    userReviewsActionDispatcher.transform(
                         transformAction = { it.safeCast<LearningActionsFeature.Action.UserReviewsAction>()?.action },
                         transformMessage = LearningActionsFeature.Message::UserReviewsMessage
                     )
