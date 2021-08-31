@@ -53,7 +53,7 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
 
-            is Message.RestartApplicationMessage -> {
+            is Message.ApplySettingsSuccess -> {
                 if (state is State.Content) {
                     state to setOf(Action.ViewAction.RestartApplication)
                 } else {

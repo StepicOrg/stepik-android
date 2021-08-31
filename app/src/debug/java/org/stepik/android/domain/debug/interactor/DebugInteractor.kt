@@ -31,11 +31,12 @@ constructor(
     fun updateEndpointConfig(endpointConfig: EndpointConfig): Completable =
         Completable.fromAction {
             sharedPreferenceHelper.putEndpointConfig(endpointConfig.ordinal)
-            logoutManager.logout {
+        }.andThen(
+            logoutManager.logoutCompletable {
                 LoginManager.getInstance().logOut()
                 VK.logout()
             }
-        }
+        )
 
     private fun getFirebaseToken(): Single<String> =
         Single.create { emitter ->

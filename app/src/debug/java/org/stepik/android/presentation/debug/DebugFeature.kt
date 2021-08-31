@@ -17,7 +17,7 @@ interface DebugFeature {
         object FetchDebugSettingsFailure : Message()
         data class RadioButtonSelectionMessage(val position: Int) : Message()
         object ApplySettingsMessage : Message()
-        object RestartApplicationMessage : Message()
+        object ApplySettingsSuccess : Message()
     }
 
     sealed class Action {

@@ -39,7 +39,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onComplete = { onNewMessage(DebugFeature.Message.RestartApplicationMessage) },
+                        onComplete = { onNewMessage(DebugFeature.Message.ApplySettingsSuccess) },
                         onError = emptyOnErrorStub
                     )
             }
