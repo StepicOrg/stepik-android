@@ -28,6 +28,14 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
 
+            is Message.FetchDebugSettingsFailure -> {
+                if (state is State.Loading) {
+                    State.Error to emptySet()
+                } else {
+                    null
+                }
+            }
+
             is Message.RadioButtonSelectionMessage -> {
                 if (state is State.Content) {
                     state.copy(endpointConfigSelection = message.position) to emptySet()
@@ -39,15 +47,15 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.ApplySettingsMessage -> {
                 if (state is State.Content) {
                     val updatedEndpointConfig = EndpointConfig.values()[state.endpointConfigSelection]
-                    state to setOf(Action.UpdateEndpointConfig(updatedEndpointConfig), Action.ViewAction.RestartApplication)
+                    state to setOf(Action.UpdateEndpointConfig(updatedEndpointConfig))
                 } else {
                     null
                 }
             }
 
-            is Message.FetchDebugSettingsFailure -> {
-                if (state is State.Loading) {
-                    State.Error to emptySet()
+            is Message.RestartApplicationMessage -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.RestartApplication)
                 } else {
                     null
                 }

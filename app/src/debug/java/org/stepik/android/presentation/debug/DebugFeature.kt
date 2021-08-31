@@ -14,9 +14,10 @@ interface DebugFeature {
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchDebugSettingsSuccess(val debugSettings: DebugSettings) : Message()
+        object FetchDebugSettingsFailure : Message()
         data class RadioButtonSelectionMessage(val position: Int) : Message()
         object ApplySettingsMessage : Message()
-        object FetchDebugSettingsFailure : Message()
+        object RestartApplicationMessage : Message()
     }
 
     sealed class Action {
