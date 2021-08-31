@@ -1,7 +1,9 @@
 package org.stepik.android.presentation.user_reviews
 
 import org.stepik.android.domain.course_reviews.model.CourseReview
+import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewsResult
+import org.stepik.android.model.Course
 
 interface UserReviewsFeature {
     sealed class State {
@@ -31,6 +33,13 @@ interface UserReviewsFeature {
         data class DeletedReviewUserReviews(val courseReview: CourseReview) : Message()
         data class DeletedReviewUserReviewsSuccess(val courseReview: CourseReview) : Message()
         data class DeletedReviewUserReviewsError(val courseReview: CourseReview) : Message()
+
+        /**
+         * Enrolled operation
+         */
+        data class EnrolledCourseMessage(val course: Course) : Message()
+        data class EnrolledReviewedCourseMessage(val reviewedItem: UserCourseReviewItem.ReviewedItem) : Message()
+        data class EnrolledPotentialReviewMessage(val potentialReviewItem: UserCourseReviewItem.PotentialReviewItem) : Message()
     }
 
     sealed class Action {
@@ -38,6 +47,7 @@ interface UserReviewsFeature {
         object ListenForUserReviews : Action()
         data class DeleteReview(val courseReview: CourseReview) : Action()
         data class PublishChanges(val userCourseReviewsResult: UserCourseReviewsResult) : Action()
+        data class FetchEnrolledCourseInfo(val course: Course) : Action()
         sealed class ViewAction : Action()
     }
 }

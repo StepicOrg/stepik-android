@@ -2,6 +2,7 @@ package org.stepik.android.domain.user_reviews.interactor
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
@@ -11,6 +12,7 @@ import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.repository.CourseReviewsRepository
 import org.stepik.android.domain.profile.repository.ProfileRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
@@ -102,6 +104,44 @@ constructor(
 
     fun removeCourseReview(courseReview: CourseReview): Completable =
         courseReviewsRepository.removeCourseReview(courseReview.id)
+
+    fun enrolledCourse(course: Course): Maybe<UserCourseReviewItem> =
+        zip(
+            fetchReviewEnrolled(course),
+            fetchProgressEnrolled(listOf(course))
+        ).flatMapMaybe { (courseReviews, progresses) ->
+            val courseReview = courseReviews.firstOrNull()
+            val progress = progresses.firstOrNull()
+
+            when {
+                courseReview != null ->
+                    Maybe.just(UserCourseReviewItem.ReviewedItem(course, courseReview))
+
+                progress != null -> {
+                    if (progress.nStepsPassed * 100 / progress.nSteps > 80) {
+                        Maybe.just(UserCourseReviewItem.PotentialReviewItem(course))
+                    } else {
+                        Maybe.empty()
+                    }
+                }
+
+                else ->
+                    Maybe.empty()
+            }
+        }
+
+    private fun fetchReviewEnrolled(course: Course): Single<List<CourseReview>> =
+        profileRepository
+            .getProfile()
+            .flatMapMaybe { profile -> courseReviewsRepository.getCourseReviewByCourseIdAndUserId(course.id, profile.id, DataSourceType.REMOTE) }
+            .map { listOf(it) }
+            .toSingle()
+            .onErrorReturnItem(emptyList())
+
+    private fun fetchProgressEnrolled(courses: List<Course>): Single<List<Progress>> =
+        progressRepository
+            .getProgresses(courses.getProgresses())
+            .onErrorReturnItem(emptyList())
 
     private fun resolvePotentialReviewItems(resultProgresses: List<Progress>, coursesByProgress: Map<String, Course>): List<UserCourseReviewItem.PotentialReviewItem> =
         resultProgresses.mapNotNull {

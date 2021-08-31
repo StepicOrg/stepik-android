@@ -9,6 +9,9 @@ import javax.inject.Inject
 class UserReviewsStateMapper
 @Inject
 constructor() {
+    /**
+     * Operations from UserCourseReviewOperationBus
+     */
     fun mergeStateWithNewReview(state: UserReviewsFeature.State.Content, courseReview: CourseReview): UserReviewsFeature.State.Content? {
         val indexOfReviewedCourse = state.userCourseReviewsResult.potentialReviewItems.indexOfFirst { it.id == courseReview.course }
         return if (indexOfReviewedCourse == -1) {
@@ -88,6 +91,10 @@ constructor() {
         }
     }
 
+    /**
+     * Operations from UserReviewsFragment screen
+     */
+
     fun mergeStateWithDeletedReviewPlaceholder(state: UserReviewsFeature.State.Content, courseReview: CourseReview): UserReviewsFeature.State.Content? {
         val indexOfDeletedReview = state.userCourseReviewsResult.reviewedReviewItems.indexOfFirst { it.id == courseReview.course }
         return if (indexOfDeletedReview == -1) {
@@ -148,4 +155,56 @@ constructor() {
                 userCourseReviewItems = with(state.userCourseReviewsResult) { potentialHeader + potentialReviewItems + reviewedHeader + reviewedReviewItems }
             )
         )
+
+    // TODO APPS-3352 Return to this before merge
+    fun mergeStateWithDroppedCourse(state: UserReviewsFeature.State.Content, droppedCourseId: Long): UserReviewsFeature.State.Content {
+        val (updatedPotentialItems, updatedReviewedItems) = with(state.userCourseReviewsResult) {
+            potentialReviewItems.filterNot { it.id == droppedCourseId } to reviewedReviewItems.filterNot { it.id == droppedCourseId }
+        }
+        val updatedPotentialHeader = if (updatedPotentialItems.isEmpty()) {
+            emptyList()
+        } else {
+            listOf(UserCourseReviewItem.PotentialReviewHeader(updatedPotentialItems.size))
+        }
+
+        val updatedReviewedHeader = if (updatedReviewedItems.isEmpty()) {
+            emptyList()
+        } else {
+            listOf(UserCourseReviewItem.ReviewedHeader(updatedReviewedItems.size))
+        }
+
+        return state.copy(
+            userCourseReviewsResult = state.userCourseReviewsResult.copy(
+                userCourseReviewItems = updatedPotentialHeader + updatedPotentialItems + updatedReviewedHeader + updatedReviewedItems,
+                potentialHeader = updatedPotentialHeader,
+                potentialReviewItems = updatedPotentialItems,
+                reviewedHeader = updatedReviewedHeader,
+                reviewedReviewItems = updatedReviewedItems
+            )
+        )
+    }
+
+    fun mergeStateWithEnrolledReviewedItem(state: UserReviewsFeature.State.Content, reviewedItem: UserCourseReviewItem.ReviewedItem): UserReviewsFeature.State.Content {
+        val updatedReviewedItems = state.userCourseReviewsResult.reviewedReviewItems.mutate { add(reviewedItem) }
+        val updatedReviewedHeader = listOf(UserCourseReviewItem.ReviewedHeader(updatedReviewedItems.size))
+        return state.copy(
+            userCourseReviewsResult = state.userCourseReviewsResult.copy(
+                userCourseReviewItems = with(state.userCourseReviewsResult) { potentialHeader + potentialReviewItems + updatedReviewedHeader + updatedReviewedItems },
+                reviewedHeader = updatedReviewedHeader,
+                reviewedReviewItems = updatedReviewedItems
+            )
+        )
+    }
+
+    fun mergeStateWithEnrolledPotentialReviewItem(state: UserReviewsFeature.State.Content, potentialReviewItem: UserCourseReviewItem.PotentialReviewItem): UserReviewsFeature.State.Content {
+        val updatedPotentialItems = state.userCourseReviewsResult.potentialReviewItems.mutate { add(potentialReviewItem) }
+        val updatedPotentialHeader = listOf(UserCourseReviewItem.PotentialReviewHeader(updatedPotentialItems.size))
+        return state.copy(
+            userCourseReviewsResult = state.userCourseReviewsResult.copy(
+                userCourseReviewItems = with(state.userCourseReviewsResult) { updatedPotentialHeader + updatedPotentialItems + reviewedHeader + reviewedReviewItems },
+                potentialHeader = updatedPotentialHeader,
+                potentialReviewItems = updatedPotentialItems
+            )
+        )
+    }
 }

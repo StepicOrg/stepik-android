@@ -104,5 +104,36 @@ constructor(
                     null
                 }
             }
+
+            is Message.EnrolledCourseMessage -> {
+                if (state is State.Content) {
+                    if (message.course.enrollment != 0L) {
+                        state to setOf(Action.FetchEnrolledCourseInfo(message.course))
+                    } else {
+                        val newState = userReviewsStateMapper.mergeStateWithDroppedCourse(state, message.course.id)
+                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                    }
+                } else {
+                    null
+                }
+            }
+
+            is Message.EnrolledReviewedCourseMessage -> {
+                if (state is State.Content) {
+                    val newState = userReviewsStateMapper.mergeStateWithEnrolledReviewedItem(state, message.reviewedItem)
+                    newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                } else {
+                    null
+                }
+            }
+
+            is Message.EnrolledPotentialReviewMessage -> {
+                if (state is State.Content) {
+                    val newState = userReviewsStateMapper.mergeStateWithEnrolledPotentialReviewItem(state, message.potentialReviewItem)
+                    newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 }
