@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.stepic.droid.configuration.Config;
+import org.stepic.droid.configuration.EndpointResolver;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,7 +22,7 @@ public class RelativeLoaderTest {
     private RelativeUrlLoader relativeUrlLoader;
 
     @Mock
-    Config config;
+    EndpointResolver config;
 
     @Mock
     ModelLoader<GlideUrl, InputStream> loaderFactory;

@@ -29,6 +29,7 @@ import org.stepic.droid.adaptive.ui.activities.AdaptiveStatsActivity;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
+import org.stepic.droid.configuration.EndpointResolver;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
@@ -104,17 +105,20 @@ import javax.inject.Inject;
 @AppSingleton
 public class ScreenManagerImpl implements ScreenManager {
     private final SharedPreferenceHelper sharedPreferences;
+    private final EndpointResolver endpointResolver;
     private final Config config;
     private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
 
     @Inject
-    public ScreenManagerImpl(Config config,
+    public ScreenManagerImpl(EndpointResolver endpointResolver,
+                             Config config,
                              UserPreferences userPreferences,
                              Analytic analytic,
                              SharedPreferenceHelper sharedPreferences,
                              Set<BranchDeepLinkRouter> deepLinkRouters) {
+        this.endpointResolver = endpointResolver;
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
@@ -417,7 +421,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri) {
-        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(endpointResolver.getBaseUrl()));
 
         final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
         final ArrayList<Intent> activityIntents = new ArrayList<>();
@@ -588,7 +592,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void openStepInWeb(Context context, Step step) {
         analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId() + "");
-        String url = config.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
+        String url = endpointResolver.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
     }
@@ -663,7 +667,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void loginWithSocial(FragmentActivity activity, SocialAuthType type) {
         String socialIdentifier = type.getIdentifier();
-        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.SOCIAL) + "&response_type=code");
+        String url = endpointResolver.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + endpointResolver.getOAuthClientId(TokenType.SOCIAL) + "&response_type=code");
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         activity.startActivity(intent);

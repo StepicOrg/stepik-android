@@ -1,16 +1,15 @@
 package org.stepic.droid.util.resolvers.text
 
 import androidx.core.text.HtmlCompat
-import org.stepic.droid.configuration.Config
-import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.configuration.EndpointResolver
 import javax.inject.Inject
 
 class TextResolverImpl
 @Inject
 constructor(
-    config: Config
+    endpointResolver: EndpointResolver
 ) : TextResolver {
-    private val baseUrl: String = config.baseUrl
+    private val baseUrl: String = endpointResolver.getBaseUrl()
 
     companion object {
         private val tagHandler = OlLiTagHandler()

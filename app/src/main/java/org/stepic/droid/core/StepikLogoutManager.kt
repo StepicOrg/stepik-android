@@ -1,5 +1,6 @@
 package org.stepic.droid.core
 
+import io.reactivex.Completable
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
@@ -26,19 +27,28 @@ constructor(
 
     fun logout(afterClearData: () -> Unit) {
         threadPoolExecutor.execute {
-            removalDownloadsInteractor.removeAllDownloads().blockingAwait()
-            try {
-                RWLocks.ClearEnrollmentsLock.writeLock().lock()
-                sharedPreferenceHelper.deleteAuthInfo()
-                databaseFacade.dropDatabase()
-                analyticDatabase.clearAllTables()
-            } finally {
-                RWLocks.ClearEnrollmentsLock.writeLock().unlock()
-            }
-            mainHandler.post {
-                notificationsBadgesLogoutPoster.clearCounter()
-                afterClearData.invoke()
-            }
+            teardown(afterClearData)
+        }
+    }
+
+    fun logoutCompletable(afterClearData: () -> Unit): Completable =
+        Completable.fromAction {
+            teardown(afterClearData)
+        }
+
+    private fun teardown(afterClearData: () -> Unit) {
+        removalDownloadsInteractor.removeAllDownloads().blockingAwait()
+        try {
+            RWLocks.ClearEnrollmentsLock.writeLock().lock()
+            sharedPreferenceHelper.deleteAuthInfo()
+            databaseFacade.dropDatabase()
+            analyticDatabase.clearAllTables()
+        } finally {
+            RWLocks.ClearEnrollmentsLock.writeLock().unlock()
+        }
+        mainHandler.post {
+            notificationsBadgesLogoutPoster.clearCounter()
+            afterClearData.invoke()
         }
     }
 }

@@ -44,6 +44,7 @@ ext.versions = [
         viewRedux            : '1.0.9',
         model                : '1.0.6',
         domainRx             : '1.0.1',
+        viewBindingDelegate  : '1.4.7',
 
         retrofit             : '2.6.1',
         okhttp               : '3.12.8',
@@ -167,6 +168,7 @@ ext.libraries = [
         ],
         domainRx             : "ru.nobird.android.domain:rx:$versions.domainRx",
         model                : "ru.nobird.android.core:model:$versions.model",
+        viewBindingDelegate  : "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$versions.viewBindingDelegate",
 
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",

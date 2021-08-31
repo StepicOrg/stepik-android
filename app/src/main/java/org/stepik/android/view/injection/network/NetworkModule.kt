@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.view.injection.achievement.AchievementDataModule
@@ -51,9 +51,9 @@ abstract class NetworkModule {
         @JvmStatic
         @AppSingleton
         @Authorized
-        internal fun provideRetrofit(config: Config, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): Retrofit =
+        internal fun provideRetrofit(endpointResolver: EndpointResolver, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): Retrofit =
             Retrofit.Builder()
-                .baseUrl(config.baseUrl)
+                .baseUrl(endpointResolver.getBaseUrl())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(converterFactory)
                 .client(okHttpClient)
