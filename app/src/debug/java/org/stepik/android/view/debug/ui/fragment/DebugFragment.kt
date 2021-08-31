@@ -45,7 +45,7 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        debugBinding.appBarLayout.viewCenteredToolbar.centeredToolbarTitle.setText(R.string.debug_toolbar_title)
+        debugBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_toolbar_title)
         initViewStateDelegate()
         debugViewModel.onNewMessage(DebugFeature.Message.InitMessage())
 

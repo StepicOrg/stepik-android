@@ -9,8 +9,8 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/appBarLayout"
-        layout="@layout/view_centered_appbar" />
+        android:id="@+id/appBarLayoutBinding"
+        layout="@layout/view_centered_appbar_binding" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
