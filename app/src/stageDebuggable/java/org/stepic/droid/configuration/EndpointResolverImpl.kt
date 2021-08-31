@@ -7,7 +7,7 @@ class EndpointResolverImpl
 @Inject
 constructor(
     private val config: Config
-) : BaseUrlResolver {
+) : EndpointResolver {
     override fun getOAuthClientId(type: TokenType): String =
         config.getOAuthClientId(type)
 

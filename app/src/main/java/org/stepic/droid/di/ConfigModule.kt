@@ -29,7 +29,7 @@ abstract class ConfigModule {
     internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
     @Binds
     @AppSingleton
-    internal abstract fun provideBaseUrlResolver(baseUrlResolverImpl: EndpointResolverImpl): EndpointResolver
+    internal abstract fun provideEndpointResolver(endpointResolver: EndpointResolverImpl): EndpointResolver
     @Module
     companion object {
         //it is good for many short lived, which should do async
