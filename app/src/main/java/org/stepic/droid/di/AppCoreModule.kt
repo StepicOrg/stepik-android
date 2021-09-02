@@ -26,6 +26,7 @@ import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.base.ListenerContainerImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.DefaultFilter
 import org.stepic.droid.core.LessonSessionManager
@@ -150,9 +151,9 @@ abstract class AppCoreModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        fun provideRetrofit(config: Config): Retrofit {
+        fun provideRetrofit(endpointResolver: EndpointResolver): Retrofit {
             return Retrofit.Builder()
-                    .baseUrl(config.baseUrl)
+                    .baseUrl(endpointResolver.getBaseUrl())
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient())
                     .build()

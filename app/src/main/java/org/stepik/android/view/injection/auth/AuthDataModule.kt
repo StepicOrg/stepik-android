@@ -8,7 +8,7 @@ import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DebugToolsHelper
@@ -65,7 +65,7 @@ abstract class AuthDataModule {
         @AppSingleton
         @JvmStatic
         internal fun provideEmptyAuthService(
-            config: Config,
+            endpointResolver: EndpointResolver,
             userAgentProvider: UserAgentProvider,
             converterFactory: Converter.Factory
         ): EmptyAuthService {
@@ -75,7 +75,7 @@ abstract class AuthDataModule {
             okHttpBuilder.addInterceptor { chain ->
                 chain.proceed(chain.addUserAgent(userAgentProvider.provideUserAgent()))
             }
-            val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
+            val retrofit = NetworkFactory.createRetrofit(endpointResolver.getBaseUrl(), okHttpBuilder.build(), converterFactory)
             return retrofit.create(EmptyAuthService::class.java)
         }
 
@@ -84,14 +84,14 @@ abstract class AuthDataModule {
         @JvmStatic
         @SocialAuthService
         internal fun provideSocialAuthService(
-            config: Config,
+            endpointResolver: EndpointResolver,
             userAgentProvider: UserAgentProvider,
             converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
-                Credentials.basic(config.getOAuthClientId(TokenType.SOCIAL), config.getOAuthClientSecret(TokenType.SOCIAL)),
+                Credentials.basic(endpointResolver.getOAuthClientId(TokenType.SOCIAL), endpointResolver.getOAuthClientSecret(TokenType.SOCIAL)),
                 userAgentProvider.provideUserAgent(),
-                config.baseUrl,
+                endpointResolver.getBaseUrl(),
                 converterFactory
             )
 
@@ -100,17 +100,17 @@ abstract class AuthDataModule {
         @JvmStatic
         @AuthService
         internal fun provideAuthService(
-            config: Config,
+            endpointResolver: EndpointResolver,
             userAgentProvider: UserAgentProvider,
             converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
                 Credentials.basic(
-                    config.getOAuthClientId(TokenType.LOGIN_PASSWORD),
-                    config.getOAuthClientSecret(TokenType.LOGIN_PASSWORD)
+                    endpointResolver.getOAuthClientId(TokenType.LOGIN_PASSWORD),
+                    endpointResolver.getOAuthClientSecret(TokenType.LOGIN_PASSWORD)
                 ),
                 userAgentProvider.provideUserAgent(),
-                config.baseUrl,
+                endpointResolver.getBaseUrl(),
                 converterFactory
             )
 
@@ -119,7 +119,7 @@ abstract class AuthDataModule {
         @JvmStatic
         @CookieAuthService
         internal fun provideCookieAuthService(
-            config: Config,
+            endpointResolver: EndpointResolver,
             userAgentProvider: UserAgentProvider,
             cookieHelper: CookieHelper,
             converterFactory: Converter.Factory
@@ -137,7 +137,7 @@ abstract class AuthDataModule {
             okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
             addDebugInterceptors(okHttpBuilder)
 
-            val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
+            val retrofit = NetworkFactory.createRetrofit(endpointResolver.getBaseUrl(), okHttpBuilder.build(), converterFactory)
             return retrofit.create(OAuthService::class.java)
         }
 

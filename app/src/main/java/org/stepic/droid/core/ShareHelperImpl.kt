@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import org.stepic.droid.R
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.StringUtil
@@ -18,9 +18,9 @@ import javax.inject.Inject
 class ShareHelperImpl
 @Inject
 constructor(
-        private val config: Config,
-        private val context: Context,
-        private val textResolver: TextResolver
+    private val endpointResolver: EndpointResolver,
+    private val context: Context,
+    private val textResolver: TextResolver
 ) : ShareHelper {
 
     private val textPlainType = "text/plain"
@@ -41,7 +41,7 @@ constructor(
             }
 
         }
-        val uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.baseUrl, course.slug)).toString()
+        val uriForSharing = Uri.parse(StringUtil.getUriForCourse(endpointResolver.getBaseUrl(), course.slug)).toString()
         val textForSharing = textResolver.fromHtml(stringBuilder.toString()).toString() + "\r\n\r\n" + uriForSharing
         return getShareIntentBase(textForSharing)
     }
@@ -50,12 +50,12 @@ constructor(
             getShareIntentBase(certificateViewItem.certificate.url ?: " ")
 
     override fun getIntentForStepSharing(step: Step, lesson: Lesson, unit: Unit?): Intent {
-        val textForSharing = Uri.parse(StringUtil.getUriForStep(config.baseUrl, lesson, unit, step)).toString()
+        val textForSharing = Uri.parse(StringUtil.getUriForStep(endpointResolver.getBaseUrl(), lesson, unit, step)).toString()
         return getShareIntentBase(textForSharing)
     }
 
     override fun getIntentForSectionSharing(section: Section): Intent {
-        val textForSharing = Uri.parse(StringUtil.getAbsoluteUriForSection(config, section)).toString()
+        val textForSharing = Uri.parse(StringUtil.getAbsoluteUriForSection(endpointResolver, section)).toString()
         return getShareIntentBase(textForSharing)
     }
 
@@ -68,7 +68,7 @@ constructor(
                 append("\r\n")
             }
 
-            val uriForSharing = Uri.parse(StringUtil.getUriForProfile(config.baseUrl, user.id)).toString()
+            val uriForSharing = Uri.parse(StringUtil.getUriForProfile(endpointResolver.getBaseUrl(), user.id)).toString()
             append(uriForSharing)
         }
         val textForSharing = stringBuilder.toString()
@@ -82,7 +82,7 @@ constructor(
             append("\r\n")
             append("\r\n")
 
-            val uriForSharing = Uri.parse(StringUtil.getUriForCourse(config.baseUrl, course.slug)).toString()
+            val uriForSharing = Uri.parse(StringUtil.getUriForCourse(endpointResolver.getBaseUrl(), course.slug)).toString()
             append(uriForSharing)
         }
         val textForSharing = stringBuilder.toString()

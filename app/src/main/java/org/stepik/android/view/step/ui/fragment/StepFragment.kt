@@ -28,7 +28,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -108,7 +108,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     internal lateinit var lessonTitleMapper: LessonTitleMapper
 
     @Inject
-    internal lateinit var config: Config
+    internal lateinit var endpointResolver: EndpointResolver
 
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
@@ -182,7 +182,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
         val stepLinkSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val stepUri = StringUtil
-                    .getUriForStep(config.baseUrl, lessonData.lesson, lessonData.unit, stepWrapper.step)
+                    .getUriForStep(endpointResolver.getBaseUrl(), lessonData.lesson, lessonData.unit, stepWrapper.step)
 
                 requireContext()
                     .copyTextToClipboard(textToCopy = stepUri, toastMessage = getString(R.string.link_copied_title))

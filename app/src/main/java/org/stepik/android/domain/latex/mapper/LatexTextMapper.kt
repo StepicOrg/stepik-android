@@ -4,7 +4,7 @@ import android.text.style.URLSpan
 import androidx.core.text.HtmlCompat
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.util.resolvers.text.OlLiTagHandler
 import org.stepik.android.domain.base.InternalDeeplinkURLSpan
 import org.stepik.android.domain.latex.model.block.ContentBlock
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class LatexTextMapper
 @Inject
 constructor(
-    config: Config
+    endpointResolver: EndpointResolver
 ) {
     private val primaryBlocks =
         listOf(
@@ -38,13 +38,13 @@ constructor(
         listOf(
             HorizontalScrollBlock(),
             MinVisibleBlock(),
-            MetaBlock(config.baseUrl),
+            MetaBlock(endpointResolver.getBaseUrl()),
             ModelViewerBlock()
         )
 
     private val rules =
         listOf(
-            RelativePathContentRule(config.baseUrl),
+            RelativePathContentRule(endpointResolver.getBaseUrl()),
             ReplaceModelViewWithImage()
         )
 

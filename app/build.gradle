@@ -191,6 +191,7 @@ dependencies {
     implementation libraries.multidex
     implementation libraries.androidKit.values()
     implementation libraries.domainRx
+    implementation libraries.viewBindingDelegate
 
     implementation libraries.exoPlayerCore
     implementation libraries.exoPlayerUI

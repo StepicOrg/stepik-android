@@ -6,6 +6,7 @@ import com.vk.api.sdk.VK
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.StepikLogoutManager
@@ -37,6 +38,7 @@ constructor(
     private val sharedPreference: SharedPreferenceHelper,
     private val stepikLogoutManager: StepikLogoutManager,
     private val screenManager: ScreenManager,
+    private val endpointResolver: EndpointResolver,
     private val config: Config,
     private val context: Context,
     private val userAgentProvider: UserAgentProvider,
@@ -66,7 +68,7 @@ constructor(
                     val csrfTokenFromCookies = cookieHelper.getCsrfTokenFromCookies(cookies)
                     if (sharedPreference.profile == null) {
                         val stepicProfileResponse = emptyAuthService.getUserProfileWithCookie(
-                            config.baseUrl,
+                            endpointResolver.getBaseUrl(),
                             cookieHeader,
                             csrfTokenFromCookies
                         ).execute().body()
@@ -79,7 +81,7 @@ constructor(
                     request = request
                         .newBuilder()
                         .addHeader(AppConstants.cookieHeaderName, cookieHeader)
-                        .addHeader(AppConstants.refererHeaderName, config.baseUrl)
+                        .addHeader(AppConstants.refererHeaderName, endpointResolver.getBaseUrl())
                         .addHeader(AppConstants.csrfTokenHeaderName, csrfTokenFromCookies)
                         .build()
                 }
