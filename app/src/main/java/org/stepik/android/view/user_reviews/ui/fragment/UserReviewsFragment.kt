@@ -104,6 +104,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         viewStateDelegate.addState<UserReviewsFeature.State.Idle>()
         viewStateDelegate.addState<UserReviewsFeature.State.Loading>(userReviewsRecycler)
         viewStateDelegate.addState<UserReviewsFeature.State.Error>(userReviewsError)
+        viewStateDelegate.addState<UserReviewsFeature.State.Empty>(userReviewsEmpty)
         viewStateDelegate.addState<UserReviewsFeature.State.Content>(userReviewsRecycler)
     }
 

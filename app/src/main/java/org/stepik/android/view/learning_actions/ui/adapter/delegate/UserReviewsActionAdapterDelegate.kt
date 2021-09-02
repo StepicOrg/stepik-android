@@ -40,6 +40,7 @@ class UserReviewsActionAdapterDelegate(private val onClick: () -> Unit) : Adapte
             viewStateDelegate.addState<UserReviewsFeature.State.Idle>()
             viewStateDelegate.addState<UserReviewsFeature.State.Loading>(userReviewsActionTitle, userReviewsActionLoadingView)
             viewStateDelegate.addState<UserReviewsFeature.State.Error>(userReviewsActionTitle)
+            viewStateDelegate.addState<UserReviewsFeature.State.Empty>(userReviewsActionTitle, userReviewsActionCourseCount)
             viewStateDelegate.addState<UserReviewsFeature.State.Content>(userReviewsActionTitle, userReviewsActionCourseCount)
             containerView.setOnClickListener { onClick() }
         }
@@ -53,14 +54,12 @@ class UserReviewsActionAdapterDelegate(private val onClick: () -> Unit) : Adapte
             viewStateDelegate.switchState(state)
             userReviewsActionCourseCount.text =
                 when (state) {
+                    is UserReviewsFeature.State.Empty ->
+                        context.getString(R.string.user_review_learning_action_empty)
+
                     is UserReviewsFeature.State.Content -> {
                         userReviewsPotentialIcon.isVisible = state.userCourseReviewsResult.potentialReviewItems.isNotEmpty()
-
-                        if (state.userCourseReviewsResult.potentialReviewItems.isEmpty() && state.userCourseReviewsResult.reviewedReviewItems.isEmpty()) {
-                            context.getString(R.string.user_review_learning_action_empty)
-                        } else {
-                            resolveActionTitle(state.userCourseReviewsResult.reviewedReviewItems.size, state.userCourseReviewsResult.potentialReviewItems.size)
-                        }
+                        resolveActionTitle(state.userCourseReviewsResult.reviewedReviewItems.size, state.userCourseReviewsResult.potentialReviewItems.size)
                     }
                     else ->
                         ""

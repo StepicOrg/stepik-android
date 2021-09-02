@@ -32,7 +32,13 @@ constructor(
 
             is Message.FetchUserReviewsSuccess -> {
                 if (state is State.Loading || state is State.Content) {
-                    State.Content(message.userCourseReviewsResult) to emptySet()
+                    val newState =
+                        if (message.userCourseReviewsResult.userCourseReviewItems.isEmpty()) {
+                            State.Empty
+                        } else {
+                            State.Content(message.userCourseReviewsResult)
+                        }
+                    newState to emptySet()
                 } else {
                     null
                 }

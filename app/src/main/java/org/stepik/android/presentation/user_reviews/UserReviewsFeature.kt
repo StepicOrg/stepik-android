@@ -10,6 +10,7 @@ interface UserReviewsFeature {
         object Idle : State()
         object Loading : State()
         object Error : State()
+        object Empty : State()
 
         data class Content(val userCourseReviewsResult: UserCourseReviewsResult) : State()
     }
