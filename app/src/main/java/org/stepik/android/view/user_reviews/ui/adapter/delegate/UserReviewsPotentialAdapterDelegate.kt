@@ -13,7 +13,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class UserReviewsPotentialAdapterDelegate(
     private val onCourseTitleClicked: (Course) -> Unit,
-    private val onWriteReviewClicked: (Long) -> Unit
+    private val onWriteReviewClicked: (Long, Float) -> Unit
 ) : AdapterDelegate<UserCourseReviewItem, DelegateViewHolder<UserCourseReviewItem>>() {
     override fun isForViewType(position: Int, data: UserCourseReviewItem): Boolean =
         data is UserCourseReviewItem.PotentialReviewItem
@@ -26,7 +26,10 @@ class UserReviewsPotentialAdapterDelegate(
         init {
             userReviewIcon.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
             userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
-            userReviewWriteAction.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.id?.let(onWriteReviewClicked) }
+            userReviewWriteAction.setOnClickListener {
+                val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnClickListener
+                onWriteReviewClicked(potentialReview.course.id, userReviewRating.rating)
+            }
         }
 
 //        private val reviewIconWrapper = userReviewIcon.wrapWithGlide()
@@ -45,7 +48,7 @@ class UserReviewsPotentialAdapterDelegate(
                 .into(userReviewIcon)
 
 //            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.ic_skip_previous_48dp))
-            userReviewRating.total = 5
+            userReviewRating.max = 5
         }
     }
 }

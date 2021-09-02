@@ -67,8 +67,8 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
-            onWriteReviewClicked = { courseId ->
-                showCourseReviewEditDialog(courseId, courseReview = null)
+            onWriteReviewClicked = { courseId, courseRating ->
+                showCourseReviewEditDialog(courseId, courseReview = null, courseRating = courseRating)
             }
         )
         userReviewItemAdapter += UserReviewsReviewedHeaderAdapterDelegate()
@@ -76,7 +76,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
-            onEditReviewClicked = { courseReview -> showCourseReviewEditDialog(courseReview.course, courseReview) },
+            onEditReviewClicked = { courseReview -> showCourseReviewEditDialog(courseReview.course, courseReview, -1f) },
             onRemoveReviewClicked = { courseReview -> userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviews(courseReview)) }
         )
         with(userReviewsRecycler) {
@@ -128,7 +128,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         }
     }
 
-    private fun showCourseReviewEditDialog(courseId: Long, courseReview: CourseReview?) {
+    private fun showCourseReviewEditDialog(courseId: Long, courseReview: CourseReview?, courseRating: Float) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
             ?: return
@@ -140,7 +140,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
                 ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE
             }
 
-        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
+        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview, courseRating)
         dialog.setTargetFragment(this, requestCode)
         dialog.showIfNotExists(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }

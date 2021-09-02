@@ -34,13 +34,14 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
         const val ARG_COURSE_REVIEW = "course_review"
 
-        fun newInstance(courseId: Long, courseReview: CourseReview?): DialogFragment =
+        fun newInstance(courseId: Long, courseReview: CourseReview?, courseRating: Float = -1f): DialogFragment =
             ComposeCourseReviewDialogFragment().apply {
                 this.arguments = Bundle(2)
                     .also {
                         it.putParcelable(ARG_COURSE_REVIEW, courseReview)
                     }
                 this.courseId = courseId
+                this.courseRating = courseRating
             }
     }
 
@@ -51,6 +52,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
     private var courseId: Long by argument()
     private val courseReview: CourseReview? by lazy { arguments?.getParcelable<CourseReview>(ARG_COURSE_REVIEW) }
+    private var courseRating: Float by argument()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -96,6 +98,11 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         }
 
         if (savedInstanceState == null) {
+            courseRating
+                .takeIf { it > -1 }
+                ?.let {
+                    courseReviewRating.rating = courseRating
+                }
             courseReview?.let {
                 courseReviewEditText.setText(it.text)
                 courseReviewRating.rating = it.score.toFloat()
