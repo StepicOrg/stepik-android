@@ -1,6 +1,7 @@
 package org.stepik.android.domain.feedback.interactor
 
 import io.reactivex.Single
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.feedback.model.SupportEmailData
@@ -12,6 +13,7 @@ class FeedbackInteractor
 @Inject
 constructor(
     private val config: Config,
+    private val endpointResolver: EndpointResolver,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val feedbackRepository: FeedbackRepository
 ) {
@@ -28,7 +30,7 @@ constructor(
 
     private fun formSystemInfoData(aboutSystem: String): String {
         val profileData = sharedPreferenceHelper.profile.let { profile ->
-            "${profile?.fullName}\n${config.baseUrl}/users/${profile?.id}"
+            "${profile?.fullName}\n${endpointResolver.getBaseUrl()}/users/${profile?.id}"
         }
         return "$profileData\n$aboutSystem"
     }

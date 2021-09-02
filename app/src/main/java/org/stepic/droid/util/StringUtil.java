@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
+import org.stepic.droid.configuration.EndpointResolver;
 import org.stepic.droid.configuration.Config;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
@@ -38,10 +39,10 @@ public class StringUtil {
                 AppConstants.WEB_URI_SEPARATOR;
     }
 
-    public static String getDynamicLinkForCourse(Config config, String slug) {
+    public static String getDynamicLinkForCourse(EndpointResolver endpointResolver, Config config, String slug) {
         String firebaseDomain = config.getFirebaseDomain();
         if (firebaseDomain == null) {
-            return getUriForCourse(config.getBaseUrl(), slug);
+            return getUriForCourse(endpointResolver.getBaseUrl(), slug);
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -50,13 +51,13 @@ public class StringUtil {
         stringBuilder.append("&apn=");
         String packageName = App.Companion.getAppContext().getPackageName();
         if (packageName == null) {
-            return getUriForCourse(config.getBaseUrl(), slug);
+            return getUriForCourse(endpointResolver.getBaseUrl(), slug);
         }
         stringBuilder.append(packageName);
 
 
         stringBuilder.append("&link=");
-        stringBuilder.append(config.getBaseUrl());
+        stringBuilder.append(endpointResolver.getBaseUrl());
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
         stringBuilder.append("course");
         stringBuilder.append(AppConstants.WEB_URI_SEPARATOR);
@@ -121,10 +122,10 @@ public class StringUtil {
         return stringBuilder;
     }
 
-    public static String getAbsoluteUriForSection(Config config, @NotNull Section section) {
+    public static String getAbsoluteUriForSection(EndpointResolver endpointResolver, @NotNull Section section) {
         StringBuilder sb;
         sb = new StringBuilder();
-        sb.append(config.getBaseUrl());
+        sb.append(endpointResolver.getBaseUrl());
         sb.append(AppConstants.WEB_URI_SEPARATOR);
         sb.append("course");
         sb.append(AppConstants.WEB_URI_SEPARATOR);

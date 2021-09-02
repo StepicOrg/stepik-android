@@ -10,7 +10,7 @@ import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.notifications.NotificationActionsHelper
 import org.stepic.droid.notifications.NotificationTimeChecker
@@ -39,7 +39,7 @@ class FcmNotificationHandlerImpl
 @Inject
 constructor(
     private val applicationContext: Context,
-    private val configs: Config,
+    private val endpointResolver: EndpointResolver,
     private val screenManager: ScreenManager,
     private val analytic: Analytic,
     private val userPreferences: UserPreferences,
@@ -373,7 +373,7 @@ constructor(
         }
 
     private fun getTeachIntent(context: Context, notification: Notification): Intent? {
-        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", endpointResolver.getBaseUrl(), 0) ?: return null
         try {
             val url = Uri.parse(link)
             val intent: Intent =
@@ -394,21 +394,21 @@ constructor(
     }
 
     private fun getLicenseIntent(notification: Notification): Intent? {
-        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", endpointResolver.getBaseUrl(), 0) ?: return null
         val intent = screenManager.getOpenInWebIntent(link)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
     }
 
     private fun getDefaultIntent(notification: Notification): Intent? =
-        HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1)?.let { data ->
+        HtmlHelper.parseNLinkInText(notification.htmlText ?: "", endpointResolver.getBaseUrl(), 1)?.let { data ->
             Intent(Intent.ACTION_VIEW, Uri.parse(data))
                 .setPackage(BuildConfig.APPLICATION_ID)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
     private fun getReviewIntent(context: Context, notification: Notification): Intent? {
-        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
+        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", endpointResolver.getBaseUrl(), 0) ?: return null
         return InAppWebViewActivity.createIntent(
             context,
             context.getString(R.string.step_quiz_review_given_title),
@@ -421,9 +421,9 @@ constructor(
         val htmlText = notification.htmlText ?: ""
         val link =
             if (action == NotificationActionsHelper.REPLIED) {
-                HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 1) ?: return null
+                HtmlHelper.parseNLinkInText(htmlText, endpointResolver.getBaseUrl(), 1) ?: return null
             } else {
-                HtmlHelper.parseNLinkInText(htmlText, configs.baseUrl, 3) ?: return null
+                HtmlHelper.parseNLinkInText(htmlText, endpointResolver.getBaseUrl(), 3) ?: return null
             }
         val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(link)
