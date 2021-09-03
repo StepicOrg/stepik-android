@@ -75,24 +75,6 @@ android {
         htmlOutput rootProject.file("reports/lint/lint.html")
     }
 
-    flavorDimensions "environment"
-
-    productFlavors {
-        envRelease { // release.stepik.org
-            dimension "environment"
-            versionNameSuffix "-release"
-        }
-
-        envDev { // dev.stepik.org
-            dimension "environment"
-            versionNameSuffix "-dev"
-        }
-
-        envProduction { // stepik.org
-            dimension "environment"
-        }
-    }
-
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -191,6 +173,7 @@ dependencies {
     implementation libraries.multidex
     implementation libraries.androidKit.values()
     implementation libraries.domainRx
+    implementation libraries.viewBindingDelegate
 
     implementation libraries.exoPlayerCore
     implementation libraries.exoPlayerUI

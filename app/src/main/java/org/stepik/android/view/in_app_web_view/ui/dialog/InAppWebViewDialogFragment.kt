@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewPresenter
@@ -62,7 +62,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     internal lateinit var inAppWebViewUrlProcessor: InAppWebViewUrlProcessor
 
     @Inject
-    internal lateinit var config: Config
+    internal lateinit var endpointResolver: EndpointResolver
 
     private val inAppWebViewPresenter: InAppWebViewPresenter by viewModels { viewModelFactory }
 
@@ -220,7 +220,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
             protocol to host
         }
         val baseUrl = getString(R.string.protocol_host_url, protocol, host)
-        return baseUrl == config.baseUrl
+        return baseUrl == endpointResolver.getBaseUrl()
     }
 
     interface Callback {

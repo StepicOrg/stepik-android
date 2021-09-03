@@ -10,5 +10,4 @@
     android:indeterminate="true"
     android:visibility="gone"
     android:padding="5dp"
-    tools:visibility="visible"
-    tools:viewBindingIgnore="true" />
+    tools:visibility="visible" />

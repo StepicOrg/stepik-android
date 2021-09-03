@@ -12,7 +12,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
@@ -27,7 +27,6 @@ import org.stepic.droid.util.not
 import org.stepic.droid.util.substringOrNull
 import org.stepik.android.data.user.source.UserRemoteDataSource
 import org.stepik.android.domain.notification.repository.NotificationRepository
-import org.stepik.android.view.notification.FcmNotificationHandler
 import timber.log.Timber
 import java.util.ArrayList
 import java.util.Calendar
@@ -52,7 +51,7 @@ class NotificationListPresenter
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
 
-    private val config: Config,
+    private val endpointResolver: EndpointResolver,
     private val analytic: Analytic,
     private val internetEnabledListenerClient: Client<InternetEnabledListener>,
     private val notificationsBadgesManager: NotificationsBadgesManager
@@ -125,7 +124,7 @@ class NotificationListPresenter
         hasNextPage.set(notifications.hasNext)
         page.set(notifications.page + 1)
 
-        val baseUrl = config.baseUrl
+        val baseUrl = endpointResolver.getBaseUrl()
 
         Timber.d("before filter size is %d", notifications.size)
         val filteredNotifications = notifications

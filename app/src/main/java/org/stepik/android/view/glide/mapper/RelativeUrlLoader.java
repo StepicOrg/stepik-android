@@ -9,7 +9,7 @@ import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader;
 
-import org.stepic.droid.configuration.Config;
+import org.stepic.droid.configuration.EndpointResolver;
 
 import java.io.InputStream;
 
@@ -17,16 +17,16 @@ import javax.inject.Inject;
 
 public class RelativeUrlLoader extends BaseGlideUrlLoader<String> {
 
-    private Config config;
+    private EndpointResolver endpointResolver;
 
-    public RelativeUrlLoader(ModelLoader<GlideUrl, InputStream> concreteLoader, Config config) {
+    public RelativeUrlLoader(ModelLoader<GlideUrl, InputStream> concreteLoader, EndpointResolver endpointResolver) {
         super(concreteLoader);
-        this.config = config;
+        this.endpointResolver = endpointResolver;
     }
 
     @Override
     protected String getUrl(String pathUrl, int width, int height, Options options) {
-        return config.getBaseUrl() + pathUrl;
+        return endpointResolver.getBaseUrl() + pathUrl;
     }
 
     @Override
@@ -36,17 +36,17 @@ public class RelativeUrlLoader extends BaseGlideUrlLoader<String> {
 
     public static class Factory implements ModelLoaderFactory<String, InputStream> {
 
-        private Config config;
+        private EndpointResolver endpointResolver;
 
         @Inject
-        public Factory(Config config) {
-            this.config = config;
+        public Factory(EndpointResolver endpointResolver) {
+            this.endpointResolver = endpointResolver;
         }
 
         @NonNull
         @Override
         public ModelLoader<String, InputStream> build(@NonNull MultiModelLoaderFactory multiFactory) {
-            return new RelativeUrlLoader(multiFactory.build(GlideUrl.class, InputStream.class), config);
+            return new RelativeUrlLoader(multiFactory.build(GlideUrl.class, InputStream.class), endpointResolver);
         }
 
         @Override
