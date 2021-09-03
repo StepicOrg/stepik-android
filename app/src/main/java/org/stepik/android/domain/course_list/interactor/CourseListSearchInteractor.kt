@@ -29,7 +29,7 @@ constructor(
         searchResultRepository
             .getSearchResults(searchResultQuery)
             .flatMapObservable { searchResult ->
-                val ids = searchResult.map(SearchResult::course)
+                val ids = searchResult.mapNotNull(SearchResult::course)
                 Single
                     .concat(
                         getCourseListItems(ids, searchResult, searchResultQuery, SourceTypeComposition.CACHE),
