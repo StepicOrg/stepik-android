@@ -1,6 +1,6 @@
 package org.stepik.android.domain.user_reviews.interactor
 
-import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.ReplayRelay
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -33,16 +33,10 @@ constructor(
     private val progressRepository: ProgressRepository
 ) {
 
-    private val userCourseReviewItemBehaviorRelay: BehaviorRelay<Result<UserCourseReviewsResult>> = BehaviorRelay.create()
+    private val userCourseReviewItemBehaviorRelay: ReplayRelay<Result<UserCourseReviewsResult>> = ReplayRelay.createWithSize(2)
 
-    fun getUserCourseReviewItems(): Observable<UserCourseReviewsResult> =
-        userCourseReviewItemBehaviorRelay
-            .flatMap { result ->
-                result.fold(
-                    onSuccess = { Observable.just(it) },
-                    onFailure = { Observable.error(it) }
-                )
-            }
+    fun getUserCourseReviewItems(): Observable<Result<UserCourseReviewsResult>> =
+        userCourseReviewItemBehaviorRelay.share()
 
     fun fetchUserCourseReviewItems(primaryDataSourceType: DataSourceType): Single<UserCourseReviewsResult> =
         zip(
@@ -97,9 +91,9 @@ constructor(
             .doOnError { userCourseReviewItemBehaviorRelay.accept(Result.failure(it)) }
             .doOnSuccess { userCourseReviewItemBehaviorRelay.accept(Result.success(it)) }
 
-    fun publishChanges(UserCourseReviewsResult: UserCourseReviewsResult): Completable =
+    fun publishChanges(userCourseReviewsResult: UserCourseReviewsResult): Completable =
         Completable.fromCallable {
-            userCourseReviewItemBehaviorRelay.accept(Result.success(UserCourseReviewsResult))
+            userCourseReviewItemBehaviorRelay.accept(Result.success(userCourseReviewsResult))
         }
 
     fun removeCourseReview(courseReview: CourseReview): Completable =

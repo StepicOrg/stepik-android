@@ -52,15 +52,15 @@ class UserReviewsActionAdapterDelegate(private val onClick: () -> Unit) : Adapte
 
         private fun render(state: UserReviewsFeature.State) {
             viewStateDelegate.switchState(state)
+            userReviewsPotentialIcon.isVisible = state is UserReviewsFeature.State.Content && state.userCourseReviewsResult.potentialReviewItems.isNotEmpty()
             userReviewsActionCourseCount.text =
                 when (state) {
                     is UserReviewsFeature.State.Empty ->
                         context.getString(R.string.user_review_learning_action_empty)
 
-                    is UserReviewsFeature.State.Content -> {
-                        userReviewsPotentialIcon.isVisible = state.userCourseReviewsResult.potentialReviewItems.isNotEmpty()
+                    is UserReviewsFeature.State.Content ->
                         resolveActionTitle(state.userCourseReviewsResult.reviewedReviewItems.size, state.userCourseReviewsResult.potentialReviewItems.size)
-                    }
+
                     else ->
                         ""
                 }

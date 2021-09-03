@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.user_reviews.dispatcher
 
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
@@ -38,12 +39,18 @@ constructor(
     override fun handleAction(action: UserReviewsFeature.Action) {
         when (action) {
             is UserReviewsFeature.Action.FetchUserReviews -> {
-                compositeDisposable += userCourseReviewsInteractor
-                    .fetchUserCourseReviewItems(primaryDataSourceType = DataSourceType.REMOTE)
-                    .ignoreElement()
-                    .subscribeOn(backgroundScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy()
+                compositeDisposable += Flowable
+                    .fromArray(DataSourceType.CACHE, DataSourceType.REMOTE)
+                    .concatMapCompletable { sourceType ->
+                        userCourseReviewsInteractor
+                            .fetchUserCourseReviewItems(primaryDataSourceType = sourceType)
+                            .ignoreElement()
+                            .subscribeOn(backgroundScheduler)
+                            .observeOn(mainScheduler)
+                    }
+                    .subscribeBy(
+                        onError = emptyOnErrorStub
+                    )
             }
 
             is UserReviewsFeature.Action.ListenForUserReviews -> {
@@ -52,8 +59,17 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onNext = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsSuccess(it)) },
-                        onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
+                        onNext = { result ->
+                            val message =
+                                result.fold(
+                                    onSuccess = { UserReviewsFeature.Message.FetchUserReviewsSuccess(it) },
+                                    onFailure = { UserReviewsFeature.Message.FetchUserReviewsError }
+                                )
+                                onNewMessage(message)
+                        },
+                        onError = {
+                            onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError)
+                        }
                     )
             }
 

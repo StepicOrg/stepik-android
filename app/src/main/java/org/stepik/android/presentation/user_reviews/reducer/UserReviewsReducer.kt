@@ -15,7 +15,7 @@ constructor(
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                if (state is State.Idle || state is State.Loading || state is State.Error && message.forceUpdate) {
+                if (state is State.Loading || state is State.Error && message.forceUpdate) {
                     State.Loading to setOf(Action.FetchUserReviews)
                 } else {
                     null
@@ -31,7 +31,7 @@ constructor(
             }
 
             is Message.FetchUserReviewsSuccess -> {
-                if (state is State.Loading || state is State.Content) {
+                if (state !is State.Idle) {
                     val newState =
                         if (message.userCourseReviewsResult.userCourseReviewItems.isEmpty()) {
                             State.Empty
