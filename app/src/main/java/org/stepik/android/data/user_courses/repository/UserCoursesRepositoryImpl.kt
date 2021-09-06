@@ -1,6 +1,5 @@
 package org.stepik.android.data.user_courses.repository
 
-import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -23,25 +22,11 @@ constructor(
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
 
-    private val userCoursesObservable: BehaviorRelay<Result<List<UserCourse>>> = BehaviorRelay.create()
-
-    override fun getUserCoursesShared(): Single<List<UserCourse>> =
-        userCoursesObservable
-            .firstOrError()
-            .flatMap { result ->
-                result.fold(
-                    onSuccess = { Single.just(it) },
-                    onFailure = { Single.error(it) }
-                )
-            }
-
-    override fun getUserCoursesShared(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<List<UserCourse>> =
+    override fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<List<UserCourse>> =
         Observable.range(1, Int.MAX_VALUE)
             .concatMapSingle { getUserCourses(userCourseQuery.copy(page = it), sourceType = sourceType) }
             .takeUntil { !it.hasNext }
-            .reduce(emptyList<UserCourse>()) { a, b -> a + b }
-            .doOnError { userCoursesObservable.accept(Result.failure(it)) }
-            .doAfterSuccess { userCoursesObservable.accept(Result.success(it)) }
+            .reduce(emptyList()) { a, b -> a + b }
 
     override fun getUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
         val remoteSource = userCoursesRemoteDataSource

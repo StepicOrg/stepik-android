@@ -6,9 +6,11 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.repository.CourseReviewsRepository
 import org.stepik.android.domain.profile.repository.ProfileRepository
@@ -40,11 +42,12 @@ constructor(
 
     fun fetchUserCourseReviewItems(primaryDataSourceType: DataSourceType): Single<UserCourseReviewsResult> =
         zip(
-            courseListUserInteractor.getUserCoursesShared(),
+            courseListUserInteractor.getAllUserCourses(UserCourseQuery(page = 1), sourceType = primaryDataSourceType),
             fetchUserCourseReviews(primaryDataSourceType)
         ).flatMap { (userCourses, courseReviews) ->
+            val courseReviewsDistinct = courseReviews.distinctBy { it.course }
             val userCoursesIds = userCourses.map(UserCourse::course)
-            val courseWithReviewsIds = courseReviews.map(CourseReview::course)
+            val courseWithReviewsIds = courseReviewsDistinct.map(CourseReview::course)
             val coursesWithoutReviews = (userCoursesIds - courseWithReviewsIds).toSet()
             courseRepository
                 .getCourses(userCoursesIds, primarySourceType = primaryDataSourceType)
@@ -64,7 +67,7 @@ constructor(
                                 resolvePotentialReviewItems(resultProgresses, coursesByProgress)
 
                             val reviewedItems =
-                                courseReviews.map { UserCourseReviewItem.ReviewedItem(course = coursesById.getValue(it.course), courseReview = it) }
+                                courseReviewsDistinct.map { UserCourseReviewItem.ReviewedItem(course = coursesById.getValue(it.course), courseReview = it) }
 
                             val potentialHeader = if (potentialReviewItems.isNotEmpty()) {
                                 listOf(UserCourseReviewItem.PotentialReviewHeader(potentialReviewCount = potentialReviewItems.size))
@@ -112,7 +115,7 @@ constructor(
                     Maybe.just(UserCourseReviewItem.ReviewedItem(course, courseReview))
 
                 progress != null -> {
-                    if (progress.nStepsPassed * 100 / progress.nSteps > 80) {
+                    if (progress.nStepsPassed * 100 safeDiv progress.nSteps > 80) {
                         Maybe.just(UserCourseReviewItem.PotentialReviewItem(course))
                     } else {
                         Maybe.empty()
@@ -139,7 +142,7 @@ constructor(
 
     private fun resolvePotentialReviewItems(resultProgresses: List<Progress>, coursesByProgress: Map<String, Course>): List<UserCourseReviewItem.PotentialReviewItem> =
         resultProgresses.mapNotNull {
-            val canWriteReview = it.nStepsPassed * 100 / it.nSteps > 80
+            val canWriteReview = it.nStepsPassed * 100 safeDiv it.nSteps > 80
             if (canWriteReview) {
                 UserCourseReviewItem.PotentialReviewItem(coursesByProgress.getValue(it.id))
             } else {

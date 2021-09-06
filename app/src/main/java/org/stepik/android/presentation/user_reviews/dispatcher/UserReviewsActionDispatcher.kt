@@ -17,6 +17,7 @@ import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.user_reviews.UserCourseReviewOperationBus
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserReviewsActionDispatcher
@@ -49,7 +50,9 @@ constructor(
                             .observeOn(mainScheduler)
                     }
                     .subscribeBy(
-                        onError = emptyOnErrorStub
+                        onError = {
+                            Timber.d("APPS-3352 - Fetch User Reviews error: $it")
+                        }
                     )
             }
 
@@ -62,12 +65,16 @@ constructor(
                         onNext = { result ->
                             val message =
                                 result.fold(
-                                    onSuccess = { UserReviewsFeature.Message.FetchUserReviewsSuccess(it) },
+                                    onSuccess = {
+                                    Timber.d("APPS-3352: Result: ${it.userCourseReviewItems}")
+                                        UserReviewsFeature.Message.FetchUserReviewsSuccess(it)
+                                                },
                                     onFailure = { UserReviewsFeature.Message.FetchUserReviewsError }
                                 )
                                 onNewMessage(message)
                         },
                         onError = {
+                            Timber.d("APPS-3352: Listen Error: $it")
                             onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError)
                         }
                     )
