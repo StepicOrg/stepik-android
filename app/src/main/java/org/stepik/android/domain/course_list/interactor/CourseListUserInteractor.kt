@@ -39,9 +39,6 @@ constructor(
             }
         }
 
-//    fun getUserCoursesShared(): Single<List<UserCourse>> =
-//        userCoursesRepository.getUserCoursesShared()
-
     fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<UserCourse>> =
         requireAuthorization then
             userCoursesRepository
