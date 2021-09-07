@@ -4,7 +4,7 @@
     android:id="@+id/reviewedText"
     android:layout_width="match_parent"
     android:layout_height="36dp"
-    android:background="#0A000000"
+    android:background="@color/color_elevation_overlay_1dp"
     android:gravity="center_vertical"
     android:paddingStart="16dp"
     android:paddingLeft="16dp"
