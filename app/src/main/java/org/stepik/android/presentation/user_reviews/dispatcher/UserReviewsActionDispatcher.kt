@@ -29,7 +29,6 @@ class UserReviewsActionDispatcher
 @Inject
 constructor(
     private val analytic: Analytic,
-    private val profileInteractor: ProfileInteractor,
     private val userCourseReviewsInteractor: UserCourseReviewsInteractor,
     @UserCourseReviewOperationBus
     private val userCourseReviewOperationObservable: Observable<UserCourseReviewOperation>,
