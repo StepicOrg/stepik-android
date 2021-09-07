@@ -108,16 +108,4 @@ class LearningActionsFragment : Fragment() {
             isNestedScrollingEnabled = false
         }
     }
-
-//    override fun onAction(action: LearningActionsFeature.Action.ViewAction) {
-//        // no op
-//    }
-//
-//    override fun render(state: LearningActionsFeature.State) {
-//        learningActionsItemAdapter.items =
-//            listOf(
-//                LearningActionsItem.UserReviews(state.userReviewsState),
-//                LearningActionsItem.Wishlist(state.wishlistState)
-//            )
-//    }
 }
