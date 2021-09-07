@@ -9,6 +9,10 @@ import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
 import org.stepik.android.presentation.user_reviews.dispatcher.UserReviewsActionDispatcher
 import org.stepik.android.presentation.user_reviews.reducer.UserReviewsReducer
+import org.stepik.android.presentation.wishlist.WishlistFeature
+import org.stepik.android.presentation.wishlist.WishlistViewModel
+import org.stepik.android.presentation.wishlist.dispatcher.WishlistActionDispatcher
+import org.stepik.android.presentation.wishlist.reducer.WishlistReducer
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
 import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
 import ru.nobird.android.presentation.redux.feature.Feature
@@ -26,6 +30,19 @@ object UserReviewsPresentationModule {
         userReviewsFeature: Feature<UserReviewsFeature.State, UserReviewsFeature.Message, UserReviewsFeature.Action>
     ): ViewModel =
         UserReviewsViewModel(userReviewsFeature.wrapWithViewContainer())
+
+    @Provides
+    @IntoMap
+    @ViewModelKey(WishlistViewModel::class)
+    internal fun provideWishlistPresenter(
+        wishlistReducer: WishlistReducer,
+        wishlistActionDispatcher: WishlistActionDispatcher
+    ): ViewModel =
+        WishlistViewModel(
+            ReduxFeature(WishlistFeature.State.Idle, wishlistReducer)
+                .wrapWithActionDispatcher(wishlistActionDispatcher)
+                .wrapWithViewContainer()
+        )
 
     @Provides
     @LearningActionsScope
