@@ -11,7 +11,6 @@ import org.stepik.android.view.user_reviews.ui.fragment.UserReviewsFragment
 
 @LearningActionsScope
 @Subcomponent(modules = [
-    LearningActionsPresentationModule::class,
     UserReviewsPresentationModule::class,
     WishlistDataModule::class,
     UserCoursesDataModule::class,
