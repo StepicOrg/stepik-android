@@ -26,9 +26,13 @@ class UserReviewsPotentialAdapterDelegate(
         init {
             userReviewIcon.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
             userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
+            userReviewRating.setOnRatingBarChangeListener { _, rating, _ ->
+                val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnRatingBarChangeListener
+                onWriteReviewClicked(potentialReview.course.id, rating)
+            }
             userReviewWriteAction.setOnClickListener {
                 val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnClickListener
-                onWriteReviewClicked(potentialReview.course.id, userReviewRating.rating)
+                onWriteReviewClicked(potentialReview.course.id, -1f)
             }
         }
 
