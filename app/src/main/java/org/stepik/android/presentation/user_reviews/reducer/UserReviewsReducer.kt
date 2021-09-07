@@ -15,16 +15,8 @@ constructor(
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                if (state is State.Loading || state is State.Error && message.forceUpdate) {
+                if (state is State.Idle || state is State.Error && message.forceUpdate) {
                     State.Loading to setOf(Action.FetchUserReviews)
-                } else {
-                    null
-                }
-            }
-
-            is Message.InitListeningMessage -> {
-                if (state is State.Idle) {
-                    State.Loading to setOf(Action.ListenForUserReviews)
                 } else {
                     null
                 }
@@ -55,7 +47,7 @@ constructor(
             is Message.NewReviewSubmission -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithNewReview(state, message.courseReview)?.let { newState ->
-                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                        newState to emptySet()
                     }
                 } else {
                     null
@@ -65,7 +57,7 @@ constructor(
             is Message.EditReviewSubmission -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithEditedReview(state, message.courseReview)?.let { newState ->
-                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                        newState to emptySet()
                     }
                 } else {
                     null
@@ -75,7 +67,7 @@ constructor(
             is Message.DeletedReviewSubmission -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithDeletedReview(state, message.courseReview)?.let { newState ->
-                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                        newState to emptySet()
                     }
                 } else {
                     null
@@ -85,7 +77,7 @@ constructor(
             is Message.DeletedReviewUserReviews -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithDeletedReviewPlaceholder(state, message.courseReview)?.let { newState ->
-                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult), Action.DeleteReview(message.courseReview))
+                        newState to setOf(Action.DeleteReview(message.courseReview))
                     }
                 } else {
                     null
@@ -95,7 +87,7 @@ constructor(
             is Message.DeletedReviewUserReviewsSuccess -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithDeletedReviewToSuccess(state, message.courseReview)?.let { newState ->
-                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                        newState to emptySet()
                     }
                 } else {
                     null
@@ -105,7 +97,7 @@ constructor(
             is Message.DeletedReviewUserReviewsError -> {
                 if (state is State.Content) {
                     val newState = userReviewsStateMapper.mergeStateWithDeletedReviewToError(state)
-                    newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                    newState to emptySet()
                 } else {
                     null
                 }
@@ -117,7 +109,7 @@ constructor(
                         state to setOf(Action.FetchEnrolledCourseInfo(message.course))
                     } else {
                         val newState = userReviewsStateMapper.mergeStateWithDroppedCourse(state, message.course.id)
-                        newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                        newState to emptySet()
                     }
                 } else {
                     null
@@ -127,7 +119,7 @@ constructor(
             is Message.EnrolledReviewedCourseMessage -> {
                 if (state is State.Content) {
                     val newState = userReviewsStateMapper.mergeStateWithEnrolledReviewedItem(state, message.reviewedItem)
-                    newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                    newState to emptySet()
                 } else {
                     null
                 }
@@ -136,7 +128,7 @@ constructor(
             is Message.EnrolledPotentialReviewMessage -> {
                 if (state is State.Content) {
                     val newState = userReviewsStateMapper.mergeStateWithEnrolledPotentialReviewItem(state, message.potentialReviewItem)
-                    newState to setOf(Action.PublishChanges(newState.userCourseReviewsResult))
+                    newState to emptySet()
                 } else {
                     null
                 }

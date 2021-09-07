@@ -17,7 +17,6 @@ interface UserReviewsFeature {
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
-        object InitListeningMessage : Message()
         data class FetchUserReviewsSuccess(val userCourseReviewsResult: UserCourseReviewsResult) : Message()
         object FetchUserReviewsError : Message()
 
@@ -45,9 +44,7 @@ interface UserReviewsFeature {
 
     sealed class Action {
         object FetchUserReviews : Action()
-        object ListenForUserReviews : Action()
         data class DeleteReview(val courseReview: CourseReview) : Action()
-        data class PublishChanges(val userCourseReviewsResult: UserCourseReviewsResult) : Action()
         data class FetchEnrolledCourseInfo(val course: Course) : Action()
         sealed class ViewAction : Action()
     }

@@ -88,7 +88,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
                 UserCourseReviewItemDecoration.SeparatorSize(resources.getDimensionPixelSize(R.dimen.comment_item_separator_big))
             ))
         }
-        userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitListeningMessage)
+//        userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitListeningMessage)
         tryAgain.setOnClickListener {
             userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = true))
         }

@@ -17,7 +17,6 @@ import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.user_reviews.UserCourseReviewOperationBus
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserReviewsActionDispatcher
@@ -42,51 +41,24 @@ constructor(
             is UserReviewsFeature.Action.FetchUserReviews -> {
                 compositeDisposable += Flowable
                     .fromArray(DataSourceType.CACHE, DataSourceType.REMOTE)
-                    .concatMapCompletable { sourceType ->
+                    .concatMapSingle { sourceType ->
                         userCourseReviewsInteractor
                             .fetchUserCourseReviewItems(primaryDataSourceType = sourceType)
-                            .ignoreElement()
-                            .subscribeOn(backgroundScheduler)
-                            .observeOn(mainScheduler)
+                            .map { userReviewsResult -> Result.success(userReviewsResult) }
+                            .onErrorReturn { exception -> Result.failure(exception) }
                     }
-                    .subscribeBy(
-                        onError = {
-                            Timber.d("APPS-3352 - Fetch User Reviews error: $it")
-                        }
-                    )
-            }
-
-            is UserReviewsFeature.Action.ListenForUserReviews -> {
-                compositeDisposable += userCourseReviewsInteractor
-                    .getUserCourseReviewItems()
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onNext = { result ->
                             val message =
                                 result.fold(
-                                    onSuccess = {
-                                    Timber.d("APPS-3352: Result: ${it.userCourseReviewItems}")
-                                        UserReviewsFeature.Message.FetchUserReviewsSuccess(it)
-                                                },
+                                    onSuccess = { UserReviewsFeature.Message.FetchUserReviewsSuccess(it) },
                                     onFailure = { UserReviewsFeature.Message.FetchUserReviewsError }
                                 )
-                                onNewMessage(message)
+                            onNewMessage(message)
                         },
-                        onError = {
-                            Timber.d("APPS-3352: Listen Error: $it")
-                            onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError)
-                        }
-                    )
-            }
-
-            is UserReviewsFeature.Action.PublishChanges -> {
-                compositeDisposable += userCourseReviewsInteractor
-                    .publishChanges(action.userCourseReviewsResult)
-                    .subscribeOn(backgroundScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onError = emptyOnErrorStub
+                        onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
                     )
             }
 

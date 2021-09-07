@@ -123,8 +123,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         }
     }
 
-    // TODO User WeakComponentHolder
-    private val learningActionsComponent = ComponentHolder<LearningActionsComponent>()
+    private val learningActionsComponent = WeakComponentHolder<LearningActionsComponent>()
 
     override fun learningActionsComponent(): LearningActionsComponent =
         learningActionsComponent.get {

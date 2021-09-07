@@ -11,6 +11,7 @@ import org.stepik.android.presentation.user_reviews.dispatcher.UserReviewsAction
 import org.stepik.android.presentation.user_reviews.reducer.UserReviewsReducer
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
 import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.android.presentation.redux.feature.Feature
 import ru.nobird.android.presentation.redux.feature.ReduxFeature
 
 @Module
@@ -22,12 +23,16 @@ object UserReviewsPresentationModule {
     @IntoMap
     @ViewModelKey(UserReviewsViewModel::class)
     internal fun provideUserReviewsPresenter(
+        userReviewsFeature: Feature<UserReviewsFeature.State, UserReviewsFeature.Message, UserReviewsFeature.Action>
+    ): ViewModel =
+        UserReviewsViewModel(userReviewsFeature.wrapWithViewContainer())
+
+    @Provides
+    @LearningActionsScope
+    internal fun provideUserReviewsFeature(
         userReviewsReducer: UserReviewsReducer,
         userReviewsActionDispatcher: UserReviewsActionDispatcher
-    ): ViewModel =
-        UserReviewsViewModel(
-            ReduxFeature(UserReviewsFeature.State.Idle, userReviewsReducer)
-                .wrapWithActionDispatcher(userReviewsActionDispatcher)
-                .wrapWithViewContainer()
-        )
+    ): Feature<UserReviewsFeature.State, UserReviewsFeature.Message, UserReviewsFeature.Action> =
+        ReduxFeature(UserReviewsFeature.State.Idle, userReviewsReducer)
+            .wrapWithActionDispatcher(userReviewsActionDispatcher)
 }

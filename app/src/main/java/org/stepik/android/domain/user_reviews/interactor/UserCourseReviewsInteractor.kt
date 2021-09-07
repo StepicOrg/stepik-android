@@ -1,6 +1,5 @@
 package org.stepik.android.domain.user_reviews.interactor
 
-import com.jakewharton.rxrelay2.ReplayRelay
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
@@ -34,11 +33,6 @@ constructor(
     private val profileRepository: ProfileRepository,
     private val progressRepository: ProgressRepository
 ) {
-
-    private val userCourseReviewItemBehaviorRelay: ReplayRelay<Result<UserCourseReviewsResult>> = ReplayRelay.createWithSize(2)
-
-    fun getUserCourseReviewItems(): Observable<Result<UserCourseReviewsResult>> =
-        userCourseReviewItemBehaviorRelay.share()
 
     fun fetchUserCourseReviewItems(primaryDataSourceType: DataSourceType): Single<UserCourseReviewsResult> =
         zip(
@@ -90,13 +84,6 @@ constructor(
                             )
                         }
                 }
-        }
-            .doOnError { userCourseReviewItemBehaviorRelay.accept(Result.failure(it)) }
-            .doOnSuccess { userCourseReviewItemBehaviorRelay.accept(Result.success(it)) }
-
-    fun publishChanges(userCourseReviewsResult: UserCourseReviewsResult): Completable =
-        Completable.fromCallable {
-            userCourseReviewItemBehaviorRelay.accept(Result.success(userCourseReviewsResult))
         }
 
     fun removeCourseReview(courseReview: CourseReview): Completable =
