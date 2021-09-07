@@ -5,10 +5,11 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewCreatedAnalyticEvent
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewUpdatedAnalyticEvent
 import org.stepik.android.domain.course_reviews.interactor.ComposeCourseReviewInteractor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation
@@ -40,36 +41,34 @@ constructor(
         view.setState(state)
     }
 
-    fun createCourseReview(courseReview: CourseReview) {
+    fun createCourseReview(courseReview: CourseReview, courseReviewViewSource: String) {
         val courseReviewSource = composeCourseReviewInteractor
             .createCourseReview(courseReview)
             .doOnSuccess {
-                analytic
-                    .reportAmplitudeEvent(
-                        AmplitudeAnalytic.CourseReview.REVIEW_CREATED,
-                        mapOf(
-                            AmplitudeAnalytic.CourseReview.Params.COURSE to it.course,
-                            AmplitudeAnalytic.CourseReview.Params.RATING to it.score
-                        )
+                analytic.report(
+                    CourseReviewCreatedAnalyticEvent(
+                        rating = it.score,
+                        courseId = it.course,
+                        source = courseReviewViewSource
                     )
+                )
                 userCourseReviewOperationSubject.onNext(UserCourseReviewOperation.CreateReviewOperation(it))
             }
         replaceCourseReview(courseReviewSource)
     }
 
-    fun updateCourseReview(oldCourseReview: CourseReview, newCourseReview: CourseReview) {
+    fun updateCourseReview(oldCourseReview: CourseReview, newCourseReview: CourseReview, courseReviewViewSource: String) {
         val courseReviewSource = composeCourseReviewInteractor
             .updateCourseReview(newCourseReview)
             .doOnSuccess {
-                analytic
-                    .reportAmplitudeEvent(
-                        AmplitudeAnalytic.CourseReview.REVIEW_UPDATED,
-                        mapOf(
-                            AmplitudeAnalytic.CourseReview.Params.COURSE to it.course,
-                            AmplitudeAnalytic.CourseReview.Params.FROM_RATING to oldCourseReview.score,
-                            AmplitudeAnalytic.CourseReview.Params.TO_RATING to it.score
-                        )
+                analytic.report(
+                    CourseReviewUpdatedAnalyticEvent(
+                        fromRating = oldCourseReview.score,
+                        toRating = it.score,
+                        courseId = it.course,
+                        source = courseReviewViewSource
                     )
+                )
                 userCourseReviewOperationSubject.onNext(UserCourseReviewOperation.EditReviewOperation(it))
             }
         replaceCourseReview(courseReviewSource)

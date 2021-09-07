@@ -5,9 +5,12 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewDeletedAnalyticEvent
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
 import org.stepik.android.domain.user_reviews.interactor.UserCourseReviewsInteractor
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation
@@ -22,6 +25,7 @@ import javax.inject.Inject
 class UserReviewsActionDispatcher
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val userCourseReviewsInteractor: UserCourseReviewsInteractor,
     @UserCourseReviewOperationBus
     private val userCourseReviewOperationObservable: Observable<UserCourseReviewOperation>,
@@ -68,7 +72,16 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onComplete = { onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviewsSuccess(action.courseReview)) },
+                        onComplete = {
+                            analytic.report(
+                                CourseReviewDeletedAnalyticEvent(
+                                    rating = action.courseReview.score,
+                                    courseId = action.courseReview.course,
+                                    source = CourseReviewViewSource.USER_REVIEWS_SOURCE
+                                )
+                            )
+                            onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviewsSuccess(action.courseReview))
+                        },
                         onError = { onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviewsError(action.courseReview)) }
                     )
             }

@@ -11,11 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_user_reviews.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
+import org.stepik.android.domain.course_reviews.analytic.CreateCourseReviewPressedAnalyticEvent
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
@@ -40,6 +43,9 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         fun newInstance(): Fragment =
             UserReviewsFragment()
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -69,6 +75,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
             onWriteReviewClicked = { courseId, courseRating ->
+                analytic.report(CreateCourseReviewPressedAnalyticEvent(courseId, CourseReviewViewSource.USER_REVIEWS_SOURCE))
                 showCourseReviewEditDialog(courseId, courseReview = null, courseRating = courseRating)
             }
         )
@@ -77,7 +84,9 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
-            onEditReviewClicked = { courseReview -> showCourseReviewEditDialog(courseReview.course, courseReview, -1f) },
+            onEditReviewClicked = { courseReview ->
+                showCourseReviewEditDialog(courseReview.course, courseReview, -1f)
+            },
             onRemoveReviewClicked = { courseReview -> userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviews(courseReview)) }
         )
         with(userReviewsRecycler) {
@@ -147,7 +156,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
                 ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE
             }
 
-        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview, courseRating)
+        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, CourseReviewViewSource.USER_REVIEWS_SOURCE, courseReview, courseRating)
         dialog.setTargetFragment(this, requestCode)
         dialog.showIfNotExists(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }
