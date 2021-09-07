@@ -39,13 +39,10 @@ constructor(
             }
         }
 
-    fun getUserCoursesShared(): Single<List<UserCourse>> =
-        userCoursesRepository.getUserCoursesShared()
-
     fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<UserCourse>> =
         requireAuthorization then
             userCoursesRepository
-                .getUserCoursesShared(userCourseQuery, sourceType)
+                .getAllUserCourses(userCourseQuery, sourceType)
 
     fun getCourseListItems(courseId: List<Long>, sourceType: DataSourceType = DataSourceType.CACHE): Single<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
         courseListInteractor

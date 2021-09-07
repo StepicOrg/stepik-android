@@ -393,6 +393,9 @@
         <activity
             android:name="org.stepik.android.view.course_revenue.ui.activity.CourseRevenueActivity" />
 
+        <activity
+            android:name="org.stepik.android.view.user_reviews.ui.activity.UserReviewsActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

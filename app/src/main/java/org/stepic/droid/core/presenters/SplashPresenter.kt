@@ -181,7 +181,7 @@ constructor(
                     )
             }
             try {
-                Tasks.await(remoteConfigTask, 1L, TimeUnit.SECONDS)
+                Tasks.await(remoteConfigTask)
             } catch (exception: Exception) {
                 // no op
             }

@@ -165,4 +165,5 @@ public interface ScreenManager {
     void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, boolean openCoursePurchase);
     void showWishlist(Context context);
     void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle);
+    void showUserReviews(Context context);
 }

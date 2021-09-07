@@ -114,6 +114,7 @@ import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.injection.user_code_run.UserCodeRunComponent
 import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
+import org.stepik.android.view.injection.user_reviews.UserReviewsBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
@@ -179,7 +180,8 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
         CoursePaymentsDataModule::class,
         PurchaseNotificationDataModule::class,
         VisitedCoursesDataModule::class,
-        ProfileDataModule::class
+        ProfileDataModule::class,
+        UserReviewsBusModule::class
     ]
 )
 interface AppCoreComponent {
@@ -283,6 +285,7 @@ interface AppCoreComponent {
     fun courseBenefitsComponentBuilder(): CourseRevenueComponent.Builder
 
     fun debugComponentBuilder(): DebugComponent.Builder
+
 
     fun inject(someActivity: FragmentActivityBase)
 

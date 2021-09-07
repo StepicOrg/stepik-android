@@ -6,7 +6,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.analytic.AmplitudeAnalytic
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
@@ -14,12 +14,16 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewDeletedAnalyticEvent
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
 import org.stepik.android.domain.course_reviews.interactor.ComposeCourseReviewInteractor
 import org.stepik.android.domain.course_reviews.interactor.CourseReviewsInteractor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
+import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course_reviews.mapper.CourseReviewsStateMapper
+import org.stepik.android.view.injection.user_reviews.UserCourseReviewOperationBus
 import javax.inject.Inject
 
 class CourseReviewsPresenter
@@ -34,6 +38,8 @@ constructor(
     private val composeCourseReviewInteractor: ComposeCourseReviewInteractor,
     private val courseReviewsStateMapper: CourseReviewsStateMapper,
 
+    @UserCourseReviewOperationBus
+    private val userCourseReviewOperationSubject: PublishSubject<UserCourseReviewOperation>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -235,14 +241,14 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doOnSuccess {
-                analytic
-                    .reportAmplitudeEvent(
-                        AmplitudeAnalytic.CourseReview.REVIEW_REMOVED,
-                        mapOf(
-                            AmplitudeAnalytic.CourseReview.Params.COURSE to courseReview.course,
-                            AmplitudeAnalytic.CourseReview.Params.RATING to courseReview.score
-                        )
+                analytic.report(
+                    CourseReviewDeletedAnalyticEvent(
+                        rating = courseReview.score,
+                        courseId = courseReview.course,
+                        source = CourseReviewViewSource.COURSE_REVIEWS_SOURCE
                     )
+                )
+                userCourseReviewOperationSubject.onNext(UserCourseReviewOperation.RemoveReviewOperation(courseReview))
             }
             .subscribeBy(
                 onSuccess = { state = courseReviewsStateMapper.mergeStateWithCurrentUserReview(it, state) },

@@ -10,9 +10,15 @@ sealed class UserCourseReviewItem {
         override val id: Long =
             course.id
     }
+
     data class ReviewedHeader(val reviewedCount: Int) : UserCourseReviewItem()
-    data class ReviewedItem(val courseReview: CourseReview) : UserCourseReviewItem(), Identifiable<Long> {
+    data class ReviewedItem(val course: Course, val courseReview: CourseReview) : UserCourseReviewItem(), Identifiable<Long> {
         override val id: Long =
             courseReview.course
+    }
+
+    data class Placeholder(val courseId: Long = -1L, val course: Course? = null) : UserCourseReviewItem(), Identifiable<Long> {
+        override val id: Long =
+            courseId
     }
 }
