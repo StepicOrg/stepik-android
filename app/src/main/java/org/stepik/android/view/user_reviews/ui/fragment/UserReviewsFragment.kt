@@ -14,6 +14,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
@@ -109,7 +110,12 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
     }
 
     override fun onAction(action: UserReviewsFeature.Action.ViewAction) {
-        // no op
+        when (action) {
+            is UserReviewsFeature.Action.ViewAction.ShowDeleteSuccessSnackbar ->
+                view?.snackbar(R.string.user_review_delete_success)
+            is UserReviewsFeature.Action.ViewAction.ShowDeleteFailureSnackbar ->
+                view?.snackbar(R.string.user_review_delete_failure)
+        }
     }
 
     override fun render(state: UserReviewsFeature.State) {

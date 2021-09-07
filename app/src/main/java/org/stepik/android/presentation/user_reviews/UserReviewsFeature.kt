@@ -46,6 +46,9 @@ interface UserReviewsFeature {
         object FetchUserReviews : Action()
         data class DeleteReview(val courseReview: CourseReview) : Action()
         data class FetchEnrolledCourseInfo(val course: Course) : Action()
-        sealed class ViewAction : Action()
+        sealed class ViewAction : Action() {
+            object ShowDeleteSuccessSnackbar : ViewAction()
+            object ShowDeleteFailureSnackbar : ViewAction()
+        }
     }
 }

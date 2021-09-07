@@ -87,7 +87,7 @@ constructor(
             is Message.DeletedReviewUserReviewsSuccess -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithDeletedReviewToSuccess(state, message.courseReview)?.let { newState ->
-                        newState to emptySet()
+                        newState to setOf(Action.ViewAction.ShowDeleteSuccessSnackbar)
                     }
                 } else {
                     null
@@ -97,7 +97,7 @@ constructor(
             is Message.DeletedReviewUserReviewsError -> {
                 if (state is State.Content) {
                     val newState = userReviewsStateMapper.mergeStateWithDeletedReviewToError(state)
-                    newState to emptySet()
+                    newState to setOf(Action.ViewAction.ShowDeleteFailureSnackbar)
                 } else {
                     null
                 }

@@ -1239,4 +1239,6 @@
     <string name="user_review_potential_learning_action_count" translatable="false">(+%d)</string>
     <string name="user_review_write_action">Write review</string>
     <string name="user_review_potential_review_header">%s to review</string>
+    <string name="user_review_delete_success">Review deleted successfully</string>
+    <string name="user_review_delete_failure">An error occurred when deleting the review</string>
 </resources>
