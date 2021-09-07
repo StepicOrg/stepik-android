@@ -6,12 +6,14 @@ import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.user_reviews.LearningActionsScope
 import org.stepik.android.view.injection.user_reviews.UserReviewsPresentationModule
 import org.stepik.android.view.injection.wishlist.WishlistDataModule
+import org.stepik.android.view.injection.wishlist.WishlistPresentationModule
 import org.stepik.android.view.learning_actions.ui.fragment.LearningActionsFragment
 import org.stepik.android.view.user_reviews.ui.fragment.UserReviewsFragment
 
 @LearningActionsScope
 @Subcomponent(modules = [
     UserReviewsPresentationModule::class,
+    WishlistPresentationModule::class,
     WishlistDataModule::class,
     UserCoursesDataModule::class,
     CourseReviewsDataModule::class
