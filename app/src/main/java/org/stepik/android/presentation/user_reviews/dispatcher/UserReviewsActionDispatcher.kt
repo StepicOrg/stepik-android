@@ -13,7 +13,6 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_reviews.analytic.CourseReviewDeletedAnalyticEvent
 import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
 import org.stepik.android.domain.course_reviews.analytic.UserCourseReviewsScreenOpenedAnalyticEvent
-import org.stepik.android.domain.profile.interactor.ProfileInteractor
 import org.stepik.android.domain.user_reviews.interactor.UserCourseReviewsInteractor
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation

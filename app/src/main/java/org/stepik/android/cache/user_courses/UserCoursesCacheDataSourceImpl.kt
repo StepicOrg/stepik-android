@@ -8,7 +8,6 @@ import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import ru.nobird.android.core.model.mapOfNotNull
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserCoursesCacheDataSourceImpl
@@ -22,9 +21,7 @@ constructor(
     }
     override fun getUserCourses(userCourseQuery: UserCourseQuery): Single<List<UserCourse>> =
         Single.fromCallable {
-            val userCourses = userCourseDao.getAllUserCourses(mapToDbQuery(userCourseQuery))
-            Timber.d("APPS-3352 User courses: $userCourses")
-            userCourses
+            userCourseDao.getAllUserCourses(mapToDbQuery(userCourseQuery))
         }
 
     override fun saveUserCourses(userCourses: List<UserCourse>): Completable =
