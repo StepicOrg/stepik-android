@@ -156,7 +156,6 @@ constructor() {
             )
         )
 
-    // TODO APPS-3352 Return to this before merge
     fun mergeStateWithDroppedCourse(state: UserReviewsFeature.State.Content, droppedCourseId: Long): UserReviewsFeature.State.Content {
         val (updatedPotentialItems, updatedReviewedItems) = with(state.userCourseReviewsResult) {
             potentialReviewItems.filterNot { it.id == droppedCourseId } to reviewedReviewItems.filterNot { it.id == droppedCourseId }

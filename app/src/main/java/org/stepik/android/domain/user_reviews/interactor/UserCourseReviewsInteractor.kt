@@ -144,9 +144,10 @@ constructor(
 
     private fun getAllCourseReviews(userId: Long, primaryDataSourceType: DataSourceType): Single<List<CourseReview>> =
         Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle {
+            .concatMapSingle { page ->
                 courseReviewsRepository.getCourseReviewsByUserId(
                     userId,
+                    page,
                     sourceType = primaryDataSourceType
                 )
             }
