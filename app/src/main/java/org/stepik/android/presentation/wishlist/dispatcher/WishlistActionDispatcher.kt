@@ -39,8 +39,8 @@ constructor(
         when (action) {
             is WishlistFeature.Action.FetchWishList -> {
                 compositeDisposable += wishlistInteractor.getWishlistSyncedWithUserCourses(dataSourceType = DataSourceType.REMOTE)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { onNewMessage(WishlistFeature.Message.FetchWishlistSuccess(it)) },
                         onError = { onNewMessage(WishlistFeature.Message.FetchWishListError) }

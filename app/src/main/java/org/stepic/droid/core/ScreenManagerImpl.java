@@ -89,6 +89,7 @@ import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.settings.ui.activity.SettingsActivity;
 import org.stepik.android.view.solutions.ui.activity.SolutionsActivity;
+import org.stepik.android.view.user_reviews.ui.activity.UserReviewsActivity;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
@@ -728,5 +729,10 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle) {
         context.startActivity(CourseRevenueActivity.Companion.createIntent(context, courseId, courseTitle));
+    }
+
+    @Override
+    public void showUserReviews(Context context) {
+        context.startActivity(UserReviewsActivity.Companion.createIntent(context));
     }
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/userReviewIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="16dp"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userReviewCourseTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textAppearance="?textAppearanceSubtitle1"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/userReviewIcon"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:text="Konstatin Konstatinopolis Konstatinopolis Konstatinopolis" />
+
+    <!-- TODO APPS-3352 - default AppCompatRatingBar, probably worth replacing? -->
+    <androidx.appcompat.widget.AppCompatRatingBar
+        android:id="@+id/userReviewRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:minHeight="36dp"
+        android:maxHeight="36dp"
+        app:layout_constraintStart_toEndOf="@id/userReviewIcon"
+        app:layout_constraintTop_toBottomOf="@id/userReviewCourseTitle"
+
+        android:progressDrawable="@drawable/course_review_rating_progress"
+        android:numStars="5"
+        android:rating="0"
+        android:stepSize="1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userReviewWriteAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="4dp"
+        android:textAppearance="?textAppearanceBody1"
+        android:background="@drawable/bg_rounded_selectable_item"
+        android:theme="@style/ThemeOverlay.Green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/userReviewCourseTitle"
+        app:layout_constraintTop_toBottomOf="@id/userReviewRating"
+        android:text="@string/user_review_write_action" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

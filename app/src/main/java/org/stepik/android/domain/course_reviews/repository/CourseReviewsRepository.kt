@@ -15,6 +15,8 @@ interface CourseReviewsRepository {
 
     fun getCourseReviewByCourseIdAndUserId(courseId: Long, userId: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Maybe<CourseReview>
 
+    fun getCourseReviewsByUserId(userId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseReview>>
+
     fun createCourseReview(courseReview: CourseReview): Single<CourseReview>
 
     fun saveCourseReview(courseReview: CourseReview): Single<CourseReview>

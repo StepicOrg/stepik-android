@@ -184,4 +184,18 @@
         <item quantity="many">%d авторов</item>
         <item quantity="other">%d авторов</item>
     </plurals>
+
+    <plurals name="learning_action_review">
+        <item quantity="one">%d отзыв</item>
+        <item quantity="few">%d отзыва</item>
+        <item quantity="many">%d отзывов</item>
+        <item quantity="other">%d отзывов</item>
+    </plurals>
+
+    <plurals name="potential_review">
+        <item quantity="one">%d новый курс</item>
+        <item quantity="few">%d новых курса</item>
+        <item quantity="many">%d новых курсов</item>
+        <item quantity="other">%d новых курсов</item>
+    </plurals>
 </resources>

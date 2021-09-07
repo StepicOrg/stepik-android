@@ -1025,4 +1025,13 @@
     <string name="course_benefit_by_month_channel_stepik">Пераходы праз Stepik</string>
     <string name="course_benefit_by_month_channel_z_link">Пераходы па z-спасылцы</string>
     <string name="course_benefit_by_month_channel_invoice">Аплата па ліку</string>
+
+    <!-- User course reviews -->
+    <string name="user_review_title">Мае водгукі</string>
+    <string name="user_review_learning_action_empty">Няма водгукаў</string>
+    <string name="user_review_potential_learning_action_count" translatable="false">(+%d)</string>
+    <string name="user_review_write_action">Напісаць водгук</string>
+    <string name="user_review_potential_review_header">%s для адклікання</string>
+    <string name="user_review_delete_success">Водгук выдалены паспяхова</string>
+    <string name="user_review_delete_failure">Паўстала памылка пры выдаленні адклікання</string>
 </resources>

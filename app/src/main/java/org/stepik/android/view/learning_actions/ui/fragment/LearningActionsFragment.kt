@@ -11,21 +11,26 @@ import kotlinx.android.synthetic.main.fragment_learning_actions.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepik.android.presentation.learning_actions.LearningActionsFeature
-import org.stepik.android.presentation.learning_actions.LearningActionsViewModel
+import org.stepik.android.presentation.user_reviews.UserReviewsFeature
+import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
 import org.stepik.android.presentation.wishlist.WishlistFeature
+import org.stepik.android.presentation.wishlist.WishlistViewModel
+import org.stepik.android.view.injection.learning_actions.LearningActionsComponent
 import org.stepik.android.view.learning_actions.model.LearningActionsItem
+import org.stepik.android.view.learning_actions.ui.adapter.delegate.UserReviewsActionAdapterDelegate
 import org.stepik.android.view.learning_actions.ui.adapter.delegate.WishlistActionAdapterDelegate
+import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class LearningActionsFragment :
-    Fragment(),
-    ReduxView<LearningActionsFeature.State, LearningActionsFeature.Action.ViewAction> {
+class LearningActionsFragment : Fragment() {
 
     companion object {
+        private const val INDEX_USER_REVIEWS = 0
+        private const val INDEX_WISHLIST = 1
+
         const val TAG = "LearningActionsFragment"
 
         fun newInstance(): Fragment =
@@ -38,21 +43,54 @@ class LearningActionsFragment :
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val learningActionsViewModel: LearningActionsViewModel by reduxViewModel(this) { viewModelFactory }
+    private lateinit var learningActionsComponent: LearningActionsComponent
 
-    private val learningActionsItemAdapter: DefaultDelegateAdapter<LearningActionsItem> = DefaultDelegateAdapter()
+    private val userReviewsReduxView = object : ReduxView<UserReviewsFeature.State, UserReviewsFeature.Action.ViewAction> {
+        override fun onAction(action: UserReviewsFeature.Action.ViewAction) {
+            // no op
+        }
+
+        override fun render(state: UserReviewsFeature.State) {
+            learningActionsItemAdapter.items = learningActionsItemAdapter.items.mutate {
+                set(INDEX_USER_REVIEWS, LearningActionsItem.UserReviews(state))
+            }
+        }
+    }
+
+    private val wishlistReduxView = object : ReduxView<WishlistFeature.State, WishlistFeature.Action.ViewAction> {
+        override fun onAction(action: WishlistFeature.Action.ViewAction) {
+            // no op
+        }
+
+        override fun render(state: WishlistFeature.State) {
+            learningActionsItemAdapter.items = learningActionsItemAdapter.items.mutate {
+                set(INDEX_WISHLIST, LearningActionsItem.Wishlist(state))
+            }
+        }
+    }
+
+    private val userReviewsViewModel: UserReviewsViewModel by reduxViewModel(userReviewsReduxView) { viewModelFactory }
+    private val wishlistViewModel: WishlistViewModel by reduxViewModel(wishlistReduxView) { viewModelFactory }
+
+    private val learningActionsItemAdapter: DefaultDelegateAdapter<LearningActionsItem> = DefaultDelegateAdapter<LearningActionsItem> ().also {
+        it.items = listOf(
+            LearningActionsItem.UserReviews(UserReviewsFeature.State.Idle),
+            LearningActionsItem.Wishlist(WishlistFeature.State.Idle)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-        learningActionsViewModel.onNewMessage(LearningActionsFeature.Message.WishlistMessage(WishlistFeature.Message.InitMessage(forceUpdate = false)))
+        userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false))
+        wishlistViewModel.onNewMessage(WishlistFeature.Message.InitMessage(forceUpdate = false))
     }
 
     private fun injectComponent() {
-        App.component()
-            .learningActionsComponentBuilder()
-            .build()
-            .inject(this)
+        learningActionsComponent = App
+            .componentManager()
+            .learningActionsComponent()
+        learningActionsComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -61,21 +99,13 @@ class LearningActionsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         learningActionsItemAdapter += WishlistActionAdapterDelegate { screenManager.showWishlist(requireContext()) }
+        learningActionsItemAdapter += UserReviewsActionAdapterDelegate { screenManager.showUserReviews(requireContext()) }
         with(learningActionsRecycler) {
             adapter = learningActionsItemAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = null
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
         }
-    }
-
-    override fun onAction(action: LearningActionsFeature.Action.ViewAction) {
-        // no op
-    }
-
-    override fun render(state: LearningActionsFeature.State) {
-        learningActionsItemAdapter.items =
-            listOf(LearningActionsItem.Wishlist(state.wishlistState))
     }
 }

@@ -126,4 +126,12 @@
         <item quantity="one">%d author</item>
         <item quantity="other">%d authors</item>
     </plurals>
+    <plurals name="learning_action_review">
+        <item quantity="one">%d review</item>
+        <item quantity="other">%d reviews</item>
+    </plurals>
+    <plurals name="potential_review">
+        <item quantity="one">%d new course</item>
+        <item quantity="other">%d new courses</item>
+    </plurals>
 </resources>
