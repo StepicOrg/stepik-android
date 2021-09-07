@@ -5,12 +5,15 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_reviews.analytic.CourseReviewDeletedAnalyticEvent
 import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
+import org.stepik.android.domain.course_reviews.analytic.UserCourseReviewsScreenOpenedAnalyticEvent
+import org.stepik.android.domain.profile.interactor.ProfileInteractor
 import org.stepik.android.domain.user_reviews.interactor.UserCourseReviewsInteractor
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewOperation
@@ -26,6 +29,7 @@ class UserReviewsActionDispatcher
 @Inject
 constructor(
     private val analytic: Analytic,
+    private val profileInteractor: ProfileInteractor,
     private val userCourseReviewsInteractor: UserCourseReviewsInteractor,
     @UserCourseReviewOperationBus
     private val userCourseReviewOperationObservable: Observable<UserCourseReviewOperation>,
@@ -63,6 +67,24 @@ constructor(
                             onNewMessage(message)
                         },
                         onError = { onNewMessage(UserReviewsFeature.Message.FetchUserReviewsError) }
+                    )
+            }
+
+            is UserReviewsFeature.Action.LogScreenOpenedEvent -> {
+                compositeDisposable += userCourseReviewsInteractor
+                    .getAnalyticProfileData()
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = {
+                            val state = if (it.isCurrentUser) {
+                                AmplitudeAnalytic.Profile.Values.SELF
+                            } else {
+                                AmplitudeAnalytic.Profile.Values.OTHER
+                            }
+                            analytic.report(UserCourseReviewsScreenOpenedAnalyticEvent(state, it.user.id))
+                        },
+                        onError = emptyOnErrorStub
                     )
             }
 

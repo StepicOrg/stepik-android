@@ -5,6 +5,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -12,9 +13,11 @@ import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.repository.CourseReviewsRepository
+import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
+import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewsResult
@@ -27,6 +30,8 @@ import javax.inject.Inject
 class UserCourseReviewsInteractor
 @Inject
 constructor(
+    private val userPreferences: UserPreferences,
+    private val userRepository: UserRepository,
     private val courseRepository: CourseRepository,
     private val courseReviewsRepository: CourseReviewsRepository,
     private val courseListUserInteractor: CourseListUserInteractor,
@@ -113,6 +118,12 @@ constructor(
                     Maybe.empty()
             }
         }
+
+    fun getAnalyticProfileData(): Single<ProfileData> =
+        Single
+            .fromCallable { userPreferences.userId }
+            .flatMap { user ->  userRepository.getUser(user, primarySourceType = DataSourceType.CACHE).toSingle() }
+            .map { user -> ProfileData(user, user.id == userPreferences.userId) }
 
     private fun fetchReviewEnrolled(course: Course): Single<List<CourseReview>> =
         profileRepository

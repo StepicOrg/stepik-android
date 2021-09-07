@@ -19,6 +19,7 @@ interface UserReviewsFeature {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchUserReviewsSuccess(val userCourseReviewsResult: UserCourseReviewsResult) : Message()
         object FetchUserReviewsError : Message()
+        object ScreenOpenedMessage : Message()
 
         /***
          * Handling operations from course screen
@@ -44,6 +45,7 @@ interface UserReviewsFeature {
 
     sealed class Action {
         object FetchUserReviews : Action()
+        object LogScreenOpenedEvent : Action()
         data class DeleteReview(val courseReview: CourseReview) : Action()
         data class FetchEnrolledCourseInfo(val course: Course) : Action()
         sealed class ViewAction : Action() {

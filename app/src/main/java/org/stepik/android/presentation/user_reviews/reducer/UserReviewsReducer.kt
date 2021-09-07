@@ -44,6 +44,10 @@ constructor(
                 }
             }
 
+            is Message.ScreenOpenedMessage -> {
+                state to setOf(Action.LogScreenOpenedEvent)
+            }
+
             is Message.NewReviewSubmission -> {
                 if (state is State.Content) {
                     userReviewsStateMapper.mergeStateWithNewReview(state, message.courseReview)?.let { newState ->

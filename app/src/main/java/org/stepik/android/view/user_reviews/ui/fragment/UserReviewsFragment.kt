@@ -99,6 +99,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             ))
         }
         userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false))
+        userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.ScreenOpenedMessage)
         tryAgain.setOnClickListener {
             userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = true))
         }
