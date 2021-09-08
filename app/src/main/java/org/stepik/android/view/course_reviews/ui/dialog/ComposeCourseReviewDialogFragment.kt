@@ -113,6 +113,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         }
         invalidateMenuState()
         courseReviewEditText.doAfterTextChanged { invalidateMenuState() }
+        courseReviewRating.setOnRatingBarChangeListener { _, _, _ -> invalidateMenuState() }
     }
 
     override fun onStart() {
