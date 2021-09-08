@@ -36,13 +36,10 @@ class UserReviewsPotentialAdapterDelegate(
             }
         }
 
-//        private val reviewIconWrapper = userReviewIcon.wrapWithGlide()
-
         override fun onBind(data: UserCourseReviewItem) {
             data as UserCourseReviewItem.PotentialReviewItem
             userReviewCourseTitle.text = data.course.title
 
-            // TODO Decide what to do with reviewIconWrapper
             Glide
                 .with(context)
                 .asBitmap()
@@ -51,7 +48,6 @@ class UserReviewsPotentialAdapterDelegate(
                 .fitCenter()
                 .into(userReviewIcon)
 
-//            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.ic_skip_previous_48dp))
             userReviewRating.max = 5
         }
     }
