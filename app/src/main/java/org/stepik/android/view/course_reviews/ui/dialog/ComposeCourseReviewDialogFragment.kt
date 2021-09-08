@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -110,6 +111,8 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
                 courseReviewRating.rating = it.score.toFloat()
             }
         }
+        invalidateMenuState()
+        courseReviewEditText.doAfterTextChanged { invalidateMenuState() }
     }
 
     override fun onStart() {
@@ -151,6 +154,11 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
                 )
             composeCourseReviewPresenter.updateCourseReview(oldCourseReview, courseReview, courseReviewViewSource)
         }
+    }
+
+    private fun invalidateMenuState() {
+        centeredToolbar.menu.findItem(R.id.course_review_submit)?.isEnabled =
+            !courseReviewEditText.text.isNullOrEmpty() && courseReviewRating.rating > 0
     }
 
     override fun setState(state: ComposeCourseReviewView.State) {
