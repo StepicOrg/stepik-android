@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course.interactor
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -34,7 +35,8 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val wishlistRepository: WishlistRepository,
-    private val sharedPreferenceHelper: SharedPreferenceHelper
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val deeplinkPromoCodeRxRelay: BehaviorRelay<DeeplinkPromoCode>
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -64,8 +66,11 @@ constructor(
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(DeeplinkPromoCode.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
             (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
-//            if (sharedPreferenceHelper.authResponseFromStore != null) wishlistRepository.getWishlistRecord(DataSourceType.CACHE) else Single.just(WishlistEntity.EMPTY)
         ) { courseStats, localSubmissions, promoCode, wishlistEntity ->
+
+            // Publish deep link promo code
+            deeplinkPromoCodeRxRelay.accept(promoCode)
+
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
