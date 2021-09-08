@@ -40,7 +40,7 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
@@ -207,8 +207,8 @@ constructor(
             }
 
             val (currencyCode, promoPrice, hasPromo) = when {
-                courseHeaderData.promoCode != PromoCode.EMPTY ->
-                    Triple(courseHeaderData.promoCode.currencyCode, courseHeaderData.promoCode.price, true)
+                courseHeaderData.deeplinkPromoCode != DeeplinkPromoCode.EMPTY ->
+                    Triple(courseHeaderData.deeplinkPromoCode.currencyCode, courseHeaderData.deeplinkPromoCode.price, true)
 
                 courseHeaderData.defaultPromoCode != DefaultPromoCode.EMPTY &&
                         (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate == null || courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) &&

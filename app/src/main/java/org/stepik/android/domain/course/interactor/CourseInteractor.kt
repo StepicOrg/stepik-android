@@ -12,7 +12,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.wishlist.model.WishlistEntity
@@ -62,7 +62,7 @@ constructor(
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo),
+            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
             (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
 //            if (sharedPreferenceHelper.authResponseFromStore != null) wishlistRepository.getWishlistRecord(DataSourceType.CACHE) else Single.just(WishlistEntity.EMPTY)
         ) { courseStats, localSubmissions, promoCode, wishlistEntity ->
@@ -74,7 +74,7 @@ constructor(
 
                 stats = courseStats.first(),
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
-                promoCode = promoCode,
+                deeplinkPromoCode = promoCode,
                 defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course),
                 isWishlistUpdating = false,
                 wishlistEntity = wishlistEntity
