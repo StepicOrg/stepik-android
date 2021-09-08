@@ -15,6 +15,10 @@ class UserReviewsPotentialAdapterDelegate(
     private val onCourseTitleClicked: (Course) -> Unit,
     private val onWriteReviewClicked: (Long, Float) -> Unit
 ) : AdapterDelegate<UserCourseReviewItem, DelegateViewHolder<UserCourseReviewItem>>() {
+    companion object {
+        private const val RATING_RESET_DELAY_MS = 750L
+    }
+
     override fun isForViewType(position: Int, data: UserCourseReviewItem): Boolean =
         data is UserCourseReviewItem.PotentialReviewItem
 
@@ -26,9 +30,14 @@ class UserReviewsPotentialAdapterDelegate(
         init {
             userReviewIcon.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
             userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.PotentialReviewItem)?.course?.let(onCourseTitleClicked) }
-            userReviewRating.setOnRatingBarChangeListener { _, rating, _ ->
+            userReviewRating.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
                 val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnRatingBarChangeListener
-                onWriteReviewClicked(potentialReview.course.id, rating)
+                if (fromUser) {
+                    onWriteReviewClicked(potentialReview.course.id, rating)
+
+                    // TODO .postDelayed is not safe, it would be a good idea to replace this
+                    ratingBar.postDelayed({ ratingBar.rating = 0f }, RATING_RESET_DELAY_MS)
+                }
             }
             userReviewWriteAction.setOnClickListener {
                 val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnClickListener
