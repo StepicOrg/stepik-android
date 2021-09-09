@@ -19,6 +19,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
 import org.stepik.android.domain.course_reviews.analytic.CreateCourseReviewPressedAnalyticEvent
+import org.stepik.android.domain.course_reviews.analytic.EditCourseReviewPressedAnalyticEvent
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
@@ -74,8 +75,8 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
-            onWriteReviewClicked = { courseId, courseRating ->
-                analytic.report(CreateCourseReviewPressedAnalyticEvent(courseId, CourseReviewViewSource.USER_REVIEWS_SOURCE))
+            onWriteReviewClicked = { courseId, courseTitle, courseRating ->
+                analytic.report(CreateCourseReviewPressedAnalyticEvent(courseId, courseTitle, CourseReviewViewSource.USER_REVIEWS_SOURCE))
                 showCourseReviewEditDialog(courseId, courseReview = null, courseRating = courseRating)
             }
         )
@@ -84,7 +85,8 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             onCourseTitleClicked = { course ->
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
-            onEditReviewClicked = { courseReview ->
+            onEditReviewClicked = { courseReview, course ->
+                analytic.report(EditCourseReviewPressedAnalyticEvent(course.id, course.title.toString(), CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
                 showCourseReviewEditDialog(courseReview.course, courseReview, -1f)
             },
             onRemoveReviewClicked = { courseReview -> userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviews(courseReview)) }

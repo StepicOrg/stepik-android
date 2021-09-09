@@ -24,7 +24,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class UserReviewsReviewedAdapterDelegate(
     private val onCourseTitleClicked: (Course) -> Unit,
-    private val onEditReviewClicked: (CourseReview) -> Unit,
+    private val onEditReviewClicked: (CourseReview, Course) -> Unit,
     private val onRemoveReviewClicked: (CourseReview) -> Unit
 ) : AdapterDelegate<UserCourseReviewItem, DelegateViewHolder<UserCourseReviewItem>>() {
     override fun isForViewType(position: Int, data: UserCourseReviewItem): Boolean =
@@ -63,6 +63,10 @@ class UserReviewsReviewedAdapterDelegate(
                 ?.courseReview
                 ?: return
 
+            val course = (itemData as? UserCourseReviewItem.ReviewedItem)
+                ?.course
+                ?: return
+
             val popupMenu = PopupMenu(context, view)
             popupMenu.inflate(R.menu.course_review_menu)
 
@@ -79,7 +83,7 @@ class UserReviewsReviewedAdapterDelegate(
                 .setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.course_review_menu_edit ->
-                            onEditReviewClicked(courseReview)
+                            onEditReviewClicked(courseReview, course)
 
                         R.id.course_review_menu_remove ->
                             onRemoveReviewClicked(courseReview)

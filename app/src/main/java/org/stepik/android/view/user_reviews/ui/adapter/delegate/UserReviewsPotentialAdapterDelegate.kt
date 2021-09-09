@@ -13,7 +13,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class UserReviewsPotentialAdapterDelegate(
     private val onCourseTitleClicked: (Course) -> Unit,
-    private val onWriteReviewClicked: (Long, Float) -> Unit
+    private val onWriteReviewClicked: (Long, String, Float) -> Unit
 ) : AdapterDelegate<UserCourseReviewItem, DelegateViewHolder<UserCourseReviewItem>>() {
     companion object {
         private const val RATING_RESET_DELAY_MS = 750L
@@ -33,7 +33,7 @@ class UserReviewsPotentialAdapterDelegate(
             userReviewRating.setOnRatingBarChangeListener { ratingBar, rating, fromUser ->
                 val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnRatingBarChangeListener
                 if (fromUser) {
-                    onWriteReviewClicked(potentialReview.course.id, rating)
+                    onWriteReviewClicked(potentialReview.course.id, potentialReview.course.title.toString(), rating)
 
                     // TODO .postDelayed is not safe, it would be a good idea to replace this
                     ratingBar.postDelayed({ ratingBar.rating = 0f }, RATING_RESET_DELAY_MS)
@@ -41,7 +41,7 @@ class UserReviewsPotentialAdapterDelegate(
             }
             userReviewWriteAction.setOnClickListener {
                 val potentialReview = (itemData as? UserCourseReviewItem.PotentialReviewItem) ?: return@setOnClickListener
-                onWriteReviewClicked(potentialReview.course.id, -1f)
+                onWriteReviewClicked(potentialReview.course.id, potentialReview.course.title.toString(), -1f)
             }
         }
 
