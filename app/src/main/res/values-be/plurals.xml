@@ -171,4 +171,16 @@
         <item quantity="many">%d аўтараў</item>
         <item quantity="other">%d аўтараў</item>
     </plurals>
+    <plurals name="learning_action_review">
+        <item quantity="one">%d водгук</item>
+        <item quantity="few">%d водгукі</item>
+        <item quantity="many">%d водгукаў</item>
+        <item quantity="other">%d водгукаў</item>
+    </plurals>
+    <plurals name="potential_review">
+        <item quantity="one">%d новы курс</item>
+        <item quantity="few">%d новых курса</item>
+        <item quantity="many">%d новых курсаў</item>
+        <item quantity="other">%d новых курсаў</item>
+    </plurals>
 </resources>

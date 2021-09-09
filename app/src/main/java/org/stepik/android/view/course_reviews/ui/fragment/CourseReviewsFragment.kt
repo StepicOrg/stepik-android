@@ -22,6 +22,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.course_reviews.analytic.CourseReviewViewSource
+import org.stepik.android.domain.course_reviews.analytic.CreateCourseReviewPressedAnalyticEvent
+import org.stepik.android.domain.course_reviews.analytic.EditCourseReviewPressedAnalyticEvent
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
@@ -39,9 +42,10 @@ import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {
     companion object {
-        fun newInstance(courseId: Long): Fragment =
+        fun newInstance(courseId: Long, courseTitle: String): Fragment =
             CourseReviewsFragment().apply {
                 this.courseId = courseId
+                this.courseTitle = courseTitle
             }
     }
 
@@ -55,6 +59,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     internal lateinit var analytic: Analytic
 
     private var courseId: Long by argument()
+    private var courseTitle: String by argument()
 
     private lateinit var courseReviewsAdapter: DefaultDelegateAdapter<CourseReviewItem>
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
@@ -69,13 +74,19 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         courseReviewsAdapter +=
             CourseReviewDataDelegate(
                 onUserClicked = { screenManager.openProfile(requireContext(), it.id) },
-                onEditReviewClicked = ::showCourseReviewEditDialog,
+                onEditReviewClicked = {
+                    analytic.report(EditCourseReviewPressedAnalyticEvent(courseId, courseTitle, CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
+                    showCourseReviewEditDialog(it)
+                },
                 onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
             )
         courseReviewsAdapter += CourseReviewPlaceholderDelegate()
         courseReviewsAdapter += CourseReviewSummaryDelegate()
         courseReviewsAdapter +=
-            CourseReviewsComposeBannerDelegate { showCourseReviewEditDialog(null) }
+            CourseReviewsComposeBannerDelegate {
+                analytic.report(CreateCourseReviewPressedAnalyticEvent(courseId, courseTitle, CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
+                showCourseReviewEditDialog(null)
+            }
     }
 
     private fun injectComponent(courseId: Long) {
@@ -176,7 +187,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                 ComposeCourseReviewDialogFragment.EDIT_REVIEW_REQUEST_CODE
             }
 
-        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
+        val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, CourseReviewViewSource.COURSE_REVIEWS_SOURCE, courseReview)
         dialog.setTargetFragment(this, requestCode)
         dialog.showIfNotExists(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }

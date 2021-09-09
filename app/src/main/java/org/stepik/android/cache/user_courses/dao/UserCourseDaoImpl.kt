@@ -51,9 +51,13 @@ constructor(
         )
 
     override fun getAllUserCourses(whereArgs: Map<String, String>): List<UserCourse> {
-        val query = "SELECT * FROM $dbName WHERE "
-        val where = whereArgs.keys.joinToString(" = ? AND ", "", "", -1, "", null) + " = ?" +
-                "ORDER BY ${DbStructureUserCourse.Columns.LAST_VIEWED} DESC"
-        return getAllWithQuery(query + where, whereArgs.values.toTypedArray())
+        val (query, where) = if (whereArgs.isEmpty()) {
+            "SELECT * FROM $dbName " to ""
+        } else {
+            "SELECT * FROM $dbName WHERE " to whereArgs.keys.joinToString(" = ? AND ", "", "", -1, "", null) + " = ?"
+        }
+
+        val orderBy = "ORDER BY ${DbStructureUserCourse.Columns.LAST_VIEWED} DESC"
+        return getAllWithQuery(query + where + orderBy, whereArgs.values.toTypedArray())
     }
 }

@@ -9,6 +9,7 @@ import org.stepik.android.domain.course_reviews.model.CourseReview
 interface CourseReviewsCacheDataSource {
     fun getCourseReviewsByCourseId(courseId: Long): Single<PagedList<CourseReview>>
     fun getCourseReviewByCourseIdAndUserId(courseId: Long, userId: Long): Maybe<CourseReview>
+    fun getCourseReviewsByUserId(userId: Long): Single<PagedList<CourseReview>>
 
     fun saveCourseReview(courseReview: CourseReview): Completable =
         saveCourseReviews(listOf(courseReview))

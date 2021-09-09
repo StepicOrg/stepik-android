@@ -1232,4 +1232,13 @@
     <string name="debug_base_url_release" translatable="false">Release</string>
     <string name="debug_restarting_message" translatable="false">Restarting application</string>
     <string name="debug_apply_settings_action_title" translatable="false">Apply</string>
+
+    <!-- User course reviews -->
+    <string name="user_review_title">User reviews</string>
+    <string name="user_review_learning_action_empty">No reviews</string>
+    <string name="user_review_potential_learning_action_count" translatable="false">(+%d)</string>
+    <string name="user_review_write_action">Write review</string>
+    <string name="user_review_potential_review_header">%s to review</string>
+    <string name="user_review_delete_success">Review deleted successfully</string>
+    <string name="user_review_delete_failure">An error occurred when deleting the review</string>
 </resources>

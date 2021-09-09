@@ -1,10 +1,10 @@
 ext.versions = [
-        code                 : 2220,
-        name                 : '1.188',
+        code                 : 2221,
+        name                 : '1.189',
 
         minSdk               : 16,
-        targetSdk            : 29,
-        compileSdk           : 29,
+        targetSdk            : 30,
+        compileSdk           : 30,
         buildTools           : '29.0.2',
 
         androidGradlePlugin  : '4.1.0',

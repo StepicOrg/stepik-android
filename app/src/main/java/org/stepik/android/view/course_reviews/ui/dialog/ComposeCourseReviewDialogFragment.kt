@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -34,13 +35,15 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
         const val ARG_COURSE_REVIEW = "course_review"
 
-        fun newInstance(courseId: Long, courseReview: CourseReview?): DialogFragment =
+        fun newInstance(courseId: Long, courseReviewViewSource: String, courseReview: CourseReview?, courseRating: Float = -1f): DialogFragment =
             ComposeCourseReviewDialogFragment().apply {
                 this.arguments = Bundle(2)
                     .also {
                         it.putParcelable(ARG_COURSE_REVIEW, courseReview)
                     }
                 this.courseId = courseId
+                this.courseReviewViewSource = courseReviewViewSource
+                this.courseRating = courseRating
             }
     }
 
@@ -50,7 +53,9 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     private val composeCourseReviewPresenter: ComposeCourseReviewPresenter by viewModels { viewModelFactory }
 
     private var courseId: Long by argument()
+    private var courseReviewViewSource: String by argument()
     private val courseReview: CourseReview? by lazy { arguments?.getParcelable<CourseReview>(ARG_COURSE_REVIEW) }
+    private var courseRating: Float by argument()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -96,11 +101,19 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         }
 
         if (savedInstanceState == null) {
+            courseRating
+                .takeIf { it > -1 }
+                ?.let {
+                    courseReviewRating.rating = courseRating
+                }
             courseReview?.let {
                 courseReviewEditText.setText(it.text)
                 courseReviewRating.rating = it.score.toFloat()
             }
         }
+        invalidateMenuState()
+        courseReviewEditText.doAfterTextChanged { invalidateMenuState() }
+        courseReviewRating.setOnRatingBarChangeListener { _, _, _ -> invalidateMenuState() }
     }
 
     override fun onStart() {
@@ -133,15 +146,20 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
                 text = text,
                 score = score
             )
-            composeCourseReviewPresenter.createCourseReview(courseReview)
+            composeCourseReviewPresenter.createCourseReview(courseReview, courseReviewViewSource)
         } else {
             val courseReview = oldCourseReview
                 .copy(
                     text = text,
                     score = score
                 )
-            composeCourseReviewPresenter.updateCourseReview(oldCourseReview, courseReview)
+            composeCourseReviewPresenter.updateCourseReview(oldCourseReview, courseReview, courseReviewViewSource)
         }
+    }
+
+    private fun invalidateMenuState() {
+        centeredToolbar.menu.findItem(R.id.course_review_submit)?.isEnabled =
+            !courseReviewEditText.text.isNullOrEmpty() && courseReviewRating.rating > 0
     }
 
     override fun setState(state: ComposeCourseReviewView.State) {

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="94dp"
+
+    android:layout_margin="@dimen/course_item_margin"
+    android:padding="8dp"
+    app:cardCornerRadius="@dimen/course_item_radius"
+    app:cardElevation="4dp"
+    tools:layout_width="154dp"
+    tools:viewBindingIgnore="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="94dp"
+
+        android:padding="8dp"
+        tools:layout_width="154dp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/userReviewsActionIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_learning_action_user_reviews" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/userReviewsPotentialIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_profile_knowledge"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/userReviewsActionTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="6dp"
+            android:text="@string/user_review_title"
+            android:textAppearance="?textAppearanceSubtitle2"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userReviewsActionIcon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/userReviewsActionCourseCount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userReviewsActionTitle"
+            tools:text="8 курсов" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/userReviewsActionLoadingView"
+            android:layout_width="64dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

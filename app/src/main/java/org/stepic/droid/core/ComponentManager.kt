@@ -7,6 +7,7 @@ import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.learning_actions.LearningActionsComponent
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
 
@@ -46,4 +47,7 @@ interface ComponentManager {
 
     @MainThread
     fun stepComponent(stepId: Long): StepComponent
+
+    @MainThread
+    fun learningActionsComponent(): LearningActionsComponent
 }

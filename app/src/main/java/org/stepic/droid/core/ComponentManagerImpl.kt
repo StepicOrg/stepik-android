@@ -8,6 +8,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.learning_actions.LearningActionsComponent
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
 import timber.log.Timber
@@ -121,6 +122,15 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             mainScreenComponentProp = null
         }
     }
+
+    private val learningActionsComponent = WeakComponentHolder<LearningActionsComponent>()
+
+    override fun learningActionsComponent(): LearningActionsComponent =
+        learningActionsComponent.get {
+            appCoreComponent
+                .learningActionsComponentBuilder()
+                .build()
+        }
 }
 
 class ComponentHolder<T> {

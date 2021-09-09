@@ -17,9 +17,11 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
 import org.stepik.android.model.user.User
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import ru.nobird.android.view.base.ui.extension.argument
 import java.util.TimeZone
+import java.util.Currency
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -50,7 +52,7 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
     internal lateinit var screenManager: ScreenManager
 
     @Inject
-    internal lateinit var displayPriceMapper: DisplayPriceMapper
+    internal lateinit var revenuePriceMapper: RevenuePriceMapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +73,11 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val currency = Currency.getInstance(courseBenefit.currencyCode)
+        val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
+        decimalFormat.minimumFractionDigits = 2
+
         transactionTitle.text =
             if (courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 getString(R.string.transaction_title_purchase)
@@ -88,7 +95,7 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionBuyerValue.isVisible = user != null
         buyerOverlayView.setOnClickListener { user?.let { screenManager.openProfile(requireContext(), it.id) } }
 
-        transactionPaymentValue.text = displayPriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, courseBenefit.paymentAmount)
+        transactionPaymentValue.text = revenuePriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, decimalFormat.format(courseBenefit.paymentAmount.toDoubleOrNull() ?: 0.0))
 
         transactionPromoCodeValue.text = courseBenefit.promoCode.orEmpty()
         transactionPromoCodeTitle.isVisible = courseBenefit.promoCode != null
@@ -107,6 +114,10 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
             }
 
         transactionPercentageValue.text = getString(R.string.transaction_share_value, courseBeneficiary.percent.removeSuffix(PERCENTAGE_SUFFIX))
-        transactionIncomeValue.text = displayPriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, courseBenefit.amount)
+        transactionIncomeValue.text = revenuePriceMapper.mapToDisplayPrice(
+            courseBenefit.currencyCode,
+            decimalFormat.format(courseBenefit.amount.toDoubleOrNull() ?: 0.0),
+            debitPrefixRequired = courseBenefit.status == CourseBenefit.Status.DEBITED
+        )
     }
 }

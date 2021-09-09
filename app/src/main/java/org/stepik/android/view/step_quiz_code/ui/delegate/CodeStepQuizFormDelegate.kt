@@ -80,7 +80,10 @@ class CodeStepQuizFormDelegate(
                 ?: return@setOnClickListener
             onFullscreenClicked(oldState.lang, oldState.code)
         }
-        codeLayout.codeEditor.doAfterTextChanged { onQuizChanged(createReply()) }
+        codeLayout.codeEditor.doAfterTextChanged {
+            if (state is CodeStepQuizFormState.Idle) return@doAfterTextChanged
+            onQuizChanged(createReply())
+        }
     }
 
     override fun createReply(): ReplyResult {

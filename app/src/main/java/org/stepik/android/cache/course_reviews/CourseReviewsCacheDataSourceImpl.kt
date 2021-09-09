@@ -45,6 +45,21 @@ constructor(
                     ))
             }
 
+    override fun getCourseReviewsByUserId(userId: Long): Single<PagedList<CourseReview>> =
+        Single.fromCallable {
+            PagedList(
+                courseReviewsDao
+                    .getAllWithQuery(
+                        """
+                            SELECT * FROM ${DbStructureCourseReview.TABLE_NAME}
+                            WHERE ${DbStructureCourseReview.Columns.USER} = ?
+                            ORDER BY ${DbStructureCourseReview.Columns.ID} DESC
+                        """.trimIndent(),
+                        arrayOf(userId.toString())
+                    )
+            )
+        }
+
     override fun saveCourseReviews(courseReviews: List<CourseReview>): Completable =
         Completable.fromAction {
             courseReviewsDao.insertOrReplaceAll(courseReviews)
