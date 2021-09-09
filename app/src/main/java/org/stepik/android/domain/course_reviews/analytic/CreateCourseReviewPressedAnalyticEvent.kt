@@ -4,6 +4,7 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class CreateCourseReviewPressedAnalyticEvent(
     courseId: Long,
+    title: String,
     source: String
 ) : AnalyticEvent {
     companion object {
@@ -17,6 +18,7 @@ class CreateCourseReviewPressedAnalyticEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_COURSE to courseId,
+            PARAM_TITLE to title,
             PARAM_SOURCE to source
         )
 }
