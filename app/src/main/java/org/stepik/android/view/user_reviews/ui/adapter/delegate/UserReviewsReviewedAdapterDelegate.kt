@@ -19,13 +19,12 @@ import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.user_reviews.model.UserCourseReviewItem
 import org.stepik.android.model.Course
 import org.stepik.android.view.base.ui.mapper.DateMapper
-import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class UserReviewsReviewedAdapterDelegate(
     private val onCourseTitleClicked: (Course) -> Unit,
-    private val onEditReviewClicked: (CourseReview) -> Unit,
+    private val onEditReviewClicked: (CourseReview, Course) -> Unit,
     private val onRemoveReviewClicked: (CourseReview) -> Unit
 ) : AdapterDelegate<UserCourseReviewItem, DelegateViewHolder<UserCourseReviewItem>>() {
     override fun isForViewType(position: Int, data: UserCourseReviewItem): Boolean =
@@ -40,13 +39,12 @@ class UserReviewsReviewedAdapterDelegate(
             userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.ReviewedItem)?.course?.let(onCourseTitleClicked) }
             userReviewMenu.setOnClickListener(::showReviewMenu)
         }
-        private val reviewIconWrapper = userReviewIcon.wrapWithGlide()
 
         override fun onBind(data: UserCourseReviewItem) {
             data as UserCourseReviewItem.ReviewedItem
             userReviewCourseTitle.text = data.course.title
             userReviewText.text = data.courseReview.text
-            // TODO Decide what to do with reviewIconWrapper
+
             Glide
                 .with(context)
                 .asBitmap()
@@ -54,7 +52,7 @@ class UserReviewsReviewedAdapterDelegate(
                 .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
                 .into(userReviewIcon)
-//            reviewIconWrapper.setImagePath(data.course.cover ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
+
             userReviewTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.courseReview.updateDate?.time ?: 0)
             userReviewRating.progress = data.courseReview.score
             userReviewRating.total = 5
@@ -63,6 +61,10 @@ class UserReviewsReviewedAdapterDelegate(
         private fun showReviewMenu(view: View) {
             val courseReview = (itemData as? UserCourseReviewItem.ReviewedItem)
                 ?.courseReview
+                ?: return
+
+            val course = (itemData as? UserCourseReviewItem.ReviewedItem)
+                ?.course
                 ?: return
 
             val popupMenu = PopupMenu(context, view)
@@ -81,7 +83,7 @@ class UserReviewsReviewedAdapterDelegate(
                 .setOnMenuItemClickListener { menuItem ->
                     when (menuItem.itemId) {
                         R.id.course_review_menu_edit ->
-                            onEditReviewClicked(courseReview)
+                            onEditReviewClicked(courseReview, course)
 
                         R.id.course_review_menu_remove ->
                             onRemoveReviewClicked(courseReview)

@@ -42,9 +42,10 @@ import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {
     companion object {
-        fun newInstance(courseId: Long): Fragment =
+        fun newInstance(courseId: Long, courseTitle: String): Fragment =
             CourseReviewsFragment().apply {
                 this.courseId = courseId
+                this.courseTitle = courseTitle
             }
     }
 
@@ -58,6 +59,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     internal lateinit var analytic: Analytic
 
     private var courseId: Long by argument()
+    private var courseTitle: String by argument()
 
     private lateinit var courseReviewsAdapter: DefaultDelegateAdapter<CourseReviewItem>
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
@@ -73,7 +75,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             CourseReviewDataDelegate(
                 onUserClicked = { screenManager.openProfile(requireContext(), it.id) },
                 onEditReviewClicked = {
-                    analytic.report(EditCourseReviewPressedAnalyticEvent(courseId, CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
+                    analytic.report(EditCourseReviewPressedAnalyticEvent(courseId, courseTitle, CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
                     showCourseReviewEditDialog(it)
                 },
                 onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
@@ -82,7 +84,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         courseReviewsAdapter += CourseReviewSummaryDelegate()
         courseReviewsAdapter +=
             CourseReviewsComposeBannerDelegate {
-                analytic.report(CreateCourseReviewPressedAnalyticEvent(courseId, CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
+                analytic.report(CreateCourseReviewPressedAnalyticEvent(courseId, courseTitle, CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
                 showCourseReviewEditDialog(null)
             }
     }

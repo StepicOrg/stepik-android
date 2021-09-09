@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
 import org.stepik.android.presentation.base.injection.ViewModelKey
+import org.stepik.android.presentation.redux.wrapWithRefCounter
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
 import org.stepik.android.presentation.user_reviews.dispatcher.UserReviewsActionDispatcher
@@ -35,4 +36,5 @@ object UserReviewsPresentationModule {
     ): Feature<UserReviewsFeature.State, UserReviewsFeature.Message, UserReviewsFeature.Action> =
         ReduxFeature(UserReviewsFeature.State.Idle, userReviewsReducer)
             .wrapWithActionDispatcher(userReviewsActionDispatcher)
+            .wrapWithRefCounter()
 }

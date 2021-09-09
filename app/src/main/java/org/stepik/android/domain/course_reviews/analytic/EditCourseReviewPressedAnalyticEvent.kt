@@ -4,10 +4,12 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class EditCourseReviewPressedAnalyticEvent(
     courseId: Long,
+    title: String,
     source: String
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
+        private const val PARAM_TITLE = "title"
         private const val PARAM_SOURCE = "source"
     }
     override val name: String =
@@ -16,6 +18,7 @@ class EditCourseReviewPressedAnalyticEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_COURSE to courseId,
+            PARAM_TITLE to title,
             PARAM_SOURCE to source
         )
 }
