@@ -86,6 +86,8 @@ data class Course(
     val isCertificateAutoIssued: Boolean = false,
     @SerializedName("is_certificate_issued")
     val isCertificateIssued: Boolean = false,
+    @SerializedName("with_certificate")
+    val withCertificate: Boolean = false,
 
     @SerializedName("last_deadline")
     val lastDeadline: String? = null,
