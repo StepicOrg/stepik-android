@@ -5,6 +5,9 @@ app/src/envDev/assets/configs/config.json filter=git-crypt diff=git-crypt
 app/src/debug/assets/configs/config_dev.json filter=git-crypt diff=git-crypt
 app/src/debug/assets/configs/config_production.json filter=git-crypt diff=git-crypt
 app/src/debug/assets/configs/config_release.json filter=git-crypt diff=git-crypt
+app/src/stageDebuggable/assets/configs/config_dev.json filter=git-crypt diff=git-crypt
+app/src/stageDebuggable/assets/configs/config_production.json filter=git-crypt diff=git-crypt
+app/src/stageDebuggable/assets/configs/config_release.json filter=git-crypt diff=git-crypt
 buildsystem/cert/** filter=git-crypt diff=git-crypt
 buildsystem/secret.gradle filter=git-crypt diff=git-crypt
 fastlane/Fastfile filter=git-crypt diff=git-crypt
