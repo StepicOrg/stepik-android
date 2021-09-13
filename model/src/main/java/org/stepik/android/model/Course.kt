@@ -86,6 +86,8 @@ data class Course(
     val isCertificateAutoIssued: Boolean = false,
     @SerializedName("is_certificate_issued")
     val isCertificateIssued: Boolean = false,
+    @SerializedName("with_certificate")
+    val withCertificate: Boolean = false,
 
     @SerializedName("last_deadline")
     val lastDeadline: String? = null,
@@ -142,14 +144,6 @@ data class Course(
     @SerializedName("default_promo_code_expire_date")
     val defaultPromoCodeExpireDate: Date? = null
 ) : Progressable, Parcelable, Identifiable<Long> {
-
-    val hasCertificate: Boolean
-        get() = certificate?.let {
-            val hasText = it.isNotEmpty()
-            val anyCertificateThreshold = certificateRegularThreshold > 0 || certificateDistinctionThreshold > 0
-            anyCertificateThreshold && (hasText || isCertificateAutoIssued || isCertificateIssued)
-        } ?: false
-
     companion object {
         const val SCHEDULE_TYPE_ENDED = "ended"
         const val SCHEDULE_TYPE_UPCOMMING = "upcoming"
