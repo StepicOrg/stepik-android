@@ -24,7 +24,7 @@ constructor(
 ) {
     fun getWishlistSyncedWithUserCourses(dataSourceType: DataSourceType = DataSourceType.REMOTE): Single<WishlistEntity> =
         zip(
-            courseListUserInteractor.getAllUserCourses(userCourseQuery = UserCourseQuery(page = 1, isArchived = false), sourceType = dataSourceType),
+            courseListUserInteractor.getAllUserCourses(UserCourseQuery(page = 1), sourceType = dataSourceType),
             getWishlist(dataSourceType = dataSourceType)
         ) { userCourses, wishlistEntity ->
             val enrolledCourseIds = userCourses.map(UserCourse::course).toSet()

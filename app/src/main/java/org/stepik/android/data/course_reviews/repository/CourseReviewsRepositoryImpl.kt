@@ -51,6 +51,20 @@ constructor(
         }
     }
 
+    override fun getCourseReviewsByUserId(userId: Long, page: Int, sourceType: DataSourceType): Single<PagedList<CourseReview>> =
+        when (sourceType) {
+            DataSourceType.CACHE ->
+                courseReviewsCacheDataSource
+                    .getCourseReviewsByUserId(userId)
+
+            DataSourceType.REMOTE ->
+                courseReviewsRemoteDataSource
+                    .getCourseReviewsByUserId(userId, page)
+                    .doCompletableOnSuccess(courseReviewsCacheDataSource::saveCourseReviews)
+
+            else -> throw IllegalStateException("Unsupported source type = $sourceType")
+        }
+
     override fun createCourseReview(courseReview: CourseReview): Single<CourseReview> =
         courseReviewsRemoteDataSource
             .createCourseReview(courseReview)

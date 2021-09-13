@@ -2,6 +2,7 @@ package org.stepik.android.data.user_courses.repository
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.Single
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
@@ -20,6 +21,13 @@ constructor(
     private val userCoursesRemoteDataSource: UserCoursesRemoteDataSource,
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
+
+    override fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<List<UserCourse>> =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMapSingle { getUserCourses(userCourseQuery.copy(page = it), sourceType = sourceType) }
+            .takeUntil { !it.hasNext }
+            .reduce(emptyList()) { a, b -> a + b }
+
     override fun getUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
         val remoteSource = userCoursesRemoteDataSource
             .getUserCourses(userCourseQuery)

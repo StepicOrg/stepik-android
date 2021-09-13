@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/userReviewIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="16dp"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/userReviewMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:paddingLeft="10dp"
+        android:paddingTop="3dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="3dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:srcCompat="@drawable/ic_more_without_padding"
+        app:tint="?colorControlNormal" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userReviewCourseTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="@dimen/comment_item_margin"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textAppearance="?textAppearanceSubtitle1"
+
+        app:layout_constraintEnd_toStartOf="@id/userReviewMenu"
+        app:layout_constraintStart_toEndOf="@id/userReviewIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginTop="@dimen/comment_item_margin"
+
+        tools:text="Konstatin Konstatinopolis Konstatinopolis Konstatinopolis" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userReviewText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
+        android:textIsSelectable="true"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/userReviewIcon"
+        app:layout_constraintTop_toBottomOf="@id/userReviewCourseTitle"
+
+        tools:text="Курс сложный" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userReviewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:gravity="center_vertical"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
+
+        app:layout_constraintStart_toStartOf="@id/userReviewText"
+        app:layout_constraintTop_toBottomOf="@id/userReviewText"
+
+        tools:text="Полгода назад" />
+
+    <org.stepik.android.view.achievement.ui.view.VectorRatingBar
+        android:id="@+id/userReviewRating"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_marginBottom="16dp"
+        app:backgroundIcon="@drawable/ic_progress_star_white_filled"
+        app:currentProgress="3"
+        app:itemsGap="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/userReviewTime"
+        app:layout_constraintTop_toBottomOf="@id/userReviewTime"
+
+        app:progressIcon="@drawable/ic_progress_star_green_filled"
+        app:secondaryIcon="@drawable/ic_progress_star_white_filled"
+        app:totalProgress="5" />
+</androidx.constraintlayout.widget.ConstraintLayout>

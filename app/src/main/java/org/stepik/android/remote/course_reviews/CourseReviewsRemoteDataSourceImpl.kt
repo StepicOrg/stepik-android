@@ -29,6 +29,11 @@ constructor(
             .map(CourseReviewsResponse::courseReviews)
             .maybeFirst()
 
+    override fun getCourseReviewsByUserId(userId: Long, page: Int): Single<PagedList<CourseReview>> =
+        courseReviewService
+            .getCourseReviewsByUserId(userId, page)
+            .map { it.toPagedList(CourseReviewsResponse::courseReviews) }
+
     override fun createCourseReview(courseReview: CourseReview): Single<CourseReview> =
         courseReviewService
             .createCourseReview(CourseReviewRequest(courseReview))

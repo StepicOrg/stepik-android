@@ -219,7 +219,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                 )
 
         uiCheckout = Checkout.forActivity(this, billing)
-        initViewPager(courseId)
+        initViewPager(courseId, course?.title.toString())
         initViewStateDelegate()
 
         hasSavedInstanceState = savedInstanceState != null
@@ -302,8 +302,8 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         }
     }
 
-    private fun initViewPager(courseId: Long) {
-        coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
+    private fun initViewPager(courseId: Long, courseTitle: String) {
+        coursePagerAdapter = CoursePagerAdapter(courseId, courseTitle, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
         val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(scrollState: Int) {

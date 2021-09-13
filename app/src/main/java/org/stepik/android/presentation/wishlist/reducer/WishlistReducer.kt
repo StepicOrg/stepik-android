@@ -14,7 +14,7 @@ constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                if (state is State.Idle) {
+                if (state is State.Idle || state is State.Error && message.forceUpdate) {
                     State.Loading to setOf(Action.FetchWishList)
                 } else {
                     null
