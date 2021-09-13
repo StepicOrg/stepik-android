@@ -157,7 +157,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         val progress = score * 100 / cost
 
         return when {
-            progress < 20f && !courseCompleteInfo.course.hasCertificate -> {
+            progress < 20f && !courseCompleteInfo.course.withCertificate -> {
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_demo_lesson,
@@ -167,7 +167,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                 )
             }
-            progress < 20f && courseCompleteInfo.course.hasCertificate -> {
+            progress < 20f && courseCompleteInfo.course.withCertificate -> {
                 val courseScore = score.toLong()
                 when {
                     (courseCompleteInfo.course.certificateRegularThreshold != 0L && courseScore < courseCompleteInfo.course.certificateRegularThreshold) ||
@@ -213,7 +213,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         CourseCompleteDialogViewInfo.EMPTY
                 }
             }
-            progress >= 20f && progress < 80f && !courseCompleteInfo.course.hasCertificate -> {
+            progress >= 20f && progress < 80f && !courseCompleteInfo.course.withCertificate -> {
                 setupCertificateNotIssued(
                     courseCompleteInfo = courseCompleteInfo,
                     headerImage = R.drawable.ic_tak_neutral,
@@ -223,7 +223,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                     secondaryActionStringRes = R.string.course_complete_action_back_to_assignments
                 )
             }
-            progress >= 20f && progress < 80f && courseCompleteInfo.course.hasCertificate -> {
+            progress >= 20f && progress < 80f && courseCompleteInfo.course.withCertificate -> {
                 val courseScore = score.toLong()
                 when {
                     (courseCompleteInfo.course.certificateRegularThreshold != 0L && courseScore < courseCompleteInfo.course.certificateRegularThreshold) ||
@@ -269,7 +269,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                         CourseCompleteDialogViewInfo.EMPTY
                 }
             }
-            progress >= 80f && !courseCompleteInfo.course.hasCertificate -> {
+            progress >= 80f && !courseCompleteInfo.course.withCertificate -> {
                 val (primaryAction, secondaryAction) = if (courseCompleteInfo.hasReview) {
                     -1 to R.string.course_complete_action_find_new_course
                 } else {
@@ -286,7 +286,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 )
             }
 
-            progress >= 80f && courseCompleteInfo.course.hasCertificate -> {
+            progress >= 80f && courseCompleteInfo.course.withCertificate -> {
                 val courseScore = score.toLong()
                 when {
                     (courseCompleteInfo.course.certificateRegularThreshold != 0L && courseScore < courseCompleteInfo.course.certificateRegularThreshold) ||
