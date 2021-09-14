@@ -86,9 +86,9 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         downloadPresenter.fetchStorage()
         downloadPresenter.fetchDownloadedCourses()
 
-        TextViewCompat.setCompoundDrawableTintList(downloadsOtherApps, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_on_surface_alpha_12)))
+        TextViewCompat.setCompoundDrawableTintList(downloadsOtherApps, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_yellow)))
         TextViewCompat.setCompoundDrawableTintList(downloadsStepik, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green)))
-        TextViewCompat.setCompoundDrawableTintList(downloadsFree, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey04)))
+        TextViewCompat.setCompoundDrawableTintList(downloadsFree, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_elevation_overlay_2dp)))
     }
 
     private fun injectComponent() {

@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course.interactor
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -12,7 +13,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.wishlist.model.WishlistEntity
@@ -34,7 +35,8 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val wishlistRepository: WishlistRepository,
-    private val sharedPreferenceHelper: SharedPreferenceHelper
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val deeplinkPromoCodeRxRelay: BehaviorRelay<DeeplinkPromoCode>
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -62,10 +64,13 @@ constructor(
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            if (promo == null) Single.just(PromoCode.EMPTY) else courseStatsInteractor.checkPromoCodeValidity(course.id, promo),
+            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
             (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
-//            if (sharedPreferenceHelper.authResponseFromStore != null) wishlistRepository.getWishlistRecord(DataSourceType.CACHE) else Single.just(WishlistEntity.EMPTY)
         ) { courseStats, localSubmissions, promoCode, wishlistEntity ->
+
+            // Publish deep link promo code
+            deeplinkPromoCodeRxRelay.accept(promoCode)
+
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -74,7 +79,7 @@ constructor(
 
                 stats = courseStats.first(),
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
-                promoCode = promoCode,
+                deeplinkPromoCode = promoCode,
                 defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course),
                 isWishlistUpdating = false,
                 wishlistEntity = wishlistEntity
