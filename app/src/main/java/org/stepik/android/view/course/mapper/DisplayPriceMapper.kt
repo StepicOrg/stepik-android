@@ -1,6 +1,10 @@
 package org.stepik.android.view.course.mapper
 
 import android.content.Context
+import android.text.SpannedString
+import androidx.core.text.buildSpannedString
+import androidx.core.text.scale
+import androidx.core.text.strikeThrough
 import org.stepic.droid.R
 import javax.inject.Inject
 
@@ -22,4 +26,18 @@ constructor(
             else ->
                 "$price $currencyCode"
         }
+
+    fun mapToDiscountedDisplayPriceSpannedString(originalDisplayPrice: String, currencyCode: String, promoPrice: String): SpannedString {
+        val promoDisplayPrice = mapToDisplayPrice(currencyCode, promoPrice)
+        return buildSpannedString {
+            append(context.getString(R.string.course_payments_purchase_in_web_with_price_promo))
+            append(promoDisplayPrice)
+            append(" ")
+            scale(0.9f) {
+                strikeThrough {
+                    append(originalDisplayPrice)
+                }
+            }
+        }
+    }
 }
