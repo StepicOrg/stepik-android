@@ -5,7 +5,7 @@ import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
 import org.stepik.android.domain.course_payments.model.CoursePayment
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse
 import org.stepik.android.remote.course_payments.model.PromoCodeRequest
@@ -47,9 +47,9 @@ constructor(
                 }
             }
 
-    override fun checkPromoCodeValidity(courseId: Long, name: String): Single<PromoCode> =
+    override fun checkDeeplinkPromoCodeValidity(courseId: Long, name: String): Single<DeeplinkPromoCode> =
         coursePaymentService
-            .checkPromoCodeValidity(PromoCodeRequest(
+            .checkDeeplinkPromoCodeValidity(PromoCodeRequest(
                 course = courseId,
                 name = name
             ))

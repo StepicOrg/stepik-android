@@ -86,7 +86,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
                 screenManager.showCourseDescription(requireContext(), course, CourseViewSource.UserReviews)
             },
             onEditReviewClicked = { courseReview, course ->
-                analytic.report(EditCourseReviewPressedAnalyticEvent(course.id, course.title.toString(), CourseReviewViewSource.COURSE_REVIEWS_SOURCE))
+                analytic.report(EditCourseReviewPressedAnalyticEvent(course.id, course.title.toString(), CourseReviewViewSource.USER_REVIEWS_SOURCE))
                 showCourseReviewEditDialog(courseReview.course, courseReview, -1f)
             },
             onRemoveReviewClicked = { courseReview -> userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviews(courseReview)) }

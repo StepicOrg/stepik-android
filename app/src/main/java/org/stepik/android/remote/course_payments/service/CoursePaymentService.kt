@@ -1,7 +1,7 @@
 package org.stepik.android.remote.course_payments.service
 
 import io.reactivex.Single
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse
 import org.stepik.android.remote.course_payments.model.PromoCodeRequest
@@ -22,7 +22,7 @@ interface CoursePaymentService {
     ): Single<CoursePaymentsResponse>
 
     @POST("api/promo-codes/check")
-    fun checkPromoCodeValidity(
+    fun checkDeeplinkPromoCodeValidity(
         @Body promoCodeRequest: PromoCodeRequest
-    ): Single<PromoCode>
+    ): Single<DeeplinkPromoCode>
 }

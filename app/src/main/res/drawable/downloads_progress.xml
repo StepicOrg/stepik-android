@@ -25,8 +25,8 @@
         <clip>
             <shape>
                 <gradient
-                    android:startColor="@color/color_on_surface_alpha_12"
-                    android:endColor="@color/color_on_surface_alpha_12"
+                    android:startColor="@color/color_overlay_yellow"
+                    android:endColor="@color/color_overlay_yellow"
                     android:angle="270" />
             </shape>
         </clip>
