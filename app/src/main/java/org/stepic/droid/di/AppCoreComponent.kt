@@ -61,7 +61,6 @@ import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
-import org.stepik.android.view.injection.course.CourseDeeplinkPromoCodeBusModule
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_revenue.CourseRevenueComponent
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
@@ -182,8 +181,7 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
         PurchaseNotificationDataModule::class,
         VisitedCoursesDataModule::class,
         ProfileDataModule::class,
-        UserReviewsBusModule::class,
-        CourseDeeplinkPromoCodeBusModule::class
+        UserReviewsBusModule::class
     ]
 )
 interface AppCoreComponent {
