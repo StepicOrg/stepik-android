@@ -4,7 +4,7 @@ import io.reactivex.Single
 import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
 import org.stepik.android.domain.course_payments.model.CoursePayment
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 
 interface CoursePaymentsRemoteDataSource {
 
@@ -17,5 +17,5 @@ interface CoursePaymentsRemoteDataSource {
      */
     fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status? = null): Single<List<CoursePayment>>
 
-    fun checkPromoCodeValidity(courseId: Long, name: String): Single<PromoCode>
+    fun checkDeeplinkPromoCodeValidity(courseId: Long, name: String): Single<DeeplinkPromoCode>
 }

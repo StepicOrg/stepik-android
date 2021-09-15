@@ -2,7 +2,6 @@ package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
 import android.text.SpannableString
-import android.text.SpannedString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
@@ -10,7 +9,6 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
-import androidx.core.text.scale
 import androidx.core.text.strikeThrough
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
@@ -39,14 +37,13 @@ import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticB
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
-import org.stepik.android.domain.course_payments.model.DefaultPromoCode
-import org.stepik.android.domain.course_payments.model.PromoCode
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
+import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
@@ -61,6 +58,7 @@ constructor(
     @Assisted private val coursePresenter: CoursePresenter,
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
+    private val coursePromoCodeResolver: CoursePromoCodeResolver,
     @Assisted private val courseViewSource: CourseViewSource,
     @Assisted private val isAuthorized: Boolean,
     @Assisted private val mustShowCourseBenefits: Boolean,
@@ -206,25 +204,18 @@ constructor(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
-            val (currencyCode, promoPrice, hasPromo) = when {
-                courseHeaderData.promoCode != PromoCode.EMPTY ->
-                    Triple(courseHeaderData.promoCode.currencyCode, courseHeaderData.promoCode.price, true)
-
-                courseHeaderData.defaultPromoCode != DefaultPromoCode.EMPTY &&
-                        (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate == null || courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) &&
-                        courseHeaderData.course.currencyCode != null ->
-                    Triple(courseHeaderData.course.currencyCode!!, courseHeaderData.defaultPromoCode.defaultPromoCodePrice, true)
-
-                else ->
-                    Triple("", "", false)
-            }
+            val (currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
+                courseHeaderData.deeplinkPromoCode,
+                courseHeaderData.defaultPromoCode,
+                courseHeaderData.course
+            )
 
             val courseDisplayPrice = courseHeaderData.course.displayPrice
 
             courseBuyInWebAction.text =
                 if (courseDisplayPrice != null) {
                     if (hasPromo) {
-                        getPurchaseButtonText(courseDisplayPrice, currencyCode, promoPrice)
+                        displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(courseDisplayPrice, currencyCode, promoPrice)
                     } else {
                         getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
                     }
@@ -292,20 +283,6 @@ constructor(
 
             shareCourseMenuItem?.isVisible = true
         }
-
-    private fun getPurchaseButtonText(originalDisplayPrice: String, currencyCode: String, promoPrice: String): SpannedString {
-        val promoDisplayPrice = displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice)
-        return buildSpannedString {
-            append(courseActivity.getString(R.string.course_payments_purchase_in_web_with_price_promo))
-            append(promoDisplayPrice)
-            append(" ")
-            scale(0.9f) {
-                strikeThrough {
-                    append(originalDisplayPrice)
-                }
-            }
-        }
-    }
 
     fun showCourseShareTooltip() {
         val menuItemView = courseActivity

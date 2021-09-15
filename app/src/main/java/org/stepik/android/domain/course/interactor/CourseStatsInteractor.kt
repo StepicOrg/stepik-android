@@ -14,7 +14,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.profile.repository.ProfileRepository
@@ -70,9 +70,9 @@ constructor(
             }
         }
 
-    fun checkPromoCodeValidity(courseId: Long, promo: String): Single<PromoCode> =
+    fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<DeeplinkPromoCode> =
         coursePaymentsRepository
-            .checkPromoCodeValidity(courseId, promo)
+            .checkDeeplinkPromoCodeValidity(courseId, promo)
 
     /**
      * Load course reviews for not enrolled [courses]

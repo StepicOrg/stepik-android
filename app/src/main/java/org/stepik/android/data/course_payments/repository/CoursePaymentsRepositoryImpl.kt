@@ -7,7 +7,7 @@ import org.stepik.android.data.course_payments.source.CoursePaymentsCacheDataSou
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_payments.model.CoursePayment
-import org.stepik.android.domain.course_payments.model.PromoCode
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import javax.inject.Inject
@@ -36,8 +36,8 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
 
-    override fun checkPromoCodeValidity(courseId: Long, name: String): Single<PromoCode> =
+    override fun checkDeeplinkPromoCodeValidity(courseId: Long, name: String): Single<DeeplinkPromoCode> =
         coursePaymentsRemoteDataSource
-            .checkPromoCodeValidity(courseId, name)
-            .onErrorReturnItem(PromoCode.EMPTY)
+            .checkDeeplinkPromoCodeValidity(courseId, name)
+            .onErrorReturnItem(DeeplinkPromoCode.EMPTY)
 }
