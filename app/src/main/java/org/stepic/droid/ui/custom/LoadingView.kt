@@ -72,10 +72,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         } finally {
             array.recycle()
         }
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            //we use clipPath in onDraw see https://stackoverflow.com/a/8895894/5222184
-            setLayerType(LAYER_TYPE_SOFTWARE, null)
-        }
 
         basePaint = Paint().apply {
             style = Paint.Style.FILL

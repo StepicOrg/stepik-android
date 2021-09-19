@@ -39,17 +39,13 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
         setLayerType(LAYER_TYPE_SOFTWARE, null)
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            outlineProvider = ViewOutlineProvider.BACKGROUND
-            clipToOutline = true
+        outlineProvider = ViewOutlineProvider.BACKGROUND
+        clipToOutline = true
 
-            val drawable = GradientDrawable()
-            drawable.cornerRadius = borderRadius
-            background = drawable
-            backgroundDrawable = drawable
-        } else {
-            maskPaint.xfermode = PorterDuffXfermode(PorterDuff.Mode.DST_IN)
-        }
+        val drawable = GradientDrawable()
+        drawable.cornerRadius = borderRadius
+        background = drawable
+        backgroundDrawable = drawable
     }
 
     override fun dispatchDraw(canvas: Canvas) {
@@ -60,18 +56,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun updateMask(width: Int, height: Int) {
         if (width <= 0 || height <= 0) return
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            backgroundDrawable?.cornerRadius = borderRadius
-            backgroundDrawable?.let(::setBackgroundDrawable)
-        } else {
-            val rect = RectF(0f, 0f, width.toFloat(), height.toFloat())
-            val mask = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(mask)
-
-            canvas.drawRoundRect(rect, borderRadius, borderRadius, antiAliasedPaint)
-
-            this.maskBitmap = mask
-        }
+        backgroundDrawable?.cornerRadius = borderRadius
+        backgroundDrawable?.let(::setBackgroundDrawable)
     }
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {

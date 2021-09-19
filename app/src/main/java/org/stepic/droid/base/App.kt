@@ -98,17 +98,10 @@ class App : MultiDexApplication() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    WebView.setDataDirectorySuffix("web")
-                }
-                WebView.setWebContentsDebuggingEnabled(true)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WebView.setDataDirectorySuffix("web")
             }
-        }
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            initSSL()
+            WebView.setWebContentsDebuggingEnabled(true)
         }
 
         AppEventsLogger.activateApp(this)
@@ -134,17 +127,6 @@ class App : MultiDexApplication() {
         Branch.getAutoInstance(this)
         initChannels()
         initNightMode()
-    }
-
-    private fun initSSL() {
-        try {
-            ProviderInstaller.installIfNeeded(applicationContext)
-            val sslContext = SSLContext.getInstance("TLSv1.2")
-            sslContext.init(null, null, null)
-            sslContext.createSSLEngine()
-        } catch (_: Exception) {
-
-        }
     }
 
     private fun initChannels() {
