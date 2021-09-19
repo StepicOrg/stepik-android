@@ -5,7 +5,11 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
+import com.google.gson.reflect.TypeToken
+import org.jsoup.Jsoup
+import org.stepik.android.model.attempts.Component
 
+import org.stepik.android.model.attempts.Pair
 import org.stepik.android.model.attempts.Dataset
 import org.stepik.android.model.attempts.DatasetWrapper
 
@@ -25,7 +29,33 @@ class DatasetDeserializer : JsonDeserializer<DatasetWrapper> {
             }
 
         } else {
-            DatasetWrapper(context.deserialize<Dataset>(json, Dataset::class.java))
+            val dataset = Dataset(
+                options = context.deserialize<List<String>?>(json.getAsJsonArray("components"), TypeToken.getParameterized(ArrayList::class.java, String::class.java).type),
+                someStringValueFromServer = null,
+                pairs = context.deserialize<List<Pair>?>(json.getAsJsonArray("pairs"), TypeToken.getParameterized(ArrayList::class.java, Pair::class.java).type),
+                rows = processStringList("rows", json),
+                columns = processStringList("columns", json),
+                description = context.deserialize<String?>(json.get("description"), String::class.java),
+                components = context.deserialize<List<Component>?>(json.getAsJsonArray("components"), TypeToken.getParameterized(ArrayList::class.java, Component::class.java).type),
+                isMultipleChoice = if (json.has("is_multiple_choice")) context.deserialize(json.get("is_multiple_choice"), Boolean::class.java) else false,
+                isCheckbox = if (json.has("is_checkbox")) context.deserialize(json.get("is_checkbox"), Boolean::class.java) else false,
+                isHtmlEnabled = if (json.has("is_html_enabled") )context.deserialize(json.get("is_html_enabled"), Boolean::class.java) else false,
+            )
+            DatasetWrapper(dataset)
         }
     }
+
+    private fun processStringList(key: String, jsonObject: JsonObject): List<String>? =
+        if (jsonObject.has(key)) {
+            jsonObject
+                .get(key)
+                .takeIf { !it.isJsonNull }
+                ?.asJsonArray
+                ?.map { jsonElement ->
+                    val element = jsonElement.asString
+                   Jsoup.parseBodyFragment(element).body().html()
+                }
+        } else {
+            null
+        }
 }
