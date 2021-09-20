@@ -139,11 +139,11 @@ constructor(
 
     @RequiresApi(Build.VERSION_CODES.N)
     inner class NetworkStateCallback : ConnectivityManager.NetworkCallback() {
-        override fun onCapabilitiesChanged(network: Network?, networkCapabilities: NetworkCapabilities?) {
+        override fun onCapabilitiesChanged(network: Network, networkCapabilities: NetworkCapabilities) {
             state = getNetworkTypes()
         }
 
-        override fun onLost(network: Network?) {
+        override fun onLost(network: Network) {
             state = getNetworkTypes()
         }
     }

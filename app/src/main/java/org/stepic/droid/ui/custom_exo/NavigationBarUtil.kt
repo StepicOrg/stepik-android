@@ -23,9 +23,7 @@ object NavigationBarUtil {
             navigationBar = navigationBar or View.SYSTEM_UI_FLAG_LOW_PROFILE
             if (!hasCombinationBar(activity.applicationContext)) {
                 navigationBar = navigationBar or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    visibility = visibility or View.SYSTEM_UI_FLAG_IMMERSIVE
-                }
+                visibility = visibility or View.SYSTEM_UI_FLAG_IMMERSIVE
 
                 visibility = visibility or View.SYSTEM_UI_FLAG_FULLSCREEN
             }

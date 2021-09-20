@@ -149,11 +149,6 @@ public class QuizCardsContainer extends FrameLayout implements ContainerView {
         for (int i = 0; i < size; i++) {
             onRebind(i);
         }
-
-        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            for (int i = size - 1; i >= 0; i--)
-                cardHolders.get(i).getView().bringToFront();
-        }
     }
 
     private int getVisibleItemCount() {
@@ -172,9 +167,7 @@ public class QuizCardsContainer extends FrameLayout implements ContainerView {
                 addView(view);
             }
 
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                view.setElevation(size + 3 - i);
-            }
+            view.setElevation(size + 3 - i);
 
             adapter.onPositionChanged(holder, i);
             setViewState(view, i - m, true);
