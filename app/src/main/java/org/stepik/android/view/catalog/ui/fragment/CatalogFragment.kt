@@ -156,6 +156,7 @@ class CatalogFragment :
     private fun injectComponent() {
         App.component()
             .catalogComponentBuilder()
+            .courseId(-1L)
             .build()
             .inject(this)
     }

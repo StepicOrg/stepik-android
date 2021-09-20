@@ -3,7 +3,6 @@ package org.stepik.android.domain.course_list.interactor
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import ru.nobird.android.core.model.PagedList
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
@@ -20,7 +19,6 @@ class CourseListSearchInteractor
 @Inject
 constructor(
     private val searchResultRepository: SearchResultRepository,
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val courseListInteractor: CourseListInteractor,
     private val searchRepository: SearchRepository
 ) {
@@ -42,7 +40,7 @@ constructor(
         if (searchResultQuery.query.isNullOrEmpty()) {
             Completable.complete()
         } else {
-            searchRepository.saveSearchQuery(searchResultQuery.query)
+            searchRepository.saveSearchQuery(query = searchResultQuery.query)
         }
 
     fun getCourseListItems(

@@ -1,6 +1,8 @@
 package org.stepik.android.view.injection.course_list.search_result
 
+import dagger.BindsInstance
 import dagger.Subcomponent
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.view.course_list.ui.fragment.CourseListSearchFragment
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
@@ -19,6 +21,9 @@ interface CourseListSearchResultComponent {
     @Subcomponent.Builder
     interface Builder {
         fun build(): CourseListSearchResultComponent
+
+        @BindsInstance
+        fun courseId(@CourseId courseId: Long): Builder
     }
 
     fun inject(courseListSearchFragment: CourseListSearchFragment)
