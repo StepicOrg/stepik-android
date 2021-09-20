@@ -30,13 +30,10 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
-import org.stepik.android.domain.compatibility.analytic.Android4DiscontinueDialogWasShown
-import org.stepik.android.domain.compatibility.interactor.Android4DiscontinueInteractor
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
-import org.stepik.android.view.compatibility.ui.dialog.Android4DiscontinueDialogFragment
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
 import org.stepik.android.view.debug.ui.fragment.DebugMenu
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
@@ -112,9 +109,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     internal lateinit var remoteConfig: FirebaseRemoteConfig
-
-    @Inject
-    internal lateinit var android4DiscontinueInteractor: Android4DiscontinueInteractor
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -209,13 +203,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         onShowStreakSuggestion()
         handleShowPersonalizedOnboarding()
         handlePersonalizedCourseList()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (android4DiscontinueInteractor.isNeedShowDialog()) {
-            showAndroid4DiscontinueDialog()
-        }
     }
 
     private fun openFragment(launchIntent: Intent?, forceHome: Boolean = false) {
@@ -457,12 +444,5 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         badge.maxCharacterCount = 3
         badge.isVisible = true
         badge.verticalOffset = 8
-    }
-
-    private fun showAndroid4DiscontinueDialog() {
-        Android4DiscontinueDialogFragment
-            .newInstance()
-            .showIfNotExists(supportFragmentManager, Android4DiscontinueDialogFragment.TAG)
-        analytic.report(Android4DiscontinueDialogWasShown)
     }
 }

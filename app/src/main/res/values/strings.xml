@@ -1119,14 +1119,6 @@
     <string name="unavailable_section_to_content_action">To syllabus</string>
     <string name="unavailable_section_to_tasks_action">To tasks</string>
 
-    <!-- Android 4 Discontinue -->
-    <string name="android_4_discontinue_title">End of support for Android 4</string>
-    <string name="android_4_discontinue_message">
-        Thanks for using Stepik! Soon we will end support for Android 4 and the app will no longer receive updates on such devices.
-        You can still use this app and download the latest available version for your device from your app store.
-        To continue using the latest version of Stepik please update your device to at least Android 5.
-    </string>
-
     <!-- Course complete information -->
     <string name="course_complete_title_finished_course">You have passed the last lesson of course \"%s\".</string>
     <string name="course_complete_title_with_success">Congratulations!\nYou have completed the course \"%s\".</string>

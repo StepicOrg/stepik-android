@@ -3,7 +3,6 @@ package org.stepik.android.view.latex.ui.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -76,9 +75,7 @@ constructor(
         @SuppressLint("SetJavaScriptEnabled")
         settings.javaScriptEnabled = true
         settings.defaultFontSize = attributes.textSize.toInt()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            settings.mediaPlaybackRequiresUserGesture = false
-        }
+        settings.mediaPlaybackRequiresUserGesture = false
 
         addJavascriptInterface(OnScrollWebListener(), HorizontalScrollBlock.SCRIPT_NAME)
         addJavascriptInterface(ModelViewerInterface(context), ModelViewerInterface.MODEL_VIEWER_INTERFACE)

@@ -138,10 +138,7 @@ class DownloadCompleteService: JobIntentService() {
             persistentItemObserver.update(persistentItem.copy(
                 status = PersistentItem.Status.TRANSFER_ERROR
             ))
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP &&
-                e is IOException &&
-                (e.cause as? ErrnoException)?.errno == OsConstants.ENOSPC
-            ) {
+            if (e is IOException && (e.cause as? ErrnoException)?.errno == OsConstants.ENOSPC) {
                 downloadErrorPoster.onRecordError(downloadRecord.copy(reason = DownloadManager.ERROR_INSUFFICIENT_SPACE))
             }
             analytic.reportError(Analytic.DownloaderV2.MOVE_DOWNLOADED_FILE_ERROR, e)

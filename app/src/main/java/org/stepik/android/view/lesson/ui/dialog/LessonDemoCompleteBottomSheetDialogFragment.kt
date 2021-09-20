@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -44,9 +43,6 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
     @Inject
     lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
 
-    @Inject
-    lateinit var deeplinkPromoCodeRxRelay: BehaviorRelay<DeeplinkPromoCode>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.component().inject(this)
@@ -67,7 +63,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
 
         val courseDisplayPrice = course.displayPrice
         val (currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
-            deeplinkPromoCodeRxRelay.value ?: DeeplinkPromoCode.EMPTY,
+            DeeplinkPromoCode.EMPTY, // TODO Deeplink promo code will be passed as a parameter to newInstance
             DefaultPromoCode(
                 course.defaultPromoCodeName ?: "",
                 course.defaultPromoCodePrice ?: "",

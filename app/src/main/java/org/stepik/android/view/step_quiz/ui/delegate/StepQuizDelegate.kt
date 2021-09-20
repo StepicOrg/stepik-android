@@ -84,9 +84,7 @@ class StepQuizDelegate(
             stepRetryButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 width = ViewGroup.LayoutParams.MATCH_PARENT
                 updateMargins(right = 0)
-                if (Build.VERSION.SDK_INT >= 17) {
-                    updateMarginsRelative(end = 0)
-                }
+                updateMarginsRelative(end = 0)
             }
         } else {
             stepQuizActionButton.isVisible = true

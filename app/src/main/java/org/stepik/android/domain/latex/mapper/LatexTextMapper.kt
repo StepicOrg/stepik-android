@@ -12,7 +12,6 @@ import org.stepik.android.domain.latex.model.block.HighlightScriptBlock
 import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
 import org.stepik.android.domain.latex.model.block.KotlinRunnableSamplesScriptBlock
 import org.stepik.android.domain.latex.model.block.LatexScriptBlock
-import org.stepik.android.domain.latex.model.block.MinVisibleBlock
 import org.stepik.android.domain.latex.model.block.WebScriptBlock
 import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.domain.latex.model.block.MetaBlock
@@ -37,7 +36,6 @@ constructor(
     private val regularBlocks =
         listOf(
             HorizontalScrollBlock(),
-            MinVisibleBlock(),
             MetaBlock(endpointResolver.getBaseUrl()),
             ModelViewerBlock()
         )

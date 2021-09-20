@@ -41,19 +41,7 @@ fun TextView.setCompoundDrawables(
 }
 
 fun TextView.setTextViewBackgroundWithoutResettingPadding(@DrawableRes backgroundRes: Int) {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        val paddingLeft = this.paddingLeft
-        val paddingTop = this.paddingTop
-        val paddingRight = this.paddingRight
-        val paddingBottom = this.paddingBottom
-        val compoundDrawablePadding = this.compoundDrawablePadding
-
-        setBackgroundResource(backgroundRes)
-        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
-        this.compoundDrawablePadding = compoundDrawablePadding
-    } else {
-        setBackgroundResource(backgroundRes)
-    }
+    setBackgroundResource(backgroundRes)
 }
 
 inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) {
@@ -128,9 +116,5 @@ fun View.collapse(animationListener: Animation.AnimationListener? = null) {
 }
 
 fun WebView.evaluateJavascriptCompat(code: String) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-        evaluateJavascript(code, null)
-    } else {
-        loadUrl("javascript: $code")
-    }
+    evaluateJavascript(code, null)
 }
