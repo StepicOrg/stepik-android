@@ -30,7 +30,7 @@ class DatasetDeserializer : JsonDeserializer<DatasetWrapper> {
 
         } else {
             val dataset = Dataset(
-                options = context.deserialize<List<String>?>(json.getAsJsonArray("components"), TypeToken.getParameterized(ArrayList::class.java, String::class.java).type),
+                options = context.deserialize<List<String>?>(json.getAsJsonArray("options"), TypeToken.getParameterized(ArrayList::class.java, String::class.java).type),
                 someStringValueFromServer = null,
                 pairs = context.deserialize<List<Pair>?>(json.getAsJsonArray("pairs"), TypeToken.getParameterized(ArrayList::class.java, Pair::class.java).type),
                 rows = processStringList("rows", json),
