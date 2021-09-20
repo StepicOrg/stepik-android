@@ -14,6 +14,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_search.interactor.CourseSearchInteractor
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -36,6 +37,7 @@ import javax.inject.Inject
 class CourseListSearchPresenter
 @Inject
 constructor(
+    private val courseSearchInteractor: CourseSearchInteractor,
     private val analytic: Analytic,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListSearchInteractor: CourseListSearchInteractor,

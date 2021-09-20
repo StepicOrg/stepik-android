@@ -15,4 +15,7 @@ constructor(
 ) : SearchResultRepository {
     override fun getSearchResults(searchResultQuery: SearchResultQuery): Single<PagedList<SearchResult>> =
         searchResultRemoteDataSource.getSearchResults(searchResultQuery)
+
+    override fun getCourseSearchResults(courseId: Long, searchResultQuery: SearchResultQuery): Single<PagedList<SearchResult>> =
+        searchResultRemoteDataSource.getCourseSearchResults(courseId, searchResultQuery)
 }

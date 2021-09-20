@@ -19,4 +19,9 @@ constructor(
         searchResultService
             .getSearchResults(searchResultQuery.toMap().mapValues { it.value.toString() })
             .map { it.toPagedList(SearchResultResponse::searchResultList) }
+
+    override fun getCourseSearchResults(courseId: Long, searchResultQuery: SearchResultQuery): Single<PagedList<SearchResult>> =
+        searchResultService
+            .getCourseSearchResults(courseId, searchResultQuery.toMap().mapValues { it.value.toString() })
+            .map { it.toPagedList(SearchResultResponse::searchResultList) }
 }
