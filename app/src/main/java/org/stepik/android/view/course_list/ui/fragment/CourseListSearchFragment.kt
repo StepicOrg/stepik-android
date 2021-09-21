@@ -234,7 +234,6 @@ class CourseListSearchFragment :
     private fun injectComponent() {
         App.component()
             .courseListComponentBuilder()
-            .courseId(-1L)
             .build()
             .inject(this)
     }

@@ -9,22 +9,16 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.SearchQuerySource
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.search.repository.SearchRepository
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 class SearchSuggestionsPresenter
-@Inject
 constructor(
-    @CourseId
     private val courseId: Long,
     private val searchRepository: SearchRepository,
-    private val databaseFacade: DatabaseFacade,
     private val analytic: Analytic,
     @BackgroundScheduler
     private val scheduler: Scheduler,
@@ -34,7 +28,6 @@ constructor(
 
     companion object {
         private const val AUTOCOMPLETE_DEBOUNCE_MS = 300L
-        private const val DB_ELEMENTS_COUNT = 2
     }
 
     private val compositeDisposable = CompositeDisposable()
