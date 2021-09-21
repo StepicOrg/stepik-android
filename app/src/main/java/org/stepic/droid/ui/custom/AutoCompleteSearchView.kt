@@ -17,17 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
-import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import org.stepic.droid.util.resolveResourceIdAttribute
-import javax.inject.Inject
 
 class AutoCompleteSearchView
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr), SearchSuggestionsView {
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr) {
     private val searchQueriesAdapter = SearchQueriesAdapter(context)
     private val closeIcon: ImageView = findViewById(androidx.appcompat.R.id.search_close_btn)
     private val searchIcon: ImageView = findViewById(androidx.appcompat.R.id.search_mag_icon)
@@ -39,26 +36,19 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     var suggestionsOnTouchListener: OnTouchListener? = null
 
-    @Inject
-    lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
-
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         searchQueriesAdapter.searchView = this
-        searchSuggestionsPresenter.attachView(this)
-        refreshSuggestions()
     }
 
     override fun onDetachedFromWindow() {
-        searchSuggestionsPresenter.detachView(this)
         searchQueriesAdapter.searchView = null
+        focusCallback = null
         super.onDetachedFromWindow()
     }
 
     init {
         maxWidth = 20000
-        App.component().inject(this)
-
         ImageViewCompat.setImageTintList(closeIcon, colorControlNormal)
         ImageViewCompat.setImageTintList(searchIcon, colorControlNormal)
     }
@@ -113,18 +103,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     fun setConstraint(constraint: String) {
         searchQueriesAdapter.constraint = constraint
-        refreshSuggestions()
     }
 
-    fun onSubmitted(constraint: String) {
-        searchSuggestionsPresenter.onQueryTextSubmit(constraint)
-    }
-
-    private fun refreshSuggestions() {
-        searchSuggestionsPresenter.onQueryTextChange(searchQueriesAdapter.constraint)
-    }
-
-    override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
+    fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
         when (source) {
             SearchQuerySource.API ->
                 searchQueriesAdapter.rawAPIItems = suggestions

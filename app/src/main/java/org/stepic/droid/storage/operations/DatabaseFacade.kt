@@ -274,8 +274,8 @@ constructor(
         return emptyList()
     }
 
-    fun getSearchQueries(constraint: String, count: Int) =
-        searchQueryDao.getSearchQueries(constraint, count)
+    fun getSearchQueries(courseId: Long, constraint: String, count: Int) =
+        searchQueryDao.getSearchQueries(courseId, constraint, count)
 
     fun addSearchQuery(searchQuery: SearchQuery) {
         searchQueryDao.insertOrReplace(searchQuery)

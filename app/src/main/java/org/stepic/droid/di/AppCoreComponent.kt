@@ -29,7 +29,6 @@ import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
-import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
@@ -328,8 +327,6 @@ interface AppCoreComponent {
     fun inject(videoQualityDetailedDialog: VideoQualityDetailedDialog)
 
     fun inject(latexView: LatexView)
-
-    fun inject(autoCompleteSearchView: AutoCompleteSearchView)
 
     fun inject(quizCardViewHolder: QuizCardViewHolder)
 

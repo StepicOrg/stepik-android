@@ -1,6 +1,7 @@
 package org.stepik.android.cache.search
 
 import io.reactivex.Completable
+import io.reactivex.Single
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.data.search.source.SearchCacheDataSource
@@ -11,6 +12,14 @@ class SearchCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : SearchCacheDataSource {
-    override fun saveSearchQuery(query: String): Completable =
-        Completable.fromCallable { databaseFacade.addSearchQuery(SearchQuery(query)) }
+    companion object {
+        private const val DB_ELEMENTS_COUNT = 2
+    }
+    override fun saveSearchQuery(searchQuery: SearchQuery): Completable =
+        Completable.fromCallable { databaseFacade.addSearchQuery(searchQuery) }
+
+    override fun getSearchQueries(courseId: Long, query: String): Single<List<SearchQuery>> =
+        Single.fromCallable {
+            databaseFacade.getSearchQueries(courseId, query, DB_ELEMENTS_COUNT)
+        }
 }
