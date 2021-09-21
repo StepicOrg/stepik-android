@@ -135,6 +135,7 @@ class CourseListSearchFragment :
         val searchResultQuery = SearchResultQuery(
             page = 1,
             query = query,
+            type = SearchResultQuery.TYPE_COURSE,
             filterQuery = filterQuery,
             remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
         )

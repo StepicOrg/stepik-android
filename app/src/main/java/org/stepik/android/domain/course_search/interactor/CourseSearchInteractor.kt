@@ -36,9 +36,9 @@ constructor(
             searchRepository.saveSearchQuery(courseId = courseId, query = searchResultQuery.query)
         }
 
-    fun getCourseSearchResult(courseId: Long, searchResultQuery: SearchResultQuery): Observable<PagedList<CourseSearchResult>> =
+    fun getCourseSearchResult(searchResultQuery: SearchResultQuery): Observable<PagedList<CourseSearchResult>> =
         searchResultRepository
-            .getCourseSearchResults(courseId, searchResultQuery)
+            .getSearchResults(searchResultQuery)
             .flatMapObservable { searchResults ->
                 val courseSearchResults = searchResults.mapPaged { CourseSearchResult(searchResult = it) }
                 Observable.concat(Observable.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))

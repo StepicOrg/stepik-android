@@ -7,5 +7,4 @@ import org.stepik.android.model.SearchResult
 
 interface SearchResultRemoteDataSource {
     fun getSearchResults(searchResultQuery: SearchResultQuery): Single<PagedList<SearchResult>>
-    fun getCourseSearchResults(courseId: Long, searchResultQuery: SearchResultQuery): Single<PagedList<SearchResult>>
 }
