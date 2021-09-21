@@ -1,9 +1,7 @@
 package org.stepik.android.domain.course_search.interactor
 
 import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles.zip
-import org.stepic.droid.util.then
+import io.reactivex.Observable
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_search.model.CourseSearchResult
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -31,15 +29,22 @@ constructor(
     private val progressRepository: ProgressRepository,
     private val userRepository: UserRepository
 ) {
-    fun getCourseSearchResult(courseId: Long, searchResultQuery: SearchResultQuery): Single<PagedList<CourseSearchResult>> =
-        addSearchQuery(courseId, searchResultQuery) then
+    fun addSearchQuery(courseId: Long, searchResultQuery: SearchResultQuery): Completable =
+        if (searchResultQuery.query.isNullOrEmpty()) {
+            Completable.complete()
+        } else {
+            searchRepository.saveSearchQuery(courseId = courseId, query = searchResultQuery.query)
+        }
+
+    fun getCourseSearchResult(courseId: Long, searchResultQuery: SearchResultQuery): Observable<PagedList<CourseSearchResult>> =
         searchResultRepository
             .getCourseSearchResults(courseId, searchResultQuery)
-            .flatMap { searchResults ->
-                fetchCourseSearchResultsDetails(searchResults)
+            .flatMapObservable { searchResults ->
+                val courseSearchResults = searchResults.mapPaged { CourseSearchResult(searchResult = it) }
+                Observable.concat(Observable.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))
             }
 
-    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Single<PagedList<CourseSearchResult>> {
+    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Observable<PagedList<CourseSearchResult>> {
         val lessonIds = searchResults
             .mapNotNull { it.lesson }
             .mapToLongArray { it }
@@ -56,15 +61,15 @@ constructor(
 
         return lessonRepository
             .getLessons(*lessonIds, primarySourceType = DataSourceType.CACHE)
-            .flatMap { lessons ->
+            .flatMapObservable { lessons ->
                 fetchProgressesAndUsers(searchResults, lessons, combined)
             }
     }
 
-    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, userIds: List<Long>): Single<PagedList<CourseSearchResult>> =
-        zip(
-            progressRepository.getProgresses(lessons.getProgresses(), primarySourceType = DataSourceType.REMOTE),
-            userRepository.getUsers(userIds, primarySourceType = DataSourceType.REMOTE)
+    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, userIds: List<Long>): Observable<PagedList<CourseSearchResult>> =
+        Observable.zip(
+            progressRepository.getProgresses(lessons.getProgresses(), primarySourceType = DataSourceType.REMOTE).toObservable(),
+            userRepository.getUsers(userIds, primarySourceType = DataSourceType.REMOTE).toObservable()
         ) { progresses, users ->
             val lessonMap = lessons.associateBy(Lesson::id)
             val progressMaps = progresses.associateBy(Progress::id)
@@ -83,12 +88,5 @@ constructor(
                     commentOwner = commentOwner
                 )
             }
-        }
-
-    private fun addSearchQuery(courseId: Long, searchResultQuery: SearchResultQuery): Completable =
-        if (searchResultQuery.query.isNullOrEmpty()) {
-            Completable.complete()
-        } else {
-            searchRepository.saveSearchQuery(courseId = courseId, query = searchResultQuery.query)
         }
 }

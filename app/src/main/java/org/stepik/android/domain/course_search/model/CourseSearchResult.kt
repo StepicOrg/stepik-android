@@ -8,10 +8,10 @@ import ru.nobird.android.core.model.Identifiable
 
 data class CourseSearchResult(
     val searchResult: SearchResult,
-    val lesson: Lesson?,
-    val progress: Progress?,
-    val lessonOwner: User?,
-    val commentOwner: User?
+    val lesson: Lesson? = null,
+    val progress: Progress? = null,
+    val lessonOwner: User? = null,
+    val commentOwner: User? = null
 ) : Identifiable<Long> {
     override val id: Long =
         searchResult.id
