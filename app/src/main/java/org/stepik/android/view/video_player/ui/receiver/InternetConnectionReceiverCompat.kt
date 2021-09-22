@@ -20,7 +20,7 @@ class InternetConnectionReceiverCompat(
             networkCallback = object : ConnectivityManager.NetworkCallback() {
                 private val mainHandler = Handler(Looper.getMainLooper())
 
-                override fun onAvailable(network: Network?) {
+                override fun onAvailable(network: Network) {
                     mainHandler.post {
                         onInternetConnectionAvailable()
                     }

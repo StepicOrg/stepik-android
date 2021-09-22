@@ -163,12 +163,7 @@ public class DeviceInfoUtil {
     @SuppressLint("NewApi")
     public static Point getScreenSize(Display d) {
         Point size = new Point();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            d.getSize(size);
-        } else {
-            size.x = d.getWidth();
-            size.y = d.getHeight();
-        }
+        d.getSize(size);
         return size;
     }
 

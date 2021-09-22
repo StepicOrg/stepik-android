@@ -68,8 +68,6 @@ public class SharedPreferenceHelper {
     private static final String STORAGE_LOCATION_PATH = "storage_location_path";
     private static final String STORAGE_LOCATION_TYPE = "storage_location_type";
 
-    private static final String IS_ANDROID_4_DISCONTINUE_DIALOG_WAS_SHOWN = "is_android_4_discontinue_dialog_was_shown";
-
     private final String COOKIES_HEADER = "cookies_header";
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
@@ -490,14 +488,6 @@ public class SharedPreferenceHelper {
 
     public boolean isEverLogged() {
         return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_EVER_LOGGED, false);
-    }
-
-    public void setAndroid4DiscontinueDialogWasShown() {
-        put(PreferenceType.DEVICE_SPECIFIC, IS_ANDROID_4_DISCONTINUE_DIALOG_WAS_SHOWN, true);
-    }
-
-    public boolean isAndroid4DiscontinueDialogWasShown() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_ANDROID_4_DISCONTINUE_DIALOG_WAS_SHOWN, false);
     }
 
     public void setPersonalizedOnboardingWasShown() {

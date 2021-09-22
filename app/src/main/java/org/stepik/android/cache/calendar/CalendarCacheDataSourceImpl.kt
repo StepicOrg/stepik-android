@@ -5,7 +5,6 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
 import android.database.Cursor
-import android.os.Build
 import android.provider.CalendarContract
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -34,9 +33,7 @@ constructor(
                         val indexId = cursor.getColumnIndex(CalendarContract.Calendars._ID)
                         var indexIsPrimary = -1
                         try {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                indexIsPrimary = cursor.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
-                            }
+                            indexIsPrimary = cursor.getColumnIndex(CalendarContract.Calendars.IS_PRIMARY)
                             if (indexIsPrimary < 0) {
                                 indexIsPrimary = cursor.getColumnIndex("COALESCE(isPrimary, ownerAccount = account_name)") // look at http://stackoverflow.com/questions/25870556/check-if-calendar-is-primary
                             }

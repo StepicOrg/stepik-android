@@ -1,7 +1,5 @@
 package org.stepik.android.domain.latex.model.block
 
-import android.os.Build
-
 class HorizontalScrollBlock : ContentBlock {
     companion object {
         const val SCRIPT_NAME = "scrollListener"
@@ -41,5 +39,5 @@ class HorizontalScrollBlock : ContentBlock {
     override val header: String = style + script
 
     override fun isEnabled(content: String): Boolean =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+        true
 }

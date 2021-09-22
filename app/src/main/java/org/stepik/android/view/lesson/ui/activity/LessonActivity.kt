@@ -146,9 +146,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lesson)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            initReview()
-        }
+        initReview()
 
         if (savedInstanceState == null) {
             if (intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)) {
@@ -487,7 +485,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
 
         if (config.isAppInStore) {
-            resolveGooglePlayRating()
+            requestReview()
         } else {
             setupTextFeedback()
         }
@@ -516,14 +514,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         )
     }
 
-    private fun resolveGooglePlayRating() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            requestReview()
-        } else {
-            screenManager.showStoreWithApp(this)
-        }
-    }
-
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initReview() {
         manager = ReviewManagerFactory.create(this)
@@ -539,7 +529,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     * Google Play enforces a time-bound quota on how often a user can be shown the review dialog, so
     * launchReviewFlow may not always display the dialog.
     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun requestReview() {
         if (reviewInfo != null) {
             ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)

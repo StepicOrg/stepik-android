@@ -26,8 +26,12 @@ import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
+import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -72,6 +76,7 @@ import javax.inject.Inject
 class CatalogFragment :
     Fragment(R.layout.fragment_catalog),
     ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>,
+    SearchSuggestionsView,
     AutoCompleteSearchView.FocusCallback,
     FilterBottomSheetDialogFragment.Callback {
 
@@ -118,6 +123,9 @@ class CatalogFragment :
 
     @Inject
     internal lateinit var recommendedCourseListAdapterDelegateFactory: RecommendedCourseListAdapterDelegateFactory
+
+    @Inject
+    lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
     private lateinit var searchIcon: ImageView
 
@@ -232,6 +240,7 @@ class CatalogFragment :
 
     override fun onStart() {
         super.onStart()
+        searchSuggestionsPresenter.attachView(this)
         catalogItemAdapter.notifyDataSetChanged()
         if (!remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)) {
             SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
@@ -281,6 +290,7 @@ class CatalogFragment :
             SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY)
             SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         }
+        searchSuggestionsPresenter.detachView(this)
         super.onStop()
     }
 
@@ -380,6 +390,7 @@ class CatalogFragment :
             searchIcon.setImageResource(0)
             searchViewToolbar.setBackgroundColor(0)
             (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
+            searchSuggestionsPresenter.onQueryTextChange(searchViewToolbar.query.toString())
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
             val margin = resources.getDimensionPixelOffset(R.dimen.search_bar_margin)
@@ -391,9 +402,13 @@ class CatalogFragment :
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
         val query = searchViewToolbar.query.toString()
         val intent = createSearchViewIntent(query, filterQuery)
-        searchViewToolbar.onSubmitted(query)
+        searchSuggestionsPresenter.onQueryTextSubmit(query)
         collapseSearchView()
         startActivity(intent)
+    }
+
+    override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
+        searchViewToolbar.setSuggestions(suggestions, source)
     }
 
     private fun logStoryEvent(story: Story) {
@@ -442,7 +457,7 @@ class CatalogFragment :
 
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    it.onSubmitted(query)
+                    searchSuggestionsPresenter.onQueryTextSubmit(query)
                     collapseSearchView()
                     val intent = createSearchViewIntent(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
                     startActivity(intent)
@@ -451,6 +466,7 @@ class CatalogFragment :
 
                 override fun onQueryTextChange(query: String): Boolean {
                     it.setConstraint(query)
+                    searchSuggestionsPresenter.onQueryTextChange(query)
                     return false
                 }
             })

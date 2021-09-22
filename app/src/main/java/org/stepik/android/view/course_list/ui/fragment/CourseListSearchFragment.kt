@@ -16,12 +16,18 @@ import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
-import kotlinx.android.synthetic.main.view_search_toolbar.*
+import kotlinx.android.synthetic.main.view_search_toolbar.backIcon
+import kotlinx.android.synthetic.main.view_search_toolbar.filterIcon
+import kotlinx.android.synthetic.main.view_search_toolbar.searchViewToolbar
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
+import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -51,7 +57,9 @@ import javax.inject.Inject
 class CourseListSearchFragment :
     Fragment(R.layout.fragment_course_list),
     CourseListSearchResultView,
-    FilterQueryView {
+    FilterQueryView,
+    SearchSuggestionsView,
+    AutoCompleteSearchView.FocusCallback {
     companion object {
         fun newInstance(query: String?, filterQuery: CourseListFilterQuery?): Fragment =
             CourseListSearchFragment().apply {
@@ -94,6 +102,9 @@ class CourseListSearchFragment :
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
 
+    @Inject
+    lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
 
@@ -124,6 +135,7 @@ class CourseListSearchFragment :
         val searchResultQuery = SearchResultQuery(
             page = 1,
             query = query,
+            type = SearchResultQuery.TYPE_COURSE,
             filterQuery = filterQuery,
             remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
         )
@@ -181,6 +193,7 @@ class CourseListSearchFragment :
         searchIcon.setImageResource(0)
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(searchViewToolbar)
+        searchViewToolbar.setFocusCallback(this)
         searchViewToolbar.setIconifiedByDefault(false)
         searchViewToolbar.setBackgroundColor(0)
         backIcon.setOnClickListener {
@@ -202,12 +215,13 @@ class CourseListSearchFragment :
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                searchView.onSubmitted(query)
+                searchSuggestionsPresenter.onQueryTextSubmit(query)
                 return false
             }
 
             override fun onQueryTextChange(query: String): Boolean {
                 searchView.setConstraint(query)
+                searchSuggestionsPresenter.onQueryTextChange(query)
                 return false
             }
         })
@@ -257,9 +271,11 @@ class CourseListSearchFragment :
     override fun onStart() {
         super.onStart()
         courseListPresenter.attachView(this)
+        searchSuggestionsPresenter.attachView(this)
     }
 
     override fun onStop() {
+        searchSuggestionsPresenter.detachView(this)
         courseListPresenter.detachView(this)
         super.onStop()
     }
@@ -269,5 +285,15 @@ class CourseListSearchFragment :
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)
             .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+    }
+
+    override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
+        searchViewToolbar.setSuggestions(suggestions, source)
+    }
+
+    override fun onFocusChanged(hasFocus: Boolean) {
+        if (hasFocus) {
+            searchSuggestionsPresenter.onQueryTextChange(searchViewToolbar.query.toString())
+        }
     }
 }

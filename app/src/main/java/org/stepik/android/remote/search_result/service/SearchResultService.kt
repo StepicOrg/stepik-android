@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.QueryMap
 
 interface SearchResultService {
-    @GET("api/search-results?type=course")
+    @GET("api/search-results")
     fun getSearchResults(@QueryMap query: Map<String, String>): Single<SearchResultResponse>
 }

@@ -13,6 +13,7 @@ enum class SearchQuerySource(
 class SearchQuery
 @JvmOverloads // required to generate empty constructor that will be called by Gson on deserialization and init source field with default value instead of null
 constructor(
+    val courseId: Long = -1L,
     val text: String = "",
     val source: SearchQuerySource = SearchQuerySource.API
 )

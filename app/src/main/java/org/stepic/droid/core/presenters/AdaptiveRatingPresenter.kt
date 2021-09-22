@@ -21,7 +21,6 @@ import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.adaptive.RatingItem
 import retrofit2.HttpException
-import ru.nobird.android.core.model.mapToLongArray
 import javax.inject.Inject
 
 class AdaptiveRatingPresenter
