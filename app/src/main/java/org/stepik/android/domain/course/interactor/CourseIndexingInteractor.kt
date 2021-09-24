@@ -14,7 +14,9 @@ import javax.inject.Inject
 class CourseIndexingInteractor
 @Inject
 constructor(
-    private val endpointResolver: EndpointResolver
+    private val endpointResolver: EndpointResolver,
+    private val firebaseAppIndex: FirebaseAppIndex,
+    private val firebaseUserActions: FirebaseUserActions
 ) {
     private var action: Action? = null
 
@@ -22,14 +24,14 @@ constructor(
         val title = course.title ?: return
         val uri = StringUtil.getUriForCourse(endpointResolver.getBaseUrl(), course.slug ?: return)
 
-        FirebaseAppIndex.getInstance().update(Indexables.newSimple(title, uri))
+        firebaseAppIndex.update(Indexables.newSimple(title, uri))
 
         action = Actions.newView(title, uri)
-        action?.let(FirebaseUserActions.getInstance()::start)
+        action?.let(firebaseUserActions::start)
     }
 
     fun endIndexing() {
-        action?.let(FirebaseUserActions.getInstance()::end)
+        action?.let(firebaseUserActions::end)
         action = null
     }
 }
