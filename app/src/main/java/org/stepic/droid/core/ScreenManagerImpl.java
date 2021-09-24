@@ -283,7 +283,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context, long userId) {
-        analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES, userId + "");
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Certificates.SCREEN_OPENED);
         Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
         context.startActivity(intent);
@@ -369,7 +368,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSettings(Activity sourceActivity) {
-        analytic.reportEvent(Analytic.Screens.SHOW_SETTINGS);
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Settings.SCREEN_OPENED);
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);

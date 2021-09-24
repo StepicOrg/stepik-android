@@ -384,7 +384,7 @@ class CatalogFragment :
         backIcon.isVisible = hasFocus
         if (hasFocus) {
             if (!searchEventLogged) {
-                logSearchEvent()
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
                 searchEventLogged = true
             }
             searchIcon.setImageResource(0)
@@ -471,11 +471,6 @@ class CatalogFragment :
                 }
             })
         }
-    }
-
-    private fun logSearchEvent() {
-        analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
     }
 
     private fun openInWeb(url: String) {

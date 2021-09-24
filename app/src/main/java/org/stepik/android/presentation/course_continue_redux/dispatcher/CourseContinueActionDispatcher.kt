@@ -27,7 +27,6 @@ constructor(
     override fun handleAction(action: CourseContinueFeature.Action) {
         when (action) {
             is CourseContinueFeature.Action.ContinueCourse -> {
-                analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
                 analytic.report(CourseContinuePressedEvent(action.course, action.interactionSource, action.viewSource))
                 if (adaptiveCoursesResolver.isAdaptive(action.course.id)) {
                     onNewMessage(CourseContinueFeature.Message.ShowCourseContinue(action.course, action.viewSource, isAdaptive = true))
