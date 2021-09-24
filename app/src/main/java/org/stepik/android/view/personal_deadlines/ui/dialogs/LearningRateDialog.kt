@@ -68,6 +68,9 @@ class LearningRateDialog : DialogFragment() {
             )
 
         val hoursValue = learningRate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_CHOSEN, Bundle().apply {
+            putLong(Analytic.Deadlines.Params.HOURS, hoursValue)
+        })
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.PERSONAL_DEADLINE_CREATED,
             mapOf(AmplitudeAnalytic.Deadlines.Params.HOURS to hoursValue))
         dismiss()

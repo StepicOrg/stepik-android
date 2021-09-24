@@ -311,6 +311,7 @@ class CourseContentFragment :
         dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
         dialog.showIfNotExists(supportFragmentManager, LearningRateDialog.TAG)
 
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_OPENED, courseId.toString())
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.SCHEDULE_PRESSED)
     }
 
