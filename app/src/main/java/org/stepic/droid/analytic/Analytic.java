@@ -94,7 +94,6 @@ public interface Analytic {
         String CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
         String AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER = "Auth: yes from auth dialog";
         String TRANSFER_DATA_YES = "storage: transfer data";
-        String SUCCESS_LOGIN = "success login";
         String CLICK_REGISTER_BUTTON = "click_register_register_screen";
         String CLICK_SIGN_IN_SOCIAL = "social_login";
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
@@ -105,86 +104,46 @@ public interface Analytic {
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
         String CLICK_SOCIAL_NETWORK = "settings_click_social_network";
 
-        String CLICK_CONTINUE_COURSE = "click_continue_course";
-        String CLICK_COURSE = "click_course";
-        String JOIN_COURSE = "click_join_course";
-
         String USER_OPEN_IMAGE = "user_open_image";
         String SCREENSHOT = "screenshot";
         String GOOGLE_SOCIAL_IS_NOT_ENABLED = "google_social_is_not_enabled";
-        String ACCEPT_DELETING_UNIT = "click_delete_unit_dialog";
-        String ACCEPT_DELETING_SECTION = "click_delete_section_dialog";
         String SHOW_LAUNCH_SCREEN_AFTER_LOGOUT = "show_launch_screen_after_logout";
     }
 
-    interface Course {
-        String DROP_COURSE_SUCCESSFUL = "drop course successful";
-        String DROP_COURSE_FAIL = "drop course fail";
-    }
 
     interface Screens {
-        String SHOW_LAUNCH = "Screen manager: show launch screen";
         String SHOW_REGISTRATION = "Screen manager: show registration";
         String SHOW_LOGIN = "Screen manager: show login";
-        String SHOW_MAIN_FEED = "Screen manager: show main feed";
-        String SHOW_COURSE_DESCRIPTION = "Screen manager: show course description";
         String OPEN_STORE = "Open google play, estimation";
-        String TRY_OPEN_VIDEO = "video is tried to show";
-        String SHOW_SETTINGS = "show settings";
         String SHOW_NOTIFICATION_SETTINGS = "show_notification_settings";
         String SHOW_STORAGE_MANAGEMENT = "show storage management";
         String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
         String OPEN_COMMENT = "comments: open oldList";
         String OPEN_WRITE_COMMENT = "comments: open write form";
-        String SHOW_STEP = "Screen manager: show steps of lesson";
         String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
         String REMIND_PASSWORD = "Screen manager: remind password";
         String OPEN_LINK_IN_WEB = "open_link";
 
-        String USER_OPEN_MY_COURSES = "main_choice_my_courses";
-        String USER_OPEN_CATALOG = "main_choice_find_courses";
         String USER_OPEN_DOWNLOADS = "main_choice_downloads";
-        String USER_OPEN_CERTIFICATES = "main_choice_certificates";
         String USER_OPEN_FEEDBACK = "main_choice_feedback";
-        String USER_OPEN_NOTIFICATIONS = "main_choice_notifications";
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
         String USER_OPEN_ABOUT_APP = "main_choice_about";
-        String USER_OPEN_PROFILE = "main_choice_profile";
     }
 
     interface Video {
         String OPEN_EXTERNAL = "video_open_external";
         String OPEN_NATIVE = "video_open_native";
-        String NOT_COMPATIBLE = "video_is_not_compatible";
-        String SHOW_CHOOSE_RATE = "video_player_show_choose_rate_menu";
-        String JUMP_FORWARD = "video_player_jump_forward";
-        String JUMP_BACKWARD = "video_player_jump_backward";
-        String SHOW_MORE_ITEMS = "video_player_show_more";
-        String ROTATE_CLICKED = "video_player_rotate_clicked";
-        String PLAYER_CREATED = "video_player_created";
-        String PLAY = "video_player_play";
-        String PAUSE = "video_player_pause";
         String CONNECTION_ERROR = "video_player_connection_error";
         String ERROR = "video_player_error";
-        String QUALITY_MENU = "video_player_quality";
         String CANCEL_VIDEO_QUALITY = "video_player_quality_cancel";
-        String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
 
         String VIDEO_FILE_RESTORED = "video_file_restored";
 
         String VIDEO_AUTOPLAY_CHANGED = "video_autoplay_changed";
     }
 
-    interface AppIndexing {
-        String COURSE_DETAIL = "appindexing_course_detail";
-        String COURSE_SYLLABUS = "appindexing_course_syllabus";
-        String STEP = "appindexing_step";
-    }
-
     interface Error {
-        String CALLBACK_SOCIAL = "callback_from_social_login";
-        String NOT_PLAYER = "NotPlayer";
         String CANT_UPDATE_TOKEN = "cant update token";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
@@ -197,7 +156,6 @@ public interface Analytic {
         String ILLEGAL_STATE_VIDEO_STEP_PLAY = "illegal_state_video_step_play";
         String CANT_PARSE_QUALITY = "cant_parse_quality";
         String FEATURED_EMPTY = "error_featured_empty";
-        String COURSE_COLLECTION_EMPTY = "course_collection_empty";
 
         String REGISTRATION_FAILED = "registration_failed";
         String SOCIAL_AUTH_FAILED = "social_auth_failed";
@@ -242,8 +200,6 @@ public interface Analytic {
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
         String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
         String NIGHT_WITHOUT_SOUND_AND_VIBRATE = "notification_night_without_sound_and_vibrate";
-
-        String NOTIFICATION_SCREEN_OPENED = "notification_screen_opened";
     }
 
     interface Comments {
@@ -254,28 +210,9 @@ public interface Analytic {
     }
 
     interface Steps {
-        String STEP_TYPE_KEY = "type";
-        String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
-        String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
         String SHARE_OPEN_IN_BROWSER = "step_share_open_in_browser";
         String COPY_LINK = "step_share_copy";
         String SHARE_ALL = "steps_share_all";
-        String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
-        String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
-        String STEP_OPENED = "step_opened";
-        String STEP_EDIT_OPENED = "step_edit_opened";
-        String STEP_EDIT_COMPLETED = "step_edit_completed";
-    }
-
-    interface Calendar {
-        String USER_CLICK_ADD_WIDGET = "calendar_click_add_widget";
-        String USER_CLICK_ADD_MENU = "calendar_click_add_menu";
-        String CALENDAR_ADDED_SUCCESSFULLY = "calendar_added_successfully";
-        String CALENDAR_ADDED_FAIL = "calendar_added_fail";
-        String SHOW_CALENDAR_AS_WIDGET = "calendar_shown_as_widget";
-        String SHOW_CALENDAR = "calendar_shown"; // course with deadlines in future //// FIXME: 13.01.17 this metric has doubled number of events
-        String HIDE_WIDGET_FROM_PREFS = "widget_hidden_from_prefs"; //// FIXME: 13.01.17 this metric has doubled number of events
-        String USER_CLICK_NOT_NOW = "calendar_click_not_now";
     }
 
     interface DeepLink {
@@ -286,9 +223,6 @@ public interface Analytic {
     interface Certificate {
         String COPY_LINK_CERTIFICATE = "certificate_copy_link";
         String SHARE_LINK_CERTIFICATE = "certificate_share";
-        String ADD_LINKEDIN = "certificate_add_linkeding";
-        String OPEN_IN_BROWSER = "certificate_open_browser";
-        String CLICK_SHARE_MAIN = "certificate_click_share_main";
         String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
@@ -330,14 +264,6 @@ public interface Analytic {
     interface Shortcut {
         String OPEN_PROFILE = "shortcut_open_profile";
         String OPEN_CATALOG = "shortcut_find_courses";
-    }
-
-    interface Anonymous {
-        String JOIN_COURSE = "click_join_course_anonymous";
-        String BROWSE_COURSES_CENTER = "click_anonymous_browse_courses_center";
-        String AUTH_CENTER = "click_anonymous_auth_center";
-        String BROWSE_COURSES_DRAWER = "click_anonymous_auth_center";
-        String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
     interface SmartLock {

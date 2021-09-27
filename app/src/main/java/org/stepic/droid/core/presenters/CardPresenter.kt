@@ -138,13 +138,11 @@ class CardPresenter(
                 isLoading = false
 
                 if (it.status == Submission.Status.CORRECT) {
-                    analytic.reportEvent(Analytic.Steps.CORRECT_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
                     listener?.createReaction(card.lessonId, Reaction.SOLVED)
                     answerListener?.onCorrectAnswer(it.id)
                     card.onCorrect()
                 }
                 if (it.status == Submission.Status.WRONG) {
-                    analytic.reportEvent(Analytic.Steps.WRONG_SUBMISSION_FILL, (card.step?.id ?: 0).toString())
                     answerListener?.onWrongAnswer(it.id)
                 }
 

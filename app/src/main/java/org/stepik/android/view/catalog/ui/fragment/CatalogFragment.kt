@@ -310,7 +310,6 @@ class CatalogFragment :
                 }
 
                 is CourseContinueFeature.Action.ViewAction.OnCourseListItemClick -> {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
                     if (viewAction.courseListItem.course.enrollment != 0L) {
                         screenManager.showCourseModules(activity, viewAction.courseListItem.course, viewAction.courseListItem.source)
                     } else {
