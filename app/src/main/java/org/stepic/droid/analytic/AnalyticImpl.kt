@@ -217,17 +217,7 @@ constructor(
     }
 
     private fun castStringToFirebaseEvent(eventName: String): String {
-        val firebaseEventName =
-            buildString {
-                eventName.forEach {
-                    if (Character.isLetterOrDigit(it) && !Character.isWhitespace(it)) {
-                        append(it)
-                    } else {
-                        append("_")
-                    }
-                }
-            }
-
+        val firebaseEventName = eventName.replace(' ', '_')
         return if (firebaseEventName.length > FIREBASE_LENGTH_LIMIT) {
             firebaseEventName.substring(0, FIREBASE_LENGTH_LIMIT)
         } else {
