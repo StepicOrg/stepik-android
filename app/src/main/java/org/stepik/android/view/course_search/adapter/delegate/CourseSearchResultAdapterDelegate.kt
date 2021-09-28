@@ -10,11 +10,17 @@ import kotlinx.android.synthetic.main.item_course_search_result.*
 import org.stepic.droid.R
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
+import org.stepik.android.model.Step
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import kotlin.math.abs
 
-class CourseSearchResultAdapterDelegate : AdapterDelegate<CourseSearchResultListItem, DelegateViewHolder<CourseSearchResultListItem>>() {
+class CourseSearchResultAdapterDelegate(
+    private val onOpenStepAction: (Lesson, org.stepik.android.model.Unit?, Section?, Int?) -> Unit,
+    private val onOpenCommentAction: (Step, Long?) -> Unit
+) : AdapterDelegate<CourseSearchResultListItem, DelegateViewHolder<CourseSearchResultListItem>>() {
     override fun isForViewType(position: Int, data: CourseSearchResultListItem): Boolean =
         data is CourseSearchResultListItem.Data
 
@@ -24,6 +30,23 @@ class CourseSearchResultAdapterDelegate : AdapterDelegate<CourseSearchResultList
     private inner class ViewHolder(
         override val containerView: View
     ) : DelegateViewHolder<CourseSearchResultListItem>(containerView), LayoutContainer {
+        init {
+            courseSearchResultContainer.setOnClickListener {
+                val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
+                with(data.courseSearchResult) {
+                    if (lesson == null) return@setOnClickListener
+                    onOpenStepAction(lesson, unit, section, searchResult.stepPosition)
+                }
+            }
+
+            courseSearchCommentContainer.setOnClickListener {
+                val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
+                with(data.courseSearchResult) {
+                    if (step == null) return@setOnClickListener
+                    onOpenCommentAction(step, searchResult.comment)
+                }
+            }
+        }
         override fun onBind(data: CourseSearchResultListItem) {
             data as CourseSearchResultListItem.Data
             courseSearchTitle.text = data.courseSearchResult.searchResult.lessonTitle

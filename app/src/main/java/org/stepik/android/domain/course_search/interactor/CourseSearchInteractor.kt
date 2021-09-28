@@ -2,10 +2,12 @@ package org.stepik.android.domain.course_search.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_search.model.CourseSearchResult
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
+import org.stepik.android.domain.discussion_thread.repository.DiscussionThreadRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
@@ -22,6 +24,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Unit
 import org.stepik.android.model.Section
 import org.stepik.android.model.SearchResult
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.mapPaged
@@ -38,7 +41,8 @@ constructor(
     private val userRepository: UserRepository,
     private val unitRepository: UnitRepository,
     private val sectionRepository: SectionRepository,
-    private val stepRepository: StepRepository
+    private val stepRepository: StepRepository,
+    private val discussionThreadRepository: DiscussionThreadRepository
 ) {
     fun addSearchQuery(courseId: Long, searchResultQuery: SearchResultQuery): Completable =
         if (searchResultQuery.query.isNullOrEmpty()) {
@@ -54,6 +58,10 @@ constructor(
                 val courseSearchResults = searchResults.mapPaged { CourseSearchResultListItem.Data(CourseSearchResult(searchResult = it)) }
                 Observable.concat(Observable.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))
             }
+
+    fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
+        discussionThreadRepository
+            .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
 
     private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Observable<PagedList<CourseSearchResultListItem.Data>> {
         val lessonIds = searchResults

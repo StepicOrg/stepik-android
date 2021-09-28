@@ -17,17 +17,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.databinding.DialogCourseSearchBinding
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.course_search.CourseSearchFeature
 import org.stepik.android.presentation.course_search.CourseSearchViewModel
 import org.stepik.android.view.course_search.adapter.delegate.CourseSearchResultAdapterDelegate
 import org.stepik.android.view.course_search.adapter.delegate.CourseSearchResultLoadingAdapterDelegate
+import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -53,10 +58,16 @@ class CourseSearchDialogFragment :
     }
 
     @Inject
+    lateinit var screenManager: ScreenManager
+
+    @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private val courseSearchViewModel: CourseSearchViewModel by reduxViewModel(this) { viewModelFactory }
 
@@ -110,7 +121,23 @@ class CourseSearchDialogFragment :
         initViewStateDelegate()
 
         courseSearchResultItemsAdapter += CourseSearchResultLoadingAdapterDelegate()
-        courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate()
+        courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate(
+            onOpenStepAction = { lesson, unit, section, stepPosition ->
+                val lessonData = LessonData(
+                    lesson = lesson,
+                    unit = unit,
+                    section = section,
+                    course = null,
+                    stepPosition = stepPosition ?: 0
+                )
+                val intent = LessonActivity.createIntent(requireContext(), lessonData)
+                startActivity(intent)
+            },
+            onOpenCommentAction = { step, discussionId ->
+                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.InitDiscussionThreadMessage(step, discussionId))
+            }
+        )
+
         with(courseSearchBinding.courseSearchRecycler) {
             adapter = courseSearchResultItemsAdapter
             itemAnimator = null
@@ -137,7 +164,17 @@ class CourseSearchDialogFragment :
     }
 
     override fun onAction(action: CourseSearchFeature.Action.ViewAction) {
-        // no op
+        when (action) {
+            is CourseSearchFeature.Action.ViewAction.ShowLoadingDialog -> {
+                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+            is CourseSearchFeature.Action.ViewAction.HideLoadingDialog -> {
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+            is CourseSearchFeature.Action.ViewAction.OpenComment -> {
+                screenManager.openComments(requireActivity(), action.discussionThread, action.step, action.discussionId, false, false)
+            }
+        }
     }
 
     override fun render(state: CourseSearchFeature.State) {
