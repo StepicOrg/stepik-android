@@ -97,7 +97,6 @@ import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.purchase_notification.PurchaseNotificationDataModule
-import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.search_result.SearchResultDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
@@ -166,7 +165,6 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
         UserActivityDataModule::class,
         NotificationDataModule::class,
         EmailAddressDataModule::class,
-        SearchDataModule::class,
         SearchResultDataModule::class,
         UserCoursesDataModule::class,
         CourseCollectionDataModule::class,

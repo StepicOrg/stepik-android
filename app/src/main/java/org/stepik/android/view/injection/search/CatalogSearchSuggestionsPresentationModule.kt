@@ -7,6 +7,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepik.android.cache.search.SearchCacheDataSourceImpl
+import org.stepik.android.data.search.source.SearchCacheDataSource
 import org.stepik.android.domain.search.repository.SearchRepository
 
 @Module
@@ -27,4 +30,9 @@ object CatalogSearchSuggestionsPresentationModule {
             scheduler = scheduler,
             mainScheduler = mainScheduler
         )
+
+    @Provides
+    internal fun provideSearchCacheDataSource(databaseFacade: DatabaseFacade) : SearchCacheDataSource =
+        SearchCacheDataSourceImpl(dbElementsCount = 2, databaseFacade = databaseFacade)
+
 }

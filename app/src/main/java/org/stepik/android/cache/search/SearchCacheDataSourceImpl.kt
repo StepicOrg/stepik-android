@@ -10,16 +10,14 @@ import javax.inject.Inject
 class SearchCacheDataSourceImpl
 @Inject
 constructor(
+    private val dbElementsCount: Int,
     private val databaseFacade: DatabaseFacade
 ) : SearchCacheDataSource {
-    companion object {
-        private const val DB_ELEMENTS_COUNT = 2
-    }
     override fun saveSearchQuery(searchQuery: SearchQuery): Completable =
         Completable.fromCallable { databaseFacade.addSearchQuery(searchQuery) }
 
     override fun getSearchQueries(courseId: Long, query: String): Single<List<SearchQuery>> =
         Single.fromCallable {
-            databaseFacade.getSearchQueries(courseId, query, DB_ELEMENTS_COUNT)
+            databaseFacade.getSearchQueries(courseId, query, dbElementsCount)
         }
 }
