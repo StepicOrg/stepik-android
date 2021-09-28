@@ -50,20 +50,13 @@ constructor(
             .mapNotNull { it.lesson }
             .mapToLongArray { it }
 
-        val lessonOwners = searchResults
-            .mapNotNull { it.lessonOwner }
-            .toSet()
-
         val commentOwners = searchResults
             .mapNotNull { it.commentUser }
-            .toSet()
-
-        val combined = (lessonOwners + commentOwners).toList()
 
         return lessonRepository
             .getLessons(*lessonIds, primarySourceType = DataSourceType.CACHE)
             .flatMapObservable { lessons ->
-                fetchProgressesAndUsers(searchResults, lessons, combined)
+                fetchProgressesAndUsers(searchResults, lessons, commentOwners)
             }
     }
 
@@ -78,7 +71,6 @@ constructor(
 
             searchResults.mapPaged { searchResult ->
                 val lesson = searchResult.lesson?.let { lessonMap.getValue(it) }
-                val lessonOwner = searchResult.lessonOwner?.let { userMaps[it] }
                 val commentOwner = searchResult.commentUser?.let { userMaps[it] }
 
                 CourseSearchResultListItem.Data(
@@ -86,7 +78,6 @@ constructor(
                         searchResult = searchResult,
                         lesson = lesson,
                         progress = lesson?.progress?.let { progressMaps.getValue(it) },
-                        lessonOwner = lessonOwner,
                         commentOwner = commentOwner
                     )
                 )

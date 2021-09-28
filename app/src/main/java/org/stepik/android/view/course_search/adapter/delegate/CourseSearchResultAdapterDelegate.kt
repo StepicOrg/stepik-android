@@ -85,7 +85,7 @@ class CourseSearchResultAdapterDelegate : AdapterDelegate<CourseSearchResultList
                 unitRating.text = abs(lesson.voteDelta).toString()
             }
 
-            val hasComment = with (data.courseSearchResult.searchResult) {
+            val hasComment = with(data.courseSearchResult.searchResult) {
                 comment != null && commentUser != null
             }
 

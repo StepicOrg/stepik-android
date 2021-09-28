@@ -10,7 +10,6 @@ data class CourseSearchResult(
     val searchResult: SearchResult,
     val lesson: Lesson? = null,
     val progress: Progress? = null,
-    val lessonOwner: User? = null,
     val commentOwner: User? = null
 ) : Identifiable<Long> {
     override val id: Long =
