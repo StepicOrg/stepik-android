@@ -35,6 +35,6 @@ object CourseSearchSuggestionsPresentationModule {
         )
 
     @Provides
-    internal fun provideSearchCacheDataSource(databaseFacade: DatabaseFacade) : SearchCacheDataSource =
+    internal fun provideSearchCacheDataSource(databaseFacade: DatabaseFacade): SearchCacheDataSource =
         SearchCacheDataSourceImpl(dbElementsCount = 10, databaseFacade = databaseFacade)
 }
