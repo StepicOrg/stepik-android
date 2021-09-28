@@ -22,6 +22,7 @@ object MigrationWrappers {
                 object : MigrationWrapper(MigrationFrom69To70) {},
                 // TODO Multiple tests on a single table fail, must research
                 object : MigrationWrapper(MigrationFrom70To71) {},
-                object : MigrationWrapper(MigrationFrom71To72) {}
+                object : MigrationWrapper(MigrationFrom71To72) {},
+                object : MigrationWrapper(MigrationFrom72To73) {}
             )
 }

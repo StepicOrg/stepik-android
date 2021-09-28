@@ -89,18 +89,16 @@ class CourseSearchResultAdapterDelegate : AdapterDelegate<CourseSearchResultList
                 comment != null && commentUser != null
             }
 
-            courseSearchCommentContainer.isVisible = hasComment
+            courseSearchCommentContainer.isVisible = hasComment && data.courseSearchResult.commentOwner != null
 
-            if (hasComment) {
-                if (data.courseSearchResult.commentOwner != null) {
-                    Glide.with(courseSearchCommentUserIcon)
-                        .asBitmap()
-                        .load(data.courseSearchResult.commentOwner.avatar)
-                        .placeholder(R.drawable.general_placeholder)
-                        .centerCrop()
-                        .into(courseSearchCommentUserIcon)
-                }
-                courseSearchCommentUserName.text = data.courseSearchResult.commentOwner?.fullName ?: ""
+            if (hasComment && data.courseSearchResult.commentOwner != null) {
+                Glide.with(courseSearchCommentUserIcon)
+                    .asBitmap()
+                    .load(data.courseSearchResult.commentOwner.avatar)
+                    .placeholder(R.drawable.general_placeholder)
+                    .centerCrop()
+                    .into(courseSearchCommentUserIcon)
+                courseSearchCommentUserName.text = data.courseSearchResult.commentOwner.fullName
                 courseSearchCommentText.setText(data.courseSearchResult.searchResult.commentText)
             }
         }

@@ -220,7 +220,7 @@
 
             tools:text="Konstatin Konstatinopolis Konstatinopolis Konstatinopolis" />
 
-        <TextView
+        <org.stepik.android.view.latex.ui.widget.LatexView
             android:id="@+id/courseSearchCommentText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -230,7 +230,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
 
-            android:textAppearance="?textAppearanceBody1"
+            android:textAppearance="?textAppearanceBody2"
             android:textColor="?android:textColorSecondary"
             android:textIsSelectable="true"
 
