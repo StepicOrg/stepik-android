@@ -2,7 +2,8 @@ package org.stepic.droid.core
 
 import android.content.Context
 import androidx.annotation.WorkerThread
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.android.gms.tasks.Tasks
+import com.google.firebase.messaging.FirebaseMessaging
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -17,7 +18,7 @@ class StepikDevicePosterImpl
 @Inject
 constructor(
     private val context: Context,
-    private val firebaseInstanceId: FirebaseInstanceId,
+    private val firebaseMessaging: FirebaseMessaging,
     private val deviceRepository: DeviceRepository,
     private val sharedPreferencesHelper: SharedPreferenceHelper,
     private val analytic: Analytic
@@ -25,10 +26,9 @@ constructor(
 
     @WorkerThread
     override fun registerDevice() {
-        val tokenNullable: String? = firebaseInstanceId.token
         try {
+            val token = Tasks.await(firebaseMessaging.token)
             sharedPreferencesHelper.authResponseFromStore!! //for logged user only work
-            val token = tokenNullable!!
 
             try {
                 deviceRepository.registerDevice(createDeviceRequest(token)).blockingAwait()
