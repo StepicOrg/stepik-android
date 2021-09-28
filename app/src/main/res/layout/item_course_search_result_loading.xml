@@ -14,25 +14,24 @@
         android:layout_marginStart="@dimen/course_content_item_margin"
         android:layout_marginLeft="@dimen/course_content_item_margin"
         android:layout_marginTop="@dimen/course_content_item_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
+
         android:contentDescription="@null"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <org.stepic.droid.ui.custom.LoadingView
-        android:id="@+id/unitTitle"
+        android:id="@+id/courseSearchTitle"
         android:layout_width="0dp"
-        android:layout_height="8dp"
+        android:layout_height="12dp"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginEnd="@dimen/course_content_item_margin"
         android:layout_marginRight="@dimen/course_content_item_margin"
-        app:layout_constraintBottom_toTopOf="@id/courseSearchViewCountIcon"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/courseSearchIcon"
-        app:layout_constraintTop_toTopOf="@+id/courseSearchIcon"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="320dp"
 
         tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
@@ -40,21 +39,22 @@
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseSearchViewCountIcon"
         android:layout_width="0dp"
-        android:layout_height="8dp"
+        android:layout_height="12dp"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
 
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="@dimen/course_content_item_margin"
         android:layout_marginRight="@dimen/course_content_item_margin"
+        android:layout_marginBottom="28dp"
         android:contentDescription="@null"
-        app:layout_constraintBottom_toBottomOf="@+id/courseSearchIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/courseSearchIcon"
 
-        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent="0.4"
         app:layout_constraintWidth_max="180dp"

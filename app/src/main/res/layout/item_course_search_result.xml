@@ -40,16 +40,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/courseSearchIcon"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
+            tools:text="1.2 Second Lesson More Detailed and terest" />
 
         <org.stepic.droid.ui.custom.LoadingView
             android:id="@+id/courseSearchProgressPlaceholder"
             android:layout_width="0dp"
-            android:layout_height="8dp"
+            android:layout_height="12dp"
             android:layout_marginStart="@dimen/course_content_item_inner_margin"
             android:layout_marginLeft="@dimen/course_content_item_inner_margin"
 
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="26dp"
 
             android:layout_marginEnd="@dimen/course_content_item_margin"
             android:layout_marginRight="@dimen/course_content_item_margin"
@@ -60,7 +61,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toEndOf="@+id/courseSearchIcon"
 
-            app:layout_constraintTop_toBottomOf="@+id/courseSearchIcon"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
             app:layout_constraintWidth_default="percent"
             app:layout_constraintWidth_percent="0.4"
             app:layout_constraintWidth_max="180dp"
