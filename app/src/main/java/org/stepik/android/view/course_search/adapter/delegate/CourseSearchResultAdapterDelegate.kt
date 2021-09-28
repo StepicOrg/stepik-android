@@ -84,6 +84,25 @@ class CourseSearchResultAdapterDelegate : AdapterDelegate<CourseSearchResultList
                 courseSearchRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = abs(lesson.voteDelta).toString()
             }
+
+            val hasComment = with (data.courseSearchResult.searchResult) {
+                comment != null && commentUser != null
+            }
+
+            courseSearchCommentContainer.isVisible = hasComment
+
+            if (hasComment) {
+                if (data.courseSearchResult.commentOwner != null) {
+                    Glide.with(courseSearchCommentUserIcon)
+                        .asBitmap()
+                        .load(data.courseSearchResult.commentOwner.avatar)
+                        .placeholder(R.drawable.general_placeholder)
+                        .centerCrop()
+                        .into(courseSearchCommentUserIcon)
+                }
+                courseSearchCommentUserName.text = data.courseSearchResult.commentOwner?.fullName ?: ""
+                courseSearchCommentText.setText(data.courseSearchResult.searchResult.commentText)
+            }
         }
     }
 }

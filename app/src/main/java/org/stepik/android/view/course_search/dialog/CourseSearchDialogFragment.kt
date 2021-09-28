@@ -113,6 +113,7 @@ class CourseSearchDialogFragment :
         courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate()
         with(courseSearchBinding.courseSearchRecycler) {
             adapter = courseSearchResultItemsAdapter
+            itemAnimator = null
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical_course_search)?.let(::setDrawable)
