@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_search.model.CourseSearchResult
+import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
@@ -36,15 +37,15 @@ constructor(
             searchRepository.saveSearchQuery(courseId = courseId, query = searchResultQuery.query)
         }
 
-    fun getCourseSearchResult(searchResultQuery: SearchResultQuery): Observable<PagedList<CourseSearchResult>> =
+    fun getCourseSearchResult(searchResultQuery: SearchResultQuery): Observable<PagedList<CourseSearchResultListItem.Data>> =
         searchResultRepository
             .getSearchResults(searchResultQuery)
             .flatMapObservable { searchResults ->
-                val courseSearchResults = searchResults.mapPaged { CourseSearchResult(searchResult = it) }
+                val courseSearchResults = searchResults.mapPaged { CourseSearchResultListItem.Data(CourseSearchResult(searchResult = it)) }
                 Observable.concat(Observable.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))
             }
 
-    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Observable<PagedList<CourseSearchResult>> {
+    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Observable<PagedList<CourseSearchResultListItem.Data>> {
         val lessonIds = searchResults
             .mapNotNull { it.lesson }
             .mapToLongArray { it }
@@ -66,7 +67,7 @@ constructor(
             }
     }
 
-    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, userIds: List<Long>): Observable<PagedList<CourseSearchResult>> =
+    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, userIds: List<Long>): Observable<PagedList<CourseSearchResultListItem.Data>> =
         Observable.zip(
             progressRepository.getProgresses(lessons.getProgresses(), primarySourceType = DataSourceType.REMOTE).toObservable(),
             userRepository.getUsers(userIds, primarySourceType = DataSourceType.REMOTE).toObservable()
@@ -80,12 +81,14 @@ constructor(
                 val lessonOwner = searchResult.lessonOwner?.let { userMaps[it] }
                 val commentOwner = searchResult.commentUser?.let { userMaps[it] }
 
-                CourseSearchResult(
-                    searchResult = searchResult,
-                    lesson = lesson,
-                    progress = lesson?.progress?.let { progressMaps.getValue(it) },
-                    lessonOwner = lessonOwner,
-                    commentOwner = commentOwner
+                CourseSearchResultListItem.Data(
+                    CourseSearchResult(
+                        searchResult = searchResult,
+                        lesson = lesson,
+                        progress = lesson?.progress?.let { progressMaps.getValue(it) },
+                        lessonOwner = lessonOwner,
+                        commentOwner = commentOwner
+                    )
                 )
             }
         }

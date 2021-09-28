@@ -5,9 +5,12 @@ import dagger.Subcomponent
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.view.course_search.dialog.CourseSearchDialogFragment
 import org.stepik.android.view.injection.search.CourseSearchSuggestionsPresentationModule
+import org.stepik.android.view.injection.user.UserDataModule
 
 @Subcomponent(modules = [
-    CourseSearchSuggestionsPresentationModule::class
+    CourseSearchPresentationModule::class,
+    CourseSearchSuggestionsPresentationModule::class,
+    UserDataModule::class
 ])
 interface CourseSearchComponent {
     @Subcomponent.Builder

@@ -5,6 +5,9 @@
         android:id="@+id/course_benefits"
         android:title="@string/course_benefits_revenue_title" />
     <item
+        android:id="@+id/share_course"
+        android:title="@string/share_title" />
+    <item
         android:id="@+id/favorite_course"
         android:title="@string/course_action_favorites_add" />
     <item
@@ -21,11 +24,12 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/share_course"
-        android:title="@string/share_title"
-        android:icon="@drawable/ic_share_dark"
+        android:id="@+id/course_search"
+        android:title="@string/course_search_menu_title"
+        android:icon="@drawable/ic_action_search"
         app:iconTint="?colorControlNormal"
         app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/restore_purchase"
         android:title="@string/course_restore_purchase" />

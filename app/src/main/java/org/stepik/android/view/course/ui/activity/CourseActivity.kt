@@ -216,7 +216,12 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     onSubmissionCountClicked = {
                         screenManager.showCachedAttempts(this, courseId)
                     },
-                    isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
+                    isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean(),
+                    showCourseSearchAction = {
+                        CourseSearchDialogFragment
+                            .newInstance(courseId)
+                            .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
+                    }
                 )
 
         uiCheckout = Checkout.forActivity(this, billing)
@@ -338,9 +343,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             onBackPressed()
             true
         } else {
-            CourseSearchDialogFragment.newInstance(courseId).showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
-            true
-//            courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
+            courseHeaderDelegate.onOptionsItemSelected(item) || super.onOptionsItemSelected(item)
         }
 
     override fun applyTransitionPrev() {

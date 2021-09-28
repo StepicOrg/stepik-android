@@ -1025,4 +1025,9 @@
     <string name="user_review_potential_review_header">%s для адклікання</string>
     <string name="user_review_delete_success">Водгук выдалены паспяхова</string>
     <string name="user_review_delete_failure">Паўстала памылка пры выдаленні адклікання</string>
+
+    <!-- Course search -->
+    <string name="course_search_menu_title">Пошук па курсе</string>
+    <string name="course_search_idle_message">Калі ласка, увядзіце ключавыя словы\nдля Пошуку па курсе</string>
+    <string name="course_search_empty_message">Па дадзеным запыце\nнічога не знойдзена</string>
 </resources>

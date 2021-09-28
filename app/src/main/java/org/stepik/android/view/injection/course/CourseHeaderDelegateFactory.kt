@@ -16,6 +16,7 @@ interface CourseHeaderDelegateFactory {
         mustShowCourseRevenue: Boolean,
         showCourseRevenueAction: () -> Unit,
         onSubmissionCountClicked: () -> Unit,
-        isLocalSubmissionsEnabled: Boolean
+        isLocalSubmissionsEnabled: Boolean,
+        showCourseSearchAction: () -> Unit
     ): CourseHeaderDelegate
 }

@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import kotlinx.android.synthetic.main.view_search_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
@@ -20,11 +23,23 @@ import org.stepic.droid.databinding.DialogCourseSearchBinding
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
+import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
+import org.stepik.android.presentation.course_search.CourseSearchFeature
+import org.stepik.android.presentation.course_search.CourseSearchViewModel
+import org.stepik.android.view.course_search.adapter.delegate.CourseSearchResultAdapterDelegate
+import org.stepik.android.view.course_search.adapter.delegate.CourseSearchResultLoadingAdapterDelegate
+import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
+import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class CourseSearchDialogFragment :
     DialogFragment(),
+    ReduxView<CourseSearchFeature.State, CourseSearchFeature.Action.ViewAction>,
     SearchSuggestionsView,
     AutoCompleteSearchView.FocusCallback {
 
@@ -39,6 +54,15 @@ class CourseSearchDialogFragment :
 
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
+
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val courseSearchViewModel: CourseSearchViewModel by reduxViewModel(this) { viewModelFactory }
+
+    private val viewStateDelegate = ViewStateDelegate<CourseSearchFeature.State>()
+
+    private val courseSearchResultItemsAdapter = DefaultDelegateAdapter<CourseSearchResultListItem>()
 
     private var courseId: Long by argument()
 
@@ -71,10 +95,34 @@ class CourseSearchDialogFragment :
             .inject(this)
     }
 
+    private fun initViewStateDelegate() {
+        viewStateDelegate.addState<CourseSearchFeature.State.Idle>(courseSearchBinding.courseSearchIdle.courseSearchIdleContainer)
+        viewStateDelegate.addState<CourseSearchFeature.State.Error>(courseSearchBinding.courseSearchError.error)
+        viewStateDelegate.addState<CourseSearchFeature.State.Loading>(courseSearchBinding.courseSearchRecycler)
+        viewStateDelegate.addState<CourseSearchFeature.State.Empty>(courseSearchBinding.courseSearchEmpty.reportProblem)
+        viewStateDelegate.addState<CourseSearchFeature.State.Content>(courseSearchBinding.courseSearchRecycler)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
+        searchIcon = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
+        initViewStateDelegate()
+
+        courseSearchResultItemsAdapter += CourseSearchResultLoadingAdapterDelegate()
+        courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate()
+        with(courseSearchBinding.courseSearchRecycler) {
+            adapter = courseSearchResultItemsAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+                AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical_course_search)?.let(::setDrawable)
+            })
+            setOnPaginationListener { paginationDirection ->
+                if (paginationDirection == PaginationDirection.NEXT) {
+                    courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchNextPage(courseId, courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString()))
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -85,6 +133,26 @@ class CourseSearchDialogFragment :
     override fun onStop() {
         searchSuggestionsPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun onAction(action: CourseSearchFeature.Action.ViewAction) {
+        // no op
+    }
+
+    override fun render(state: CourseSearchFeature.State) {
+        viewStateDelegate.switchState(state)
+        if (state is CourseSearchFeature.State.Loading) {
+            courseSearchResultItemsAdapter.items = listOf(
+                CourseSearchResultListItem.Placeholder,
+                CourseSearchResultListItem.Placeholder,
+                CourseSearchResultListItem.Placeholder,
+                CourseSearchResultListItem.Placeholder,
+                CourseSearchResultListItem.Placeholder
+            )
+        }
+        if (state is CourseSearchFeature.State.Content) {
+            courseSearchResultItemsAdapter.items = state.courseSearchResultListItems
+        }
     }
 
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
@@ -126,13 +194,14 @@ class CourseSearchDialogFragment :
                     onActionViewCollapsed()
                     onActionViewExpanded()
                     clearFocus()
+                    setQuery(query, false)
                 }
-                // TODO Send message to ViewModel
+                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, query))
                 return true
             }
 
             override fun onQueryTextChange(query: String): Boolean {
-                searchView.setConstraint(query)
+                courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setConstraint(query)
                 searchSuggestionsPresenter.onQueryTextChange(query)
                 return false
             }
