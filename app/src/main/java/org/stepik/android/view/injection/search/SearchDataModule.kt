@@ -23,11 +23,6 @@ abstract class SearchDataModule {
         searchRemoteDataSourceImpl: SearchRemoteDataSourceImpl
     ): SearchRemoteDataSource
 
-//    @Binds
-//    internal abstract fun bindSearchCacheDataSource(
-//        searchCacheDataSourceImpl: SearchCacheDataSourceImpl
-//    ): SearchCacheDataSource
-
     @Module
     companion object {
         @Provides
