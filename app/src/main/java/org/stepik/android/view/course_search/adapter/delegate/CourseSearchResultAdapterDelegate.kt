@@ -50,6 +50,17 @@ class CourseSearchResultAdapterDelegate(
         override fun onBind(data: CourseSearchResultListItem) {
             data as CourseSearchResultListItem.Data
             courseSearchTitle.text = data.courseSearchResult.searchResult.lessonTitle
+
+            courseSearchTitle.text = buildString {
+                if (data.courseSearchResult.section != null && data.courseSearchResult.unit != null) {
+                    append("${data.courseSearchResult.section.position}.${data.courseSearchResult.unit.position} ")
+                }
+                append(data.courseSearchResult.searchResult.lessonTitle)
+                if (data.courseSearchResult.searchResult.stepPosition != null) {
+                    append(context.getString(R.string.course_search_step_suffix, data.courseSearchResult.searchResult.stepPosition))
+                }
+            }
+
             Glide.with(courseSearchIcon)
                 .asBitmap()
                 .load(data.courseSearchResult.searchResult.lessonCoverUrl)
@@ -65,9 +76,9 @@ class CourseSearchResultAdapterDelegate(
             courseSearchTextProgress.isVisible = isProgressAvailable
             courseSearchTimeToComplete.isVisible = isProgressAvailable
             courseSearchViewCountIcon.isVisible = isProgressAvailable
-            unitViewCount.isVisible = isProgressAvailable
+            courseSearchViewCount.isVisible = isProgressAvailable
             courseSearchRatingIcon.isVisible = isProgressAvailable
-            unitRating.isVisible = isProgressAvailable
+            courseSearchRating.isVisible = isProgressAvailable
 
             if (progress != null && progress.cost > 0) {
                 val score = progress
@@ -94,7 +105,7 @@ class CourseSearchResultAdapterDelegate(
                     courseSearchTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
                 }
 
-                unitViewCount.text = lesson.passedBy.toString()
+                courseSearchViewCount.text = lesson.passedBy.toString()
 
                 @DrawableRes
                 val unitRatingDrawableRes =
@@ -105,7 +116,7 @@ class CourseSearchResultAdapterDelegate(
                     }
 
                 courseSearchRatingIcon.setImageResource(unitRatingDrawableRes)
-                unitRating.text = abs(lesson.voteDelta).toString()
+                courseSearchRating.text = abs(lesson.voteDelta).toString()
             }
 
             val hasComment = with(data.courseSearchResult.searchResult) {

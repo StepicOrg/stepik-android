@@ -113,7 +113,7 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/unitViewCount"
+            android:id="@+id/courseSearchViewCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -144,12 +144,12 @@
             android:layout_marginTop="@dimen/course_content_item_inner_margin"
             android:layout_marginBottom="@dimen/course_content_item_margin"
 
-            app:layout_constraintStart_toEndOf="@+id/unitViewCount"
+            app:layout_constraintStart_toEndOf="@+id/courseSearchViewCount"
             app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/unitRating"
+            android:id="@+id/courseSearchRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 

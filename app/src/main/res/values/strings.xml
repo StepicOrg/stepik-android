@@ -1238,4 +1238,5 @@
     <string name="course_search_menu_title">Search course</string>
     <string name="course_search_idle_message">Enter a keyword\nto Search the course</string>
     <string name="course_search_empty_message">No results were\nfound for this request.</string>
+    <string name="course_search_step_suffix">" — Step %d"</string>
 </resources>
