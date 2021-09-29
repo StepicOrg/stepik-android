@@ -1,7 +1,7 @@
 package org.stepik.android.domain.debug.interactor
 
 import com.facebook.login.LoginManager
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.api.sdk.VK
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class DebugInteractor
 @Inject
 constructor(
-    private val firebaseInstanceId: FirebaseInstanceId,
+    private val firebaseMessaging: FirebaseMessaging,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val logoutManager: StepikLogoutManager
 ) {
@@ -40,9 +40,9 @@ constructor(
 
     private fun getFirebaseToken(): Single<String> =
         Single.create { emitter ->
-            firebaseInstanceId
-                .instanceId
-                .addOnSuccessListener { instanceIdResult -> emitter.onSuccess(instanceIdResult.token) }
+            firebaseMessaging
+                .token
+                .addOnSuccessListener { result -> emitter.onSuccess(result) }
                 .addOnFailureListener(emitter::onError)
         }
 
