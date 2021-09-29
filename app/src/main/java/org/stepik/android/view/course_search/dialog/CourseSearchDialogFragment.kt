@@ -31,10 +31,10 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.course_search.CourseSearchFeature
 import org.stepik.android.presentation.course_search.CourseSearchViewModel
 import org.stepik.android.view.course_search.adapter.delegate.CourseSearchResultAdapterDelegate
-import org.stepik.android.view.course_search.adapter.delegate.CourseSearchResultLoadingAdapterDelegate
 import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
@@ -120,7 +120,11 @@ class CourseSearchDialogFragment :
         setupSearchBar()
         initViewStateDelegate()
 
-        courseSearchResultItemsAdapter += CourseSearchResultLoadingAdapterDelegate()
+        courseSearchResultItemsAdapter += adapterDelegate(
+            layoutResId = R.layout.item_course_search_result_loading,
+            isForViewType = { _, data -> data is CourseSearchResultListItem.Placeholder }
+        )
+
         courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate(
             onOpenStepAction = { lesson, unit, section, stepPosition ->
                 val lessonData = LessonData(
