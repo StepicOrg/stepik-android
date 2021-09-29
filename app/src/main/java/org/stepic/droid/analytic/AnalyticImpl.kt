@@ -24,6 +24,7 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.base.analytic.AnalyticSource
 import ru.nobird.android.view.base.ui.extension.isNightModeEnabled
 import java.util.HashMap
+import java.util.Locale
 import javax.inject.Inject
 
 @AppSingleton
@@ -35,6 +36,8 @@ constructor(
     private val stepikAnalytic: StepikAnalytic
 ) : Analytic {
     private companion object {
+        private const val FIREBASE_LENGTH_LIMIT = 40
+
         inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
             val userProfile = UserProfile.newBuilder()
                 .apply(mutation)
@@ -127,7 +130,8 @@ constructor(
 
         if (AnalyticSource.FIREBASE in analyticEvent.sources) {
             val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
-            firebaseAnalytics.logEvent(analyticEvent.name, bundle)
+            val firebaseEventName = castStringToFirebaseEvent(analyticEvent.name)
+            firebaseAnalytics.logEvent(firebaseEventName, bundle)
         }
 
         if (AnalyticSource.STEPIK_API in analyticEvent.sources) {
@@ -147,6 +151,10 @@ constructor(
         amplitude.logEvent(eventName, properties)
         YandexMetrica.reportEvent(eventName, params)
         firebaseCrashlytics.log("$eventName=$params")
+
+        val bundle = bundleOf(*params?.map { (a, b) -> a to b }?.toTypedArray() ?: emptyArray())
+        val firebaseEventName = castStringToFirebaseEvent(eventName)
+        firebaseAnalytics.logEvent(firebaseEventName, bundle)
     }
 
     override fun setUserProperty(name: String, value: String) {
@@ -209,26 +217,10 @@ constructor(
     }
 
     private fun castStringToFirebaseEvent(eventName: String): String {
-        var eventNameLocal =
-                if (eventName == Analytic.Interaction.SUCCESS_LOGIN) {
-                    FirebaseAnalytics.Event.LOGIN
-                } else {
-                    eventName
-                }
+        val firebaseEventName = eventName
+            .decapitalize(Locale.ENGLISH)
+            .replace(' ', '_')
 
-        val sb = StringBuilder()
-        eventNameLocal.forEach {
-            if (Character.isLetterOrDigit(it) && !Character.isWhitespace(it)) {
-                sb.append(it)
-            } else {
-                sb.append("_")
-            }
-        }
-        eventNameLocal = sb.toString()
-
-        if (eventNameLocal.length > 32L) {
-            eventNameLocal = eventNameLocal.substring(0, 32)
-        }
-        return eventNameLocal
+        return firebaseEventName.take(FIREBASE_LENGTH_LIMIT)
     }
 }

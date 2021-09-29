@@ -61,7 +61,6 @@ public class CertificateShareDialog extends BottomSheetDialog {
             @Override
             public void onClick(View view) {
                 dismiss();
-                analytic.reportEvent(Analytic.Certificate.ADD_LINKEDIN);
                 screenManager.addCertificateToLinkedIn(certificateViewItem);
             }
         });
