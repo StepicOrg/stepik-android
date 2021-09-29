@@ -16,14 +16,14 @@ constructor() {
     }
 
     fun updateCourseSearchResults(currentItems: PagedList<CourseSearchResultListItem.Data>, newItems: PagedList<CourseSearchResultListItem.Data>): CourseSearchFeature.State.Content {
+        val newItemsMap = newItems.associateBy(CourseSearchResultListItem.Data::id)
         val updatedItems =
             currentItems.transform {
                 map { item ->
-                    newItems
-                        .find { courseSearchResultItem -> item.id == courseSearchResultItem.id }
-                        ?: item
+                    newItemsMap[item.id] ?: item
                 }
             }
+
         return CourseSearchFeature.State.Content(updatedItems, updatedItems)
     }
 }
