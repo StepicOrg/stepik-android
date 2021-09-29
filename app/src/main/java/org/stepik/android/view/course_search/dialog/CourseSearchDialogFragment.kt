@@ -189,7 +189,12 @@ class CourseSearchDialogFragment :
             )
         }
         if (state is CourseSearchFeature.State.Content) {
-            courseSearchResultItemsAdapter.items = state.courseSearchResultListItems
+            courseSearchResultItemsAdapter.items =
+                if (state.isLoadingNextPage) {
+                    state.courseSearchResultListDataItems + CourseSearchResultListItem.Placeholder
+                } else {
+                    state.courseSearchResultListDataItems
+                }
         }
     }
 

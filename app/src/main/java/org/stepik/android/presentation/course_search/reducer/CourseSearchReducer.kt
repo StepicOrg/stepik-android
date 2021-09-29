@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_search.reducer
 
-import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
 import org.stepik.android.presentation.course_search.CourseSearchFeature.State
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Message
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Action
@@ -29,12 +28,12 @@ constructor(
                             if (message.courseSearchResultsDataItems.isEmpty()) {
                                 State.Empty
                             } else {
-                                State.Content(message.courseSearchResultsDataItems, message.courseSearchResultsDataItems)
+                                State.Content(message.courseSearchResultsDataItems, isLoadingNextPage = false)
                             }
                         courseSearchState to emptySet()
                     }
                     is State.Content -> {
-                        courseSearchStateMapper.updateCourseSearchResults(state.courseSearchResultListDataItems, message.courseSearchResultsDataItems) to emptySet()
+                        courseSearchStateMapper.updateCourseSearchResults(state, message.courseSearchResultsDataItems) to emptySet()
                     }
                     else ->
                         null
@@ -48,8 +47,8 @@ constructor(
             }
             is Message.FetchNextPage -> {
                 if (state is State.Content) {
-                    if (state.courseSearchResultListDataItems.hasNext && state.courseSearchResultListItems.last() !is CourseSearchResultListItem.Placeholder) {
-                        state.copy(courseSearchResultListItems = state.courseSearchResultListItems + CourseSearchResultListItem.Placeholder) to
+                    if (state.courseSearchResultListDataItems.hasNext && !state.isLoadingNextPage) {
+                        state.copy(isLoadingNextPage = true) to
                                 setOf(
                                     Action.FetchCourseSearchResults(
                                         message.courseId,
@@ -68,9 +67,9 @@ constructor(
                 if (state is State.Content) {
                     val newState =
                         if (state.courseSearchResultListDataItems.page < message.courseSearchResultsDataItems.page) {
-                            courseSearchStateMapper.concatCourseSearchResults(state.courseSearchResultListDataItems, message.courseSearchResultsDataItems)
+                            courseSearchStateMapper.concatCourseSearchResults(state, message.courseSearchResultsDataItems)
                         } else {
-                            courseSearchStateMapper.updateCourseSearchResults(state.courseSearchResultListDataItems, message.courseSearchResultsDataItems)
+                            courseSearchStateMapper.updateCourseSearchResults(state, message.courseSearchResultsDataItems)
                         }
                     newState to emptySet()
                 } else {
@@ -79,7 +78,7 @@ constructor(
             }
             is Message.FetchCourseSearchResultsNextFailure -> {
                 if (state is State.Content) {
-                    state.copy(courseSearchResultListItems = state.courseSearchResultListDataItems) to emptySet()
+                    state.copy(isLoadingNextPage = false) to emptySet()
                 } else {
                     null
                 }

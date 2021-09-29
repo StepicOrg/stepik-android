@@ -10,20 +10,22 @@ import javax.inject.Inject
 class CourseSearchStateMapper
 @Inject
 constructor() {
-    fun concatCourseSearchResults(currentItems: PagedList<CourseSearchResultListItem.Data>, newItems: PagedList<CourseSearchResultListItem.Data>): CourseSearchFeature.State.Content {
-        val updatedItems = currentItems.concatWithPagedList(newItems)
-        return CourseSearchFeature.State.Content(updatedItems, updatedItems)
+    fun concatCourseSearchResults(currentState: CourseSearchFeature.State.Content, newItems: PagedList<CourseSearchResultListItem.Data>): CourseSearchFeature.State.Content {
+        val updatedItems = currentState.courseSearchResultListDataItems.concatWithPagedList(newItems)
+        return currentState.copy(courseSearchResultListDataItems = updatedItems)
     }
 
-    fun updateCourseSearchResults(currentItems: PagedList<CourseSearchResultListItem.Data>, newItems: PagedList<CourseSearchResultListItem.Data>): CourseSearchFeature.State.Content {
+    fun updateCourseSearchResults(currentState: CourseSearchFeature.State.Content, newItems: PagedList<CourseSearchResultListItem.Data>): CourseSearchFeature.State.Content {
         val newItemsMap = newItems.associateBy(CourseSearchResultListItem.Data::id)
         val updatedItems =
-            currentItems.transform {
-                map { item ->
-                    newItemsMap[item.id] ?: item
+            currentState
+                .courseSearchResultListDataItems
+                .transform {
+                    map { item ->
+                        newItemsMap[item.id] ?: item
+                    }
                 }
-            }
 
-        return CourseSearchFeature.State.Content(updatedItems, updatedItems)
+        return currentState.copy(courseSearchResultListDataItems = updatedItems, isLoadingNextPage = false)
     }
 }

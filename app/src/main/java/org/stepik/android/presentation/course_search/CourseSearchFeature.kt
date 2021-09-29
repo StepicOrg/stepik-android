@@ -11,10 +11,7 @@ interface CourseSearchFeature {
         object Loading : State()
         object Empty : State()
         object Error : State()
-        data class Content(
-            val courseSearchResultListDataItems: PagedList<CourseSearchResultListItem.Data>,
-            val courseSearchResultListItems: List<CourseSearchResultListItem>
-        ) : State()
+        data class Content(val courseSearchResultListDataItems: PagedList<CourseSearchResultListItem.Data>, val isLoadingNextPage: Boolean) : State()
     }
 
     sealed class Message {
