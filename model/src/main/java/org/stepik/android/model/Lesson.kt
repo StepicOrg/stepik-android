@@ -63,7 +63,7 @@ class Lesson(
     val timeToComplete: Long = 0,
 
     @SerializedName("units")
-    val unit: LongArray = longArrayOf()
+    val units: List<Long> = emptyList()
 ) : Parcelable, Progressable, Identifiable<Long> {
     @IgnoredOnParcel
     val isTeacher: Boolean =

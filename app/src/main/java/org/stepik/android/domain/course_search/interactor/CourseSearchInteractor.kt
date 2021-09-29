@@ -1,9 +1,9 @@
 package org.stepik.android.domain.course_search.interactor
 
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.Singles
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_search.model.CourseSearchResult
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
@@ -51,19 +51,19 @@ constructor(
             searchRepository.saveSearchQuery(courseId = courseId, query = searchResultQuery.query)
         }
 
-    fun getCourseSearchResult(searchResultQuery: SearchResultQuery): Observable<PagedList<CourseSearchResultListItem.Data>> =
+    fun getCourseSearchResult(searchResultQuery: SearchResultQuery): Flowable<PagedList<CourseSearchResultListItem.Data>> =
         searchResultRepository
             .getSearchResults(searchResultQuery)
-            .flatMapObservable { searchResults ->
+            .flatMapPublisher { searchResults ->
                 val courseSearchResults = searchResults.mapPaged { CourseSearchResultListItem.Data(CourseSearchResult(searchResult = it)) }
-                Observable.concat(Observable.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))
+                Single.concat(Single.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))
             }
 
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
 
-    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Observable<PagedList<CourseSearchResultListItem.Data>> {
+    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Single<PagedList<CourseSearchResultListItem.Data>> {
         val lessonIds = searchResults
             .mapNotNull { it.lesson }
 
@@ -72,27 +72,27 @@ constructor(
 
         val stepIds = searchResults
             .mapNotNull { it.step }
-            .mapToLongArray { it }
+            .toLongArray()
 
-        return Observables.zip(
-            lessonRepository.getLessons(*lessonIds.mapToLongArray { it }, primarySourceType = DataSourceType.REMOTE).toObservable(),
-            stepRepository.getSteps(*stepIds, primarySourceType = DataSourceType.REMOTE).toObservable()
+        return Singles.zip(
+            lessonRepository.getLessons(*lessonIds.mapToLongArray { it }, primarySourceType = DataSourceType.REMOTE),
+            stepRepository.getSteps(*stepIds, primarySourceType = DataSourceType.REMOTE)
         ).flatMap { (lessons, steps) ->
-            val unitIds = lessons.flatMap { lesson -> lesson.unit.map { it } }
+            val unitIds = lessons.flatMap { lesson -> lesson.units }
             unitRepository
                 .getUnits(unitIds, DataSourceType.REMOTE)
-                .flatMapObservable { units ->
+                .flatMap { units ->
                     fetchProgressesAndUsers(searchResults, lessons, units, steps, commentOwners)
                 }
         }
     }
 
-    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, units: List<Unit>, steps: List<Step>, userIds: List<Long>): Observable<PagedList<CourseSearchResultListItem.Data>> =
-        Observables.zip(
-            progressRepository.getProgresses(lessons.getProgresses(), primarySourceType = DataSourceType.REMOTE).toObservable(),
-            userRepository.getUsers(userIds, primarySourceType = DataSourceType.REMOTE).toObservable(),
-            sectionRepository.getSections(units.map(Unit::section), primarySourceType = DataSourceType.REMOTE).toObservable()
-        ).map { (progresses, users, sections) ->
+    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, units: List<Unit>, steps: List<Step>, userIds: List<Long>): Single<PagedList<CourseSearchResultListItem.Data>> =
+        Singles.zip(
+            progressRepository.getProgresses(lessons.getProgresses(), primarySourceType = DataSourceType.REMOTE),
+            userRepository.getUsers(userIds, primarySourceType = DataSourceType.REMOTE),
+            sectionRepository.getSections(units.map(Unit::section), primarySourceType = DataSourceType.REMOTE)
+        ) { progresses, users, sections ->
             val lessonMap = lessons.associateBy(Lesson::id)
             val progressMaps = progresses.associateBy(Progress::id)
             val userMaps = users.associateBy(User::id)
