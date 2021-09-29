@@ -40,5 +40,7 @@ data class SearchResult(
     @SerializedName("comment_user")
     val commentUser: Long?,
     @SerializedName("comment_text")
-    val commentText: String?
+    val commentText: String?,
+    @SerializedName("target_type")
+    val targetType: String?
 )

@@ -16,6 +16,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
+import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.listeners.OnItemClickListener
 import org.stepic.droid.util.resolveColorAttribute
 import ru.nobird.android.view.base.ui.extension.inflate
@@ -50,6 +51,7 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
         }
 
     var searchView: SearchView? = null
+    var suggestionClickCallback: AutoCompleteSearchView.SuggestionClickCallback? = null
 
     private val querySpan = BackgroundColorSpan(context.resolveColorAttribute(R.attr.colorControlHighlight))
 
@@ -69,6 +71,7 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
         }
         val (query, _) = items[position]
         analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
+        suggestionClickCallback?.onSuggestionClicked(query.toString())
         searchView?.setQuery(query.toString(), true)
     }
 

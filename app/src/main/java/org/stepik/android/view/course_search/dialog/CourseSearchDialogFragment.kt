@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
@@ -26,6 +26,7 @@ import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course_search.analytic.CourseContentSearchScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.course_search.CourseSearchFeature
@@ -40,22 +41,28 @@ import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseSearchDialogFragment :
     DialogFragment(),
     ReduxView<CourseSearchFeature.State, CourseSearchFeature.Action.ViewAction>,
     SearchSuggestionsView,
-    AutoCompleteSearchView.FocusCallback {
+    AutoCompleteSearchView.FocusCallback,
+    AutoCompleteSearchView.SuggestionClickCallback {
 
     companion object {
         const val TAG = "CourseSearchDialogFragment"
 
-        fun newInstance(courseId: Long): DialogFragment =
+        fun newInstance(courseId: Long, courseTitle: String): DialogFragment =
             CourseSearchDialogFragment().apply {
                 this.courseId = courseId
+                this.courseTitle = courseTitle
             }
     }
+
+    @Inject
+    lateinit var analytic: Analytic
 
     @Inject
     lateinit var screenManager: ScreenManager
@@ -76,8 +83,9 @@ class CourseSearchDialogFragment :
     private val courseSearchResultItemsAdapter = DefaultDelegateAdapter<CourseSearchResultListItem>()
 
     private var courseId: Long by argument()
+    private var courseTitle: String by argument()
 
-    private lateinit var searchIcon: ImageView
+    private var isSuggestionClicked: Boolean = false
 
     private val courseSearchBinding: DialogCourseSearchBinding by viewBinding(DialogCourseSearchBinding::bind)
 
@@ -92,6 +100,7 @@ class CourseSearchDialogFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+        analytic.report(CourseContentSearchScreenOpenedAnalyticEvent(courseId, courseTitle))
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
     }
 
@@ -116,7 +125,6 @@ class CourseSearchDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchIcon = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
         initViewStateDelegate()
 
@@ -126,6 +134,16 @@ class CourseSearchDialogFragment :
         )
 
         courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate(
+            onLogEventAction = { stepId, type ->
+                Timber.d("APPS-3428: Log")
+                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchResultClickedEventMessage(
+                    courseId = courseId,
+                    courseTitle = courseTitle,
+                    query = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString(),
+                    type = type,
+                    step = stepId
+                ))
+            },
             onOpenStepAction = { lesson, unit, section, stepPosition ->
                 val lessonData = LessonData(
                     lesson = lesson,
@@ -151,7 +169,7 @@ class CourseSearchDialogFragment :
             })
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchNextPage(courseId, courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString()))
+                    courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchNextPage(courseId, courseTitle, courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString()))
                 }
             }
         }
@@ -212,14 +230,18 @@ class CourseSearchDialogFragment :
         }
     }
 
+    override fun onSuggestionClicked(query: String) {
+        isSuggestionClicked = true
+    }
+
     private fun setupSearchBar() {
         courseSearchBinding.viewSearchToolbarBinding.viewCenteredToolbarBinding.centeredToolbar.isVisible = false
         courseSearchBinding.viewSearchToolbarBinding.backIcon.isVisible = true
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.isVisible = true
-        searchIcon.setImageResource(0)
         (courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar)
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setFocusCallback(this)
+        courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setSuggestionCallback(this)
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setIconifiedByDefault(false)
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setBackgroundColor(0)
         courseSearchBinding.viewSearchToolbarBinding.backIcon.setOnClickListener {
@@ -243,7 +265,9 @@ class CourseSearchDialogFragment :
                     clearFocus()
                     setQuery(query, false)
                 }
-                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, query))
+                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestionClicked))
+                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestionClicked))
+                isSuggestionClicked = false
                 return true
             }
 

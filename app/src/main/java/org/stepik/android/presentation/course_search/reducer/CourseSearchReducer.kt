@@ -1,5 +1,7 @@
 package org.stepik.android.presentation.course_search.reducer
 
+import org.stepik.android.domain.course_search.analytic.CourseContentSearchResultClicked
+import org.stepik.android.domain.course_search.analytic.CourseContentSearchedAnalyticEvent
 import org.stepik.android.presentation.course_search.CourseSearchFeature.State
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Message
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Action
@@ -16,7 +18,7 @@ constructor(
         when (message) {
             is Message.FetchCourseSearchResultsInitial -> {
                 if (state !is State.Loading) {
-                    State.Loading to setOf(Action.FetchCourseSearchResults(message.courseId, message.query))
+                    State.Loading to setOf(Action.FetchCourseSearchResults(message.courseId, message.courseTitle, message.query, message.isSuggestion))
                 } else {
                     null
                 }
@@ -28,7 +30,7 @@ constructor(
                             if (message.courseSearchResultsDataItems.isEmpty()) {
                                 State.Empty
                             } else {
-                                State.Content(message.courseSearchResultsDataItems, isLoadingNextPage = false)
+                                State.Content(message.courseSearchResultsDataItems, isLoadingNextPage = false, isSuggestion = message.isSuggestion)
                             }
                         courseSearchState to emptySet()
                     }
@@ -52,7 +54,9 @@ constructor(
                                 setOf(
                                     Action.FetchCourseSearchResults(
                                         message.courseId,
+                                        message.courseTitle,
                                         message.query,
+                                        state.isSuggestion,
                                         state.courseSearchResultListDataItems.page + 1
                                     )
                                 )
@@ -103,6 +107,18 @@ constructor(
                 } else {
                     null
                 }
+            }
+            is Message.CourseContentSearchResultClickedEventMessage -> {
+                if (state is State.Content) {
+                    val event = CourseContentSearchResultClicked(message.courseId, message.courseTitle, message.query, state.isSuggestion, message.type, message.step)
+                    state to setOf(Action.LogAnalyticEvent(event))
+                } else {
+                    null
+                }
+            }
+            is Message.CourseContentSearchedEventMessage -> {
+                val event = CourseContentSearchedAnalyticEvent(message.courseId, message.courseTitle, message.query, message.isSuggestion)
+                state to setOf(Action.LogAnalyticEvent(event))
             }
         } ?: state to emptySet()
 }

@@ -3,6 +3,7 @@ package org.stepik.android.presentation.course_search.dispatcher
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_search.interactor.CourseSearchInteractor
@@ -15,6 +16,7 @@ import javax.inject.Inject
 class CourseSearchActionDispatcher
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val courseSearchInteractor: CourseSearchInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -34,7 +36,7 @@ constructor(
                         onNext = {
                             val message =
                                 if (searchResultQuery.page == 1) {
-                                    CourseSearchFeature.Message.FetchCourseSearchResultsSuccess(it)
+                                    CourseSearchFeature.Message.FetchCourseSearchResultsSuccess(it, action.isSuggestion)
                                 } else {
                                     CourseSearchFeature.Message.FetchCourseSearchResultsNextSuccess(it)
                                 }
@@ -63,6 +65,9 @@ constructor(
                             onNewMessage(CourseSearchFeature.Message.DiscussionThreadError)
                         }
                     )
+            }
+            is CourseSearchFeature.Action.LogAnalyticEvent -> {
+                analytic.report(action.analyticEvent)
             }
         }
     }

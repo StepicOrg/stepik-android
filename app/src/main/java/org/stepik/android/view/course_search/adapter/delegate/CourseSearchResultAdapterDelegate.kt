@@ -9,6 +9,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_course_search_result.*
 import org.stepic.droid.R
 import org.stepic.droid.util.toFixed
+import org.stepik.android.domain.course_search.model.CourseSearchResult
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
@@ -18,6 +19,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import kotlin.math.abs
 
 class CourseSearchResultAdapterDelegate(
+    private val onLogEventAction: (Long?, String) -> Unit,
     private val onOpenStepAction: (Lesson, org.stepik.android.model.Unit?, Section?, Int?) -> Unit,
     private val onOpenCommentAction: (Step, Long?) -> Unit
 ) : AdapterDelegate<CourseSearchResultListItem, DelegateViewHolder<CourseSearchResultListItem>>() {
@@ -33,14 +35,16 @@ class CourseSearchResultAdapterDelegate(
         init {
             courseSearchResultContainer.setOnClickListener {
                 val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
+                logEvent(data.courseSearchResult)
                 with(data.courseSearchResult) {
-                    if (lesson == null) return@setOnClickListener
+                    if (lesson == null) return@with
                     onOpenStepAction(lesson, unit, section, searchResult.stepPosition)
                 }
             }
 
             courseSearchCommentContainer.setOnClickListener {
                 val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
+                logEvent(data.courseSearchResult)
                 with(data.courseSearchResult) {
                     if (step == null) return@setOnClickListener
                     onOpenCommentAction(step, searchResult.comment)
@@ -133,7 +137,16 @@ class CourseSearchResultAdapterDelegate(
                     .centerCrop()
                     .into(courseSearchCommentUserIcon)
                 courseSearchCommentUserName.text = data.courseSearchResult.commentOwner.fullName
-                courseSearchCommentText.setText(data.courseSearchResult.searchResult.commentText)
+                courseSearchCommentText.text = data.courseSearchResult.searchResult.commentText
+            }
+        }
+
+        private fun logEvent(courseSearchResult: CourseSearchResult) {
+            with(courseSearchResult.searchResult) {
+                if (targetType == null) {
+                    return@with
+                }
+                onLogEventAction(step, targetType!!)
             }
         }
     }

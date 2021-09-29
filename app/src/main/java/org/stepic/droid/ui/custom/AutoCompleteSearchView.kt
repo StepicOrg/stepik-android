@@ -44,6 +44,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun onDetachedFromWindow() {
         searchQueriesAdapter.searchView = null
         focusCallback = null
+        searchQueriesAdapter.suggestionClickCallback = null
         super.onDetachedFromWindow()
     }
 
@@ -90,6 +91,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         this.focusCallback = focusCallback
     }
 
+    fun setSuggestionCallback(suggestionClickCallback: SuggestionClickCallback) {
+        searchQueriesAdapter.suggestionClickCallback = suggestionClickCallback
+    }
+
     fun setCloseIconDrawableRes(@DrawableRes iconRes: Int) {
         closeIcon.setImageResource(iconRes)
     }
@@ -120,5 +125,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     interface FocusCallback {
         fun onFocusChanged(hasFocus: Boolean)
+    }
+
+    interface SuggestionClickCallback {
+        fun onSuggestionClicked(query: String)
     }
 }
