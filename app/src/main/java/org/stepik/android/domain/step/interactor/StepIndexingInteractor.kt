@@ -18,19 +18,21 @@ class StepIndexingInteractor
 @Inject
 constructor(
     private val context: Context,
+    private val firebaseAppIndex: FirebaseAppIndex,
+    private val firebaseUserActions: FirebaseUserActions,
     private val endpointResolver: EndpointResolver
 ) {
     private var action: Action? = null
 
     fun startIndexing(unit: Unit?, lesson: Lesson, step: Step) {
-        FirebaseAppIndex.getInstance().update(newIndexable(unit, lesson, step))
+        firebaseAppIndex.update(newIndexable(unit, lesson, step))
 
         action = newAction(unit, lesson, step)
-        action?.let(FirebaseUserActions.getInstance()::start)
+        action?.let(firebaseUserActions::start)
     }
 
     fun endIndexing() {
-        action?.let(FirebaseUserActions.getInstance()::end)
+        action?.let(firebaseUserActions::end)
         action = null
     }
 

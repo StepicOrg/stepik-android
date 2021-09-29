@@ -129,7 +129,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchFromSplash(Activity activity) {
-        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = SocialAuthActivity.Companion.createIntent(activity, null, false);
         activity.startActivity(launchIntent);
     }
@@ -149,7 +148,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
-        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = SocialAuthActivity.Companion.createIntent(activity, course, false);
         activity.startActivity(launchIntent);
     }
@@ -177,7 +175,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
-        analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = SocialAuthActivity.Companion.createIntent(context, fromMainFeed, index);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
@@ -199,21 +196,17 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course) {
-        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         MainFeedActivity.Companion.launchAfterLogin(sourceActivity, course);
     }
 
     @Override
     public void showMainFeedFromSplash(Activity sourceActivity) {
-        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
-
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         sourceActivity.startActivity(intent);
     }
 
     @Override
     public void showMainFeed(Context sourceActivity, int indexOfMenu) {
-        analytic.reportEvent(Analytic.Screens.SHOW_MAIN_FEED);
         Intent intent = new Intent(sourceActivity, MainFeedActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(MainFeedActivity.CURRENT_INDEX_KEY, indexOfMenu);
@@ -248,7 +241,6 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     private Intent getIntentForDescription(Context context, @NotNull Course course, @NotNull CourseViewSource courseViewSource, boolean autoEnroll, CourseScreenTab tab) {
-        analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
         Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, tab);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -283,7 +275,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context, long userId) {
-        analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES, userId + "");
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Certificates.SCREEN_OPENED);
         Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
         context.startActivity(intent);
@@ -321,7 +312,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable LessonData lessonMovementBundle) {
-        analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
             analytic.reportEvent(Analytic.Video.OPEN_EXTERNAL);
@@ -361,7 +351,6 @@ public class ScreenManagerImpl implements ScreenManager {
             try {
                 sourceFragment.startActivity(intent);
             } catch (Exception ex) {
-                analytic.reportError(Analytic.Error.NOT_PLAYER, ex);
                 Toast.makeText(context, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
             }
         }
@@ -369,7 +358,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSettings(Activity sourceActivity) {
-        analytic.reportEvent(Analytic.Screens.SHOW_SETTINGS);
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Settings.SCREEN_OPENED);
         Intent intent = new Intent(sourceActivity, SettingsActivity.class);
         sourceActivity.startActivity(intent);
@@ -579,7 +567,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled) {
-        analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
         Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation, isAutoplayEnabled);
         sourceActivity.startActivity(intent);
     }

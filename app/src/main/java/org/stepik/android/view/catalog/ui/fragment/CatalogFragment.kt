@@ -310,7 +310,6 @@ class CatalogFragment :
                 }
 
                 is CourseContinueFeature.Action.ViewAction.OnCourseListItemClick -> {
-                    analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
                     if (viewAction.courseListItem.course.enrollment != 0L) {
                         screenManager.showCourseModules(activity, viewAction.courseListItem.course, viewAction.courseListItem.source)
                     } else {
@@ -384,7 +383,7 @@ class CatalogFragment :
         backIcon.isVisible = hasFocus
         if (hasFocus) {
             if (!searchEventLogged) {
-                logSearchEvent()
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
                 searchEventLogged = true
             }
             searchIcon.setImageResource(0)
@@ -471,11 +470,6 @@ class CatalogFragment :
                 }
             })
         }
-    }
-
-    private fun logSearchEvent() {
-        analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
     }
 
     private fun openInWeb(url: String) {

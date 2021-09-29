@@ -76,7 +76,6 @@ public class StepShareDialog extends BottomSheetDialog {
                 dismiss();
                 analytic.reportEvent(Analytic.Steps.SHARE_OPEN_IN_BROWSER);
                 screenManager.openStepInWeb(context, step);
-
             }
         });
 

@@ -59,7 +59,6 @@ constructor(
     }
 
     fun onQueryTextSubmit(query: String) {
-        analytic.reportEventWithName(Analytic.Search.SEARCH_SUBMITTED, query)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(AmplitudeAnalytic.Search.PARAM_SUGGESTION to query.toLowerCase()))
     }
 

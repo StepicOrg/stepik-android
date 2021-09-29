@@ -42,7 +42,6 @@ constructor(
     }
 
     override fun continueCourse(course: Course, viewSource: CourseViewSource, interactionSource: CourseContinueInteractionSource) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.report(CourseContinuePressedEvent(course, interactionSource, viewSource))
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             viewContainer.view?.showCourse(course, viewSource, isAdaptive = true)
