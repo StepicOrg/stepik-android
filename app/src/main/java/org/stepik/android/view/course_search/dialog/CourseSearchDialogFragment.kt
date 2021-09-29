@@ -149,7 +149,7 @@ class CourseSearchDialogFragment :
                     unit = unit,
                     section = section,
                     course = null,
-                    stepPosition = stepPosition ?: 0
+                    stepPosition = stepPosition?.let { it - 1 } ?: 0
                 )
                 val intent = LessonActivity.createIntent(requireContext(), lessonData)
                 startActivity(intent)

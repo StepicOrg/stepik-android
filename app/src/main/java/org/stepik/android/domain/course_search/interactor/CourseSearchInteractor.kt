@@ -28,7 +28,6 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.mapPaged
-import ru.nobird.android.core.model.mapToLongArray
 import javax.inject.Inject
 
 class CourseSearchInteractor
@@ -55,17 +54,31 @@ constructor(
         searchResultRepository
             .getSearchResults(searchResultQuery)
             .flatMapPublisher { searchResults ->
-                val courseSearchResults = searchResults.mapPaged { CourseSearchResultListItem.Data(CourseSearchResult(searchResult = it)) }
-                Single.concat(Single.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults))
+                val lessonIds = searchResults
+                    .mapNotNull { it.lesson }
+                    .toLongArray()
+                lessonRepository
+                    .getLessons(*lessonIds, primarySourceType = DataSourceType.REMOTE)
+                    .flatMapPublisher { lessons ->
+                        val lessonsMap = lessons.associateBy(Lesson::id)
+                        val courseSearchResults = searchResults.mapPaged { searchResult ->
+                            CourseSearchResultListItem.Data(
+                                CourseSearchResult(
+                                    searchResult = searchResult,
+                                    lesson = searchResult.lesson?.let { lessonsMap[it] }
+                                )
+                            )
+                        }
+                        Single.concat(Single.just(courseSearchResults), fetchCourseSearchResultsDetails(searchResults, lessons))
+                    }
             }
 
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
 
-    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>): Single<PagedList<CourseSearchResultListItem.Data>> {
-        val lessonIds = searchResults
-            .mapNotNull { it.lesson }
+    private fun fetchCourseSearchResultsDetails(searchResults: PagedList<SearchResult>, lessons: List<Lesson>): Single<PagedList<CourseSearchResultListItem.Data>> {
+        val unitIds = lessons.flatMap { lesson -> lesson.units }
 
         val commentOwners = searchResults
             .mapNotNull { it.commentUser }
@@ -75,15 +88,10 @@ constructor(
             .toLongArray()
 
         return Singles.zip(
-            lessonRepository.getLessons(*lessonIds.mapToLongArray { it }, primarySourceType = DataSourceType.REMOTE),
+            unitRepository.getUnits(unitIds, DataSourceType.REMOTE),
             stepRepository.getSteps(*stepIds, primarySourceType = DataSourceType.REMOTE)
-        ).flatMap { (lessons, steps) ->
-            val unitIds = lessons.flatMap { lesson -> lesson.units }
-            unitRepository
-                .getUnits(unitIds, DataSourceType.REMOTE)
-                .flatMap { units ->
-                    fetchProgressesAndUsers(searchResults, lessons, units, steps, commentOwners)
-                }
+        ).flatMap { (units, steps) ->
+            fetchProgressesAndUsers(searchResults, lessons, units, steps, commentOwners)
         }
     }
 
