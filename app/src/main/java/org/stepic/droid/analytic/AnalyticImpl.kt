@@ -130,7 +130,7 @@ constructor(
 
         if (AnalyticSource.FIREBASE in analyticEvent.sources) {
             val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
-            val firebaseEventName = castStringToFirebaseEvent(analyticEvent.name.decapitalize(Locale.ROOT))
+            val firebaseEventName = castStringToFirebaseEvent(analyticEvent.name)
             firebaseAnalytics.logEvent(firebaseEventName, bundle)
         }
 
@@ -153,7 +153,7 @@ constructor(
         firebaseCrashlytics.log("$eventName=$params")
 
         val bundle = bundleOf(*params?.map { (a, b) -> a to b }?.toTypedArray() ?: emptyArray())
-        val firebaseEventName = castStringToFirebaseEvent(eventName.decapitalize(Locale.ROOT))
+        val firebaseEventName = castStringToFirebaseEvent(eventName)
         firebaseAnalytics.logEvent(firebaseEventName, bundle)
     }
 
@@ -217,11 +217,10 @@ constructor(
     }
 
     private fun castStringToFirebaseEvent(eventName: String): String {
-        val firebaseEventName = eventName.replace(' ', '_')
-        return if (firebaseEventName.length > FIREBASE_LENGTH_LIMIT) {
-            firebaseEventName.substring(0, FIREBASE_LENGTH_LIMIT)
-        } else {
-            firebaseEventName
-        }
+        val firebaseEventName = eventName
+            .decapitalize(Locale.ENGLISH)
+            .replace(' ', '_')
+
+        return firebaseEventName.take(FIREBASE_LENGTH_LIMIT)
     }
 }
