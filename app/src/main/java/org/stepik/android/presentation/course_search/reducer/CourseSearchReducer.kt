@@ -5,14 +5,15 @@ import org.stepik.android.domain.course_search.analytic.CourseContentSearchedAna
 import org.stepik.android.presentation.course_search.CourseSearchFeature.State
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Message
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Action
-import org.stepik.android.presentation.course_search.mapper.CourseSearchStateMapper
+import org.stepik.android.presentation.course_search.mapper.CourseSearchResultItemsMapper
+import ru.nobird.android.core.model.concatWithPagedList
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseSearchReducer
 @Inject
 constructor(
-    private val courseSearchStateMapper: CourseSearchStateMapper
+    private val courseSearchResultItemsMapper: CourseSearchResultItemsMapper
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
@@ -35,7 +36,8 @@ constructor(
                         courseSearchState to emptySet()
                     }
                     is State.Content -> {
-                        courseSearchStateMapper.updateCourseSearchResults(state, message.courseSearchResultsDataItems) to emptySet()
+                        val updatedItems = courseSearchResultItemsMapper.updateCourseSearchResults(state.courseSearchResultListDataItems, message.courseSearchResultsDataItems)
+                        state.copy(courseSearchResultListDataItems = updatedItems, isLoadingNextPage = false) to emptySet()
                     }
                     else ->
                         null
@@ -71,9 +73,10 @@ constructor(
                 if (state is State.Content) {
                     val newState =
                         if (state.courseSearchResultListDataItems.page < message.courseSearchResultsDataItems.page) {
-                            courseSearchStateMapper.concatCourseSearchResults(state, message.courseSearchResultsDataItems)
+                            state.copy(courseSearchResultListDataItems = state.courseSearchResultListDataItems.concatWithPagedList(message.courseSearchResultsDataItems))
                         } else {
-                            courseSearchStateMapper.updateCourseSearchResults(state, message.courseSearchResultsDataItems)
+                            val updatedItems = courseSearchResultItemsMapper.updateCourseSearchResults(state.courseSearchResultListDataItems, message.courseSearchResultsDataItems)
+                            state.copy(courseSearchResultListDataItems = updatedItems, isLoadingNextPage = false)
                         }
                     newState to emptySet()
                 } else {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -41,7 +42,6 @@ import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseSearchDialogFragment :
@@ -135,7 +135,6 @@ class CourseSearchDialogFragment :
 
         courseSearchResultItemsAdapter += CourseSearchResultAdapterDelegate(
             onLogEventAction = { stepId, type ->
-                Timber.d("APPS-3428: Log")
                 courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchResultClickedEventMessage(
                     courseId = courseId,
                     courseTitle = courseTitle,
@@ -256,6 +255,7 @@ class CourseSearchDialogFragment :
 
     private fun setupSearchView(searchView: AutoCompleteSearchView) {
         searchView.initSuggestions(courseSearchBinding.courseSearchContainer)
+        (searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView).setImageResource(0)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchSuggestionsPresenter.onQueryTextSubmit(query)
