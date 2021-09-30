@@ -16,7 +16,6 @@ import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
-import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
@@ -91,7 +90,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         this.focusCallback = focusCallback
     }
 
-    fun setSuggestionCallback(suggestionClickCallback: SuggestionClickCallback) {
+    fun setSuggestionClickCallback(suggestionClickCallback: SuggestionClickCallback) {
         searchQueriesAdapter.suggestionClickCallback = suggestionClickCallback
     }
 
@@ -128,6 +127,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     interface SuggestionClickCallback {
-        fun onSuggestionClicked(query: String)
+        fun onQueryTextSubmitSuggestion(query: String): Boolean
     }
 }

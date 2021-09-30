@@ -85,8 +85,6 @@ class CourseSearchDialogFragment :
     private var courseId: Long by argument()
     private var courseTitle: String by argument()
 
-    private var isSuggestionClicked: Boolean = false
-
     private val courseSearchBinding: DialogCourseSearchBinding by viewBinding(DialogCourseSearchBinding::bind)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -229,10 +227,6 @@ class CourseSearchDialogFragment :
         }
     }
 
-    override fun onSuggestionClicked(query: String) {
-        isSuggestionClicked = true
-    }
-
     private fun setupSearchBar() {
         courseSearchBinding.viewSearchToolbarBinding.viewCenteredToolbarBinding.centeredToolbar.isVisible = false
         courseSearchBinding.viewSearchToolbarBinding.backIcon.isVisible = true
@@ -240,7 +234,7 @@ class CourseSearchDialogFragment :
         (courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar)
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setFocusCallback(this)
-        courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setSuggestionCallback(this)
+        courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setSuggestionClickCallback(this)
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setIconifiedByDefault(false)
         courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setBackgroundColor(0)
         courseSearchBinding.viewSearchToolbarBinding.backIcon.setOnClickListener {
@@ -257,19 +251,8 @@ class CourseSearchDialogFragment :
         searchView.initSuggestions(courseSearchBinding.courseSearchContainer)
         (searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView).setImageResource(0)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                searchSuggestionsPresenter.onQueryTextSubmit(query)
-                with(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar) {
-                    onActionViewCollapsed()
-                    onActionViewExpanded()
-                    clearFocus()
-                    setQuery(query, false)
-                }
-                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestionClicked))
-                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestionClicked))
-                isSuggestionClicked = false
-                return true
-            }
+            override fun onQueryTextSubmit(query: String): Boolean =
+                onQueryTextSubmit(query, isSuggestion = false)
 
             override fun onQueryTextChange(query: String): Boolean {
                 courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setConstraint(query)
@@ -279,5 +262,21 @@ class CourseSearchDialogFragment :
         })
         searchView.onActionViewExpanded()
         searchView.clearFocus()
+    }
+
+    override fun onQueryTextSubmitSuggestion(query: String): Boolean =
+        onQueryTextSubmit(query, isSuggestion = true)
+
+    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean): Boolean {
+        searchSuggestionsPresenter.onQueryTextSubmit(query)
+        with(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar) {
+            onActionViewCollapsed()
+            onActionViewExpanded()
+            clearFocus()
+            setQuery(query, false)
+        }
+        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
+        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
+        return true
     }
 }

@@ -71,8 +71,7 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
         }
         val (query, _) = items[position]
         analytic.reportEventValue(Analytic.Search.SEARCH_SUGGESTION_CLICKED, (query.length - constraint.length).toLong())
-        suggestionClickCallback?.onSuggestionClicked(query.toString())
-        searchView?.setQuery(query.toString(), true)
+        suggestionClickCallback?.onQueryTextSubmitSuggestion(query.toString())
     }
 
 
