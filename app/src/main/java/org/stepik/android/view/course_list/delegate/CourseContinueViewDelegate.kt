@@ -41,7 +41,6 @@ class CourseContinueViewDelegate(
     }
 
     fun onCourseClicked(courseListItem: CourseListItem.Data) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (courseListItem.course.enrollment != 0L) {
             screenManager.showCourseModules(activity, courseListItem.course, courseListItem.source)
         } else {

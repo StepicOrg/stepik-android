@@ -50,7 +50,6 @@ public class NotificationsFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Notifications.NOTIFICATION_SCREEN_OPENED);
-        analytic.reportEvent(Analytic.Notification.NOTIFICATION_SCREEN_OPENED);
     }
 
     @Nullable

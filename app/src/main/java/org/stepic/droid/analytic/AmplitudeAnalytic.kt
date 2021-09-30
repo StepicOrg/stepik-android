@@ -222,15 +222,8 @@ interface AmplitudeAnalytic {
     object CourseReview {
         const val SCREEN_OPENED = "Course reviews screen opened"
 
-        const val REVIEW_CREATED = "Course review created"
-        const val REVIEW_UPDATED = "Course review updated"
-        const val REVIEW_REMOVED = "Course review deleted"
-
         object Params {
             const val COURSE = "course"
-            const val RATING = "rating"
-            const val FROM_RATING = "from_rating"
-            const val TO_RATING = "to_rating"
         }
     }
 
