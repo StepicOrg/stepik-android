@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2223,
-        name                 : '1.191',
+        code                 : 2224,
+        name                 : '1.192',
 
         minSdk               : 21,
         targetSdk            : 30,
@@ -65,11 +65,7 @@ ext.versions = [
         playCore             : '1.8.2',
         playCoreKtx          : '1.8.1',
         googleauth           : '18.1.0',
-        firebaseAnalytics    : '17.4.3',
-        firebaseAppindexing  : '19.1.0',
-        firebaseConfig       : '19.1.4',
-        firebaseMessaging    : '20.2.1',
-        firebasePerf         : '19.0.7',
+        firebaseBoM          : '28.4.1',
 
         checkout             : '1.2.1',
 
@@ -191,11 +187,12 @@ ext.libraries = [
         playCore             : "com.google.android.play:core:$versions.playCore",
         playCoreKtx          : "com.google.android.play:core-ktx:$versions.playCoreKtx",
         googleauth           : "com.google.android.gms:play-services-auth:$versions.googleauth",
-        firebaseAnalytics    : "com.google.firebase:firebase-analytics-ktx:$versions.firebaseAnalytics",
-        firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebaseAppindexing",
-        firebaseConfig       : "com.google.firebase:firebase-config-ktx:$versions.firebaseConfig",
-        firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebaseMessaging",
-        firebasePerf         : "com.google.firebase:firebase-perf:$versions.firebasePerf",
+        firebaseBoM          : "com.google.firebase:firebase-bom:$versions.firebaseBoM",
+        firebaseAnalytics    : "com.google.firebase:firebase-analytics-ktx",
+        firebaseAppindexing  : "com.google.firebase:firebase-appindexing",
+        firebaseConfig       : "com.google.firebase:firebase-config-ktx",
+        firebaseMessaging    : "com.google.firebase:firebase-messaging",
+        firebasePerf         : "com.google.firebase:firebase-perf",
 
         checkout             : "org.solovyev.android:checkout:$versions.checkout",
 

@@ -304,27 +304,12 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
-        sendOpenUserAnalytic(menuItem.itemId)
         showCurrentFragment(menuItem.itemId)
         return true
     }
 
     override fun onNavigationItemReselected(menuItem: MenuItem) {
 //        scrollUp()
-    }
-
-    private fun sendOpenUserAnalytic(itemId: Int) {
-        when (itemId) {
-            R.id.home -> analytic.reportEvent(Analytic.Screens.USER_OPEN_MY_COURSES)
-            R.id.catalog -> {
-                analytic.reportEvent(Analytic.Screens.USER_OPEN_CATALOG)
-                if (sharedPreferenceHelper.authResponseFromStore == null) {
-                    analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER)
-                }
-            }
-            R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
-            R.id.notifications -> analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
-        }
     }
 
     private fun setFragment(@IdRes id: Int) {

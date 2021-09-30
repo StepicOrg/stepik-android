@@ -84,7 +84,6 @@ constructor(
         requireAuthorization then
         enrollmentRepository
             .removeEnrollment(courseId)
-            .doOnComplete { analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId.toString()) }
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .andThen(userCoursesInteractor.removeUserCourse(courseId))
             .andThen(lessonRepository.removeCachedLessons(courseId))

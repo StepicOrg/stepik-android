@@ -44,7 +44,6 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
             override fun onPageSelected(position: Int) {
                 invokeAnimationOnFragment(position)
-                reportToAnalytic(Analytic.Onboarding.SCREEN_OPENED)
                 reportToAmplitude(AmplitudeAnalytic.Onboarding.SCREEN_OPENED)
             }
         }
@@ -69,13 +68,11 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     }
 
     private fun onboardingClosed() {
-        reportToAnalytic(Analytic.Onboarding.CLOSED)
         reportToAmplitude(AmplitudeAnalytic.Onboarding.CLOSED)
         openLaunchScreen()
     }
 
     override fun onNextClicked() {
-        reportToAnalytic(Analytic.Onboarding.ACTION)
         val current = onboardingViewPager.currentItem
         val next = current + 1
         if (next < onboardingViewPager.adapter!!.count) {
@@ -85,11 +82,6 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
         }
     }
 
-    private fun reportToAnalytic(eventName: String) {
-        val analyticPosition = onboardingViewPager.currentItem + 1
-        val bundle = Bundle().apply { putInt(Analytic.Onboarding.SCREEN_PARAM, analyticPosition) }
-        analytic.reportEvent(eventName, bundle)
-    }
 
     private fun reportToAmplitude(eventName: String) {
         val analyticPosition = onboardingViewPager.currentItem + 1
@@ -97,7 +89,6 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
     }
 
     private fun onboardingComplete() {
-        analytic.reportEvent(Analytic.Onboarding.COMPLETE)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Onboarding.COMPLETED)
         openLaunchScreen()
     }
