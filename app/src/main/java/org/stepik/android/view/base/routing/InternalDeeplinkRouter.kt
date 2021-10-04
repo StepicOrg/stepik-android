@@ -21,13 +21,20 @@ object InternalDeeplinkRouter {
             intent.`package` = BuildConfig.APPLICATION_ID
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            if (intent.resolveActivity(context.packageManager) != null) {
-                context.startActivity(intent)
-            } else {
-                val errorMessage = context.resources.getString(R.string.internal_deeplink_error, uri.path)
-                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
-            }
+            openInExternal(context, uri)
+        }
+    }
+
+    /**
+     * context.startActivity will automatically infer what application to use or offer a choice
+     */
+    private fun openInExternal(context: Context, uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val errorMessage = context.resources.getString(R.string.internal_deeplink_error, uri.toString())
+            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 }
