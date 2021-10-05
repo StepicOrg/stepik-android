@@ -255,8 +255,10 @@ class CourseSearchDialogFragment :
         searchView.initSuggestions(courseSearchBinding.courseSearchContainer)
         (searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView).setImageResource(0)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean =
+            override fun onQueryTextSubmit(query: String): Boolean {
                 onQueryTextSubmit(query, isSuggestion = false)
+                return true
+            }
 
             override fun onQueryTextChange(query: String): Boolean {
                 courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.setConstraint(query)
@@ -268,10 +270,11 @@ class CourseSearchDialogFragment :
         searchView.clearFocus()
     }
 
-    override fun onQueryTextSubmitSuggestion(query: String): Boolean =
+    override fun onQueryTextSubmitSuggestion(query: String) {
         onQueryTextSubmit(query, isSuggestion = true)
+    }
 
-    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean, isTryAgain: Boolean = false): Boolean {
+    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean, isTryAgain: Boolean = false) {
         searchSuggestionsPresenter.onQueryTextSubmit(query)
         val isSameQuery = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString() == query
 
@@ -286,7 +289,5 @@ class CourseSearchDialogFragment :
             courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
             courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
         }
-
-        return true
     }
 }

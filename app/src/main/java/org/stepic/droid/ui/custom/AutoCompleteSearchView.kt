@@ -127,6 +127,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     interface SuggestionClickCallback {
-        fun onQueryTextSubmitSuggestion(query: String): Boolean
+        fun onQueryTextSubmitSuggestion(query: String)
     }
 }
