@@ -82,6 +82,11 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 is LatexData.Web -> {
                     webView.text = latexWebViewMapper.mapLatexData(value, webView.attributes)
 
+                    // TODO Switch to WebViewAssetLoader
+                    /**
+                     * Allow WebView to open file://
+                     */
+                    webView.settings.allowFileAccess = true
                     /**
                      * Kotlin Playground downloads a file with Kotlin versions which generates a mistake, if allowUniversalAccessFromFileURLs is false
                      */
