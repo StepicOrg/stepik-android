@@ -6,6 +6,7 @@ import org.stepik.android.presentation.course_search.CourseSearchFeature.State
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Message
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Action
 import org.stepik.android.presentation.course_search.mapper.CourseSearchResultItemsMapper
+import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.concatWithPagedList
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
@@ -85,7 +86,19 @@ constructor(
             }
             is Message.FetchCourseSearchResultsNextFailure -> {
                 if (state is State.Content) {
-                    state.copy(isLoadingNextPage = false) to emptySet()
+                    val newState =
+                        if (state.courseSearchResultListDataItems.page < message.page) {
+                            state.copy(isLoadingNextPage = false)
+                        } else {
+                            val fallbackList = PagedList(
+                                list = state.courseSearchResultListDataItems.dropLast(20),
+                                page = state.courseSearchResultListDataItems.page - 1,
+                                hasNext = state.courseSearchResultListDataItems.hasNext,
+                                hasPrev = state.courseSearchResultListDataItems.hasPrev
+                            )
+                            state.copy(courseSearchResultListDataItems = fallbackList, isLoadingNextPage = false)
+                        }
+                    newState to emptySet()
                 } else {
                     null
                 }

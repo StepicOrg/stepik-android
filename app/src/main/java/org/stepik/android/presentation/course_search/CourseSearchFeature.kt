@@ -25,7 +25,7 @@ interface CourseSearchFeature {
         data class FetchCourseSearchResultsSuccess(val courseSearchResultsDataItems: PagedList<CourseSearchResultListItem.Data>, val isSuggestion: Boolean) : Message()
         data class FetchCourseSearchResultsNextSuccess(val courseSearchResultsDataItems: PagedList<CourseSearchResultListItem.Data>) : Message()
         object FetchCourseSearchResultsFailure : Message()
-        object FetchCourseSearchResultsNextFailure : Message()
+        data class FetchCourseSearchResultsNextFailure(val page: Int) : Message()
         data class CourseContentSearchResultClickedEventMessage(val courseId: Long, val courseTitle: String, val query: String, val type: String, val step: Long?) : Message()
         data class CourseContentSearchedEventMessage(val courseId: Long, val courseTitle: String, val query: String, val isSuggestion: Boolean) : Message()
         data class InitDiscussionThreadMessage(val step: Step, val discussionId: Long?) : Message()

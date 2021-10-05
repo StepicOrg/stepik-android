@@ -42,7 +42,15 @@ constructor(
                                 }
                             onNewMessage(message)
                         },
-                        onError = { onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsFailure) }
+                        onError = {
+                            val message =
+                                if (searchResultQuery.page == 1) {
+                                    CourseSearchFeature.Message.FetchCourseSearchResultsFailure
+                                } else {
+                                    CourseSearchFeature.Message.FetchCourseSearchResultsNextFailure(page = action.page)
+                                }
+                            onNewMessage(message)
+                        }
                     )
             }
             is CourseSearchFeature.Action.FetchDiscussionThread -> {
