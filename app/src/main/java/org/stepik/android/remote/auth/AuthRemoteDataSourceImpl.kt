@@ -117,7 +117,7 @@ constructor(
                 config.csrfTokenCookieName + "=" + csrftoken + "; " + config.sessionCookieName + "=" + sessionId
             if (csrftoken == null) return@Interceptor chain.proceed(newRequest)
             val url = newRequest
-                .url()
+                .url
                 .newBuilder()
                 .addQueryParameter("csrfmiddlewaretoken", csrftoken)
                 .addQueryParameter("csrfmiddlewaretoken", csrftoken)

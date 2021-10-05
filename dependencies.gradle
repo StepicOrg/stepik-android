@@ -47,7 +47,7 @@ ext.versions = [
         viewBindingDelegate  : '1.4.7',
 
         retrofit             : '2.6.1',
-        okhttp               : '3.12.8',
+        okhttp               : '4.9.0',
         gson                 : '2.8.5',
         jsoup                : '1.12.1',
 
