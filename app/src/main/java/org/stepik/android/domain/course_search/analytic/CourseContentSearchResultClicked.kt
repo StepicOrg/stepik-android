@@ -7,7 +7,7 @@ class CourseContentSearchResultClicked(
     val courseId: Long,
     val courseTitle: String,
     val query: String,
-    val suggestion: Boolean,
+    val suggestion: String?,
     val type: String,
     val stepId: Long?
 ) : AnalyticEvent {

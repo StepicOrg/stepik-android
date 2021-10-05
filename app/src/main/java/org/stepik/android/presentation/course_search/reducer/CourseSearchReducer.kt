@@ -113,14 +113,26 @@ constructor(
             }
             is Message.CourseContentSearchResultClickedEventMessage -> {
                 if (state is State.Content) {
-                    val event = CourseContentSearchResultClicked(message.courseId, message.courseTitle, message.query, state.isSuggestion, message.type, message.step)
+                    val suggestion =
+                        if (state.isSuggestion) {
+                            message.query
+                        } else {
+                            null
+                        }
+                    val event = CourseContentSearchResultClicked(message.courseId, message.courseTitle, message.query, suggestion, message.type, message.step)
                     state to setOf(Action.LogAnalyticEvent(event))
                 } else {
                     null
                 }
             }
             is Message.CourseContentSearchedEventMessage -> {
-                val event = CourseContentSearchedAnalyticEvent(message.courseId, message.courseTitle, message.query, message.isSuggestion)
+                val suggestion =
+                    if (message.isSuggestion) {
+                        message.query
+                    } else {
+                        null
+                    }
+                val event = CourseContentSearchedAnalyticEvent(message.courseId, message.courseTitle, message.query, suggestion)
                 state to setOf(Action.LogAnalyticEvent(event))
             }
         } ?: state to emptySet()
