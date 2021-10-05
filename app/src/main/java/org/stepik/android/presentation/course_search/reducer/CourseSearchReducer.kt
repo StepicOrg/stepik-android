@@ -88,15 +88,25 @@ constructor(
                 if (state is State.Content) {
                     val newState =
                         if (state.courseSearchResultListDataItems.page < message.page) {
-                            state.copy(isLoadingNextPage = false)
+                            val oldLoadedItems = PagedList(
+                                list = state.courseSearchResultListDataItems.filter { it.courseSearchResult.progress != null },
+                                page = state.courseSearchResultListDataItems.page,
+                                hasNext = state.courseSearchResultListDataItems.hasNext,
+                                hasPrev = state.courseSearchResultListDataItems.hasPrev
+                            )
+                            if (oldLoadedItems.isNotEmpty()) {
+                                state.copy(courseSearchResultListDataItems = oldLoadedItems, isLoadingNextPage = false)
+                            } else {
+                                State.Error
+                            }
                         } else {
-                            val fallbackList = PagedList(
-                                list = state.courseSearchResultListDataItems.dropLast(20),
+                            val oldLoadedItems = PagedList(
+                                list = state.courseSearchResultListDataItems.filter { it.courseSearchResult.progress != null },
                                 page = state.courseSearchResultListDataItems.page - 1,
                                 hasNext = state.courseSearchResultListDataItems.hasNext,
                                 hasPrev = state.courseSearchResultListDataItems.hasPrev
                             )
-                            state.copy(courseSearchResultListDataItems = fallbackList, isLoadingNextPage = false)
+                            state.copy(courseSearchResultListDataItems = oldLoadedItems, isLoadingNextPage = false)
                         }
                     newState to emptySet()
                 } else {
