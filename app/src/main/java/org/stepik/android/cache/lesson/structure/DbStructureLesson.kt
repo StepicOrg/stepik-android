@@ -27,6 +27,7 @@ object DbStructureLesson {
         const val LEARNERS_GROUP = "learners_group"
         const val TEACHERS_GROUP = "teachers_group"
         const val TIME_TO_COMPLETE = "time_to_complete"
+        const val UNITS = "units"
     }
 
     fun createTable(db: SupportSQLiteDatabase) {

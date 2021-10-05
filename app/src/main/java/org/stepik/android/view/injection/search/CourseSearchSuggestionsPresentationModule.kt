@@ -6,6 +6,7 @@ import io.reactivex.Scheduler
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.cache.search.SearchCacheDataSourceImpl
@@ -13,9 +14,11 @@ import org.stepik.android.data.search.source.SearchCacheDataSource
 import org.stepik.android.domain.search.repository.SearchRepository
 
 @Module
-object CatalogSearchSuggestionsPresentationModule {
+object CourseSearchSuggestionsPresentationModule {
     @Provides
     internal fun provideSearchSuggestionsPresenter(
+        @CourseId
+        courseId: Long,
         searchRepository: SearchRepository,
         analytic: Analytic,
         @BackgroundScheduler
@@ -24,7 +27,7 @@ object CatalogSearchSuggestionsPresentationModule {
         mainScheduler: Scheduler
     ): SearchSuggestionsPresenter =
         SearchSuggestionsPresenter(
-            courseId = -1L,
+            courseId = courseId,
             searchRepository = searchRepository,
             analytic = analytic,
             scheduler = scheduler,
@@ -33,5 +36,5 @@ object CatalogSearchSuggestionsPresentationModule {
 
     @Provides
     internal fun provideSearchCacheDataSource(databaseFacade: DatabaseFacade): SearchCacheDataSource =
-        SearchCacheDataSourceImpl(dbElementsCount = 2, databaseFacade = databaseFacade)
+        SearchCacheDataSourceImpl(dbElementsCount = 10, databaseFacade = databaseFacade)
 }

@@ -78,7 +78,8 @@ class CatalogFragment :
     ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>,
     SearchSuggestionsView,
     AutoCompleteSearchView.FocusCallback,
-    FilterBottomSheetDialogFragment.Callback {
+    FilterBottomSheetDialogFragment.Callback,
+    AutoCompleteSearchView.SuggestionClickCallback {
 
     companion object {
         const val TAG = "CatalogFragment"
@@ -433,6 +434,7 @@ class CatalogFragment :
         searchViewToolbar.setIconifiedByDefault(false)
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setFocusCallback(this)
+        searchViewToolbar.setSuggestionClickCallback(this)
         backIcon.setOnClickListener {
             collapseSearchView()
         }
@@ -456,10 +458,7 @@ class CatalogFragment :
 
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    searchSuggestionsPresenter.onQueryTextSubmit(query)
-                    collapseSearchView()
-                    val intent = createSearchViewIntent(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
-                    startActivity(intent)
+                    onQueryTextSubmit(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
                     return true
                 }
 
@@ -472,6 +471,10 @@ class CatalogFragment :
         }
     }
 
+    override fun onQueryTextSubmitSuggestion(query: String) {
+        onQueryTextSubmit(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
+    }
+
     private fun openInWeb(url: String) {
         val uri = Uri
             .parse(url)
@@ -480,6 +483,13 @@ class CatalogFragment :
             .build()
 
         screenManager.openLinkInWebBrowser(requireContext(), uri)
+    }
+
+    private fun onQueryTextSubmit(query: String, filterQuery: CourseListFilterQuery) {
+        searchSuggestionsPresenter.onQueryTextSubmit(query)
+        collapseSearchView()
+        val intent = createSearchViewIntent(query, filterQuery)
+        startActivity(intent)
     }
 
     private fun createSearchViewIntent(query: String, filterQuery: CourseListFilterQuery): Intent {

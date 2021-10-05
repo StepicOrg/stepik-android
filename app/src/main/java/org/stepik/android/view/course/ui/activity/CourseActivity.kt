@@ -57,6 +57,7 @@ import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
+import org.stepik.android.view.course_search.dialog.CourseSearchDialogFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.course.CourseHeaderDelegateFactory
@@ -215,7 +216,12 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     onSubmissionCountClicked = {
                         screenManager.showCachedAttempts(this, courseId)
                     },
-                    isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
+                    isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean(),
+                    showCourseSearchAction = {
+                        CourseSearchDialogFragment
+                            .newInstance(courseId, course?.title.toString())
+                            .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
+                    }
                 )
 
         uiCheckout = Checkout.forActivity(this, billing)

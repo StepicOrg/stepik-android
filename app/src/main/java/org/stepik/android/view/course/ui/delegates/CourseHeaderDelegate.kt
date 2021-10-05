@@ -64,7 +64,8 @@ constructor(
     @Assisted private val mustShowCourseBenefits: Boolean,
     @Assisted private val showCourseBenefitsAction: () -> Unit,
     @Assisted onSubmissionCountClicked: () -> Unit,
-    @Assisted isLocalSubmissionsEnabled: Boolean
+    @Assisted isLocalSubmissionsEnabled: Boolean,
+    @Assisted private val showSearchCourseAction: () -> Unit
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
@@ -78,6 +79,7 @@ constructor(
         }
 
     private var courseBenefitsMenuItem: MenuItem? = null
+    private var courseSearchMenuItem: MenuItem? = null
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
@@ -307,6 +309,9 @@ constructor(
         courseBenefitsMenuItem = menu.findItem(R.id.course_benefits)
         courseBenefitsMenuItem?.isVisible = mustShowCourseBenefits
 
+        courseSearchMenuItem = menu.findItem(R.id.course_search)
+        courseSearchMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.Enrolled
+
         menu.findItem(R.id.favorite_course)
             ?.let { favoriteCourseMenuItem ->
 
@@ -363,6 +368,10 @@ constructor(
         when (item.itemId) {
             R.id.course_benefits -> {
                 showCourseBenefitsAction()
+                true
+            }
+            R.id.course_search -> {
+                showSearchCourseAction()
                 true
             }
             R.id.drop_course -> {

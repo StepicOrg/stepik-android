@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+        android:id="@+id/courseSearchContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <include
+            android:id="@+id/courseSearchIdle"
+            layout="@layout/view_course_search_idle" />
+
+        <include
+            android:id="@+id/courseSearchError"
+            layout="@layout/error_no_connection_with_button_binding" />
+
+        <include
+            android:id="@+id/courseSearchEmpty"
+            layout="@layout/view_course_search_empty" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/courseSearchRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false" />
+
+    </FrameLayout>
+
+    <include
+        android:id="@+id/viewSearchToolbarBinding"
+        layout="@layout/view_search_toolbar_binding" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

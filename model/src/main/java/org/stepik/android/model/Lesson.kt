@@ -60,7 +60,10 @@ class Lesson(
     val teachersGroup: String? = null,
 
     @SerializedName("time_to_complete")
-    val timeToComplete: Long = 0
+    val timeToComplete: Long = 0,
+
+    @SerializedName("units")
+    val units: List<Long> = emptyList()
 ) : Parcelable, Progressable, Identifiable<Long> {
     @IgnoredOnParcel
     val isTeacher: Boolean =

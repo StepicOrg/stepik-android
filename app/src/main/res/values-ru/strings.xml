@@ -1162,4 +1162,10 @@
     <string name="user_review_potential_review_header">%s для отзыва</string>
     <string name="user_review_delete_success">Отзыв удален успешно</string>
     <string name="user_review_delete_failure">Возникла ошибка при удалении отзыва</string>
+
+    <!-- Course search -->
+    <string name="course_search_menu_title">Поиск по курсу</string>
+    <string name="course_search_idle_message">Введите ключевые слова\nдля Поиска по курсу</string>
+    <string name="course_search_empty_message">По данному запросу\nничего не найдено</string>
+    <string name="course_search_step_suffix">" — Шаг %d"</string>
 </resources>
