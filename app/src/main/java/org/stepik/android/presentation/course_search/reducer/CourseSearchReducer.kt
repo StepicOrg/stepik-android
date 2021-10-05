@@ -44,7 +44,7 @@ constructor(
                 }
             }
             is Message.FetchCourseSearchResultsFailure -> {
-                if (state is State.Loading) {
+                if (state is State.Loading || state is State.Content) {
                     State.Error to emptySet()
                 } else
                     null

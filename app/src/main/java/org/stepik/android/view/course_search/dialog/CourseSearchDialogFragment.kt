@@ -170,6 +170,10 @@ class CourseSearchDialogFragment :
                 }
             }
         }
+
+        courseSearchBinding.courseSearchError.tryAgain.setOnClickListener {
+            onQueryTextSubmit(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString(), isSuggestion = false, isTryAgain = true)
+        }
     }
 
     override fun onStart() {
@@ -267,16 +271,22 @@ class CourseSearchDialogFragment :
     override fun onQueryTextSubmitSuggestion(query: String): Boolean =
         onQueryTextSubmit(query, isSuggestion = true)
 
-    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean): Boolean {
+    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean, isTryAgain: Boolean = false): Boolean {
         searchSuggestionsPresenter.onQueryTextSubmit(query)
+        val isSameQuery = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString() == query
+
         with(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar) {
             onActionViewCollapsed()
             onActionViewExpanded()
             clearFocus()
             setQuery(query, false)
         }
-        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
-        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
+
+        if (!isSameQuery || isTryAgain) {
+            courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
+            courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
+        }
+
         return true
     }
 }
