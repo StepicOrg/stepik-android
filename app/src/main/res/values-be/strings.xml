@@ -1031,4 +1031,5 @@
     <string name="course_search_idle_message">Калі ласка, увядзіце ключавыя словы\nдля Пошуку па курсе</string>
     <string name="course_search_empty_message">Па дадзеным запыце\nнічога не знойдзена</string>
     <string name="course_search_step_suffix">" — Крок %d"</string>
+    <string name="course_search_hint">Пошук па курсе %s</string>
 </resources>

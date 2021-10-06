@@ -14,6 +14,7 @@ interface CourseSearchFeature {
         object Error : State()
         data class Content(
             val courseSearchResultListDataItems: PagedList<CourseSearchResultListItem.Data>,
+            val query: String,
             val isLoadingNextPage: Boolean,
             val isSuggestion: Boolean
         ) : State()
@@ -22,7 +23,7 @@ interface CourseSearchFeature {
     sealed class Message {
         data class FetchCourseSearchResultsInitial(val courseId: Long, val courseTitle: String, val query: String, val isSuggestion: Boolean) : Message()
         data class FetchNextPage(val courseId: Long, val courseTitle: String, val query: String) : Message()
-        data class FetchCourseSearchResultsSuccess(val courseSearchResultsDataItems: PagedList<CourseSearchResultListItem.Data>, val isSuggestion: Boolean) : Message()
+        data class FetchCourseSearchResultsSuccess(val courseSearchResultsDataItems: PagedList<CourseSearchResultListItem.Data>, val query: String, val isSuggestion: Boolean) : Message()
         data class FetchCourseSearchResultsNextSuccess(val courseSearchResultsDataItems: PagedList<CourseSearchResultListItem.Data>) : Message()
         object FetchCourseSearchResultsFailure : Message()
         data class FetchCourseSearchResultsNextFailure(val page: Int) : Message()

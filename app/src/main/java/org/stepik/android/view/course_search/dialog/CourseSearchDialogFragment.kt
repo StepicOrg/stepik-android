@@ -172,7 +172,7 @@ class CourseSearchDialogFragment :
         }
 
         courseSearchBinding.courseSearchError.tryAgain.setOnClickListener {
-            onQueryTextSubmit(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString(), isSuggestion = false, isTryAgain = true)
+            onQueryTextSubmit(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString(), isSuggestion = false)
         }
     }
 
@@ -254,6 +254,7 @@ class CourseSearchDialogFragment :
     private fun setupSearchView(searchView: AutoCompleteSearchView) {
         searchView.initSuggestions(courseSearchBinding.courseSearchContainer)
         (searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView).setImageResource(0)
+        searchView.queryHint = getString(R.string.course_search_hint, courseTitle)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 onQueryTextSubmit(query, isSuggestion = false)
@@ -274,9 +275,8 @@ class CourseSearchDialogFragment :
         onQueryTextSubmit(query, isSuggestion = true)
     }
 
-    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean, isTryAgain: Boolean = false) {
+    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean) {
         searchSuggestionsPresenter.onQueryTextSubmit(query)
-        val isSameQuery = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString() == query
 
         with(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar) {
             onActionViewCollapsed()
@@ -285,9 +285,7 @@ class CourseSearchDialogFragment :
             setQuery(query, false)
         }
 
-        if (!isSameQuery || isTryAgain) {
-            courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
-            courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
-        }
+        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
+        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
     }
 }

@@ -36,7 +36,7 @@ constructor(
                         onNext = {
                             val message =
                                 if (searchResultQuery.page == 1) {
-                                    CourseSearchFeature.Message.FetchCourseSearchResultsSuccess(it, action.isSuggestion)
+                                    CourseSearchFeature.Message.FetchCourseSearchResultsSuccess(it, action.query, action.isSuggestion)
                                 } else {
                                     CourseSearchFeature.Message.FetchCourseSearchResultsNextSuccess(it)
                                 }

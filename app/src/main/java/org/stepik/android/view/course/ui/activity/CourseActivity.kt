@@ -219,7 +219,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                     isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean(),
                     showCourseSearchAction = {
                         CourseSearchDialogFragment
-                            .newInstance(courseId, course?.title.toString())
+                            .newInstance(courseId, course?.title.orEmpty())
                             .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
                     }
                 )
