@@ -25,8 +25,6 @@ import org.stepic.droid.databinding.DialogCourseSearchBinding
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
-import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_search.analytic.CourseContentSearchScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
 import org.stepik.android.domain.lesson.model.LessonData
@@ -72,9 +70,6 @@ class CourseSearchDialogFragment :
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val progressDialogFragment: DialogFragment =
-        LoadingProgressDialogFragment.newInstance()
 
     private val courseSearchViewModel: CourseSearchViewModel by reduxViewModel(this) { viewModelFactory }
 
@@ -150,10 +145,19 @@ class CourseSearchDialogFragment :
                     stepPosition = stepPosition?.let { it - 1 } ?: 0
                 )
                 val intent = LessonActivity.createIntent(requireContext(), lessonData)
-                startActivity(intent)
+                requireActivity().startActivity(intent)
             },
-            onOpenCommentAction = { step, discussionId ->
-                courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.InitDiscussionThreadMessage(step, discussionId))
+            onOpenCommentAction = { lesson, unit, section, stepPosition, discussionId ->
+                val lessonData = LessonData(
+                    lesson = lesson,
+                    unit = unit,
+                    section = section,
+                    course = null,
+                    stepPosition = stepPosition?.let { it - 1 } ?: 0,
+                    discussionId = discussionId
+                )
+                val intent = LessonActivity.createIntent(requireContext(), lessonData)
+                requireActivity().startActivity(intent)
             }
         )
 
@@ -172,7 +176,7 @@ class CourseSearchDialogFragment :
         }
 
         courseSearchBinding.courseSearchError.tryAgain.setOnClickListener {
-            onQueryTextSubmit(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString(), isSuggestion = false, isTryAgain = true)
+            onQueryTextSubmit(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString(), isSuggestion = false)
         }
     }
 
@@ -187,17 +191,7 @@ class CourseSearchDialogFragment :
     }
 
     override fun onAction(action: CourseSearchFeature.Action.ViewAction) {
-        when (action) {
-            is CourseSearchFeature.Action.ViewAction.ShowLoadingDialog -> {
-                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
-            }
-            is CourseSearchFeature.Action.ViewAction.HideLoadingDialog -> {
-                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
-            }
-            is CourseSearchFeature.Action.ViewAction.OpenComment -> {
-                screenManager.openComments(requireActivity(), action.discussionThread, action.step, action.discussionId, false, false)
-            }
-        }
+        // no op
     }
 
     override fun render(state: CourseSearchFeature.State) {
@@ -254,6 +248,7 @@ class CourseSearchDialogFragment :
     private fun setupSearchView(searchView: AutoCompleteSearchView) {
         searchView.initSuggestions(courseSearchBinding.courseSearchContainer)
         (searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView).setImageResource(0)
+        searchView.queryHint = getString(R.string.course_search_hint, courseTitle)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 onQueryTextSubmit(query, isSuggestion = false)
@@ -274,9 +269,8 @@ class CourseSearchDialogFragment :
         onQueryTextSubmit(query, isSuggestion = true)
     }
 
-    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean, isTryAgain: Boolean = false) {
+    private fun onQueryTextSubmit(query: String, isSuggestion: Boolean) {
         searchSuggestionsPresenter.onQueryTextSubmit(query)
-        val isSameQuery = courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar.query.toString() == query
 
         with(courseSearchBinding.viewSearchToolbarBinding.searchViewToolbar) {
             onActionViewCollapsed()
@@ -285,9 +279,7 @@ class CourseSearchDialogFragment :
             setQuery(query, false)
         }
 
-        if (!isSameQuery || isTryAgain) {
-            courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
-            courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
-        }
+        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.CourseContentSearchedEventMessage(courseId, courseTitle, query, isSuggestion = isSuggestion))
+        courseSearchViewModel.onNewMessage(CourseSearchFeature.Message.FetchCourseSearchResultsInitial(courseId, courseTitle, query, isSuggestion = isSuggestion))
     }
 }

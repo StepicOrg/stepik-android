@@ -19,10 +19,22 @@ constructor(
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.FetchCourseSearchResultsInitial -> {
-                if (state !is State.Loading) {
-                    State.Loading to setOf(Action.FetchCourseSearchResults(message.courseId, message.courseTitle, message.query, message.isSuggestion))
-                } else {
-                    null
+                val (newState, action) = State.Loading to setOf(Action.FetchCourseSearchResults(message.courseId, message.courseTitle, message.query, message.isSuggestion))
+                when (state) {
+                    is State.Loading ->
+                        null
+
+                    is State.Content -> {
+                        if (state.query != message.query) {
+                            newState to action
+                        } else {
+                            null
+                        }
+                    }
+
+                    else -> {
+                        newState to action
+                    }
                 }
             }
             is Message.FetchCourseSearchResultsSuccess -> {
@@ -32,13 +44,13 @@ constructor(
                             if (message.courseSearchResultsDataItems.isEmpty()) {
                                 State.Empty
                             } else {
-                                State.Content(message.courseSearchResultsDataItems, isLoadingNextPage = false, isSuggestion = message.isSuggestion)
+                                State.Content(message.courseSearchResultsDataItems, query = message.query, isLoadingNextPage = false, isSuggestion = message.isSuggestion)
                             }
                         courseSearchState to emptySet()
                     }
                     is State.Content -> {
                         val updatedItems = courseSearchResultItemsMapper.updateCourseSearchResults(state.courseSearchResultListDataItems, message.courseSearchResultsDataItems)
-                        state.copy(courseSearchResultListDataItems = updatedItems, isLoadingNextPage = false) to emptySet()
+                        state.copy(query = message.query, courseSearchResultListDataItems = updatedItems, isLoadingNextPage = false) to emptySet()
                     }
                     else ->
                         null
@@ -109,27 +121,6 @@ constructor(
                             state.copy(courseSearchResultListDataItems = oldLoadedItems, isLoadingNextPage = false)
                         }
                     newState to emptySet()
-                } else {
-                    null
-                }
-            }
-            is Message.InitDiscussionThreadMessage -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.ShowLoadingDialog, Action.FetchDiscussionThread(message.step, message.discussionId))
-                } else {
-                    null
-                }
-            }
-            is Message.DiscussionThreadSuccess -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.HideLoadingDialog, Action.ViewAction.OpenComment(message.step, message.discussionThread, message.discussionId))
-                } else {
-                    null
-                }
-            }
-            is Message.DiscussionThreadError -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.HideLoadingDialog)
                 } else {
                     null
                 }

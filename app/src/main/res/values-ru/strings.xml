@@ -1168,4 +1168,5 @@
     <string name="course_search_idle_message">Введите ключевые слова\nдля Поиска по курсу</string>
     <string name="course_search_empty_message">По данному запросу\nничего не найдено</string>
     <string name="course_search_step_suffix">" — Шаг %d"</string>
+    <string name="course_search_hint">Поиск по курсу %s</string>
 </resources>
