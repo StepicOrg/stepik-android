@@ -125,27 +125,6 @@ constructor(
                     null
                 }
             }
-            is Message.InitDiscussionThreadMessage -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.ShowLoadingDialog, Action.FetchDiscussionThread(message.step, message.discussionId))
-                } else {
-                    null
-                }
-            }
-            is Message.DiscussionThreadSuccess -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.HideLoadingDialog, Action.ViewAction.OpenComment(message.step, message.discussionThread, message.discussionId))
-                } else {
-                    null
-                }
-            }
-            is Message.DiscussionThreadError -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.HideLoadingDialog)
-                } else {
-                    null
-                }
-            }
             is Message.CourseContentSearchResultClickedEventMessage -> {
                 if (state is State.Content) {
                     val suggestion =

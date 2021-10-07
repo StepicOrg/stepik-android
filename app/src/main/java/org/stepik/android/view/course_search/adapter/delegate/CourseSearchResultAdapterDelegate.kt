@@ -13,7 +13,6 @@ import org.stepik.android.domain.course_search.model.CourseSearchResult
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
-import org.stepik.android.model.Step
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import kotlin.math.abs
@@ -21,7 +20,7 @@ import kotlin.math.abs
 class CourseSearchResultAdapterDelegate(
     private val onLogEventAction: (Long?, String) -> Unit,
     private val onOpenStepAction: (Lesson, org.stepik.android.model.Unit?, Section?, Int?) -> Unit,
-    private val onOpenCommentAction: (Step, Long?) -> Unit
+    private val onOpenCommentAction: (Lesson, org.stepik.android.model.Unit?, Section?, Int?, Long?) -> Unit
 ) : AdapterDelegate<CourseSearchResultListItem, DelegateViewHolder<CourseSearchResultListItem>>() {
     override fun isForViewType(position: Int, data: CourseSearchResultListItem): Boolean =
         data is CourseSearchResultListItem.Data
@@ -46,8 +45,13 @@ class CourseSearchResultAdapterDelegate(
                 val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
                 logEvent(data.courseSearchResult)
                 with(data.courseSearchResult) {
-                    if (step == null) return@setOnClickListener
-                    onOpenCommentAction(step, searchResult.comment)
+                    if (lesson == null || step == null) return@setOnClickListener
+                    val discussionId = if (searchResult.commentParent != null) {
+                        searchResult.commentParent
+                    } else {
+                        searchResult.comment
+                    }
+                    onOpenCommentAction(lesson, unit, section, searchResult.stepPosition, discussionId)
                 }
             }
         }
