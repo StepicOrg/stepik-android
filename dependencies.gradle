@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2224,
-        name                 : '1.192',
+        code                 : 2225,
+        name                 : '1.193',
 
         minSdk               : 21,
         targetSdk            : 30,
@@ -47,7 +47,7 @@ ext.versions = [
         viewBindingDelegate  : '1.4.7',
 
         retrofit             : '2.6.1',
-        okhttp               : '3.12.8',
+        okhttp               : '4.9.0',
         gson                 : '2.8.5',
         jsoup                : '1.12.1',
 

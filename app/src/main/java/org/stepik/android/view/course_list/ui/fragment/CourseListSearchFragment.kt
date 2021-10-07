@@ -59,7 +59,8 @@ class CourseListSearchFragment :
     CourseListSearchResultView,
     FilterQueryView,
     SearchSuggestionsView,
-    AutoCompleteSearchView.FocusCallback {
+    AutoCompleteSearchView.FocusCallback,
+    AutoCompleteSearchView.SuggestionClickCallback {
     companion object {
         fun newInstance(query: String?, filterQuery: CourseListFilterQuery?): Fragment =
             CourseListSearchFragment().apply {
@@ -194,6 +195,7 @@ class CourseListSearchFragment :
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setFocusCallback(this)
+        searchViewToolbar.setSuggestionClickCallback(this)
         searchViewToolbar.setIconifiedByDefault(false)
         searchViewToolbar.setBackgroundColor(0)
         backIcon.setOnClickListener {
@@ -295,5 +297,9 @@ class CourseListSearchFragment :
         if (hasFocus) {
             searchSuggestionsPresenter.onQueryTextChange(searchViewToolbar.query.toString())
         }
+    }
+
+    override fun onQueryTextSubmitSuggestion(query: String) {
+        searchViewToolbar.setQuery(query, true)
     }
 }

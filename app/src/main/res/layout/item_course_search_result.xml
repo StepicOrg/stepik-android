@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:minHeight="80dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/courseSearchResultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="?selectableItemBackground"
+        android:maxHeight="108dp">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/courseSearchIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="@dimen/course_content_item_margin"
+            android:layout_marginLeft="@dimen/course_content_item_margin"
+            android:layout_marginTop="@dimen/course_content_item_margin"
+            android:contentDescription="@null"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/courseSearchTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/course_content_item_inner_margin"
+            android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+            android:layout_marginTop="@dimen/course_content_item_margin"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:textAppearance="?textAppearanceBody2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/courseSearchIcon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1.2 Second Lesson More Detailed and terest" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/courseSearchProgressPlaceholder"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="@dimen/course_content_item_inner_margin"
+            android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="26dp"
+
+            android:layout_marginEnd="@dimen/course_content_item_margin"
+            android:layout_marginRight="@dimen/course_content_item_margin"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/courseSearchIcon"
+
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.4"
+            app:layout_constraintWidth_max="180dp"
+            app:srcCompat="@drawable/ic_course_info_target_audience" />
+
+        <TextView
+            android:id="@+id/courseSearchTextProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/course_content_item_inner_margin"
+            android:layout_marginBottom="@dimen/course_content_item_margin"
+            android:textAppearance="?textAppearanceCaption"
+            android:textColor="?android:textColorSecondary"
+            app:layout_constraintStart_toStartOf="@+id/courseSearchTitle"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="6/10" />
+
+        <TextView
+            android:id="@+id/courseSearchTimeToComplete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/course_content_item_inner_margin"
+            android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+            android:layout_marginTop="@dimen/course_content_item_inner_margin"
+            android:layout_marginBottom="@dimen/course_content_item_margin"
+            app:layout_goneMarginLeft="0dp"
+            android:textAppearance="?textAppearanceCaption"
+            android:textColor="?android:textColorSecondary"
+            app:layout_constraintStart_toEndOf="@+id/courseSearchTextProgress"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="≈ 2 min"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/courseSearchViewCountIcon"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_course_info_target_audience"
+            app:tint="?colorControlNormal"
+
+            android:layout_marginStart="@dimen/course_content_item_inner_margin"
+            android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+            android:layout_marginTop="@dimen/course_content_item_inner_margin"
+            android:layout_marginBottom="@dimen/course_content_item_margin"
+
+            app:layout_constraintStart_toEndOf="@+id/courseSearchTimeToComplete"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/courseSearchViewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textAppearance="?textAppearanceCaption"
+            android:textColor="?android:textColorSecondary"
+
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="@dimen/course_content_item_inner_margin"
+            android:layout_marginBottom="@dimen/course_content_item_margin"
+
+            app:layout_constraintStart_toEndOf="@+id/courseSearchViewCountIcon"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            tools:text="718k" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/courseSearchRatingIcon"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_course_content_like"
+            app:tint="?colorControlNormal"
+
+            android:layout_marginStart="@dimen/course_content_item_inner_margin"
+            android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+            android:layout_marginTop="@dimen/course_content_item_inner_margin"
+            android:layout_marginBottom="@dimen/course_content_item_margin"
+
+            app:layout_constraintStart_toEndOf="@+id/courseSearchViewCount"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/courseSearchRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textAppearance="?textAppearanceCaption"
+            android:textColor="?android:textColorSecondary"
+
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="@dimen/course_content_item_inner_margin"
+            android:layout_marginBottom="@dimen/course_content_item_margin"
+
+            app:layout_constraintStart_toEndOf="@+id/courseSearchRatingIcon"
+            app:layout_constraintTop_toBottomOf="@+id/courseSearchTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            tools:text="999" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/courseSearchCommentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/courseSearchResultContainer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="?selectableItemBackground"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/view_divider_vertical"
+            android:id="@+id/courseSearchCommentDivider"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/courseSearchCommentUserIcon"
+            android:layout_width="@dimen/comment_user_image_size"
+            android:layout_height="@dimen/comment_user_image_size"
+            android:layout_marginLeft="36dp"
+            android:layout_marginTop="16dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@null" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/courseSearchCommentUserName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:textAppearance="?textAppearanceSubtitle1"
+
+            app:layout_constraintStart_toEndOf="@id/courseSearchCommentUserIcon"
+            app:layout_constraintTop_toBottomOf="@id/courseSearchCommentDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="36dp"
+
+            android:layout_marginTop="12dp"
+            app:layout_goneMarginTop="@dimen/comment_item_margin"
+
+            android:lines="1"
+            android:ellipsize="end"
+
+            tools:text="Konstatin Konstatinopolis Konstatinopolis Konstatinopolis" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/courseSearchCommentText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintStart_toEndOf="@id/courseSearchCommentUserIcon"
+            app:layout_constraintTop_toBottomOf="@id/courseSearchCommentUserName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="?android:textColorSecondary"
+
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="36dp"
+            android:layout_marginBottom="16dp"
+            tools:text="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

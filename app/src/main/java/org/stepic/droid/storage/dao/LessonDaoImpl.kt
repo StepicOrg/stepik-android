@@ -51,7 +51,8 @@ constructor(
             updateDate = cursor.getDate(DbStructureLesson.Columns.UPDATE_DATE),
             learnersGroup = cursor.getString(DbStructureLesson.Columns.LEARNERS_GROUP),
             teachersGroup = cursor.getString(DbStructureLesson.Columns.TEACHERS_GROUP),
-            timeToComplete = cursor.getLong(DbStructureLesson.Columns.TIME_TO_COMPLETE)
+            timeToComplete = cursor.getLong(DbStructureLesson.Columns.TIME_TO_COMPLETE),
+            units = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureLesson.Columns.UNITS), escapeSymbols = true) ?: emptyList()
         )
 
     public override fun getContentValues(lesson: Lesson): ContentValues {
@@ -78,6 +79,7 @@ constructor(
         values.put(DbStructureLesson.Columns.LEARNERS_GROUP, lesson.learnersGroup)
         values.put(DbStructureLesson.Columns.TEACHERS_GROUP, lesson.teachersGroup)
         values.put(DbStructureLesson.Columns.TIME_TO_COMPLETE, lesson.timeToComplete)
+        values.put(DbStructureLesson.Columns.UNITS, DbParseHelper.parseLongListToString(lesson.units, escapeSymbols = true))
 
         return values
     }

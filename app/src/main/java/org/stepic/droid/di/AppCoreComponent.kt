@@ -73,6 +73,7 @@ import org.stepik.android.view.injection.course_list.visited.CourseListVisitedCo
 import org.stepik.android.view.injection.course_list.wishlist.CourseListWishComponent
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
+import org.stepik.android.view.injection.course_search.CourseSearchComponent
 import org.stepik.android.view.injection.debug.DebugComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
@@ -96,7 +97,6 @@ import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.purchase_notification.PurchaseNotificationDataModule
-import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.search_result.SearchResultDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
@@ -165,7 +165,6 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
         UserActivityDataModule::class,
         NotificationDataModule::class,
         EmailAddressDataModule::class,
-        SearchDataModule::class,
         SearchResultDataModule::class,
         UserCoursesDataModule::class,
         CourseCollectionDataModule::class,
@@ -285,6 +284,7 @@ interface AppCoreComponent {
 
     fun debugComponentBuilder(): DebugComponent.Builder
 
+    fun courseSearchComponentBuilder(): CourseSearchComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

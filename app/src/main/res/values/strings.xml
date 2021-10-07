@@ -1233,4 +1233,11 @@
     <string name="user_review_potential_review_header">%s to review</string>
     <string name="user_review_delete_success">Review deleted successfully</string>
     <string name="user_review_delete_failure">An error occurred when deleting the review</string>
+
+    <!-- Course search -->
+    <string name="course_search_menu_title">Search course</string>
+    <string name="course_search_idle_message">Enter a keyword\nto Search the course</string>
+    <string name="course_search_empty_message">No results were\nfound for this request.</string>
+    <string name="course_search_step_suffix">" — Step %d"</string>
+    <string name="course_search_hint">Search in course %s</string>
 </resources>
