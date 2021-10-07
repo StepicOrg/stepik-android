@@ -45,7 +45,7 @@ class CourseSearchResultAdapterDelegate(
                 val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
                 logEvent(data.courseSearchResult)
                 with(data.courseSearchResult) {
-                    if (lesson == null || step == null) return@setOnClickListener
+                    if (lesson == null) return@setOnClickListener
                     val discussionId = if (searchResult.commentParent != null) {
                         searchResult.commentParent
                     } else {

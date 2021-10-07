@@ -83,37 +83,30 @@ constructor(
         val commentOwners = searchResults
             .mapNotNull { it.commentUser }
 
-        val stepIds = searchResults
-            .mapNotNull { it.step }
-            .toLongArray()
-
         return Singles.zip(
             unitRepository.getUnits(unitIds, DataSourceType.REMOTE),
-            stepRepository.getSteps(*stepIds, primarySourceType = DataSourceType.REMOTE)
-        ).flatMap { (units, steps) ->
-            fetchProgressesAndUsers(searchResults, lessons, units, steps, commentOwners)
+            userRepository.getUsers(commentOwners, primarySourceType = DataSourceType.REMOTE)
+        ).flatMap { (units, users) ->
+            fetchProgressesAndUsers(searchResults, lessons, units, users)
         }
     }
 
-    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, units: List<Unit>, steps: List<Step>, userIds: List<Long>): Single<PagedList<CourseSearchResultListItem.Data>> =
+    private fun fetchProgressesAndUsers(searchResults: PagedList<SearchResult>, lessons: List<Lesson>, units: List<Unit>, users: List<User>): Single<PagedList<CourseSearchResultListItem.Data>> =
         Singles.zip(
             progressRepository.getProgresses(lessons.getProgresses(), primarySourceType = DataSourceType.REMOTE),
-            userRepository.getUsers(userIds, primarySourceType = DataSourceType.REMOTE),
             sectionRepository.getSections(units.map(Unit::section), primarySourceType = DataSourceType.REMOTE)
-        ) { progresses, users, sections ->
+        ) { progresses, sections ->
             val lessonMap = lessons.associateBy(Lesson::id)
             val progressMaps = progresses.associateBy(Progress::id)
             val userMaps = users.associateBy(User::id)
             val unitsMap = units.associateBy(Unit::lesson)
             val sectionsMap = sections.associateBy(Section::id)
-            val stepsMap = steps.associateBy(Step::id)
 
             searchResults.mapPaged { searchResult ->
                 val lesson = searchResult.lesson?.let { lessonMap.getValue(it) }
                 val commentOwner = searchResult.commentUser?.let { userMaps[it] }
                 val unit = searchResult.lesson?.let { unitsMap[it] }
                 val section = unit?.section?.let { sectionsMap[it] }
-                val step = searchResult.step?.let { stepsMap[it] }
 
                 CourseSearchResultListItem.Data(
                     CourseSearchResult(
@@ -122,7 +115,6 @@ constructor(
                         progress = lesson?.progress?.let { progressMaps.getValue(it) },
                         unit = unit,
                         section = section,
-                        step = step,
                         commentOwner = commentOwner
                     )
                 )
