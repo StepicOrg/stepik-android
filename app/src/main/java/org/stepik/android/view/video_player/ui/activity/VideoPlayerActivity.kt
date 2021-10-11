@@ -209,23 +209,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
 
-//    private val controlDispatcher = object : DefaultControlDispatcher() {
-//        override fun dispatchSeekTo(player: Player?, windowIndex: Int, positionMs: Long): Boolean {
-//            val current = player?.currentPosition ?: 0L
-//            val difference = current - positionMs
-//            val action =
-//                if (difference > 0L) {
-//                    VideoPlayerControlClickedEvent.ACTION_SEEK_BACK
-//                } else {
-//                    VideoPlayerControlClickedEvent.ACTION_SEEK_FORWARD
-//                }
-//            if (abs(difference) != JUMP_TIME_MILLIS.toLong()) {
-//                analytic.report(VideoPlayerControlClickedEvent(action))
-//            }
-//            return super.dispatchSeekTo(player, windowIndex, positionMs)
-//        }
-//    }
-
     private lateinit var gestureDetector: GestureDetectorCompat
 
     private val onSimpleGestureListener = object : GestureDetector.SimpleOnGestureListener() {
@@ -299,12 +282,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
         qualityView.isVisible = false
-
-//        playerView.setControlDispatcher(controlDispatcher)
-//        playerView.setControlDispatcher()
         playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
-//        playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
-//        playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
         exo_pip_icon_container.isVisible = isSupportPIP()
         exo_pip_icon_container.setOnClickListener {
@@ -654,7 +632,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     private fun logIsPlayingEvent(isPlaying: Boolean) {
-
         val event = if (isPlaying) {
             VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PLAY)
         } else {
