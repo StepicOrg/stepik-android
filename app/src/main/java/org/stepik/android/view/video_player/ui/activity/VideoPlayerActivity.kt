@@ -34,14 +34,12 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.exoplayer2.DefaultControlDispatcher
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
-import kotlinx.android.synthetic.main.exo_playback_control_view.*
+import kotlinx.android.synthetic.main.exo_player_control_view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -65,7 +63,6 @@ import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 import javax.inject.Inject
-import kotlin.math.abs
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
@@ -152,11 +149,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
     private val exoPlayerListener =
-        object : Player.EventListener {
-            override fun onPlayerError(error: ExoPlaybackException?) {
-                error ?: return
-
-                if (error.type == ExoPlaybackException.TYPE_SOURCE && error.cause is HttpDataSource.HttpDataSourceException) {
+        object : Player.Listener {
+            override fun onPlayerError(error: PlaybackException) {
+                if (error.cause is HttpDataSource.HttpDataSourceException) {
                     Toast
                         .makeText(this@VideoPlayerActivity, R.string.no_connection, Toast.LENGTH_LONG)
                         .show()
@@ -204,11 +199,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                     }
                     CONTROL_TYPE_PAUSE -> exoPlayer?.playWhenReady = false
                     CONTROL_TYPE_REWIND -> exoPlayer?.let {
-                        analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_REWIND))
                         it.seekTo(it.currentPosition - JUMP_TIME_MILLIS)
                     }
                     CONTROL_TYPE_FORWARD -> exoPlayer?.let {
-                        analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_FORWARD))
                         it.seekTo(it.currentPosition + JUMP_TIME_MILLIS)
                     }
                 }
@@ -216,22 +209,22 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
 
-    private val controlDispatcher = object : DefaultControlDispatcher() {
-        override fun dispatchSeekTo(player: Player?, windowIndex: Int, positionMs: Long): Boolean {
-            val current = player?.currentPosition ?: 0L
-            val difference = current - positionMs
-            val action =
-                if (difference > 0L) {
-                    VideoPlayerControlClickedEvent.ACTION_SEEK_BACK
-                } else {
-                    VideoPlayerControlClickedEvent.ACTION_SEEK_FORWARD
-                }
-            if (abs(difference) != JUMP_TIME_MILLIS.toLong()) {
-                analytic.report(VideoPlayerControlClickedEvent(action))
-            }
-            return super.dispatchSeekTo(player, windowIndex, positionMs)
-        }
-    }
+//    private val controlDispatcher = object : DefaultControlDispatcher() {
+//        override fun dispatchSeekTo(player: Player?, windowIndex: Int, positionMs: Long): Boolean {
+//            val current = player?.currentPosition ?: 0L
+//            val difference = current - positionMs
+//            val action =
+//                if (difference > 0L) {
+//                    VideoPlayerControlClickedEvent.ACTION_SEEK_BACK
+//                } else {
+//                    VideoPlayerControlClickedEvent.ACTION_SEEK_FORWARD
+//                }
+//            if (abs(difference) != JUMP_TIME_MILLIS.toLong()) {
+//                analytic.report(VideoPlayerControlClickedEvent(action))
+//            }
+//            return super.dispatchSeekTo(player, windowIndex, positionMs)
+//        }
+//    }
 
     private lateinit var gestureDetector: GestureDetectorCompat
 
@@ -247,7 +240,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
 
-    private var exoPlayer: ExoPlayer? = null
+    private var exoPlayer: Player? = null
         set(value) {
             field?.removeListener(exoPlayerListener)
             field = value
@@ -307,10 +300,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         qualityView.isVisible = false
 
-        playerView.setControlDispatcher(controlDispatcher)
+//        playerView.setControlDispatcher(controlDispatcher)
+//        playerView.setControlDispatcher()
         playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
-        playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
-        playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
+//        playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
+//        playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
         exo_pip_icon_container.isVisible = isSupportPIP()
         exo_pip_icon_container.setOnClickListener {
@@ -343,12 +337,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
         rewind.setOnClickListener {
-            analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_REWIND))
             exoPlayer?.let { player -> player.seekTo(player.currentPosition - JUMP_TIME_MILLIS) }
         }
 
         forward.setOnClickListener {
-            analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_FORWARD))
             exoPlayer?.let { player -> player.seekTo(player.currentPosition + JUMP_TIME_MILLIS) }
         }
 
@@ -662,6 +654,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     private fun logIsPlayingEvent(isPlaying: Boolean) {
+
         val event = if (isPlaying) {
             VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PLAY)
         } else {

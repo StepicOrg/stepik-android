@@ -20,7 +20,7 @@ ext.versions = [
         rxKotlin             : '2.3.0',
         rxRelay              : '2.1.1',
 
-        exoPlayer            : '2.10.5',
+        exoPlayer            : '2.15.1',
 
         appCompat            : '1.1.0',
         ktx                  : '1.3.0',

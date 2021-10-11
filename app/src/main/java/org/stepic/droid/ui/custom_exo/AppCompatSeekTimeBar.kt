@@ -21,12 +21,12 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         setOnSeekBarChangeListener(this)
     }
 
-    override fun addListener(listener: TimeBar.OnScrubListener?) {
-        listener?.let(listeners::add)
+    override fun addListener(listener: TimeBar.OnScrubListener) {
+        listener.let(listeners::add)
     }
 
-    override fun removeListener(listener: TimeBar.OnScrubListener?) {
-        listener?.let(listeners::remove)
+    override fun removeListener(listener: TimeBar.OnScrubListener) {
+        listener.let(listeners::remove)
     }
 
     override fun setKeyTimeIncrement(time: Long) {
