@@ -103,7 +103,7 @@ class CommentDataAdapterDelegate(
 
             commentUserIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
 
-            commentText.latexData = data.textData
+            commentText.setText(data.comment.text)
 
             commentMenu.isVisible =
                 data.comment.actions?.delete == true || data.comment.actions?.edit == true

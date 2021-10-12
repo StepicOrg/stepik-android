@@ -11,7 +11,6 @@ import ru.nobird.android.core.model.Identifiable
 sealed class CommentItem {
     data class Data(
         val comment: Comment,
-        val textData: LatexData,
         val user: User,
         val voteStatus: VoteStatus,
         val isFocused: Boolean,

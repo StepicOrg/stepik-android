@@ -45,17 +45,8 @@ constructor(
                                 CommentItem.Data.Solution(attempt, submission)
                             }
                     }
-
-                val latexData = latexTextMapper.mapToLatexText(comment.text ?: "")
-                val result = if (latexData is LatexData.Web) {
-                    latexData
-                } else {
-                    latexTextMapper.mapToLatexText(comment.text?.replace("\n", "<br>") ?: "")
-                }
-
                 CommentItem.Data(
                     comment = comment,
-                    textData = result,
                     user = user,
                     voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
                     isFocused = discussionId == comment.id,
