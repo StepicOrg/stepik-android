@@ -12,14 +12,13 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import androidx.media.session.MediaButtonReceiver
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.DefaultRenderersFactory
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.ForwardingPlayer
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.MediaSource
@@ -28,7 +27,6 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.DefaultControlDispatcher
 import com.google.android.exoplayer2.util.Util
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -64,7 +62,7 @@ class VideoPlayerForegroundService : Service() {
     @Inject
     internal lateinit var analytic: Analytic
 
-    private var player: SimpleExoPlayer? = null
+    private var player: ForwardingPlayer? = null
     private lateinit var playerNotificationManager: PlayerNotificationManager
 
     private lateinit var mediaSession: MediaSessionCompat
@@ -100,7 +98,7 @@ class VideoPlayerForegroundService : Service() {
         createPlayer()
     }
 
-    override fun onBind(intent: Intent?): IBinder? =
+    override fun onBind(intent: Intent?): IBinder =
         VideoPlayerBinder(player)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -119,45 +117,53 @@ class VideoPlayerForegroundService : Service() {
 
         val loadControl = DefaultLoadControl.Builder()
             .setBackBuffer(BACK_BUFFER_DURATION_MS, true)
-            .createDefaultLoadControl()
+            .build()
 
-        player = ExoPlayerFactory
-            .newSimpleInstance(this, DefaultRenderersFactory(this), DefaultTrackSelector(), loadControl)
+        val simplePlayer = SimpleExoPlayer.Builder(this)
+            .setLoadControl(loadControl)
+            .setTrackSelector(DefaultTrackSelector(this))
+            .setSeekBackIncrementMs(JUMP_TIME_MILLIS)
+            .setSeekForwardIncrementMs(JUMP_TIME_MILLIS)
+            .build()
             .apply {
                 playWhenReady = true
                 setAudioAttributes(audioAttributes, true)
             }
 
-        val notificationListener =
-            object : PlayerNotificationManager.NotificationListener {
-                override fun onNotificationCancelled(notificationId: Int) {
-                    stopSelf()
-                }
-
-                override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
-                    startForeground(notificationId, notification)
-                }
+        player = object : ForwardingPlayer(simplePlayer) {
+            /**
+             * Interacting with seekbar in notification or fullscreen
+             */
+            override fun seekTo(windowIndex: Int, positionMs: Long) {
+                val currentPosition = player?.currentPosition ?: 0L
+                val difference = currentPosition - positionMs
+                val action =
+                    if (difference > 0L) {
+                        VideoPlayerControlClickedEvent.ACTION_SEEK_BACK
+                    } else {
+                        VideoPlayerControlClickedEvent.ACTION_SEEK_FORWARD
+                    }
+                analytic.report(VideoPlayerControlClickedEvent(action))
+                super.seekTo(windowIndex, positionMs)
             }
 
-        playerNotificationManager = PlayerNotificationManager
-            .createWithNotificationChannel(
-                this,
-                PLAYER_CHANNEL_ID,
-                R.string.video_player_control_notification_channel_name,
-                R.string.video_player_control_notification_channel_description,
-                PLAYER_NOTIFICATION_ID,
-                videoPlayerMediaDescriptionAdapter,
-                notificationListener
-            )
+            /**
+             * Rewind/forward buttons in notification
+             */
+            override fun seekBack() {
+                analytic.report(VideoPlayerControlClickedEvent((VideoPlayerControlClickedEvent.ACTION_REWIND)))
+                super.seekBack()
+            }
 
-        playerNotificationManager.setSmallIcon(R.drawable.ic_player_notification)
-        playerNotificationManager.setUseStopAction(false)
-        playerNotificationManager.setPlayer(player)
-        playerNotificationManager.setRewindIncrementMs(JUMP_TIME_MILLIS)
-        playerNotificationManager.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
-        playerNotificationManager.setUseNavigationActions(false)
-        playerNotificationManager.setControlDispatcher(object : DefaultControlDispatcher() {
-            override fun dispatchSeekTo(player: Player?, windowIndex: Int, positionMs: Long): Boolean {
+            override fun seekForward() {
+                analytic.report(VideoPlayerControlClickedEvent((VideoPlayerControlClickedEvent.ACTION_FORWARD)))
+                super.seekForward()
+            }
+
+            /**
+             * Rewind/forward when pressing PIP or fullscreen buttons
+             */
+            override fun seekTo(positionMs: Long) {
                 val currentPosition = player?.currentPosition ?: 0L
                 val difference = currentPosition - positionMs
                 val action =
@@ -167,9 +173,31 @@ class VideoPlayerForegroundService : Service() {
                         VideoPlayerControlClickedEvent.ACTION_FORWARD
                     }
                 analytic.report(VideoPlayerControlClickedEvent(action))
-                return super.dispatchSeekTo(player, windowIndex, positionMs)
+                super.seekTo(positionMs)
             }
-        })
+        }
+
+        val notificationListener =
+            object : PlayerNotificationManager.NotificationListener {
+                override fun onNotificationCancelled(notificationId: Int, dismissedByUser: Boolean) {
+                    stopSelf()
+                }
+
+                override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
+                    startForeground(notificationId, notification)
+                }
+            }
+
+        playerNotificationManager = PlayerNotificationManager.Builder(this, PLAYER_NOTIFICATION_ID, PLAYER_CHANNEL_ID)
+            .setChannelNameResourceId(R.string.video_player_control_notification_channel_name)
+            .setChannelDescriptionResourceId(R.string.video_player_control_notification_channel_description)
+            .setMediaDescriptionAdapter(videoPlayerMediaDescriptionAdapter)
+            .setNotificationListener(notificationListener)
+            .build()
+
+        playerNotificationManager.setSmallIcon(R.drawable.ic_player_notification)
+        playerNotificationManager.setPlayer(player)
+        playerNotificationManager.setUsePreviousAction(false)
 
         mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
@@ -186,6 +214,7 @@ class VideoPlayerForegroundService : Service() {
 
     private fun setPlayerData(videoPlayerData: VideoPlayerData?) {
         val player = this.player
+            ?.wrappedPlayer as? SimpleExoPlayer
             ?: return
 
         val position =
@@ -202,7 +231,8 @@ class VideoPlayerForegroundService : Service() {
         if (videoPlayerData != null) {
             if (this.videoPlayerData?.videoUrl != videoPlayerData.videoUrl || player.playbackState == Player.STATE_IDLE) {
                 val mediaSource = getMediaSource(videoPlayerData)
-                player.prepare(mediaSource)
+                player.prepare()
+                player.setMediaSource(mediaSource)
             }
 
             player.playbackParameters = PlaybackParameters(videoPlayerData.videoPlaybackRate.rateFloat, 1f)
@@ -222,7 +252,7 @@ class VideoPlayerForegroundService : Service() {
 
         return ProgressiveMediaSource
             .Factory(dataSourceFactory)
-            .createMediaSource(Uri.parse(videoPlayerData.videoUrl))
+            .createMediaSource(MediaItem.fromUri(Uri.parse(videoPlayerData.videoUrl)))
     }
 
     private fun releasePlayer() {
@@ -233,7 +263,6 @@ class VideoPlayerForegroundService : Service() {
         mediaSessionConnector.setPlayer(null)
 
         playerNotificationManager.setPlayer(null)
-        playerNotificationManager.setControlDispatcher(null)
         player?.release()
         player = null
     }
@@ -244,8 +273,8 @@ class VideoPlayerForegroundService : Service() {
         super.onDestroy()
     }
 
-    class VideoPlayerBinder(private val player: ExoPlayer?) : Binder() {
-        fun getPlayer(): ExoPlayer? =
+    class VideoPlayerBinder(private val player: Player?) : Binder() {
+        fun getPlayer(): Player? =
             player
     }
 }
