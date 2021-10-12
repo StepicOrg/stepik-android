@@ -22,11 +22,11 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
     override fun addListener(listener: TimeBar.OnScrubListener) {
-        listener.let(listeners::add)
+        listeners += listener
     }
 
     override fun removeListener(listener: TimeBar.OnScrubListener) {
-        listener.let(listeners::remove)
+        listeners -= listener
     }
 
     override fun setKeyTimeIncrement(time: Long) {

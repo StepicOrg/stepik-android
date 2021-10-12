@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
@@ -49,6 +49,6 @@ class VideoPlayerMediaDescriptionAdapter(
                     callback.onBitmap(resource)
                 }
             })
-        return ContextCompat.getDrawable(context, R.drawable.general_placeholder)?.toBitmap()
+        return AppCompatResources.getDrawable(context, R.drawable.general_placeholder)?.toBitmap()
     }
 }
