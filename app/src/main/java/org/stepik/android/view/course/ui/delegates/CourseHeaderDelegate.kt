@@ -142,6 +142,10 @@ constructor(
             courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
 
             courseBuyInAppAction.setOnClickListener {
+                courseHeaderData?.let { headerData ->
+                    analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
+                    analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
+                }
                 coursePresenter.purchaseCourse()
             }
 

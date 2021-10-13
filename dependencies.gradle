@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2225,
-        name                 : '1.193',
+        code                 : 2226,
+        name                 : '1.194',
 
         minSdk               : 21,
         targetSdk            : 30,
@@ -20,7 +20,7 @@ ext.versions = [
         rxKotlin             : '2.3.0',
         rxRelay              : '2.1.1',
 
-        exoPlayer            : '2.10.5',
+        exoPlayer            : '2.15.1',
 
         appCompat            : '1.1.0',
         ktx                  : '1.3.0',
@@ -67,7 +67,7 @@ ext.versions = [
         googleauth           : '18.1.0',
         firebaseBoM          : '28.4.1',
 
-        checkout             : '1.2.1',
+        checkout             : '1.2.3',
 
         facebook             : '8.1.0',
         vk                   : '2.2.3',

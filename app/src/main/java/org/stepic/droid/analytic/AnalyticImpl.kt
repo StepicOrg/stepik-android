@@ -68,6 +68,10 @@ constructor(
             apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED).withValue(context.isNightModeEnabled()))
             apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED).withValue(context.isARSupported()))
         }
+
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
     }
 
     // Amplitude properties
@@ -85,32 +89,38 @@ constructor(
     override fun setCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.COURSES_COUNT).withValue(coursesCount.toDouble())) }
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount.toString())
     }
 
     override fun setSubmissionsCount(submissionsCount: Long, delta: Long) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT, submissionsCount + delta))
         updateYandexUserProfile { apply(Attribute.customCounter(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT).withDelta(delta.toDouble())) }
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT,  (submissionsCount + delta).toString())
     }
 
     override fun setScreenOrientation(orientation: Int) {
         val orientationName = if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName))
         updateYandexUserProfile { apply(Attribute.customString(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION).withValue(orientationName))  }
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName)
     }
 
     override fun setStreaksNotificationsEnabled(isEnabled: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
         updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED).withValue(isEnabled)) }
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED.substring(0, 24), if (isEnabled) "enabled" else "disabled")
     }
 
     override fun setTeachingCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount.toString())
     }
 
     override fun setGoogleServicesAvailable(isAvailable: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString()))
         updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE).withValue(isAvailable)) }
+        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE.substring(0, 24), isAvailable.toString())
     }
 
     override fun report(analyticEvent: AnalyticEvent) {
