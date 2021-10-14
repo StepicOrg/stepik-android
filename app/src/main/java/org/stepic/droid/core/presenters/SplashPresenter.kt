@@ -16,6 +16,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.configuration.RemoteConfig
+import org.stepic.droid.configuration.analytic.*
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.presenters.contracts.SplashView
@@ -184,15 +185,15 @@ constructor(
     }
 
     private fun logRemoteConfig() {
-        analytic.setMinDelayRateDialogSeconds(firebaseRemoteConfig[RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC].asLong())
-        analytic.setShowStreakAfterLogin(firebaseRemoteConfig[RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN].asBoolean())
-        analytic.setAdaptiveCourses(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_COURSES].asString())
-        analytic.setAdaptiveBackendUrl(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_BACKEND_URL].asString())
-        analytic.setIsLocalSubmissionsEnabled(firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean())
-        analytic.setSearchQueryParameters(firebaseRemoteConfig[RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID].asString())
-        analytic.setIsNewHomeScreenEnabled(firebaseRemoteConfig[RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED].asBoolean())
-        analytic.setPersonalizedOnboardingCourseLists(firebaseRemoteConfig[RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS].asString())
-        analytic.setIsCourseRevenueAvailable(firebaseRemoteConfig[RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID].asBoolean())
+        analytic.reportUserProperty(MinDelayRateDialogUserProperty(firebaseRemoteConfig[RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC].asLong()))
+        analytic.reportUserProperty(ShowStreakDialogAfterLoginUserProperty(firebaseRemoteConfig[RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN].asBoolean()))
+        analytic.reportUserProperty(AdaptiveCoursesUserProperty(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_COURSES].asString()))
+        analytic.reportUserProperty(AdaptiveBackendUrlUserProperty(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_BACKEND_URL].asString()))
+        analytic.reportUserProperty(LocalSubmissionsEnabledUserProperty(firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()))
+        analytic.reportUserProperty(SearchQueryParamsUserProperty(firebaseRemoteConfig[RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID].asString()))
+        analytic.reportUserProperty(NewHomeScreenEnabledUserProperty(firebaseRemoteConfig[RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED].asBoolean()))
+        analytic.reportUserProperty(PersonalizedOnboardingCourseListsUserProperty(firebaseRemoteConfig[RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS].asString()))
+        analytic.reportUserProperty(CourseRevenueAvailableUserProperty(firebaseRemoteConfig[RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID].asBoolean()))
     }
 
     private fun countNumberOfLaunches() {

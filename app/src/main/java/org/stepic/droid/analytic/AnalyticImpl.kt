@@ -23,6 +23,8 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.base.analytic.AnalyticSource
+import org.stepik.android.domain.base.analytic.UserProperty
+import org.stepik.android.domain.base.analytic.UserPropertySource
 import ru.nobird.android.view.base.ui.extension.isNightModeEnabled
 import java.util.HashMap
 import java.util.Locale
@@ -126,63 +128,6 @@ constructor(
         setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString())
     }
 
-    /**
-     * Remote config user properties
-     */
-    override fun setMinDelayRateDialogSeconds(delay: Long) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC, delay))
-        updateYandexUserProfile { apply(Attribute.customNumber(RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).withValue(delay.toDouble())) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC, delay.toString())
-    }
-
-    override fun setShowStreakAfterLogin(showStreak: Boolean) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN, showStreak))
-        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN).withValue(showStreak)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN, showStreak.toString())
-    }
-
-    override fun setAdaptiveCourses(adaptiveCourses: String) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES, adaptiveCourses))
-        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES).withValue(adaptiveCourses)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES, adaptiveCourses)
-    }
-
-    override fun setAdaptiveBackendUrl(adaptiveBackendUrl: String) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL, adaptiveBackendUrl))
-        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL).withValue(adaptiveBackendUrl)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL, adaptiveBackendUrl)
-    }
-
-    override fun setIsLocalSubmissionsEnabled(isLocalSubmissionsEnabled: Boolean) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED, isLocalSubmissionsEnabled))
-        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED).withValue(isLocalSubmissionsEnabled)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED, isLocalSubmissionsEnabled.toString())
-    }
-
-    override fun setSearchQueryParameters(searchQueryParameters: String) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID, searchQueryParameters))
-        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID).withValue(searchQueryParameters)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID, searchQueryParameters)
-    }
-
-    override fun setIsNewHomeScreenEnabled(isNewHomeScreenEnabled: Boolean) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED, isNewHomeScreenEnabled))
-        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED).withValue(isNewHomeScreenEnabled)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED, isNewHomeScreenEnabled.toString())
-    }
-
-    override fun setPersonalizedOnboardingCourseLists(personalizedOnboardingCourseLists: String) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS, personalizedOnboardingCourseLists))
-        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS).withValue(personalizedOnboardingCourseLists)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS, personalizedOnboardingCourseLists)
-    }
-
-    override fun setIsCourseRevenueAvailable(isCourseRevenueAvailable: Boolean) {
-        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID, isCourseRevenueAvailable))
-        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID).withValue(isCourseRevenueAvailable)) }
-        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID, isCourseRevenueAvailable.toString())
-    }
-
     override fun report(analyticEvent: AnalyticEvent) {
         if (AnalyticSource.YANDEX in analyticEvent.sources) {
             YandexMetrica.reportEvent(analyticEvent.name, analyticEvent.params)
@@ -206,6 +151,44 @@ constructor(
 
         if (AnalyticSource.STEPIK_API in analyticEvent.sources) {
             stepikAnalytic.logEvent(analyticEvent.name, analyticEvent.params)
+        }
+    }
+
+    override fun reportUserProperty(userProperty: UserProperty) {
+        if (UserPropertySource.YANDEX in userProperty.sources) {
+            val userProfileUpdate =
+                when (val value = userProperty.value) {
+                    is String ->
+                        Attribute.customString(userProperty.name).withValue(value)
+                    is Boolean ->
+                        Attribute.customBoolean(userProperty.name).withValue(value)
+                    is Number ->
+                        Attribute.customNumber(userProperty.name).withValue(value.toDouble())
+                    else ->
+                        throw IllegalArgumentException("Invalid argument type")
+                }
+            updateYandexUserProfile { apply(userProfileUpdate) }
+        }
+
+        if (UserPropertySource.AMPLITUDE in userProperty.sources) {
+            val identify =
+                when (val value = userProperty.value) {
+                    is String ->
+                        Identify().set(userProperty.name, value)
+                    is Boolean ->
+                        Identify().set(userProperty.name, value)
+                    is Long ->
+                        Identify().set(userProperty.name, value)
+                    is Double ->
+                        Identify().set(userProperty.name, value)
+                    else ->
+                        throw IllegalArgumentException("Invalid argument type")
+                }
+            amplitude.identify(identify)
+        }
+
+        if (UserPropertySource.FIREBASE in userProperty.sources) {
+            setFirebaseUserProperty(userProperty.name, userProperty.value.toString())
         }
     }
 
