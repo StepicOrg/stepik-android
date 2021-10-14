@@ -18,6 +18,7 @@ import com.yandex.metrica.profile.UserProfile
 import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
 import org.stepik.android.domain.base.analytic.AnalyticEvent
@@ -71,9 +72,9 @@ constructor(
             apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED).withValue(context.isARSupported()))
         }
 
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
     }
 
     // Amplitude properties
@@ -91,38 +92,95 @@ constructor(
     override fun setCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.COURSES_COUNT).withValue(coursesCount.toDouble())) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount.toString())
     }
 
     override fun setSubmissionsCount(submissionsCount: Long, delta: Long) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT, submissionsCount + delta))
         updateYandexUserProfile { apply(Attribute.customCounter(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT).withDelta(delta.toDouble())) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT,  (submissionsCount + delta).toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT,  (submissionsCount + delta).toString())
     }
 
     override fun setScreenOrientation(orientation: Int) {
         val orientationName = if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName))
         updateYandexUserProfile { apply(Attribute.customString(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION).withValue(orientationName))  }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName)
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName)
     }
 
     override fun setStreaksNotificationsEnabled(isEnabled: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
         updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED).withValue(isEnabled)) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED.substring(0, 24), if (isEnabled) "enabled" else "disabled")
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled")
     }
 
     override fun setTeachingCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount.toString())
     }
 
     override fun setGoogleServicesAvailable(isAvailable: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString()))
         updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE).withValue(isAvailable)) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE.substring(0, 24), isAvailable.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString())
+    }
+
+    /**
+     * Remote config user properties
+     */
+    override fun setMinDelayRateDialogSeconds(delay: Long) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC, delay))
+        updateYandexUserProfile { apply(Attribute.customNumber(RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).withValue(delay.toDouble())) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC, delay.toString())
+    }
+
+    override fun setShowStreakAfterLogin(showStreak: Boolean) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN, showStreak))
+        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN).withValue(showStreak)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN, showStreak.toString())
+    }
+
+    override fun setAdaptiveCourses(adaptiveCourses: String) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES, adaptiveCourses))
+        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES).withValue(adaptiveCourses)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES, adaptiveCourses)
+    }
+
+    override fun setAdaptiveBackendUrl(adaptiveBackendUrl: String) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL, adaptiveBackendUrl))
+        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL).withValue(adaptiveBackendUrl)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL, adaptiveBackendUrl)
+    }
+
+    override fun setIsLocalSubmissionsEnabled(isLocalSubmissionsEnabled: Boolean) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED, isLocalSubmissionsEnabled))
+        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED).withValue(isLocalSubmissionsEnabled)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED, isLocalSubmissionsEnabled.toString())
+    }
+
+    override fun setSearchQueryParameters(searchQueryParameters: String) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID, searchQueryParameters))
+        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID).withValue(searchQueryParameters)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID, searchQueryParameters)
+    }
+
+    override fun setIsNewHomeScreenEnabled(isNewHomeScreenEnabled: Boolean) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED, isNewHomeScreenEnabled))
+        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED).withValue(isNewHomeScreenEnabled)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED, isNewHomeScreenEnabled.toString())
+    }
+
+    override fun setPersonalizedOnboardingCourseLists(personalizedOnboardingCourseLists: String) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS, personalizedOnboardingCourseLists))
+        updateYandexUserProfile { apply(Attribute.customString(RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS).withValue(personalizedOnboardingCourseLists)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS, personalizedOnboardingCourseLists)
+    }
+
+    override fun setIsCourseRevenueAvailable(isCourseRevenueAvailable: Boolean) {
+        amplitude.identify(Identify().set(RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID, isCourseRevenueAvailable))
+        updateYandexUserProfile { apply(Attribute.customBoolean(RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID).withValue(isCourseRevenueAvailable)) }
+        setFirebaseUserProperty(RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID, isCourseRevenueAvailable.toString())
     }
 
     override fun report(analyticEvent: AnalyticEvent) {
@@ -173,7 +231,7 @@ constructor(
         amplitude.identify(Identify().set(name, value))
         updateYandexUserProfile { apply(Attribute.customString(name).withValue(value)) }
         firebaseCrashlytics.setCustomKey(name, value)
-        firebaseAnalytics.setUserProperty(name.take(FIREBASE_USER_PROPERTY_NAME_LIMIT), value.take(FIREBASE_USER_PROPERTY_VALUE_LIMIT))
+        setFirebaseUserProperty(name, value)
     }
     // End of amplitude properties
 
@@ -226,6 +284,10 @@ constructor(
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
         }
         reportEvent(eventName, bundle)
+    }
+
+    private fun setFirebaseUserProperty(name: String, value: String) {
+        firebaseAnalytics.setUserProperty(name.take(FIREBASE_USER_PROPERTY_NAME_LIMIT), value.take(FIREBASE_USER_PROPERTY_VALUE_LIMIT))
     }
 
     private fun castStringToFirebaseEvent(eventName: String): String {

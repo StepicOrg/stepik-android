@@ -184,47 +184,15 @@ constructor(
     }
 
     private fun logRemoteConfig() {
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC,
-            firebaseRemoteConfig[RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC].asLong().toString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN,
-            firebaseRemoteConfig[RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN].asBoolean().toString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_COURSES,
-            firebaseRemoteConfig[RemoteConfig.ADAPTIVE_COURSES].asString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.ADAPTIVE_BACKEND_URL,
-            firebaseRemoteConfig[RemoteConfig.ADAPTIVE_BACKEND_URL].asString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED,
-            firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean().toString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID,
-            firebaseRemoteConfig[RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID].asString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED,
-            firebaseRemoteConfig[RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED].asBoolean().toString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS,
-            firebaseRemoteConfig[RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS].asString()
-        )
-        analytic.setUserProperty(
-            RemoteConfig.PREFIX + RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID,
-            firebaseRemoteConfig[RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID].asString()
-        )
-        analytic
-            .setUserProperty(
-                RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED,
-                firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean().toString()
-            )
+        analytic.setMinDelayRateDialogSeconds(firebaseRemoteConfig[RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC].asLong())
+        analytic.setShowStreakAfterLogin(firebaseRemoteConfig[RemoteConfig.SHOW_STREAK_DIALOG_AFTER_LOGIN].asBoolean())
+        analytic.setAdaptiveCourses(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_COURSES].asString())
+        analytic.setAdaptiveBackendUrl(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_BACKEND_URL].asString())
+        analytic.setIsLocalSubmissionsEnabled(firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean())
+        analytic.setSearchQueryParameters(firebaseRemoteConfig[RemoteConfig.SEARCH_QUERY_PARAMS_ANDROID].asString())
+        analytic.setIsNewHomeScreenEnabled(firebaseRemoteConfig[RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED].asBoolean())
+        analytic.setPersonalizedOnboardingCourseLists(firebaseRemoteConfig[RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS].asString())
+        analytic.setIsCourseRevenueAvailable(firebaseRemoteConfig[RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID].asBoolean())
     }
 
     private fun countNumberOfLaunches() {

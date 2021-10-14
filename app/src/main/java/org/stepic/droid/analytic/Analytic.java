@@ -361,6 +361,20 @@ public interface Analytic {
     void setStreaksNotificationsEnabled(boolean isEnabled);
     void setTeachingCoursesCount(int coursesCount);
     void setGoogleServicesAvailable(boolean isAvailable);
+
+    /**
+     * Remote config user properties
+     */
+    void setMinDelayRateDialogSeconds(long delay);
+    void setShowStreakAfterLogin(boolean showStreak);
+    void setAdaptiveCourses(@NotNull String adaptiveCourses);
+    void setAdaptiveBackendUrl(@NotNull String adaptiveBackendUrl);
+    void setIsLocalSubmissionsEnabled(boolean isLocalSubmissionsEnabled);
+    void setSearchQueryParameters(@NotNull String searchQueryParameters);
+    void setIsNewHomeScreenEnabled(boolean isNewHomeScreenEnabled);
+    void setPersonalizedOnboardingCourseLists(@NotNull String personalizedOnboardingCourseLists);
+    void setIsCourseRevenueAvailable(boolean isCourseRevenueAvailable);
+
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
 
