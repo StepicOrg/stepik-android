@@ -29,7 +29,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.EndpointResolver
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -376,8 +375,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
             val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block ||
                     stepWrapper.step.isEnabled != state.stepWrapper.step.isEnabled
 
-            val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
-                    state.stepWrapper.step.isEnabled == false
+            val isStepDisabled = state.stepWrapper.step.isEnabled == false
 
             val isStepUnavailable = isStepDisabled && !lessonData.lesson.isTeacher
 
@@ -410,8 +408,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     }
 
     private fun isStepContentNextVisible(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Boolean {
-        val isStepDisabled = remoteConfig.getBoolean(RemoteConfig.IS_DISABLED_STEPS_SUPPORTED) &&
-                stepWrapper.step.isEnabled == false
+        val isStepDisabled = stepWrapper.step.isEnabled == false
 
         val isStepNotLast = stepWrapper.step.position < lessonData.lesson.steps.size
 

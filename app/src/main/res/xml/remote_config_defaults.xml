@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <defaultsMap>
     <entry>
-        <key>continue_course_experiment_enabled</key>
-        <value>false</value>
-    </entry>
-    <entry>
         <key>min_delay_rate_dialog_sec</key>
         <value>86400</value>
     </entry>
     <entry>
         <key>show_streak_dialog_after_login</key>
         <value>true</value>
-    </entry>
-    <entry>
-        <key>show_notifications_badges</key>
-        <value>false</value>
     </entry>
     <entry>
         <key>adaptive_courses_android</key>
@@ -26,14 +18,6 @@
     </entry>
     <entry>
         <key>is_local_submissions_enabled</key>
-        <value>false</value>
-    </entry>
-    <entry>
-        <key>is_peer_review_enabled</key>
-        <value>false</value>
-    </entry>
-    <entry>
-        <key>is_disabled_steps_supported</key>
         <value>false</value>
     </entry>
     <entry>

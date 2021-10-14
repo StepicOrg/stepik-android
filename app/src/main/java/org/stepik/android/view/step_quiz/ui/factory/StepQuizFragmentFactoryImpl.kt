@@ -1,8 +1,6 @@
 package org.stepik.android.view.step_quiz.ui.factory
 
 import androidx.fragment.app.Fragment
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
@@ -22,16 +20,14 @@ import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
 @Inject
-constructor(
-    private val firebaseRemoteConfig: FirebaseRemoteConfig
-) : StepQuizFragmentFactory {
+constructor() : StepQuizFragmentFactory {
     override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment {
         val instructionType =
             stepPersistentWrapper.step.instructionType.takeIf { stepPersistentWrapper.step.actions?.doReview != null }
 
         val blockName = stepPersistentWrapper.step.block?.name
 
-        return if (instructionType != null && firebaseRemoteConfig.getBoolean(RemoteConfig.IS_PEER_REVIEW_ENABLED)) {
+        return if (instructionType != null) {
             when {
                 lessonData.lesson.isTeacher && blockName in StepQuizReviewTeacherFragment.supportedQuizTypes ->
                     StepQuizReviewTeacherFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
