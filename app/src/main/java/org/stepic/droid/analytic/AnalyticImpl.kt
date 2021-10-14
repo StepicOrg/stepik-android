@@ -36,6 +36,8 @@ constructor(
     private val stepikAnalytic: StepikAnalytic
 ) : Analytic {
     private companion object {
+        private const val FIREBASE_USER_PROPERTY_NAME_LIMIT = 24
+        private const val FIREBASE_USER_PROPERTY_VALUE_LIMIT = 36
         private const val FIREBASE_LENGTH_LIMIT = 40
 
         inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
@@ -171,7 +173,7 @@ constructor(
         amplitude.identify(Identify().set(name, value))
         updateYandexUserProfile { apply(Attribute.customString(name).withValue(value)) }
         firebaseCrashlytics.setCustomKey(name, value)
-        firebaseAnalytics.setUserProperty(name, value)
+        firebaseAnalytics.setUserProperty(name.take(FIREBASE_USER_PROPERTY_NAME_LIMIT), value.take(FIREBASE_USER_PROPERTY_VALUE_LIMIT))
     }
     // End of amplitude properties
 
