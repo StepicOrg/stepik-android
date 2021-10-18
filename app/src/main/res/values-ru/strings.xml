@@ -1169,4 +1169,19 @@
     <string name="course_search_empty_message">По данному запросу\nничего не найдено</string>
     <string name="course_search_step_suffix">" — Шаг %d"</string>
     <string name="course_search_hint">Поиск по курсу %s</string>
+
+    <!-- Course purchase -->
+    <string name="course_purchase_commission_web_view_title">Пользовательское соглашение</string>
+    <string name="course_purchase_commission_information_part_1">"В цену включена 15% комиссия Google Play.\nОплачивая доступ к этому курсу вы соглашаетесь с условиями "</string>
+    <string name="course_purchase_commission_information_part_2">пользовательского соглашения</string>
+    <string name="course_purchase_commission_url">https://welcome.stepik.org/ru/payment-terms</string>
+
+    <string name="course_purchase_promocode_available">У меня есть промокод</string>
+    <string name="course_purchase_promocode_checking">Проверка промокода</string>
+    <string name="course_purchase_promocode_invalid">Неверный промокод</string>
+    <string name="course_purchase_promocode_valid">Промокод применен</string>
+
+    <string name="course_purchase_wishlist_add">Добавить в Список желаний</string>
+    <string name="course_purchase_wishlist_adding">Добавляем</string>
+    <string name="course_purchase_wishlist_added">Курс добавлен в Список желаний</string>
 </resources>

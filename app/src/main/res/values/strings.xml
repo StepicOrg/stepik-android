@@ -1240,4 +1240,20 @@
     <string name="course_search_empty_message">No results were\nfound for this request.</string>
     <string name="course_search_step_suffix">" — Step %d"</string>
     <string name="course_search_hint">Search in course %s</string>
+
+    <!-- Course purchase -->
+
+    <string name="course_purchase_commission_web_view_title">User Agreement</string>
+    <string name="course_purchase_commission_information_part_1">The price includes 15% commission from Google Play.\nBy paying for access to this course you agree to the terms </string>
+    <string name="course_purchase_commission_information_part_2">user agreement</string>
+    <string name="course_purchase_commission_url">https://welcome.stepik.org/en/payment-terms</string>
+
+    <string name="course_purchase_promocode_available">I have a promocode</string>
+    <string name="course_purchase_promocode_checking">Checking promocode</string>
+    <string name="course_purchase_promocode_invalid">Invalid promocode</string>
+    <string name="course_purchase_promocode_valid">Promocode applied</string>
+
+    <string name="course_purchase_wishlist_add">Add to Wishlist</string>
+    <string name="course_purchase_wishlist_adding">Adding</string>
+    <string name="course_purchase_wishlist_added">Course added to Wishlist</string>
 </resources>

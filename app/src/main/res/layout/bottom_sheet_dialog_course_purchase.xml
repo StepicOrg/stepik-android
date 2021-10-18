@@ -64,7 +64,7 @@
 
     <FrameLayout
         android:id="@+id/coursePurchasePromoCodeInputContainer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
@@ -74,7 +74,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/coursePurchasePromoCodeSubmitAction"
         app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -88,6 +88,19 @@
             tools:hint="Введите промокод" />
 
     </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/coursePurchasePromoCodeSubmitAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
+        android:padding="0dp"
+        android:background="@drawable/bg_course_purchase_promo_code_submit"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
+
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/coursePurchasePromoCodeBarrier"

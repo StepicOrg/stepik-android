@@ -58,6 +58,7 @@ class CourseBenefitSummaryViewDelegate(
         courseBenefitExperimentDisclaimer.text = buildSpannedString {
             bold { append(context.getString(R.string.course_benefits_contact_support_part_1)) }
             append(context.getString(R.string.course_benefits_contact_support_part_2))
+
             color(ContextCompat.getColor(context, R.color.color_overlay_violet)) {
                 append(context.getString(R.string.course_benefits_contact_support_part_3))
             }

@@ -39,6 +39,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
@@ -65,7 +66,8 @@ constructor(
     @Assisted private val showCourseBenefitsAction: () -> Unit,
     @Assisted onSubmissionCountClicked: () -> Unit,
     @Assisted isLocalSubmissionsEnabled: Boolean,
-    @Assisted private val showSearchCourseAction: () -> Unit
+    @Assisted private val showSearchCourseAction: () -> Unit,
+    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
@@ -138,7 +140,21 @@ constructor(
                 }
             }
 
-            courseBuyInWebAction.setOnClickListener { buyInWebAction() }
+//            courseBuyInWebAction.setOnClickListener { buyInWebAction() }
+            // TODO APPS-3478 - Testing click, replace with flag check
+            courseBuyInWebAction.setOnClickListener {
+                courseHeaderData?.let {
+                    val coursePurchaseData = CoursePurchaseData(
+                        it.course,
+                        it.stats,
+                        it.deeplinkPromoCode,
+                        it.defaultPromoCode,
+                        it.wishlistEntity,
+                        it.stats.isWishlisted
+                    )
+                    coursePurchaseFlowAction(coursePurchaseData)
+                }
+            }
             courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
 
             courseBuyInAppAction.setOnClickListener {
