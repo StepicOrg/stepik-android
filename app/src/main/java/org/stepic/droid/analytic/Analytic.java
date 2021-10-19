@@ -5,6 +5,7 @@ import android.os.Bundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepik.android.domain.base.analytic.AnalyticEvent;
+import org.stepik.android.domain.base.analytic.UserProperty;
 
 import java.util.Map;
 
@@ -361,10 +362,13 @@ public interface Analytic {
     void setStreaksNotificationsEnabled(boolean isEnabled);
     void setTeachingCoursesCount(int coursesCount);
     void setGoogleServicesAvailable(boolean isAvailable);
+
+
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
 
     void report(@NotNull AnalyticEvent analyticEvent);
+    void reportUserProperty(@NotNull UserProperty userProperty);
 
     void setUserProperty(@NotNull String name, @NotNull String value);
 
