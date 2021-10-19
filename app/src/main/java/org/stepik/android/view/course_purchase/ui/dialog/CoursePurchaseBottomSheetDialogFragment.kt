@@ -121,10 +121,6 @@ class CoursePurchaseBottomSheetDialogFragment :
             append(getString(R.string.full_stop))
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
-
-        coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), R.color.color_overlay_green)
-        coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), R.color.color_overlay_green))
-//        coursePurchaseBinding.coursePurchaseWishlistAction.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_overlay_green))
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
@@ -135,17 +131,34 @@ class CoursePurchaseBottomSheetDialogFragment :
         if (state is CoursePurchaseFeature.State.Content) {
             promoCodeViewDelegate.render(state.promoCodeState)
             wishlistViewDelegate.render(state.wishlistState)
-            val actionButtonColor = getActionButtonColor(state.promoCodeState)
-            coursePurchaseBinding.coursePurchaseBuyAction.setBackgroundColor(ContextCompat.getColor(requireContext(), actionButtonColor))
-            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), actionButtonColor)
-            coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), actionButtonColor))
+            val buyActionButtonColor = getBuyActionColor(state.promoCodeState)
+            val (strokeColor, textColor) = getWishlistActionColor(state)
+
+            coursePurchaseBinding.coursePurchaseBuyAction.setBackgroundColor(ContextCompat.getColor(requireContext(), buyActionButtonColor))
+            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
+            coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))
         }
     }
 
-    private fun getActionButtonColor(promoCodeState: CoursePurchaseFeature.PromoCodeState): Int =
+    private fun getBuyActionColor(promoCodeState: CoursePurchaseFeature.PromoCodeState): Int =
         if (promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
             R.color.color_overlay_green
         } else {
             R.color.color_overlay_violet
+        }
+
+    private fun getWishlistActionColor(state: CoursePurchaseFeature.State.Content): Pair<Int, Int> =
+        if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+            if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
+                R.color.color_overlay_green_alpha_12 to R.color.color_overlay_green
+            } else {
+                R.color.color_overlay_green to R.color.color_overlay_green
+            }
+        } else {
+            if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
+                R.color.color_overlay_violet_alpha_12 to R.color.color_overlay_violet
+            } else {
+                R.color.color_overlay_violet to R.color.color_overlay_violet
+            }
         }
 }
