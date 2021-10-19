@@ -13,7 +13,6 @@ import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
-import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.PromoCodeState
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
@@ -23,8 +22,7 @@ class PromoCodeViewDelegate(
     coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
     private val coursePurchaseViewModel: CoursePurchaseViewModel,
     private val coursePurchaseData: CoursePurchaseData,
-    private val displayPriceMapper: DisplayPriceMapper,
-    private val promoCodeResolver: CoursePromoCodeResolver
+    private val displayPriceMapper: DisplayPriceMapper
 ) {
     private val context = coursePurchaseBinding.root.context
     private val coursePromoCodeAction = coursePurchaseBinding.coursePromoCodeAction
@@ -32,6 +30,7 @@ class PromoCodeViewDelegate(
     private val coursePromoCodeInput = coursePurchaseBinding.coursePurchasePromoCodeInput
     private val coursePromoCodeDismiss = coursePurchaseBinding.coursePurchasePromoCodeInputDismiss
     private val coursePromoCodeSubmitAction = coursePurchaseBinding.coursePurchasePromoCodeSubmitAction
+    private val coursePurchasePromoCodeResultMessage = coursePurchaseBinding.coursePurchasePromoCodeResultMessage
     private val coursePurchaseBuyAction = coursePurchaseBinding.coursePurchaseBuyAction
 
     private val layerListDrawableDelegate = LayerListDrawableDelegate(
@@ -80,10 +79,30 @@ class PromoCodeViewDelegate(
                 context.getString(R.string.course_payments_purchase_in_web)
             }
 
+        coursePurchasePromoCodeResultMessage.isVisible = state is PromoCodeState.Checking || state is PromoCodeState.Valid || state is PromoCodeState.Invalid
+
+        val (messageRes, colorRes) = getPromoCodeResultMessage(state)
+        if (messageRes != -1 && colorRes != -1) {
+            coursePurchasePromoCodeResultMessage.text = context.getString(messageRes)
+            coursePurchasePromoCodeResultMessage.setTextColor(AppCompatResources.getColorStateList(context, colorRes))
+        }
+
         coursePromoCodeSubmitAction.setImageDrawable(getDrawableForSubmitAction(state))
         setEditTextFromState(state)
         layerListDrawableDelegate.showLayer(getBackgroundLayer(state))
     }
+
+    private fun getPromoCodeResultMessage(promoCodeState: PromoCodeState): Pair<Int, Int> =
+        when (promoCodeState) {
+            is PromoCodeState.Idle, is PromoCodeState.Editing ->
+                -1 to -1
+            is PromoCodeState.Checking ->
+                R.string.course_purchase_promocode_checking to R.color.color_overlay_violet
+            is PromoCodeState.Valid ->
+                R.string.course_purchase_promocode_valid to R.color.color_overlay_green
+            is PromoCodeState.Invalid ->
+                R.string.course_purchase_promocode_invalid to R.color.color_overlay_red
+        }
 
     private fun setEditTextFromState(state: PromoCodeState) {
         when (state) {

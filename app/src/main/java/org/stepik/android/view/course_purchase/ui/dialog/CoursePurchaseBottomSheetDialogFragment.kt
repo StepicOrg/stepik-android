@@ -89,7 +89,7 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel, coursePurchaseData, displayPriceMapper, coursePromoCodeResolver)
+        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel, coursePurchaseData, displayPriceMapper)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
         coursePurchaseBinding.coursePurchaseWishlistAction.setOnClickListener {
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.WishlistAddMessage)
