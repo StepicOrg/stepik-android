@@ -19,6 +19,7 @@ interface CourseHeaderDelegateFactory {
         onSubmissionCountClicked: () -> Unit,
         isLocalSubmissionsEnabled: Boolean,
         showCourseSearchAction: () -> Unit,
-        coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
+        coursePurchaseFlowAction: (CoursePurchaseData) -> Unit,
+        currentPurchaseFlow: String
     ): CourseHeaderDelegate
 }

@@ -227,7 +227,8 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                         CoursePurchaseBottomSheetDialogFragment
                             .newInstance(it)
                             .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
-                    }
+                    },
+                    currentPurchaseFlow = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString()
                 )
 
         uiCheckout = Checkout.forActivity(this, billing)

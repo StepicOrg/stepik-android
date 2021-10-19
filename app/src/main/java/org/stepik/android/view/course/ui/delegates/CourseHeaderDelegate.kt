@@ -67,11 +67,15 @@ constructor(
     @Assisted onSubmissionCountClicked: () -> Unit,
     @Assisted isLocalSubmissionsEnabled: Boolean,
     @Assisted private val showSearchCourseAction: () -> Unit,
-    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
+    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit,
+    @Assisted private val currentPurchaseFlow: String
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -140,33 +144,39 @@ constructor(
                 }
             }
 
-//            courseBuyInWebAction.setOnClickListener { buyInWebAction() }
-            // TODO APPS-3478 - Testing click, replace with flag check
             courseBuyInWebAction.setOnClickListener {
-                courseHeaderData?.let {
-                    val coursePurchaseData = CoursePurchaseData(
-                        it.course,
-                        it.stats,
-                        it.deeplinkPromoCode,
-                        it.defaultPromoCode,
-                        it.wishlistEntity,
-                        it.stats.isWishlisted
-                    )
-                    coursePurchaseFlowAction(coursePurchaseData)
+                if (currentPurchaseFlow == PURCHASE_FLOW_IAP) {
+                    courseHeaderData?.let {
+                        val coursePurchaseData = CoursePurchaseData(
+                            it.course,
+                            it.stats,
+                            it.deeplinkPromoCode,
+                            it.defaultPromoCode,
+                            it.wishlistEntity,
+                            it.stats.isWishlisted
+                        )
+                        coursePurchaseFlowAction(coursePurchaseData)
+                    }
+                } else {
+                    buyInWebAction()
                 }
             }
-//            courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
+
             courseBuyInWebActionDiscounted.setOnClickListener {
-                courseHeaderData?.let {
-                    val coursePurchaseData = CoursePurchaseData(
-                        it.course,
-                        it.stats,
-                        it.deeplinkPromoCode,
-                        it.defaultPromoCode,
-                        it.wishlistEntity,
-                        it.stats.isWishlisted
-                    )
-                    coursePurchaseFlowAction(coursePurchaseData)
+                if (currentPurchaseFlow == PURCHASE_FLOW_IAP) {
+                    courseHeaderData?.let {
+                        val coursePurchaseData = CoursePurchaseData(
+                            it.course,
+                            it.stats,
+                            it.deeplinkPromoCode,
+                            it.defaultPromoCode,
+                            it.wishlistEntity,
+                            it.stats.isWishlisted
+                        )
+                        coursePurchaseFlowAction(coursePurchaseData)
+                    }
+                } else {
+                    buyInWebAction()
                 }
             }
 
