@@ -1,8 +1,11 @@
 package org.stepik.android.view.course_purchase.delegate
 
+import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
 import android.text.Editable
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import org.stepic.droid.R
@@ -14,6 +17,7 @@ import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.PromoCodeState
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
+import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
 class PromoCodeViewDelegate(
     coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
@@ -59,6 +63,8 @@ class PromoCodeViewDelegate(
     fun render(state: PromoCodeState) {
         coursePromoCodeAction.isVisible = state is PromoCodeState.Idle
         coursePromoCodeContainer.isVisible = state !is PromoCodeState.Idle
+        coursePromoCodeDismiss.isEnabled = state !is PromoCodeState.Checking
+        coursePromoCodeSubmitAction.isEnabled = state is PromoCodeState.Editing
         coursePromoCodeInput.isEnabled = state is PromoCodeState.Editing
 
         val courseDisplayPrice = coursePurchaseData.course.displayPrice
@@ -74,6 +80,7 @@ class PromoCodeViewDelegate(
                 context.getString(R.string.course_payments_purchase_in_web)
             }
 
+        coursePromoCodeSubmitAction.setImageDrawable(getDrawableForSubmitAction(state))
         setEditTextFromState(state)
         layerListDrawableDelegate.showLayer(getBackgroundLayer(state))
     }
@@ -88,6 +95,25 @@ class PromoCodeViewDelegate(
                 return
         }
     }
+
+    private fun getDrawableForSubmitAction(state: PromoCodeState): Drawable? =
+        when (state) {
+            is PromoCodeState.Idle, is PromoCodeState.Editing ->
+                AppCompatResources.getDrawable(context, R.drawable.ic_arrow_forward)
+            is PromoCodeState.Checking -> {
+                val evaluationDrawable = AnimationDrawable()
+                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), 200)
+                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), 200)
+                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), 200)
+                evaluationDrawable.isOneShot = false
+                evaluationDrawable.start()
+                evaluationDrawable
+            }
+            is PromoCodeState.Invalid ->
+                AppCompatResources.getDrawable(context, R.drawable.ic_step_quiz_wrong)
+            is PromoCodeState.Valid ->
+                AppCompatResources.getDrawable(context, R.drawable.ic_step_quiz_correct)
+        }
 
     private fun getBackgroundLayer(state: PromoCodeState): Int =
         when (state) {

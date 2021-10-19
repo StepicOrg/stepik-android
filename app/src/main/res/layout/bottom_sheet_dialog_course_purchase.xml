@@ -84,7 +84,7 @@
             android:id="@+id/coursePurchasePromoCodeInput"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginRight="40dp"
+            android:layout_marginRight="44dp"
             android:background="@android:color/transparent"
             android:ellipsize="end"
             android:hint="@string/course_purchase_promocode_hint"
@@ -96,10 +96,10 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/coursePurchasePromoCodeInputDismiss"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="16dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_close"
             app:tint="?colorControlNormal" />
@@ -135,7 +135,6 @@
         android:layout_height="?dividerVerticalSize"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-
         app:layout_constraintTop_toBottomOf="@id/coursePurchasePromoCodeBarrier" />
 
     <androidx.appcompat.widget.AppCompatTextView
