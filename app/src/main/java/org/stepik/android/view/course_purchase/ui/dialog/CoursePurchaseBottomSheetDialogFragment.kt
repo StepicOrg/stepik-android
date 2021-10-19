@@ -6,6 +6,8 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.fragment.app.DialogFragment
@@ -30,7 +32,6 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseBottomSheetDialogFragment :
@@ -120,6 +121,10 @@ class CoursePurchaseBottomSheetDialogFragment :
             append(getString(R.string.full_stop))
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
+
+        coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), R.color.color_overlay_green)
+        coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), R.color.color_overlay_green))
+//        coursePurchaseBinding.coursePurchaseWishlistAction.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_overlay_green))
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
@@ -128,10 +133,19 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
-            Timber.d("APPS - Promo code state: ${state.promoCodeState}")
-            Timber.d("APPS - Wishlist state: ${state.wishlistState}")
             promoCodeViewDelegate.render(state.promoCodeState)
             wishlistViewDelegate.render(state.wishlistState)
+            val actionButtonColor = getActionButtonColor(state.promoCodeState)
+            coursePurchaseBinding.coursePurchaseBuyAction.setBackgroundColor(ContextCompat.getColor(requireContext(), actionButtonColor))
+            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), actionButtonColor)
+            coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), actionButtonColor))
         }
     }
+
+    private fun getActionButtonColor(promoCodeState: CoursePurchaseFeature.PromoCodeState): Int =
+        if (promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+            R.color.color_overlay_green
+        } else {
+            R.color.color_overlay_violet
+        }
 }
