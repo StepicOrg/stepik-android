@@ -12,4 +12,5 @@ object RemoteConfig {
     const val IS_NEW_HOME_SCREEN_ENABLED = "is_new_home_screen_enabled"
     const val PERSONALIZED_ONBOARDING_COURSE_LISTS = "personalized_onboarding_course_lists"
     const val IS_COURSE_REVENUE_AVAILABLE_ANDROID = "is_course_revenue_available_android"
+    const val PURCHASE_FLOW_ANDROID = "purchase_flow_android"
 }

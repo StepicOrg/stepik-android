@@ -36,4 +36,8 @@
         <key>is_course_revenue_available_android</key>
         <value>false</value>
     </entry>
+    <entry>
+        <key>purchase_flow_android</key>
+        <value>web</value>
+    </entry>
 </defaultsMap>

@@ -56,6 +56,7 @@ import org.stepik.android.view.course.routing.getPromoCodeFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
+import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.course_search.dialog.CourseSearchDialogFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
@@ -221,7 +222,13 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                         CourseSearchDialogFragment
                             .newInstance(courseId, course?.title.orEmpty())
                             .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
-                    }
+                    },
+                    coursePurchaseFlowAction = {
+                        CoursePurchaseBottomSheetDialogFragment
+                            .newInstance(it)
+                            .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
+                    },
+                    currentPurchaseFlow = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString()
                 )
 
         uiCheckout = Checkout.forActivity(this, billing)

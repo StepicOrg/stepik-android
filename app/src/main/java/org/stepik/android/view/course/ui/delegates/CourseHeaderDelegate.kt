@@ -39,6 +39,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
@@ -65,11 +66,16 @@ constructor(
     @Assisted private val showCourseBenefitsAction: () -> Unit,
     @Assisted onSubmissionCountClicked: () -> Unit,
     @Assisted isLocalSubmissionsEnabled: Boolean,
-    @Assisted private val showSearchCourseAction: () -> Unit
+    @Assisted private val showSearchCourseAction: () -> Unit,
+    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit,
+    @Assisted private val currentPurchaseFlow: String
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -138,8 +144,41 @@ constructor(
                 }
             }
 
-            courseBuyInWebAction.setOnClickListener { buyInWebAction() }
-            courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
+            courseBuyInWebAction.setOnClickListener {
+                if (currentPurchaseFlow == PURCHASE_FLOW_IAP) {
+                    courseHeaderData?.let {
+                        val coursePurchaseData = CoursePurchaseData(
+                            it.course,
+                            it.stats,
+                            it.deeplinkPromoCode,
+                            it.defaultPromoCode,
+                            it.wishlistEntity,
+                            it.stats.isWishlisted
+                        )
+                        coursePurchaseFlowAction(coursePurchaseData)
+                    }
+                } else {
+                    buyInWebAction()
+                }
+            }
+
+            courseBuyInWebActionDiscounted.setOnClickListener {
+                if (currentPurchaseFlow == PURCHASE_FLOW_IAP) {
+                    courseHeaderData?.let {
+                        val coursePurchaseData = CoursePurchaseData(
+                            it.course,
+                            it.stats,
+                            it.deeplinkPromoCode,
+                            it.defaultPromoCode,
+                            it.wishlistEntity,
+                            it.stats.isWishlisted
+                        )
+                        coursePurchaseFlowAction(coursePurchaseData)
+                    }
+                } else {
+                    buyInWebAction()
+                }
+            }
 
             courseBuyInAppAction.setOnClickListener {
                 courseHeaderData?.let { headerData ->
@@ -210,7 +249,7 @@ constructor(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
-            val (currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
+            val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
                 courseHeaderData.deeplinkPromoCode,
                 courseHeaderData.defaultPromoCode,
                 courseHeaderData.course
