@@ -29,6 +29,7 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseBottomSheetDialogFragment :
@@ -72,7 +73,8 @@ class CoursePurchaseBottomSheetDialogFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
+        val initialCoursePromoCodeInfo = coursePromoCodeResolver.resolvePromoCodeInfo(coursePurchaseData.deeplinkPromoCode, coursePurchaseData.defaultPromoCode, coursePurchaseData.course)
+        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData, initialCoursePromoCodeInfo))
     }
 
     override fun onStart() {
@@ -85,7 +87,7 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper, coursePromoCodeResolver)
+        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel, coursePurchaseData, displayPriceMapper, coursePromoCodeResolver)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
         coursePurchaseBinding.coursePurchaseWishlistAction.setOnClickListener {
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.WishlistAddMessage)
@@ -124,6 +126,8 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
+            Timber.d("APPS - Promo code state: ${state.promoCodeState}")
+            Timber.d("APPS - Wishlist state: ${state.wishlistState}")
             promoCodeViewDelegate.render(state.promoCodeState)
             wishlistViewDelegate.render(state.wishlistState)
         }

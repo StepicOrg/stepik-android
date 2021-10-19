@@ -155,7 +155,20 @@ constructor(
                     coursePurchaseFlowAction(coursePurchaseData)
                 }
             }
-            courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
+//            courseBuyInWebActionDiscounted.setOnClickListener { buyInWebAction() }
+            courseBuyInWebActionDiscounted.setOnClickListener {
+                courseHeaderData?.let {
+                    val coursePurchaseData = CoursePurchaseData(
+                        it.course,
+                        it.stats,
+                        it.deeplinkPromoCode,
+                        it.defaultPromoCode,
+                        it.wishlistEntity,
+                        it.stats.isWishlisted
+                    )
+                    coursePurchaseFlowAction(coursePurchaseData)
+                }
+            }
 
             courseBuyInAppAction.setOnClickListener {
                 courseHeaderData?.let { headerData ->

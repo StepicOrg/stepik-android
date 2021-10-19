@@ -48,19 +48,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginBottom="26dp"
+        android:text="@string/course_purchase_promocode_available"
         android:textAppearance="?textAppearanceBody1"
         android:theme="@style/ThemeOverlay.Green"
-        android:visibility="gone"
+        android:visibility="visible"
         app:drawableEndCompat="@drawable/exo_ic_chevron_right"
         app:drawableTint="@color/color_overlay_green"
         app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle"
-        tools:text="У меня есть промокод" />
+        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
 
     <FrameLayout
         android:id="@+id/coursePurchasePromoCodeInputContainer"
@@ -75,7 +75,7 @@
         app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/coursePurchasePromoCodeSubmitAction"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle">
+        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/coursePurchasePromoCodeInput"
@@ -114,7 +114,7 @@
         android:src="@drawable/ic_arrow_forward"
         android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
+        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon" />
 
 
     <androidx.constraintlayout.widget.Barrier

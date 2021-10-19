@@ -16,13 +16,21 @@ constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                val promoCodeState = CoursePurchaseFeature.PromoCodeState.Idle
-                val wishlistState = if (message.coursePurchaseData.isWishlisted) {
-                    CoursePurchaseFeature.WishlistState.Wishlisted
+                if (state is State.Idle) {
+                    val promoCodeState = if (message.initialCoursePromoCodeInfo.hasPromo) {
+                        CoursePurchaseFeature.PromoCodeState.Valid(message.initialCoursePromoCodeInfo.name, message.initialCoursePromoCodeInfo)
+                    } else {
+                        CoursePurchaseFeature.PromoCodeState.Idle
+                    }
+                    val wishlistState = if (message.coursePurchaseData.isWishlisted) {
+                        CoursePurchaseFeature.WishlistState.Wishlisted
+                    } else {
+                        CoursePurchaseFeature.WishlistState.Idle
+                    }
+                    State.Content(message.coursePurchaseData, promoCodeState, wishlistState) to emptySet()
                 } else {
-                    CoursePurchaseFeature.WishlistState.Idle
+                    null
                 }
-                State.Content(message.coursePurchaseData, promoCodeState, wishlistState) to emptySet()
             }
             is Message.WishlistAddMessage -> {
                 if (state is State.Content) {
@@ -44,6 +52,34 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.WishlistAddFailure -> {
                 if (state is State.Content) {
                     state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Idle) to emptySet()
+                } else {
+                    null
+                }
+            }
+            is Message.PromoCodeEditingMessage -> {
+                if (state is State.Content) {
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Editing) to emptySet()
+                } else {
+                    null
+                }
+            }
+            is Message.PromoCodeCheckMessage -> {
+                if (state is State.Content && state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Editing) {
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Checking(message.text)) to setOf(Action.CheckPromoCode(state.coursePurchaseData.course.id, message.text))
+                } else {
+                    null
+                }
+            }
+            is Message.PromoCodeValidMessage -> {
+                if (state is State.Content && state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Checking) {
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Valid(state.promoCodeState.text, message.coursePromoCodeInfo)) to emptySet()
+                } else {
+                    null
+                }
+            }
+            is Message.PromoCodeInvalidMessage -> {
+                if (state is State.Content && state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Checking) {
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Invalid) to emptySet()
                 } else {
                     null
                 }

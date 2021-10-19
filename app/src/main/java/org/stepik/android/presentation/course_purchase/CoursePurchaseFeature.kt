@@ -4,6 +4,7 @@ import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.view.course.model.CoursePromoCodeInfo
 
 interface CoursePurchaseFeature {
     sealed class State {
@@ -16,10 +17,22 @@ interface CoursePurchaseFeature {
     }
 
     sealed class Message {
-        data class InitMessage(val coursePurchaseData: CoursePurchaseData) : Message()
+        data class InitMessage(val coursePurchaseData: CoursePurchaseData, val initialCoursePromoCodeInfo: CoursePromoCodeInfo) : Message()
+
+        /**
+         * Wishlist messages
+         */
         object WishlistAddMessage : Message()
         data class WishlistAddSuccess(val wishlistEntity: WishlistEntity) : Message()
         object WishlistAddFailure : Message()
+
+        /**
+         * PromoCode
+         */
+        object PromoCodeEditingMessage : Message()
+        data class PromoCodeCheckMessage(val text: String) : Message()
+        data class PromoCodeValidMessage(val coursePromoCodeInfo: CoursePromoCodeInfo) : Message()
+        object PromoCodeInvalidMessage : Message()
     }
 
     sealed class Action {
@@ -28,15 +41,17 @@ interface CoursePurchaseFeature {
             val wishlistEntity: WishlistEntity,
             val wishlistOperationData: WishlistOperationData
         ) : Action()
+
+        data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         sealed class ViewAction : Action()
     }
 
     sealed class PromoCodeState {
         object Idle : PromoCodeState()
-        data class Editing(val text: String) : PromoCodeState()
+        object Editing : PromoCodeState()
         data class Checking(val text: String) : PromoCodeState()
-        data class Valid(val text: String) : PromoCodeState()
-        data class Invalid(val text: String) : PromoCodeState()
+        data class Valid(val text: String, val coursePromoCodeInfo: CoursePromoCodeInfo) : PromoCodeState()
+        object Invalid : PromoCodeState()
     }
 
     sealed class WishlistState {
