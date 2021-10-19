@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_purchase
 
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
@@ -31,7 +32,7 @@ interface CoursePurchaseFeature {
          */
         object PromoCodeEditingMessage : Message()
         data class PromoCodeCheckMessage(val text: String) : Message()
-        data class PromoCodeValidMessage(val coursePromoCodeInfo: CoursePromoCodeInfo) : Message()
+        data class PromoCodeValidMessage(val deeplinkPromoCode: DeeplinkPromoCode) : Message()
         object PromoCodeInvalidMessage : Message()
     }
 

@@ -1,6 +1,7 @@
 package org.stepik.android.view.course_purchase.ui.dialog
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -118,6 +119,7 @@ class CoursePurchaseBottomSheetDialogFragment :
             }
             append(getString(R.string.full_stop))
         }
+        coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {

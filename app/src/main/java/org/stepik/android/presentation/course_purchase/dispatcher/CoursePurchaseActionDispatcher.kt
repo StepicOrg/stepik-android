@@ -7,6 +7,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
+import org.stepik.android.domain.course_purchase.interactor.CoursePurchaseInteractor
 import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
@@ -18,6 +20,7 @@ class CoursePurchaseActionDispatcher
 constructor(
     private val analytic: Analytic,
     private val wishlistInteractor: WishlistInteractor,
+    private val coursePurchaseInteractor: CoursePurchaseInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -36,6 +39,22 @@ constructor(
                             onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess(it))
                         },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddFailure) }
+                    )
+            }
+            is CoursePurchaseFeature.Action.CheckPromoCode -> {
+                compositeDisposable += coursePurchaseInteractor
+                    .checkPromoCodeValidity(action.courseId, action.promoCodeName)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = {
+                            if (it == DeeplinkPromoCode.EMPTY) {
+                                onNewMessage(CoursePurchaseFeature.Message.PromoCodeInvalidMessage)
+                            } else {
+                                onNewMessage(CoursePurchaseFeature.Message.PromoCodeValidMessage(it))
+                            }
+                        },
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.PromoCodeInvalidMessage) }
                     )
             }
         }

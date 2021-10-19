@@ -1,18 +1,22 @@
 package org.stepik.android.presentation.course_purchase.reducer
 
+import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.State
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Message
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Action
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.wishlist.model.WishlistAction
+import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CoursePurchaseReducer
 @Inject
-constructor() : StateReducer<State, Message, Action> {
+constructor(
+    private val coursePromoCodeResolver: CoursePromoCodeResolver
+) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
@@ -72,7 +76,8 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.PromoCodeValidMessage -> {
                 if (state is State.Content && state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Checking) {
-                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Valid(state.promoCodeState.text, message.coursePromoCodeInfo)) to emptySet()
+                    val coursePromoCodeInfo = coursePromoCodeResolver.resolvePromoCodeInfo(message.deeplinkPromoCode, DefaultPromoCode.EMPTY, state.coursePurchaseData.course)
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Valid(state.promoCodeState.text, coursePromoCodeInfo)) to emptySet()
                 } else {
                     null
                 }
