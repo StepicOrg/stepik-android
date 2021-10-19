@@ -1039,6 +1039,7 @@
     <string name="course_purchase_commission_information_part_2">карыстацкага пагаднення</string>
     <string name="course_purchase_commission_url">https://welcome.stepik.org/ru/payment-terms</string>
 
+    <string name="course_purchase_promocode_hint">Увядзіце промокод</string>
     <string name="course_purchase_promocode_available">У мяне ёсць промокод</string>
     <string name="course_purchase_promocode_checking">Праверка промокода</string>
     <string name="course_purchase_promocode_invalid">Няправільны промокод</string>

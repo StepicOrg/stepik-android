@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/coursePurchaseGrip"
@@ -81,11 +81,25 @@
             android:id="@+id/coursePurchasePromoCodeInput"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginRight="40dp"
             android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/course_purchase_promocode_hint"
+            android:imeOptions="actionDone"
+            android:inputType="textCapCharacters"
+            android:maxLines="1"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textAppearance="?textAppearanceBody1"
-            tools:hint="Введите промокод" />
+            android:textAppearance="?textAppearanceBody1" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/coursePurchasePromoCodeInputDismiss"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginRight="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_close"
+            app:tint="?colorControlNormal" />
 
     </FrameLayout>
 
@@ -95,9 +109,10 @@
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
-        android:padding="0dp"
         android:background="@drawable/bg_course_purchase_promo_code_submit"
+        android:padding="0dp"
         android:src="@drawable/ic_arrow_forward"
+        android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
 
@@ -116,6 +131,7 @@
         android:layout_width="match_parent"
         android:layout_height="?dividerVerticalSize"
         android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
 
         app:layout_constraintTop_toBottomOf="@id/coursePurchasePromoCodeBarrier" />
 
@@ -157,11 +173,13 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-
         android:layout_marginRight="16dp"
-        android:theme="@style/ThemeOverlay.Violet"
-        app:layout_constraintLeft_toLeftOf="parent"
 
+        android:layout_marginBottom="16dp"
+        android:theme="@style/ThemeOverlay.Violet"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyAction"
         app:strokeColor="?colorPrimary"

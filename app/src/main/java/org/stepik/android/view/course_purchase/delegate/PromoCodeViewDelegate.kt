@@ -2,6 +2,9 @@ package org.stepik.android.view.course_purchase.delegate
 
 import android.graphics.drawable.LayerDrawable
 import android.graphics.drawable.RippleDrawable
+import android.text.Editable
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import org.stepic.droid.R
 import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -19,6 +22,7 @@ class PromoCodeViewDelegate(
     private val context = coursePurchaseBinding.root.context
     private val coursePromoCodeContainer = coursePurchaseBinding.coursePurchasePromoCodeInputContainer
     private val coursePromoCodeInput = coursePurchaseBinding.coursePurchasePromoCodeInput
+    private val coursePromoCodeDismiss = coursePurchaseBinding.coursePurchasePromoCodeInputDismiss
     private val coursePromoCodeSubmitAction = coursePurchaseBinding.coursePurchasePromoCodeSubmitAction
     private val coursePurchaseBuyAction = coursePurchaseBinding.coursePurchaseBuyAction
 
@@ -32,8 +36,17 @@ class PromoCodeViewDelegate(
         (coursePromoCodeSubmitAction.background as RippleDrawable).findDrawableByLayerId(R.id.promo_code_layer_list) as LayerDrawable
     )
 
+    init {
+        coursePromoCodeInput.doAfterTextChanged { text: Editable? ->
+            val length = text?.length ?: 0
+            coursePromoCodeDismiss.isVisible = length != 0
+            coursePromoCodeSubmitAction.isVisible = length != 0
+        }
+        coursePromoCodeDismiss.setOnClickListener { coursePromoCodeInput.setText("") }
+    }
+
     fun render(state: PromoCodeState) {
-        val (currencyCode, promoPrice, hasPromo) = promoCodeResolver.resolvePromoCodeInfo(
+        val (_, currencyCode, promoPrice, hasPromo) = promoCodeResolver.resolvePromoCodeInfo(
             coursePurchaseData.deeplinkPromoCode,
             coursePurchaseData.defaultPromoCode,
             coursePurchaseData.course

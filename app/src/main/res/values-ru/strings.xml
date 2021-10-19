@@ -1176,6 +1176,7 @@
     <string name="course_purchase_commission_information_part_2">пользовательского соглашения</string>
     <string name="course_purchase_commission_url">https://welcome.stepik.org/ru/payment-terms</string>
 
+    <string name="course_purchase_promocode_hint">Введите промокод</string>
     <string name="course_purchase_promocode_available">У меня есть промокод</string>
     <string name="course_purchase_promocode_checking">Проверка промокода</string>
     <string name="course_purchase_promocode_invalid">Неверный промокод</string>

@@ -1248,10 +1248,11 @@
     <string name="course_purchase_commission_information_part_2">user agreement</string>
     <string name="course_purchase_commission_url">https://welcome.stepik.org/en/payment-terms</string>
 
-    <string name="course_purchase_promocode_available">I have a promocode</string>
-    <string name="course_purchase_promocode_checking">Checking promocode</string>
-    <string name="course_purchase_promocode_invalid">Invalid promocode</string>
-    <string name="course_purchase_promocode_valid">Promocode applied</string>
+    <string name="course_purchase_promocode_hint">Enter promo code</string>
+    <string name="course_purchase_promocode_available">I have a promo code</string>
+    <string name="course_purchase_promocode_checking">Checking promo code</string>
+    <string name="course_purchase_promocode_invalid">Invalid promo code</string>
+    <string name="course_purchase_promocode_valid">Promo code applied</string>
 
     <string name="course_purchase_wishlist_add">Add to Wishlist</string>
     <string name="course_purchase_wishlist_adding">Adding</string>

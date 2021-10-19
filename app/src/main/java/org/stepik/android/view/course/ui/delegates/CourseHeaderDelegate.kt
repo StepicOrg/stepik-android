@@ -226,7 +226,7 @@ constructor(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
-            val (currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
+            val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
                 courseHeaderData.deeplinkPromoCode,
                 courseHeaderData.defaultPromoCode,
                 courseHeaderData.course

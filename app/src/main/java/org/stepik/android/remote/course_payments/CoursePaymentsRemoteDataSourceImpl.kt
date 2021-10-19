@@ -49,8 +49,8 @@ constructor(
 
     override fun checkDeeplinkPromoCodeValidity(courseId: Long, name: String): Single<DeeplinkPromoCode> =
         coursePaymentService
-            .checkDeeplinkPromoCodeValidity(PromoCodeRequest(
-                course = courseId,
-                name = name
-            ))
+            .checkDeeplinkPromoCodeValidity(PromoCodeRequest(course = courseId, name = name))
+            .map { response ->
+                DeeplinkPromoCode(name, response.price, response.currencyCode)
+            }
 }

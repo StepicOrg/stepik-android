@@ -13,13 +13,13 @@ constructor() {
     fun resolvePromoCodeInfo(deeplinkPromoCode: DeeplinkPromoCode, defaultPromoCode: DefaultPromoCode, course: Course): CoursePromoCodeInfo =
         when {
             deeplinkPromoCode != DeeplinkPromoCode.EMPTY ->
-                CoursePromoCodeInfo(deeplinkPromoCode.currencyCode, deeplinkPromoCode.price, true)
+                CoursePromoCodeInfo(deeplinkPromoCode.name, deeplinkPromoCode.currencyCode, deeplinkPromoCode.price, true)
 
             defaultPromoCode != DefaultPromoCode.EMPTY &&
                     (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) && course.currencyCode != null ->
-                CoursePromoCodeInfo(course.currencyCode!!, defaultPromoCode.defaultPromoCodePrice, true)
+                CoursePromoCodeInfo(defaultPromoCode.defaultPromoCodeName, course.currencyCode!!, defaultPromoCode.defaultPromoCodePrice, true)
 
             else ->
-                CoursePromoCodeInfo("", "", false)
+                CoursePromoCodeInfo("", "", "", false)
         }
 }
