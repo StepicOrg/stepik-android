@@ -37,7 +37,7 @@ class CourseHeaderDataTest {
                 isWishlisted = false
             ),
             localSubmissionsCount = 5,
-            deeplinkPromoCode = DeeplinkPromoCode("200", "RUB"),
+            deeplinkPromoCode = DeeplinkPromoCode("CODE", "200", "RUB"),
             defaultPromoCode = DefaultPromoCode.EMPTY,
             isWishlistUpdating = false,
             wishlistEntity = WishlistEntity(-1, emptyList())

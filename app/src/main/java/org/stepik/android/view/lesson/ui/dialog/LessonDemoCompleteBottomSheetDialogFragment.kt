@@ -62,7 +62,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
 
         val courseDisplayPrice = course.displayPrice
-        val (currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
+        val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
             DeeplinkPromoCode.EMPTY, // TODO Deeplink promo code will be passed as a parameter to newInstance
             DefaultPromoCode(
                 course.defaultPromoCodeName ?: "",

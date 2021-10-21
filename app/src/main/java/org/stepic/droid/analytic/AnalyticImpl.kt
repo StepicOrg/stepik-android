@@ -18,10 +18,13 @@ import com.yandex.metrica.profile.UserProfile
 import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.base.analytic.AnalyticSource
+import org.stepik.android.domain.base.analytic.UserProperty
+import org.stepik.android.domain.base.analytic.UserPropertySource
 import ru.nobird.android.view.base.ui.extension.isNightModeEnabled
 import java.util.HashMap
 import java.util.Locale
@@ -36,6 +39,8 @@ constructor(
     private val stepikAnalytic: StepikAnalytic
 ) : Analytic {
     private companion object {
+        private const val FIREBASE_USER_PROPERTY_NAME_LIMIT = 24
+        private const val FIREBASE_USER_PROPERTY_VALUE_LIMIT = 36
         private const val FIREBASE_LENGTH_LIMIT = 40
 
         inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
@@ -69,9 +74,9 @@ constructor(
             apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED).withValue(context.isARSupported()))
         }
 
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
     }
 
     // Amplitude properties
@@ -89,38 +94,38 @@ constructor(
     override fun setCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.COURSES_COUNT).withValue(coursesCount.toDouble())) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount.toString())
     }
 
     override fun setSubmissionsCount(submissionsCount: Long, delta: Long) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT, submissionsCount + delta))
         updateYandexUserProfile { apply(Attribute.customCounter(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT).withDelta(delta.toDouble())) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT,  (submissionsCount + delta).toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT,  (submissionsCount + delta).toString())
     }
 
     override fun setScreenOrientation(orientation: Int) {
         val orientationName = if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName))
         updateYandexUserProfile { apply(Attribute.customString(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION).withValue(orientationName))  }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName)
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName)
     }
 
     override fun setStreaksNotificationsEnabled(isEnabled: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
         updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED).withValue(isEnabled)) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED.substring(0, 24), if (isEnabled) "enabled" else "disabled")
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled")
     }
 
     override fun setTeachingCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount))
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount.toString())
     }
 
     override fun setGoogleServicesAvailable(isAvailable: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString()))
         updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE).withValue(isAvailable)) }
-        firebaseAnalytics.setUserProperty(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE.substring(0, 24), isAvailable.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_GOOGLE_SERVICES_AVAILABLE, isAvailable.toString())
     }
 
     override fun report(analyticEvent: AnalyticEvent) {
@@ -149,6 +154,44 @@ constructor(
         }
     }
 
+    override fun reportUserProperty(userProperty: UserProperty) {
+        if (UserPropertySource.YANDEX in userProperty.sources) {
+            val userProfileUpdate =
+                when (val value = userProperty.value) {
+                    is String ->
+                        Attribute.customString(userProperty.name).withValue(value)
+                    is Boolean ->
+                        Attribute.customBoolean(userProperty.name).withValue(value)
+                    is Number ->
+                        Attribute.customNumber(userProperty.name).withValue(value.toDouble())
+                    else ->
+                        throw IllegalArgumentException("Invalid argument type")
+                }
+            updateYandexUserProfile { apply(userProfileUpdate) }
+        }
+
+        if (UserPropertySource.AMPLITUDE in userProperty.sources) {
+            val identify =
+                when (val value = userProperty.value) {
+                    is String ->
+                        Identify().set(userProperty.name, value)
+                    is Boolean ->
+                        Identify().set(userProperty.name, value)
+                    is Long ->
+                        Identify().set(userProperty.name, value)
+                    is Double ->
+                        Identify().set(userProperty.name, value)
+                    else ->
+                        throw IllegalArgumentException("Invalid argument type")
+                }
+            amplitude.identify(identify)
+        }
+
+        if (UserPropertySource.FIREBASE in userProperty.sources) {
+            setFirebaseUserProperty(userProperty.name, userProperty.value.toString())
+        }
+    }
+
     override fun reportAmplitudeEvent(eventName: String) = reportAmplitudeEvent(eventName, null)
     override fun reportAmplitudeEvent(eventName: String, params: Map<String, Any>?) {
         syncAmplitudeProperties()
@@ -171,7 +214,7 @@ constructor(
         amplitude.identify(Identify().set(name, value))
         updateYandexUserProfile { apply(Attribute.customString(name).withValue(value)) }
         firebaseCrashlytics.setCustomKey(name, value)
-        firebaseAnalytics.setUserProperty(name, value)
+        setFirebaseUserProperty(name, value)
     }
     // End of amplitude properties
 
@@ -224,6 +267,10 @@ constructor(
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
         }
         reportEvent(eventName, bundle)
+    }
+
+    private fun setFirebaseUserProperty(name: String, value: String) {
+        firebaseAnalytics.setUserProperty(name.take(FIREBASE_USER_PROPERTY_NAME_LIMIT), value.take(FIREBASE_USER_PROPERTY_VALUE_LIMIT))
     }
 
     private fun castStringToFirebaseEvent(eventName: String): String {

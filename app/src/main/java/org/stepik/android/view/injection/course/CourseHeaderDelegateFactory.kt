@@ -4,6 +4,7 @@ import android.app.Activity
 import dagger.assisted.AssistedFactory
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 
 @AssistedFactory
@@ -17,6 +18,8 @@ interface CourseHeaderDelegateFactory {
         showCourseRevenueAction: () -> Unit,
         onSubmissionCountClicked: () -> Unit,
         isLocalSubmissionsEnabled: Boolean,
-        showCourseSearchAction: () -> Unit
+        showCourseSearchAction: () -> Unit,
+        coursePurchaseFlowAction: (CoursePurchaseData) -> Unit,
+        currentPurchaseFlow: String
     ): CourseHeaderDelegate
 }
