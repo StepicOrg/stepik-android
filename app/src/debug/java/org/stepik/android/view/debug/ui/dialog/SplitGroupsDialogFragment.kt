@@ -64,6 +64,7 @@ class SplitGroupsDialogFragment : DialogFragment(R.layout.dialog_split_groups), 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        splitGroupsBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_ab_group_subtitle)
         splitGroupViewModel.onNewMessage(SplitGroupFeature.Message.InitMessage(splitTestGroups))
         splitTestGroupsAdapter += SplitGroupAdapterDelegate{ splitTestName, splitTestGroupName, groups ->
             val chosenPosition = groups.indexOf(splitTestGroupName)
