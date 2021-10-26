@@ -22,6 +22,8 @@ import android.content.Context
 import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
+import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction> {
     companion object {
@@ -70,6 +72,12 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
 
         debugBinding.debugLoadingError.tryAgain.setOnClickListener {
             debugViewModel.onNewMessage(DebugFeature.Message.InitMessage(forceUpdate = true))
+        }
+
+        debugBinding.debugSplitTests.setOnClickListener {
+            SplitTestsDialogFragment
+                .newInstance()
+                .showIfNotExists(childFragmentManager, SplitTestsDialogFragment.TAG)
         }
     }
 
