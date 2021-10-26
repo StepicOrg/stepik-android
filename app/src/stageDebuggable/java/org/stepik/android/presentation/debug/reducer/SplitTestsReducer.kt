@@ -14,7 +14,7 @@ constructor() : StateReducer<State, Message, Action> {
         when (message) {
             is Message.InitMessage -> {
                 if (state is State.Idle) {
-                    State.Loading to setOf(Action.FetchSplitTestData(message.splitTests))
+                    State.Loading to setOf(Action.FetchSplitTestData)
                 } else {
                     null
                 }

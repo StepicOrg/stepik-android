@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
-import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.databinding.DialogSplitTestsBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -32,10 +31,6 @@ class SplitTestsDialogFragment : DialogFragment(R.layout.dialog_split_tests), Re
         fun newInstance(): DialogFragment =
             SplitTestsDialogFragment()
     }
-
-    @Inject
-    lateinit var splitTests: Set<@JvmSuppressWildcards SplitTest<*>>
-
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -66,7 +61,7 @@ class SplitTestsDialogFragment : DialogFragment(R.layout.dialog_split_tests), Re
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         splitTestsBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_ab_group_subtitle)
-        splitTestsViewModel.onNewMessage(SplitTestsFeature.Message.InitMessage(splitTests))
+        splitTestsViewModel.onNewMessage(SplitTestsFeature.Message.InitMessage)
         splitTestGroupsAdapter += SplitTestDataAdapterDelegate{ splitTestName, splitTestGroupName, groups ->
             val chosenPosition = groups.indexOf(splitTestGroupName)
             MaterialAlertDialogBuilder(requireContext())

@@ -10,12 +10,13 @@ import javax.inject.Inject
 class SplitTestsInteractor
 @Inject
 constructor(
+    private val splitTests: Set<@JvmSuppressWildcards SplitTest<*>>,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
     companion object {
         private const val SPLIT_TEST_PREFIX = "split_test_"
     }
-    fun getSplitTestDataList(splitTests: Set<SplitTest<*>>): Single<List<SplitTestData>> =
+    fun getSplitTestDataList(): Single<List<SplitTestData>> =
         Single.fromCallable {
             splitTests.map { splitTest ->
                 SplitTestData(

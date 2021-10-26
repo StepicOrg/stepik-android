@@ -24,7 +24,7 @@ constructor(
         when (action) {
             is SplitTestsFeature.Action.FetchSplitTestData -> {
                 compositeDisposable += splitTestsInteractor
-                    .getSplitTestDataList(action.splitTests)
+                    .getSplitTestDataList()
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
