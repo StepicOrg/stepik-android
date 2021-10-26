@@ -1,49 +1,49 @@
 package org.stepik.android.presentation.debug.reducer
 
-import org.stepik.android.presentation.debug.SplitGroupFeature.State
-import org.stepik.android.presentation.debug.SplitGroupFeature.Message
-import org.stepik.android.presentation.debug.SplitGroupFeature.Action
+import org.stepik.android.presentation.debug.SplitTestsFeature.State
+import org.stepik.android.presentation.debug.SplitTestsFeature.Message
+import org.stepik.android.presentation.debug.SplitTestsFeature.Action
 import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
-class SplitGroupReducer
+class SplitTestsReducer
 @Inject
 constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
                 if (state is State.Idle) {
-                    State.Loading to setOf(Action.FetchSplitGroupData(message.splitGroups))
+                    State.Loading to setOf(Action.FetchSplitTestData(message.splitTests))
                 } else {
                     null
                 }
             }
             is Message.InitSuccess -> {
                 if (state is State.Loading) {
-                    State.Content(message.splitGroupDataList) to emptySet()
+                    State.Content(message.splitTestDataList) to emptySet()
                 } else {
                     null
                 }
             }
             is Message.ChosenGroup -> {
                 if (state is State.Content) {
-                    state to setOf(Action.SetSplitGroupData(message.splitGroupData))
+                    state to setOf(Action.SetSplitTestData(message.splitTestData))
                 } else {
                     null
                 }
             }
-            is Message.SetSplitGroupDataSuccess -> {
+            is Message.SetSplitTestDataSuccess -> {
                 if (state is State.Content) {
-                    val updatedList = state.splitGroupDataList.mutate {
-                        val index = state.splitGroupDataList.indexOfFirst { it.splitTestName == message.splitGroupData.splitTestName }
+                    val updatedList = state.splitTestDataList.mutate {
+                        val index = state.splitTestDataList.indexOfFirst { it.splitTestName == message.splitTestData.splitTestName }
                         if (index == -1) {
-                            add(message.splitGroupData)
+                            add(message.splitTestData)
                         } else {
-                            set(index, message.splitGroupData)
+                            set(index, message.splitTestData)
                         }
                     }
-                    state.copy(splitGroupDataList = updatedList) to emptySet()
+                    state.copy(splitTestDataList = updatedList) to emptySet()
                 } else {
                     null
                 }

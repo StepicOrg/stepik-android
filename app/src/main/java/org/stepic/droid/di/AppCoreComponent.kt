@@ -48,7 +48,6 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
-import org.stepik.android.view.debug.ui.dialog.SplitGroupsDialogFragment
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.analytic.AnalyticComponent
@@ -77,7 +76,7 @@ import org.stepik.android.view.injection.course_purchase.CoursePurchaseComponent
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.course_search.CourseSearchComponent
 import org.stepik.android.view.injection.debug.DebugComponent
-import org.stepik.android.view.injection.debug.SplitGroupComponent
+import org.stepik.android.view.injection.debug.SplitTestsComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.email_address.EmailAddressDataModule
@@ -291,7 +290,7 @@ interface AppCoreComponent {
 
     fun coursePurchaseComponentBuilder(): CoursePurchaseComponent.Builder
 
-    fun splitGroupsComponentBuilder(): SplitGroupComponent.Builder
+    fun splitTestsComponentBuilder(): SplitTestsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

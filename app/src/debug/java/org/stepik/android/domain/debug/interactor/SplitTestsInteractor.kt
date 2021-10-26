@@ -4,10 +4,10 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.domain.debug.model.SplitGroupData
+import org.stepik.android.domain.debug.model.SplitTestData
 import javax.inject.Inject
 
-class SplitGroupInteractor
+class SplitTestsInteractor
 @Inject
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
@@ -15,10 +15,10 @@ constructor(
     companion object {
         private const val SPLIT_TEST_PREFIX = "split_test_"
     }
-    fun getSplitGroupsList(splitGroups: Set<SplitTest<*>>): Single<List<SplitGroupData>> =
+    fun getSplitTestDataList(splitTests: Set<SplitTest<*>>): Single<List<SplitTestData>> =
         Single.fromCallable {
-            splitGroups.map { splitTest ->
-                SplitGroupData(
+            splitTests.map { splitTest ->
+                SplitTestData(
                     splitTestName = splitTest.name,
                     splitTestValue = sharedPreferenceHelper.getSplitTestGroup(SPLIT_TEST_PREFIX + splitTest.name) ?: "",
                     splitTestGroups = splitTest.groups.map { it.name }
@@ -26,8 +26,8 @@ constructor(
             }
         }
 
-    fun updateSplitGroupData(splitGroupData: SplitGroupData): Completable =
+    fun updateSplitTestData(splitTestData: SplitTestData): Completable =
         Completable.fromAction {
-            sharedPreferenceHelper.saveSplitTestGroup(SPLIT_TEST_PREFIX + splitGroupData.splitTestName, splitGroupData.splitTestValue)
+            sharedPreferenceHelper.saveSplitTestGroup(SPLIT_TEST_PREFIX + splitTestData.splitTestName, splitTestData.splitTestValue)
         }
 }

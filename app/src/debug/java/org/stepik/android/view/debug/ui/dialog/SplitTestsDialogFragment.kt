@@ -14,27 +14,28 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.base.App
-import org.stepic.droid.databinding.DialogSplitGroupsBinding
+import org.stepic.droid.databinding.DialogSplitTestsBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.domain.debug.model.SplitGroupData
-import org.stepik.android.presentation.debug.SplitGroupFeature
-import org.stepik.android.presentation.debug.SplitGroupViewModel
-import org.stepik.android.view.debug.ui.adapter.delegate.SplitGroupAdapterDelegate
+import org.stepik.android.domain.debug.model.SplitTestData
+import org.stepik.android.presentation.debug.SplitTestsFeature
+import org.stepik.android.presentation.debug.SplitTestsViewModel
+import org.stepik.android.view.debug.ui.adapter.delegate.SplitTestDataAdapterDelegate
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class SplitGroupsDialogFragment : DialogFragment(R.layout.dialog_split_groups), ReduxView<SplitGroupFeature.State, SplitGroupFeature.Action.ViewAction> {
+class SplitTestsDialogFragment : DialogFragment(R.layout.dialog_split_tests), ReduxView<SplitTestsFeature.State, SplitTestsFeature.Action.ViewAction> {
     companion object {
-        const val TAG = "SplitGroupsDialogFragment"
+        const val TAG = "SplitTestsDialogFragment"
 
         fun newInstance(): DialogFragment =
-            SplitGroupsDialogFragment()
+            SplitTestsDialogFragment()
     }
 
     @Inject
-    lateinit var splitTestGroups: Set<@JvmSuppressWildcards SplitTest<*>>
+    lateinit var splitTests: Set<@JvmSuppressWildcards SplitTest<*>>
+
 
     @Inject
     lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -42,11 +43,11 @@ class SplitGroupsDialogFragment : DialogFragment(R.layout.dialog_split_groups), 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val splitGroupViewModel: SplitGroupViewModel by reduxViewModel(this) { viewModelFactory }
+    private val splitTestsViewModel: SplitTestsViewModel by reduxViewModel(this) { viewModelFactory }
 
-    private val splitTestGroupsAdapter: DefaultDelegateAdapter<SplitGroupData> = DefaultDelegateAdapter()
+    private val splitTestGroupsAdapter: DefaultDelegateAdapter<SplitTestData> = DefaultDelegateAdapter()
 
-    private val splitGroupsBinding: DialogSplitGroupsBinding by viewBinding(DialogSplitGroupsBinding::bind)
+    private val splitTestsBinding: DialogSplitTestsBinding by viewBinding(DialogSplitTestsBinding::bind)
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -64,26 +65,26 @@ class SplitGroupsDialogFragment : DialogFragment(R.layout.dialog_split_groups), 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        splitGroupsBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_ab_group_subtitle)
-        splitGroupViewModel.onNewMessage(SplitGroupFeature.Message.InitMessage(splitTestGroups))
-        splitTestGroupsAdapter += SplitGroupAdapterDelegate{ splitTestName, splitTestGroupName, groups ->
+        splitTestsBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_ab_group_subtitle)
+        splitTestsViewModel.onNewMessage(SplitTestsFeature.Message.InitMessage(splitTests))
+        splitTestGroupsAdapter += SplitTestDataAdapterDelegate{ splitTestName, splitTestGroupName, groups ->
             val chosenPosition = groups.indexOf(splitTestGroupName)
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.debug_choose_ab_test)
                 .setSingleChoiceItems(groups.toTypedArray(), chosenPosition) { dialog, which ->
-                    val updatedSplitGroupData = SplitGroupData(
+                    val updatedSplitTestData = SplitTestData(
                         splitTestName = splitTestName,
                         splitTestValue = groups[which],
                         splitTestGroups = groups
                     )
-                    splitGroupViewModel.onNewMessage(SplitGroupFeature.Message.ChosenGroup(updatedSplitGroupData))
+                    splitTestsViewModel.onNewMessage(SplitTestsFeature.Message.ChosenGroup(updatedSplitTestData))
                     dialog.dismiss()
                 }
                 .setNegativeButton(R.string.debug_alert_dialog_cancel) { _, _ -> }
                 .show()
         }
 
-        with(splitGroupsBinding.splitGroupsRecycler) {
+        with(splitTestsBinding.splitTestsRecycler) {
             adapter = splitTestGroupsAdapter
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
@@ -93,16 +94,16 @@ class SplitGroupsDialogFragment : DialogFragment(R.layout.dialog_split_groups), 
     }
 
     private fun injectComponent() {
-        App.component().splitGroupsComponentBuilder().build().inject(this)
+        App.component().splitTestsComponentBuilder().build().inject(this)
     }
 
-    override fun onAction(action: SplitGroupFeature.Action.ViewAction) {
+    override fun onAction(action: SplitTestsFeature.Action.ViewAction) {
         // no op
     }
 
-    override fun render(state: SplitGroupFeature.State) {
-        if (state is SplitGroupFeature.State.Content) {
-            splitTestGroupsAdapter.items = state.splitGroupDataList
+    override fun render(state: SplitTestsFeature.State) {
+        if (state is SplitTestsFeature.State.Content) {
+            splitTestGroupsAdapter.items = state.splitTestDataList
         }
     }
 }
