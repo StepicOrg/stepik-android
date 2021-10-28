@@ -1224,6 +1224,11 @@
     <string name="debug_base_url_release" translatable="false">Release</string>
     <string name="debug_restarting_message" translatable="false">Restarting application</string>
     <string name="debug_apply_settings_action_title" translatable="false">Apply</string>
+    <string name="debug_choose_ab_test" translatable="false">Select A/B Group</string>
+    <string name="debug_alert_dialog_cancel" translatable="false">Cancel</string>
+
+    <string name="debug_remote_and_local_flags_title" translatable="false">Remote and Local Flags</string>
+    <string name="debug_ab_group_subtitle" translatable="false">A/B Groups</string>
 
     <!-- User course reviews -->
     <string name="user_review_title">User reviews</string>

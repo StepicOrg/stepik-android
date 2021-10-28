@@ -106,6 +106,26 @@
 
                 <include layout="@layout/view_divider_vertical" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/debug_remote_and_local_flags_title"
+                    android:textAppearance="?textAppearanceSubtitle1" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/debugSplitTests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/debug_ab_group_subtitle" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/debugApplySettingsAction"
                     android:layout_width="match_parent"

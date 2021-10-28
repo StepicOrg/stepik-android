@@ -8,7 +8,7 @@ abstract class SplitTest<G : SplitTest.Group>(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
     val name: String,
-    private val groups: Array<G>
+    val groups: Array<G>
 ) {
     companion object {
         private const val SPLIT_TEST_PREFIX = "split_test_"
