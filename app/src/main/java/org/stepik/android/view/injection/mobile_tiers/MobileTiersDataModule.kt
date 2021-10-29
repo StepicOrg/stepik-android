@@ -4,11 +4,16 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepik.android.cache.base.database.AppDatabase
+import org.stepik.android.cache.mobile_tiers.LightSkuCacheDataSourceImpl
 import org.stepik.android.cache.mobile_tiers.MobileTiersCacheDataSourceImpl
+import org.stepik.android.cache.mobile_tiers.dao.LightSkuDao
 import org.stepik.android.cache.mobile_tiers.dao.MobileTiersDao
+import org.stepik.android.data.mobile_tiers.repository.LightSkuRepositoryImpl
 import org.stepik.android.data.mobile_tiers.repository.MobileTiersRepositoryImpl
+import org.stepik.android.data.mobile_tiers.source.LightSkuCacheDataSource
 import org.stepik.android.data.mobile_tiers.source.MobileTiersCacheDataSource
 import org.stepik.android.data.mobile_tiers.source.MobileTiersRemoteDataSource
+import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
 import org.stepik.android.remote.mobile_tiers.MobileTiersRemoteDataSourceImpl
 import org.stepik.android.remote.mobile_tiers.service.MobileTiersService
@@ -33,7 +38,22 @@ abstract class MobileTiersDataModule {
         mobileTiersCacheDataSourceImpl: MobileTiersCacheDataSourceImpl
     ): MobileTiersCacheDataSource
 
+    @Binds
+    internal abstract fun bindLightSkuRepository(
+        lightSkuRepositoryImpl: LightSkuRepositoryImpl
+    ): LightSkuRepository
+
+    @Binds
+    internal abstract fun bindLightSkuCacheDataSource(
+        lightSkuCacheDataSourceImpl: LightSkuCacheDataSourceImpl
+    ): LightSkuCacheDataSource
+
     companion object {
+        @Provides
+        @JvmStatic
+        fun provideLightSkuDao(appDatabase: AppDatabase): LightSkuDao =
+            appDatabase.lightSkuDao()
+
         @Provides
         @JvmStatic
         fun provideMobileTiersDao(appDatabase: AppDatabase): MobileTiersDao =

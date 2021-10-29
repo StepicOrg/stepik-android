@@ -8,6 +8,7 @@ import org.stepik.android.domain.mobile_tiers.model.MobileTier
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
 import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import timber.log.Timber
 import javax.inject.Inject
 
 class MobileTiersRepositoryImpl
@@ -21,7 +22,7 @@ constructor(
             .getMobileTiers(mobileTierCalculations)
             .doCompletableOnSuccess(mobileTiersCacheDataSource::saveMobileTiers)
 
-        val cache = mobileTiersCacheDataSource.getMobileTiers(mobileTierCalculations.map(MobileTierCalculation::course))
+        val cache = mobileTiersCacheDataSource.getMobileTiers(mobileTierCalculations.map(MobileTierCalculation::course)).map { Timber.d("Cache: $it"); it }
 
         return when (dataSourceType) {
             DataSourceType.REMOTE ->
