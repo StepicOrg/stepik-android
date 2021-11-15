@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.*
-import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -45,6 +44,7 @@ constructor(
     @Assisted private val onBlockSeen: (String) -> Unit,
     @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
     @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit,
+    @Assisted private val isIAPFlowEnabled: Boolean,
     private val tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
@@ -86,7 +86,8 @@ constructor(
                 },
                 isHandleInAppPurchase = isHandleInAppPurchase,
                 defaultPromoCodeMapper = defaultPromoCodeMapper,
-                displayPriceMapper = displayPriceMapper
+                displayPriceMapper = displayPriceMapper,
+                isIAPFlowEnabled = isIAPFlowEnabled
             )
 
             val rowCount = context.resources.getInteger(R.integer.course_list_rows)

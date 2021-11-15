@@ -13,6 +13,7 @@ interface RecommendedCourseListAdapterDelegateFactory {
         isHandleInAppPurchase: Boolean,
         onBlockSeen: (String) -> Unit,
         onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-        onCourseClicked: (CourseListItem.Data) -> Unit
+        onCourseClicked: (CourseListItem.Data) -> Unit,
+        isIAPFlowEnabled: Boolean
     ): RecommendedCourseListAdapterDelegate
 }

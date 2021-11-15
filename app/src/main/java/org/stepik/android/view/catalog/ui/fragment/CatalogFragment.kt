@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -90,6 +91,9 @@ class CatalogFragment :
 
         private const val CATALOG_STORIES_INDEX = 0
         private const val CATALOG_STORIES_KEY = "catalog_stories"
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     @Inject
@@ -127,6 +131,9 @@ class CatalogFragment :
 
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
+
+    @Inject
+    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var searchIcon: ImageView
 
@@ -197,7 +204,8 @@ class CatalogFragment :
             },
             onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
-            }
+            },
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
         )
         catalogItemAdapter += AuthorListAdapterDelegate(
             authorCountMapper = authorCountMapper,
@@ -225,7 +233,8 @@ class CatalogFragment :
             },
             onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
-            }
+            },
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
         )
 
         catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }

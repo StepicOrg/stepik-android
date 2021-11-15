@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
@@ -23,6 +25,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
@@ -71,6 +74,9 @@ class CourseListSearchFragment :
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     private var menuDrawableRes: Int = R.drawable.ic_filter
@@ -105,6 +111,9 @@ class CourseListSearchFragment :
 
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
+
+    @Inject
+    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
@@ -180,7 +189,8 @@ class CourseListSearchFragment :
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
-            displayPriceMapper = displayPriceMapper
+            displayPriceMapper = displayPriceMapper,
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
         )
 
         courseListPresenter.fetchCourses(searchResultQuery)

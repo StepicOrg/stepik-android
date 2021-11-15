@@ -22,6 +22,7 @@ import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListVisitedPresenter
@@ -75,6 +76,7 @@ constructor(
             .subscribeBy(
                 onNext = { items ->
                     state = if (items.isNotEmpty()) {
+                        items.forEach { Timber.d("APPS: Course List Item - ${it.courseStats.enrollmentState}") }
                         CourseListView.State.Content(
                             courseListDataItems = items,
                             courseListItems = items

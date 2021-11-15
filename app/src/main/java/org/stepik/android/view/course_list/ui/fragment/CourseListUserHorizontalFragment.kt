@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
 import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
@@ -14,6 +16,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.defaultLocale
@@ -45,6 +48,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             get() = this == OnboardingSplitTestVersion2.Group.Personalized || this == OnboardingSplitTestVersion2.Group.ControlPersonalized
 
         private const val RUSSIAN_LANGUAGE_CODE = "ru"
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     @Inject
@@ -70,6 +75,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
     @Inject
     internal lateinit var tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
+
+    @Inject
+    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
@@ -171,7 +179,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
-            displayPriceMapper = displayPriceMapper
+            displayPriceMapper = displayPriceMapper,
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
         )
 
         wrapperViewStateDelegate = ViewStateDelegate()

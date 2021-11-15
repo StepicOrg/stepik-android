@@ -75,8 +75,7 @@ class CoursePurchaseBottomSheetDialogFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        val initialCoursePromoCodeInfo = coursePromoCodeResolver.resolvePromoCodeInfo(coursePurchaseData.deeplinkPromoCode, coursePurchaseData.defaultPromoCode, coursePurchaseData.course)
-        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData, initialCoursePromoCodeInfo))
+        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
     }
 
     override fun onStart() {

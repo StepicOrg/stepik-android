@@ -34,6 +34,7 @@ class CourseListViewDelegate(
     displayPriceMapper: DisplayPriceMapper,
     onCourseListClicked: (CatalogCourseList) -> Unit = { _ -> },
     onAuthorClick: (Long) -> Unit = { _ -> },
+    isIAPFlowEnabled: Boolean,
     courseCountMapper: CourseCountMapper? = null,
     isVerticalCourseCollection: Boolean = false,
     itemAdapterDelegateType: ItemAdapterDelegateType = ItemAdapterDelegateType.STANDARD // TODO Hacky way
@@ -59,6 +60,7 @@ class CourseListViewDelegate(
                         isHandleInAppPurchase = isHandleInAppPurchase,
                         defaultPromoCodeMapper = defaultPromoCodeMapper,
                         displayPriceMapper = displayPriceMapper,
+                        isIAPFlowEnabled = isIAPFlowEnabled,
                         isNeedExtraMargin = isVerticalCourseCollection
                     ),
                     CourseListPlaceHolderAdapterDelegate()
@@ -71,7 +73,8 @@ class CourseListViewDelegate(
                         onItemClicked = courseContinueViewDelegate::onCourseClicked,
                         isHandleInAppPurchase = isHandleInAppPurchase,
                         defaultPromoCodeMapper =  defaultPromoCodeMapper,
-                        displayPriceMapper = displayPriceMapper
+                        displayPriceMapper = displayPriceMapper,
+                        isIAPFlowEnabled = isIAPFlowEnabled
                     ),
                     VisitedCourseListPlaceHolderAdapterDelegate()
                 )

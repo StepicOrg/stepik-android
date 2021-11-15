@@ -88,6 +88,7 @@ import org.stepik.android.view.injection.in_app_web_view.InAppWebViewComponent
 import org.stepik.android.view.injection.learning_actions.LearningActionsComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.magic_links.MagicLinksComponent
+import org.stepik.android.view.injection.mobile_tiers.MobileTiersDataModule
 import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.network.NetworkModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
@@ -176,6 +177,8 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
 
         BillingModule::class,
         BillingDataModule::class,
+        MobileTiersDataModule::class,
+
 
         CoursePaymentsDataModule::class,
         PurchaseNotificationDataModule::class,

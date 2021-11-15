@@ -7,7 +7,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.analytic.CourseViewSource
-import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
+import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.interactor.CoursePurchaseInteractor
 import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
@@ -48,7 +48,7 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = {
-                            if (it == DeeplinkPromoCode.EMPTY) {
+                            if (it == PromoCodeSku.EMPTY) {
                                 onNewMessage(CoursePurchaseFeature.Message.PromoCodeInvalidMessage)
                             } else {
                                 onNewMessage(CoursePurchaseFeature.Message.PromoCodeValidMessage(it))

@@ -26,6 +26,7 @@ import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerific
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
@@ -62,6 +63,11 @@ constructor(
         private val UNAUTHORIZED_EXCEPTION_STUB =
             HttpException(Response.error<Nothing>(HttpURLConnection.HTTP_UNAUTHORIZED, ResponseBody.create(null, "")))
     }
+
+    fun purchaseCourse(checkout: UiCheckout, courseId: Long, sku: LightSku): Completable =
+        billingRepository
+            .getInventory(ProductTypes.IN_APP, sku.id)
+            .flatMapCompletable { purchaseCourse(checkout, courseId, it) }
 
     fun purchaseCourse(checkout: UiCheckout, courseId: Long, sku: Sku): Completable =
         coursePaymentsRepository

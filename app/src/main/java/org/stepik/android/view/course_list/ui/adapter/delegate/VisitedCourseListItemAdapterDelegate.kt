@@ -31,7 +31,8 @@ class VisitedCourseListItemAdapterDelegate(
     private val onItemClicked: (CourseListItem.Data) -> Unit,
     private val isHandleInAppPurchase: Boolean,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
-    private val displayPriceMapper: DisplayPriceMapper
+    private val displayPriceMapper: DisplayPriceMapper,
+    private val isIAPFlowEnabled: Boolean
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.Data

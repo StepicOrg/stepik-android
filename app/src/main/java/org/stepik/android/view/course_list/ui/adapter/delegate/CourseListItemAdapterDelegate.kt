@@ -33,6 +33,7 @@ class CourseListItemAdapterDelegate(
     private val isHandleInAppPurchase: Boolean,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
+    private val isIAPFlowEnabled: Boolean,
     private val isNeedExtraMargin: Boolean = false
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
@@ -78,6 +79,8 @@ class CourseListItemAdapterDelegate(
 
             courseItemName.text = data.course.title
 
+            val isIAP = data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier && isIAPFlowEnabled
+
             val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
             val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY &&
                     (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc())
@@ -90,10 +93,14 @@ class CourseListItemAdapterDelegate(
                 courseDescription.text = HtmlCompat.fromHtml(data.course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
                 courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
-
             coursePrice.isVisible = !isEnrolled
+
             val (@ColorRes textColor, displayPrice) = if (data.course.isPaid) {
-                handleCoursePrice(data, defaultPromoCode)
+                if (isIAP) {
+                    handleCoursePriceMobileTiers(data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
+                } else {
+                    handleCoursePrice(data, defaultPromoCode)
+                }
             } else {
                 R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
             }
@@ -103,7 +110,11 @@ class CourseListItemAdapterDelegate(
             courseOldPrice.isVisible = mustShowDefaultPromoCode && !isEnrolled
             courseOldPrice.text = buildSpannedString {
                 strikeThrough {
-                    append(data.course.displayPrice ?: "")
+                    if (isIAP) {
+                        append((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)?.standardLightSku?.price ?: "")
+                    } else {
+                        append(data.course.displayPrice ?: "")
+                    }
                 }
             }
 
@@ -124,5 +135,12 @@ class CourseListItemAdapterDelegate(
                 R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
             else ->
                 R.color.color_overlay_violet to data.course.displayPrice
+        }
+
+    private fun handleCoursePriceMobileTiers(mobileTierEnrollmentState: EnrollmentState.NotEnrolledMobileTier?): Pair<Int, String?> =
+        if (mobileTierEnrollmentState?.promoLightSku != null) {
+            R.color.color_overlay_red to mobileTierEnrollmentState.promoLightSku.price
+        } else {
+            R.color.color_overlay_violet to mobileTierEnrollmentState?.standardLightSku?.price
         }
 }

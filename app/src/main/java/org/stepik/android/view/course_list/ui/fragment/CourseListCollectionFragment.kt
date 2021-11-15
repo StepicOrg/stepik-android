@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
@@ -14,6 +16,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -43,6 +46,9 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             CourseListCollectionFragment().apply {
                 this.courseCollectionId = courseCollectionId
             }
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     private var courseCollectionId by argument<Long>()
@@ -67,6 +73,9 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
+
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListCollectionPresenter by viewModels { viewModelFactory }
@@ -130,6 +139,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             displayPriceMapper = displayPriceMapper,
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) },
             onAuthorClick = { screenManager.openProfile(requireContext(), it) },
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP,
             courseCountMapper = courseCountMapper,
             isVerticalCourseCollection = true
         )

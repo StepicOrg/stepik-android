@@ -40,4 +40,16 @@ constructor(
             }
         }
     }
+
+    fun mapToDiscountedDisplayPriceSpannedStringMobileTiers(originalDisplayPrice: String, promoPrice: String): SpannedString =
+        buildSpannedString {
+            append(context.getString(R.string.course_payments_purchase_in_web_with_price_promo))
+            append(promoPrice)
+            append(" ")
+            scale(0.9f) {
+                strikeThrough {
+                    append(originalDisplayPrice)
+                }
+            }
+        }
 }

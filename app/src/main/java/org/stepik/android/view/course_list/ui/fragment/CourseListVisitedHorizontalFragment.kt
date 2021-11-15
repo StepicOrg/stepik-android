@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -30,6 +33,9 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
     companion object {
         fun newInstance(): Fragment =
             CourseListVisitedHorizontalFragment()
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     @Inject
@@ -52,6 +58,9 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
+
+    @Inject
+    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListVisitedPresenter: CourseListVisitedPresenter by viewModels { viewModelFactory }
@@ -110,6 +119,7 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP,
             itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.SMALL
         )
 

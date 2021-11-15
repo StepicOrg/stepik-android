@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.view.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
@@ -16,6 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -41,6 +44,9 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
             CourseListUserFragment().apply {
                 this.courseListUserQuery = userCourseQuery
             }
+
+        private const val PURCHASE_FLOW_IAP = "iap"
+        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     private var courseListUserQuery by argument<UserCourseQuery>()
@@ -62,6 +68,9 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
+
+    @Inject
+    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
@@ -125,7 +134,8 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
-            displayPriceMapper = displayPriceMapper
+            displayPriceMapper = displayPriceMapper,
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
         )
 
         wrapperViewStateDelegate = ViewStateDelegate()
