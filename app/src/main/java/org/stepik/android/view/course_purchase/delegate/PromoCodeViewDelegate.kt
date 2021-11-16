@@ -73,7 +73,7 @@ class PromoCodeViewDelegate(
                 if (state is PromoCodeState.Valid && state.promoCodeSku.lightSku != null) {
                     displayPriceMapper.mapToDiscountedDisplayPriceSpannedStringMobileTiers(coursePurchaseData.primarySku.price, state.promoCodeSku.lightSku.price)
                 } else {
-                    context.getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
+                    context.getString(R.string.course_payments_purchase_in_web_with_price, coursePurchaseData.primarySku.price)
                 }
             } else {
                 context.getString(R.string.course_payments_purchase_in_web)
