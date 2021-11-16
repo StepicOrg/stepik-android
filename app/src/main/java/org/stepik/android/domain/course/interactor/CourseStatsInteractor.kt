@@ -87,23 +87,11 @@ constructor(
         zip(
             resolveCourseReview(listOf(course), sourceTypeComposition.generalSourceType),
             resolveCourseProgress(listOf(course), sourceTypeComposition.generalSourceType),
-            mobileTiersInteractor.fetchTiersAndSkus(listOf(course), sourceTypeComposition.generalSourceType),
-            profileRepository.getProfile(sourceTypeComposition.generalSourceType),
+            resolveEnrollmentStateMobileTiersSingleCourse(course, sourceTypeComposition.generalSourceType),
             resolveWishlistStates(sourceTypeComposition.generalSourceType)
-        ) { courseReviews, courseProgresses, (mobileTiers, lightSkus), profile, wishlistStates ->
+        ) { courseReviews, courseProgresses, enrollmentState, wishlistStates ->
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
             val progressMaps = courseProgresses.associateBy(Progress::id)
-
-            val mobileTiersByCourseId = mobileTiers.associateBy(MobileTier::course)
-            val lightSkusByTierId = lightSkus.associateBy(LightSku::id)
-            val enrollmentMap =
-                course
-                    .let {
-                        val currentMobileTier = mobileTiersByCourseId[it.id]
-                        val standardLightSku = currentMobileTier?.priceTier?.let { tier -> lightSkusByTierId[tier] }
-                        val promoLightSku = currentMobileTier?.promoTier?.let { tier -> lightSkusByTierId[tier] }
-                        resolveEnrollmentStateMobileTiers(it, profile.id, standardLightSku, promoLightSku)
-                    }
 
             // Temporary list conversion
             listOf(
@@ -112,7 +100,7 @@ constructor(
                     learnersCount = course.learnersCount,
                     readiness = course.readiness,
                     progress = course.progress?.let(progressMaps::get),
-                    enrollmentState = enrollmentMap.second,
+                    enrollmentState = enrollmentState,
                     isWishlisted = wishlistStates.contains(course.id)
                 )
             )
@@ -155,34 +143,6 @@ constructor(
                     isWishlisted = wishlistStates.contains(course.id)
                 )
             }
-        }
-
-    private fun resolveEnrollmentStateMobileTiers(course: Course, profileId: Long, standardLightSku: LightSku?, promoLightSku: LightSku?): Pair<Long, EnrollmentState> =
-        when {
-            course.enrollment > 0 ->
-                course.id to EnrollmentState.Enrolled(
-                    UserCourse(
-                        course = course.id,
-                        user = profileId,
-                        isArchived = course.isArchived,
-                        isFavorite = course.isFavorite,
-                        lastViewed = null
-                    )
-                )
-
-            !course.isPaid ->
-                course.id to EnrollmentState.NotEnrolledFree
-
-            course.isPaid -> {
-                if (standardLightSku == null) {
-                    course.id to EnrollmentState.NotEnrolledWeb
-                } else {
-                    course.id to EnrollmentState.NotEnrolledMobileTier(standardLightSku, promoLightSku)
-                }
-            }
-
-            else ->
-                course.id to EnrollmentState.NotEnrolledFree
         }
 
     fun checkDeeplinkPromoCodeValidityMobileTiers(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> =
@@ -267,5 +227,84 @@ constructor(
 
             else ->
                 Single.just(course.id to EnrollmentState.NotEnrolledFree)
+        }
+
+    private fun resolveEnrollmentStateMobileTiers(course: Course, profileId: Long, standardLightSku: LightSku?, promoLightSku: LightSku?): Pair<Long, EnrollmentState> =
+        when {
+            course.enrollment > 0 ->
+                course.id to EnrollmentState.Enrolled(
+                        UserCourse(
+                                course = course.id,
+                                user = profileId,
+                                isArchived = course.isArchived,
+                                isFavorite = course.isFavorite,
+                                lastViewed = null
+                        )
+                )
+
+            !course.isPaid ->
+                course.id to EnrollmentState.NotEnrolledFree
+
+            course.isPaid -> {
+                if (standardLightSku == null) {
+                    course.id to EnrollmentState.NotEnrolledWeb
+                } else {
+                    course.id to EnrollmentState.NotEnrolledMobileTier(standardLightSku, promoLightSku)
+                }
+            }
+
+            else ->
+                course.id to EnrollmentState.NotEnrolledFree
+        }
+
+    private fun resolveEnrollmentStateMobileTiersSingleCourse(course: Course, sourceType: DataSourceType): Single<EnrollmentState> =
+        when {
+            course.enrollment > 0 ->
+                profileRepository.getProfile().map { profile ->
+                    EnrollmentState.Enrolled(
+                        UserCourse(
+                                course = course.id,
+                                user = profile.id,
+                                isArchived = course.isArchived,
+                                isFavorite = course.isFavorite,
+                                lastViewed = null
+                        )
+                    )
+                }
+
+            !course.isPaid ->
+                Single.just(EnrollmentState.NotEnrolledFree)
+
+            course.isPaid ->
+                mobileTiersInteractor
+                    .fetchTiersAndSkus(listOf(course), sourceType = sourceType)
+                    .flatMap { (mobileTiers, lightSkus) ->
+                        val mobileTiersByCourseId = mobileTiers.associateBy(MobileTier::course)
+                        val lightSkusByTierId = lightSkus.associateBy(LightSku::id)
+                        val (standardLightSku, promoLightSku) = course.let {
+                            val currentMobileTier = mobileTiersByCourseId[it.id]
+                            currentMobileTier?.priceTier?.let { tier -> lightSkusByTierId[tier] } to currentMobileTier?.promoTier?.let { tier -> lightSkusByTierId[tier] }
+                        }
+                        coursePaymentsRepository
+                            .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = sourceType)
+                            .flatMap { payments ->
+                                if (payments.isEmpty()) {
+                                    Single.just(resolvePaidEnrollmentState(standardLightSku, promoLightSku))
+                                } else {
+                                    Single.just(EnrollmentState.NotEnrolledFree)
+                                }
+                            }
+                            .onErrorReturnItem(resolvePaidEnrollmentState(standardLightSku, promoLightSku))
+                    }
+
+            else ->
+                Single.just(EnrollmentState.NotEnrolledFree)
+        }
+
+    private fun resolvePaidEnrollmentState(standardLightSku: LightSku?, promoLightSku: LightSku?): EnrollmentState =
+        if (standardLightSku == null) {
+            EnrollmentState.NotEnrolledWeb
+        } else {
+            EnrollmentState.NotEnrolledMobileTier(standardLightSku, promoLightSku)
         }
 }
