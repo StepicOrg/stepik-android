@@ -25,6 +25,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
 import retrofit2.HttpException
 import retrofit2.Response
+import ru.nobird.android.domain.rx.first
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -67,7 +68,11 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> =
         zip(
-            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) courseStatsInteractor.getCourseStatsMobileTiersSingle(course) else courseStatsInteractor.getCourseStats(listOf(course)),
+            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+                courseStatsInteractor.getCourseStatsMobileTiersSingle(course)
+            } else  {
+                courseStatsInteractor.getCourseStats(listOf(course)).first()
+            },
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
             if (promo == null) Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidityMobileTiers(course.id, promo),
             (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
@@ -78,7 +83,7 @@ constructor(
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 
-                stats = courseStats.first(),
+                stats = courseStats,
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
                 deeplinkPromoCode = promoCode,
                 deeplinkPromoCodeSku = promoCodeSku,

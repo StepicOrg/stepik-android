@@ -17,6 +17,10 @@ constructor(
     private val mobileTiersCacheDataSource: MobileTiersCacheDataSource
 ) : MobileTiersRepository {
     override fun calculateMobileTiers(mobileTierCalculations: List<MobileTierCalculation>, dataSourceType: DataSourceType): Single<List<MobileTier>> {
+        if (mobileTierCalculations.isEmpty()) {
+            return Single.just(emptyList())
+        }
+
         val remote = mobileTiersRemoteDataSource
             .getMobileTiers(mobileTierCalculations)
             .doCompletableOnSuccess(mobileTiersCacheDataSource::saveMobileTiers)

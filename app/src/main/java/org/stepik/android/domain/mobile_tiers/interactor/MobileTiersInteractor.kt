@@ -1,6 +1,5 @@
 package org.stepik.android.domain.mobile_tiers.interactor
 
-import io.reactivex.Maybe
 import io.reactivex.Single
 import org.solovyev.android.checkout.ProductTypes
 import org.stepik.android.domain.base.DataSourceType
@@ -10,7 +9,6 @@ import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
 import org.stepik.android.model.Course
 import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
-import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 class MobileTiersInteractor
@@ -19,14 +17,10 @@ constructor(
     private val mobileTiersRepository: MobileTiersRepository,
     private val lightSkuRepository: LightSkuRepository
 ) {
-    fun getMobileTier(courseId: Long): Maybe<MobileTier> =
-        mobileTiersRepository.calculateMobileTier(MobileTierCalculation(course = courseId))
-
-    fun getLightSku(skuId: String): Maybe<LightSku> =
-        lightSkuRepository.getLightInventory(ProductTypes.IN_APP, listOf(skuId)).maybeFirst()
-
     fun fetchTiersAndSkus(courses: List<Course>, sourceType: DataSourceType): Single<Pair<List<MobileTier>, List<LightSku>>> {
-        val mobileTierCalculations = courses.map { MobileTierCalculation(course = it.id) }
+        val mobileTierCalculations = courses
+                .filter(Course::isPaid)
+                .map { MobileTierCalculation(course = it.id) }
         return mobileTiersRepository
             .calculateMobileTiers(mobileTierCalculations)
             .flatMap { mobileTiers ->

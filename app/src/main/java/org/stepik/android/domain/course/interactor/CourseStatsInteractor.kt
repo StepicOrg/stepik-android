@@ -83,7 +83,7 @@ constructor(
     fun getCourseStatsMobileTiersSingle(
         course: Course,
         sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
-    ): Single<List<CourseStats>> =
+    ): Single<CourseStats> =
         zip(
             resolveCourseReview(listOf(course), sourceTypeComposition.generalSourceType),
             resolveCourseProgress(listOf(course), sourceTypeComposition.generalSourceType),
@@ -93,16 +93,13 @@ constructor(
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
             val progressMaps = courseProgresses.associateBy(Progress::id)
 
-            // Temporary list conversion
-            listOf(
-                CourseStats(
-                    review = reviewsMap[course.id]?.average ?: 0.0,
-                    learnersCount = course.learnersCount,
-                    readiness = course.readiness,
-                    progress = course.progress?.let(progressMaps::get),
-                    enrollmentState = enrollmentState,
-                    isWishlisted = wishlistStates.contains(course.id)
-                )
+            CourseStats(
+                review = reviewsMap[course.id]?.average ?: 0.0,
+                learnersCount = course.learnersCount,
+                readiness = course.readiness,
+                progress = course.progress?.let(progressMaps::get),
+                enrollmentState = enrollmentState,
+                isWishlisted = wishlistStates.contains(course.id)
             )
         }
 
