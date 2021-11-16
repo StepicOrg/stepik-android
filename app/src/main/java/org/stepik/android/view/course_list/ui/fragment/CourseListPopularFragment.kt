@@ -149,7 +149,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             },
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
         )
 
         courseListQueryPresenter.fetchCourses(courseListQuery)

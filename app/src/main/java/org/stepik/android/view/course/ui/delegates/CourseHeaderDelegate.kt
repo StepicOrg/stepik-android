@@ -28,6 +28,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
@@ -228,7 +229,7 @@ constructor(
              * Purchase setup section
              */
 
-            val isIAP = courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier && currentPurchaseFlow == PURCHASE_FLOW_IAP
+            val isIAP = courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier && (currentPurchaseFlow == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG)
 
             if (isIAP) {
                 setupIAP(courseHeaderData)
@@ -240,6 +241,9 @@ constructor(
                 val formattedDate = DateTimeHelper.getPrintableDate(it, DateTimeHelper.DISPLAY_DAY_MONTH_PATTERN, TimeZone.getDefault())
                 getString(R.string.course_promo_code_date, formattedDate)
             }
+
+            courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
+                    courseHeaderData.course.enrollment == 0L
 
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
@@ -346,7 +350,7 @@ constructor(
 
     private fun setupBuyAction(courseHeaderData: CourseHeaderData) {
         val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
-        if (currentPurchaseFlow == PURCHASE_FLOW_IAP && notEnrolledMobileTierState != null) {
+        if ((currentPurchaseFlow == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) && notEnrolledMobileTierState != null) {
                 val promoCodeSku = when {
                     courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
                         courseHeaderData.deeplinkPromoCodeSku

@@ -107,7 +107,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
             },
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
         )
     }
 

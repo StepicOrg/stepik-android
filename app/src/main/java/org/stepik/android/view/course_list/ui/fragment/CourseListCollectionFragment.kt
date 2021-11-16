@@ -134,7 +134,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             displayPriceMapper = displayPriceMapper,
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) },
             onAuthorClick = { screenManager.openProfile(requireContext(), it) },
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP,
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG,
             courseCountMapper = courseCountMapper,
             isVerticalCourseCollection = true
         )

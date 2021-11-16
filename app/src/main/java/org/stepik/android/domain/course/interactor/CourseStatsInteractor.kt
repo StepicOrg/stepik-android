@@ -149,7 +149,7 @@ constructor(
         coursePaymentsRepository
             .checkDeeplinkPromoCodeValidity(courseId, promo)
             .flatMap { deeplinkPromoCode ->
-                if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP) {
+                if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
                     mobileTiersRepository
                         .calculateMobileTier(MobileTierCalculation(course = courseId, promo = promo), dataSourceType = DataSourceType.REMOTE)
                         .flatMapSingle { mobileTier ->

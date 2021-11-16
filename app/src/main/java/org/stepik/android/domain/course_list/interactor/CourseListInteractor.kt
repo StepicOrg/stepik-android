@@ -73,7 +73,7 @@ constructor(
         courseViewSource: CourseViewSource,
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
-        if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP) {
+        if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
             mobileTiersInteractor
                 .fetchTiersAndSkus(courses, sourceTypeComposition.generalSourceType)
                 .flatMap { (mobileTiers, lightSkus) ->

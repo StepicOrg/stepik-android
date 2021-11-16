@@ -121,7 +121,7 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
             },
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP,
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG,
             itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.STANDARD
         )
 

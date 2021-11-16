@@ -76,13 +76,13 @@
         android:id="@+id/courseDefaultPromoInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Скидка действует до 10 июня"
         android:gravity="center"
         app:drawableLeftCompat="@drawable/ic_default_promo_info"
         android:drawablePadding="8dp"
         android:layout_marginTop="12dp"
         android:textAppearance="?textAppearanceCaption"
-        app:drawableTint="@color/color_overlay_violet"/>
+        app:drawableTint="@color/color_overlay_violet"
+        tools:text="Скидка действует до 10 июня"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/courseTryFree"

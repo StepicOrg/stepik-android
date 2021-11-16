@@ -175,7 +175,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             },
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP
+            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
         )
 
         wrapperViewStateDelegate = ViewStateDelegate()
