@@ -21,9 +21,7 @@ constructor(
             return Single.just(emptyList())
         }
 
-        val remote = mobileTiersRemoteDataSource
-            .getMobileTiers(mobileTierCalculations)
-            .doCompletableOnSuccess(mobileTiersCacheDataSource::saveMobileTiers)
+        val remote = remoteAction(mobileTierCalculations)
 
         val cache = mobileTiersCacheDataSource.getMobileTiers(mobileTierCalculations.map(MobileTierCalculation::course))
 
@@ -32,11 +30,18 @@ constructor(
                 remote.onErrorResumeNext(cache)
 
             DataSourceType.CACHE ->
-                cache
-                    .filter(List<MobileTier>::isNotEmpty)
-                    .switchIfEmpty(remote)
+                cache.flatMap { cachedItems ->
+                    val newIds = (mobileTierCalculations.map { it.course } - cachedItems.map { it.course })
+                    val newMobileCalculations = newIds.map { MobileTierCalculation(course = it) }
+                    remoteAction(newMobileCalculations)
+                            .map { remoteItems -> (cachedItems + remoteItems) }
+                }
 
             else -> throw IllegalArgumentException("Unsupported source type = $dataSourceType")
         }
     }
+    private fun remoteAction(mobileTierCalculations: List<MobileTierCalculation>): Single<List<MobileTier>> =
+        mobileTiersRemoteDataSource
+            .getMobileTiers(mobileTierCalculations)
+            .doCompletableOnSuccess(mobileTiersCacheDataSource::saveMobileTiers)
 }
