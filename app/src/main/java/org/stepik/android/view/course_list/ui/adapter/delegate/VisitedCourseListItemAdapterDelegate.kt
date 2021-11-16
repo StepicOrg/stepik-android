@@ -70,8 +70,6 @@ class VisitedCourseListItemAdapterDelegate(
 
             courseItemName.text = data.course.title
 
-            val isIAP = data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier
-
             val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
             val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY &&
                     (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc())
@@ -84,8 +82,8 @@ class VisitedCourseListItemAdapterDelegate(
                         R.color.material_on_surface_disabled to context.resources.getString(R.string.visited_courses_enrolled)
 
                     data.course.isPaid ->
-                        if (isIAP) {
-                            handleCoursePriceMobileTiers(data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
+                        if (data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
+                            handleCoursePriceMobileTiers(data.courseStats.enrollmentState)
                         } else {
                             handleCoursePrice(data, defaultPromoCode)
                         }
@@ -100,8 +98,8 @@ class VisitedCourseListItemAdapterDelegate(
             courseItemOldPrice.isVisible = mustShowDefaultPromoCode && !isEnrolled
             courseItemOldPrice.text = buildSpannedString {
                 strikeThrough {
-                    if (isIAP) {
-                        append((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)?.standardLightSku?.price ?: "")
+                    if (data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
+                        append(data.courseStats.enrollmentState.standardLightSku.price)
                     } else {
                         append(data.course.displayPrice ?: "")
                     }
@@ -117,15 +115,15 @@ class VisitedCourseListItemAdapterDelegate(
 
     private fun handleCoursePrice(data: CourseListItem.Data, defaultPromoCode: DefaultPromoCode): Pair<Int, String?> =
         if (defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc())) {
-            R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
+            R.color.color_overlay_red to displayPriceMapper.mapToDisplayPriceWithCurrency(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
         } else {
             R.color.color_overlay_violet to data.course.displayPrice
         }
 
-    private fun handleCoursePriceMobileTiers(mobileTierEnrollmentState: EnrollmentState.NotEnrolledMobileTier?): Pair<Int, String?> =
-        if (mobileTierEnrollmentState?.promoLightSku != null) {
-            R.color.color_overlay_red to mobileTierEnrollmentState.promoLightSku.price
+    private fun handleCoursePriceMobileTiers(enrollmentState: EnrollmentState.NotEnrolledMobileTier): Pair<Int, String?> =
+        if (enrollmentState.promoLightSku != null) {
+            R.color.color_overlay_red to enrollmentState.promoLightSku.price
         } else {
-            R.color.color_overlay_violet to mobileTierEnrollmentState?.standardLightSku?.price
+            R.color.color_overlay_violet to enrollmentState.standardLightSku.price
         }
 }

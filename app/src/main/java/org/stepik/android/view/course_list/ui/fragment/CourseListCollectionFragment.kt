@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
@@ -64,9 +63,6 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
-
-    @Inject
-    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListCollectionPresenter by viewModels { viewModelFactory }

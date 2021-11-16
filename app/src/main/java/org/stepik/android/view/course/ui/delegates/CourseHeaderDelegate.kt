@@ -277,7 +277,7 @@ constructor(
             courseBuyInWebAction.text =
                 if (courseHeaderData.course.displayPrice != null) {
                     if (promoCodeSku.lightSku != null) {
-                        displayPriceMapper.mapToDiscountedDisplayPriceSpannedStringMobileTiers(notEnrolledMobileTierState.standardLightSku.price, promoCodeSku.lightSku.price)
+                        displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(notEnrolledMobileTierState.standardLightSku.price, promoCodeSku.lightSku.price)
                     } else {
                         getString(R.string.course_payments_purchase_in_web_with_price, notEnrolledMobileTierState.standardLightSku.price)
                     }
@@ -314,8 +314,8 @@ constructor(
                     if (hasPromo) {
                         displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(
                             courseDisplayPrice,
-                            currencyCode,
-                            promoPrice
+                            promoPrice,
+                            currencyCode
                         )
                     } else {
                         getString(
@@ -328,7 +328,7 @@ constructor(
                 }
 
             courseBuyInWebActionDiscountedNewPrice.text =
-                getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPrice(currencyCode, promoPrice))
+                getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPriceWithCurrency(currencyCode, promoPrice))
 
             courseBuyInWebActionDiscountedOldPrice.text =
                 buildSpannedString {

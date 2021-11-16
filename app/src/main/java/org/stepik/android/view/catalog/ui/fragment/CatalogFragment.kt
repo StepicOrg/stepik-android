@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -124,9 +123,6 @@ class CatalogFragment :
 
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
-
-    @Inject
-    lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private lateinit var searchIcon: ImageView
 
