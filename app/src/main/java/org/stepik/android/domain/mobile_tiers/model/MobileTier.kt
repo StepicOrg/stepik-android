@@ -12,7 +12,7 @@ data class MobileTier(
     @SerializedName("course")
     val course: Long,
     @SerializedName("price_tier")
-    val priceTier: String,
+    val priceTier: String? = null,
     @SerializedName("promo_tier")
     val promoTier: String? = null
 )

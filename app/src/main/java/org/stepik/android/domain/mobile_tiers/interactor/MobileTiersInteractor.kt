@@ -1,6 +1,5 @@
 package org.stepik.android.domain.mobile_tiers.interactor
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.solovyev.android.checkout.ProductTypes
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class MobileTiersInteractor
 @Inject
 constructor(
-    private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val mobileTiersRepository: MobileTiersRepository,
     private val lightSkuRepository: LightSkuRepository
 ) {
@@ -32,7 +30,7 @@ constructor(
         return mobileTiersRepository
             .calculateMobileTiers(mobileTierCalculations)
             .flatMap { mobileTiers ->
-                val priceTiers = mobileTiers.map(MobileTier::priceTier)
+                val priceTiers = mobileTiers.mapNotNull(MobileTier::priceTier)
                 val promoTiers = mobileTiers.mapNotNull(MobileTier::promoTier)
                 val skuIds = priceTiers.union(promoTiers).toList()
                 lightSkuRepository

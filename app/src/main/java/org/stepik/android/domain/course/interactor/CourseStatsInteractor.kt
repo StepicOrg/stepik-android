@@ -20,6 +20,7 @@ import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.mobile_tiers.interactor.MobileTiersInteractor
 import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.mobile_tiers.model.MobileTier
 import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
@@ -49,6 +50,7 @@ constructor(
     private val mobileTiersRepository: MobileTiersRepository,
     private val lightSkuRepository: LightSkuRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val mobileTiersInteractor: MobileTiersInteractor,
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
     companion object {
@@ -91,7 +93,7 @@ constructor(
         zip(
             resolveCourseReview(listOf(course), sourceTypeComposition.generalSourceType),
             resolveCourseProgress(listOf(course), sourceTypeComposition.generalSourceType),
-            fetchMobileTiersAndLightSkus(listOf(course), sourceTypeComposition.generalSourceType),
+            mobileTiersInteractor.fetchTiersAndSkus(listOf(course), sourceTypeComposition.generalSourceType),
             profileRepository.getProfile(sourceTypeComposition.generalSourceType),
             resolveWishlistStates(sourceTypeComposition.generalSourceType)
         ) { courseReviews, courseProgresses, (mobileTiers, lightSkus), profile, wishlistStates ->
@@ -282,18 +284,4 @@ constructor(
             else ->
                 Single.just(course.id to EnrollmentState.NotEnrolledFree)
         }
-
-    private fun fetchMobileTiersAndLightSkus(courses: List<Course>, sourceType: DataSourceType): Single<Pair<List<MobileTier>, List<LightSku>>>  {
-        val mobileTierCalculations = courses.map { MobileTierCalculation(course = it.id) }
-        return mobileTiersRepository
-            .calculateMobileTiers(mobileTierCalculations)
-            .flatMap { mobileTiers ->
-                val priceTiers = mobileTiers.map(MobileTier::priceTier)
-                val promoTiers = mobileTiers.mapNotNull(MobileTier::promoTier)
-                val skuIds = priceTiers.union(promoTiers).toList()
-                lightSkuRepository
-                    .getLightInventory(ProductTypes.IN_APP, skuIds, sourceType)
-                    .map { lightSkus -> mobileTiers to lightSkus }
-            }
-    }
 }
