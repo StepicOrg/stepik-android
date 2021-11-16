@@ -13,6 +13,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
@@ -46,8 +47,6 @@ constructor(
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
         private val UNAUTHORIZED_EXCEPTION_STUB =
             HttpException(Response.error<Nothing>(HttpURLConnection.HTTP_UNAUTHORIZED, ResponseBody.create(null, "")))
-        private const val PURCHASE_FLOW_IAP = "iap"
-        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -68,7 +67,7 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> =
         zip(
-            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
                 courseStatsInteractor.getCourseStatsMobileTiersSingle(course)
             } else  {
                 courseStatsInteractor.getCourseStats(listOf(course)).first()

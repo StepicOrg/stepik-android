@@ -28,7 +28,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
@@ -70,15 +69,11 @@ constructor(
     @Assisted onSubmissionCountClicked: () -> Unit,
     @Assisted isLocalSubmissionsEnabled: Boolean,
     @Assisted private val showSearchCourseAction: () -> Unit,
-    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit,
-    @Assisted private val currentPurchaseFlow: String
+    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
-
-        private const val PURCHASE_FLOW_IAP = "iap"
-        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -229,9 +224,7 @@ constructor(
              * Purchase setup section
              */
 
-            val isIAP = courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier && (currentPurchaseFlow == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG)
-
-            if (isIAP) {
+            if (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
                 setupIAP(courseHeaderData)
             } else {
                 setupWeb(courseHeaderData)
@@ -350,7 +343,7 @@ constructor(
 
     private fun setupBuyAction(courseHeaderData: CourseHeaderData) {
         val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
-        if ((currentPurchaseFlow == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) && notEnrolledMobileTierState != null) {
+        if (notEnrolledMobileTierState != null) {
                 val promoCodeSku = when {
                     courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
                         courseHeaderData.deeplinkPromoCodeSku

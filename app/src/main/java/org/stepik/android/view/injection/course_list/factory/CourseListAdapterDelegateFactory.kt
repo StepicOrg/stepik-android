@@ -14,7 +14,6 @@ interface CourseListAdapterDelegateFactory {
         onTitleClick: (Long) -> Unit,
         onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
         onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-        onCourseClicked: (CourseListItem.Data) -> Unit,
-        isIAPFlowEnabled: Boolean
+        onCourseClicked: (CourseListItem.Data) -> Unit
     ): CourseListAdapterDelegate
 }

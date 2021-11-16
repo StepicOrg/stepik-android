@@ -9,6 +9,7 @@ import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.model.SourceTypeComposition
@@ -48,10 +49,6 @@ constructor(
     private val mobileTiersInteractor: MobileTiersInteractor,
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
-    companion object {
-        private const val PURCHASE_FLOW_IAP = "iap"
-        private const val PURCHASE_FLOW_WEB = "web"
-    }
 
     fun getCourseStats(
         courses: List<Course>,
@@ -146,7 +143,7 @@ constructor(
         coursePaymentsRepository
             .checkDeeplinkPromoCodeValidity(courseId, promo)
             .flatMap { deeplinkPromoCode ->
-                if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+                if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
                     mobileTiersRepository
                         .calculateMobileTier(MobileTierCalculation(course = courseId, promo = promo), dataSourceType = DataSourceType.REMOTE)
                         .flatMapSingle { mobileTier ->

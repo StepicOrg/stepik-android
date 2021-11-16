@@ -12,7 +12,6 @@ interface RecommendedCourseListAdapterDelegateFactory {
     fun create(
         onBlockSeen: (String) -> Unit,
         onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
-        onCourseClicked: (CourseListItem.Data) -> Unit,
-        isIAPFlowEnabled: Boolean
+        onCourseClicked: (CourseListItem.Data) -> Unit
     ): RecommendedCourseListAdapterDelegate
 }

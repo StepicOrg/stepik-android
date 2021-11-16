@@ -46,7 +46,6 @@ constructor(
     @Assisted private val onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
     @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
     @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit,
-    @Assisted private val isIAPFlowEnabled: Boolean,
     private val tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
@@ -93,8 +92,7 @@ constructor(
                     onCourseContinueClicked(it.course, CourseViewSource.Collection(block.courseList.id), CourseContinueInteractionSource.COURSE_WIDGET)
                 },
                 defaultPromoCodeMapper = defaultPromoCodeMapper,
-                displayPriceMapper = displayPriceMapper,
-                isIAPFlowEnabled = isIAPFlowEnabled
+                displayPriceMapper = displayPriceMapper
             )
             courseItemAdapter += CourseListViewAllAdapterDelegate {
                 val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListViewAllAdapterDelegate

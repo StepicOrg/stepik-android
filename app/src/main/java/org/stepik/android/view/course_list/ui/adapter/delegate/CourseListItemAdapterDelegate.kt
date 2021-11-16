@@ -32,7 +32,6 @@ class CourseListItemAdapterDelegate(
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
-    private val isIAPFlowEnabled: Boolean,
     private val isNeedExtraMargin: Boolean = false
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
@@ -78,7 +77,7 @@ class CourseListItemAdapterDelegate(
 
             courseItemName.text = data.course.title
 
-            val isIAP = data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier && isIAPFlowEnabled
+            val isIAP = data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier
 
             val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
             val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY &&

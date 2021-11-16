@@ -90,9 +90,6 @@ class CatalogFragment :
 
         private const val CATALOG_STORIES_INDEX = 0
         private const val CATALOG_STORIES_KEY = "catalog_stories"
-
-        private const val PURCHASE_FLOW_IAP = "iap"
-        private const val PURCHASE_FLOW_WEB = "web"
     }
 
     @Inject
@@ -199,8 +196,7 @@ class CatalogFragment :
             },
             onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
-            },
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            }
         )
         catalogItemAdapter += AuthorListAdapterDelegate(
             authorCountMapper = authorCountMapper,
@@ -227,8 +223,7 @@ class CatalogFragment :
             },
             onCourseClicked = { courseListItem ->
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseContinueMessage(CourseContinueFeature.Message.CourseListItemClick(courseListItem)))
-            },
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            }
         )
 
         catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }

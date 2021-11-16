@@ -9,6 +9,7 @@ import org.stepic.droid.configuration.RemoteConfig
 import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
+import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -27,11 +28,6 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val mobileTiersInteractor: MobileTiersInteractor
 ) {
-
-    companion object {
-        private const val PURCHASE_FLOW_IAP = "iap"
-        private const val PURCHASE_FLOW_WEB = "web"
-    }
 
     fun getAllCourses(courseListQuery: CourseListQuery): Single<List<Course>> =
         Observable.range(1, Int.MAX_VALUE)
@@ -73,7 +69,7 @@ constructor(
         courseViewSource: CourseViewSource,
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
-        if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+        if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
             mobileTiersInteractor
                 .fetchTiersAndSkus(courses, sourceTypeComposition.generalSourceType)
                 .flatMap { (mobileTiers, lightSkus) ->
@@ -85,7 +81,7 @@ constructor(
                 }
         } else {
             mapCourseStats(
-                courseStatsInteractor.getCourseStats(courses, resolveEnrollmentState = isMustResolveEnrollmentState(courses), sourceTypeComposition = sourceTypeComposition),
+                courseStatsInteractor.getCourseStats(courses, resolveEnrollmentState = false, sourceTypeComposition = sourceTypeComposition),
                 courses,
                 courseViewSource
             )
@@ -109,7 +105,4 @@ constructor(
                     hasPrev = courses.hasPrev
                 )
             }
-
-    private fun isMustResolveEnrollmentState(courses: List<Course>) =
-        courses.any { it.priceTier != null }
 }

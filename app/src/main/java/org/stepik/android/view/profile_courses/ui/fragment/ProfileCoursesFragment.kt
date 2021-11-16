@@ -7,14 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -39,9 +36,6 @@ import kotlin.math.min
 
 class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), ProfileCoursesView {
     companion object {
-        private const val PURCHASE_FLOW_IAP = "iap"
-        private const val PURCHASE_FLOW_WEB = "web"
-
         fun newInstance(userId: Long): Fragment =
             ProfileCoursesFragment()
                 .apply {
@@ -66,9 +60,6 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
 
     @Inject
     internal lateinit var tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
-
-    @Inject
-    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private var userId by argument<Long>()
 
@@ -106,8 +97,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
                     )
             },
             defaultPromoCodeMapper = defaultPromoCodeMapper,
-            displayPriceMapper = displayPriceMapper,
-            isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            displayPriceMapper = displayPriceMapper
         )
     }
 
