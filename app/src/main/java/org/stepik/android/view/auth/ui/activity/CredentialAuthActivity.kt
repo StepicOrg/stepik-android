@@ -198,13 +198,18 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
             .getSerializableExtra(EXTRA_AUTO_AUTH) as? AutoAuth
             ?: AutoAuth.NONE
 
-        loginField.setText(intent.getStringExtra(EXTRA_EMAIL))
-
+        val email = intent.getStringExtra(EXTRA_EMAIL)
         val password = intent.getStringExtra(EXTRA_PASSWORD)
-        if (password != null) {
-            passwordField.setText(password)
-        } else {
-            passwordField.requestFocus()
+
+        loginField.setText(email)
+        passwordField.setText(password)
+
+        when {
+            email == null ->
+                loginField.requestFocus()
+
+            passwordField == null ->
+                passwordField.requestFocus()
         }
 
         if (autoAuth != AutoAuth.NONE) {
