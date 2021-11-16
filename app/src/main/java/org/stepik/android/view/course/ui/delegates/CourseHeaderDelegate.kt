@@ -147,63 +147,11 @@ constructor(
             }
 
             courseBuyInWebAction.setOnClickListener {
-                if (true) {
-                    courseHeaderData?.let {
-                        val notEnrolledMobileTierState = (it.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier) ?: return@setOnClickListener
-                        val promoCodeSku = when {
-                            it.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                                it.deeplinkPromoCodeSku
-
-                            notEnrolledMobileTierState.promoLightSku != null -> {
-                                PromoCodeSku(it.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
-                            }
-
-                            else ->
-                                PromoCodeSku.EMPTY
-                        }
-                        val coursePurchaseData = CoursePurchaseData(
-                            it.course,
-                            it.stats,
-                            notEnrolledMobileTierState.standardLightSku,
-                            promoCodeSku,
-                            it.wishlistEntity,
-                            it.stats.isWishlisted
-                        )
-                        coursePurchaseFlowAction(coursePurchaseData)
-                    }
-                } else {
-                    buyInWebAction()
-                }
+                courseHeaderData?.let(::setupBuyAction)
             }
 
             courseBuyInWebActionDiscounted.setOnClickListener {
-                if (true) {
-                    courseHeaderData?.let {
-                        val notEnrolledMobileTierState = (it.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier) ?: return@setOnClickListener
-                        val promoCodeSku = when {
-                            it.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                                it.deeplinkPromoCodeSku
-
-                            notEnrolledMobileTierState.promoLightSku != null -> {
-                                PromoCodeSku(it.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
-                            }
-
-                            else ->
-                                PromoCodeSku.EMPTY
-                        }
-                        val coursePurchaseData = CoursePurchaseData(
-                            it.course,
-                            it.stats,
-                            notEnrolledMobileTierState.standardLightSku,
-                            promoCodeSku,
-                            it.wishlistEntity,
-                            it.stats.isWishlisted
-                        )
-                        coursePurchaseFlowAction(coursePurchaseData)
-                    }
-                } else {
-                    buyInWebAction()
-                }
+                courseHeaderData?.let(::setupBuyAction)
             }
 
             courseBuyInAppAction.setOnClickListener {
@@ -328,6 +276,7 @@ constructor(
                 else ->
                     PromoCodeSku.EMPTY
             }
+
             courseBuyInWebAction.text =
                 if (courseHeaderData.course.displayPrice != null) {
                     if (promoCodeSku.lightSku != null) {
@@ -338,6 +287,16 @@ constructor(
                 } else {
                     getString(R.string.course_payments_purchase_in_web)
                 }
+
+            courseBuyInWebActionDiscountedNewPrice.text =
+                    getString(R.string.course_payments_purchase_in_web_with_price, promoCodeSku.lightSku?.price)
+
+            courseBuyInWebActionDiscountedOldPrice.text =
+                    buildSpannedString {
+                        strikeThrough {
+                            append(notEnrolledMobileTierState.standardLightSku.price)
+                        }
+                    }
 
             setupDiscountButtons(hasDiscount = promoCodeSku.lightSku != null)
         }
@@ -382,6 +341,34 @@ constructor(
                 }
 
             setupDiscountButtons(hasDiscount = courseHeaderData.course.displayPrice != null && hasPromo)
+        }
+    }
+
+    private fun setupBuyAction(courseHeaderData: CourseHeaderData) {
+        val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
+        if (currentPurchaseFlow == PURCHASE_FLOW_IAP && notEnrolledMobileTierState != null) {
+                val promoCodeSku = when {
+                    courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
+                        courseHeaderData.deeplinkPromoCodeSku
+
+                    notEnrolledMobileTierState.promoLightSku != null -> {
+                        PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
+                    }
+
+                    else ->
+                        PromoCodeSku.EMPTY
+                }
+                val coursePurchaseData = CoursePurchaseData(
+                        courseHeaderData.course,
+                        courseHeaderData.stats,
+                        notEnrolledMobileTierState.standardLightSku,
+                        promoCodeSku,
+                        courseHeaderData.wishlistEntity,
+                        courseHeaderData.stats.isWishlisted
+                )
+                coursePurchaseFlowAction(coursePurchaseData)
+        } else {
+            buyInWebAction()
         }
     }
 
