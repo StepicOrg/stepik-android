@@ -192,17 +192,7 @@ constructor(
     private fun resolveCourseEnrollmentState(course: Course, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
         when {
             course.enrollment > 0 ->
-                profileRepository.getProfile().map { profile ->
-                    course.id to EnrollmentState.Enrolled(
-                        UserCourse(
-                            course = course.id,
-                            user = profile.id,
-                            isArchived = course.isArchived,
-                            isFavorite = course.isFavorite,
-                            lastViewed = null
-                        )
-                    ) as EnrollmentState
-                }
+                profileRepository.getProfile().map { profile -> course.id to resolveEnrolledEnrollmentState(course, profile.id) }
 
             !course.isPaid ->
                 Single.just(course.id to EnrollmentState.NotEnrolledFree)
@@ -226,15 +216,7 @@ constructor(
     private fun resolveEnrollmentStateMobileTiers(course: Course, profileId: Long, standardLightSku: LightSku?, promoLightSku: LightSku?): Pair<Long, EnrollmentState> =
         when {
             course.enrollment > 0 ->
-                course.id to EnrollmentState.Enrolled(
-                        UserCourse(
-                                course = course.id,
-                                user = profileId,
-                                isArchived = course.isArchived,
-                                isFavorite = course.isFavorite,
-                                lastViewed = null
-                        )
-                )
+                course.id to resolveEnrolledEnrollmentState(course, profileId)
 
             !course.isPaid ->
                 course.id to EnrollmentState.NotEnrolledFree
@@ -254,17 +236,7 @@ constructor(
     private fun resolveEnrollmentStateMobileTiersSingleCourse(course: Course, sourceType: DataSourceType): Single<EnrollmentState> =
         when {
             course.enrollment > 0 ->
-                profileRepository.getProfile().map { profile ->
-                    EnrollmentState.Enrolled(
-                        UserCourse(
-                                course = course.id,
-                                user = profile.id,
-                                isArchived = course.isArchived,
-                                isFavorite = course.isFavorite,
-                                lastViewed = null
-                        )
-                    )
-                }
+                profileRepository.getProfile().map { profile -> resolveEnrolledEnrollmentState(course, profile.id) }
 
             !course.isPaid ->
                 Single.just(EnrollmentState.NotEnrolledFree)
@@ -294,6 +266,17 @@ constructor(
             else ->
                 Single.just(EnrollmentState.NotEnrolledFree)
         }
+
+    private fun resolveEnrolledEnrollmentState(course: Course, profileId: Long): EnrollmentState.Enrolled =
+        EnrollmentState.Enrolled(
+            UserCourse(
+                course = course.id,
+                user = profileId,
+                isArchived = course.isArchived,
+                isFavorite = course.isFavorite,
+                lastViewed = null
+            )
+        )
 
     private fun resolvePaidEnrollmentState(standardLightSku: LightSku?, promoLightSku: LightSku?): EnrollmentState =
         if (standardLightSku == null) {
