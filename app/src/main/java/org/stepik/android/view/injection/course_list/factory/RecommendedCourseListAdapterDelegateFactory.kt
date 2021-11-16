@@ -10,7 +10,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.RecommendedCourseList
 @AssistedFactory
 interface RecommendedCourseListAdapterDelegateFactory {
     fun create(
-        isHandleInAppPurchase: Boolean,
         onBlockSeen: (String) -> Unit,
         onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
         onCourseClicked: (CourseListItem.Data) -> Unit,

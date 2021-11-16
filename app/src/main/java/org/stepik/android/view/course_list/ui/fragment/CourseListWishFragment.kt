@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
@@ -57,9 +56,6 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
     @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
-
-    @Inject
-    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
     internal lateinit var defaultPromoCodeMapper: DefaultPromoCodeMapper
@@ -123,7 +119,6 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
             isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP,

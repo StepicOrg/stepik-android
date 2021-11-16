@@ -11,7 +11,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDele
 @AssistedFactory
 interface CourseListAdapterDelegateFactory {
     fun create(
-        isHandleInAppPurchase: Boolean,
         onTitleClick: (Long) -> Unit,
         onBlockSeen: (String, CatalogBlockContent.FullCourseList) -> Unit,
         onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,

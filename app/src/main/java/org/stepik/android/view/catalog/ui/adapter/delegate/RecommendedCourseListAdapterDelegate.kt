@@ -40,7 +40,6 @@ constructor(
     private val courseCountMapper: CourseCountMapper,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
-    @Assisted private val isHandleInAppPurchase: Boolean,
     @Assisted private val onBlockSeen: (String) -> Unit,
     @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
     @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit,
@@ -84,7 +83,6 @@ constructor(
                 onContinueCourseClicked = {
                     onCourseContinueClicked(it.course, CourseViewSource.Recommendation, CourseContinueInteractionSource.COURSE_WIDGET)
                 },
-                isHandleInAppPurchase = isHandleInAppPurchase,
                 defaultPromoCodeMapper = defaultPromoCodeMapper,
                 displayPriceMapper = displayPriceMapper,
                 isIAPFlowEnabled = isIAPFlowEnabled

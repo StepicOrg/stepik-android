@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.view_search_toolbar.filterIcon
 import kotlinx.android.synthetic.main.view_search_toolbar.searchViewToolbar
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
@@ -96,9 +95,6 @@ class CourseListSearchFragment :
 
     @Inject
     internal lateinit var sharedPreferencesHelper: SharedPreferenceHelper
-
-    @Inject
-    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
     internal lateinit var searchResultRemoteQueryParamsMapper: SearchResultRemoteQueryParamsMapper
@@ -187,7 +183,6 @@ class CourseListSearchFragment :
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
             isIAPFlowEnabled = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == PURCHASE_FLOW_IAP

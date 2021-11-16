@@ -29,7 +29,6 @@ class CourseListViewDelegate(
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     onContinueCourseClicked: (CourseListItem.Data) -> Unit,
-    isHandleInAppPurchase: Boolean,
     defaultPromoCodeMapper: DefaultPromoCodeMapper,
     displayPriceMapper: DisplayPriceMapper,
     onCourseListClicked: (CatalogCourseList) -> Unit = { _ -> },
@@ -57,7 +56,6 @@ class CourseListViewDelegate(
                         analytic,
                         onItemClicked = courseContinueViewDelegate::onCourseClicked,
                         onContinueCourseClicked = onContinueCourseClicked,
-                        isHandleInAppPurchase = isHandleInAppPurchase,
                         defaultPromoCodeMapper = defaultPromoCodeMapper,
                         displayPriceMapper = displayPriceMapper,
                         isIAPFlowEnabled = isIAPFlowEnabled,
@@ -71,7 +69,6 @@ class CourseListViewDelegate(
                     VisitedCourseListItemAdapterDelegate(
                         analytic,
                         onItemClicked = courseContinueViewDelegate::onCourseClicked,
-                        isHandleInAppPurchase = isHandleInAppPurchase,
                         defaultPromoCodeMapper =  defaultPromoCodeMapper,
                         displayPriceMapper = displayPriceMapper,
                         isIAPFlowEnabled = isIAPFlowEnabled

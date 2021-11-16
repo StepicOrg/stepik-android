@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
@@ -61,9 +60,6 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
     internal lateinit var courseCountMapper: CourseCountMapper
@@ -134,7 +130,6 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper,
             onCourseListClicked = { screenManager.showCoursesCollection(requireContext(), it.id) },

@@ -29,7 +29,6 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class VisitedCourseListItemAdapterDelegate(
     private val analytic: Analytic,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
-    private val isHandleInAppPurchase: Boolean,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
     private val isIAPFlowEnabled: Boolean
@@ -118,13 +117,10 @@ class VisitedCourseListItemAdapterDelegate(
     }
 
     private fun handleCoursePrice(data: CourseListItem.Data, defaultPromoCode: DefaultPromoCode): Pair<Int, String?> =
-        when {
-            isHandleInAppPurchase && data.course.priceTier != null ->
-                R.color.color_overlay_violet to ((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice)
-            defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) ->
-                R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
-            else ->
-                R.color.color_overlay_violet to data.course.displayPrice
+        if (defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc())) {
+            R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
+        } else {
+            R.color.color_overlay_violet to data.course.displayPrice
         }
 
     private fun handleCoursePriceMobileTiers(mobileTierEnrollmentState: EnrollmentState.NotEnrolledMobileTier?): Pair<Int, String?> =

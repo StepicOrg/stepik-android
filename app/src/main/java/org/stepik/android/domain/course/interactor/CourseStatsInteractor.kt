@@ -6,12 +6,9 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.solovyev.android.checkout.ProductTypes
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.billing.model.SkuSerializableWrapper
-import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.model.SourceTypeComposition
@@ -40,8 +37,6 @@ import javax.inject.Inject
 class CourseStatsInteractor
 @Inject
 constructor(
-    private val inAppPurchaseSplitTest: InAppPurchaseSplitTest,
-    private val billingRepository: BillingRepository,
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
@@ -54,7 +49,6 @@ constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
     companion object {
-        private const val COURSE_TIER_PREFIX = "course_tier_"
         private const val PURCHASE_FLOW_IAP = "iap"
         private const val PURCHASE_FLOW_WEB = "web"
     }
@@ -264,17 +258,7 @@ constructor(
                     .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = sourceType)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
-                            if (inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive) {
-                                billingRepository
-                                    .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
-                                    .map(::SkuSerializableWrapper)
-                                    .map(EnrollmentState::NotEnrolledInApp)
-                                    .cast(EnrollmentState::class.java)
-                                    .toSingle(EnrollmentState.NotEnrolledWeb)
-                                    .map { course.id to it }
-                            } else {
-                                Single.just(course.id to EnrollmentState.NotEnrolledWeb)
-                            }
+                            Single.just(course.id to EnrollmentState.NotEnrolledWeb)
                         } else {
                             Single.just(course.id to EnrollmentState.NotEnrolledFree)
                         }
