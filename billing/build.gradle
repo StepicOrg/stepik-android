@@ -39,6 +39,7 @@ dependencies {
     implementation libraries.rxJava2
     implementation libraries.rxKotlin
     implementation libraries.domainRx
+    implementation libraries.viewInjection
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric

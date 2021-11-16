@@ -173,6 +173,7 @@ dependencies {
     implementation libraries.multidex
     implementation libraries.androidKit.values()
     implementation libraries.domainRx
+    implementation libraries.viewInjection
     implementation libraries.viewBindingDelegate
 
     implementation libraries.exoPlayerCore
