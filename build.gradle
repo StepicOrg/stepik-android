@@ -11,6 +11,7 @@ buildscript {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
+        gradlePluginPortal()
     }
     dependencies {
         classpath gradlePlugins.android
@@ -19,7 +20,12 @@ buildscript {
         classpath gradlePlugins.firebasePerfPlugin
         classpath gradlePlugins.kotlin
         classpath gradlePlugins.dexcount
+        classpath gradlePlugins.ktlint
     }
+}
+
+subprojects {
+    apply plugin: 'org.jlleitschuh.gradle.ktlint'
 }
 
 allprojects {

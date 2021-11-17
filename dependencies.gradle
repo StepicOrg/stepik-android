@@ -115,7 +115,8 @@ ext.gradlePlugins = [
         kotlin            : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
         android           : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
         dexcount          : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcount",
-        firebasePerfPlugin: "com.google.firebase:perf-plugin:$versions.firebasePerfPlugin"
+        firebasePerfPlugin: "com.google.firebase:perf-plugin:$versions.firebasePerfPlugin",
+        ktlint            : "org.jlleitschuh.gradle:ktlint-gradle:10.2.0"
 ]
 
 ext.libraries = [
