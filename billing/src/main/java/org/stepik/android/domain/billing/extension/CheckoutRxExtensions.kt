@@ -12,19 +12,21 @@ import org.solovyev.android.checkout.UiCheckout
 fun UiCheckout.startPurchaseFlowRx(sku: Sku, payload: String?): Single<Purchase> =
     Single.create { emitter ->
         startPurchaseFlow(
-            sku, payload, object : RequestListener<Purchase> {
-            override fun onSuccess(purchase: Purchase) {
-                if (!emitter.isDisposed) {
-                    emitter.onSuccess(purchase)
+            sku,
+            payload,
+            object : RequestListener<Purchase> {
+                override fun onSuccess(purchase: Purchase) {
+                    if (!emitter.isDisposed) {
+                        emitter.onSuccess(purchase)
+                    }
                 }
-            }
 
-            override fun onError(response: Int, exception: Exception) {
-                if (!emitter.isDisposed) {
-                    emitter.onError(exception)
+                override fun onError(response: Int, exception: Exception) {
+                    if (!emitter.isDisposed) {
+                        emitter.onError(exception)
+                    }
                 }
             }
-        }
         )
     }
 
@@ -41,17 +43,20 @@ fun Checkout.onReady(): Single<BillingRequests> =
 
 fun BillingRequests.consumeRx(token: String): Completable =
     Completable.create { emitter ->
-        consume(token, object : RequestListener<Any> {
-            override fun onSuccess(result: Any) {
-                if (!emitter.isDisposed) {
-                    emitter.onComplete()
+        consume(
+            token,
+            object : RequestListener<Any> {
+                override fun onSuccess(result: Any) {
+                    if (!emitter.isDisposed) {
+                        emitter.onComplete()
+                    }
                 }
-            }
 
-            override fun onError(response: Int, exception: Exception) {
-                if (!emitter.isDisposed) {
-                    emitter.onError(exception)
+                override fun onError(response: Int, exception: Exception) {
+                    if (!emitter.isDisposed) {
+                        emitter.onError(exception)
+                    }
                 }
             }
-        })
+        )
     }
