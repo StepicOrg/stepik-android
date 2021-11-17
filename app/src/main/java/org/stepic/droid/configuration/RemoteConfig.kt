@@ -15,5 +15,5 @@ object RemoteConfig {
     const val PURCHASE_FLOW_ANDROID = "purchase_flow_android"
 
     // TODO APPS-3443: Remove after finishing feature
-    const val PURCHASE_FLOW_ANDROID_TESTING_FLAG = true
+    const val PURCHASE_FLOW_ANDROID_TESTING_FLAG = false
 }
