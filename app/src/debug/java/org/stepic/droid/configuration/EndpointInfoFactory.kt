@@ -30,7 +30,7 @@ constructor(
                 EndpointConfig.RELEASE ->
                     ENDPOINT_RELEASE_CONFIG
             }
-        return context.assets.open("configs/${fileName}").use {
+        return context.assets.open("configs/$fileName").use {
             gson.fromJson(InputStreamReader(it, Charset.defaultCharset()), EndpointInfo::class.java)
         }
     }

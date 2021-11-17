@@ -17,27 +17,26 @@ class CodeOptionsTest {
             addAll(listOf("1", "2", "3", "4"))
         }
         val codeOptions = CodeOptions(
-                limits = mapOf("java" to CodeLimit(3, 256)),
-                executionMemoryLimit = 120,
-                executionTimeLimit = 5,
-                codeTemplates = hashMapOf("java" to "public static etc"),
-                samples = listOf(sample1, sample2),
-                isRunUserCodeAllowed = true
+            limits = mapOf("java" to CodeLimit(3, 256)),
+            executionMemoryLimit = 120,
+            executionTimeLimit = 5,
+            codeTemplates = hashMapOf("java" to "public static etc"),
+            samples = listOf(sample1, sample2),
+            isRunUserCodeAllowed = true
         )
 
         codeOptions.assertThatObjectParcelable<CodeOptions>()
     }
 
-
     @Test
     fun emptyListsAndMapsSuccess() {
         val codeOptions = CodeOptions(
-                limits = emptyMap(),
-                executionTimeLimit = 0,
-                executionMemoryLimit = 0,
-                codeTemplates = emptyMap(),
-                samples = emptyList(),
-                isRunUserCodeAllowed = false
+            limits = emptyMap(),
+            executionTimeLimit = 0,
+            executionMemoryLimit = 0,
+            codeTemplates = emptyMap(),
+            samples = emptyList(),
+            isRunUserCodeAllowed = false
         )
 
         codeOptions.assertThatObjectParcelable<CodeOptions>()

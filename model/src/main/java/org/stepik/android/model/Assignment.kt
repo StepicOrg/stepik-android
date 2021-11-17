@@ -2,7 +2,7 @@ package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
 import ru.nobird.android.core.model.Identifiable
-import java.util.*
+import java.util.Date
 
 class Assignment(
     @SerializedName("id")

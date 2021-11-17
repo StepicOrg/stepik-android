@@ -35,10 +35,10 @@ class StepStatusTest {
     @Test
     fun byNameAllValuesResolvedByName() {
         assertThat<List<Step.Status?>>(
-                Step.Status.values()
-                        .map { Step.Status.byName(it.name) }
-                        .toList(),
-                everyItem(notNullValue(Step.Status::class.java))
+            Step.Status.values()
+                .map { Step.Status.byName(it.name) }
+                .toList(),
+            everyItem(notNullValue(Step.Status::class.java))
         )
     }
 
@@ -56,5 +56,4 @@ class StepStatusTest {
     fun saveOrderOfError() {
         assertEquals("backward compatibility", 2, Step.Status.ERROR.ordinal)
     }
-
 }

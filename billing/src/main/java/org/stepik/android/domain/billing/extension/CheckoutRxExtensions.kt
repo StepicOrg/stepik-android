@@ -11,7 +11,8 @@ import org.solovyev.android.checkout.UiCheckout
 
 fun UiCheckout.startPurchaseFlowRx(sku: Sku, payload: String?): Single<Purchase> =
     Single.create { emitter ->
-        startPurchaseFlow(sku, payload, object : RequestListener<Purchase> {
+        startPurchaseFlow(
+            sku, payload, object : RequestListener<Purchase> {
             override fun onSuccess(purchase: Purchase) {
                 if (!emitter.isDisposed) {
                     emitter.onSuccess(purchase)
@@ -23,7 +24,8 @@ fun UiCheckout.startPurchaseFlowRx(sku: Sku, payload: String?): Single<Purchase>
                     emitter.onError(exception)
                 }
             }
-        })
+        }
+        )
     }
 
 fun Checkout.onReady(): Single<BillingRequests> =

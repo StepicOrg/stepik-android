@@ -16,10 +16,13 @@ class BillingModule {
         @PublicLicenseKey
         appPublicLicenseKey: String
     ): Billing =
-        Billing(context, object : Billing.DefaultConfiguration() {
-            override fun getPublicKey(): String =
-                appPublicLicenseKey
-        })
+        Billing(
+            context,
+            object : Billing.DefaultConfiguration() {
+                override fun getPublicKey(): String =
+                    appPublicLicenseKey
+            }
+        )
 
     /**
      * Provides system checkout that can be used for querying inventory & etc.

@@ -6,9 +6,9 @@ import com.google.gson.annotations.SerializedName
 
 data class CodeLimit(
     @SerializedName("time")
-    val time: Int, //in seconds
+    val time: Int, // in seconds
     @SerializedName("memory")
-    val memory: Int //in Mb
+    val memory: Int // in Mb
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(time)

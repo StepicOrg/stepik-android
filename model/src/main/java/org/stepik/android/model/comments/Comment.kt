@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import org.stepik.android.model.Actions
 import org.stepik.android.model.UserRole
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class Comment(
@@ -41,9 +41,9 @@ data class Comment(
     @SerializedName("actions")
     val actions: Actions? = null,
     @SerializedName("target")
-    val target: Long = 0, //for example, id of Step.
+    val target: Long = 0, // for example, id of Step.
     @SerializedName("replies")
-    val replies: List<Long>? = null, //oldList of all replies, but in query only 20.
+    val replies: List<Long>? = null, // oldList of all replies, but in query only 20.
 
     @SerializedName("tonality_auto")
     val tonalityAuto: Int? = null,

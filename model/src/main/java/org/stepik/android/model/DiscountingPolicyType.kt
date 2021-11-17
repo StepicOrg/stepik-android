@@ -13,9 +13,9 @@ enum class DiscountingPolicyType {
     FirstThree;
 
     fun numberOfTries(): Int =
-            when (this) {
-                NoDiscount, Inverse -> Int.MAX_VALUE
-                FirstOne -> 1
-                FirstThree -> 3
-            }
+        when (this) {
+            NoDiscount, Inverse -> Int.MAX_VALUE
+            FirstOne -> 1
+            FirstThree -> 3
+        }
 }

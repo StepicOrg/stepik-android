@@ -7,10 +7,16 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import org.stepic.droid.storage.migration.MigrationFrom68To69
 import org.stepic.droid.storage.structure.DbStructureCourse
-import org.stepic.droid.util.*
+import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getString
+import org.stepic.droid.util.getDouble
+import org.stepic.droid.util.getDate
+import org.stepic.droid.util.toObject
 import org.stepik.android.model.Course
 import org.stepik.android.model.Video
-import java.util.*
+import java.util.Date
 
 class MigrationWrapperFrom68To69(migration: MigrationFrom68To69) : MigrationWrapper(migration) {
 
@@ -26,8 +32,6 @@ class MigrationWrapperFrom68To69(migration: MigrationFrom68To69) : MigrationWrap
         val cursor = db.query("SELECT * FROM ${DbStructureCourse.TABLE_NAME}")
         cursor.moveToFirst()
         val retrievedCourse = parsePersistentObject(cursor)
-        println("Before: $beforeCourse")
-        println("After: $retrievedCourse")
         assert(beforeCourse == retrievedCourse) { "Objects not equal" }
     }
 

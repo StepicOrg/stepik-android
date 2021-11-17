@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName
 
 import org.stepik.android.model.code.CodeOptions
 
-//more fields look at stepik.org/api/steps/14671
+// more fields look at stepik.org/api/steps/14671
 data class Block(
     @SerializedName("name")
     val name: String? = null,
     @SerializedName("text")
     val text: String? = null,
     @SerializedName("video")
-    var video: Video? = null, //always external video
+    var video: Video? = null, // always external video
 
     @SerializedName("options")
     val options: CodeOptions? = null,
@@ -49,7 +49,7 @@ data class Block(
         dest.writeParcelable(this.options, flags)
     }
 
-    companion object CREATOR: Parcelable.Creator<Block> {
+    companion object CREATOR : Parcelable.Creator<Block> {
         override fun createFromParcel(parcel: Parcel): Block =
             Block(
                 parcel.readString(),
@@ -62,5 +62,3 @@ data class Block(
             arrayOfNulls(size)
     }
 }
-
-

@@ -62,7 +62,7 @@ class SplitTestsDialogFragment : DialogFragment(R.layout.dialog_split_tests), Re
         super.onViewCreated(view, savedInstanceState)
         splitTestsBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_ab_group_subtitle)
         splitTestsViewModel.onNewMessage(SplitTestsFeature.Message.InitMessage)
-        splitTestGroupsAdapter += SplitTestDataAdapterDelegate{ splitTestName, splitTestGroupName, groups ->
+        splitTestGroupsAdapter += SplitTestDataAdapterDelegate { splitTestName, splitTestGroupName, groups ->
             val chosenPosition = groups.indexOf(splitTestGroupName)
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle(R.string.debug_choose_ab_test)
@@ -82,9 +82,11 @@ class SplitTestsDialogFragment : DialogFragment(R.layout.dialog_split_tests), Re
         with(splitTestsBinding.splitTestsRecycler) {
             adapter = splitTestGroupsAdapter
             layoutManager = LinearLayoutManager(requireContext())
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
-            })
+            addItemDecoration(
+                DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+                    AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
+                }
+            )
         }
     }
 

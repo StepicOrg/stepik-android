@@ -19,7 +19,8 @@ class SkuSerializableWrapperTest {
             Sku.Price(0, "USD"),
             "title", "description", "introductoryPrice",
             Sku.Price(0, "USD"),
-            "subscriptionPeriod", "freeTrialPeriod", "introductoryPricePeriod", 0)
+            "subscriptionPeriod", "freeTrialPeriod", "introductoryPricePeriod", 0
+        )
 
         outputStream.writeObject(
             SkuSerializableWrapper(

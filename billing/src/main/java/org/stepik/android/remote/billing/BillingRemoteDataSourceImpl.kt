@@ -51,7 +51,8 @@ constructor(
             billing
                 .newRequestsBuilder()
                 .create()
-                .getAllPurchases(productType, object : RequestListener<Purchases> {
+                .getAllPurchases(
+                    productType, object : RequestListener<Purchases> {
                     override fun onSuccess(purchases: Purchases) {
                         if (!emitter.isDisposed) {
                             emitter.onSuccess(purchases.list)
@@ -63,7 +64,8 @@ constructor(
                             emitter.onError(e)
                         }
                     }
-                })
+                }
+                )
         }
 
     override fun consumePurchase(purchase: Purchase): Completable =
