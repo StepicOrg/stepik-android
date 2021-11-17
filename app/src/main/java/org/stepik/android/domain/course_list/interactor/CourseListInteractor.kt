@@ -70,15 +70,11 @@ constructor(
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
         if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
-            mobileTiersInteractor
-                .fetchTiersAndSkus(courses, sourceTypeComposition.generalSourceType)
-                .flatMap { (mobileTiers, lightSkus) ->
-                    mapCourseStats(
-                        courseStatsInteractor.getCourseStatsMobileTiers(courses, mobileTiers, lightSkus, sourceTypeComposition),
-                        courses,
-                        courseViewSource
-                    )
-                }
+            mapCourseStats(
+                courseStatsInteractor.getCourseStatsMobileTiers(courses, sourceTypeComposition, resolveEnrollmentState = false),
+                courses,
+                courseViewSource
+            )
         } else {
             mapCourseStats(
                 courseStatsInteractor.getCourseStats(courses, resolveEnrollmentState = false, sourceTypeComposition = sourceTypeComposition),

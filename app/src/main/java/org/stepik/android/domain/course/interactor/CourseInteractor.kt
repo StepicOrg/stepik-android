@@ -68,12 +68,12 @@ constructor(
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> =
         zip(
             if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
-                courseStatsInteractor.getCourseStatsMobileTiersSingle(course)
+                courseStatsInteractor.getCourseStatsMobileTiers(listOf(course)).first()
             } else  {
                 courseStatsInteractor.getCourseStats(listOf(course)).first()
             },
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidityMobileTiers(course.id, promo),
+            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
             (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
         ) { courseStats, localSubmissions, (promoCode, promoCodeSku), wishlistEntity ->
             CourseHeaderData(
