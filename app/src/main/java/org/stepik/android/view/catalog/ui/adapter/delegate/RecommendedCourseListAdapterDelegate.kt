@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.*
-import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -41,7 +40,6 @@ constructor(
     private val courseCountMapper: CourseCountMapper,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
-    @Assisted private val isHandleInAppPurchase: Boolean,
     @Assisted private val onBlockSeen: (String) -> Unit,
     @Assisted private val onCourseContinueClicked: (Course, CourseViewSource, CourseContinueInteractionSource) -> Unit,
     @Assisted private val onCourseClicked: (CourseListItem.Data) -> Unit,
@@ -84,7 +82,6 @@ constructor(
                 onContinueCourseClicked = {
                     onCourseContinueClicked(it.course, CourseViewSource.Recommendation, CourseContinueInteractionSource.COURSE_WIDGET)
                 },
-                isHandleInAppPurchase = isHandleInAppPurchase,
                 defaultPromoCodeMapper = defaultPromoCodeMapper,
                 displayPriceMapper = displayPriceMapper
             )

@@ -1,18 +1,23 @@
 package org.stepik.android.domain.course.interactor
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import okhttp3.ResponseBody
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
+import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.wishlist.model.WishlistEntity
@@ -21,6 +26,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
 import retrofit2.HttpException
 import retrofit2.Response
+import ru.nobird.android.domain.rx.first
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -34,7 +40,8 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val wishlistRepository: WishlistRepository,
-    private val sharedPreferenceHelper: SharedPreferenceHelper
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -60,20 +67,25 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> =
         zip(
-            courseStatsInteractor.getCourseStats(listOf(course)),
+            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+                courseStatsInteractor.getCourseStatsMobileTiers(listOf(course)).first()
+            } else  {
+                courseStatsInteractor.getCourseStats(listOf(course)).first()
+            },
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
+            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
             (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
-        ) { courseStats, localSubmissions, promoCode, wishlistEntity ->
+        ) { courseStats, localSubmissions, (promoCode, promoCodeSku), wishlistEntity ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 
-                stats = courseStats.first(),
+                stats = courseStats,
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
                 deeplinkPromoCode = promoCode,
+                deeplinkPromoCodeSku = promoCodeSku,
                 defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course),
                 isWishlistUpdating = false,
                 wishlistEntity = wishlistEntity

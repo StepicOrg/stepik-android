@@ -40,7 +40,6 @@ class CourseListAdapterDelegate
 constructor(
     private val analytic: Analytic,
     private val courseCountMapper: CourseCountMapper,
-    @Assisted private val isHandleInAppPurchase: Boolean,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
     @Assisted private val onTitleClick: (Long) -> Unit,
@@ -92,7 +91,6 @@ constructor(
                     val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CourseListItemAdapterDelegate
                     onCourseContinueClicked(it.course, CourseViewSource.Collection(block.courseList.id), CourseContinueInteractionSource.COURSE_WIDGET)
                 },
-                isHandleInAppPurchase = isHandleInAppPurchase,
                 defaultPromoCodeMapper = defaultPromoCodeMapper,
                 displayPriceMapper = displayPriceMapper
             )

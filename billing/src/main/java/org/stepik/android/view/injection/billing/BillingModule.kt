@@ -5,8 +5,10 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.solovyev.android.checkout.Billing
 import org.solovyev.android.checkout.Checkout
+import ru.nobird.android.view.injection.base.RxScheduler
 
 @Module
 class BillingModule {
@@ -32,6 +34,12 @@ class BillingModule {
             .also(Checkout::start)
 
     @Provides
+    @RxScheduler.Main
     internal fun provideAndroidScheduler(): Scheduler =
         AndroidSchedulers.mainThread()
+
+    @Provides
+    @RxScheduler.Background
+    internal fun provideBackgroundScheduler(): Scheduler =
+        Schedulers.io()
 }

@@ -28,7 +28,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -148,9 +147,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
 
     @Inject
-    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
-
-    @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
     @Inject
@@ -227,8 +223,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                         CoursePurchaseBottomSheetDialogFragment
                             .newInstance(it)
                             .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
-                    },
-                    currentPurchaseFlow = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString()
+                    }
                 )
 
         uiCheckout = Checkout.forActivity(this, billing)

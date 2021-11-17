@@ -13,4 +13,7 @@ object RemoteConfig {
     const val PERSONALIZED_ONBOARDING_COURSE_LISTS = "personalized_onboarding_course_lists"
     const val IS_COURSE_REVENUE_AVAILABLE_ANDROID = "is_course_revenue_available_android"
     const val PURCHASE_FLOW_ANDROID = "purchase_flow_android"
+
+    // TODO APPS-3443: Remove after finishing feature
+    const val PURCHASE_FLOW_ANDROID_TESTING_FLAG = false
 }

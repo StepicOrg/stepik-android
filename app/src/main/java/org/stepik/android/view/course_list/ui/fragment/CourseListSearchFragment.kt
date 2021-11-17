@@ -21,7 +21,6 @@ import kotlinx.android.synthetic.main.view_search_toolbar.filterIcon
 import kotlinx.android.synthetic.main.view_search_toolbar.searchViewToolbar
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
@@ -90,9 +89,6 @@ class CourseListSearchFragment :
 
     @Inject
     internal lateinit var sharedPreferencesHelper: SharedPreferenceHelper
-
-    @Inject
-    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
     internal lateinit var searchResultRemoteQueryParamsMapper: SearchResultRemoteQueryParamsMapper
@@ -178,7 +174,6 @@ class CourseListSearchFragment :
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             defaultPromoCodeMapper = defaultPromoCodeMapper,
             displayPriceMapper = displayPriceMapper
         )

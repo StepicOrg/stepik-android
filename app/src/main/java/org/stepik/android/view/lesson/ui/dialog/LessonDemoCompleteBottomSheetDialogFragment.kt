@@ -76,7 +76,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
         demoCompleteAction.text =
             if (courseDisplayPrice != null) {
                 if (hasPromo) {
-                    displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(courseDisplayPrice, currencyCode, promoPrice)
+                    displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(courseDisplayPrice, promoPrice, currencyCode)
                 } else {
                     getString(R.string.course_payments_purchase_in_web_with_price, courseDisplayPrice)
                 }

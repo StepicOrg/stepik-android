@@ -34,11 +34,6 @@ abstract class AnalyticModule {
     @AppSingleton
     @Binds
     @IntoSet
-    internal abstract fun bindInAppPurchaseSplitTest(inAppPurchaseSplitTest: InAppPurchaseSplitTest): SplitTest<*>
-
-    @AppSingleton
-    @Binds
-    @IntoSet
     internal abstract fun bindDiscountButtonAppearanceSplitTest(discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest): SplitTest<*>
 
     @AppSingleton

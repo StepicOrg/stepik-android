@@ -1,11 +1,10 @@
 package org.stepik.android.presentation.course_purchase
 
-import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
+import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
-import org.stepik.android.view.course.model.CoursePromoCodeInfo
 
 interface CoursePurchaseFeature {
     sealed class State {
@@ -18,7 +17,7 @@ interface CoursePurchaseFeature {
     }
 
     sealed class Message {
-        data class InitMessage(val coursePurchaseData: CoursePurchaseData, val initialCoursePromoCodeInfo: CoursePromoCodeInfo) : Message()
+        data class InitMessage(val coursePurchaseData: CoursePurchaseData) : Message()
 
         /**
          * Wishlist messages
@@ -32,7 +31,7 @@ interface CoursePurchaseFeature {
          */
         object PromoCodeEditingMessage : Message()
         data class PromoCodeCheckMessage(val text: String) : Message()
-        data class PromoCodeValidMessage(val deeplinkPromoCode: DeeplinkPromoCode) : Message()
+        data class PromoCodeValidMessage(val promoCodeSku: PromoCodeSku) : Message()
         object PromoCodeInvalidMessage : Message()
     }
 
@@ -51,7 +50,7 @@ interface CoursePurchaseFeature {
         object Idle : PromoCodeState()
         object Editing : PromoCodeState()
         data class Checking(val text: String) : PromoCodeState()
-        data class Valid(val text: String, val coursePromoCodeInfo: CoursePromoCodeInfo) : PromoCodeState()
+        data class Valid(val text: String, val promoCodeSku: PromoCodeSku) : PromoCodeState()
         object Invalid : PromoCodeState()
     }
 
