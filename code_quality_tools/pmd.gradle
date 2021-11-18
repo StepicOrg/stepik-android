@@ -3,9 +3,6 @@ plugins.apply('pmd')
 pmd {
     toolVersion = '6.18.0'
     reportsDir file("${project.rootDir}/reports/pmd")
-
-//    change up to 5 in the future
-    rulePriority 1
 }
 
 task pmd(type: Pmd) {
