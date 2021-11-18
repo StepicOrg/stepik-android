@@ -126,7 +126,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
             REQUEST_FROM_SMART_LOCK_CODE -> {
                 if (resultCode == RESULT_OK && data != null) {
                     analytic.reportEvent(Analytic.SmartLock.PROMPT_CREDENTIAL_RETRIEVED)
-                    val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
+                    val credential = requireNotNull(data.getParcelableExtra<Credential>(Credential.EXTRA_KEY))
                     onCredentialsRetrieved(credential.toCredentials())
                 }
             }

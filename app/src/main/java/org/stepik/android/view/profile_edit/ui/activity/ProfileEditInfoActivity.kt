@@ -41,7 +41,7 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val profile by lazy { intent.getParcelableExtra<Profile>(EXTRA_PROFILE) }
+    private val profile by lazy { requireNotNull(intent.getParcelableExtra<Profile>(EXTRA_PROFILE)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

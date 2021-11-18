@@ -70,7 +70,7 @@ class PhotoViewActivity : FragmentActivityBase() {
             }
         }
 
-        val url = intent.getStringExtra(EXTRA_PATH)
+        val url = requireNotNull(intent.getStringExtra(EXTRA_PATH))
 
         retryButton.setOnClickListener {
             internetProblemRootView.isVisible = false
