@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
@@ -105,9 +104,6 @@ class CatalogFragment :
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
-
-    @Inject
     internal lateinit var courseCountMapper: CourseCountMapper
 
     @Inject
@@ -186,7 +182,6 @@ class CatalogFragment :
         }
         catalogItemAdapter += LoadingAdapterDelegate()
         catalogItemAdapter += courseListAdapterDelegateFactory.create(
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onTitleClick = { collectionId -> screenManager.showCoursesCollection(requireContext(), collectionId) },
             onBlockSeen = { id, fullCourseList ->
                 val courseListMessage = CourseListFeature.Message.InitMessage(id = id, courseList = fullCourseList.courseList)
@@ -215,7 +210,6 @@ class CatalogFragment :
         )
 
         catalogItemAdapter += recommendedCourseListAdapterDelegateFactory.create(
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
             onBlockSeen = { id ->
                 val courseListMessage = CourseListFeature.Message.InitMessageRecommended(id = id)
                 catalogViewModel.onNewMessage(CatalogFeature.Message.CourseListMessage(id = id, message = courseListMessage))

@@ -30,7 +30,6 @@ class CourseListItemAdapterDelegate(
     private val analytic: Analytic,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
-    private val isHandleInAppPurchase: Boolean,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val displayPriceMapper: DisplayPriceMapper,
     private val isNeedExtraMargin: Boolean = false
@@ -90,10 +89,14 @@ class CourseListItemAdapterDelegate(
                 courseDescription.text = HtmlCompat.fromHtml(data.course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
                 courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
-
             coursePrice.isVisible = !isEnrolled
+
             val (@ColorRes textColor, displayPrice) = if (data.course.isPaid) {
-                handleCoursePrice(data, defaultPromoCode)
+                if (data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
+                    handleCoursePriceMobileTiers(data.courseStats.enrollmentState)
+                } else {
+                    handleCoursePrice(data, defaultPromoCode)
+                }
             } else {
                 R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
             }
@@ -103,7 +106,11 @@ class CourseListItemAdapterDelegate(
             courseOldPrice.isVisible = mustShowDefaultPromoCode && !isEnrolled
             courseOldPrice.text = buildSpannedString {
                 strikeThrough {
-                    append(data.course.displayPrice ?: "")
+                    if (data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
+                        append(data.courseStats.enrollmentState.standardLightSku.price)
+                    } else {
+                        append(data.course.displayPrice ?: "")
+                    }
                 }
             }
 
@@ -117,12 +124,16 @@ class CourseListItemAdapterDelegate(
     }
 
     private fun handleCoursePrice(data: CourseListItem.Data, defaultPromoCode: DefaultPromoCode): Pair<Int, String?> =
-        when {
-            isHandleInAppPurchase && data.course.priceTier != null ->
-                R.color.color_overlay_violet to ((data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice)
-            defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc()) ->
-                R.color.color_overlay_red to displayPriceMapper.mapToDisplayPrice(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
-            else ->
-                R.color.color_overlay_violet to data.course.displayPrice
+        if (defaultPromoCode != DefaultPromoCode.EMPTY && (defaultPromoCode.defaultPromoCodeExpireDate == null || defaultPromoCode.defaultPromoCodeExpireDate.time > DateTimeHelper.nowUtc())) {
+            R.color.color_overlay_red to displayPriceMapper.mapToDisplayPriceWithCurrency(data.course.currencyCode ?: "", defaultPromoCode.defaultPromoCodePrice)
+        } else {
+            R.color.color_overlay_violet to data.course.displayPrice
+        }
+
+    private fun handleCoursePriceMobileTiers(enrollmentState: EnrollmentState.NotEnrolledMobileTier?): Pair<Int, String?> =
+        if (enrollmentState?.promoLightSku != null) {
+            R.color.color_overlay_red to enrollmentState.promoLightSku.price
+        } else {
+            R.color.color_overlay_violet to enrollmentState?.standardLightSku?.price
         }
 }

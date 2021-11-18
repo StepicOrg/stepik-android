@@ -17,7 +17,7 @@ constructor(
         private const val RUB_FORMAT = "RUB"
         private const val USD_FORMAT = "USD"
     }
-    fun mapToDisplayPrice(currencyCode: String, price: String): String =
+    fun mapToDisplayPriceWithCurrency(currencyCode: String, price: String): String =
         when (currencyCode) {
             RUB_FORMAT ->
                 context.getString(R.string.rub_format, price.substringBefore('.'))
@@ -27,8 +27,12 @@ constructor(
                 "$price $currencyCode"
         }
 
-    fun mapToDiscountedDisplayPriceSpannedString(originalDisplayPrice: String, currencyCode: String, promoPrice: String): SpannedString {
-        val promoDisplayPrice = mapToDisplayPrice(currencyCode, promoPrice)
+    fun mapToDiscountedDisplayPriceSpannedString(originalDisplayPrice: String, promoPrice: String, currencyCode: String = ""): SpannedString {
+        val promoDisplayPrice = if (currencyCode.isNotEmpty()) {
+            mapToDisplayPriceWithCurrency(currencyCode, promoPrice)
+        } else {
+            promoPrice
+        }
         return buildSpannedString {
             append(context.getString(R.string.course_payments_purchase_in_web_with_price_promo))
             append(promoDisplayPrice)

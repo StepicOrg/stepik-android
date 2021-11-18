@@ -1,28 +1,25 @@
 package org.stepik.android.presentation.course_purchase.reducer
 
-import org.stepik.android.domain.course_payments.model.DefaultPromoCode
+import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.State
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Message
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Action
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.wishlist.model.WishlistAction
-import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CoursePurchaseReducer
 @Inject
-constructor(
-    private val coursePromoCodeResolver: CoursePromoCodeResolver
-) : StateReducer<State, Message, Action> {
+constructor() : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
                 if (state is State.Idle) {
-                    val promoCodeState = if (message.initialCoursePromoCodeInfo.hasPromo) {
-                        CoursePurchaseFeature.PromoCodeState.Valid(message.initialCoursePromoCodeInfo.name, message.initialCoursePromoCodeInfo)
+                    val promoCodeState = if (message.coursePurchaseData.promoCodeSku != PromoCodeSku.EMPTY) {
+                        CoursePurchaseFeature.PromoCodeState.Valid(message.coursePurchaseData.promoCodeSku.name, message.coursePurchaseData.promoCodeSku)
                     } else {
                         CoursePurchaseFeature.PromoCodeState.Idle
                     }
@@ -76,8 +73,7 @@ constructor(
             }
             is Message.PromoCodeValidMessage -> {
                 if (state is State.Content && state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Checking) {
-                    val coursePromoCodeInfo = coursePromoCodeResolver.resolvePromoCodeInfo(message.deeplinkPromoCode, DefaultPromoCode.EMPTY, state.coursePurchaseData.course)
-                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Valid(state.promoCodeState.text, coursePromoCodeInfo)) to emptySet()
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Valid(state.promoCodeState.text, message.promoCodeSku)) to emptySet()
                 } else {
                     null
                 }

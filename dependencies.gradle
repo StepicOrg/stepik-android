@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2228,
-        name                 : '1.196',
+        code                 : 2229,
+        name                 : '1.199',
 
         minSdk               : 21,
         targetSdk            : 30,
@@ -42,6 +42,7 @@ ext.versions = [
         presentationRedux    : '1.1.0',
         viewUI               : '1.0.11',
         viewRedux            : '1.0.9',
+        viewInjection        : '1.0.1',
         model                : '1.0.6',
         domainRx             : '1.0.1',
         viewBindingDelegate  : '1.4.7',
@@ -163,6 +164,7 @@ ext.libraries = [
                 viewRedux            : "ru.nobird.android.view:redux:$versions.viewRedux",
         ],
         domainRx             : "ru.nobird.android.domain:rx:$versions.domainRx",
+        viewInjection        : "ru.nobird.android.view:injection:$versions.viewInjection",
         model                : "ru.nobird.android.core:model:$versions.model",
         viewBindingDelegate  : "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$versions.viewBindingDelegate",
 

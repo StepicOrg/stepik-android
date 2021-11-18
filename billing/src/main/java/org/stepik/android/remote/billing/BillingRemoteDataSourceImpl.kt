@@ -15,6 +15,7 @@ import org.stepik.android.domain.billing.extension.onReady
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
 import org.stepik.android.domain.billing.exception.BillingNotSupportedException
 import org.stepik.android.view.injection.billing.SystemCheckout
+import ru.nobird.android.view.injection.base.RxScheduler
 import javax.inject.Inject
 
 class BillingRemoteDataSourceImpl
@@ -25,7 +26,11 @@ constructor(
     @SystemCheckout
     private val checkout: Checkout,
 
-    private val mainScheduler: Scheduler
+    @RxScheduler.Main
+    private val mainScheduler: Scheduler,
+
+    @RxScheduler.Background
+    private val backgroundScheduler: Scheduler
 ) : BillingRemoteDataSource {
     override fun getInventory(productType: String, skuIds: List<String>): Single<List<Sku>> =
         Single
@@ -45,6 +50,7 @@ constructor(
                 }
             }
             .subscribeOn(mainScheduler)
+            .observeOn(backgroundScheduler)
 
     override fun getAllPurchases(productType: String): Single<List<Purchase>> =
         Single.create { emitter ->
@@ -73,4 +79,5 @@ constructor(
                 requests.consumeRx(purchase.token)
             }
             .subscribeOn(mainScheduler)
+            .observeOn(backgroundScheduler)
 }

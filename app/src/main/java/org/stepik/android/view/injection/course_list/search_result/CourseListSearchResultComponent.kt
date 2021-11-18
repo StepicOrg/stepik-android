@@ -5,6 +5,7 @@ import org.stepik.android.view.course_list.ui.fragment.CourseListSearchFragment
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
+import org.stepik.android.view.injection.mobile_tiers.MobileTiersDataModule
 import org.stepik.android.view.injection.search.CatalogSearchSuggestionsPresentationModule
 import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.wishlist.WishlistDataModule
@@ -17,7 +18,8 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
     CourseDataModule::class,
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
-    WishlistDataModule::class
+    WishlistDataModule::class,
+    MobileTiersDataModule::class
 ])
 interface CourseListSearchResultComponent {
     @Subcomponent.Builder
