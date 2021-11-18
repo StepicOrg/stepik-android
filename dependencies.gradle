@@ -5,9 +5,9 @@ ext.versions = [
         minSdk               : 21,
         targetSdk            : 30,
         compileSdk           : 30,
-        buildTools           : '29.0.2',
+        buildTools           : '30.0.2',
 
-        androidGradlePlugin  : '4.1.0',
+        androidGradlePlugin  : '7.0.1',
         kotlin               : '1.5.31',
         googleServicesVersion: '4.3.10',
         dexcount             : '1.0.3',
