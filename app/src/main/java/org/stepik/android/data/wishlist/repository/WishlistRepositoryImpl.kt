@@ -53,4 +53,7 @@ constructor(
         } else {
             wishlistCacheDataSource.removeWishlistEntry(courseId)
         }
+
+    override fun removeWishlistEntries(): Completable =
+        wishlistCacheDataSource.removeWishlistEntries()
 }

@@ -13,11 +13,10 @@ import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.remote.wishlist.WishlistRemoteDataSourceImpl
 import org.stepik.android.remote.wishlist.WishlistService
 import org.stepik.android.view.injection.base.Authorized
-import org.stepik.android.view.injection.remote_storage.RemoteStorageDataModule
 import retrofit2.Retrofit
 import retrofit2.create
 
-@Module(includes = [RemoteStorageDataModule::class])
+@Module
 abstract class WishlistDataModule {
     @Binds
     internal abstract fun bindWishlistRepository(

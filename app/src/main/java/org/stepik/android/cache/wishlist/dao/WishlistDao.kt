@@ -24,4 +24,7 @@ interface WishlistDao {
 
     @Query("DELETE FROM `WishlistEntry` WHERE course == :courseId")
     fun deleteWishlistEntry(courseId: Long): Completable
+
+    @Query("DELETE FROM `WishlistEntry`")
+    fun clearTable(): Completable
 }

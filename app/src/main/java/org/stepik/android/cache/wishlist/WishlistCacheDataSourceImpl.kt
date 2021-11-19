@@ -24,6 +24,9 @@ constructor(
     override fun saveWishlistEntries(wishlistEntries: List<WishlistEntry>): Completable =
         wishlistDao.insertWishlistEntries(wishlistEntries)
 
-    override fun removeWishlistEntry(wishlistEntryId: Long): Completable =
-        wishlistDao.deleteWishlistEntry(wishlistEntryId)
+    override fun removeWishlistEntry(courseId: Long): Completable =
+        wishlistDao.deleteWishlistEntry(courseId)
+
+    override fun removeWishlistEntries(): Completable =
+        wishlistDao.clearTable()
 }

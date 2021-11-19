@@ -13,6 +13,7 @@ import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.domain.visited_courses.repository.VisitedCoursesRepository
+import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.user.RegistrationCredentials
 import javax.inject.Inject
 
@@ -24,7 +25,8 @@ constructor(
 
     private val userProfileRepository: UserProfileRepository,
     private val courseRepository: CourseRepository,
-    private val visitedCoursesRepository: VisitedCoursesRepository
+    private val visitedCoursesRepository: VisitedCoursesRepository,
+    private val wishlistRepository: WishlistRepository
 ) {
     companion object {
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
@@ -46,6 +48,7 @@ constructor(
             .doCompletableOnSuccess {
                 courseRepository.removeCachedCourses()
                 visitedCoursesRepository.removedVisitedCourses()
+                wishlistRepository.removeWishlistEntries()
             }
 
     fun authWithNativeCode(code: String, type: SocialAuthType, email: String? = null): Completable =
@@ -56,6 +59,7 @@ constructor(
             }
             .andThen(courseRepository.removeCachedCourses())
             .andThen(visitedCoursesRepository.removedVisitedCourses())
+            .andThen(wishlistRepository.removeWishlistEntries())
 
     fun authWithCode(code: String, type: SocialAuthType): Completable =
         authRepository
@@ -65,6 +69,7 @@ constructor(
             }
             .andThen(courseRepository.removeCachedCourses())
             .andThen(visitedCoursesRepository.removedVisitedCourses())
+            .andThen(wishlistRepository.removeWishlistEntries())
 
     private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
         userProfileRepository

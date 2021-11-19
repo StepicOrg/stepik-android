@@ -10,4 +10,5 @@ interface WishlistCacheDataSource {
     fun saveWishlistEntry(wishlistEntry: WishlistEntry): Completable
     fun saveWishlistEntries(wishlistEntries: List<WishlistEntry>): Completable
     fun removeWishlistEntry(courseId: Long): Completable
+    fun removeWishlistEntries(): Completable
 }

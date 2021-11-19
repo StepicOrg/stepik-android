@@ -9,4 +9,5 @@ interface WishlistRepository {
     fun getWishlistEntries(sourceType: DataSourceType): Single<List<WishlistEntry>>
     fun addCourseToWishlist(courseId: Long): Completable
     fun removeCourseFromWishlist(courseId: Long, isManualRemoval: Boolean): Completable
+    fun removeWishlistEntries(): Completable
 }
