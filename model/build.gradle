@@ -34,6 +34,7 @@ dependencies {
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric
+    testImplementation libraries.hamcrest
     androidTestImplementation libraries.testRunner
     androidTestImplementation libraries.espressoCore
 }
