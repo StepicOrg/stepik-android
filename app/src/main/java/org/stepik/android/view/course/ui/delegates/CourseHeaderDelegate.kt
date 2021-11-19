@@ -360,7 +360,6 @@ constructor(
                         courseHeaderData.stats,
                         notEnrolledMobileTierState.standardLightSku,
                         promoCodeSku,
-                        courseHeaderData.wishlistEntity,
                         courseHeaderData.stats.isWishlisted
                 )
                 coursePurchaseFlowAction(coursePurchaseData)

@@ -1,53 +1,41 @@
 package org.stepik.android.remote.wishlist
 
+import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.stepic.droid.di.qualifiers.WishlistScheduler
-import org.stepik.android.data.wishlist.KIND_WISHLIST
 import org.stepik.android.data.wishlist.source.WishlistRemoteDataSource
-import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.profile.repository.ProfileRepository
-import org.stepik.android.domain.wishlist.model.WishlistEntity
-import org.stepik.android.remote.wishlist.model.WishlistWrapper
-import org.stepik.android.remote.remote_storage.service.RemoteStorageService
-import org.stepik.android.remote.wishlist.mapper.WishlistMapper
-import ru.nobird.android.domain.rx.toMaybe
+import org.stepik.android.domain.wishlist.model.WishlistEntry
+import org.stepik.android.remote.wishlist.model.WishlistRequest
+import org.stepik.android.remote.wishlist.model.WishlistResponse
 import javax.inject.Inject
 
 class WishlistRemoteDataSourceImpl
 @Inject
 constructor(
-    private val profileRepository: ProfileRepository,
-    private val remoteStorageService: RemoteStorageService,
-    private val wishlistMapper: WishlistMapper,
+    private val wishlistService: WishlistService,
     @WishlistScheduler
     private val scheduler: Scheduler
 ) : WishlistRemoteDataSource {
 
-    override fun getWishlistRecord(): Single<WishlistEntity> =
-        profileRepository
-            .getProfile(primarySourceType = DataSourceType.REMOTE)
-            .flatMap { profile ->
-                remoteStorageService
-                    .getStorageRecords(1, profile.id, kind = KIND_WISHLIST)
-                    .flatMapMaybe { response ->
-                        wishlistMapper
-                            .mapToEntity(response)
-                            .toMaybe()
-                    }
-                    .switchIfEmpty(createWishlistRecord(WishlistWrapper.EMPTY))
-                    .subscribeOn(scheduler)
-            }
+    override fun getWishlistEntries(): Single<List<WishlistEntry>> =
+        getWishlistEntriesByPage()
+            .map { it.sortedByDescending(WishlistEntry::createDate) }
+            .subscribeOn(scheduler)
 
-    override fun createWishlistRecord(wishlistWrapper: WishlistWrapper): Single<WishlistEntity> =
-        remoteStorageService
-            .createStorageRecord(
-                wishlistMapper.mapToStorageRequest(wishlistWrapper)
-            )
-            .map(wishlistMapper::mapToEntity)
+    override fun saveWishlistEntry(courseId: Long): Single<WishlistEntry> =
+        wishlistService
+            .addToWishlist(WishlistRequest(courseId))
+            .map { wishlistResponse -> wishlistResponse.wishlistEntries.first() }
 
-    override fun updateWishlistRecord(wishlistEntity: WishlistEntity): Single<WishlistEntity> =
-        remoteStorageService
-            .setStorageRecord(wishlistEntity.recordId, wishlistMapper.mapToStorageRequest(wishlistEntity))
-            .map(wishlistMapper::mapToEntity)
+    override fun removeWishlistEntry(wishlistEntryId: Long): Completable =
+        wishlistService.removeFromWishlist(wishlistEntryId)
+
+    private fun getWishlistEntriesByPage(): Single<List<WishlistEntry>> =
+        Observable.range(1, Integer.MAX_VALUE)
+            .concatMapSingle { wishlistService.getWishlist(it) }
+            .takeUntil { !it.meta.hasNext }
+            .map(WishlistResponse::wishlistEntries)
+            .reduce(emptyList()) { a, b -> a + b }
 }

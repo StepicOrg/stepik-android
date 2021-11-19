@@ -27,6 +27,7 @@ import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.wishlist.model.WishlistEntry
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
@@ -249,14 +250,14 @@ constructor(
         progressRepository
             .getProgresses(progressIds = courses.getProgresses(), primarySourceType = sourceType)
 
-    private fun resolveWishlistStates(sourceType: DataSourceType): Single<Set<Long>> =
+    private fun resolveWishlistStates(sourceType: DataSourceType): Single<List<Long>> =
         if (sharedPreferenceHelper.authResponseFromStore != null) {
             wishlistRepository
-                .getWishlistRecord(sourceType)
-                .map { it.courses.toSet() }
-                .onErrorReturnItem(emptySet())
+                .getWishlistEntries(sourceType)
+                .map { wishlistEntries -> wishlistEntries.map(WishlistEntry::course) }
+                .onErrorReturnItem(emptyList())
         } else {
-            Single.just(emptySet())
+            Single.just(emptyList())
         }
     // </editor-fold>
 }

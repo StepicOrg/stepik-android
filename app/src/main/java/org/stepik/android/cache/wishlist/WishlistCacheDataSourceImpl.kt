@@ -1,24 +1,29 @@
 package org.stepik.android.cache.wishlist
 
 import io.reactivex.Completable
-import io.reactivex.Maybe
-import org.stepic.droid.preferences.SharedPreferenceHelper
+import io.reactivex.Single
+import org.stepik.android.cache.wishlist.dao.WishlistDao
 import org.stepik.android.data.wishlist.source.WishlistCacheDataSource
-import org.stepik.android.domain.wishlist.model.WishlistEntity
+import org.stepik.android.domain.wishlist.model.WishlistEntry
 import javax.inject.Inject
 
 class WishlistCacheDataSourceImpl
 @Inject
 constructor(
-    private val sharedPreferenceHelper: SharedPreferenceHelper
+    private val wishlistDao: WishlistDao
 ) : WishlistCacheDataSource {
-    override fun getWishlistRecord(): Maybe<WishlistEntity> =
-        Maybe.fromCallable { sharedPreferenceHelper.wishlist }
+    override fun getWishlistEntry(courseId: Long): Single<WishlistEntry> =
+        wishlistDao.getWishlistEntry(courseId)
 
-    override fun saveWishlistRecord(wishlistEntity: WishlistEntity): Completable =
-        Completable
-            .fromAction {
-                sharedPreferenceHelper
-                    .storeWishlist(wishlistEntity)
-            }
+    override fun getWishlistEntries(): Single<List<WishlistEntry>> =
+        wishlistDao.getWishlistEntries()
+
+    override fun saveWishlistEntry(wishlistEntry: WishlistEntry): Completable =
+        wishlistDao.insertWishlistEntry(wishlistEntry)
+
+    override fun saveWishlistEntries(wishlistEntries: List<WishlistEntry>): Completable =
+        wishlistDao.insertWishlistEntries(wishlistEntries)
+
+    override fun removeWishlistEntry(wishlistEntryId: Long): Completable =
+        wishlistDao.deleteWishlistEntry(wishlistEntryId)
 }
