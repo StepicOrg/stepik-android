@@ -99,7 +99,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         set(value) {
             field = value
             if (ViewCompat.isAttachedToWindow(this)) {
-                webView.webViewClient = webViewClient
+                webView.webViewClient = requireNotNull(webViewClient)
             }
         }
 
@@ -153,7 +153,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     override fun onDetachedFromWindow() {
         webView.onImageClickListener = null
-        webView.webViewClient = null
         super.onDetachedFromWindow()
     }
 

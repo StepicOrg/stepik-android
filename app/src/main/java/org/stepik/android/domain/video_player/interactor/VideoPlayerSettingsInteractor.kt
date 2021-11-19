@@ -11,6 +11,7 @@ import org.stepik.android.model.VideoUrl
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
+import kotlin.math.abs
 
 class VideoPlayerSettingsInteractor
 @Inject
@@ -41,9 +42,9 @@ constructor(
             .map { quality ->
                 val qualityInt = quality.toInt()
                 videoUrls
-                    .minBy { url ->
+                    .minByOrNull { url ->
                         val urlQualityInt = Integer.parseInt(url.quality!!)
-                        Math.abs(qualityInt - urlQualityInt)
+                        abs(qualityInt - urlQualityInt)
                     }
                     ?.url!!
             }

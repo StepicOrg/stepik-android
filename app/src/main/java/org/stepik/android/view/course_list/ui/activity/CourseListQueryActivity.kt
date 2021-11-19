@@ -22,12 +22,12 @@ class CourseListQueryActivity : SingleFragmentActivity() {
 
     override fun createFragment(): Fragment =
         CourseListQueryFragment.newInstance(
-            courseListTitle = intent.getStringExtra(EXTRA_COURSE_LIST_TITLE),
-            courseListQuery = intent.getParcelableExtra(EXTRA_COURSE_LIST_QUERY)
+            courseListTitle = requireNotNull(intent.getStringExtra(EXTRA_COURSE_LIST_TITLE)),
+            courseListQuery = requireNotNull(intent.getParcelableExtra(EXTRA_COURSE_LIST_QUERY))
         )
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

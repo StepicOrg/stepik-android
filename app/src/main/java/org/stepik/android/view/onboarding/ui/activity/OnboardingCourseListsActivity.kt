@@ -37,7 +37,7 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
         }
     }
 
-    private val onboardingGoal by lazy { intent.getParcelableExtra<OnboardingGoal>(EXTRA_ONBOARDING_GOAL) }
+    private val onboardingGoal by lazy { requireNotNull(intent.getParcelableExtra<OnboardingGoal>(EXTRA_ONBOARDING_GOAL)) }
 
     @Inject
     internal lateinit var analytic: Analytic

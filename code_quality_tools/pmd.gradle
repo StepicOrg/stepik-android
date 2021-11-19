@@ -1,11 +1,8 @@
 plugins.apply('pmd')
 
 pmd {
-    toolVersion = '6.18.0'
+    toolVersion = '6.40.0'
     reportsDir file("${project.rootDir}/reports/pmd")
-
-//    change up to 5 in the future
-    rulePriority 1
 }
 
 task pmd(type: Pmd) {
@@ -13,5 +10,6 @@ task pmd(type: Pmd) {
     ruleSetFiles = files("${project.rootDir}/code_quality_tools/pmd.xml")
     ruleSets = []
 
+    rulesMinimumPriority = 1
     source = fileTree('src/main/java')
 }

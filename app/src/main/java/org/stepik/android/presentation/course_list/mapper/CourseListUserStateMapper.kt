@@ -357,7 +357,7 @@ constructor(
                 state.userCourses.associateBy(UserCourse::course)
 
             state.courseListViewState.courseListDataItems
-                .maxBy { userCoursesMap[it.course.id]?.time ?: 0L }
+                .maxByOrNull { userCoursesMap[it.course.id]?.time ?: 0L }
                 ?.let(UserCoursesLoaded::FirstCourse)
                 ?: UserCoursesLoaded.Empty
         } else {
