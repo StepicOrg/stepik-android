@@ -17,8 +17,8 @@ class NotificationSettingsActivity : SettingsActivity() {
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             android.R.id.home -> {
                 // Respond to the action bar's Up/Home button
                 finish()

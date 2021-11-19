@@ -63,12 +63,18 @@ constructor(
     private val displayPriceMapper: DisplayPriceMapper,
     private val coursePromoCodeResolver: CoursePromoCodeResolver,
     @Assisted private val courseViewSource: CourseViewSource,
-    @Assisted private val isAuthorized: Boolean,
-    @Assisted private val mustShowCourseBenefits: Boolean,
-    @Assisted private val showCourseBenefitsAction: () -> Unit,
-    @Assisted onSubmissionCountClicked: () -> Unit,
-    @Assisted isLocalSubmissionsEnabled: Boolean,
-    @Assisted private val showSearchCourseAction: () -> Unit,
+    @Assisted("isAuthorized")
+    private val isAuthorized: Boolean,
+    @Assisted("mustShowCourseRevenue")
+    private val mustShowCourseRevenue: Boolean,
+    @Assisted("showCourseRevenueAction")
+    private val showCourseRevenueAction: () -> Unit,
+    @Assisted("onSubmissionCountClicked")
+    onSubmissionCountClicked: () -> Unit,
+    @Assisted("isLocalSubmissionsEnabled")
+    isLocalSubmissionsEnabled: Boolean,
+    @Assisted("showCourseSearchAction")
+    private val showSearchCourseAction: () -> Unit,
     @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
 ) {
     companion object {
@@ -415,7 +421,7 @@ constructor(
         val userCourseState = courseHeaderData?.enrolledState
 
         courseBenefitsMenuItem = menu.findItem(R.id.course_benefits)
-        courseBenefitsMenuItem?.isVisible = mustShowCourseBenefits
+        courseBenefitsMenuItem?.isVisible = mustShowCourseRevenue
 
         courseSearchMenuItem = menu.findItem(R.id.course_search)
         courseSearchMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.Enrolled
@@ -475,7 +481,7 @@ constructor(
     fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.course_benefits -> {
-                showCourseBenefitsAction()
+                showCourseRevenueAction()
                 true
             }
             R.id.course_search -> {

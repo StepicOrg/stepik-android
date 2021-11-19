@@ -36,7 +36,7 @@ constructor(
 
                 metadataRetriever
                     .extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                    .toLong()
+                    ?.toLong() ?: 0L
             }
             .onErrorComplete()
 

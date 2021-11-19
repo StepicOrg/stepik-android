@@ -93,8 +93,8 @@ class CommentsActivity :
 
     private val commentPlaceholders = List(5) { CommentItem.Placeholder }
 
-    private val step by lazy { intent.getParcelableExtra<Step>(EXTRA_STEP) }
-    private val discussionThread by lazy { intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD) }
+    private val step by lazy { requireNotNull(intent.getParcelableExtra<Step>(EXTRA_STEP)) }
+    private val discussionThread by lazy { requireNotNull(intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD)) }
     private val isTeacher by lazy { intent.getBooleanExtra(EXTRA_IS_TEACHER, false) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -311,7 +311,7 @@ class CommentsActivity :
 
     private fun showSolutionDialog(discussionId: Long, solution: CommentItem.Data.Solution) {
         SolutionCommentDialogFragment
-            .newInstance(intent.getParcelableExtra(EXTRA_STEP), solution.attempt, solution.submission, discussionThread, discussionId)
+            .newInstance(step, solution.attempt, solution.submission, discussionThread, discussionId)
             .showIfNotExists(supportFragmentManager, SolutionCommentDialogFragment.TAG)
     }
 
