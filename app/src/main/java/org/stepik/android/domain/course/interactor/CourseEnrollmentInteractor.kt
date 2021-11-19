@@ -12,9 +12,12 @@ import org.stepik.android.domain.course.repository.EnrollmentRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
+import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -31,6 +34,8 @@ constructor(
 
     private val deadlinesRepository: DeadlinesRepository,
     private val wishlistRepository: WishlistRepository,
+    @WishlistOperationBus
+    private val wishlistOperationPublisher: PublishSubject<WishlistOperationData>,
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>,
 
@@ -71,7 +76,7 @@ constructor(
             .addEnrollment(courseId)
             .andThen(userCoursesInteractor.addUserCourse(courseId))
             .andThen(lessonRepository.removeCachedLessons(courseId))
-            .andThen(wishlistRepository.removeCourseFromWishlist(courseId, isManualRemoval = false))
+            .andThen(removeCourseFromWishlist(courseId))
             .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
@@ -85,15 +90,12 @@ constructor(
             .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
-//    private fun removeCourseFromWishlist(courseId: Long): Completable =
-//        wishlistInteractor
-//            .getWishlist(dataSourceType = DataSourceType.CACHE)
-//            .flatMapCompletable { wishlistEntity ->
-//                val updatedWishlist = wishlistEntity.copy(
-//                    courses = wishlistEntity.courses.mutate { remove(courseId) }
-//                )
-//                wishlistInteractor
-//                    .updateWishlistWithOperation(updatedWishlist, WishlistOperationData(courseId, WishlistAction.REMOVE))
-//                    .ignoreElement()
-//            }
+    private fun removeCourseFromWishlist(courseId: Long): Completable =
+        wishlistRepository
+            .removeCourseFromWishlist(courseId, isManualRemoval = false)
+            .andThen(
+                Completable.fromAction {
+                    wishlistOperationPublisher.onNext(WishlistOperationData(courseId, WishlistAction.REMOVE))
+                }
+            )
 }
