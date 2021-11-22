@@ -25,7 +25,14 @@ class Certificate(
     @SerializedName("type")
     val type: Type? = null,
     @SerializedName("url")
-    val url: String? = null
+    val url: String? = null,
+
+    @SerializedName("saved_fullname")
+    val savedFullName: String? = null,
+    @SerializedName("edits_count")
+    val editsCount: Int,
+    @SerializedName("allowed_edits_count")
+    val allowedEditsCount: Int
 ) : Parcelable {
 
     /*
@@ -61,7 +68,10 @@ class Certificate(
                 source.readDate(),
                 source.readString(),
                 Type.values().getOrNull(source.readInt()),
-                source.readString()
+                source.readString(),
+                source.readString(),
+                source.readInt(),
+                source.readInt()
             )
 
         override fun newArray(size: Int): Array<Certificate?> =

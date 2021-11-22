@@ -1,6 +1,5 @@
 package org.stepic.droid.storage.structure
 
-import android.database.sqlite.SQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureCourse {

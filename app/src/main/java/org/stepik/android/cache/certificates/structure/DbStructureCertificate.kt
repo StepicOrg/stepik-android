@@ -14,6 +14,10 @@ object DbStructureCertificate {
         const val GRADE = "grade"
         const val TYPE = "type"
         const val URL = "url"
+
+        const val SAVED_FULLNAME = "saved_fullname"
+        const val EDITS_COUNT = "edits_count"
+        const val ALLOWED_EDITS_COUNT = "allowed_edits_count"
     }
 
     fun createTable(db: SupportSQLiteDatabase) {
