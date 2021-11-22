@@ -50,4 +50,9 @@ constructor(
             else ->
                 throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
+
+    override fun updateCertificate(certificate: Certificate): Single<Certificate> =
+        certificateRemoteDataSource
+            .updateCertificate(certificate)
+            .doCompletableOnSuccess(certificateCacheDataSource::saveCertificate)
 }

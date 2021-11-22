@@ -7,7 +7,7 @@ import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeDate
 import java.util.Date
 
-class Certificate(
+data class Certificate(
     @SerializedName("id")
     val id: Long,
     @SerializedName("user")
