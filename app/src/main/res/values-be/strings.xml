@@ -1050,6 +1050,7 @@
     <string name="course_purchase_wishlist_added">Курс дададзены ў Спіс жаданняў</string>
 
     <!-- Certificate name change -->
+    <string name="certificate_name_change_action">Змяніць імя атрымальніка</string>
     <string name="certificate_name_change_dialog_title">Змяніць імя атрымальніка</string>
     <string name="certificate_name_change_dialog_body_warning">Увага! Змяніць імя атрымальніка сертыфіката можна толькі %d. Увядзіце імя:</string>
     <string name="certificate_name_change_dialog_body_confirmation">Вы ўпэўненыя, што хочаце змяніць імя атрымальніка сертыфіката з %s на %s?</string>

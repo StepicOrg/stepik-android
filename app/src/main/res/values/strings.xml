@@ -1263,6 +1263,7 @@
     <string name="course_purchase_wishlist_added">Course added to Wishlist</string>
 
     <!-- Certificate name change -->
+    <string name="certificate_name_change_action">Change recipient name</string>
     <string name="certificate_name_change_dialog_title">Change recipient name</string>
     <string name="certificate_name_change_dialog_body_warning">Warning! You can change the certificate recipient name only %d. Enter name:</string>
     <string name="certificate_name_change_dialog_body_confirmation">Are you sure that you want to change the certificate recipient name from %s to %s?</string>

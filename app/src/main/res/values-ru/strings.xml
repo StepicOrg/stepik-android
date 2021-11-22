@@ -1187,6 +1187,7 @@
     <string name="course_purchase_wishlist_added">Курс добавлен в Список желаний</string>
 
     <!-- Certificate name change -->
+    <string name="certificate_name_change_action">Изменить имя получателя</string>
     <string name="certificate_name_change_dialog_title">Изменить имя получателя</string>
     <string name="certificate_name_change_dialog_body_warning">Внимание! Изменить имя получателя сертификата можно только %d. Введите имя:</string>
     <string name="certificate_name_change_dialog_body_confirmation">Вы уверены, что хотите изменить имя получателя сертификата с %s на %s?</string>

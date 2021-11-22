@@ -3,6 +3,7 @@ package org.stepik.android.view.certificate.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.certificate_item.view.*
 import org.stepic.droid.R
@@ -30,6 +31,7 @@ class CertificatesAdapterDelegate(
         private val certificateGradeView = root.certificate_grade
         private val certificateDescription = root.certificate_description
         private val certificateShareButton = root.certificate_share_button
+        private val certificateNameChangeButton = root.certificate_name_change_button
 
         private val certificatePlaceholder =
             ContextCompat.getDrawable(context, R.drawable.general_placeholder)
@@ -54,6 +56,8 @@ class CertificatesAdapterDelegate(
 
             certificateGradeView.text =
                 context.resources.getString(R.string.certificate_result_with_substitution, data.certificate.grade ?: "")
+
+            certificateNameChangeButton.isVisible = data.certificate.editsCount < data.certificate.allowedEditsCount
 
             Glide.with(context)
                 .load(data.coverFullPath ?: "")
