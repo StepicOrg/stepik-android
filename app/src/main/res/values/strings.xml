@@ -1266,7 +1266,7 @@
     <string name="certificate_name_change_action">Change recipient name</string>
     <string name="certificate_name_change_dialog_title">Change recipient name</string>
     <string name="certificate_name_change_dialog_body_warning">Warning! You can change the certificate recipient name only %s.\nEnter name:</string>
-    <string name="certificate_name_change_dialog_body_confirmation">Are you sure that you want to change the certificate recipient name from %s to %s?</string>
+    <string name="certificate_name_change_dialog_body_confirmation"><![CDATA[Are you sure that you want to change the certificate recipient name from <b>%s</b> to <b>%s</b>?]]></string>
     <string name="certificate_name_change_dialog_body_last_edit_warning">Warning! After this confirmation you will not be able to change the certificate recipient name.</string>
     <string name="certificate_name_change_snackbar_success">Certificate recipient name changed.</string>
     <string name="certificate_name_change_snackbar_failure">Failed to change certificate recipient name.</string>

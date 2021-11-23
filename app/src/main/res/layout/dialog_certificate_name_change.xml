@@ -7,13 +7,13 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/certificateChangeNameBody"
+        style="@style/MaterialAlertDialog.MaterialComponents.Body.Text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="?dialogPreferredPadding"
         android:layout_marginRight="?dialogPreferredPadding"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:textAppearance="?textAppearanceBody1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -30,10 +30,17 @@ class CertificateNameChangeDialog : DialogFragment() {
         val view = View.inflate(requireContext(), R.layout.dialog_certificate_name_change, null)
         val editTextWrapper = view.certificateChangeNameWrapper
         val editText = view.certificateChangeNameEditText
+
         editText.doAfterTextChanged { editTextWrapper.error = null }
+
+        val remainingEdits = certificate.allowedEditsCount - certificate.editsCount
         view.certificateChangeNameBody.text = resources.getString(
             R.string.certificate_name_change_dialog_body_warning,
-            resources.getQuantityString(R.plurals.times, certificate.allowedEditsCount - certificate.editsCount, certificate.allowedEditsCount - certificate.editsCount)
+            resources.getQuantityString(
+                R.plurals.times,
+                remainingEdits,
+                remainingEdits
+            )
         )
 
         return MaterialAlertDialogBuilder(requireContext())

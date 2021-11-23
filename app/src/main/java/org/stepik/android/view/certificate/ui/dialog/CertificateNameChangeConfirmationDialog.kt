@@ -2,6 +2,7 @@ package org.stepik.android.view.certificate.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import androidx.core.text.HtmlCompat
 import androidx.core.text.buildSpannedString
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -25,7 +26,16 @@ class CertificateNameChangeConfirmationDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val message = buildSpannedString {
-            append(resources.getString(R.string.certificate_name_change_dialog_body_confirmation, certificate.savedFullName, newFullName))
+            append(
+                HtmlCompat.fromHtml(
+                    resources.getString(
+                        R.string.certificate_name_change_dialog_body_confirmation,
+                        certificate.savedFullName,
+                        newFullName
+                    ),
+                    HtmlCompat.FROM_HTML_MODE_COMPACT
+                )
+            )
             if (certificate.editsCount + 1 == certificate.allowedEditsCount) {
                 append("\n")
                 append(resources.getString(R.string.certificate_name_change_dialog_body_last_edit_warning))

@@ -1190,7 +1190,8 @@
     <string name="certificate_name_change_action">Изменить имя получателя</string>
     <string name="certificate_name_change_dialog_title">Изменить имя получателя</string>
     <string name="certificate_name_change_dialog_body_warning">Внимание! Изменить имя получателя сертификата можно только %s.\nВведите имя:</string>
-    <string name="certificate_name_change_dialog_body_confirmation">Вы уверены, что хотите изменить имя получателя сертификата с %s на %s?</string>
+    <!-- <![CDATA[Вы решаете <b>%s</b> подряд!]]> -->
+    <string name="certificate_name_change_dialog_body_confirmation"><![CDATA[Вы уверены, что хотите изменить имя получателя сертификата с <b>%s</b> на <b>%s</b>?]]></string>
     <string name="certificate_name_change_dialog_body_last_edit_warning">Внимание! После этого изменения вы больше не сможете поменять имя.</string>
     <string name="certificate_name_change_snackbar_success">Имя получателя сертификата изменено.</string>
     <string name="certificate_name_change_snackbar_failure">Не удалось изменить имя получателя сертификата.</string>
