@@ -183,4 +183,10 @@
         <item quantity="many">%d новых курсаў</item>
         <item quantity="other">%d новых курсаў</item>
     </plurals>
+    <plurals name="times">
+        <item quantity="one">%d раз</item>
+        <item quantity="few">%d разы</item>
+        <item quantity="many">%d разоў</item>
+        <item quantity="other">%d разоў</item>
+    </plurals>
 </resources>

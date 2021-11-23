@@ -9,4 +9,5 @@ import org.stepik.android.model.Certificate
 interface CertificateRepository {
     fun getCertificate(userId: Long, courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Maybe<Certificate>
     fun getCertificates(userId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<Certificate>>
+    fun saveCertificate(certificate: Certificate): Single<Certificate>
 }
