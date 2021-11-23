@@ -27,6 +27,15 @@ data class Certificate(
     @SerializedName("url")
     val url: String? = null,
 
+    @SerializedName("user_rank")
+    val userRank: Long?,
+    @SerializedName("user_rank_max")
+    val userRankMax: Long?,
+    @SerializedName("leaderboard_size")
+    val leaderboardSize: Long?,
+    @SerializedName("preview_url")
+    val previewUrl: String?,
+
     @SerializedName("saved_fullname")
     val savedFullName: String? = null,
     @SerializedName("edits_count")
@@ -54,6 +63,13 @@ data class Certificate(
         dest.writeString(this.grade)
         dest.writeInt(this.type?.ordinal ?: -1)
         dest.writeString(this.url)
+        dest.writeValue(this.userRank)
+        dest.writeValue(this.userRankMax)
+        dest.writeValue(this.leaderboardSize)
+        dest.writeString(this.previewUrl)
+        dest.writeString(this.savedFullName)
+        dest.writeInt(this.editsCount)
+        dest.writeInt(this.allowedEditsCount)
     }
 
     override fun describeContents(): Int = 0
@@ -68,6 +84,10 @@ data class Certificate(
                 source.readDate(),
                 source.readString(),
                 Type.values().getOrNull(source.readInt()),
+                source.readString(),
+                source.readLong(),
+                source.readLong(),
+                source.readLong(),
                 source.readString(),
                 source.readString(),
                 source.readInt(),
