@@ -13,7 +13,9 @@ import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.interactor.CertificatesInteractor
+import org.stepik.android.model.Certificate
 import org.stepik.android.presentation.base.PresenterBase
+import ru.nobird.android.core.model.transform
 import javax.inject.Inject
 
 class CertificatesPresenter
@@ -29,6 +31,12 @@ constructor(
         set(value) {
             field = value
             view?.setState(state)
+        }
+
+    private var isBlockingLoading: Boolean = false
+        set(value) {
+            field = value
+            view?.setBlockingLoading(value)
         }
 
     private val paginationDisposable = CompositeDisposable()
@@ -130,6 +138,50 @@ constructor(
                         else ->
                             state = CertificatesView.State.NetworkError
                     }
+                }
+            )
+    }
+
+    fun updateCertificate(certificate: Certificate) {
+        val oldState = state
+
+        val currentItems = (oldState as? CertificatesView.State.CertificatesRemote)?.certificates
+            ?: (oldState as? CertificatesView.State.CertificatesCache)?.certificates
+            ?: return
+
+        isBlockingLoading = true
+        compositeDisposable += certificatesInteractor
+            .updateCertificate(certificate)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onSuccess = { updatedCertificate ->
+                    val updatedItems = currentItems.transform {
+                        map { certificateViewItem ->
+                            if (certificateViewItem.certificate.id == updatedCertificate.id) {
+                                certificateViewItem.copy(certificate = updatedCertificate)
+                            } else {
+                                certificateViewItem
+                            }
+                        }
+                    }
+
+                    state =
+                        when (oldState) {
+                            is CertificatesView.State.CertificatesRemote ->
+                                CertificatesView.State.CertificatesRemote(updatedItems)
+
+                            is CertificatesView.State.CertificatesCache ->
+                                CertificatesView.State.CertificatesCache(updatedItems)
+
+                            else ->
+                                oldState
+                        }
+                    view?.showChangeNameSnackbar(isSuccess = true)
+                },
+                onError = {
+                    view?.showChangeNameSnackbar(isSuccess = false)
                 }
             )
     }

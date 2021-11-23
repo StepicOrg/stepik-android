@@ -14,7 +14,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CertificatesAdapterDelegate(
     private val onItemClick: (String) -> Unit,
-    private val onShareButtonClick: (CertificateViewItem) -> Unit
+    private val onShareButtonClick: (CertificateViewItem) -> Unit,
+    private val onChangeNameClick: (CertificateViewItem) -> Unit
 ) : AdapterDelegate<CertificateViewItem, DelegateViewHolder<CertificateViewItem>>() {
     override fun isForViewType(position: Int, data: CertificateViewItem): Boolean =
         true
@@ -39,6 +40,7 @@ class CertificatesAdapterDelegate(
         init {
             root.setOnClickListener { onItemClick(itemData?.certificate?.url ?: "") }
             certificateShareButton.setOnClickListener { onShareButtonClick(itemData as CertificateViewItem) }
+            certificateNameChangeButton.setOnClickListener { itemData?.let(onChangeNameClick) }
         }
 
         override fun onBind(data: CertificateViewItem) {

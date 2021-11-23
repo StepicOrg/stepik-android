@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_certificates.*
@@ -16,11 +17,16 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
+import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.model.Certificate
 import org.stepik.android.presentation.certificate.CertificatesPresenter
 import org.stepik.android.presentation.certificate.CertificatesView
 import org.stepik.android.view.certificate.ui.adapter.delegate.CertificatesAdapterDelegate
+import org.stepik.android.view.certificate.ui.dialog.CertificateNameChangeConfirmationDialog
+import org.stepik.android.view.certificate.ui.dialog.CertificateNameChangeDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -28,7 +34,11 @@ import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CertificatesActivity : FragmentActivityBase(), CertificatesView {
+class CertificatesActivity :
+    FragmentActivityBase(),
+    CertificatesView,
+    CertificateNameChangeDialog.Callback,
+    CertificateNameChangeConfirmationDialog.Callback {
     companion object {
         private const val EXTRA_USER_ID = "user_id"
 
@@ -46,6 +56,9 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
 
     private var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem> = DefaultDelegateAdapter()
 
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
+
     private val viewStateDelegate =
         ViewStateDelegate<CertificatesView.State>()
 
@@ -60,7 +73,8 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
 
         certificatesAdapter += CertificatesAdapterDelegate(
             onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
-            onShareButtonClick = { onNeedShowShareDialog(it) }
+            onShareButtonClick = { onNeedShowShareDialog(it) },
+            onChangeNameClick = { showChangeNameDialog(it.certificate, shouldDisplayError = false) }
         )
 
         with(certificateRecyclerView) {
@@ -139,6 +153,23 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         root.snackbar(messageRes = R.string.connectionProblems)
     }
 
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+    }
+
+    override fun showChangeNameSnackbar(isSuccess: Boolean) {
+        val messageRes = if (isSuccess) {
+            R.string.certificate_name_change_snackbar_success
+        } else {
+            R.string.certificate_name_change_snackbar_failure
+        }
+        root.snackbar(messageRes = messageRes)
+    }
+
     private fun onNeedShowShareDialog(certificateViewItem: CertificateViewItem?) {
         if (certificateViewItem == null) {
             return
@@ -146,5 +177,21 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         CertificateShareDialogFragment
             .newInstance(certificateViewItem)
             .showIfNotExists(supportFragmentManager, CertificateShareDialogFragment.TAG)
+    }
+
+    override fun showUpdateCertificateConfirmationDialog(newFullName: String, certificate: Certificate) {
+        CertificateNameChangeConfirmationDialog
+            .newInstance(newFullName, certificate)
+            .showIfNotExists(supportFragmentManager, CertificateNameChangeConfirmationDialog.TAG)
+    }
+
+    override fun updateCertificate(certificate: Certificate) {
+        certificatesPresenter.updateCertificate(certificate)
+    }
+
+    private fun showChangeNameDialog(certificate: Certificate, shouldDisplayError: Boolean = false) {
+        CertificateNameChangeDialog
+            .newInstance(certificate, shouldDisplayError)
+            .showIfNotExists(supportFragmentManager, CertificateNameChangeDialog.TAG)
     }
 }

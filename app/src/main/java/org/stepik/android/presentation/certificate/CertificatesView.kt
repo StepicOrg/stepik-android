@@ -17,4 +17,6 @@ interface CertificatesView {
 
     fun setState(state: State)
     fun showNetworkError()
+    fun setBlockingLoading(isLoading: Boolean)
+    fun showChangeNameSnackbar(isSuccess: Boolean)
 }

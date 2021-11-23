@@ -78,10 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/certificate_share_button"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:theme="@style/ThemeOverlay.Violet"
             android:text="@string/certificate_name_change_action"
+            android:theme="@style/ThemeOverlay.Violet"
             tools:text="Изменить имя получателя" />
 
         <androidx.appcompat.widget.AppCompatTextView
