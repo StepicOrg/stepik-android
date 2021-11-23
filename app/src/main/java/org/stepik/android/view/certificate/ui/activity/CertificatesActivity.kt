@@ -74,7 +74,7 @@ class CertificatesActivity :
         certificatesAdapter += CertificatesAdapterDelegate(
             onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
             onShareButtonClick = { onNeedShowShareDialog(it) },
-            onChangeNameClick = { showChangeNameDialog(it.certificate, shouldDisplayError = false) }
+            onChangeNameClick = { showChangeNameDialog(certificate = it.certificate) }
         )
 
         with(certificateRecyclerView) {
@@ -161,13 +161,12 @@ class CertificatesActivity :
         }
     }
 
-    override fun showChangeNameSnackbar(isSuccess: Boolean) {
-        val messageRes = if (isSuccess) {
-            R.string.certificate_name_change_snackbar_success
-        } else {
-            R.string.certificate_name_change_snackbar_failure
-        }
-        root.snackbar(messageRes = messageRes)
+    override fun showChangeNameSuccess() {
+        root.snackbar(messageRes = R.string.certificate_name_change_snackbar_success)
+    }
+
+    override fun showChangeNameDialogError(certificate: Certificate, attemptedFullName: String) {
+        showChangeNameDialog(certificate, attemptedFullName)
     }
 
     private fun onNeedShowShareDialog(certificateViewItem: CertificateViewItem?) {
@@ -185,13 +184,13 @@ class CertificatesActivity :
             .showIfNotExists(supportFragmentManager, CertificateNameChangeConfirmationDialog.TAG)
     }
 
-    override fun updateCertificate(certificate: Certificate) {
-        certificatesPresenter.updateCertificate(certificate)
+    override fun updateCertificate(certificate: Certificate, newFullName: String) {
+        certificatesPresenter.updateCertificate(certificate, newFullName)
     }
 
-    private fun showChangeNameDialog(certificate: Certificate, shouldDisplayError: Boolean = false) {
+    private fun showChangeNameDialog(certificate: Certificate, attemptedFullName: String = "") {
         CertificateNameChangeDialog
-            .newInstance(certificate, shouldDisplayError)
+            .newInstance(certificate, attemptedFullName)
             .showIfNotExists(supportFragmentManager, CertificateNameChangeDialog.TAG)
     }
 }

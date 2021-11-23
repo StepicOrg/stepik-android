@@ -142,7 +142,7 @@ constructor(
             )
     }
 
-    fun updateCertificate(certificate: Certificate) {
+    fun updateCertificate(certificate: Certificate, newFullName: String) {
         val oldState = state
 
         val currentItems = (oldState as? CertificatesView.State.CertificatesRemote)?.certificates
@@ -151,7 +151,7 @@ constructor(
 
         isBlockingLoading = true
         compositeDisposable += certificatesInteractor
-            .updateCertificate(certificate)
+            .saveCertificate(certificate.copy(savedFullName = newFullName))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally { isBlockingLoading = false }
@@ -178,10 +178,10 @@ constructor(
                             else ->
                                 oldState
                         }
-                    view?.showChangeNameSnackbar(isSuccess = true)
+                    view?.showChangeNameSuccess()
                 },
                 onError = {
-                    view?.showChangeNameSnackbar(isSuccess = false)
+                    view?.showChangeNameDialogError(certificate, newFullName)
                 }
             )
     }

@@ -17,5 +17,5 @@ interface CertificateService {
     fun getCertificate(@Query("user") userId: Long, @Query("course") courseId: Long): Single<CertificateResponse>
 
     @PUT("api/certificates/{certificateId}")
-    fun updateCertificate(@Path("certificateId") certificateId: Long, @Body certificateRequest: CertificateRequest): Single<CertificateResponse>
+    fun saveCertificate(@Path("certificateId") certificateId: Long, @Body certificateRequest: CertificateRequest): Single<CertificateResponse>
 }

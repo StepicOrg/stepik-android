@@ -44,6 +44,6 @@ constructor(
                     }
             }
 
-    fun updateCertificate(certificate: Certificate): Single<Certificate> =
-        certificateRepository.updateCertificate(certificate)
+    fun saveCertificate(certificate: Certificate): Single<Certificate> =
+        certificateRepository.saveCertificate(certificate)
 }

@@ -1194,7 +1194,7 @@
     <string name="certificate_name_change_dialog_body_confirmation"><![CDATA[Вы уверены, что хотите изменить имя получателя сертификата с <b>%s</b> на <b>%s</b>?]]></string>
     <string name="certificate_name_change_dialog_body_last_edit_warning">Внимание! После этого изменения вы больше не сможете поменять имя.</string>
     <string name="certificate_name_change_snackbar_success">Имя получателя сертификата изменено.</string>
-    <string name="certificate_name_change_snackbar_failure">Не удалось изменить имя получателя сертификата.</string>
+    <string name="certificate_name_change_failure">Не удалось изменить имя получателя сертификата</string>
     <string name="certificate_name_change_recipient_name">Имя получателя</string>
     <string name="certificate_name_change_empty_field_error">Поле не может быть пустым</string>
 </resources>

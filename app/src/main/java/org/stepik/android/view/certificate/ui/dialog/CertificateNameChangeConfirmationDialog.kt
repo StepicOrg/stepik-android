@@ -49,12 +49,12 @@ class CertificateNameChangeConfirmationDialog : DialogFragment() {
                 dismiss()
             }
             .setPositiveButton(R.string.ok) { _, _ ->
-                (activity as? Callback)?.updateCertificate(certificate.copy(savedFullName = newFullName))
+                (activity as? Callback)?.updateCertificate(certificate, newFullName)
             }
             .create()
     }
 
     interface Callback {
-        fun updateCertificate(certificate: Certificate)
+        fun updateCertificate(certificate: Certificate, newFullName: String)
     }
 }

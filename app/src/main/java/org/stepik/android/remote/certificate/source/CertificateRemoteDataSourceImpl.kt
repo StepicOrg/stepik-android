@@ -28,9 +28,9 @@ constructor(
         certificateService.getCertificates(userId, page)
             .map { it.toPagedList(CertificateResponse::certificates) }
 
-    override fun updateCertificate(certificate: Certificate): Single<Certificate> =
+    override fun saveCertificate(certificate: Certificate): Single<Certificate> =
         certificateService
-            .updateCertificate(certificate.id, CertificateRequest(certificate))
+            .saveCertificate(certificate.id, CertificateRequest(certificate))
             .map(CertificateResponse::certificates)
             .first()
 }

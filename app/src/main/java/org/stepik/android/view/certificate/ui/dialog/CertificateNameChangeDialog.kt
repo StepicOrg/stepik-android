@@ -16,22 +16,27 @@ class CertificateNameChangeDialog : DialogFragment() {
     companion object {
         const val TAG = "CertificateChangeNameDialog"
 
-        fun newInstance(certificate: Certificate, shouldDisplayError: Boolean = false): DialogFragment =
+        fun newInstance(certificate: Certificate, attemptedFullName: String): DialogFragment =
             CertificateNameChangeDialog().apply {
                 this.certificate = certificate
-                this.shouldDisplayError = shouldDisplayError
+                this.attemptedFullName = attemptedFullName
             }
     }
 
     private var certificate: Certificate by argument()
-    private var shouldDisplayError: Boolean by argument()
+    private var attemptedFullName: String by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = View.inflate(requireContext(), R.layout.dialog_certificate_name_change, null)
         val editTextWrapper = view.certificateChangeNameWrapper
         val editText = view.certificateChangeNameEditText
 
+        editText.setText(attemptedFullName)
         editText.doAfterTextChanged { editTextWrapper.error = null }
+
+        if (attemptedFullName.isNotEmpty()) {
+            editTextWrapper.error = resources.getString(R.string.certificate_name_change_failure)
+        }
 
         val remainingEdits = certificate.allowedEditsCount - certificate.editsCount
         view.certificateChangeNameBody.text = resources.getString(
