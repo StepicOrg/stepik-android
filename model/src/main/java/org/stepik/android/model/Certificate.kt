@@ -1,12 +1,11 @@
 package org.stepik.android.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readDate
-import org.stepik.android.model.util.writeDate
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
+@Parcelize
 data class Certificate(
     @SerializedName("id")
     val id: Long,
@@ -52,49 +51,5 @@ data class Certificate(
         REGULAR,
         @SerializedName("distinction")
         DISTINCTION
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(this.id)
-        dest.writeLong(this.user)
-        dest.writeLong(this.course)
-        dest.writeDate(issueDate)
-        dest.writeDate(updateDate)
-        dest.writeString(this.grade)
-        dest.writeInt(this.type?.ordinal ?: -1)
-        dest.writeString(this.url)
-        dest.writeValue(this.userRank)
-        dest.writeValue(this.userRankMax)
-        dest.writeValue(this.leaderboardSize)
-        dest.writeString(this.previewUrl)
-        dest.writeString(this.savedFullName)
-        dest.writeInt(this.editsCount)
-        dest.writeInt(this.allowedEditsCount)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<Certificate> {
-        override fun createFromParcel(source: Parcel): Certificate =
-            Certificate(
-                source.readLong(),
-                source.readLong(),
-                source.readLong(),
-                source.readDate(),
-                source.readDate(),
-                source.readString(),
-                Type.values().getOrNull(source.readInt()),
-                source.readString(),
-                source.readLong(),
-                source.readLong(),
-                source.readLong(),
-                source.readString(),
-                source.readString(),
-                source.readInt(),
-                source.readInt()
-            )
-
-        override fun newArray(size: Int): Array<Certificate?> =
-            arrayOfNulls(size)
     }
 }
