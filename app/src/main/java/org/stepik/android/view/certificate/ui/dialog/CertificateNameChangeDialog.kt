@@ -1,8 +1,10 @@
 package org.stepik.android.view.certificate.ui.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
@@ -33,6 +35,11 @@ class CertificateNameChangeDialog : DialogFragment() {
 
         editText.setText(attemptedFullName)
         editText.doAfterTextChanged { editTextWrapper.error = null }
+        editText.postDelayed({
+            editText.requestFocus()
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+        }, 200)
 
         if (attemptedFullName.isNotEmpty()) {
             editTextWrapper.error = resources.getString(R.string.certificate_name_change_failure)
@@ -58,7 +65,7 @@ class CertificateNameChangeDialog : DialogFragment() {
             .apply {
                 setOnShowListener {
                     getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                        if (editText.text.isNullOrEmpty()) {
+                        if (editText.text.isNullOrBlank()) {
                             editTextWrapper.error =
                                 resources.getString(R.string.certificate_name_change_empty_field_error)
                         } else {

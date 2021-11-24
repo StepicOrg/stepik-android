@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/certificate_name_change_recipient_name"
             android:imeOptions="actionSend"
-            android:inputType="textPersonName"
+            android:inputType="textPersonName|textCapWords"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
