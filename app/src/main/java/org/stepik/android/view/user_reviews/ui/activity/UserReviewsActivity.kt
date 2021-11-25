@@ -16,8 +16,8 @@ class UserReviewsActivity : SingleFragmentActivity() {
     override fun createFragment(): Fragment =
         UserReviewsFragment.newInstance()
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

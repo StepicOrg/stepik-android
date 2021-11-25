@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import org.stepik.android.model.Certificate
 
-class CertificateViewItem(
+data class CertificateViewItem(
     val certificate: Certificate,
     val title: String?,
     val coverFullPath: String?

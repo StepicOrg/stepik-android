@@ -22,8 +22,8 @@ open class AboutAppActivity : SingleFragmentActivity() {
         initCenteredToolbar(R.string.about_app_title, true, closeIconDrawableRes)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             android.R.id.home -> {
                  if (sharedPreferenceHelper.authResponseFromStore == null) {
                     finish()

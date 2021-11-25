@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,24 +16,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/certificate_item_padding"
-            android:paddingLeft="@dimen/certificate_item_padding"
-            android:paddingRight="@dimen/certificate_item_padding"
             android:paddingStart="@dimen/certificate_item_padding"
-            android:paddingTop="@dimen/certificate_item_padding">
+            android:paddingLeft="@dimen/certificate_item_padding"
+            android:paddingTop="@dimen/certificate_item_padding"
+            android:paddingEnd="@dimen/certificate_item_padding"
+            android:paddingRight="@dimen/certificate_item_padding">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:layout_toLeftOf="@+id/certificate_icon"
                 android:layout_toStartOf="@+id/certificate_icon"
+                android:layout_toLeftOf="@+id/certificate_icon"
                 android:ellipsize="end"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
                 android:textAppearance="?textAppearanceHeadline5"
-                tools:text="Программирование на Python"/>
+                tools:text="Программирование на Python" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_description"
@@ -42,13 +41,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/certificate_title"
                 android:layout_marginTop="8dp"
-                android:layout_toLeftOf="@+id/certificate_icon"
                 android:layout_toStartOf="@+id/certificate_icon"
+                android:layout_toLeftOf="@+id/certificate_icon"
+                android:alpha="?alphaEmphasisMedium"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
                 android:textAppearance="?textAppearanceBody1"
-                android:alpha="?alphaEmphasisMedium"
-                tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
+                tools:text="Сертификат с отличием за курс Безопасность в интернете" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/certificate_icon"
@@ -56,7 +55,7 @@
                 android:layout_height="@dimen/certificate_image_size"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                tools:src="@drawable/general_placeholder"/>
+                tools:src="@drawable/general_placeholder" />
         </RelativeLayout>
 
         <Button
@@ -64,14 +63,24 @@
             style="@style/Widget.AppTheme.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/certificate_content_layout"
-            android:layout_marginBottom="8dp"
+            android:layout_alignParentRight="true"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
             android:text="@string/share_title"
             android:theme="@style/ThemeOverlay.Violet" />
+
+        <Button
+            android:id="@+id/certificate_name_change_button"
+            style="@style/Widget.AppTheme.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/certificate_share_button"
+            android:layout_centerHorizontal="true"
+            android:text="@string/certificate_name_change_action"
+            android:theme="@style/ThemeOverlay.Violet"
+            tools:text="Изменить имя получателя" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/certificate_grade"
@@ -79,14 +88,14 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/certificate_share_button"
             android:layout_alignBottom="@+id/certificate_share_button"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/certificate_share_button"
+            android:layout_alignParentLeft="true"
             android:layout_toStartOf="@+id/certificate_share_button"
-            android:textAppearance="?textAppearanceBody1"
+            android:layout_toLeftOf="@+id/certificate_share_button"
             android:alpha="?alphaEmphasisMedium"
             android:paddingLeft="@dimen/certificate_item_padding"
             android:paddingRight="@dimen/certificate_item_padding"
-            tools:text="Результат: 100%"/>
+            android:textAppearance="?textAppearanceBody1"
+            tools:text="Результат: 100%" />
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
