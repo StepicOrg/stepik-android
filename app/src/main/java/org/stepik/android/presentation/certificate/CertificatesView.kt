@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.certificate
 
 import org.stepic.droid.model.CertificateViewItem
+import org.stepik.android.model.Certificate
 import ru.nobird.android.core.model.PagedList
 
 interface CertificatesView {
@@ -17,4 +18,8 @@ interface CertificatesView {
 
     fun setState(state: State)
     fun showNetworkError()
+    fun setBlockingLoading(isLoading: Boolean)
+
+    fun showChangeNameSuccess()
+    fun showChangeNameDialogError(certificate: Certificate, attemptedFullName: String)
 }

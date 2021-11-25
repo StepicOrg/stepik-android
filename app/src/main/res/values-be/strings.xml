@@ -1048,4 +1048,15 @@
     <string name="course_purchase_wishlist_add">Дадаць у Спіс жаданняў</string>
     <string name="course_purchase_wishlist_adding">Дадаем</string>
     <string name="course_purchase_wishlist_added">Курс дададзены ў Спіс жаданняў</string>
+
+    <!-- Certificate name change -->
+    <string name="certificate_name_change_action">Змяніць імя атрымальніка</string>
+    <string name="certificate_name_change_dialog_title">Змяніць імя атрымальніка</string>
+    <string name="certificate_name_change_dialog_body_warning">Увага! Змяніць імя атрымальніка сертыфіката можна толькі %s.\nУвядзіце імя:</string>
+    <string name="certificate_name_change_dialog_body_confirmation"><![CDATA[Вы ўпэўненыя, што хочаце змяніць імя атрымальніка сертыфіката з <b>%s</b> на <b>%s</b>?]]></string>
+    <string name="certificate_name_change_dialog_body_last_edit_warning">Увага! Пасля гэтай змены вы больш не зможаце памяняць імя.</string>
+    <string name="certificate_name_change_snackbar_success">Імя атрымальніка сертыфіката зменена.</string>
+    <string name="certificate_name_change_failure">Не ўдалося змяніць імя атрымальніка сертыфіката.</string>
+    <string name="certificate_name_change_recipient_name">Імя атрымальніка</string>
+    <string name="certificate_name_change_empty_field_error">Поле не можа быць пустым</string>
 </resources>

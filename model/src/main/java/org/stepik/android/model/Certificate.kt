@@ -1,13 +1,12 @@
 package org.stepik.android.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readDate
-import org.stepik.android.model.util.writeDate
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
-class Certificate(
+@Parcelize
+data class Certificate(
     @SerializedName("id")
     val id: Long,
     @SerializedName("user")
@@ -25,7 +24,23 @@ class Certificate(
     @SerializedName("type")
     val type: Type? = null,
     @SerializedName("url")
-    val url: String? = null
+    val url: String? = null,
+
+    @SerializedName("user_rank")
+    val userRank: Long?,
+    @SerializedName("user_rank_max")
+    val userRankMax: Long?,
+    @SerializedName("leaderboard_size")
+    val leaderboardSize: Long?,
+    @SerializedName("preview_url")
+    val previewUrl: String?,
+
+    @SerializedName("saved_fullname")
+    val savedFullName: String? = null,
+    @SerializedName("edits_count")
+    val editsCount: Int,
+    @SerializedName("allowed_edits_count")
+    val allowedEditsCount: Int
 ) : Parcelable {
 
     /*
@@ -36,35 +51,5 @@ class Certificate(
         REGULAR,
         @SerializedName("distinction")
         DISTINCTION
-    }
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(this.id)
-        dest.writeLong(this.user)
-        dest.writeLong(this.course)
-        dest.writeDate(issueDate)
-        dest.writeDate(updateDate)
-        dest.writeString(this.grade)
-        dest.writeInt(this.type?.ordinal ?: -1)
-        dest.writeString(this.url)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<Certificate> {
-        override fun createFromParcel(source: Parcel): Certificate =
-            Certificate(
-                source.readLong(),
-                source.readLong(),
-                source.readLong(),
-                source.readDate(),
-                source.readDate(),
-                source.readString(),
-                Type.values().getOrNull(source.readInt()),
-                source.readString()
-            )
-
-        override fun newArray(size: Int): Array<Certificate?> =
-            arrayOfNulls(size)
     }
 }

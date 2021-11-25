@@ -43,4 +43,7 @@ constructor(
                         )
                     }
             }
+
+    fun saveCertificate(certificate: Certificate): Single<Certificate> =
+        certificateRepository.saveCertificate(certificate)
 }

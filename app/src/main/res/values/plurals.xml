@@ -134,4 +134,8 @@
         <item quantity="one">%d new course</item>
         <item quantity="other">%d new courses</item>
     </plurals>
+    <plurals name="times">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
+    </plurals>
 </resources>
