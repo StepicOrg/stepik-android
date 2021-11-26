@@ -1229,6 +1229,9 @@
 
     <string name="debug_remote_and_local_flags_title" translatable="false">Remote and Local Flags</string>
     <string name="debug_ab_group_subtitle" translatable="false">A/B Groups</string>
+    <string name="debug_iap_purchase_title" translatable="false">In App Purchases</string>
+    <string name="debug_purchases_subtitle" translatable="false">Purchases</string>
+    <string name="debug_purchase_status" translatable="false">Status: %s</string>
 
     <!-- User course reviews -->
     <string name="user_review_title">User reviews</string>
