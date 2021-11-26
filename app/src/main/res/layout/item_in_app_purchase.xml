@@ -17,15 +17,46 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Price Tier 34" />
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/inAppPurchaseBarrier"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="inAppPurchaseCourse, inAppPurchaseUser" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/inAppPurchaseCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/inAppPurchaseTime"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseSku"
+        tools:text="Course ID: 12345" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/inAppPurchaseUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/inAppPurchaseTime"
+        app:layout_constraintLeft_toRightOf="@id/inAppPurchaseCourse"
+        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseSku"
+        tools:text="User ID: 1337" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/inAppPurchaseTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toTopOf="@id/inAppPurchaseStatus"
-        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseSku"
+        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseBarrier"
+        app:layout_goneMarginTop="4dp"
         tools:text="1637935709" />
 
     <androidx.appcompat.widget.AppCompatTextView

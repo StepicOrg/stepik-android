@@ -2,13 +2,17 @@ package org.stepik.android.view.debug.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_in_app_purchase.*
 import org.solovyev.android.checkout.Purchase
 import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.toObject
+import org.stepik.android.domain.course.model.CoursePurchasePayload
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import timber.log.Timber
 import java.util.Date
 import java.util.TimeZone
 
@@ -22,8 +26,17 @@ class InAppPurchaseAdapterDelegate : AdapterDelegate<Purchase, DelegateViewHolde
     private class ViewHolder(override val containerView: View) : DelegateViewHolder<Purchase>(containerView), LayoutContainer {
         override fun onBind(data: Purchase) {
             inAppPurchaseSku.text = data.sku
-            inAppPurchaseTime.text = DateTimeHelper.getPrintableDate(Date(data.time), DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+            inAppPurchaseTime.text = context.getString(R.string.debug_purchase_date, DateTimeHelper.getPrintableDate(Date(data.time), DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()))
             inAppPurchaseStatus.text = context.getString(R.string.debug_purchase_status, data.state.name)
+
+            inAppPurchaseCourse.isVisible = data.payload.isNotEmpty()
+            inAppPurchaseUser.isVisible = data.payload.isNotEmpty()
+            if (data.payload.isNotEmpty()) {
+                data.payload.toObject<CoursePurchasePayload>().let {
+                    inAppPurchaseCourse.text = context.getString(R.string.debug_purchase_course, it.courseId)
+                    inAppPurchaseUser.text = context.getString(R.string.debug_purchase_profile, it.profileId)
+                }
+            }
         }
     }
 }
