@@ -156,14 +156,6 @@ constructor(
                 courseHeaderData?.let(::setupBuyAction)
             }
 
-            courseBuyInAppAction.setOnClickListener {
-                courseHeaderData?.let { headerData ->
-                    analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
-                    analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
-                }
-                coursePresenter.purchaseCourse()
-            }
-
             courseTryFree.setOnClickListener {
                 val lessonId = courseHeaderData
                     ?.course

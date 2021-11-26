@@ -14,10 +14,12 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.plus
+import org.stepik.android.domain.course.analytic.BuyCoursePressedEvent
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.UserCourseActionEvent
+import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.analytic.batch.CoursePreviewScreenOpenedAnalyticBatchEvent
 import org.stepik.android.domain.course.interactor.CourseBillingInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
@@ -26,6 +28,8 @@ import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.mapper.CourseStateMapper
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.purchase_notification.interactor.PurchaseReminderInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
@@ -54,6 +58,7 @@ import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -135,6 +140,7 @@ constructor(
         uiCheckout = view
             .createUiCheckout()
             .also(UiCheckout::start)
+        Timber.d("APPS: attachView")
     }
 
     override fun detachView(view: CourseView) {
@@ -143,6 +149,7 @@ constructor(
 
         uiCheckout?.let(UiCheckout::stop)
         uiCheckout = null
+        Timber.d("APPS: detachView")
     }
 
     /**
@@ -210,11 +217,13 @@ constructor(
      * Enrollment
      */
     fun autoEnroll() {
-        val enrollmentState = (state as? CourseView.State.CourseLoaded)
+        val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.stats
-            ?.enrollmentState
             ?: return
+
+        val enrollmentState = headerData
+            .stats
+            .enrollmentState
 
         when (enrollmentState) {
             EnrollmentState.NotEnrolledFree ->
@@ -223,8 +232,9 @@ constructor(
             EnrollmentState.NotEnrolledWeb ->
                 openCoursePurchaseInWeb()
 
-            is EnrollmentState.NotEnrolledInApp ->
-                purchaseCourse()
+            is EnrollmentState.NotEnrolledMobileTier -> {
+                purchaseCourse(enrollmentState.standardLightSku, headerData.deeplinkPromoCodeSku)
+            }
         }
     }
 
@@ -364,18 +374,26 @@ constructor(
             )
     }
 
-    fun purchaseCourse() {
+    fun purchaseCourse(primarySku: LightSku, promoCodeSku: PromoCodeSku) {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?: return
 
-        val sku = (headerData.stats.enrollmentState as? EnrollmentState.NotEnrolledInApp)
-            ?.skuWrapper
-            ?.sku
-            ?: return
+        if (headerData.stats.enrollmentState !is EnrollmentState.NotEnrolledMobileTier) {
+            return
+        }
 
         val checkout = this.uiCheckout
             ?: return
+
+        val lightSku = if (promoCodeSku != PromoCodeSku.EMPTY) {
+            requireNotNull(promoCodeSku.lightSku)
+        } else {
+            primarySku
+        }
+
+        analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
+        analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
 
         schedulePurchaseReminder()
 
@@ -385,7 +403,7 @@ constructor(
             )
         )
         compositeDisposable += courseBillingInteractor
-            .purchaseCourse(checkout, headerData.courseId, sku)
+            .purchaseCourse(checkout, headerData.courseId, lightSku)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

@@ -20,6 +20,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
+import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -120,10 +122,13 @@ class CoursePurchaseBottomSheetDialogFragment :
             append(getString(R.string.full_stop))
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
+        coursePurchaseBinding.coursePurchaseBuyAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.BuyCourseMessage) }
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
-        // no op
+        if (action is CoursePurchaseFeature.Action.ViewAction.BuyCourseData) {
+            (activity as? Callback)?.purchaseCourse(action.primarySku, action.promoCodeSku)
+        }
     }
 
     override fun render(state: CoursePurchaseFeature.State) {
@@ -160,4 +165,8 @@ class CoursePurchaseBottomSheetDialogFragment :
                 R.color.color_overlay_violet to R.color.color_overlay_violet
             }
         }
+
+    interface Callback {
+        fun purchaseCourse(primarySku: LightSku, promoCodeSku: PromoCodeSku)
+    }
 }

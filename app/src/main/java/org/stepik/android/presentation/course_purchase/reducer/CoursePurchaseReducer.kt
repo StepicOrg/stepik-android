@@ -33,6 +33,18 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.BuyCourseMessage -> {
+                if (state is State.Content) {
+                    val promoCodeSku = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+                        state.promoCodeState.promoCodeSku
+                    } else {
+                        PromoCodeSku.EMPTY
+                    }
+                    state to setOf(Action.ViewAction.BuyCourseData(state.coursePurchaseData.primarySku, promoCodeSku))
+                } else {
+                    null
+                }
+            }
             is Message.WishlistAddMessage -> {
                 if (state is State.Content) {
                     val wishlistEntity = state.coursePurchaseData.wishlistEntity.copy(courses = state.coursePurchaseData.wishlistEntity.courses.mutate { add(0, state.coursePurchaseData.course.id) })
