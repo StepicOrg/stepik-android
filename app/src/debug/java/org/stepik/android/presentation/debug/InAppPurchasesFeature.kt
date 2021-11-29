@@ -17,13 +17,21 @@ interface InAppPurchasesFeature {
         object FetchPurchasesFailure : Message()
 
         data class PurchaseClickedMessage(val purchase: Purchase) : Message()
-        object ConsumeSuccess : Message()
+        object ConsumeAllMessage : Message()
+
+        data class ConsumeSuccess(val purchase: Purchase) : Message()
+        object ConsumeAllSuccess : Message()
         object ConsumeFailure : Message()
     }
 
     sealed class Action {
         object FetchPurchases : Action()
         data class ConsumePurchase(val purchase: Purchase) : Action()
-        sealed class ViewAction : Action()
+        data class ConsumeAllPurchases(val purchases: List<Purchase>) : Action()
+        sealed class ViewAction : Action() {
+            object ShowLoading : ViewAction()
+            object ShowConsumeSuccess : ViewAction()
+            object ShowConsumeFailure : ViewAction()
+        }
     }
 }

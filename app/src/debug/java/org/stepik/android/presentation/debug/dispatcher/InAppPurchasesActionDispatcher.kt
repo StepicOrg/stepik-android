@@ -8,7 +8,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.debug.interactor.InAppPurchasesInteractor
 import org.stepik.android.presentation.debug.InAppPurchasesFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class InAppPurchasesActionDispatcher
@@ -39,8 +38,19 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onComplete = { Timber.d("APPS: Consume success"); onNewMessage(InAppPurchasesFeature.Message.ConsumeSuccess) },
-                        onError = { Timber.d("APPS: Consume failure - $it"); onNewMessage(InAppPurchasesFeature.Message.ConsumeFailure) }
+                        onComplete = { onNewMessage(InAppPurchasesFeature.Message.ConsumeSuccess(action.purchase)) },
+                        onError = { onNewMessage(InAppPurchasesFeature.Message.ConsumeFailure) }
+                    )
+            }
+
+            is InAppPurchasesFeature.Action.ConsumeAllPurchases -> {
+                compositeDisposable += inAppPurchasesInteractor
+                    .consumePurchases(action.purchases)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = { onNewMessage(InAppPurchasesFeature.Message.ConsumeAllSuccess) },
+                        onError = { onNewMessage(InAppPurchasesFeature.Message.ConsumeFailure) }
                     )
             }
         }

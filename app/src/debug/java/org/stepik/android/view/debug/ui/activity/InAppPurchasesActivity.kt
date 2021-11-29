@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,8 @@ import org.solovyev.android.checkout.Purchase
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.databinding.ActivityInAppPurchasesBinding
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.presentation.debug.InAppPurchasesFeature
 import org.stepik.android.presentation.debug.InAppPurchasesViewModel
 import org.stepik.android.view.debug.ui.adapter.delegate.InAppPurchaseAdapterDelegate
@@ -35,6 +38,9 @@ class InAppPurchasesActivity : AppCompatActivity(), ReduxView<InAppPurchasesFeat
 
     @Inject
     internal lateinit var billing: Billing
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private val inAppPurchasesViewModel: InAppPurchasesViewModel by reduxViewModel(this) { viewModelFactory }
 
@@ -71,7 +77,15 @@ class InAppPurchasesActivity : AppCompatActivity(), ReduxView<InAppPurchasesFeat
                 AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
         }
+
+        inAppPurchasesBinding.inAppPurchasesConsumeAllAction.setOnClickListener {
+            inAppPurchasesViewModel.onNewMessage(InAppPurchasesFeature.Message.ConsumeAllMessage)
+        }
+
         inAppPurchasesViewModel.onNewMessage(InAppPurchasesFeature.Message.InitMessage())
+        inAppPurchasesBinding.inAppPurchaseError.tryAgain.setOnClickListener {
+            inAppPurchasesViewModel.onNewMessage(InAppPurchasesFeature.Message.InitMessage(forceUpdate = true))
+        }
     }
 
     private fun injectComponent() {
@@ -84,9 +98,9 @@ class InAppPurchasesActivity : AppCompatActivity(), ReduxView<InAppPurchasesFeat
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<InAppPurchasesFeature.State.Idle>()
         viewStateDelegate.addState<InAppPurchasesFeature.State.Loading>(inAppPurchasesBinding.inAppPurchaseProgressBar.loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<InAppPurchasesFeature.State.Empty>()
-        viewStateDelegate.addState<InAppPurchasesFeature.State.Error>()
-        viewStateDelegate.addState<InAppPurchasesFeature.State.Content>(inAppPurchasesBinding.inAppPurchasesRecycler)
+        viewStateDelegate.addState<InAppPurchasesFeature.State.Empty>(inAppPurchasesBinding.inAppPurchaseEmpty)
+        viewStateDelegate.addState<InAppPurchasesFeature.State.Error>(inAppPurchasesBinding.inAppPurchaseError.error)
+        viewStateDelegate.addState<InAppPurchasesFeature.State.Content>(inAppPurchasesBinding.inAppPurchasesContentContainer)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -98,7 +112,18 @@ class InAppPurchasesActivity : AppCompatActivity(), ReduxView<InAppPurchasesFeat
     }
 
     override fun onAction(action: InAppPurchasesFeature.Action.ViewAction) {
-        // no op
+        when (action) {
+            is InAppPurchasesFeature.Action.ViewAction.ShowLoading ->
+                ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is InAppPurchasesFeature.Action.ViewAction.ShowConsumeSuccess -> {
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+
+            is InAppPurchasesFeature.Action.ViewAction.ShowConsumeFailure -> {
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+        }
     }
 
     override fun render(state: InAppPurchasesFeature.State) {

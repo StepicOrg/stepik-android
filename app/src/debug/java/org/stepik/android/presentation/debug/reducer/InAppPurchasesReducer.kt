@@ -3,6 +3,7 @@ package org.stepik.android.presentation.debug.reducer
 import org.stepik.android.presentation.debug.InAppPurchasesFeature.State
 import org.stepik.android.presentation.debug.InAppPurchasesFeature.Message
 import org.stepik.android.presentation.debug.InAppPurchasesFeature.Action
+import ru.nobird.android.core.model.mutate
 
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
@@ -40,21 +41,42 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.PurchaseClickedMessage -> {
                 if (state is State.Content) {
-                    state to setOf(Action.ConsumePurchase(message.purchase))
+                    state to setOf(Action.ViewAction.ShowLoading, Action.ConsumePurchase(message.purchase))
+                } else {
+                    null
+                }
+            }
+            is Message.ConsumeAllMessage -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.ShowLoading, Action.ConsumeAllPurchases(state.purchases))
                 } else {
                     null
                 }
             }
             is Message.ConsumeSuccess -> {
                 if (state is State.Content) {
-                    state to emptySet()
+                    val updatedPurchases = state.purchases.mapNotNull {
+                        if (it.sku == message.purchase.sku) {
+                            null
+                        } else {
+                            it
+                        }
+                    }
+                    State.Content(updatedPurchases)to setOf(Action.ViewAction.ShowConsumeSuccess)
+                } else {
+                    null
+                }
+            }
+            is Message.ConsumeAllSuccess -> {
+                if (state is State.Content) {
+                    State.Empty to setOf(Action.ViewAction.ShowConsumeSuccess)
                 } else {
                     null
                 }
             }
             is Message.ConsumeFailure -> {
                 if (state is State.Content) {
-                    state to emptySet()
+                    state to setOf(Action.ViewAction.ShowConsumeFailure)
                 } else {
                     null
                 }
