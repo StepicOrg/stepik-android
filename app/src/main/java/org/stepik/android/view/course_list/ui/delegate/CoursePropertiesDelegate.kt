@@ -46,7 +46,7 @@ class CoursePropertiesDelegate(
         setRating(courseListItem.courseStats)
         setCertificate(courseListItem.course)
         setUserCourse(courseListItem.courseStats.enrollmentState.safeCast<EnrollmentState.Enrolled>()?.userCourse)
-        setWishlist(courseListItem.course.enrollment > 0L, courseListItem.courseStats.isWishlisted)
+        setWishlist(courseListItem.course.enrollment > 0L, courseListItem.course.isInWishlist)
 
         view.isVisible = view.children.any(View::isVisible)
     }

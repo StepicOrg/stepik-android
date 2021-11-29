@@ -31,6 +31,6 @@ constructor(
         if (wishlistOperationData.wishlistAction == WishlistAction.ADD) {
             wishlistRepository.addCourseToWishlist(wishlistOperationData.courseId)
         } else {
-            wishlistRepository.removeCourseFromWishlist(wishlistOperationData.courseId, isManualRemoval = true)
+            wishlistRepository.removeCourseFromWishlist(wishlistOperationData.courseId)
         }
 }

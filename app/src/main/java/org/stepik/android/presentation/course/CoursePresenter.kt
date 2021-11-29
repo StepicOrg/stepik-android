@@ -537,7 +537,7 @@ constructor(
                     val oldState = state.safeCast<CourseView.State.CourseLoaded>()
                         ?: return@subscribeBy
                     val isWishlisted = wishlistAction == WishlistAction.ADD
-                    state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(stats = oldState.courseHeaderData.stats.copy(isWishlisted = isWishlisted)))
+                    state = CourseView.State.CourseLoaded(oldState.courseHeaderData.copy(course = oldState.courseHeaderData.course.copy(isInWishlist = isWishlisted)))
                     logWishlistAction(wishlistAction, viewSource)
                     view?.showWishlistActionSuccess(wishlistAction)
                 },
@@ -576,7 +576,7 @@ constructor(
 
                     state = CourseView.State.CourseLoaded(
                         courseHeaderData = oldState.courseHeaderData.copy(
-                            stats = oldState.courseHeaderData.stats.copy(isWishlisted = isWishlisted),
+                            course = oldState.courseHeaderData.course.copy(isInWishlist = isWishlisted),
                             isWishlistUpdating = false
                         )
                     )
