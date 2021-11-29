@@ -26,8 +26,7 @@ class CourseHeaderDataTest {
                 learnersCount = 100,
                 readiness = 1.0,
                 progress = Progress(id = "1"),
-                enrollmentState = EnrollmentState.NotEnrolledWeb,
-                isWishlisted = false
+                enrollmentState = EnrollmentState.NotEnrolledWeb
             ),
             localSubmissionsCount = 5,
             deeplinkPromoCode = DeeplinkPromoCode("CODE", "200", "RUB"),
