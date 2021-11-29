@@ -58,7 +58,6 @@ import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -140,7 +139,6 @@ constructor(
         uiCheckout = view
             .createUiCheckout()
             .also(UiCheckout::start)
-        Timber.d("APPS: attachView")
     }
 
     override fun detachView(view: CourseView) {
@@ -149,7 +147,6 @@ constructor(
 
         uiCheckout?.let(UiCheckout::stop)
         uiCheckout = null
-        Timber.d("APPS: detachView")
     }
 
     /**
