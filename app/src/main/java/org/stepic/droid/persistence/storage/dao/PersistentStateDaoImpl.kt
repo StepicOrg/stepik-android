@@ -13,7 +13,7 @@ import javax.inject.Inject
 class PersistentStateDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations
+    databaseOperations: DatabaseOperations
 ): DaoBase<PersistentState>(databaseOperations), PersistentStateDao {
     override fun getDbName() = DBStructurePersistentState.TABLE_NAME
 

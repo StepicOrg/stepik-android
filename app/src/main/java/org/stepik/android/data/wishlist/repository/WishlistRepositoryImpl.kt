@@ -41,8 +41,18 @@ constructor(
             .doCompletableOnSuccess(wishlistCacheDataSource::saveWishlistEntry)
             .ignoreElement()
 
-    override fun removeCourseFromWishlist(courseId: Long): Completable =
-        wishlistCacheDataSource.removeWishlistEntry(courseId)
+    /**
+     * If removal is manual - notify server about removal, else just remove locally
+     */
+    override fun removeCourseFromWishlist(courseId: Long, mustNotifyBackend: Boolean): Completable =
+        if (mustNotifyBackend) {
+            wishlistCacheDataSource
+                .getWishlistEntry(courseId)
+                .flatMapCompletable { wishlistEntry -> wishlistRemoteDataSource.removeWishlistEntry(wishlistEntry.id) }
+                .andThen(wishlistCacheDataSource.removeWishlistEntry(courseId))
+        } else {
+            wishlistCacheDataSource.removeWishlistEntry(courseId)
+        }
 
     override fun removeWishlistEntries(): Completable =
         wishlistCacheDataSource.removeWishlistEntries()
