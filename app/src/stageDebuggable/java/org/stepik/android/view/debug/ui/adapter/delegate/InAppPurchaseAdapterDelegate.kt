@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.debug.item_in_app_purchase.*
+import kotlinx.android.synthetic.stageDebuggable.item_in_app_purchase.*
 import org.solovyev.android.checkout.Purchase
 import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
