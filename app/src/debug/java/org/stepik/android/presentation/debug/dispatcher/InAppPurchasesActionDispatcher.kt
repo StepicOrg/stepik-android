@@ -8,6 +8,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.debug.interactor.InAppPurchasesInteractor
 import org.stepik.android.presentation.debug.InAppPurchasesFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class InAppPurchasesActionDispatcher
@@ -20,13 +21,28 @@ constructor(
     private val mainScheduler: Scheduler
 ) : RxActionDispatcher<InAppPurchasesFeature.Action, InAppPurchasesFeature.Message>() {
     override fun handleAction(action: InAppPurchasesFeature.Action) {
-        compositeDisposable += inAppPurchasesInteractor
-            .getAllPurchases()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesSuccess(it)) },
-                onError = { onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesFailure) }
-            )
+        when (action) {
+            is InAppPurchasesFeature.Action.FetchPurchases -> {
+                compositeDisposable += inAppPurchasesInteractor
+                    .getAllPurchases()
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesSuccess(it)) },
+                        onError = { onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesFailure) }
+                    )
+            }
+
+            is InAppPurchasesFeature.Action.ConsumePurchase -> {
+                compositeDisposable += inAppPurchasesInteractor
+                    .consumePurchase(action.purchase)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = { Timber.d("APPS: Consume success"); onNewMessage(InAppPurchasesFeature.Message.ConsumeSuccess) },
+                        onError = { Timber.d("APPS: Consume failure - $it"); onNewMessage(InAppPurchasesFeature.Message.ConsumeFailure) }
+                    )
+            }
+        }
     }
 }

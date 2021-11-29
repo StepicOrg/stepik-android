@@ -54,9 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:layout_constraintBottom_toTopOf="@id/inAppPurchaseStatus"
-        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseBarrier"
-        app:layout_goneMarginTop="4dp"
+        app:layout_constraintTop_toTopOf="@id/inAppPurchaseConsumeAction"
         tools:text="1637935709" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -64,11 +62,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="@id/inAppPurchaseConsumeAction"
+        tools:text="Status: Purchased" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/inAppPurchaseConsumeAction"
+        style="@style/Widget.AppTheme.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
+        android:text="@string/debug_purchase_consume_action"
+        android:theme="@style/ThemeOverlay.Violet"
+        app:layout_goneMarginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseBarrier"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inAppPurchaseTime"
-        tools:text="Status: Purchased" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

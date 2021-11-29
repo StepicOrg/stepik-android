@@ -15,10 +15,15 @@ interface InAppPurchasesFeature {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchPurchasesSuccess(val purchases: List<Purchase>) : Message()
         object FetchPurchasesFailure : Message()
+
+        data class PurchaseClickedMessage(val purchase: Purchase) : Message()
+        object ConsumeSuccess : Message()
+        object ConsumeFailure : Message()
     }
 
     sealed class Action {
         object FetchPurchases : Action()
+        data class ConsumePurchase(val purchase: Purchase) : Action()
         sealed class ViewAction : Action()
     }
 }

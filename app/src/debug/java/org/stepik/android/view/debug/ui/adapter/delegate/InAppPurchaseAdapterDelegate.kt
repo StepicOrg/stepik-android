@@ -16,14 +16,19 @@ import timber.log.Timber
 import java.util.Date
 import java.util.TimeZone
 
-class InAppPurchaseAdapterDelegate : AdapterDelegate<Purchase, DelegateViewHolder<Purchase>>() {
+class InAppPurchaseAdapterDelegate(
+    private val onItemClick: (Purchase) -> Unit
+) : AdapterDelegate<Purchase, DelegateViewHolder<Purchase>>() {
     override fun isForViewType(position: Int, data: Purchase): Boolean =
         true
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<Purchase> =
         ViewHolder(createView(parent, R.layout.item_in_app_purchase))
 
-    private class ViewHolder(override val containerView: View) : DelegateViewHolder<Purchase>(containerView), LayoutContainer {
+    private inner class ViewHolder(override val containerView: View) : DelegateViewHolder<Purchase>(containerView), LayoutContainer {
+        init {
+            inAppPurchaseConsumeAction.setOnClickListener { itemData?.let(onItemClick) }
+        }
         override fun onBind(data: Purchase) {
             inAppPurchaseSku.text = data.sku
             inAppPurchaseTime.text = context.getString(R.string.debug_purchase_date, DateTimeHelper.getPrintableDate(Date(data.time), DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()))

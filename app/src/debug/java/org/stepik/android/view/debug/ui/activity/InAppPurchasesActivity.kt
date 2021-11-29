@@ -61,7 +61,9 @@ class InAppPurchasesActivity : AppCompatActivity(), ReduxView<InAppPurchasesFeat
         }
         inAppPurchasesBinding.appBarLayoutBinding.viewCenteredToolbarBinding.centeredToolbarTitle.setText(R.string.debug_purchases_subtitle)
 
-        inAppPurchasesAdapter += InAppPurchaseAdapterDelegate()
+        inAppPurchasesAdapter += InAppPurchaseAdapterDelegate {
+            inAppPurchasesViewModel.onNewMessage(InAppPurchasesFeature.Message.PurchaseClickedMessage(it))
+        }
         with(inAppPurchasesBinding.inAppPurchasesRecycler) {
             adapter = inAppPurchasesAdapter
             layoutManager = LinearLayoutManager(this@InAppPurchasesActivity)

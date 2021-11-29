@@ -1236,6 +1236,7 @@
     <string name="debug_purchase_status" translatable="false">Status: %s</string>
     <string name="debug_purchase_course" translatable="false">Course ID: %d</string>
     <string name="debug_purchase_profile" translatable="false">Profile ID: %d</string>
+    <string name="debug_purchase_consume_action" translatable="false">Consume</string>
 
     <!-- User course reviews -->
     <string name="user_review_title">User reviews</string>

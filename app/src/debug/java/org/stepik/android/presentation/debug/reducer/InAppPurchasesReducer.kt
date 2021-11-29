@@ -38,5 +38,26 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.PurchaseClickedMessage -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ConsumePurchase(message.purchase))
+                } else {
+                    null
+                }
+            }
+            is Message.ConsumeSuccess -> {
+                if (state is State.Content) {
+                    state to emptySet()
+                } else {
+                    null
+                }
+            }
+            is Message.ConsumeFailure -> {
+                if (state is State.Content) {
+                    state to emptySet()
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 }

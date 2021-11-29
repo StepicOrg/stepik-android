@@ -1,5 +1,6 @@
 package org.stepik.android.domain.debug.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.solovyev.android.checkout.ProductTypes
 import org.solovyev.android.checkout.Purchase
@@ -13,4 +14,7 @@ constructor(
 ) {
     fun getAllPurchases(): Single<List<Purchase>> =
         billingRepository.getAllPurchases(ProductTypes.IN_APP)
+
+    fun consumePurchase(purchase: Purchase): Completable =
+        billingRepository.consumePurchase(purchase)
 }
