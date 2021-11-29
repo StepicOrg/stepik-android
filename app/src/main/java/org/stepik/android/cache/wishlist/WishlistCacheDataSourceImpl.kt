@@ -26,7 +26,9 @@ constructor(
             .andThen(updateCourseIsInWishlist(wishlistEntry.course, isInWishList = true))
 
     override fun saveWishlistEntries(wishlistEntries: List<WishlistEntry>): Completable =
-        wishlistDao.insertWishlistEntries(wishlistEntries)
+        Completable.fromCallable {
+            wishlistDao.insertWishlistEntriesNew(wishlistEntries)
+        }
 
     override fun removeWishlistEntry(courseId: Long): Completable =
         wishlistDao
@@ -34,7 +36,9 @@ constructor(
             .andThen(updateCourseIsInWishlist(courseId, isInWishList = false))
 
     override fun removeWishlistEntries(): Completable =
-        wishlistDao.clearTable()
+        Completable.fromCallable {
+            wishlistDao.clearTable()
+        }
 
     private fun updateCourseIsInWishlist(courseId: Long, isInWishList: Boolean): Completable =
         Completable.fromAction {
