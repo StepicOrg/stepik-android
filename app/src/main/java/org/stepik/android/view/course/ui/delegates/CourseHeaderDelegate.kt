@@ -38,6 +38,7 @@ import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticB
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -240,7 +241,8 @@ constructor(
             }
 
             courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
-                    courseHeaderData.course.enrollment == 0L
+                courseHeaderData.course.enrollment == 0L &&
+                (courseHeaderData.deeplinkPromoCode == DeeplinkPromoCode.EMPTY || courseHeaderData.deeplinkPromoCode.name == courseHeaderData.defaultPromoCode.defaultPromoCodeName)
 
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
@@ -255,10 +257,10 @@ constructor(
                 restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
             }
 
-            courseTryFree.isVisible = courseHeaderData.course.previewLesson != null &&
+            courseTryFree.isVisible = courseHeaderData.course.previewLesson != 0L &&
                     courseHeaderData.course.enrollment == 0L &&
                     courseHeaderData.course.isPaid &&
-                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledInApp || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
+                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
 
             shareCourseMenuItem?.isVisible = true
         }

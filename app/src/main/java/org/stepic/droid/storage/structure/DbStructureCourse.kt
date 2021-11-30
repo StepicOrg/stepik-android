@@ -23,6 +23,7 @@ object DbStructureCourse {
         const val INSTRUCTORS = "instructors"
         const val SECTIONS = "sections"
         const val PREVIEW_LESSON = "preview_lesson"
+        const val PREVIEW_UNIT = "preview_unit"
 
         const val COURSE_FORMAT = "course_format"
         const val TARGET_AUDIENCE = "target_audience"

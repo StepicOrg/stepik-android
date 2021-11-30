@@ -41,6 +41,7 @@ constructor(
             instructors = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.INSTRUCTORS)),
             sections = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.SECTIONS)),
             previewLesson = cursor.getLong(DbStructureCourse.Columns.PREVIEW_LESSON),
+            previewUnit = cursor.getLong(DbStructureCourse.Columns.PREVIEW_UNIT),
             courseFormat = cursor.getString(DbStructureCourse.Columns.COURSE_FORMAT),
             targetAudience = cursor.getString(DbStructureCourse.Columns.TARGET_AUDIENCE),
             certificateFooter = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_FOOTER),
@@ -109,6 +110,7 @@ constructor(
         values.put(DbStructureCourse.Columns.INSTRUCTORS, DbParseHelper.parseLongListToString(course.instructors))
         values.put(DbStructureCourse.Columns.SECTIONS, DbParseHelper.parseLongListToString(course.sections))
         values.put(DbStructureCourse.Columns.PREVIEW_LESSON, course.previewLesson)
+        values.put(DbStructureCourse.Columns.PREVIEW_UNIT, course.previewUnit)
         values.put(DbStructureCourse.Columns.COURSE_FORMAT, course.courseFormat)
         values.put(DbStructureCourse.Columns.TARGET_AUDIENCE, course.targetAudience)
         values.put(DbStructureCourse.Columns.CERTIFICATE_FOOTER, course.certificateFooter)
