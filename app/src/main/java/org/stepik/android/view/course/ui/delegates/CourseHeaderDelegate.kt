@@ -167,9 +167,7 @@ constructor(
             courseTryFree.setOnClickListener {
                 val lessonId = courseHeaderData
                     ?.course
-                    ?.courseOptions
-                    ?.coursePreview
-                    ?.previewLessonId
+                    ?.previewLesson
                     ?: return@setOnClickListener
 
                 coursePresenter.tryLessonFree(lessonId)
@@ -257,7 +255,7 @@ constructor(
                 restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
             }
 
-            courseTryFree.isVisible = courseHeaderData.course.courseOptions?.coursePreview?.previewLessonId != null &&
+            courseTryFree.isVisible = courseHeaderData.course.previewLesson != null &&
                     courseHeaderData.course.enrollment == 0L &&
                     courseHeaderData.course.isPaid &&
                     (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledInApp || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)

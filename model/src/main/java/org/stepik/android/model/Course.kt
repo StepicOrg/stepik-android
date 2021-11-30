@@ -38,6 +38,8 @@ data class Course(
     val instructors: List<Long>? = null,
     @SerializedName("sections")
     val sections: List<Long>? = null,
+    @SerializedName("preview_lesson")
+    val previewLesson: Long? = null,
 
     @SerializedName("course_format")
     val courseFormat: String? = null,
