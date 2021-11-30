@@ -12,7 +12,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface WishlistService {
-    @GET("api/wish-lists?platform=mobile")
+    @GET("api/wish-lists")
     fun getWishlist(@Query("page") page: Int): Single<WishlistResponse>
 
     @POST("api/wish-lists")
