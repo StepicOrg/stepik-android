@@ -13,6 +13,7 @@ import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.domain.visited_courses.repository.VisitedCoursesRepository
+import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.user.RegistrationCredentials
 import javax.inject.Inject
 
@@ -24,7 +25,8 @@ constructor(
 
     private val userProfileRepository: UserProfileRepository,
     private val courseRepository: CourseRepository,
-    private val visitedCoursesRepository: VisitedCoursesRepository
+    private val visitedCoursesRepository: VisitedCoursesRepository,
+    private val wishlistRepository: WishlistRepository
 ) {
     companion object {
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
@@ -43,10 +45,7 @@ constructor(
                 val event = if (isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
             }
-            .doCompletableOnSuccess {
-                courseRepository.removeCachedCourses()
-                visitedCoursesRepository.removedVisitedCourses()
-            }
+            .doCompletableOnSuccess { clearCache() }
 
     fun authWithNativeCode(code: String, type: SocialAuthType, email: String? = null): Completable =
         authRepository
@@ -54,8 +53,7 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
-            .andThen(courseRepository.removeCachedCourses())
-            .andThen(visitedCoursesRepository.removedVisitedCourses())
+            .andThen(clearCache())
 
     fun authWithCode(code: String, type: SocialAuthType): Completable =
         authRepository
@@ -63,8 +61,7 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
-            .andThen(courseRepository.removeCachedCourses())
-            .andThen(visitedCoursesRepository.removedVisitedCourses())
+            .andThen(clearCache())
 
     private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
         userProfileRepository
@@ -85,4 +82,9 @@ constructor(
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to type.identifier))
             }
             .ignoreElement()
+
+    private fun clearCache(): Completable =
+        courseRepository.removeCachedCourses()
+            .andThen(visitedCoursesRepository.removedVisitedCourses())
+            .andThen(wishlistRepository.removeWishlistEntries())
 }
