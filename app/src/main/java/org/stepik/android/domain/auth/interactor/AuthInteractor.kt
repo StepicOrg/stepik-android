@@ -45,11 +45,7 @@ constructor(
                 val event = if (isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
             }
-            .doCompletableOnSuccess {
-                courseRepository.removeCachedCourses()
-                visitedCoursesRepository.removedVisitedCourses()
-                wishlistRepository.removeWishlistEntries()
-            }
+            .doCompletableOnSuccess { clearCache() }
 
     fun authWithNativeCode(code: String, type: SocialAuthType, email: String? = null): Completable =
         authRepository
