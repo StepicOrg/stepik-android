@@ -54,7 +54,6 @@ import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -419,9 +418,6 @@ constructor(
     }
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
-        Timber.d("APPS: $queryParams")
-        Timber.d("APPS: Keys - ${queryParams?.keys}")
-        Timber.d("APPS: Values - ${(queryParams?.get("promo") as List<String>).get(0)}")
         isNeedCheckCourseEnrollment = true
         schedulePurchaseReminder()
         view?.openCoursePurchaseInWeb(courseId, queryParams)
