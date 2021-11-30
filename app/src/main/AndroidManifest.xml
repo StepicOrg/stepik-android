@@ -396,6 +396,9 @@
         <activity
             android:name="org.stepik.android.view.user_reviews.ui.activity.UserReviewsActivity" />
 
+        <activity
+            android:name="org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
