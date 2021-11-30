@@ -1,6 +1,7 @@
 package org.stepik.android.remote.wishlist
 
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -9,6 +10,7 @@ import org.stepik.android.data.wishlist.source.WishlistRemoteDataSource
 import org.stepik.android.domain.wishlist.model.WishlistEntry
 import org.stepik.android.remote.wishlist.model.WishlistRequest
 import org.stepik.android.remote.wishlist.model.WishlistResponse
+import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 class WishlistRemoteDataSourceImpl
@@ -19,12 +21,17 @@ constructor(
     private val scheduler: Scheduler
 ) : WishlistRemoteDataSource {
 
+    override fun getWishlistEntry(courseId: Long): Maybe<WishlistEntry> =
+        wishlistService
+            .getWishlistEntry(courseId)
+            .map(WishlistResponse::wishlistEntries)
+            .maybeFirst()
+
     override fun getWishlistEntries(): Single<List<WishlistEntry>> =
         getWishlistEntriesByPage()
-            .map { it.sortedByDescending(WishlistEntry::createDate) }
             .subscribeOn(scheduler)
 
-    override fun saveWishlistEntry(courseId: Long): Single<WishlistEntry> =
+    override fun createWishlistEntry(courseId: Long): Single<WishlistEntry> =
         wishlistService
             .updateWishlist(WishlistRequest(courseId))
             .map { wishlistResponse -> wishlistResponse.wishlistEntries.first() }

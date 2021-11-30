@@ -37,21 +37,24 @@ constructor(
 
     override fun addCourseToWishlist(courseId: Long): Completable =
         wishlistRemoteDataSource
-            .saveWishlistEntry(courseId)
+            .createWishlistEntry(courseId)
             .doCompletableOnSuccess(wishlistCacheDataSource::saveWishlistEntry)
             .ignoreElement()
 
-    /**
-     * If removal is manual - notify server about removal, else just remove locally
-     */
-    override fun removeCourseFromWishlist(courseId: Long, mustNotifyBackend: Boolean): Completable =
-        if (mustNotifyBackend) {
-            wishlistCacheDataSource
-                .getWishlistEntry(courseId)
-                .flatMapCompletable { wishlistEntry -> wishlistRemoteDataSource.removeWishlistEntry(wishlistEntry.id) }
-                .andThen(wishlistCacheDataSource.removeWishlistEntry(courseId))
-        } else {
-            wishlistCacheDataSource.removeWishlistEntry(courseId)
+    override fun removeCourseFromWishlist(courseId: Long, sourceType: DataSourceType): Completable =
+        when (sourceType) {
+            DataSourceType.REMOTE ->
+                wishlistCacheDataSource
+                    .getWishlistEntry(courseId)
+                    .switchIfEmpty(wishlistRemoteDataSource.getWishlistEntry(courseId))
+                    .flatMapCompletable { wishlistEntry -> wishlistRemoteDataSource.removeWishlistEntry(wishlistEntry.id) }
+                    .andThen(wishlistCacheDataSource.removeWishlistEntry(courseId))
+
+            DataSourceType.CACHE ->
+                wishlistCacheDataSource.removeWishlistEntry(courseId)
+
+            else ->
+                throw IllegalArgumentException("Unsupported sourceType = $sourceType")
         }
 
     override fun removeWishlistEntries(): Completable =

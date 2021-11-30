@@ -8,6 +8,6 @@ import org.stepik.android.domain.wishlist.model.WishlistEntry
 interface WishlistRepository {
     fun getWishlistEntries(sourceType: DataSourceType): Single<List<WishlistEntry>>
     fun addCourseToWishlist(courseId: Long): Completable
-    fun removeCourseFromWishlist(courseId: Long, mustNotifyBackend: Boolean): Completable
+    fun removeCourseFromWishlist(courseId: Long, sourceType: DataSourceType): Completable
     fun removeWishlistEntries(): Completable
 }

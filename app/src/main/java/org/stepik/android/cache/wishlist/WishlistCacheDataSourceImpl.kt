@@ -1,6 +1,7 @@
 package org.stepik.android.cache.wishlist
 
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.cache.wishlist.dao.WishlistDao
@@ -14,7 +15,7 @@ constructor(
     private val wishlistDao: WishlistDao,
     private val databaseFacade: DatabaseFacade
 ) : WishlistCacheDataSource {
-    override fun getWishlistEntry(courseId: Long): Single<WishlistEntry> =
+    override fun getWishlistEntry(courseId: Long): Maybe<WishlistEntry> =
         wishlistDao.getWishlistEntry(courseId)
 
     override fun getWishlistEntries(): Single<List<WishlistEntry>> =

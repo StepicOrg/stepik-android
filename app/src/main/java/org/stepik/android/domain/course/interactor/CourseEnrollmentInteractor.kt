@@ -92,10 +92,6 @@ constructor(
 
     private fun removeCourseFromWishlist(courseId: Long): Completable =
         wishlistRepository
-            .removeCourseFromWishlist(courseId, mustNotifyBackend = false)
-            .andThen(
-                Completable.fromAction {
-                    wishlistOperationPublisher.onNext(WishlistOperationData(courseId, WishlistAction.REMOVE))
-                }
-            )
+            .removeCourseFromWishlist(courseId, sourceType = DataSourceType.CACHE)
+            .doOnComplete { wishlistOperationPublisher.onNext(WishlistOperationData(courseId, WishlistAction.REMOVE)) }
 }

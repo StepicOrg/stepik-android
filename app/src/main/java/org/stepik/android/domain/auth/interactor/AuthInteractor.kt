@@ -57,9 +57,7 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
-            .andThen(courseRepository.removeCachedCourses())
-            .andThen(visitedCoursesRepository.removedVisitedCourses())
-            .andThen(wishlistRepository.removeWishlistEntries())
+            .andThen(clearCache())
 
     fun authWithCode(code: String, type: SocialAuthType): Completable =
         authRepository
@@ -67,9 +65,7 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
-            .andThen(courseRepository.removeCachedCourses())
-            .andThen(visitedCoursesRepository.removedVisitedCourses())
-            .andThen(wishlistRepository.removeWishlistEntries())
+            .andThen(clearCache())
 
     private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
         userProfileRepository
@@ -90,4 +86,9 @@ constructor(
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to type.identifier))
             }
             .ignoreElement()
+
+    private fun clearCache(): Completable =
+        courseRepository.removeCachedCourses()
+            .andThen(visitedCoursesRepository.removedVisitedCourses())
+            .andThen(wishlistRepository.removeWishlistEntries())
 }
