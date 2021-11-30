@@ -24,6 +24,7 @@ import org.stepik.android.cache.mobile_tiers.dao.LightSkuDao
 import org.stepik.android.cache.mobile_tiers.dao.MobileTiersDao
 import org.stepik.android.cache.proctor_session.dao.ProctorSessionDao
 import org.stepik.android.cache.rubric.dao.RubricDao
+import org.stepik.android.cache.wishlist.dao.WishlistDao
 import org.stepik.android.domain.course_recommendations.model.CourseRecommendation
 import org.stepik.android.domain.exam_session.model.ExamSession
 import org.stepik.android.domain.mobile_tiers.model.LightSku
@@ -31,6 +32,7 @@ import org.stepik.android.domain.mobile_tiers.model.MobileTier
 import org.stepik.android.domain.proctor_session.model.ProctorSession
 import org.stepik.android.domain.rubric.model.Rubric
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
+import org.stepik.android.domain.wishlist.model.WishlistEntry
 
 @Database(
     entities = [
@@ -45,7 +47,8 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
         ExamSession::class,
         ProctorSession::class,
         MobileTier::class,
-        LightSku::class
+        LightSku::class,
+        WishlistEntry::class
     ],
     version = AppDatabase.VERSION,
     exportSchema = false
@@ -75,4 +78,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun proctorSessionDao(): ProctorSessionDao
     abstract fun mobileTiersDao(): MobileTiersDao
     abstract fun lightSkuDao(): LightSkuDao
+    abstract fun wishlistDao(): WishlistDao
 }

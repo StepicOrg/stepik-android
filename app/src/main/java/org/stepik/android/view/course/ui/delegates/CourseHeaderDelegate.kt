@@ -128,7 +128,7 @@ constructor(
                         CourseJoinedEvent(
                             CourseJoinedEvent.SOURCE_PREVIEW,
                             headerData.course,
-                            headerData.stats.isWishlisted
+                            headerData.course.isInWishlist
                         )
                     )
                 }
@@ -158,7 +158,7 @@ constructor(
 
             courseBuyInAppAction.setOnClickListener {
                 courseHeaderData?.let { headerData ->
-                    analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
+                    analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.course.isInWishlist))
                     analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
                 }
                 coursePresenter.purchaseCourse()
@@ -184,7 +184,7 @@ constructor(
         coursePresenter.openCoursePurchaseInWeb(queryParams)
 
         courseHeaderData?.let { headerData ->
-            analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
+            analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.course.isInWishlist))
             analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
         }
     }
@@ -364,8 +364,7 @@ constructor(
                         courseHeaderData.stats,
                         notEnrolledMobileTierState.standardLightSku,
                         promoCodeSku,
-                        courseHeaderData.wishlistEntity,
-                        courseHeaderData.stats.isWishlisted
+                        courseHeaderData.course.isInWishlist
                 )
                 coursePurchaseFlowAction(coursePurchaseData)
         } else {
@@ -461,7 +460,7 @@ constructor(
                 wishlistCourseMenuItem.isVisible = courseHeaderData != null && courseHeaderData?.course?.enrollment == 0L && isAuthorized
                 wishlistCourseMenuItem.isEnabled = courseHeaderData?.isWishlistUpdating == false
                 val (icon, title) =
-                    if (courseHeaderData?.stats?.isWishlisted == true) {
+                    if (courseHeaderData?.course?.isInWishlist == true) {
                         ContextCompat.getDrawable(courseActivity, R.drawable.ic_wishlist_active) to courseActivity.getString(R.string.wishlist_add_action)
                     } else {
                         ContextCompat.getDrawable(courseActivity, R.drawable.ic_wishlist_inactive) to courseActivity.getString(R.string.wishlist_remove_action)
@@ -525,9 +524,9 @@ constructor(
             }
 
             R.id.wishlist_course -> {
-                courseHeaderData?.stats?.let {
+                courseHeaderData?.course?.let {
                     val action =
-                        if (it.isWishlisted) {
+                        if (it.isInWishlist) {
                             WishlistAction.REMOVE
                         } else {
                             WishlistAction.ADD

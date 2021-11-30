@@ -1,5 +1,6 @@
 package org.stepic.droid.storage.operations
 
+import android.content.ContentValues
 import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
@@ -187,6 +188,12 @@ constructor(
 
     fun deleteCourses() {
         courseDao.removeAll()
+    }
+
+    fun updateCourseIsInWishlist(courseId: Long, isInWishlist: Boolean) {
+        val contentValues = ContentValues()
+        contentValues.put(DbStructureCourse.Columns.IS_IN_WISHLIST, isInWishlist)
+        courseDao.update(DbStructureCourse.Columns.ID, courseId.toString(), contentValues)
     }
 
     fun addSections(sections: List<Section>) =

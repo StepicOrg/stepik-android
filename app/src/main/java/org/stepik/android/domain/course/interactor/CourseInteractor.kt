@@ -22,7 +22,6 @@ import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
-import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -77,9 +76,12 @@ constructor(
                 courseStatsInteractor.getCourseStats(listOf(course)).first()
             },
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            if (promo == null) Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY) else courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo),
-            (requireAuthorization() then wishlistRepository.getWishlistRecord(DataSourceType.CACHE)).onErrorReturnItem(WishlistEntity.EMPTY)
-        ) { courseStats, localSubmissions, (promoCode, promoCodeSku), wishlistEntity ->
+            if (promo == null) {
+                Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY)
+            } else {
+                courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo)
+            }
+        ) { courseStats, localSubmissions, (promoCode, promoCodeSku) ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -91,8 +93,7 @@ constructor(
                 deeplinkPromoCode = promoCode,
                 deeplinkPromoCodeSku = promoCodeSku,
                 defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course),
-                isWishlistUpdating = false,
-                wishlistEntity = wishlistEntity
+                isWishlistUpdating = false
             )
         }
             .toMaybe()

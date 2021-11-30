@@ -6,12 +6,14 @@ import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity
 import org.stepik.android.view.auth.ui.activity.RegistrationActivity
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_profile.UserProfileDataModule
+import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @Subcomponent(
     modules = [
         AuthModule::class,
         UserDataModule::class,
-        UserProfileDataModule::class
+        UserProfileDataModule::class,
+        WishlistDataModule::class
     ]
 )
 interface AuthComponent {
