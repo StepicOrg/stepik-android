@@ -16,8 +16,8 @@ interface WishlistService {
     fun getWishlist(@Query("page") page: Int): Single<WishlistResponse>
 
     @POST("api/wish-lists")
-    fun addToWishlist(@Body body: WishlistRequest): Single<WishlistResponse>
+    fun updateWishlist(@Body body: WishlistRequest): Single<WishlistResponse>
 
     @DELETE("api/wish-lists/{wishlistEntryId}")
-    fun removeFromWishlist(@Path("wishlistEntryId") wishlistEntryId: Long): Completable
+    fun removeWishlistEntry(@Path("wishlistEntryId") wishlistEntryId: Long): Completable
 }

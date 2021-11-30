@@ -26,11 +26,11 @@ constructor(
 
     override fun saveWishlistEntry(courseId: Long): Single<WishlistEntry> =
         wishlistService
-            .addToWishlist(WishlistRequest(courseId))
+            .updateWishlist(WishlistRequest(courseId))
             .map { wishlistResponse -> wishlistResponse.wishlistEntries.first() }
 
     override fun removeWishlistEntry(wishlistEntryId: Long): Completable =
-        wishlistService.removeFromWishlist(wishlistEntryId)
+        wishlistService.removeWishlistEntry(wishlistEntryId)
 
     private fun getWishlistEntriesByPage(): Single<List<WishlistEntry>> =
         Observable.range(1, Integer.MAX_VALUE)
