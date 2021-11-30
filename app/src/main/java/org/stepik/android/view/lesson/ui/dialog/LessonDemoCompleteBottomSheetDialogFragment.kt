@@ -97,7 +97,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
             }
 
         demoCompleteAction.setOnClickListener {
-            screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.LessonDemoDialog, CourseScreenTab.INFO, true)
+            screenManager.showCoursePurchaseFromLessonDemoDialog(requireContext(), course.id, CourseViewSource.LessonDemoDialog, CourseScreenTab.INFO, deeplinkPromoCode)
         }
     }
 

@@ -17,6 +17,7 @@ import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.domain.lesson.model.LessonData;
@@ -162,7 +163,8 @@ public interface ScreenManager {
     void showUserCourses(Context context);
     void showVisitedCourses(Context context);
     void showPersonalizedOnboarding(Context context);
-    void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, boolean openCoursePurchase);
+    void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab);
+    void showCoursePurchaseFromLessonDemoDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, DeeplinkPromoCode deeplinkPromoCode);
     void showWishlist(Context context);
     void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle);
     void showUserReviews(Context context);

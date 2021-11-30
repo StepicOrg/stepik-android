@@ -497,7 +497,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun onSyllabusAction(courseViewSource: CourseViewSource) {
         val course = lessonData.course ?: return
-        screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS, false)
+        screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS)
     }
 
     override fun showErrorMessage() {
