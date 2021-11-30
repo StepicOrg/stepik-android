@@ -574,8 +574,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showTrialLesson(Activity sourceActivity, Long lessonId) {
-        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, lessonId);
+    public void showTrialLesson(Activity sourceActivity, Long lessonId, Long unitId) {
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, lessonId, unitId);
         sourceActivity.startActivity(intent);
     }
 

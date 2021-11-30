@@ -166,12 +166,11 @@ constructor(
             }
 
             courseTryFree.setOnClickListener {
-                val lessonId = courseHeaderData
+                val course = courseHeaderData
                     ?.course
-                    ?.previewLesson
                     ?: return@setOnClickListener
 
-                coursePresenter.tryLessonFree(lessonId)
+                coursePresenter.tryLessonFree(course.previewLesson, course.previewUnit)
             }
         }
     }

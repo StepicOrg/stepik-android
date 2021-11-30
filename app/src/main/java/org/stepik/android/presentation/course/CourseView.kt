@@ -34,5 +34,5 @@ interface CourseView : CourseContinueView, BillingView {
 
     fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>? = null)
 
-    fun showTrialLesson(lessonId: Long)
+    fun showTrialLesson(lessonId: Long, unitId: Long)
 }

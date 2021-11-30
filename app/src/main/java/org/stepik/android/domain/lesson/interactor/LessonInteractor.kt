@@ -63,17 +63,18 @@ constructor(
             }
 
     fun getLessonData(lessonDeepLinkData: LessonDeepLinkData): Maybe<LessonData> =
-        resolveLessonDataByLessonId(lessonDeepLinkData.lessonId, lessonDeepLinkData.stepPosition - 1, lessonDeepLinkData.discussionId, lessonDeepLinkData.discussionThread)
+        resolveLessonDataByLessonAndUnitId(lessonDeepLinkData.lessonId, lessonDeepLinkData.unitId ?: 0, lessonDeepLinkData.stepPosition - 1, lessonDeepLinkData.discussionId, lessonDeepLinkData.discussionThread)
 
-    fun getLessonData(trialLessonId: Long): Maybe<LessonData> =
-        resolveLessonDataByLessonId(trialLessonId)
+    fun getLessonData(trialLessonId: Long, trialUnitId: Long): Maybe<LessonData> =
+        resolveLessonDataByLessonAndUnitId(trialLessonId, trialUnitId)
 
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())
 
-    private fun resolveLessonDataByLessonId(
+    private fun resolveLessonDataByLessonAndUnitId(
         lessonId: Long,
+        unitId: Long = 0,
         stepPosition: Int = 0,
         discussionId: Long? = null,
         discussionThread: String? = null
@@ -81,9 +82,7 @@ constructor(
         lessonRepository
             .getLesson(lessonId)
             .flatMapSingleElement { lesson ->
-                unitRepository
-                    .getUnitsByLessonId(lesson.id)
-                    .maybeFirst()
+                resolveUnitSource(unitId, lesson.id)
                     .flatMap { unit ->
                         sectionRepository
                             .getSection(unit.section)
@@ -100,4 +99,14 @@ constructor(
                     }
                     .toSingle(LessonData(lesson, null, null, null, stepPosition, discussionId, discussionThread))
             }
+
+    private fun resolveUnitSource(unitId: Long, lessonId: Long): Maybe<Unit> =
+        if (unitId == 0L) {
+            unitRepository
+                .getUnitsByLessonId(lessonId)
+                .maybeFirst()
+        } else {
+            unitRepository
+                .getUnit(unitId)
+        }
 }

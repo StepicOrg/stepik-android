@@ -554,8 +554,8 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         }
     }
 
-    override fun showTrialLesson(lessonId: Long) {
-        screenManager.showTrialLesson(this, lessonId)
+    override fun showTrialLesson(lessonId: Long, unitId: Long) {
+        screenManager.showTrialLesson(this, lessonId, unitId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
