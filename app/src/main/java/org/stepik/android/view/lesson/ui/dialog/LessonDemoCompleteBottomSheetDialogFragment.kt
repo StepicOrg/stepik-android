@@ -12,10 +12,12 @@ import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepik.android.data.course.repository.CoursePurchaseDataRepositoryImpl
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course.routing.CourseScreenTab
@@ -43,9 +45,12 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
     @Inject
     lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
 
+    @Inject
+    lateinit var coursePurchaseDataRepository: CoursePurchaseDataRepositoryImpl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.component().inject(this)
+        App.componentManager().courseComponent(course.id).inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
     }
 
@@ -61,9 +66,17 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
         super.onViewCreated(view, savedInstanceState)
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
 
+        if (coursePurchaseDataRepository.coursePurchaseData != null) {
+            setupIAP(coursePurchaseDataRepository.coursePurchaseData!!)
+        } else {
+            setupWeb(coursePurchaseDataRepository.deeplinkPromoCode)
+        }
+    }
+
+    private fun setupWeb(deeplinkPromoCode: DeeplinkPromoCode) {
         val courseDisplayPrice = course.displayPrice
         val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
-            DeeplinkPromoCode.EMPTY, // TODO Deeplink promo code will be passed as a parameter to newInstance
+            deeplinkPromoCode,
             DefaultPromoCode(
                 course.defaultPromoCodeName ?: "",
                 course.defaultPromoCodePrice ?: "",
@@ -72,7 +85,6 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
             ),
             course
         )
-
         demoCompleteAction.text =
             if (courseDisplayPrice != null) {
                 if (hasPromo) {
@@ -87,5 +99,19 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
         demoCompleteAction.setOnClickListener {
             screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.LessonDemoDialog, CourseScreenTab.INFO, true)
         }
+    }
+
+    private fun setupIAP(coursePurchaseData: CoursePurchaseData) {
+        val courseDisplayPrice = coursePurchaseData.course.displayPrice
+        demoCompleteAction.text =
+            if (courseDisplayPrice != null) {
+                if (coursePurchaseData.promoCodeSku.lightSku != null) {
+                    displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(coursePurchaseData.primarySku.price, coursePurchaseData.promoCodeSku.lightSku.price)
+                } else {
+                    getString(R.string.course_payments_purchase_in_web_with_price, coursePurchaseData.primarySku.price)
+                }
+            } else {
+                getString(R.string.course_payments_purchase_in_web)
+            }
     }
 }

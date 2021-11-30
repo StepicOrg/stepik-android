@@ -11,9 +11,11 @@ import okhttp3.ResponseBody
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
+import org.stepik.android.data.course.repository.CoursePurchaseDataRepositoryImpl
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.CoursePurchaseFlow
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
@@ -23,6 +25,7 @@ import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.injection.course.CourseScope
 import retrofit2.HttpException
 import retrofit2.Response
@@ -41,7 +44,8 @@ constructor(
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val wishlistRepository: WishlistRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val firebaseRemoteConfig: FirebaseRemoteConfig
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
+    private val coursePurchaseDataRepository: CoursePurchaseDataRepositoryImpl
 ) {
     companion object {
 //        private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -92,6 +96,35 @@ constructor(
             )
         }
             .toMaybe()
+            .doOnSuccess { courseHeaderData ->
+                val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
+                val coursePurchaseData =
+                    if (notEnrolledMobileTierState != null) {
+                        val promoCodeSku = when {
+                            courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
+                                courseHeaderData.deeplinkPromoCodeSku
+
+                            notEnrolledMobileTierState.promoLightSku != null -> {
+                                PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
+                            }
+
+                            else ->
+                                PromoCodeSku.EMPTY
+                        }
+                        CoursePurchaseData(
+                            courseHeaderData.course,
+                            courseHeaderData.stats,
+                            notEnrolledMobileTierState.standardLightSku,
+                            promoCodeSku,
+                            courseHeaderData.wishlistEntity,
+                            courseHeaderData.stats.isWishlisted
+                        )
+                    } else {
+                        null
+                    }
+                coursePurchaseDataRepository.coursePurchaseData = coursePurchaseData
+                coursePurchaseDataRepository.deeplinkPromoCode = courseHeaderData.deeplinkPromoCode
+            }
 
     private fun requireAuthorization(): Completable =
         Completable.create { emitter ->

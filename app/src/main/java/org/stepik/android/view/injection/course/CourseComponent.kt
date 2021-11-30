@@ -19,6 +19,7 @@ import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.wishlist.WishlistDataModule
+import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 
 @CourseScope
 @Subcomponent(modules = [
@@ -42,7 +43,8 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
     ExamSessionDataModule::class,
     ProctorSessionDataModule::class,
 
-    WishlistDataModule::class
+    WishlistDataModule::class,
+    CoursePurchaseDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder
@@ -58,4 +60,5 @@ interface CourseComponent {
     fun inject(courseInfoFragment: CourseInfoFragment)
     fun inject(courseReviewsFragment: CourseReviewsFragment)
     fun inject(courseContentFragment: CourseContentFragment)
+    fun inject(lessonDemoCompleteBottomSheetDialogFragment: LessonDemoCompleteBottomSheetDialogFragment)
 }
