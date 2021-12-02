@@ -1,7 +1,6 @@
 package org.stepik.android.presentation.course_purchase
 
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
-import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -23,7 +22,7 @@ interface CoursePurchaseFeature {
          * Wishlist messages
          */
         object WishlistAddMessage : Message()
-        data class WishlistAddSuccess(val wishlistEntity: WishlistEntity) : Message()
+        object WishlistAddSuccess : Message()
         object WishlistAddFailure : Message()
 
         /**
@@ -38,7 +37,6 @@ interface CoursePurchaseFeature {
     sealed class Action {
         data class AddToWishlist(
             val course: Course,
-            val wishlistEntity: WishlistEntity,
             val wishlistOperationData: WishlistOperationData
         ) : Action()
 

@@ -7,7 +7,6 @@ import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Mes
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Action
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.wishlist.model.WishlistAction
-import ru.nobird.android.core.model.mutate
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
@@ -35,16 +34,15 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.WishlistAddMessage -> {
                 if (state is State.Content) {
-                    val wishlistEntity = state.coursePurchaseData.wishlistEntity.copy(courses = state.coursePurchaseData.wishlistEntity.courses.mutate { add(0, state.coursePurchaseData.course.id) })
                     val wishlistOperationData = WishlistOperationData(state.coursePurchaseData.course.id, WishlistAction.ADD)
-                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding)to setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistEntity, wishlistOperationData))
+                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding)to setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistOperationData))
                 } else {
                     null
                 }
             }
             is Message.WishlistAddSuccess -> {
                 if (state is State.Content) {
-                    val updatedCoursePurchaseData = state.coursePurchaseData.copy(wishlistEntity = message.wishlistEntity, isWishlisted = true)
+                    val updatedCoursePurchaseData = state.coursePurchaseData.copy(isWishlisted = true)
                     state.copy(coursePurchaseData = updatedCoursePurchaseData, wishlistState = CoursePurchaseFeature.WishlistState.Wishlisted) to emptySet()
                 } else {
                     null

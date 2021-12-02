@@ -76,6 +76,7 @@ import org.stepik.android.view.injection.course_purchase.CoursePurchaseComponent
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.course_search.CourseSearchComponent
 import org.stepik.android.view.injection.debug.DebugComponent
+import org.stepik.android.view.injection.debug.InAppPurchasesComponent
 import org.stepik.android.view.injection.debug.SplitTestsComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
@@ -294,6 +295,8 @@ interface AppCoreComponent {
     fun coursePurchaseComponentBuilder(): CoursePurchaseComponent.Builder
 
     fun splitTestsComponentBuilder(): SplitTestsComponent.Builder
+
+    fun inAppPurchasesComponentBuilder(): InAppPurchasesComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

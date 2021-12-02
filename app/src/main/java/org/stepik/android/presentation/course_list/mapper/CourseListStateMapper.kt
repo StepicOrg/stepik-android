@@ -107,7 +107,7 @@ constructor(
 
     private fun mergeCourseDataItemWithWishlist(item: CourseListItem.Data, wishlistOperationData: WishlistOperationData): CourseListItem.Data =
         if (item.course.id == wishlistOperationData.courseId) {
-            item.copy(courseStats = item.courseStats.copy(isWishlisted = wishlistOperationData.wishlistAction == WishlistAction.ADD))
+            item.copy(course = item.course.copy(isInWishlist = wishlistOperationData.wishlistAction == WishlistAction.ADD))
         } else {
             item
         }

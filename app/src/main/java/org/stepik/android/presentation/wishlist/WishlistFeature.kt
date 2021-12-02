@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.wishlist
 
-import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 
 interface WishlistFeature {
@@ -15,7 +14,7 @@ interface WishlistFeature {
 
     sealed class Message {
         data class InitMessage(val forceUpdate: Boolean = false) : Message()
-        data class FetchWishlistSuccess(val wishlistEntity: WishlistEntity) : Message()
+        data class FetchWishlistSuccess(val wishlistedCourses: List<Long>) : Message()
         object FetchWishListError : Message()
         data class WishlistOperationUpdate(val wishlistOperationData: WishlistOperationData) : Message()
     }

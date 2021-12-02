@@ -38,7 +38,7 @@ constructor(
     override fun handleAction(action: WishlistFeature.Action) {
         when (action) {
             is WishlistFeature.Action.FetchWishList -> {
-                compositeDisposable += wishlistInteractor.getWishlistSyncedWithUserCourses(dataSourceType = DataSourceType.REMOTE)
+                compositeDisposable += wishlistInteractor.getWishlist(dataSourceType = DataSourceType.REMOTE)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

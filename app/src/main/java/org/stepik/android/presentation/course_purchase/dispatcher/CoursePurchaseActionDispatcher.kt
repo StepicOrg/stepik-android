@@ -30,13 +30,13 @@ constructor(
         when (action) {
             is CoursePurchaseFeature.Action.AddToWishlist -> {
                 compositeDisposable += wishlistInteractor
-                    .updateWishlistWithOperation(action.wishlistEntity, action.wishlistOperationData)
+                    .updateWishlistWithOperation(action.wishlistOperationData)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = {
+                        onComplete = {
                             analytic.report(CourseWishlistAddedEvent(action.course, CourseViewSource.CoursePurchase))
-                            onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess(it))
+                            onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess)
                         },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddFailure) }
                     )
