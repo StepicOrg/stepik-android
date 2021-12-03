@@ -1,206 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coursePurchaseCoordinator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/coursePurchaseGrip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_grip"
-        app:tint="?colorControlNormal" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/coursePurchaseCourseIcon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
-        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
-
-        tools:src="@drawable/general_placeholder" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/coursePurchaseCourseTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="16dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textAppearance="?textAppearanceHeadline6"
-
-        app:layout_constraintLeft_toRightOf="@id/coursePurchaseCourseIcon"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
-        tools:text="Алгоритмический фундамент программиста" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/coursePromoCodeAction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="26dp"
-        android:layout_marginBottom="26dp"
-        android:text="@string/course_purchase_promocode_available"
-        android:textAppearance="?textAppearanceBody1"
-        android:theme="@style/ThemeOverlay.Green"
-        android:visibility="visible"
-        app:drawableEndCompat="@drawable/exo_ic_chevron_right"
-        app:drawableTint="@color/color_overlay_green"
-        app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
-
-    <FrameLayout
-        android:id="@+id/coursePurchasePromoCodeInputContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/login_edit_text_stroke"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/coursePurchasePromoCodeSubmitAction"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/coursePurchasePromoCodeInput"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginRight="44dp"
-            android:background="@android:color/transparent"
-            android:ellipsize="end"
-            android:hint="@string/course_purchase_promocode_hint"
-            android:imeOptions="actionDone"
-            android:inputType="textCapCharacters"
-            android:maxLines="1"
-            android:paddingLeft="16dp"
-            android:textAppearance="?textAppearanceBody1" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/coursePurchasePromoCodeInputDismiss"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="16dp"
-            android:visibility="gone"
-            app:srcCompat="@drawable/ic_close"
+            android:id="@+id/coursePurchaseGrip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_grip"
             app:tint="?colorControlNormal" />
 
-    </FrameLayout>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/coursePurchaseCourseIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/coursePurchasePromoCodeSubmitAction"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/bg_course_purchase_promo_code_submit"
-        android:padding="0dp"
-        android:src="@drawable/ic_arrow_forward"
-        android:visibility="gone"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon" />
+            tools:src="@drawable/general_placeholder" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coursePurchaseCourseTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="16dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?textAppearanceHeadline6"
+
+            app:layout_constraintLeft_toRightOf="@id/coursePurchaseCourseIcon"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
+            tools:text="Алгоритмический фундамент программиста" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coursePromoCodeAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginBottom="26dp"
+            android:text="@string/course_purchase_promocode_available"
+            android:textAppearance="?textAppearanceBody1"
+            android:theme="@style/ThemeOverlay.Green"
+            android:visibility="visible"
+            app:drawableEndCompat="@drawable/exo_ic_chevron_right"
+            app:drawableTint="@color/color_overlay_green"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
+
+        <FrameLayout
+            android:id="@+id/coursePurchasePromoCodeInputContainer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/login_edit_text_stroke"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/coursePurchasePromoCodeSubmitAction"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/coursePurchasePromoCodeInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginRight="44dp"
+                android:background="@android:color/transparent"
+                android:ellipsize="end"
+                android:hint="@string/course_purchase_promocode_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textCapCharacters"
+                android:maxLines="1"
+                android:paddingLeft="16dp"
+                android:textAppearance="?textAppearanceBody1" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/coursePurchasePromoCodeInputDismiss"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginRight="16dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_close"
+                app:tint="?colorControlNormal" />
+
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/coursePurchasePromoCodeSubmitAction"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/bg_course_purchase_promo_code_submit"
+            android:padding="0dp"
+            android:src="@drawable/ic_arrow_forward"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon" />
 
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/coursePurchasePromoCodeBarrier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="coursePromoCodeAction,coursePurchasePromoCodeInputContainer" />
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/coursePurchasePromoCodeBarrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="coursePromoCodeAction,coursePurchasePromoCodeInputContainer" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/coursePurchasePromoCodeResultMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:textAppearance="?textAppearanceCaption"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchasePromoCodeBarrier"
-        tools:text="Промокод применен" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coursePurchasePromoCodeResultMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:textAppearance="?textAppearanceCaption"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchasePromoCodeBarrier"
+            tools:text="Промокод применен" />
 
 
-    <include
-        android:id="@+id/coursePurchaseDivider"
-        layout="@layout/view_divider_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchasePromoCodeResultMessage"
-        app:layout_goneMarginTop="0dp" />
+        <include
+            android:id="@+id/coursePurchaseDivider"
+            layout="@layout/view_divider_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="?dividerVerticalSize"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchasePromoCodeResultMessage"
+            app:layout_goneMarginTop="0dp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/coursePurchaseCommissionNotice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
-        android:textAppearance="?textAppearanceCaption"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseDivider"
-        tools:text="В цену включена 30% комиссия Google Play. Оплачивая доступ к этому курсу вы соглашаетесь с условиями пользовательского соглашения." />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coursePurchaseCommissionNotice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:textAppearance="?textAppearanceCaption"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseDivider"
+            tools:text="В цену включена 30% комиссия Google Play. Оплачивая доступ к этому курсу вы соглашаетесь с условиями пользовательского соглашения." />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/coursePurchaseBuyAction"
-        style="@style/Widget.AppTheme.Button"
-        android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/coursePurchaseBuyAction"
+            style="@style/Widget.AppTheme.Button"
+            android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
 
-        android:layout_marginRight="16dp"
-        android:theme="@style/ThemeOverlay.Violet"
-        app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="16dp"
+            android:theme="@style/ThemeOverlay.Violet"
+            app:layout_constraintLeft_toLeftOf="parent"
 
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
-        tools:text="Купить за 5000 ₽" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            tools:text="Купить за 5000 ₽" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/coursePurchaseWishlistAction"
-        style="@style/Widget.AppTheme.Button.OutlinedButton"
-        android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/coursePurchaseWishlistAction"
+            style="@style/Widget.AppTheme.Button.OutlinedButton"
+            android:layout_width="match_parent"
 
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
 
-        android:layout_marginBottom="16dp"
-        android:theme="@style/ThemeOverlay.Violet"
-        app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="16dp"
+            android:theme="@style/ThemeOverlay.Violet"
+            app:layout_constraintBottom_toBottomOf="parent"
 
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyAction"
-        app:strokeColor="?colorPrimary"
-        app:strokeWidth="1dp"
-        tools:text="Добавить в Список желаний" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyAction"
+            app:strokeColor="?colorPrimary"
+            app:strokeWidth="1dp"
+            tools:text="Добавить в Список желаний" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

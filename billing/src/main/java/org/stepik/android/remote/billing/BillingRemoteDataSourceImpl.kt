@@ -91,7 +91,7 @@ constructor(
                 val consumeParams = ConsumeParams.newBuilder()
                     .setPurchaseToken(purchase.purchaseToken)
                     .build()
-                billingClient.consumeAsync(consumeParams) { billingResult, purchaseToken ->
+                billingClient.consumeAsync(consumeParams) { billingResult, _ ->
                     if (!emitter.isDisposed) {
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                             emitter.onComplete()
