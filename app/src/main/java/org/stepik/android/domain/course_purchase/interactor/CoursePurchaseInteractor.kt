@@ -1,8 +1,11 @@
 package org.stepik.android.domain.course_purchase.interactor
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.SkuDetails
+import io.reactivex.Maybe
 import io.reactivex.Single
-import org.solovyev.android.checkout.ProductTypes
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
@@ -12,6 +15,7 @@ import javax.inject.Inject
 class CoursePurchaseInteractor
 @Inject
 constructor(
+    private val billingRepository: BillingRepository,
     private val mobileTiersRepository: MobileTiersRepository,
     private val lightSkuRepository: LightSkuRepository
 ) {
@@ -23,8 +27,11 @@ constructor(
                     Single.just(PromoCodeSku.EMPTY)
                 } else {
                     lightSkuRepository
-                        .getLightInventory(ProductTypes.IN_APP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
+                        .getLightInventory(BillingClient.SkuType.INAPP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
                         .map { lightSku -> PromoCodeSku(promoCodeName, lightSku.firstOrNull()) }
                 }
             }
+
+    fun getSkuDetails(skuId: String): Maybe<SkuDetails> =
+        billingRepository.getInventory(BillingClient.SkuType.INAPP, skuId)
 }

@@ -8,6 +8,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.debug.interactor.InAppPurchasesInteractor
 import org.stepik.android.presentation.debug.InAppPurchasesFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class InAppPurchasesActionDispatcher
@@ -28,7 +29,7 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesSuccess(it)) },
-                        onError = { onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesFailure) }
+                        onError = { Timber.d("APPS: $it"); onNewMessage(InAppPurchasesFeature.Message.FetchPurchasesFailure) }
                     )
             }
 

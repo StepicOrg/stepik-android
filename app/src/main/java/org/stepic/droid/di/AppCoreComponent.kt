@@ -52,6 +52,7 @@ import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.analytic.AnalyticComponent
 import org.stepik.android.view.injection.auth.AuthComponent
+import org.stepik.android.view.injection.billing.BillingComponent
 import org.stepik.android.view.injection.billing.BillingDataModule
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
@@ -137,7 +138,8 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
 @AppSingleton
 @Component(
     dependencies = [
-        StorageComponent::class
+        StorageComponent::class,
+        BillingComponent::class
     ],
     modules = [
         AppCoreModule::class,
@@ -176,8 +178,6 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
         CourseListBusModule::class,
         CatalogBusModule::class,
 
-        BillingModule::class,
-        BillingDataModule::class,
         MobileTiersDataModule::class,
 
 
@@ -195,6 +195,8 @@ interface AppCoreComponent {
         fun build(): AppCoreComponent
 
         fun setStorageComponent(storageComponent: StorageComponent): Builder
+
+        fun setBillingComponent(billingComponent: BillingComponent): Builder
 
         @BindsInstance
         fun context(context: Context): Builder

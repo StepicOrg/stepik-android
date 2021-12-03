@@ -33,14 +33,28 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
-            is Message.BuyCourseMessage -> {
+            is Message.BuyCourseSkuDetailsMessage -> {
                 if (state is State.Content) {
-                    val promoCodeSku = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-                        state.promoCodeState.promoCodeSku
+                    val skuId = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+                        requireNotNull(state.promoCodeState.promoCodeSku.lightSku?.id)
                     } else {
-                        PromoCodeSku.EMPTY
+                        state.coursePurchaseData.primarySku.id
                     }
-                    state to setOf(Action.ViewAction.BuyCourseData(state.coursePurchaseData.primarySku, promoCodeSku))
+                    state to setOf(Action.FetchSkuDetails(skuId))
+                } else {
+                    null
+                }
+            }
+            is Message.BuyCourseSkuDetailsSuccess -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.BuyCourseData(message.skuDetails))
+                } else {
+                    null
+                }
+            }
+            is Message.BuyCourseSkuDetailsFailure -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.Error(message.throwable))
                 } else {
                     null
                 }

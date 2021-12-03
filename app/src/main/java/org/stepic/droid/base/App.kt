@@ -5,6 +5,7 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
+import com.android.billingclient.api.BillingClient
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.security.ProviderInstaller
 import com.squareup.leakcanary.LeakCanary
@@ -27,6 +28,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
+import org.stepik.android.view.injection.billing.DaggerBillingComponent
 import ru.nobird.android.view.base.ui.extension.isMainProcess
 import timber.log.Timber
 import javax.inject.Inject
@@ -73,6 +75,9 @@ class App : MultiDexApplication() {
     internal lateinit var codeParserContainer: ParserContainer
 
     @Inject
+    internal lateinit var billingClient: BillingClient
+
+    @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     override fun onCreate() {
@@ -117,6 +122,10 @@ class App : MultiDexApplication() {
                         .builder()
                         .context(application)
                         .build())
+                .setBillingComponent(DaggerBillingComponent
+                    .builder()
+                    .context(application)
+                    .build())
                 .build()
 
         component.inject(this)

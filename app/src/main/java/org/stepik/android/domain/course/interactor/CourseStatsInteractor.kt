@@ -1,11 +1,11 @@
 package org.stepik.android.domain.course.interactor
 
+import com.android.billingclient.api.BillingClient
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
-import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
@@ -62,7 +62,7 @@ constructor(
                                 Single.just(deeplinkPromoCode to PromoCodeSku.EMPTY)
                             } else {
                                 lightSkuRepository
-                                    .getLightInventory(ProductTypes.IN_APP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
+                                    .getLightInventory(BillingClient.SkuType.INAPP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
                                     .map { lightSku -> deeplinkPromoCode to PromoCodeSku(promo, lightSku.firstOrNull()) }
                             }
                         }

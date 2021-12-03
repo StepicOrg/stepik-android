@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_purchase
 
+import com.android.billingclient.api.SkuDetails
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.wishlist.model.WishlistEntity
@@ -20,7 +21,9 @@ interface CoursePurchaseFeature {
     sealed class Message {
         data class InitMessage(val coursePurchaseData: CoursePurchaseData) : Message()
 
-        object BuyCourseMessage : Message()
+        object BuyCourseSkuDetailsMessage : Message()
+        data class BuyCourseSkuDetailsSuccess(val skuDetails: SkuDetails) : Message()
+        data class BuyCourseSkuDetailsFailure(val throwable: Throwable) : Message()
 
         /**
          * Wishlist messages
@@ -46,8 +49,10 @@ interface CoursePurchaseFeature {
         ) : Action()
 
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
+        data class FetchSkuDetails(val skuId: String) : Action()
         sealed class ViewAction : Action() {
-            data class BuyCourseData(val primarySku: LightSku, val promoCodeSku: PromoCodeSku) : ViewAction()
+            data class BuyCourseData(val skuDetails: SkuDetails) : ViewAction()
+            data class Error(val throwable: Throwable) : ViewAction()
         }
     }
 

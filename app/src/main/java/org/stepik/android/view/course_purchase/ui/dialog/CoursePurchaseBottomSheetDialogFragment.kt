@@ -6,6 +6,7 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
@@ -13,6 +14,12 @@ import androidx.core.text.inSpans
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -34,11 +41,14 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseBottomSheetDialogFragment :
     BottomSheetDialogFragment(),
-    ReduxView<CoursePurchaseFeature.State, CoursePurchaseFeature.Action.ViewAction> {
+    ReduxView<CoursePurchaseFeature.State, CoursePurchaseFeature.Action.ViewAction>,
+    PurchasesUpdatedListener,
+    BillingClientStateListener {
     companion object {
         const val TAG = "CoursePurchaseBottomSheetDialogFragment"
 
@@ -56,6 +66,8 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     @Inject
     internal lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
+
+    private lateinit var billingClient: BillingClient
 
     private var coursePurchaseData: CoursePurchaseData by argument()
 
@@ -78,6 +90,18 @@ class CoursePurchaseBottomSheetDialogFragment :
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
+
+        billingClient = BillingClient
+            .newBuilder(requireContext())
+            .enablePendingPurchases()
+            .setListener(this)
+            .build()
+        billingClient.startConnection(this)
+    }
+
+    override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
+        Timber.d("Result Dialog: Message - ${billingResult.debugMessage} Code: ${billingResult.responseCode}")
+        Timber.d("Purchases: $purchases")
     }
 
     override fun onStart() {
@@ -122,12 +146,22 @@ class CoursePurchaseBottomSheetDialogFragment :
             append(getString(R.string.full_stop))
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
-        coursePurchaseBinding.coursePurchaseBuyAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.BuyCourseMessage) }
+        coursePurchaseBinding.coursePurchaseBuyAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.BuyCourseSkuDetailsMessage) }
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
-        if (action is CoursePurchaseFeature.Action.ViewAction.BuyCourseData) {
-            (activity as? Callback)?.purchaseCourse(action.primarySku, action.promoCodeSku)
+        when (action) {
+            is CoursePurchaseFeature.Action.ViewAction.BuyCourseData -> {
+                val billingFlowParams = BillingFlowParams
+                    .newBuilder()
+                    .setSkuDetails(action.skuDetails)
+                    .build()
+
+                billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
+            }
+            is CoursePurchaseFeature.Action.ViewAction.Error -> {
+                Toast.makeText(requireContext(), "Error: ${action.throwable.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -142,6 +176,19 @@ class CoursePurchaseBottomSheetDialogFragment :
             coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
             coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))
         }
+    }
+
+    override fun onDestroy() {
+        billingClient.endConnection()
+        super.onDestroy()
+    }
+
+    override fun onBillingServiceDisconnected() {
+        Timber.d("APPS: Dialog billing disconnected")
+    }
+
+    override fun onBillingSetupFinished(p0: BillingResult) {
+        Timber.d("APPS: Dialog billing connected: Message - ${p0.debugMessage} Code - ${p0.responseCode}")
     }
 
     private fun getBuyActionColor(promoCodeState: CoursePurchaseFeature.PromoCodeState): Int =

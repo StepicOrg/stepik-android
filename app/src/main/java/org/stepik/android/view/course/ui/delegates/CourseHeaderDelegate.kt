@@ -239,11 +239,11 @@ constructor(
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
 
-                courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
+                courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
 
-                if (this is EnrollmentState.NotEnrolledInApp) {
-                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
-                }
+//                if (this is EnrollmentState.NotEnrolledInApp) {
+//                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
+//                }
 
                 dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
                 restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
@@ -252,7 +252,7 @@ constructor(
             courseTryFree.isVisible = courseHeaderData.course.courseOptions?.coursePreview?.previewLessonId != null &&
                     courseHeaderData.course.enrollment == 0L &&
                     courseHeaderData.course.isPaid &&
-                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledInApp || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
+                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
 
             shareCourseMenuItem?.isVisible = true
         }
@@ -468,7 +468,7 @@ constructor(
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
-        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledInApp
+        restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledInApp
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
