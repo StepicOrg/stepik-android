@@ -46,9 +46,7 @@ import javax.inject.Inject
 
 class CoursePurchaseBottomSheetDialogFragment :
     BottomSheetDialogFragment(),
-    ReduxView<CoursePurchaseFeature.State, CoursePurchaseFeature.Action.ViewAction>,
-    PurchasesUpdatedListener,
-    BillingClientStateListener {
+    ReduxView<CoursePurchaseFeature.State, CoursePurchaseFeature.Action.ViewAction> {
     companion object {
         const val TAG = "CoursePurchaseBottomSheetDialogFragment"
 
@@ -67,7 +65,8 @@ class CoursePurchaseBottomSheetDialogFragment :
     @Inject
     internal lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
 
-    private lateinit var billingClient: BillingClient
+    @Inject
+    internal lateinit var billingClient: BillingClient
 
     private var coursePurchaseData: CoursePurchaseData by argument()
 
@@ -91,17 +90,6 @@ class CoursePurchaseBottomSheetDialogFragment :
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
 
-        billingClient = BillingClient
-            .newBuilder(requireContext())
-            .enablePendingPurchases()
-            .setListener(this)
-            .build()
-        billingClient.startConnection(this)
-    }
-
-    override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
-        Timber.d("Result Dialog: Message - ${billingResult.debugMessage} Code: ${billingResult.responseCode}")
-        Timber.d("Purchases: $purchases")
     }
 
     override fun onStart() {
@@ -176,19 +164,6 @@ class CoursePurchaseBottomSheetDialogFragment :
             coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
             coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))
         }
-    }
-
-    override fun onDestroy() {
-        billingClient.endConnection()
-        super.onDestroy()
-    }
-
-    override fun onBillingServiceDisconnected() {
-        Timber.d("APPS: Dialog billing disconnected")
-    }
-
-    override fun onBillingSetupFinished(p0: BillingResult) {
-        Timber.d("APPS: Dialog billing connected: Message - ${p0.debugMessage} Code - ${p0.responseCode}")
     }
 
     private fun getBuyActionColor(promoCodeState: CoursePurchaseFeature.PromoCodeState): Int =
