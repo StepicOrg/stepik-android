@@ -6,7 +6,6 @@ import android.text.style.ClickableSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
@@ -38,6 +37,9 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
+import androidx.annotation.StringRes
+import org.stepik.android.presentation.course.model.EnrollmentError
+import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CoursePurchaseBottomSheetDialogFragment :
     BottomSheetDialogFragment(),
@@ -84,7 +86,6 @@ class CoursePurchaseBottomSheetDialogFragment :
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
-
     }
 
     override fun onStart() {
@@ -129,21 +130,52 @@ class CoursePurchaseBottomSheetDialogFragment :
             append(getString(R.string.full_stop))
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
-        coursePurchaseBinding.coursePurchaseBuyAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.BuyCourseSkuDetailsMessage) }
+        coursePurchaseBinding.coursePurchaseBuyAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) }
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
         when (action) {
-            is CoursePurchaseFeature.Action.ViewAction.BuyCourseData -> {
+            is CoursePurchaseFeature.Action.ViewAction.LaunchPurchaseFlowBilling -> {
                 val billingFlowParams = BillingFlowParams
                     .newBuilder()
+                    // .setObfuscatedProfileId(action.payload) - MD5 the payload and add here
                     .setSkuDetails(action.skuDetails)
                     .build()
 
                 billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
             }
             is CoursePurchaseFeature.Action.ViewAction.Error -> {
-                Toast.makeText(requireContext(), "Error: ${action.throwable.message}", Toast.LENGTH_SHORT).show()
+                @StringRes
+                val errorMessage =
+                    when (action.error) {
+                        EnrollmentError.NO_CONNECTION ->
+                            R.string.course_error_enroll
+
+                        EnrollmentError.FORBIDDEN ->
+                            R.string.join_course_web_exception
+
+                        EnrollmentError.UNAUTHORIZED ->
+                            R.string.unauthorization_detail
+
+                        EnrollmentError.SERVER_ERROR ->
+                            R.string.course_purchase_server_error
+
+                        EnrollmentError.BILLING_ERROR ->
+                            R.string.course_purchase_billing_error
+
+                        EnrollmentError.BILLING_CANCELLED ->
+                            R.string.course_purchase_billing_cancelled
+
+                        EnrollmentError.BILLING_NOT_AVAILABLE ->
+                            R.string.course_purchase_billing_not_available
+
+                        EnrollmentError.COURSE_ALREADY_OWNED ->
+                            R.string.course_purchase_already_owned
+
+                        EnrollmentError.BILLING_NO_PURCHASES_TO_RESTORE ->
+                            R.string.course_purchase_billing_no_purchases_to_restore
+                    }
+                coursePurchaseBinding.coursePurchaseCoordinator.snackbar(messageRes = errorMessage)
             }
         }
     }

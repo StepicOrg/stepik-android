@@ -1,8 +1,10 @@
 package org.stepik.android.presentation.course.mapper
 
+import com.android.billingclient.api.BillingClient
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwnedException
 import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
+import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.presentation.course.model.EnrollmentError
 import retrofit2.HttpException
 import java.net.HttpURLConnection
@@ -24,17 +26,17 @@ fun Throwable.toEnrollmentError(): EnrollmentError =
                     EnrollmentError.NO_CONNECTION
             }
 
-//        is BillingException ->
-//            when (response) {
-//                ResponseCodes.USER_CANCELED ->
-//                    EnrollmentError.BILLING_CANCELLED
-//
-//                ResponseCodes.BILLING_UNAVAILABLE ->
-//                    EnrollmentError.BILLING_NOT_AVAILABLE
-//
-//                else ->
-//                    EnrollmentError.BILLING_ERROR
-//            }
+        is BillingException ->
+            when (responseCode) {
+                BillingClient.BillingResponseCode.USER_CANCELED ->
+                    EnrollmentError.BILLING_CANCELLED
+
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE ->
+                    EnrollmentError.BILLING_NOT_AVAILABLE
+
+                else ->
+                    EnrollmentError.BILLING_ERROR
+            }
 
         is CoursePurchaseVerificationException ->
             EnrollmentError.SERVER_ERROR

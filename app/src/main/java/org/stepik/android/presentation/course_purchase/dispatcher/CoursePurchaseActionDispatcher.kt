@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_purchase.dispatcher
 
+import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.jakewharton.rxrelay2.BehaviorRelay
@@ -11,9 +12,11 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.interactor.CoursePurchaseInteractor
 import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
+import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
@@ -40,6 +43,11 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (billingResult, purchases) ->
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases?.firstOrNull() != null) {
+                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases.first()))
+                    } else {
+                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode).toEnrollmentError()))
+                    }
                     Timber.d("Action dispatcher; Billing Result - Debug message: ${billingResult.debugMessage} Response: ${billingResult.responseCode}; Purchases - $purchases")
                 }
             )
@@ -75,14 +83,24 @@ constructor(
                         onError = { onNewMessage(CoursePurchaseFeature.Message.PromoCodeInvalidMessage) }
                     )
             }
-            is CoursePurchaseFeature.Action.FetchSkuDetails -> {
+            is CoursePurchaseFeature.Action.FetchLaunchFlowData -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .getSkuDetails(action.skuId)
+                    .launchPurchaseFlow(action.courseId, action.skuId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(CoursePurchaseFeature.Message.BuyCourseSkuDetailsSuccess(it)) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.BuyCourseSkuDetailsFailure(it)) }
+                        onSuccess = { (payload, skuDetails) -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(payload, skuDetails)) },
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it.toEnrollmentError())) }
+                    )
+            }
+            is CoursePurchaseFeature.Action.ConsumePurchaseAction -> {
+                compositeDisposable += coursePurchaseInteractor
+                    .completePurchase(action.courseId, action.skuDetails, action.purchase)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.ConsumePurchaseSuccess) },
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.ConsumePurchaseFailure(it.toEnrollmentError())) }
                     )
             }
         }
