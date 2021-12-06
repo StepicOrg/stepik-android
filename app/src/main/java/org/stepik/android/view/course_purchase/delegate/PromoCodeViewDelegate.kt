@@ -20,6 +20,10 @@ class PromoCodeViewDelegate(
     coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
     private val coursePurchaseViewModel: CoursePurchaseViewModel
 ) {
+    companion object {
+        private const val EVALUATION_FRAME_DURATION_MS = 250
+    }
+
     private val context = coursePurchaseBinding.root.context
     private val coursePromoCodeAction = coursePurchaseBinding.coursePromoCodeAction
     private val coursePromoCodeContainer = coursePurchaseBinding.coursePurchasePromoCodeInputContainer
@@ -112,9 +116,9 @@ class PromoCodeViewDelegate(
                 AppCompatResources.getDrawable(context, R.drawable.ic_arrow_forward)
             is PromoCodeState.Checking -> {
                 val evaluationDrawable = AnimationDrawable()
-                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), 200)
-                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), 200)
-                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), 200)
+                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
                 evaluationDrawable.isOneShot = false
                 evaluationDrawable.start()
                 evaluationDrawable

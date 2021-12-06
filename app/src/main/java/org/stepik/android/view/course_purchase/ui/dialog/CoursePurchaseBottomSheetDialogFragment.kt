@@ -184,6 +184,7 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
+            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
             buyActionViewDelegate.render(state)
 
             if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
