@@ -11,8 +11,6 @@ import androidx.core.widget.doAfterTextChanged
 import org.stepic.droid.R
 import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
-import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
-import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.PromoCodeState
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
@@ -20,9 +18,7 @@ import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
 class PromoCodeViewDelegate(
     coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
-    private val coursePurchaseViewModel: CoursePurchaseViewModel,
-    private val coursePurchaseData: CoursePurchaseData,
-    private val displayPriceMapper: DisplayPriceMapper
+    private val coursePurchaseViewModel: CoursePurchaseViewModel
 ) {
     private val context = coursePurchaseBinding.root.context
     private val coursePromoCodeAction = coursePurchaseBinding.coursePromoCodeAction
@@ -31,7 +27,6 @@ class PromoCodeViewDelegate(
     private val coursePromoCodeDismiss = coursePurchaseBinding.coursePurchasePromoCodeInputDismiss
     private val coursePromoCodeSubmitAction = coursePurchaseBinding.coursePurchasePromoCodeSubmitAction
     private val coursePurchasePromoCodeResultMessage = coursePurchaseBinding.coursePurchasePromoCodeResultMessage
-    private val coursePurchaseBuyAction = coursePurchaseBinding.coursePurchaseBuyAction
 
     private val layerListDrawableDelegate = LayerListDrawableDelegate(
         listOf(
@@ -59,25 +54,21 @@ class PromoCodeViewDelegate(
         coursePromoCodeSubmitAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeCheckMessage(coursePromoCodeInput.text.toString())) }
     }
 
+    fun setViewVisibility(isVisible: Boolean) {
+        coursePromoCodeAction.isVisible = isVisible
+        coursePromoCodeContainer.isVisible = isVisible
+        coursePromoCodeInput.isVisible = isVisible
+        coursePromoCodeDismiss.isVisible = isVisible
+        coursePromoCodeSubmitAction.isVisible = isVisible
+        coursePurchasePromoCodeResultMessage.isVisible = isVisible
+    }
+
     fun render(state: PromoCodeState) {
         coursePromoCodeAction.isVisible = state is PromoCodeState.Idle
         coursePromoCodeContainer.isVisible = state !is PromoCodeState.Idle
         coursePromoCodeDismiss.isEnabled = state !is PromoCodeState.Checking
         coursePromoCodeSubmitAction.isEnabled = state is PromoCodeState.Editing
         coursePromoCodeInput.isEnabled = state is PromoCodeState.Editing
-
-        val courseDisplayPrice = coursePurchaseData.course.displayPrice
-
-        coursePurchaseBuyAction.text =
-            if (courseDisplayPrice != null) {
-                if (state is PromoCodeState.Valid && state.promoCodeSku.lightSku != null) {
-                    displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(coursePurchaseData.primarySku.price, state.promoCodeSku.lightSku.price)
-                } else {
-                    context.getString(R.string.course_payments_purchase_in_web_with_price, coursePurchaseData.primarySku.price)
-                }
-            } else {
-                context.getString(R.string.course_payments_purchase_in_web)
-            }
 
         coursePurchasePromoCodeResultMessage.isVisible = state is PromoCodeState.Checking || state is PromoCodeState.Valid || state is PromoCodeState.Invalid
 

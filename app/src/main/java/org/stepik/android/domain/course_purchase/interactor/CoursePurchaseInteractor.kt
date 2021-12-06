@@ -95,7 +95,7 @@ constructor(
     private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<String, SkuDetails>> =
         getCurrentProfileId()
             .flatMap { profileId ->
-                val payload = gson.toJson(CoursePurchasePayload(profileId, courseId))
+                val payload = CoursePurchasePayload(profileId, courseId).hashCode().toString()
                 billingRepository
                     .getInventory(BillingClient.SkuType.INAPP, skuId)
                     .toSingle()

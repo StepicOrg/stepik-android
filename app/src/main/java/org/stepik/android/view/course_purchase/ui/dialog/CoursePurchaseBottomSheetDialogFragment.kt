@@ -39,6 +39,7 @@ import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import androidx.annotation.StringRes
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CoursePurchaseBottomSheetDialogFragment :
@@ -70,6 +71,7 @@ class CoursePurchaseBottomSheetDialogFragment :
     private val coursePurchaseViewModel: CoursePurchaseViewModel by reduxViewModel(this) { viewModelFactory }
     private val coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding by viewBinding(BottomSheetDialogCoursePurchaseBinding::bind)
 
+    private lateinit var buyActionViewDelegate: BuyActionViewDelegate
     private lateinit var promoCodeViewDelegate: PromoCodeViewDelegate
     private lateinit var wishlistViewDelegate: WishlistViewDelegate
 
@@ -98,7 +100,8 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel, coursePurchaseData, displayPriceMapper)
+        buyActionViewDelegate = BuyActionViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper) { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) }
+        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
         coursePurchaseBinding.coursePurchaseWishlistAction.setOnClickListener {
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.WishlistAddMessage)
@@ -130,7 +133,6 @@ class CoursePurchaseBottomSheetDialogFragment :
             append(getString(R.string.full_stop))
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
-        coursePurchaseBinding.coursePurchaseBuyAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) }
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
@@ -138,7 +140,7 @@ class CoursePurchaseBottomSheetDialogFragment :
             is CoursePurchaseFeature.Action.ViewAction.LaunchPurchaseFlowBilling -> {
                 val billingFlowParams = BillingFlowParams
                     .newBuilder()
-                    // .setObfuscatedProfileId(action.payload) - MD5 the payload and add here
+                    .setObfuscatedProfileId(action.payload)
                     .setSkuDetails(action.skuDetails)
                     .build()
 
@@ -182,11 +184,21 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
-            promoCodeViewDelegate.render(state.promoCodeState)
-            wishlistViewDelegate.render(state.wishlistState)
+            buyActionViewDelegate.render(state)
+
+            if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
+                promoCodeViewDelegate.setViewVisibility(isVisible = false)
+                wishlistViewDelegate.setViewVisibility(isVisible = false)
+            } else {
+                promoCodeViewDelegate.render(state.promoCodeState)
+                wishlistViewDelegate.setViewVisibility(isVisible = true)
+                wishlistViewDelegate.render(state.wishlistState)
+            }
+
             val buyActionButtonColor = getBuyActionColor(state.promoCodeState)
             val (strokeColor, textColor) = getWishlistActionColor(state)
 
+            coursePurchaseBinding.coursePurchaseBuyAction.isEnabled = state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
             coursePurchaseBinding.coursePurchaseBuyAction.setBackgroundColor(ContextCompat.getColor(requireContext(), buyActionButtonColor))
             coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
             coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))

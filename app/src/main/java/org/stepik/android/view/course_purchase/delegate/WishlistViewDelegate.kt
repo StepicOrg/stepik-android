@@ -1,6 +1,7 @@
 package org.stepik.android.view.course_purchase.delegate
 
 import android.graphics.drawable.AnimationDrawable
+import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.WishlistState
@@ -14,6 +15,10 @@ class WishlistViewDelegate(
     }
 
     private val context = wishlistButton.context
+
+    fun setViewVisibility(isVisible: Boolean) {
+        wishlistButton.isVisible = isVisible
+    }
 
     fun render(state: WishlistState) {
         val messageResId =
