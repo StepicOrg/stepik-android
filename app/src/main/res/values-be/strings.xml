@@ -1049,6 +1049,12 @@
     <string name="course_purchase_wishlist_adding">Дадаем</string>
     <string name="course_purchase_wishlist_added">Курс дададзены ў Спіс жаданняў</string>
 
+    <string name="course_purchase_payment_learn_action">Пачаць вучыцца</string>
+    <string name="course_purchase_payment_restore_action">Аднавіць пакупку</string>
+    <string name="course_purchase_payment_success">Аплата прайшла паспяхова</string>
+    <string name="course_purchase_payment_failure">Аплата прайшла, пакупка не завершана</string>
+    <string name="course_purchase_payment_failure_body">Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і звяжыцеся з падтрымкай, калі памылка не будзе ліквідаваная. Паўторнага спісання сродкаў не адбудзецца.</string>
+
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Змяніць імя атрымальніка</string>
     <string name="certificate_name_change_dialog_title">Змяніць імя атрымальніка</string>

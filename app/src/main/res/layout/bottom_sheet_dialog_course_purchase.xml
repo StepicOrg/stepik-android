@@ -5,6 +5,7 @@
     android:id="@+id/coursePurchaseCoordinator"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,6 +23,35 @@
             app:srcCompat="@drawable/ic_grip"
             app:tint="?colorControlNormal" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/coursePurchasePaymentIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
+            app:srcCompat="@drawable/ic_purchase_success" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/coursePurchasePaymentTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="16dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textAppearance="?textAppearanceSubtitle1"
+            android:visibility="gone"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchasePaymentIcon"
+            tools:text="Оплата прошла успешно" />
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/coursePurchaseCourseIcon"
             android:layout_width="48dp"
@@ -29,7 +59,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchasePaymentTitle"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
 
             tools:src="@drawable/general_placeholder" />
@@ -47,8 +77,20 @@
 
             app:layout_constraintLeft_toRightOf="@id/coursePurchaseCourseIcon"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/coursePurchaseGrip"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchasePaymentTitle"
             tools:text="Алгоритмический фундамент программиста" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/coursePurchasePaymentFeedback"
+            style="@style/StepQuizFeedback.Wrong"
+            android:layout_margin="16dp"
+            android:text="@string/course_purchase_payment_failure_body"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_step_quiz_choice_wrong"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/coursePromoCodeAction"
