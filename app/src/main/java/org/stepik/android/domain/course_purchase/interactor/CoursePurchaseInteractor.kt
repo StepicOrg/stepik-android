@@ -5,14 +5,12 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import com.google.gson.Gson
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.repository.BillingRepository
-import org.stepik.android.domain.course.interactor.CourseBillingInteractor
 import org.stepik.android.domain.course.model.CoursePurchasePayload
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwnedException
@@ -20,6 +18,7 @@ import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerific
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
@@ -68,7 +67,7 @@ constructor(
                 }
             }
 
-    fun launchPurchaseFlow(courseId: Long, skuId: String): Single<Pair<String, SkuDetails>> =
+    fun launchPurchaseFlow(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
         coursePaymentsRepository
             .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .flatMap { payments ->
@@ -92,14 +91,15 @@ constructor(
             .andThen(updateCourseAfterEnrollment(courseId))
             .andThen(billingRepository.consumePurchase(purchase))
 
-    private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<String, SkuDetails>> =
+    private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
         getCurrentProfileId()
             .flatMap { profileId ->
-                val payload = CoursePurchasePayload(profileId, courseId).hashCode().toString()
+                val obfuscatedAccountId = profileId.toString().hashCode().toString()
+                val obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
                 billingRepository
                     .getInventory(BillingClient.SkuType.INAPP, skuId)
                     .toSingle()
-                    .map { skuDetails -> payload to skuDetails }
+                    .map { skuDetails -> CoursePurchaseObfuscatedParams(obfuscatedAccountId, obfuscatedProfileId) to skuDetails }
             }
 
 

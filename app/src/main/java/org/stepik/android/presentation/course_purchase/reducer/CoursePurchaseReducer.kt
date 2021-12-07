@@ -47,7 +47,7 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.LaunchPurchaseFlowSuccess -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingInitialCheck) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingBillingPayment(message.payload, message.skuDetails)) to setOf(Action.ViewAction.LaunchPurchaseFlowBilling(message.payload, message.skuDetails))
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingBillingPayment(message.obfuscatedParams, message.skuDetails)) to setOf(Action.ViewAction.LaunchPurchaseFlowBilling(message.obfuscatedParams, message.skuDetails))
                 } else {
                     null
                 }

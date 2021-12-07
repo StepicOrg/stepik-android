@@ -140,7 +140,8 @@ class CoursePurchaseBottomSheetDialogFragment :
             is CoursePurchaseFeature.Action.ViewAction.LaunchPurchaseFlowBilling -> {
                 val billingFlowParams = BillingFlowParams
                     .newBuilder()
-                    .setObfuscatedProfileId(action.payload)
+                    .setObfuscatedAccountId(action.obfuscatedParams.obfuscatedAccountId)
+                    .setObfuscatedProfileId(action.obfuscatedParams.obfuscatedProfileId)
                     .setSkuDetails(action.skuDetails)
                     .build()
 

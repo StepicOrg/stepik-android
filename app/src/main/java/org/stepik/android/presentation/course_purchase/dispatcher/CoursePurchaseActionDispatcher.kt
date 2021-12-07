@@ -89,7 +89,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { (payload, skuDetails) -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(payload, skuDetails)) },
+                        onSuccess = { (obfuscatedParams, skuDetails) -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(obfuscatedParams, skuDetails)) },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it.toEnrollmentError())) }
                     )
             }
