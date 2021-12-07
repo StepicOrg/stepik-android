@@ -2,13 +2,16 @@ package org.stepik.android.view.course_purchase.delegate
 
 import android.graphics.PorterDuff
 import android.graphics.drawable.AnimationDrawable
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
 import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -18,10 +21,14 @@ class BuyActionViewDelegate(
     coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
     private val coursePurchaseData: CoursePurchaseData,
     private val displayPriceMapper: DisplayPriceMapper,
-    launchPurchaseFlowAction: () -> Unit
+    launchPurchaseFlowAction: () -> Unit,
+    launchStartStudying: (Course) -> Unit,
+    launchRestoreAction: () -> Unit
 ) {
     private val context = coursePurchaseBinding.root.context
-    private val coursePurchaseBuyAction = coursePurchaseBinding.coursePurchaseBuyAction
+    private val coursePurchaseBuyActionGreen = coursePurchaseBinding.coursePurchaseBuyActionGreen
+    private val coursePurchaseBuyActionViolet = coursePurchaseBinding.coursePurchaseBuyActionViolet
+    private val coursePurchaseTerminalAction = coursePurchaseBinding.coursePurchaseTerminalAction
     private val coursePurchasePaymentIcon = coursePurchaseBinding.coursePurchasePaymentIcon
     private val coursePurchasePaymentTitle = coursePurchaseBinding.coursePurchasePaymentTitle
     private val coursePurchasePaymentFeedback = coursePurchaseBinding.coursePurchasePaymentFeedback
@@ -29,29 +36,45 @@ class BuyActionViewDelegate(
 
     private var paymentState: CoursePurchaseFeature.PaymentState = CoursePurchaseFeature.PaymentState.Idle
 
+    private val idleClickListener = View.OnClickListener {
+        if (paymentState is CoursePurchaseFeature.PaymentState.Idle) {
+            launchPurchaseFlowAction()
+        }
+    }
+
     init {
-        coursePurchaseBuyAction.setOnClickListener {
+        coursePurchaseBuyActionGreen.setOnClickListener(idleClickListener)
+        coursePurchaseBuyActionViolet.setOnClickListener(idleClickListener)
+        coursePurchaseTerminalAction.setOnClickListener {
             when (paymentState) {
-                is CoursePurchaseFeature.PaymentState.Idle -> {
-                    launchPurchaseFlowAction()
-                }
                 is CoursePurchaseFeature.PaymentState.PaymentSuccess -> {
-                    // no op
+                    launchStartStudying(coursePurchaseData.course)
                 }
                 is CoursePurchaseFeature.PaymentState.PaymentFailure -> {
-                    // no op
+                    launchRestoreAction()
                 }
+                else -> {}
             }
         }
     }
 
     fun render(state: CoursePurchaseFeature.State.Content) {
         this.paymentState = state.paymentState
-        coursePurchasePaymentTitle.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
-        coursePurchasePaymentIcon.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+        val isTerminalState = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+        coursePurchasePaymentTitle.isVisible = isTerminalState
+        coursePurchasePaymentIcon.isVisible = isTerminalState
         coursePurchasePaymentFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure
-        coursePurchaseCommissionNotice.isGone = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+        coursePurchaseCommissionNotice.isGone = isTerminalState
 
+        coursePurchaseBuyActionGreen.isVisible = state.promoCodeState !is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
+        coursePurchaseBuyActionViolet.isVisible = state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
+        coursePurchaseTerminalAction.isVisible = isTerminalState
+        renderIdleButton(state, coursePurchaseBuyActionGreen)
+        renderIdleButton(state, coursePurchaseBuyActionViolet)
+        renderTerminalButton(state)
+    }
+
+    private fun renderIdleButton(state: CoursePurchaseFeature.State.Content, coursePurchaseBuyAction: MaterialButton) {
         when (state.paymentState) {
             is CoursePurchaseFeature.PaymentState.Idle -> {
                 coursePurchaseBuyAction.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
@@ -81,28 +104,33 @@ class BuyActionViewDelegate(
                 coursePurchaseBuyAction.text = context.getString(R.string.course_purchase_payment_processing)
                 evaluationDrawable.start()
             }
+        }
+    }
 
+    private fun renderTerminalButton(state: CoursePurchaseFeature.State.Content) {
+        when (state.paymentState) {
             is CoursePurchaseFeature.PaymentState.PaymentSuccess -> {
-                coursePurchaseBuyAction.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-                AppCompatResources
-                    .getDrawable(context, R.drawable.ic_step_quiz_choice_correct)
+                val icon = AppCompatResources
+                    .getDrawable(context, R.drawable.ic_purchase_success_check)
                     ?.mutate()
                     ?.let { DrawableCompat.wrap(it) }
                     ?.also {
                         DrawableCompat.setTint(it, context.resolveColorAttribute(R.attr.colorOnPrimary))
                         DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
                     }
-                coursePurchaseBuyAction.text = context.getString(R.string.course_purchase_payment_learn_action)
+                coursePurchaseTerminalAction.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, null, null, null)
+                coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_learn_action)
                 coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_success)
                 coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_success))
             }
 
             is CoursePurchaseFeature.PaymentState.PaymentFailure -> {
-                coursePurchaseBuyAction.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-                coursePurchaseBuyAction.text = context.getString(R.string.course_purchase_payment_restore_action)
+                coursePurchaseTerminalAction.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+                coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_restore_action)
                 coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_failure)
                 coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_fail))
             }
+            else -> {}
         }
     }
 }

@@ -722,4 +722,15 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showUserReviews(Context context) {
         context.startActivity(UserReviewsActivity.Companion.createIntent(context));
     }
+
+    @Override
+    public void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainIntent = new Intent(context, MainFeedActivity.class);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, course, courseViewSource, true, courseScreenTab);
+        taskStackBuilder.addParentStack(MainFeedActivity.class);
+        taskStackBuilder.addNextIntent(mainIntent);
+        taskStackBuilder.addNextIntent(courseIntent);
+        taskStackBuilder.startActivities();
+    }
 }

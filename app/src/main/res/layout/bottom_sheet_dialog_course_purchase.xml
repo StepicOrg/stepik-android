@@ -58,8 +58,10 @@
             android:layout_height="48dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="32dp"
+            app:layout_constraintBottom_toTopOf="@id/coursePromoCodeAction"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coursePurchasePaymentTitle"
+            app:layout_constraintVertical_bias="0"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
 
             tools:src="@drawable/general_placeholder" />
@@ -69,15 +71,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="28dp"
             android:layout_marginRight="16dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textAppearance="?textAppearanceHeadline6"
+            app:layout_constraintBottom_toTopOf="@id/coursePromoCodeAction"
 
             app:layout_constraintLeft_toRightOf="@id/coursePurchaseCourseIcon"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coursePurchasePaymentTitle"
+            app:layout_constraintVertical_bias="0"
             tools:text="Алгоритмический фундамент программиста" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -85,8 +89,8 @@
             style="@style/StepQuizFeedback.Wrong"
             android:layout_margin="16dp"
             android:text="@string/course_purchase_payment_failure_body"
-            android:visibility="visible"
-            app:drawableStartCompat="@drawable/ic_step_quiz_choice_wrong"
+            android:visibility="gone"
+            app:drawableStartCompat="@drawable/ic_purchase_error"
             app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -102,14 +106,14 @@
             android:text="@string/course_purchase_promocode_available"
             android:textAppearance="?textAppearanceBody1"
             android:theme="@style/ThemeOverlay.Green"
-            android:visibility="visible"
+            android:visibility="gone"
             app:drawableEndCompat="@drawable/exo_ic_chevron_right"
             app:drawableTint="@color/color_overlay_green"
             app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseTitle" />
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon" />
 
         <FrameLayout
             android:id="@+id/coursePurchasePromoCodeInputContainer"
@@ -120,7 +124,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/login_edit_text_stroke"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/coursePurchasePromoCodeBarrier"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/coursePurchasePromoCodeSubmitAction"
@@ -206,33 +210,15 @@
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
             android:textAppearance="?textAppearanceCaption"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coursePurchaseDivider"
             tools:text="В цену включена 30% комиссия Google Play. Оплачивая доступ к этому курсу вы соглашаетесь с условиями пользовательского соглашения." />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/coursePurchaseBuyAction"
+            android:id="@+id/coursePurchaseBuyActionViolet"
             style="@style/Widget.AppTheme.Button"
-            android:layout_width="match_parent"
-
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            app:layout_goneMarginBottom="16dp"
-
-            android:layout_marginRight="16dp"
-            android:theme="@style/ThemeOverlay.Violet"
-            app:layout_constraintLeft_toLeftOf="parent"
-
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
-            app:layout_constraintBottom_toTopOf="@id/coursePurchaseWishlistAction"
-            tools:text="Купить за 5000 ₽" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/coursePurchaseWishlistAction"
-            style="@style/Widget.AppTheme.Button.OutlinedButton"
             android:layout_width="match_parent"
 
             android:layout_height="wrap_content"
@@ -242,11 +228,76 @@
 
             android:layout_marginBottom="16dp"
             android:theme="@style/ThemeOverlay.Violet"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchaseBuyActionsBarrier"
 
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyAction"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            tools:text="Купить за 5000 ₽" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/coursePurchaseBuyActionGreen"
+            style="@style/Widget.AppTheme.Button"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+
+            android:layout_marginBottom="16dp"
+            android:theme="@style/ThemeOverlay.Green"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchaseBuyActionsBarrier"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            tools:text="Купить за 5000 ₽" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/coursePurchaseTerminalAction"
+            style="@style/Widget.AppTheme.Button"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+
+            android:layout_marginBottom="16dp"
+            android:theme="@style/ThemeOverlay.Green"
+            app:layout_constraintBottom_toTopOf="@id/coursePurchaseBuyActionsBarrier"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            tools:text="Восстановить покупку" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/coursePurchaseBuyActionsBarrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="coursePurchaseBuyActionViolet, coursePurchaseBuyActionGreen, coursePurchaseTerminalAction" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/coursePurchaseWishlistAction"
+            style="@style/Widget.AppTheme.Button.OutlinedButton"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+
+            android:layout_marginBottom="16dp"
+            android:theme="@style/ThemeOverlay.Violet"
+            android:visibility="gone"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyActionsBarrier"
             app:strokeColor="?colorPrimary"
             app:strokeWidth="1dp"
             tools:text="Добавить в Список желаний" />
