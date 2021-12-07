@@ -41,6 +41,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.web.CustomTabsHelper
@@ -150,13 +151,8 @@ class CourseActivity :
     @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
-//    @Inject
-//    internal lateinit var billing: Billing
-
     @Inject
     internal lateinit var courseHeaderDelegateFactory: CourseHeaderDelegateFactory
-
-//    private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,13 +217,10 @@ class CourseActivity :
                             .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
                     },
                     coursePurchaseFlowAction = { coursePurchaseData, isNeedRestoreMessage ->
-                        CoursePurchaseBottomSheetDialogFragment
-                            .newInstance(coursePurchaseData, isNeedRestoreMessage = isNeedRestoreMessage)
-                            .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
+                        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage)
                     }
                 )
 
-//        uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId, course?.title.toString())
         initViewStateDelegate()
 
@@ -507,12 +500,6 @@ class CourseActivity :
         coursePager.snackbar(messageRes = errorMessage)
     }
 
-    /**
-     * BillingView
-     */
-//    override fun createUiCheckout(): UiCheckout =
-//        uiCheckout
-
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
         when (coursePurchaseWebviewSplitTest.currentGroup) {
@@ -537,12 +524,6 @@ class CourseActivity :
     override fun showTrialLesson(lessonId: Long) {
         screenManager.showTrialLesson(this, lessonId)
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
-//    }
 
     override fun onDestroy() {
         releaseComponent(courseId)
@@ -596,5 +577,15 @@ class CourseActivity :
             customTabsIntent.intent.`package` = packageName
             customTabsIntent.launchUrl(this, Uri.parse(url))
         }
+    }
+
+    override fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData) {
+        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage = false)
+    }
+
+    private fun showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean) {
+        CoursePurchaseBottomSheetDialogFragment
+            .newInstance(coursePurchaseData, isNeedRestoreMessage = isNeedRestoreMessage)
+            .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
     }
 }

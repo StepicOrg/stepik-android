@@ -40,6 +40,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
@@ -62,6 +63,7 @@ constructor(
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
     private val coursePromoCodeResolver: CoursePromoCodeResolver,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver,
     @Assisted private val courseViewSource: CourseViewSource,
     @Assisted("isAuthorized")
     private val isAuthorized: Boolean,
@@ -337,7 +339,7 @@ constructor(
         coursePresenter.schedulePurchaseReminder()
         analytic.report(BuyCoursePressedEvent(courseHeaderData.course, BuyCoursePressedEvent.COURSE_SCREEN, courseHeaderData.course.isInWishlist))
         analytic.report(BuyCoursePressedAnalyticBatchEvent(courseHeaderData.courseId))
-        val coursePurchaseData = resolveCoursePurchaseData(courseHeaderData)
+        val coursePurchaseData = coursePurchaseDataResolver.resolveCoursePurchaseData(courseHeaderData)
         if (coursePurchaseData != null) {
             coursePurchaseFlowAction(coursePurchaseData, false)
         } else {
@@ -370,31 +372,6 @@ constructor(
             }
         }
     }
-
-    private fun resolveCoursePurchaseData(courseHeaderData: CourseHeaderData): CoursePurchaseData? =
-        (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)?.let { notEnrolledMobileTierState ->
-            val promoCodeSku = when {
-                courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                    courseHeaderData.deeplinkPromoCodeSku
-
-                notEnrolledMobileTierState.promoLightSku != null -> {
-                    PromoCodeSku(
-                        courseHeaderData.course.defaultPromoCodeName.orEmpty(),
-                        notEnrolledMobileTierState.promoLightSku
-                    )
-                }
-
-                else ->
-                    PromoCodeSku.EMPTY
-            }
-            CoursePurchaseData(
-                courseHeaderData.course,
-                courseHeaderData.stats,
-                notEnrolledMobileTierState.standardLightSku,
-                promoCodeSku,
-                courseHeaderData.course.isInWishlist
-            )
-        }
 
     fun showCourseShareTooltip() {
         val menuItemView = courseActivity
@@ -539,7 +516,7 @@ constructor(
                 true
             }
             R.id.restore_purchase -> {
-                val coursePurchaseData = courseHeaderData?.let(::resolveCoursePurchaseData)
+                val coursePurchaseData = courseHeaderData?.let(coursePurchaseDataResolver::resolveCoursePurchaseData)
                 if (coursePurchaseData != null) {
                     coursePurchaseFlowAction(coursePurchaseData, true)
                 }

@@ -37,6 +37,7 @@ import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -95,7 +96,8 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val analytic: Analytic
+    private val analytic: Analytic,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver
 ) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by courseContinuePresenterDelegateImpl {
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
@@ -213,8 +215,11 @@ constructor(
                 openCoursePurchaseInWeb()
 
             is EnrollmentState.NotEnrolledMobileTier -> {
-                // no op
-//                purchaseCourse(enrollmentState.standardLightSku, headerData.deeplinkPromoCodeSku)
+                coursePurchaseDataResolver
+                    .resolveCoursePurchaseData(headerData)
+                    ?.let { coursePurchaseData ->
+                        view?.openCoursePurchaseInApp(coursePurchaseData)
+                    }
             }
         }
     }
