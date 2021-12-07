@@ -4,6 +4,7 @@ import android.graphics.drawable.AnimationDrawable
 import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
+import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.WishlistState
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
@@ -20,9 +21,9 @@ class WishlistViewDelegate(
         wishlistButton.isVisible = isVisible
     }
 
-    fun render(state: WishlistState) {
+    fun render(state: CoursePurchaseFeature.State.Content) {
         val messageResId =
-            when (state) {
+            when (state.wishlistState) {
                 WishlistState.Idle ->
                     R.string.course_purchase_wishlist_add
                 WishlistState.Adding ->
@@ -30,9 +31,12 @@ class WishlistViewDelegate(
                 WishlistState.Wishlisted ->
                     R.string.course_purchase_wishlist_added
             }
-        wishlistButton.isEnabled = state is WishlistState.Idle
+        wishlistButton.isEnabled = state.wishlistState is WishlistState.Idle &&
+            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess)
         wishlistButton.setText(messageResId)
-        resolveButtonDrawable(state)
+        resolveButtonDrawable(state.wishlistState)
     }
 
     private fun resolveButtonDrawable(state: WishlistState) {

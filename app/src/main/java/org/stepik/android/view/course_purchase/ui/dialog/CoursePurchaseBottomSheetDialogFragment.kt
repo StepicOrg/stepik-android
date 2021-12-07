@@ -225,7 +225,7 @@ class CoursePurchaseBottomSheetDialogFragment :
             } else {
                 promoCodeViewDelegate.render(state.promoCodeState)
                 wishlistViewDelegate.setViewVisibility(isVisible = true)
-                wishlistViewDelegate.render(state.wishlistState)
+                wishlistViewDelegate.render(state)
             }
 
             val (strokeColor, textColor) = getWishlistActionColor(state)
@@ -234,7 +234,6 @@ class CoursePurchaseBottomSheetDialogFragment :
                 isCancelable = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
-                coursePurchaseBinding.coursePurchaseWishlistAction.isEnabled = mustEnable
             }
 
             coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
