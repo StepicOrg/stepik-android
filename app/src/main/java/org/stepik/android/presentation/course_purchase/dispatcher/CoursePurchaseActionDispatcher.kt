@@ -103,6 +103,16 @@ constructor(
                         onError = { onNewMessage(CoursePurchaseFeature.Message.ConsumePurchaseFailure(it.toEnrollmentError())) }
                     )
             }
+            is CoursePurchaseFeature.Action.RestorePurchaseWithSkuId -> {
+                compositeDisposable += coursePurchaseInteractor
+                    .restorePurchase(action.courseId, action.skuId)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseSuccess) },
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseFailure(it.toEnrollmentError())) }
+                    )
+            }
         }
     }
 }

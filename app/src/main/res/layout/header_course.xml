@@ -31,16 +31,6 @@
         android:text="@string/course_item_join"
         android:layout_marginTop="?actionBarSize" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/courseBuyInAppAction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.Green"
-        app:cornerRadius="@dimen/header_action_radius"
-        android:minWidth="200dp"
-        android:text="@string/course_payments_purchase_in_app"
-        android:layout_marginTop="?actionBarSize" />
-
     <FrameLayout
         android:id="@+id/purchaseContainer"
         android:layout_width="wrap_content"

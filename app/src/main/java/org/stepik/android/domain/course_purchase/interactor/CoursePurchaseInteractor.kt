@@ -94,7 +94,12 @@ constructor(
             .andThen(updateCourseAfterEnrollment(courseId))
             .andThen(billingRepository.consumePurchase(purchase))
 
-    fun restorePurchase(courseId: Long, sku: SkuDetails): Completable =
+    fun restorePurchase(courseId: Long, skuId: String): Completable =
+        billingRepository
+            .getInventory(BillingClient.SkuType.INAPP, skuId)
+            .flatMapCompletable { skuDetails ->  restorePurchase(courseId, skuDetails) }
+
+    private fun restorePurchase(courseId: Long, sku: SkuDetails): Completable =
         zip(
             getCurrentProfileId()
                 .toMaybe(),
@@ -122,7 +127,6 @@ constructor(
                     .toSingle()
                     .map { skuDetails -> CoursePurchaseObfuscatedParams(obfuscatedAccountId, obfuscatedProfileId) to skuDetails }
             }
-
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
         userCoursesInteractor.addUserCourse(courseId)

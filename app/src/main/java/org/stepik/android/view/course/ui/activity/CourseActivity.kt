@@ -35,9 +35,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
-import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -70,8 +68,7 @@ class CourseActivity :
     FragmentActivityBase(),
     CourseView,
     InAppWebViewDialogFragment.Callback,
-    MagicLinkDialogFragment.Callback,
-    CoursePurchaseBottomSheetDialogFragment.Callback {
+    MagicLinkDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
@@ -223,9 +220,9 @@ class CourseActivity :
                             .newInstance(courseId, course?.title.orEmpty())
                             .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
                     },
-                    coursePurchaseFlowAction = {
+                    coursePurchaseFlowAction = { coursePurchaseData, isNeedRestoreMessage ->
                         CoursePurchaseBottomSheetDialogFragment
-                            .newInstance(it)
+                            .newInstance(coursePurchaseData, isNeedRestoreMessage = isNeedRestoreMessage)
                             .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
                     }
                 )
@@ -599,9 +596,5 @@ class CourseActivity :
             customTabsIntent.intent.`package` = packageName
             customTabsIntent.launchUrl(this, Uri.parse(url))
         }
-    }
-
-    override fun purchaseCourse(primarySku: LightSku, promoCodeSku: PromoCodeSku) {
-        coursePresenter.purchaseCourse(primarySku, promoCodeSku)
     }
 }

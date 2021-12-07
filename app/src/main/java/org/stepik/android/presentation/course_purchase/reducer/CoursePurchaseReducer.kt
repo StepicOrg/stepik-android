@@ -87,6 +87,32 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.RestorePurchase -> {
+                if (state is State.Content) {
+                    val skuId = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+                        requireNotNull(state.promoCodeState.promoCodeSku.lightSku?.id)
+                    } else {
+                        state.coursePurchaseData.primarySku.id
+                    }
+                    state to setOf(Action.ViewAction.ShowLoading, Action.RestorePurchaseWithSkuId(state.coursePurchaseData.course.id, skuId))
+                } else {
+                    null
+                }
+            }
+            is Message.RestorePurchaseSuccess -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.ShowConsumeSuccess)
+                } else {
+                    null
+                }
+            }
+            is Message.RestorePurchaseFailure -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.ShowConsumeFailure, Action.ViewAction.Error(message.enrollmentError))
+                } else {
+                    null
+                }
+            }
             is Message.WishlistAddMessage -> {
                 if (state is State.Content) {
                     val wishlistEntity = state.coursePurchaseData.wishlistEntity.copy(courses = state.coursePurchaseData.wishlistEntity.courses.mutate { add(0, state.coursePurchaseData.course.id) })

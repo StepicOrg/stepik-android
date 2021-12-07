@@ -13,22 +13,17 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.plus
-import org.stepik.android.domain.course.analytic.BuyCoursePressedEvent
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.UserCourseActionEvent
-import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticBatchEvent
 import org.stepik.android.domain.course.analytic.batch.CoursePreviewScreenOpenedAnalyticBatchEvent
-import org.stepik.android.domain.course.interactor.CourseBillingInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.mapper.CourseStateMapper
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
-import org.stepik.android.domain.course_payments.model.PromoCodeSku
-import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.purchase_notification.interactor.PurchaseReminderInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
@@ -72,7 +67,6 @@ constructor(
     private val courseStateMapper: CourseStateMapper,
 
     private val courseInteractor: CourseInteractor,
-//    private val courseBillingInteractor: CourseBillingInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
@@ -111,8 +105,6 @@ constructor(
             startIndexing()
         }
 
-//    private var uiCheckout: UiCheckout? = null
-
     private var isCoursePreviewLogged = false
     private var isNeedCheckCourseEnrollment = false
     private lateinit var viewSource: CourseViewSource
@@ -134,18 +126,11 @@ constructor(
         super.attachView(view)
         view.setState(state)
         startIndexing()
-
-//        uiCheckout = view
-//            .createUiCheckout()
-//            .also(UiCheckout::start)
     }
 
     override fun detachView(view: CourseView) {
         super.detachView(view)
         endIndexing()
-
-//        uiCheckout?.let(UiCheckout::stop)
-//        uiCheckout = null
     }
 
     /**
@@ -229,7 +214,8 @@ constructor(
                 openCoursePurchaseInWeb()
 
             is EnrollmentState.NotEnrolledMobileTier -> {
-                purchaseCourse(enrollmentState.standardLightSku, headerData.deeplinkPromoCodeSku)
+                // no op
+//                purchaseCourse(enrollmentState.standardLightSku, headerData.deeplinkPromoCodeSku)
             }
         }
     }
@@ -283,7 +269,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
+                onNext  = { state = CourseView.State.CourseLoaded(it); resolveCourseShareTooltip(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }
@@ -323,100 +309,6 @@ constructor(
         if (courseHeaderData.stats.enrollmentState is EnrollmentState.Enrolled) {
             view?.showCourseShareTooltip()
         }
-    }
-
-    /**
-     * Purchases
-     */
-    fun restoreCoursePurchase() {
-//        val headerData = (state as? CourseView.State.CourseLoaded)
-//            ?.courseHeaderData
-//            ?: return
-//
-//        val sku = (headerData.stats.enrollmentState as? EnrollmentState.NotEnrolledInApp)
-//            ?.skuWrapper
-//            ?.sku
-//            ?: return
-//
-//        state = CourseView.State.BlockingLoading(
-//            headerData.copy(
-//                stats = headerData.stats.copy(
-//                    enrollmentState = EnrollmentState.Pending
-//                )
-//            )
-//        )
-//        compositeDisposable += courseBillingInteractor
-//            .restorePurchase(sku)
-//            .observeOn(mainScheduler)
-//            .subscribeOn(backgroundScheduler)
-//            .subscribeBy(
-//                onError = {
-//                    state = CourseView.State.CourseLoaded(headerData) // roll back data
-//
-//                    val errorType = it.toEnrollmentError()
-//                    analytic.reportError(errorType.name, it)
-//
-//                    when (errorType) {
-//                        EnrollmentError.UNAUTHORIZED ->
-//                            view?.showEmptyAuthDialog(headerData.course)
-//
-//                        EnrollmentError.COURSE_ALREADY_OWNED ->
-//                            enrollCourse() // try to enroll course normally
-//
-//                        else ->
-//                            view?.showEnrollmentError(errorType)
-//                    }
-//                }
-//            )
-    }
-
-    fun purchaseCourse(primarySku: LightSku, promoCodeSku: PromoCodeSku) {
-//        val headerData = (state as? CourseView.State.CourseLoaded)
-//            ?.courseHeaderData
-//            ?: return
-//
-//        if (headerData.stats.enrollmentState !is EnrollmentState.NotEnrolledMobileTier) {
-//            return
-//        }
-//
-//        val checkout = this.uiCheckout
-//            ?: return
-//
-//
-//        val lightSku = if (promoCodeSku != PromoCodeSku.EMPTY) {
-//            requireNotNull(promoCodeSku.lightSku)
-//        } else {
-//            primarySku
-//        }
-//
-//        analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.stats.isWishlisted))
-//        analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
-//
-//        schedulePurchaseReminder()
-//
-//        state = CourseView.State.BlockingLoading(
-//            headerData.copy(
-//                stats = headerData.stats.copy(enrollmentState = EnrollmentState.Pending)
-//            )
-//        )
-//        compositeDisposable += courseBillingInteractor
-//            .purchaseCourse(checkout, headerData.courseId, lightSku)
-//            .observeOn(mainScheduler)
-//            .subscribeOn(backgroundScheduler)
-//            .subscribeBy(
-//                onError = {
-//                    state = CourseView.State.CourseLoaded(headerData) // roll back data
-//
-//                    val errorType = it.toEnrollmentError()
-//                    analytic.reportError(errorType.name, it)
-//
-//                    if (errorType == EnrollmentError.UNAUTHORIZED) {
-//                        view?.showEmptyAuthDialog(headerData.course)
-//                    } else {
-//                        view?.showEnrollmentError(errorType)
-//                    }
-//                }
-//            )
     }
 
     fun handleCoursePurchasePressed() {

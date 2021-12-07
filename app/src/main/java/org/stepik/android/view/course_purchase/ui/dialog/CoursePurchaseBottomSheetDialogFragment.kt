@@ -22,8 +22,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
-import org.stepik.android.domain.course_payments.model.PromoCodeSku
-import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -38,6 +36,8 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import androidx.annotation.StringRes
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
 import ru.nobird.android.view.base.ui.extension.snackbar
@@ -48,9 +48,10 @@ class CoursePurchaseBottomSheetDialogFragment :
     companion object {
         const val TAG = "CoursePurchaseBottomSheetDialogFragment"
 
-        fun newInstance(coursePurchaseData: CoursePurchaseData): DialogFragment =
+        fun newInstance(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean): DialogFragment =
             CoursePurchaseBottomSheetDialogFragment().apply {
                 this.coursePurchaseData = coursePurchaseData
+                this.isNeedRestoreMessage = isNeedRestoreMessage
             }
     }
 
@@ -67,9 +68,13 @@ class CoursePurchaseBottomSheetDialogFragment :
     internal lateinit var billingClient: BillingClient
 
     private var coursePurchaseData: CoursePurchaseData by argument()
+    private var isNeedRestoreMessage: Boolean by argument()
 
     private val coursePurchaseViewModel: CoursePurchaseViewModel by reduxViewModel(this) { viewModelFactory }
     private val coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding by viewBinding(BottomSheetDialogCoursePurchaseBinding::bind)
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private lateinit var buyActionViewDelegate: BuyActionViewDelegate
     private lateinit var promoCodeViewDelegate: PromoCodeViewDelegate
@@ -88,6 +93,9 @@ class CoursePurchaseBottomSheetDialogFragment :
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
+        if (isNeedRestoreMessage) {
+            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.RestorePurchase)
+        }
     }
 
     override fun onStart() {
@@ -147,6 +155,7 @@ class CoursePurchaseBottomSheetDialogFragment :
 
                 billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
             }
+
             is CoursePurchaseFeature.Action.ViewAction.Error -> {
                 @StringRes
                 val errorMessage =
@@ -179,6 +188,19 @@ class CoursePurchaseBottomSheetDialogFragment :
                             R.string.course_purchase_billing_no_purchases_to_restore
                     }
                 coursePurchaseBinding.coursePurchaseCoordinator.snackbar(messageRes = errorMessage)
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowLoading ->
+                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowConsumeSuccess -> {
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+                coursePurchaseBinding.coursePurchaseCoordinator.snackbar("Success restore")
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowConsumeFailure -> {
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+                coursePurchaseBinding.coursePurchaseCoordinator.snackbar("Fail restore")
             }
         }
     }
@@ -228,8 +250,4 @@ class CoursePurchaseBottomSheetDialogFragment :
                 R.color.color_overlay_violet to R.color.color_overlay_violet
             }
         }
-
-    interface Callback {
-        fun purchaseCourse(primarySku: LightSku, promoCodeSku: PromoCodeSku)
-    }
 }

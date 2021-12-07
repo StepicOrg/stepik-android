@@ -4,7 +4,6 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
-import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
@@ -35,6 +34,10 @@ interface CoursePurchaseFeature {
         object ConsumePurchaseSuccess : Message()
         data class ConsumePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
 
+        object RestorePurchase : Message()
+        object RestorePurchaseSuccess : Message()
+        data class RestorePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
+
         /**
          * Wishlist messages
          */
@@ -61,9 +64,16 @@ interface CoursePurchaseFeature {
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
         data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
+
+        data class RestorePurchaseWithSkuId(val courseId: Long, val skuId: String) : Action()
+
         sealed class ViewAction : Action() {
             data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : ViewAction()
             data class Error(val error: EnrollmentError) : ViewAction()
+
+            object ShowLoading : Action.ViewAction()
+            object ShowConsumeSuccess : Action.ViewAction()
+            object ShowConsumeFailure : Action.ViewAction()
         }
     }
 
