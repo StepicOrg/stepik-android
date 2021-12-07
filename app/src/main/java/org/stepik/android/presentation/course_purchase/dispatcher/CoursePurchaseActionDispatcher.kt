@@ -3,7 +3,7 @@ package org.stepik.android.presentation.course_purchase.dispatcher
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
-import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -18,16 +18,13 @@ import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
-import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseActionDispatcher
 @Inject
 constructor(
-    @BillingSingleton
-    purchaseListenerBehaviorRelay: BehaviorRelay<Pair<BillingResult, List<Purchase>?>>,
+    purchaseListenerBehaviorRelay: PublishRelay<Pair<BillingResult, List<Purchase>?>>,
 
     private val analytic: Analytic,
     private val wishlistInteractor: WishlistInteractor,
@@ -48,7 +45,6 @@ constructor(
                     } else {
                         onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode).toEnrollmentError()))
                     }
-                    Timber.d("Action dispatcher; Billing Result - Debug message: ${billingResult.debugMessage} Response: ${billingResult.responseCode}; Purchases - $purchases")
                 }
             )
     }
@@ -85,7 +81,7 @@ constructor(
             }
             is CoursePurchaseFeature.Action.FetchLaunchFlowData -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .launchPurchaseFlow(action.courseId, action.skuId)
+                    .fetchPurchaseFlowData(action.courseId, action.skuId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

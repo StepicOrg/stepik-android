@@ -5,6 +5,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.jakewharton.rxrelay2.BehaviorRelay
+import com.jakewharton.rxrelay2.PublishRelay
 import dagger.BindsInstance
 import dagger.Component
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
@@ -22,7 +23,7 @@ interface BillingComponent {
     }
 
     val billingClient: BillingClient
-    val purchaseListenerBehaviorRelay: BehaviorRelay<Pair<BillingResult, List<Purchase>?>>
+    val purchaseListenerBehaviorRelay: PublishRelay<Pair<BillingResult, List<Purchase>?>>
     val billingRemoteDataSource: BillingRemoteDataSource
     val billingRepository: BillingRepository
 }

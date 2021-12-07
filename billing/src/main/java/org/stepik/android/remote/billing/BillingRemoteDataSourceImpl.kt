@@ -1,8 +1,6 @@
 package org.stepik.android.remote.billing
 
 import com.android.billingclient.api.BillingClient
-import com.android.billingclient.api.BillingClientStateListener
-import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
@@ -22,32 +20,10 @@ class BillingRemoteDataSourceImpl
 constructor(
     @BillingSingleton
     private val billingClient: BillingClient,
-    @RxScheduler.Main
-    private val mainScheduler: Scheduler,
 
     @RxScheduler.Background
     private val backgroundScheduler: Scheduler
 ) : BillingRemoteDataSource {
-    private fun connect(): Completable =
-        Completable.create { emitter ->
-            billingClient.startConnection(object : BillingClientStateListener {
-                override fun onBillingServiceDisconnected() {
-                    if (!emitter.isDisposed) {
-                        emitter.onError(Exception())
-                    }
-                }
-
-                override fun onBillingSetupFinished(p0: BillingResult) {
-                    if (p0.responseCode == BillingClient.BillingResponseCode.OK) {
-                        if (!emitter.isDisposed) {
-                            emitter.onComplete()
-                        } else {
-                            emitter.onError(Exception(p0.debugMessage))
-                        }
-                    }
-                }
-            })
-        }
 
     override fun getInventory(productType: String, skuIds: List<String>): Single<List<SkuDetails>> =
         Single

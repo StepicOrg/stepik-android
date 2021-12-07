@@ -325,7 +325,6 @@ constructor(
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
         isNeedCheckCourseEnrollment = true
-        schedulePurchaseReminder()
         view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 
@@ -434,6 +433,16 @@ constructor(
         saveWishlistAction(wishlistAction)
     }
 
+    fun schedulePurchaseReminder() {
+        compositeDisposable += coursePurchaseReminderInteractor
+            .savePurchaseNotificationSchedule(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = emptyOnErrorStub
+            )
+    }
+
     private fun saveWishlistAction(wishlistAction: WishlistAction) {
         compositeDisposable += wishlistInteractor
             .updateWishlistWithOperation(WishlistOperationData(courseId, wishlistAction))
@@ -526,15 +535,5 @@ constructor(
                 CourseWishlistRemovedEvent(course, source)
             }
         analytic.report(event)
-    }
-
-    private fun schedulePurchaseReminder() {
-        compositeDisposable += coursePurchaseReminderInteractor
-            .savePurchaseNotificationSchedule(courseId)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onError = emptyOnErrorStub
-            )
     }
 }

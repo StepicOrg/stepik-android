@@ -334,6 +334,9 @@ constructor(
     }
 
     private fun setupBuyAction(courseHeaderData: CourseHeaderData) {
+        coursePresenter.schedulePurchaseReminder()
+        analytic.report(BuyCoursePressedEvent(courseHeaderData.course, BuyCoursePressedEvent.COURSE_SCREEN, courseHeaderData.course.isInWishlist))
+        analytic.report(BuyCoursePressedAnalyticBatchEvent(courseHeaderData.courseId))
         val coursePurchaseData = resolveCoursePurchaseData(courseHeaderData)
         if (coursePurchaseData != null) {
             coursePurchaseFlowAction(coursePurchaseData, false)

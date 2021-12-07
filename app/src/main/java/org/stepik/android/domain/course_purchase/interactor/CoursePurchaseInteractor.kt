@@ -3,13 +3,10 @@ package org.stepik.android.domain.course_purchase.interactor
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
-import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes.zip
 import io.reactivex.subjects.PublishSubject
-import okhttp3.ResponseBody
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.billing.repository.BillingRepository
@@ -24,38 +21,30 @@ import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedP
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
+import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
-import retrofit2.HttpException
-import retrofit2.Response
 import ru.nobird.android.domain.rx.maybeFirst
-import java.net.HttpURLConnection
 import javax.inject.Inject
 
 class CoursePurchaseInteractor
 @Inject
 constructor(
+    private val userCoursesInteractor: UserCoursesInteractor,
+
     private val billingRepository: BillingRepository,
     private val mobileTiersRepository: MobileTiersRepository,
     private val lightSkuRepository: LightSkuRepository,
-    private val userCoursesInteractor: UserCoursesInteractor,
     private val coursePaymentsRepository: CoursePaymentsRepository,
-
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
-
     private val courseRepository: CourseRepository,
     private val lessonRepository: LessonRepository,
+    private val profileRepository: ProfileRepository,
 
     @EnrollmentCourseUpdates
-    private val enrollmentSubject: PublishSubject<Course>,
-    private val gson: Gson
+    private val enrollmentSubject: PublishSubject<Course>
 ) {
-    companion object {
-        private val UNAUTHORIZED_EXCEPTION_STUB =
-            HttpException(Response.error<Nothing>(HttpURLConnection.HTTP_UNAUTHORIZED, ResponseBody.create(null, "")))
-    }
 
     fun checkPromoCodeValidity(courseId: Long, promoCodeName: String): Single<PromoCodeSku> =
         mobileTiersRepository
@@ -70,7 +59,7 @@ constructor(
                 }
             }
 
-    fun launchPurchaseFlow(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
+    fun fetchPurchaseFlowData(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
         coursePaymentsRepository
             .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .flatMap { payments ->
@@ -108,9 +97,8 @@ constructor(
                 .maybeFirst()
         )
             .filter { (profileId, purchase) ->
-                val obfuscatedAccountId = profileId.toString().hashCode().toString()
-                val obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
-                purchase.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId && purchase?.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+                val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
+                purchase.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId && purchase?.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
             }
             .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
             .flatMapCompletable { (_, purchase) ->
@@ -120,12 +108,10 @@ constructor(
     private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
         getCurrentProfileId()
             .flatMap { profileId ->
-                val obfuscatedAccountId = profileId.toString().hashCode().toString()
-                val obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
                 billingRepository
                     .getInventory(BillingClient.SkuType.INAPP, skuId)
                     .toSingle()
-                    .map { skuDetails -> CoursePurchaseObfuscatedParams(obfuscatedAccountId, obfuscatedProfileId) to skuDetails }
+                    .map { skuDetails -> createCoursePurchaseObfuscatedParams(profileId, courseId) to skuDetails }
             }
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
@@ -136,10 +122,13 @@ constructor(
             .ignoreElement()
 
     private fun getCurrentProfileId(): Single<Long> =
-        Single.fromCallable {
-            sharedPreferenceHelper
-                .profile
-                ?.id
-                ?: throw UNAUTHORIZED_EXCEPTION_STUB
-        }
+        profileRepository
+            .getProfile()
+            .map { profile -> profile.id }
+
+    private fun createCoursePurchaseObfuscatedParams(profileId: Long, courseId: Long): CoursePurchaseObfuscatedParams =
+        CoursePurchaseObfuscatedParams(
+            obfuscatedAccountId = profileId.toString().hashCode().toString(),
+            obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
+        )
 }
