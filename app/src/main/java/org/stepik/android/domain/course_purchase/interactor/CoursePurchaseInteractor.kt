@@ -6,10 +6,12 @@ import com.android.billingclient.api.SkuDetails
 import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Maybes.zip
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CoursePurchasePayload
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -28,6 +30,7 @@ import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
 import retrofit2.Response
+import ru.nobird.android.domain.rx.maybeFirst
 import java.net.HttpURLConnection
 import javax.inject.Inject
 
@@ -90,6 +93,24 @@ constructor(
             }
             .andThen(updateCourseAfterEnrollment(courseId))
             .andThen(billingRepository.consumePurchase(purchase))
+
+    fun restorePurchase(courseId: Long, sku: SkuDetails): Completable =
+        zip(
+            getCurrentProfileId()
+                .toMaybe(),
+            billingRepository
+                .getAllPurchases(BillingClient.SkuType.INAPP, listOf(sku.sku))
+                .maybeFirst()
+        )
+            .filter { (profileId, purchase) ->
+                val obfuscatedAccountId = profileId.toString().hashCode().toString()
+                val obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
+                purchase.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId && purchase?.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+            }
+            .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
+            .flatMapCompletable { (_, purchase) ->
+                completePurchase(courseId, sku, purchase)
+            }
 
     private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
         getCurrentProfileId()
