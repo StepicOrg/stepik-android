@@ -37,6 +37,8 @@ interface CoursePurchaseFeature {
         object RestorePurchaseSuccess : Message()
         data class RestorePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
 
+        object StartLearningMessage : Message()
+
         /**
          * Wishlist messages
          */
@@ -72,6 +74,7 @@ interface CoursePurchaseFeature {
             object ShowLoading : Action.ViewAction()
             object ShowConsumeSuccess : Action.ViewAction()
             object ShowConsumeFailure : Action.ViewAction()
+            object StartStudyAction : Action.ViewAction()
         }
     }
 

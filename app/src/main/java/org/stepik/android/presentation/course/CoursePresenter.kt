@@ -273,7 +273,19 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseView.State.CourseLoaded(it); resolveCourseShareTooltip(it) },
+                onNext  = {
+                    val oldEnrollmentState = (state as? CourseView.State.CourseLoaded)
+                        ?.courseHeaderData
+                        ?.stats
+                        ?.enrollmentState
+
+                    state = CourseView.State.CourseLoaded(it)
+
+                    if (oldEnrollmentState !is EnrollmentState.NotEnrolledMobileTier) {
+                        continueLearning()
+                        resolveCourseShareTooltip(it)
+                    }
+                },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }

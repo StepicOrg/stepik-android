@@ -46,6 +46,7 @@ class BillingModule {
 
 
     @Provides
+    @BillingSingleton
     internal fun providePurchaseListenerRelay(): PublishRelay<Pair<BillingResult, List<Purchase>?>> =
         PublishRelay.create()
 

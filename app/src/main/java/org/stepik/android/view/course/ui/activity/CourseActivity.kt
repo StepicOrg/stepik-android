@@ -69,7 +69,8 @@ class CourseActivity :
     FragmentActivityBase(),
     CourseView,
     InAppWebViewDialogFragment.Callback,
-    MagicLinkDialogFragment.Callback {
+    MagicLinkDialogFragment.Callback,
+    CoursePurchaseBottomSheetDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
@@ -581,6 +582,10 @@ class CourseActivity :
 
     override fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData) {
         showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage = false)
+    }
+
+    override fun continueLearning() {
+        coursePresenter.continueLearning()
     }
 
     private fun showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean) {

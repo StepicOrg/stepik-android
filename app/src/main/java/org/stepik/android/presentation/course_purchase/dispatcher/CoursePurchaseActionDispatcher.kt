@@ -18,12 +18,14 @@ import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
+import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
 
 class CoursePurchaseActionDispatcher
 @Inject
 constructor(
+    @BillingSingleton
     purchaseListenerBehaviorRelay: PublishRelay<Pair<BillingResult, List<Purchase>?>>,
 
     private val analytic: Analytic,

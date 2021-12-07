@@ -112,6 +112,13 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.StartLearningMessage -> {
+                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
+                    state to setOf(Action.ViewAction.StartStudyAction)
+                } else {
+                    null
+                }
+            }
             is Message.WishlistAddMessage -> {
                 if (state is State.Content) {
                     val wishlistOperationData = WishlistOperationData(state.coursePurchaseData.course.id, WishlistAction.ADD)

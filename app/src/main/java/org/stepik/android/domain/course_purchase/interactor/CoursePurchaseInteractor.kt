@@ -80,8 +80,8 @@ constructor(
                     Completable.error(CoursePurchaseVerificationException())
                 }
             }
-            .andThen(updateCourseAfterEnrollment(courseId))
             .andThen(billingRepository.consumePurchase(purchase))
+            .andThen(updateCourseAfterEnrollment(courseId))
 
     fun restorePurchase(courseId: Long, skuId: String): Completable =
         billingRepository

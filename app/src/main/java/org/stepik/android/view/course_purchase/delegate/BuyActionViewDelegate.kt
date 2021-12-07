@@ -11,7 +11,6 @@ import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
 import org.stepic.droid.databinding.BottomSheetDialogCoursePurchaseBinding
 import org.stepic.droid.util.resolveColorAttribute
-import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
@@ -22,7 +21,7 @@ class BuyActionViewDelegate(
     private val coursePurchaseData: CoursePurchaseData,
     private val displayPriceMapper: DisplayPriceMapper,
     launchPurchaseFlowAction: () -> Unit,
-    launchStartStudying: (Course) -> Unit,
+    launchStartStudying: () -> Unit,
     launchRestoreAction: () -> Unit
 ) {
     private val context = coursePurchaseBinding.root.context
@@ -48,7 +47,7 @@ class BuyActionViewDelegate(
         coursePurchaseTerminalAction.setOnClickListener {
             when (paymentState) {
                 is CoursePurchaseFeature.PaymentState.PaymentSuccess -> {
-                    launchStartStudying(coursePurchaseData.course)
+                    launchStartStudying()
                 }
                 is CoursePurchaseFeature.PaymentState.PaymentFailure -> {
                     launchRestoreAction()

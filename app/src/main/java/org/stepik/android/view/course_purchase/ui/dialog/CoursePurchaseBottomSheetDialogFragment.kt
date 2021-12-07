@@ -38,9 +38,7 @@ import androidx.annotation.StringRes
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.presentation.course.model.EnrollmentError
-import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
 import ru.nobird.android.view.base.ui.extension.snackbar
 
@@ -115,7 +113,7 @@ class CoursePurchaseBottomSheetDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         buyActionViewDelegate = BuyActionViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper,
             launchPurchaseFlowAction =  { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) },
-            launchStartStudying = { purchasedCourse -> screenManager.showCourseAfterPurchase(requireContext(), purchasedCourse, CourseViewSource.CoursePurchase, CourseScreenTab.INFO) },
+            launchStartStudying = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.StartLearningMessage) },
             launchRestoreAction = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.RestorePurchase) }
         )
         promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
@@ -204,12 +202,15 @@ class CoursePurchaseBottomSheetDialogFragment :
 
             is CoursePurchaseFeature.Action.ViewAction.ShowConsumeSuccess -> {
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
-                coursePurchaseBinding.coursePurchaseCoordinator.snackbar("Success restore")
             }
 
             is CoursePurchaseFeature.Action.ViewAction.ShowConsumeFailure -> {
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
-                coursePurchaseBinding.coursePurchaseCoordinator.snackbar("Fail restore")
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.StartStudyAction -> {
+                (activity as? Callback)?.continueLearning()
+                dismiss()
             }
         }
     }
@@ -255,4 +256,8 @@ class CoursePurchaseBottomSheetDialogFragment :
                 R.color.color_overlay_violet to R.color.color_overlay_violet
             }
         }
+
+    interface Callback {
+        fun continueLearning()
+    }
 }
