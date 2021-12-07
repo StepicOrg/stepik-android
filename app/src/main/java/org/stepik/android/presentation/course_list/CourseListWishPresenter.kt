@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.wishlist.model.WishlistEntity
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
@@ -91,19 +90,19 @@ constructor(
             .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
             .concatMapSingle { sourceType ->
                 courseListWishInteractor
-                    .getWishlistEntity(sourceType.generalSourceType)
-                    .flatMap { wishlistEntity ->
-                        if (wishlistEntity.courses.isEmpty()) {
+                    .getWishlistedCourses(sourceType.generalSourceType)
+                    .flatMap { wishlistedCourses ->
+                        if (wishlistedCourses.isEmpty()) {
                             Single.just(CourseListView.State.Empty to sourceType.generalSourceType)
                         } else {
-                            val ids = wishlistEntity.courses.take(PAGE_SIZE)
+                            val ids = wishlistedCourses.take(PAGE_SIZE)
                             courseListWishInteractor
                                 .getCourseListItems(ids, sourceTypeComposition = sourceType, courseViewSource = CourseViewSource.Wishlist)
                                 .map { items ->
                                     CourseListView.State.Content(courseListDataItems = items, courseListItems = items) to sourceType.generalSourceType
                                 }
                         }.map { (courseListViewState, sourceType) ->
-                            CourseListWishView.State.Data(wishlistEntity, courseListViewState, sourceType)
+                            CourseListWishView.State.Data(wishlistedCourses, courseListViewState, sourceType)
                         }
                     }
             }
@@ -143,7 +142,7 @@ constructor(
         val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
             ?: return
 
-        val ids = getNextPageCourseIds(oldState.wishlistEntity, oldCourseListState)
+        val ids = getNextPageCourseIds(oldState.wishlistedCourses, oldCourseListState)
             ?.takeIf { it.isNotEmpty() }
             ?: return
 
@@ -170,13 +169,13 @@ constructor(
         }
     }
 
-    private fun getNextPageCourseIds(wishlistEntity: WishlistEntity, courseListViewState: CourseListView.State.Content): List<Long>? {
+    private fun getNextPageCourseIds(wishlistedCourses: List<Long>, courseListViewState: CourseListView.State.Content): List<Long>? {
         if ((courseListViewState.courseListItems.last() as? CourseListItem.PlaceHolder)?.courseId == -1L) {
             return null
         }
         val offset = courseListViewState.courseListItems.size
 
-        return wishlistEntity.courses.slice(offset, offset + PAGE_SIZE)
+        return wishlistedCourses.slice(offset, offset + PAGE_SIZE)
     }
 
     /**

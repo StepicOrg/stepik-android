@@ -106,7 +106,7 @@ class VisitedCourseListItemAdapterDelegate(
                 }
             }
 
-            courseListWishlist.isVisible = !isEnrolled && data.courseStats.isWishlisted
+            courseListWishlist.isVisible = !isEnrolled && data.course.isInWishlist
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
             analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))

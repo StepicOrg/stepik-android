@@ -20,7 +20,6 @@ import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepik.android.domain.wishlist.model.WishlistEntity;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
 import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
@@ -706,22 +705,6 @@ public class SharedPreferenceHelper {
         }
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(json, Profile.class);
-    }
-
-    public void storeWishlist(WishlistEntity wishlistEntity) {
-        Gson gson = new Gson();
-        String json = gson.toJson(wishlistEntity);
-        put(PreferenceType.LOGIN, WISHLIST, json);
-    }
-
-    @Nullable
-    public WishlistEntity getWishlist() {
-        String json = getString(PreferenceType.LOGIN, WISHLIST);
-        if (json == null) {
-            return null;
-        }
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(json, WishlistEntity.class);
     }
 
     public void storeEmailAddresses(List<EmailAddress> emailAddresses) {

@@ -376,7 +376,7 @@ class CourseActivity :
                         CourseJoinedEvent(
                             CourseJoinedEvent.SOURCE_PREVIEW,
                             state.courseHeaderData.course,
-                            state.courseHeaderData.stats.isWishlisted
+                            state.courseHeaderData.course.isInWishlist
                         )
                     )
                 }
