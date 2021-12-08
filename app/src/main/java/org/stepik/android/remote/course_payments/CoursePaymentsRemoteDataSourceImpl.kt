@@ -18,7 +18,7 @@ constructor(
     private val coursePaymentService: CoursePaymentService
 ) : CoursePaymentsRemoteDataSource {
 
-    override fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase): Single<CoursePayment> =
+    override fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment> =
         coursePaymentService
             .createCoursePayment(
                 CoursePaymentRequest(CoursePaymentRequest.Body(
@@ -30,7 +30,8 @@ constructor(
                         productId   = purchase.skus.first(),
                         amount      = sku.priceAmountMicros / 1_000_000f,
                         currency    = sku.priceCurrencyCode
-                    )
+                    ),
+                    promoCode = promoCode
                 ))
             )
             .map { it.coursePayments.first() }

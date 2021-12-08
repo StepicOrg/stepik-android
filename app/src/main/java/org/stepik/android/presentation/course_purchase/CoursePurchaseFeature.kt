@@ -66,7 +66,7 @@ interface CoursePurchaseFeature {
 
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
-        data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
+        data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase, val promoCode: String?) : Action()
 
         data class RestorePurchaseWithSkuId(val skuId: String) : Action()
         data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()

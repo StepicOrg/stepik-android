@@ -61,7 +61,14 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.PurchaseFlowBillingSuccess -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, message.purchase)) to setOf(Action.ConsumePurchaseAction(state.coursePurchaseData.course.id, state.paymentState.skuDetails, message.purchase))
+                    val promoCode = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+                        state.promoCodeState.promoCodeSku.name
+                    } else {
+                        null
+                    }
+
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, message.purchase)) to
+                        setOf(Action.ConsumePurchaseAction(state.coursePurchaseData.course.id, state.paymentState.skuDetails, message.purchase, promoCode))
                 } else {
                     null
                 }

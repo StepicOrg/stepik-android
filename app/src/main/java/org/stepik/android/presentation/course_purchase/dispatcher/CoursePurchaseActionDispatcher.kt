@@ -94,7 +94,7 @@ constructor(
             }
             is CoursePurchaseFeature.Action.ConsumePurchaseAction -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .completePurchase(action.courseId, action.skuDetails, action.purchase)
+                    .completePurchase(action.courseId, action.skuDetails, action.purchase, action.promoCode)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

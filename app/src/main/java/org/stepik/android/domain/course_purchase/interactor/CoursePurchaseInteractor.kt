@@ -71,9 +71,9 @@ constructor(
                 }
             }
 
-    fun completePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase): Completable =
+    fun completePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
         coursePaymentsRepository
-            .createCoursePayment(courseId, sku, purchase)
+            .createCoursePayment(courseId, sku, purchase, promoCodeName)
             .flatMapCompletable { payment ->
                 if (payment.status == CoursePayment.Status.SUCCESS) {
                     Completable.complete()

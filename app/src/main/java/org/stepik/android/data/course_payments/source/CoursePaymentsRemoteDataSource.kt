@@ -8,7 +8,7 @@ import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 
 interface CoursePaymentsRemoteDataSource {
 
-    fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase): Single<CoursePayment>
+    fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCode: String? = null): Single<CoursePayment>
 
     /**
      * Return course payments for selected course id

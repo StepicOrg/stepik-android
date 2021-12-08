@@ -18,9 +18,9 @@ constructor(
     private val coursePaymentsRemoteDataSource: CoursePaymentsRemoteDataSource,
     private val coursePaymentsCacheDataSource: CoursePaymentsCacheDataSource
 ) : CoursePaymentsRepository {
-    override fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase): Single<CoursePayment> =
+    override fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment> =
         coursePaymentsRemoteDataSource
-            .createCoursePayment(courseId, sku, purchase)
+            .createCoursePayment(courseId, sku, purchase, promoCode)
 
     override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?, sourceType: DataSourceType): Single<List<CoursePayment>> =
         when (sourceType) {
