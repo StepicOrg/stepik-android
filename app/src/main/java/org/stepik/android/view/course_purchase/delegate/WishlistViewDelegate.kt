@@ -47,10 +47,10 @@ class WishlistViewDelegate(
             evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
             evaluationDrawable.isOneShot = false
 
-            wishlistButton.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+            wishlistButton.icon = evaluationDrawable
             evaluationDrawable.start()
         } else {
-            wishlistButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
+            wishlistButton.icon = null
         }
     }
 }

@@ -76,7 +76,7 @@ class BuyActionViewDelegate(
     private fun renderIdleButton(state: CoursePurchaseFeature.State.Content, coursePurchaseBuyAction: MaterialButton) {
         when (state.paymentState) {
             is CoursePurchaseFeature.PaymentState.Idle -> {
-                coursePurchaseBuyAction.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+                coursePurchaseBuyAction.icon = null
                 val courseDisplayPrice = coursePurchaseData.course.displayPrice
                 coursePurchaseBuyAction.text =
                     if (courseDisplayPrice != null) {
@@ -98,8 +98,7 @@ class BuyActionViewDelegate(
                 evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), 200)
                 evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), 200)
                 evaluationDrawable.isOneShot = false
-                DrawableCompat.setTint(evaluationDrawable, context.resolveColorAttribute(R.attr.colorOnPrimary))
-                coursePurchaseBuyAction.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+                coursePurchaseBuyAction.icon = evaluationDrawable
                 coursePurchaseBuyAction.text = context.getString(R.string.course_purchase_payment_processing)
                 evaluationDrawable.start()
             }
@@ -117,14 +116,14 @@ class BuyActionViewDelegate(
                         DrawableCompat.setTint(it, context.resolveColorAttribute(R.attr.colorOnPrimary))
                         DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
                     }
-                coursePurchaseTerminalAction.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, null, null, null)
+                coursePurchaseTerminalAction.icon = icon
                 coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_learn_action)
                 coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_success)
                 coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_success))
             }
 
             is CoursePurchaseFeature.PaymentState.PaymentFailure -> {
-                coursePurchaseTerminalAction.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+                coursePurchaseTerminalAction.icon = null
                 coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_restore_action)
                 coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_failure)
                 coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_fail))

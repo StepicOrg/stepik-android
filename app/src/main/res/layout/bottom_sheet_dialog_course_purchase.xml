@@ -234,6 +234,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            app:iconPadding="-18dp"
             tools:text="Купить за 5000 ₽" />
 
         <com.google.android.material.button.MaterialButton
@@ -253,6 +254,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            app:iconPadding="-18dp"
             tools:text="Купить за 5000 ₽" />
 
         <com.google.android.material.button.MaterialButton
@@ -272,6 +274,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/coursePurchaseCommissionNotice"
+            app:iconPadding="-18dp"
             tools:text="Восстановить покупку" />
 
         <androidx.constraintlayout.widget.Barrier
