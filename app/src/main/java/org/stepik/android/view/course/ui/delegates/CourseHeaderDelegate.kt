@@ -178,11 +178,6 @@ constructor(
             ?.getAllQueryParameters()
 
         coursePresenter.openCoursePurchaseInWeb(queryParams)
-
-        courseHeaderData?.let { headerData ->
-            analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.course.isInWishlist))
-            analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
-        }
     }
 
     private fun initViewStateDelegate() {
