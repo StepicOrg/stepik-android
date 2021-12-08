@@ -166,4 +166,5 @@ public interface ScreenManager {
     void showWishlist(Context context);
     void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle);
     void showUserReviews(Context context);
+    void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab);
 }

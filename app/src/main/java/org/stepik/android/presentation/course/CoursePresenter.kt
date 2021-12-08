@@ -7,7 +7,6 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
@@ -18,7 +17,6 @@ import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyt
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.UserCourseActionEvent
 import org.stepik.android.domain.course.analytic.batch.CoursePreviewScreenOpenedAnalyticBatchEvent
-import org.stepik.android.domain.course.interactor.CourseBillingInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
@@ -39,6 +37,7 @@ import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -68,7 +67,6 @@ constructor(
     private val courseStateMapper: CourseStateMapper,
 
     private val courseInteractor: CourseInteractor,
-    private val courseBillingInteractor: CourseBillingInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
@@ -98,7 +96,8 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val analytic: Analytic
+    private val analytic: Analytic,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver
 ) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by courseContinuePresenterDelegateImpl {
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
@@ -106,8 +105,6 @@ constructor(
             view?.setState(value)
             startIndexing()
         }
-
-    private var uiCheckout: UiCheckout? = null
 
     private var isCoursePreviewLogged = false
     private var isNeedCheckCourseEnrollment = false
@@ -130,18 +127,11 @@ constructor(
         super.attachView(view)
         view.setState(state)
         startIndexing()
-
-        uiCheckout = view
-            .createUiCheckout()
-            .also(UiCheckout::start)
     }
 
     override fun detachView(view: CourseView) {
         super.detachView(view)
         endIndexing()
-
-        uiCheckout?.let(UiCheckout::stop)
-        uiCheckout = null
     }
 
     /**
@@ -209,11 +199,13 @@ constructor(
      * Enrollment
      */
     fun autoEnroll() {
-        val enrollmentState = (state as? CourseView.State.CourseLoaded)
+        val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.stats
-            ?.enrollmentState
             ?: return
+
+        val enrollmentState = headerData
+            .stats
+            .enrollmentState
 
         when (enrollmentState) {
             EnrollmentState.NotEnrolledFree ->
@@ -222,8 +214,13 @@ constructor(
             EnrollmentState.NotEnrolledWeb ->
                 openCoursePurchaseInWeb()
 
-            is EnrollmentState.NotEnrolledInApp ->
-                purchaseCourse()
+            is EnrollmentState.NotEnrolledMobileTier -> {
+                coursePurchaseDataResolver
+                    .resolveCoursePurchaseData(headerData)
+                    ?.let { coursePurchaseData ->
+                        view?.openCoursePurchaseInApp(coursePurchaseData)
+                    }
+            }
         }
     }
 
@@ -276,7 +273,19 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
+                onNext  = {
+                    val oldEnrollmentState = (state as? CourseView.State.CourseLoaded)
+                        ?.courseHeaderData
+                        ?.stats
+                        ?.enrollmentState
+
+                    state = CourseView.State.CourseLoaded(it)
+
+                    if (oldEnrollmentState !is EnrollmentState.NotEnrolledMobileTier) {
+                        continueLearning()
+                        resolveCourseShareTooltip(it)
+                    }
+                },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }
@@ -318,91 +327,6 @@ constructor(
         }
     }
 
-    /**
-     * Purchases
-     */
-    fun restoreCoursePurchase() {
-        val headerData = (state as? CourseView.State.CourseLoaded)
-            ?.courseHeaderData
-            ?: return
-
-        val sku = (headerData.stats.enrollmentState as? EnrollmentState.NotEnrolledInApp)
-            ?.skuWrapper
-            ?.sku
-            ?: return
-
-        state = CourseView.State.BlockingLoading(
-            headerData.copy(
-                stats = headerData.stats.copy(
-                    enrollmentState = EnrollmentState.Pending
-                )
-            )
-        )
-        compositeDisposable += courseBillingInteractor
-            .restorePurchase(sku)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onError = {
-                    state = CourseView.State.CourseLoaded(headerData) // roll back data
-
-                    val errorType = it.toEnrollmentError()
-                    analytic.reportError(errorType.name, it)
-
-                    when (errorType) {
-                        EnrollmentError.UNAUTHORIZED ->
-                            view?.showEmptyAuthDialog(headerData.course)
-
-                        EnrollmentError.COURSE_ALREADY_OWNED ->
-                            enrollCourse() // try to enroll course normally
-
-                        else ->
-                            view?.showEnrollmentError(errorType)
-                    }
-                }
-            )
-    }
-
-    fun purchaseCourse() {
-        val headerData = (state as? CourseView.State.CourseLoaded)
-            ?.courseHeaderData
-            ?: return
-
-        val sku = (headerData.stats.enrollmentState as? EnrollmentState.NotEnrolledInApp)
-            ?.skuWrapper
-            ?.sku
-            ?: return
-
-        val checkout = this.uiCheckout
-            ?: return
-
-        schedulePurchaseReminder()
-
-        state = CourseView.State.BlockingLoading(
-            headerData.copy(
-                stats = headerData.stats.copy(enrollmentState = EnrollmentState.Pending)
-            )
-        )
-        compositeDisposable += courseBillingInteractor
-            .purchaseCourse(checkout, headerData.courseId, sku)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onError = {
-                    state = CourseView.State.CourseLoaded(headerData) // roll back data
-
-                    val errorType = it.toEnrollmentError()
-                    analytic.reportError(errorType.name, it)
-
-                    if (errorType == EnrollmentError.UNAUTHORIZED) {
-                        view?.showEmptyAuthDialog(headerData.course)
-                    } else {
-                        view?.showEnrollmentError(errorType)
-                    }
-                }
-            )
-    }
-
     fun handleCoursePurchasePressed() {
         if (!isNeedCheckCourseEnrollment) {
             return
@@ -418,7 +342,6 @@ constructor(
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
         isNeedCheckCourseEnrollment = true
-        schedulePurchaseReminder()
         view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 
@@ -527,6 +450,16 @@ constructor(
         saveWishlistAction(wishlistAction)
     }
 
+    fun schedulePurchaseReminder() {
+        compositeDisposable += coursePurchaseReminderInteractor
+            .savePurchaseNotificationSchedule(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = emptyOnErrorStub
+            )
+    }
+
     private fun saveWishlistAction(wishlistAction: WishlistAction) {
         compositeDisposable += wishlistInteractor
             .updateWishlistWithOperation(WishlistOperationData(courseId, wishlistAction))
@@ -619,15 +552,5 @@ constructor(
                 CourseWishlistRemovedEvent(course, source)
             }
         analytic.report(event)
-    }
-
-    private fun schedulePurchaseReminder() {
-        compositeDisposable += coursePurchaseReminderInteractor
-            .savePurchaseNotificationSchedule(courseId)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onError = emptyOnErrorStub
-            )
     }
 }

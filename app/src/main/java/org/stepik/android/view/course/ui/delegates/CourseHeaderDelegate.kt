@@ -40,6 +40,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
@@ -62,6 +63,7 @@ constructor(
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
     private val displayPriceMapper: DisplayPriceMapper,
     private val coursePromoCodeResolver: CoursePromoCodeResolver,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver,
     @Assisted private val courseViewSource: CourseViewSource,
     @Assisted("isAuthorized")
     private val isAuthorized: Boolean,
@@ -75,7 +77,7 @@ constructor(
     isLocalSubmissionsEnabled: Boolean,
     @Assisted("showCourseSearchAction")
     private val showSearchCourseAction: () -> Unit,
-    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
+    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData, Boolean) -> Unit
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
@@ -154,14 +156,6 @@ constructor(
 
             courseBuyInWebActionDiscounted.setOnClickListener {
                 courseHeaderData?.let(::setupBuyAction)
-            }
-
-            courseBuyInAppAction.setOnClickListener {
-                courseHeaderData?.let { headerData ->
-                    analytic.report(BuyCoursePressedEvent(headerData.course, BuyCoursePressedEvent.COURSE_SCREEN, headerData.course.isInWishlist))
-                    analytic.report(BuyCoursePressedAnalyticBatchEvent(headerData.courseId))
-                }
-                coursePresenter.purchaseCourse()
             }
 
             courseTryFree.setOnClickListener {
@@ -247,20 +241,14 @@ constructor(
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
 
-                courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
-
-                if (this is EnrollmentState.NotEnrolledInApp) {
-                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
-                }
-
                 dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
-                restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
+                restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledMobileTier
             }
 
             courseTryFree.isVisible = courseHeaderData.course.courseOptions?.coursePreview?.previewLessonId != null &&
                     courseHeaderData.course.enrollment == 0L &&
                     courseHeaderData.course.isPaid &&
-                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledInApp || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
+                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
 
             shareCourseMenuItem?.isVisible = true
         }
@@ -348,27 +336,12 @@ constructor(
     }
 
     private fun setupBuyAction(courseHeaderData: CourseHeaderData) {
-        val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
-        if (notEnrolledMobileTierState != null) {
-                val promoCodeSku = when {
-                    courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                        courseHeaderData.deeplinkPromoCodeSku
-
-                    notEnrolledMobileTierState.promoLightSku != null -> {
-                        PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
-                    }
-
-                    else ->
-                        PromoCodeSku.EMPTY
-                }
-                val coursePurchaseData = CoursePurchaseData(
-                        courseHeaderData.course,
-                        courseHeaderData.stats,
-                        notEnrolledMobileTierState.standardLightSku,
-                        promoCodeSku,
-                        courseHeaderData.course.isInWishlist
-                )
-                coursePurchaseFlowAction(coursePurchaseData)
+        coursePresenter.schedulePurchaseReminder()
+        analytic.report(BuyCoursePressedEvent(courseHeaderData.course, BuyCoursePressedEvent.COURSE_SCREEN, courseHeaderData.course.isInWishlist))
+        analytic.report(BuyCoursePressedAnalyticBatchEvent(courseHeaderData.courseId))
+        val coursePurchaseData = coursePurchaseDataResolver.resolveCoursePurchaseData(courseHeaderData)
+        if (coursePurchaseData != null) {
+            coursePurchaseFlowAction(coursePurchaseData, false)
         } else {
             buyInWebAction()
         }
@@ -475,7 +448,7 @@ constructor(
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
-        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledInApp
+        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledMobileTier
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -543,7 +516,10 @@ constructor(
                 true
             }
             R.id.restore_purchase -> {
-                coursePresenter.restoreCoursePurchase()
+                val coursePurchaseData = courseHeaderData?.let(coursePurchaseDataResolver::resolveCoursePurchaseData)
+                if (coursePurchaseData != null) {
+                    coursePurchaseFlowAction(coursePurchaseData, true)
+                }
                 true
             }
             else ->

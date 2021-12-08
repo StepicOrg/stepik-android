@@ -38,6 +38,7 @@ dependencies {
     implementation libraries.rxAndroid
     implementation libraries.rxJava2
     implementation libraries.rxKotlin
+    implementation libraries.rxRelay
     implementation libraries.domainRx
     implementation libraries.viewInjection
 
@@ -54,5 +55,6 @@ dependencies {
     androidTestImplementation libraries.espressoContrib
     androidTestImplementation libraries.espressoIntents
 
-    api libraries.checkout
+    api libraries.billing
+    api libraries.billingKtx
 }

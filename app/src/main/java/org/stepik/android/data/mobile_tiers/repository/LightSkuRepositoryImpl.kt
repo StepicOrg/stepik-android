@@ -41,6 +41,6 @@ constructor(
     private fun remoteAction(productType: String, skuIds: List<String>): Single<List<LightSku>> =
         billingRemoteDataSource
             .getInventory(productType, skuIds)
-            .map { inventory -> inventory.map { LightSku(it.id.code, it.price) } }
+            .map { inventory -> inventory.map { LightSku(it.sku, it.price) } }
             .doCompletableOnSuccess(lightSkuCacheDataSource::saveLightInventory)
 }

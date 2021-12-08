@@ -11,8 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import org.solovyev.android.checkout.Billing
-import org.solovyev.android.checkout.Purchase
+import com.android.billingclient.api.Purchase
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.databinding.ActivityInAppPurchasesBinding
@@ -35,9 +34,6 @@ class InAppPurchasesActivity : AppCompatActivity(), ReduxView<InAppPurchasesFeat
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    internal lateinit var billing: Billing
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()

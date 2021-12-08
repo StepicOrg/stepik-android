@@ -26,6 +26,6 @@ interface CourseHeaderDelegateFactory {
         isLocalSubmissionsEnabled: Boolean,
         @Assisted("showCourseSearchAction")
         showCourseSearchAction: () -> Unit,
-        coursePurchaseFlowAction: (CoursePurchaseData) -> Unit
+        coursePurchaseFlowAction: (CoursePurchaseData, Boolean) -> Unit
     ): CourseHeaderDelegate
 }
