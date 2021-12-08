@@ -3,7 +3,6 @@ package org.stepik.android.presentation.course.mapper
 import com.android.billingclient.api.BillingClient
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwnedException
-import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
 import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.presentation.course.model.EnrollmentError
 import retrofit2.HttpException
@@ -18,9 +17,6 @@ fun Throwable.toEnrollmentError(): EnrollmentError =
 
                 HttpURLConnection.HTTP_UNAUTHORIZED ->
                     EnrollmentError.UNAUTHORIZED
-
-                HttpURLConnection.HTTP_BAD_REQUEST ->
-                    EnrollmentError.SERVER_ERROR
 
                 else ->
                     EnrollmentError.NO_CONNECTION
@@ -37,9 +33,6 @@ fun Throwable.toEnrollmentError(): EnrollmentError =
                 else ->
                     EnrollmentError.BILLING_ERROR
             }
-
-        is CoursePurchaseVerificationException ->
-            EnrollmentError.SERVER_ERROR
 
         is CourseAlreadyOwnedException ->
             EnrollmentError.COURSE_ALREADY_OWNED

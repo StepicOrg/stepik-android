@@ -33,9 +33,12 @@ interface CoursePurchaseFeature {
         object ConsumePurchaseSuccess : Message()
         data class ConsumePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
 
-        object RestorePurchase : Message()
+        object LaunchRestorePurchaseFlow : Message()
+        data class LaunchRestorePurchaseSuccess(val skuDetails: SkuDetails, val purchase: Purchase) : Message()
+        data class LaunchRestorePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
+
         object RestorePurchaseSuccess : Message()
-        data class RestorePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
+        data class RestorePurchaseFailure(val skuDetails: SkuDetails, val purchase: Purchase, val enrollmentError: EnrollmentError) : Message()
 
         object StartLearningMessage : Message()
 
@@ -65,7 +68,8 @@ interface CoursePurchaseFeature {
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
         data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
 
-        data class RestorePurchaseWithSkuId(val courseId: Long, val skuId: String) : Action()
+        data class RestorePurchaseWithSkuId(val skuId: String) : Action()
+        data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
 
         sealed class ViewAction : Action() {
             data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : ViewAction()
@@ -83,6 +87,8 @@ interface CoursePurchaseFeature {
         object ProcessingInitialCheck : PaymentState()
         data class ProcessingBillingPayment(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : PaymentState()
         data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
+
+//        data class RestoringPayment(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()
         data class PaymentFailure(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()

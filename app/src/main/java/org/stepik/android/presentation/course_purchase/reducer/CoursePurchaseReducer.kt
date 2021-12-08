@@ -2,6 +2,7 @@ package org.stepik.android.presentation.course_purchase.reducer
 
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
+import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.State
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Message
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Action
@@ -74,40 +75,58 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.ConsumePurchaseSuccess -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to emptySet()
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to setOf(Action.ViewAction.ShowConsumeSuccess)
                 } else {
                     null
                 }
             }
             is Message.ConsumePurchaseFailure -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure(state.paymentState.skuDetails, state.paymentState.purchase)) to setOf(Action.ViewAction.Error(message.enrollmentError))
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure(state.paymentState.skuDetails, state.paymentState.purchase)) to emptySet()
                 } else {
                     null
                 }
             }
-            is Message.RestorePurchase -> {
+            is Message.LaunchRestorePurchaseFlow -> {
                 if (state is State.Content) {
                     val skuId = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
                         requireNotNull(state.promoCodeState.promoCodeSku.lightSku?.id)
                     } else {
                         state.coursePurchaseData.primarySku.id
                     }
-                    state to setOf(Action.ViewAction.ShowLoading, Action.RestorePurchaseWithSkuId(state.coursePurchaseData.course.id, skuId))
+                    state to setOf(Action.ViewAction.ShowLoading, Action.RestorePurchaseWithSkuId(skuId))
+                } else {
+                    null
+                }
+            }
+            is Message.LaunchRestorePurchaseSuccess -> {
+                if (state is State.Content) {
+                    state to setOf(Action.RestorePurchase(state.coursePurchaseData.course.id, message.skuDetails, message.purchase))
+                } else {
+                    null
+                }
+            }
+            is Message.LaunchRestorePurchaseFailure -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.ShowConsumeFailure, Action.ViewAction.Error(message.enrollmentError))
                 } else {
                     null
                 }
             }
             is Message.RestorePurchaseSuccess -> {
                 if (state is State.Content) {
-                    state to setOf(Action.ViewAction.ShowConsumeSuccess)
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to setOf(Action.ViewAction.ShowConsumeSuccess)
                 } else {
                     null
                 }
             }
             is Message.RestorePurchaseFailure -> {
                 if (state is State.Content) {
-                    state to setOf(Action.ViewAction.ShowConsumeFailure, Action.ViewAction.Error(message.enrollmentError))
+                    if (message.enrollmentError == EnrollmentError.BILLING_NO_PURCHASES_TO_RESTORE) {
+                        state to setOf(Action.ViewAction.ShowConsumeFailure, Action.ViewAction.Error(message.enrollmentError))
+                    } else {
+                        state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure(message.skuDetails, message.purchase)) to setOf(Action.ViewAction.ShowConsumeFailure)
+                    }
                 } else {
                     null
                 }

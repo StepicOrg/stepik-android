@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
@@ -103,12 +104,24 @@ constructor(
             }
             is CoursePurchaseFeature.Action.RestorePurchaseWithSkuId -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .restorePurchase(action.courseId, action.skuId)
+                    .fetchSkuDetailsAndPurchase(action.skuId)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { (skuDetails, purchase) -> onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseSuccess(skuDetails, purchase)) },
+                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFailure(NoPurchasesToRestoreException().toEnrollmentError())) },
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFailure(it.toEnrollmentError())) }
+                    )
+            }
+
+            is CoursePurchaseFeature.Action.RestorePurchase -> {
+                compositeDisposable += coursePurchaseInteractor
+                    .restorePurchase(action.courseId, action.skuDetails, action.purchase)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onComplete = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseSuccess) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseFailure(it.toEnrollmentError())) }
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseFailure(action.skuDetails, action.purchase, it.toEnrollmentError())) }
                     )
             }
         }

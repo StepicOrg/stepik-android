@@ -411,9 +411,6 @@ class CourseActivity :
                 EnrollmentError.UNAUTHORIZED ->
                     R.string.unauthorization_detail
 
-                EnrollmentError.SERVER_ERROR ->
-                    R.string.course_purchase_server_error
-
                 EnrollmentError.BILLING_ERROR ->
                     R.string.course_purchase_billing_error
 

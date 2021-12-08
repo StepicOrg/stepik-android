@@ -4,6 +4,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes.zip
 import io.reactivex.subjects.PublishSubject
@@ -83,25 +84,23 @@ constructor(
             .andThen(billingRepository.consumePurchase(purchase))
             .andThen(updateCourseAfterEnrollment(courseId))
 
-    fun restorePurchase(courseId: Long, skuId: String): Completable =
-        billingRepository
-            .getInventory(BillingClient.SkuType.INAPP, skuId)
-            .flatMapCompletable { skuDetails ->  restorePurchase(courseId, skuDetails) }
-
-    private fun restorePurchase(courseId: Long, sku: SkuDetails): Completable =
+    fun fetchSkuDetailsAndPurchase(skuId: String): Maybe<Pair<SkuDetails, Purchase>> =
         zip(
-            getCurrentProfileId()
-                .toMaybe(),
             billingRepository
-                .getAllPurchases(BillingClient.SkuType.INAPP, listOf(sku.sku))
+                .getInventory(BillingClient.SkuType.INAPP, skuId),
+            billingRepository
+                .getAllPurchases(BillingClient.SkuType.INAPP, listOf(skuId))
                 .maybeFirst()
         )
-            .filter { (profileId, purchase) ->
+
+    fun restorePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase): Completable =
+        getCurrentProfileId()
+            .filter { profileId ->
                 val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
-                purchase.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId && purchase?.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+                purchase.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId && purchase.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
             }
             .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
-            .flatMapCompletable { (_, purchase) ->
+            .flatMapCompletable {
                 completePurchase(courseId, sku, purchase)
             }
 

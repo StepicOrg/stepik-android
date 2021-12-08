@@ -97,7 +97,7 @@ class CoursePurchaseBottomSheetDialogFragment :
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
         if (isNeedRestoreMessage) {
-            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.RestorePurchase)
+            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow)
         }
     }
 
@@ -114,7 +114,7 @@ class CoursePurchaseBottomSheetDialogFragment :
         buyActionViewDelegate = BuyActionViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper,
             launchPurchaseFlowAction =  { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) },
             launchStartStudying = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.StartLearningMessage) },
-            launchRestoreAction = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.RestorePurchase) }
+            launchRestoreAction = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow) }
         )
         promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
@@ -175,9 +175,6 @@ class CoursePurchaseBottomSheetDialogFragment :
 
                         EnrollmentError.UNAUTHORIZED ->
                             R.string.unauthorization_detail
-
-                        EnrollmentError.SERVER_ERROR ->
-                            R.string.course_purchase_server_error
 
                         EnrollmentError.BILLING_ERROR ->
                             R.string.course_purchase_billing_error
