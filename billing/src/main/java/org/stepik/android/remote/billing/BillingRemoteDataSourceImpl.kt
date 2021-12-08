@@ -1,85 +1,81 @@
 package org.stepik.android.remote.billing
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.ConsumeParams
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.SkuDetailsParams
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
-import org.solovyev.android.checkout.Billing
-import org.solovyev.android.checkout.Checkout
-import org.solovyev.android.checkout.Inventory
-import org.solovyev.android.checkout.Purchase
-import org.solovyev.android.checkout.Purchases
-import org.solovyev.android.checkout.RequestListener
-import org.solovyev.android.checkout.Sku
-import org.stepik.android.domain.billing.extension.consumeRx
-import org.stepik.android.domain.billing.extension.onReady
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
 import org.stepik.android.domain.billing.exception.BillingNotSupportedException
-import org.stepik.android.view.injection.billing.SystemCheckout
+import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.view.injection.base.RxScheduler
 import javax.inject.Inject
 
+@BillingSingleton
 class BillingRemoteDataSourceImpl
 @Inject
 constructor(
-    private val billing: Billing,
-
-    @SystemCheckout
-    private val checkout: Checkout,
-
-    @RxScheduler.Main
-    private val mainScheduler: Scheduler,
+    @BillingSingleton
+    private val billingClient: BillingClient,
 
     @RxScheduler.Background
     private val backgroundScheduler: Scheduler
 ) : BillingRemoteDataSource {
-    override fun getInventory(productType: String, skuIds: List<String>): Single<List<Sku>> =
+
+    override fun getInventory(productType: String, skuIds: List<String>): Single<List<SkuDetails>> =
         Single
-            .create<List<Sku>> { emitter ->
-                val request = Inventory.Request.create()
-                request.loadAllPurchases()
-                request.loadSkus(productType, skuIds.distinct())
-                checkout.loadInventory(request) { products ->
+            .create<List<SkuDetails>> { emitter ->
+                val skuParams = SkuDetailsParams
+                    .newBuilder()
+                    .setSkusList(skuIds)
+                    .setType(productType)
+                    .build()
+
+                billingClient.querySkuDetailsAsync(skuParams) { billingResult, skuDetails ->
                     if (!emitter.isDisposed) {
-                        val product = products[productType]
-                        if (product.supported) {
-                            emitter.onSuccess(product.skus)
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetails != null) {
+                            emitter.onSuccess(skuDetails)
+                        } else {
+                            emitter.onError(Exception(billingResult.debugMessage))
+                        }
+                    }
+                }
+            }
+            .observeOn(backgroundScheduler)
+
+
+    override fun getAllPurchases(productType: String): Single<List<Purchase>> =
+        Single
+            .create { emitter ->
+                billingClient
+                    .queryPurchasesAsync(productType) { billingResult, purchases ->
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                            emitter.onSuccess(purchases)
+                        } else {
+                            emitter.onError(Exception(billingResult.debugMessage))
+                        }
+                    }
+            }
+
+
+    override fun consumePurchase(purchase: Purchase): Completable =
+        Completable
+            .create { emitter ->
+                val consumeParams = ConsumeParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
+                billingClient.consumeAsync(consumeParams) { billingResult, _ ->
+                    if (!emitter.isDisposed) {
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                            emitter.onComplete()
                         } else {
                             emitter.onError(BillingNotSupportedException())
                         }
                     }
                 }
             }
-            .subscribeOn(mainScheduler)
             .observeOn(backgroundScheduler)
-
-    override fun getAllPurchases(productType: String): Single<List<Purchase>> =
-        Single.create { emitter ->
-            billing
-                .newRequestsBuilder()
-                .create()
-                .getAllPurchases(productType, object : RequestListener<Purchases> {
-                    override fun onSuccess(purchases: Purchases) {
-                        if (!emitter.isDisposed) {
-                            emitter.onSuccess(purchases.list)
-                        }
-                    }
-
-                    override fun onError(response: Int, e: Exception) {
-                        if (!emitter.isDisposed)  {
-                            emitter.onError(e)
-                        }
-                    }
-                })
-        }
-
-    override fun consumePurchase(purchase: Purchase): Completable =
-        checkout
-            .onReady()
-            .flatMapCompletable { requests ->
-                requests.consumeRx(purchase.token)
-            }
-            .subscribeOn(mainScheduler)
-            .observeOn(backgroundScheduler)
-
-
 }
