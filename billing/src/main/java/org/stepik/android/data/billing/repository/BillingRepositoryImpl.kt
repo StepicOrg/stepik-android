@@ -1,9 +1,9 @@
 package org.stepik.android.data.billing.repository
 
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.solovyev.android.checkout.Purchase
-import org.solovyev.android.checkout.Sku
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
 import org.stepik.android.domain.billing.repository.BillingRepository
 import javax.inject.Inject
@@ -11,14 +11,14 @@ import javax.inject.Inject
 class BillingRepositoryImpl
 @Inject
 constructor(
-    private val billingRemoteDataSource: BillingRemoteDataSource
+    private val billingRemoteDataSourceImpl: BillingRemoteDataSource
 ) : BillingRepository {
-    override fun getInventory(productType: String, skuIds: List<String>): Single<List<Sku>> =
-        billingRemoteDataSource.getInventory(productType, skuIds)
+    override fun getInventory(productType: String, skuIds: List<String>): Single<List<SkuDetails>> =
+        billingRemoteDataSourceImpl.getInventory(productType, skuIds)
 
     override fun getAllPurchases(productType: String): Single<List<Purchase>> =
-        billingRemoteDataSource.getAllPurchases(productType)
+        billingRemoteDataSourceImpl.getAllPurchases(productType)
 
     override fun consumePurchase(purchase: Purchase): Completable =
-        billingRemoteDataSource.consumePurchase(purchase)
+        billingRemoteDataSourceImpl.consumePurchase(purchase)
 }

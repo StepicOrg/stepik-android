@@ -1,8 +1,10 @@
 package org.stepik.android.view.course_purchase.delegate
 
 import android.graphics.drawable.AnimationDrawable
+import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
+import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.WishlistState
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
@@ -15,9 +17,13 @@ class WishlistViewDelegate(
 
     private val context = wishlistButton.context
 
-    fun render(state: WishlistState) {
+    fun setViewVisibility(isVisible: Boolean) {
+        wishlistButton.isVisible = isVisible
+    }
+
+    fun render(state: CoursePurchaseFeature.State.Content) {
         val messageResId =
-            when (state) {
+            when (state.wishlistState) {
                 WishlistState.Idle ->
                     R.string.course_purchase_wishlist_add
                 WishlistState.Adding ->
@@ -25,9 +31,12 @@ class WishlistViewDelegate(
                 WishlistState.Wishlisted ->
                     R.string.course_purchase_wishlist_added
             }
-        wishlistButton.isEnabled = state is WishlistState.Idle
+        wishlistButton.isEnabled = state.wishlistState is WishlistState.Idle &&
+            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess)
         wishlistButton.setText(messageResId)
-        resolveButtonDrawable(state)
+        resolveButtonDrawable(state.wishlistState)
     }
 
     private fun resolveButtonDrawable(state: WishlistState) {
@@ -38,10 +47,10 @@ class WishlistViewDelegate(
             evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
             evaluationDrawable.isOneShot = false
 
-            wishlistButton.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+            wishlistButton.icon = evaluationDrawable
             evaluationDrawable.start()
         } else {
-            wishlistButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null)
+            wishlistButton.icon = null
         }
     }
 }

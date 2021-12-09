@@ -1,7 +1,7 @@
 package org.stepik.android.domain.mobile_tiers.interactor
 
+import com.android.billingclient.api.BillingClient
 import io.reactivex.Single
-import org.solovyev.android.checkout.ProductTypes
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.mobile_tiers.model.MobileTier
@@ -28,7 +28,7 @@ constructor(
                 val promoTiers = mobileTiers.mapNotNull(MobileTier::promoTier)
                 val skuIds = priceTiers.union(promoTiers).toList()
                 lightSkuRepository
-                    .getLightInventory(ProductTypes.IN_APP, skuIds, sourceType)
+                    .getLightInventory(BillingClient.SkuType.INAPP, skuIds, sourceType)
                     .map { lightSkus -> mobileTiers to lightSkus }
             }
             .onErrorReturnItem(emptyList<MobileTier>() to emptyList<LightSku>())

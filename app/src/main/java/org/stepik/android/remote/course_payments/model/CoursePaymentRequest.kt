@@ -14,7 +14,10 @@ class CoursePaymentRequest(
         val provider: Provider,
 
         @SerializedName("data")
-        val data: Data
+        val data: Data,
+
+        @SerializedName("promo_code")
+        val promoCode: String?
     ) {
         enum class Provider {
             @SerializedName("Google")

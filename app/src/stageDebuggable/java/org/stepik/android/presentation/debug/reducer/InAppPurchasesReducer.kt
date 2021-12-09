@@ -56,7 +56,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.ConsumeSuccess -> {
                 if (state is State.Content) {
                     val updatedPurchases = state.purchases.mapNotNull {
-                        if (it.sku == message.purchase.sku) {
+                        if (it.skus.first() == message.purchase.skus.first()) {
                             null
                         } else {
                             it

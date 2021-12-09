@@ -1,22 +1,22 @@
 package org.stepik.android.domain.billing.repository
 
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.solovyev.android.checkout.Purchase
-import org.solovyev.android.checkout.Sku
 import ru.nobird.android.domain.rx.maybeFirst
 
 interface BillingRepository {
     /**
-     * Return list of Sku along with skuIds
+     * Return list of SkuDetails along with skuIds
      */
-    fun getInventory(productType: String, skuIds: List<String>): Single<List<Sku>>
+    fun getInventory(productType: String, skuIds: List<String>): Single<List<SkuDetails>>
 
     /**
-     * Return sku
+     * Return single SkuDetails
      */
-    fun getInventory(productType: String, sku: String): Maybe<Sku> =
+    fun getInventory(productType: String, sku: String): Maybe<SkuDetails> =
         getInventory(productType, listOf(sku))
             .maybeFirst()
 
@@ -31,7 +31,7 @@ interface BillingRepository {
     fun getAllPurchases(productType: String, skus: List<String>): Single<List<Purchase>> =
         getAllPurchases(productType)
             .map { purchases ->
-                purchases.filter { it.sku in skus }
+                purchases.filter { it.skus.first() in skus }
             }
 
     /**
