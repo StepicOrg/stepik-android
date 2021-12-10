@@ -15,7 +15,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CertificatesAdapterDelegate(
     private val onItemClick: (String) -> Unit,
     private val onShareButtonClick: (CertificateViewItem) -> Unit,
-    private val onChangeNameClick: (CertificateViewItem) -> Unit
+    private val onChangeNameClick: (CertificateViewItem) -> Unit,
+    private val isCurrentUser: Boolean
 ) : AdapterDelegate<CertificateViewItem, DelegateViewHolder<CertificateViewItem>>() {
     override fun isForViewType(position: Int, data: CertificateViewItem): Boolean =
         true
@@ -59,7 +60,7 @@ class CertificatesAdapterDelegate(
             certificateGradeView.text =
                 context.resources.getString(R.string.certificate_result_with_substitution, data.certificate.grade ?: "")
 
-            certificateNameChangeButton.isVisible = data.certificate.editsCount < data.certificate.allowedEditsCount
+            certificateNameChangeButton.isVisible = data.certificate.editsCount < data.certificate.allowedEditsCount && isCurrentUser
 
             Glide.with(context)
                 .load(data.coverFullPath ?: "")
