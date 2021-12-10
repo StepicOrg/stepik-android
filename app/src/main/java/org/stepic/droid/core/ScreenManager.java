@@ -94,7 +94,7 @@ public interface ScreenManager {
 
     void showCertificates(Context context);
 
-    void showCertificates(Context context, long userId);
+    void showCertificates(Context context, long userId, boolean isCurrentUser);
 
     Intent getCertificateIntent();
 

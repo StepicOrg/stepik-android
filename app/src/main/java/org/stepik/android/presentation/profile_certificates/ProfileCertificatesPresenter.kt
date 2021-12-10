@@ -44,13 +44,12 @@ constructor(
                 .filter { !it.user.isOrganization && !it.user.isPrivate }
                 .observeOn(mainScheduler)
                 .doOnSuccess { profileData ->
-                    state = ProfileCertificatesView.State.Loading(profileData.user.id)
+                    state = ProfileCertificatesView.State.Loading(profileData)
                 } // post public loading to view
                 .observeOn(backgroundScheduler)
                 .flatMapSingleElement { profileData ->
-                    val userId = profileData.user.id
-                    fetchCertificatesFromCache(userId)
-                        .switchIfEmpty(fetchCertificatesFromRemote(userId))
+                    fetchCertificatesFromCache(profileData)
+                        .switchIfEmpty(fetchCertificatesFromRemote(profileData))
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
@@ -64,20 +63,20 @@ constructor(
         }
     }
 
-    private fun fetchCertificatesFromCache(userId: Long): Maybe<ProfileCertificatesView.State> =
+    private fun fetchCertificatesFromCache(profileData: ProfileData): Maybe<ProfileCertificatesView.State> =
         certificatesInteractor
-            .getCertificates(userId, page = 1, sourceType = DataSourceType.CACHE)
+            .getCertificates(profileData.user.id, page = 1, sourceType = DataSourceType.CACHE)
             .filter { it.isNotEmpty() }
-            .map { ProfileCertificatesView.State.CertificatesCache(it, userId) }
+            .map { ProfileCertificatesView.State.CertificatesCache(it, profileData) }
 
-    private fun fetchCertificatesFromRemote(userId: Long): Single<ProfileCertificatesView.State> =
+    private fun fetchCertificatesFromRemote(profileData: ProfileData): Single<ProfileCertificatesView.State> =
         certificatesInteractor
-            .getCertificates(userId, page = 1, sourceType = DataSourceType.REMOTE)
+            .getCertificates(profileData.user.id, page = 1, sourceType = DataSourceType.REMOTE)
             .map { certificates ->
                 if (certificates.isEmpty()) {
                     ProfileCertificatesView.State.NoCertificates
                 } else {
-                    ProfileCertificatesView.State.CertificatesRemote(certificates, userId)
+                    ProfileCertificatesView.State.CertificatesRemote(certificates, profileData)
                 }
             }
 }

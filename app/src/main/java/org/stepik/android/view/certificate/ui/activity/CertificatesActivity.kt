@@ -41,13 +41,16 @@ class CertificatesActivity :
     CertificateNameChangeConfirmationDialog.Callback {
     companion object {
         private const val EXTRA_USER_ID = "user_id"
+        private const val EXTRA_IS_CURRENT_USER = "is_current_user"
 
-        fun createIntent(context: Context, userId: Long): Intent =
+        fun createIntent(context: Context, userId: Long, isCurrentUser: Boolean): Intent =
             Intent(context, CertificatesActivity::class.java)
                 .putExtra(EXTRA_USER_ID, userId)
+                .putExtra(EXTRA_IS_CURRENT_USER, isCurrentUser)
     }
 
     private var userId: Long = -1
+    private var isCurrentUser: Boolean = false
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -70,11 +73,13 @@ class CertificatesActivity :
 
         initCenteredToolbar(R.string.certificates_title, showHomeButton = true)
         userId = intent.getLongExtra(EXTRA_USER_ID, -1)
+        isCurrentUser = intent.getBooleanExtra(EXTRA_IS_CURRENT_USER, false)
 
         certificatesAdapter += CertificatesAdapterDelegate(
             onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
             onShareButtonClick = { onNeedShowShareDialog(it) },
-            onChangeNameClick = { showChangeNameDialog(certificate = it.certificate) }
+            onChangeNameClick = { showChangeNameDialog(certificate = it.certificate) },
+            isCurrentUser = isCurrentUser
         )
 
         with(certificateRecyclerView) {
