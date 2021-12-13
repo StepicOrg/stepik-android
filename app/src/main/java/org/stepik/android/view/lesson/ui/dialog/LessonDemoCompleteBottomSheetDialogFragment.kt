@@ -73,6 +73,11 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
         }
     }
 
+    override fun onDestroy() {
+        App.componentManager().releaseCourseComponent(course.id)
+        super.onDestroy()
+    }
+
     private fun setupWeb(deeplinkPromoCode: DeeplinkPromoCode) {
         val courseDisplayPrice = course.displayPrice
         val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
