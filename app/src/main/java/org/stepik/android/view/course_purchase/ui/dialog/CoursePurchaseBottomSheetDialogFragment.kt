@@ -226,32 +226,21 @@ class CoursePurchaseBottomSheetDialogFragment :
                 wishlistViewDelegate.render(state)
             }
 
-            val (strokeColor, textColor) = getWishlistActionColor(state)
-
             (state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess).let { mustEnable ->
                 isCancelable = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
             }
 
-            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
-            coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))
+            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), getWishlistActionStrokeColor(state))
         }
     }
 
-    private fun getWishlistActionColor(state: CoursePurchaseFeature.State.Content): Pair<Int, Int> =
-        if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-            if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
-                R.color.color_overlay_green_alpha_12 to R.color.color_overlay_green
-            } else {
-                R.color.color_overlay_green to R.color.color_overlay_green
-            }
+    private fun getWishlistActionStrokeColor(state: CoursePurchaseFeature.State.Content): Int =
+        if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
+            R.color.color_overlay_violet_alpha_12
         } else {
-            if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
-                R.color.color_overlay_violet_alpha_12 to R.color.color_overlay_violet
-            } else {
-                R.color.color_overlay_violet to R.color.color_overlay_violet
-            }
+            R.color.color_overlay_violet
         }
 
     interface Callback {

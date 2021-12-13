@@ -306,6 +306,7 @@
                 app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyActionsBarrier"
                 app:strokeColor="?colorPrimary"
                 app:strokeWidth="1dp"
+                app:iconPadding="-18dp"
                 tools:text="Добавить в Список желаний" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

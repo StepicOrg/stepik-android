@@ -23,6 +23,7 @@ constructor() : StateReducer<State, Message, Action> {
                     } else {
                         CoursePurchaseFeature.PromoCodeState.Idle
                     }
+//                    val wishlistState = CoursePurchaseFeature.WishlistState.Adding
                     val wishlistState = if (message.coursePurchaseData.isWishlisted) {
                         CoursePurchaseFeature.WishlistState.Wishlisted
                     } else {
@@ -148,7 +149,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.WishlistAddMessage -> {
                 if (state is State.Content) {
                     val wishlistOperationData = WishlistOperationData(state.coursePurchaseData.course.id, WishlistAction.ADD)
-                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding)to setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistOperationData))
+                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding) to setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistOperationData))
                 } else {
                     null
                 }

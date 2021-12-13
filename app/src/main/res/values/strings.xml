@@ -1270,7 +1270,7 @@
 
     <string name="course_purchase_wishlist_add">Add to Wishlist</string>
     <string name="course_purchase_wishlist_adding">Adding</string>
-    <string name="course_purchase_wishlist_added">Course added to Wishlist</string>
+    <string name="course_purchase_wishlist_added">Added to Wishlist</string>
 
     <string name="course_purchase_payment_learn_action">Begin to study</string>
     <string name="course_purchase_payment_restore_action">Restore purchase</string>

@@ -1184,7 +1184,7 @@
 
     <string name="course_purchase_wishlist_add">Добавить в Список желаний</string>
     <string name="course_purchase_wishlist_adding">Добавляем</string>
-    <string name="course_purchase_wishlist_added">Курс добавлен в Список желаний</string>
+    <string name="course_purchase_wishlist_added">Добавлен в Список желаний</string>
 
     <string name="course_purchase_payment_learn_action">Начать учиться</string>
     <string name="course_purchase_payment_restore_action">Восстановить покупку</string>
