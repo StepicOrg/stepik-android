@@ -1044,6 +1044,7 @@
 
     <string name="course_purchase_wishlist_add">Дадаць у Спіс жаданняў</string>
     <string name="course_purchase_wishlist_adding">Дадаем</string>
+    <string name="course_purchase_wishlist_removing">Выдаляем</string>
     <string name="course_purchase_wishlist_added">Дададзены ў Спіс жаданняў</string>
 
     <string name="course_purchase_payment_learn_action">Пачаць вучыцца</string>

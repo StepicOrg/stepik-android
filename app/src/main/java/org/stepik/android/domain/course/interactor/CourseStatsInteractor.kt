@@ -46,11 +46,15 @@ constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
 
-    fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> =
-        coursePaymentsRepository
+    fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> {
+        val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP_FALLBACK_WEB ||
+            RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+
+        return coursePaymentsRepository
             .checkDeeplinkPromoCodeValidity(courseId, promo)
             .flatMap { deeplinkPromoCode ->
-                if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+                if (isInAppActive) {
                     mobileTiersRepository
                         .calculateMobileTier(MobileTierCalculation(course = courseId, promo = promo), dataSourceType = DataSourceType.REMOTE)
                         .flatMapSingle { mobileTier ->
@@ -67,6 +71,7 @@ constructor(
                 }
             }
             .onErrorReturnItem(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY)
+    }
 
     // <editor-fold desc="CourseStats Web Purchase Flow">
     fun getCourseStats(
@@ -222,7 +227,11 @@ constructor(
 
     private fun resolvePaidEnrollmentState(standardLightSku: LightSku?, promoLightSku: LightSku?): EnrollmentState =
         if (standardLightSku == null) {
-            EnrollmentState.NotEnrolledWeb
+            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP) {
+                EnrollmentState.NotEnrolledUnavailable
+            } else {
+                EnrollmentState.NotEnrolledWeb
+            }
         } else {
             EnrollmentState.NotEnrolledMobileTier(standardLightSku, promoLightSku)
         }

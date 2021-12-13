@@ -1180,6 +1180,7 @@
 
     <string name="course_purchase_wishlist_add">Добавить в Список желаний</string>
     <string name="course_purchase_wishlist_adding">Добавляем</string>
+    <string name="course_purchase_wishlist_removing">Удаляем</string>
     <string name="course_purchase_wishlist_added">Добавлен в Список желаний</string>
 
     <string name="course_purchase_payment_learn_action">Начать учиться</string>
