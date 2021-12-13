@@ -10,8 +10,10 @@ import org.stepik.android.remote.billing.BillingRemoteDataSourceImpl
 @Module
 abstract class BillingDataModule {
     @Binds
+    @BillingSingleton
     internal abstract fun bindBillingRepository(billingRepositoryImpl: BillingRepositoryImpl): BillingRepository
 
     @Binds
+    @BillingSingleton
     internal abstract fun bindBillingRemoteDataSource(billingRemoteDataSourceImpl: BillingRemoteDataSourceImpl): BillingRemoteDataSource
 }

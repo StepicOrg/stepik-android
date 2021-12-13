@@ -95,7 +95,7 @@ public interface ScreenManager {
 
     void showCertificates(Context context);
 
-    void showCertificates(Context context, long userId);
+    void showCertificates(Context context, long userId, boolean isCurrentUser);
 
     Intent getCertificateIntent();
 
@@ -168,4 +168,5 @@ public interface ScreenManager {
     void showWishlist(Context context);
     void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle);
     void showUserReviews(Context context);
+    void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab);
 }

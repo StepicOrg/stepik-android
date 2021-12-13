@@ -7,12 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingFlowParams
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -33,6 +34,13 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
+import androidx.annotation.StringRes
+import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
+import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CoursePurchaseBottomSheetDialogFragment :
     BottomSheetDialogFragment(),
@@ -40,11 +48,15 @@ class CoursePurchaseBottomSheetDialogFragment :
     companion object {
         const val TAG = "CoursePurchaseBottomSheetDialogFragment"
 
-        fun newInstance(coursePurchaseData: CoursePurchaseData): DialogFragment =
+        fun newInstance(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean): DialogFragment =
             CoursePurchaseBottomSheetDialogFragment().apply {
                 this.coursePurchaseData = coursePurchaseData
+                this.isNeedRestoreMessage = isNeedRestoreMessage
             }
     }
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -55,11 +67,19 @@ class CoursePurchaseBottomSheetDialogFragment :
     @Inject
     internal lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
 
+    @Inject
+    internal lateinit var billingClient: BillingClient
+
     private var coursePurchaseData: CoursePurchaseData by argument()
+    private var isNeedRestoreMessage: Boolean by argument()
 
     private val coursePurchaseViewModel: CoursePurchaseViewModel by reduxViewModel(this) { viewModelFactory }
     private val coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding by viewBinding(BottomSheetDialogCoursePurchaseBinding::bind)
 
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
+
+    private lateinit var buyActionViewDelegate: BuyActionViewDelegate
     private lateinit var promoCodeViewDelegate: PromoCodeViewDelegate
     private lateinit var wishlistViewDelegate: WishlistViewDelegate
 
@@ -76,6 +96,9 @@ class CoursePurchaseBottomSheetDialogFragment :
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
+        if (isNeedRestoreMessage) {
+            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow)
+        }
     }
 
     override fun onStart() {
@@ -88,7 +111,12 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel, coursePurchaseData, displayPriceMapper)
+        buyActionViewDelegate = BuyActionViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper,
+            launchPurchaseFlowAction =  { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) },
+            launchStartStudying = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.StartLearningMessage) },
+            launchRestoreAction = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow) }
+        )
+        promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
         coursePurchaseBinding.coursePurchaseWishlistAction.setOnClickListener {
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.WishlistAddMessage)
@@ -123,28 +151,93 @@ class CoursePurchaseBottomSheetDialogFragment :
     }
 
     override fun onAction(action: CoursePurchaseFeature.Action.ViewAction) {
-        // no op
+        when (action) {
+            is CoursePurchaseFeature.Action.ViewAction.LaunchPurchaseFlowBilling -> {
+                val billingFlowParams = BillingFlowParams
+                    .newBuilder()
+                    .setObfuscatedAccountId(action.obfuscatedParams.obfuscatedAccountId)
+                    .setObfuscatedProfileId(action.obfuscatedParams.obfuscatedProfileId)
+                    .setSkuDetails(action.skuDetails)
+                    .build()
+
+                billingClient.launchBillingFlow(requireActivity(), billingFlowParams)
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.Error -> {
+                @StringRes
+                val errorMessage =
+                    when (action.error) {
+                        EnrollmentError.NO_CONNECTION ->
+                            R.string.course_error_enroll
+
+                        EnrollmentError.FORBIDDEN ->
+                            R.string.join_course_web_exception
+
+                        EnrollmentError.UNAUTHORIZED ->
+                            R.string.unauthorization_detail
+
+                        EnrollmentError.BILLING_ERROR ->
+                            R.string.course_purchase_billing_error
+
+                        EnrollmentError.BILLING_CANCELLED ->
+                            R.string.course_purchase_billing_cancelled
+
+                        EnrollmentError.BILLING_NOT_AVAILABLE ->
+                            R.string.course_purchase_billing_not_available
+
+                        EnrollmentError.COURSE_ALREADY_OWNED ->
+                            R.string.course_purchase_already_owned
+
+                        EnrollmentError.BILLING_NO_PURCHASES_TO_RESTORE ->
+                            R.string.course_purchase_billing_no_purchases_to_restore
+                    }
+                coursePurchaseBinding.coursePurchaseCoordinator.snackbar(messageRes = errorMessage)
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowLoading ->
+                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowConsumeSuccess -> {
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowConsumeFailure -> {
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.StartStudyAction -> {
+                (activity as? Callback)?.continueLearning()
+                dismiss()
+            }
+        }
     }
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
-            promoCodeViewDelegate.render(state.promoCodeState)
-            wishlistViewDelegate.render(state.wishlistState)
-            val buyActionButtonColor = getBuyActionColor(state.promoCodeState)
+            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            buyActionViewDelegate.render(state)
+
+            if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
+                promoCodeViewDelegate.setViewVisibility(isVisible = false)
+                wishlistViewDelegate.setViewVisibility(isVisible = false)
+            } else {
+                promoCodeViewDelegate.render(state.promoCodeState)
+                wishlistViewDelegate.setViewVisibility(isVisible = true)
+                wishlistViewDelegate.render(state)
+            }
+
             val (strokeColor, textColor) = getWishlistActionColor(state)
 
-            coursePurchaseBinding.coursePurchaseBuyAction.setBackgroundColor(ContextCompat.getColor(requireContext(), buyActionButtonColor))
+            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess).let { mustEnable ->
+                isCancelable = mustEnable
+                coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
+                coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
+            }
+
             coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
             coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))
         }
     }
-
-    private fun getBuyActionColor(promoCodeState: CoursePurchaseFeature.PromoCodeState): Int =
-        if (promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-            R.color.color_overlay_green
-        } else {
-            R.color.color_overlay_violet
-        }
 
     private fun getWishlistActionColor(state: CoursePurchaseFeature.State.Content): Pair<Int, Int> =
         if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
@@ -160,4 +253,8 @@ class CoursePurchaseBottomSheetDialogFragment :
                 R.color.color_overlay_violet to R.color.color_overlay_violet
             }
         }
+
+    interface Callback {
+        fun continueLearning()
+    }
 }

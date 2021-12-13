@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.debug
 
-import org.solovyev.android.checkout.Purchase
+import com.android.billingclient.api.Purchase
 
 interface InAppPurchasesFeature {
     sealed class State {

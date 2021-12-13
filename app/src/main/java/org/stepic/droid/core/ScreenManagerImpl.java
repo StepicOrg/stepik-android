@@ -265,20 +265,20 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        Intent intent = CertificatesActivity.Companion.createIntent(context, userPreferences.getUserId());
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userPreferences.getUserId(), true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
     @Override
     public void showCertificates(Context context) {
-        showCertificates(context, userPreferences.getUserId());
+        showCertificates(context, userPreferences.getUserId(), true);
     }
 
     @Override
-    public void showCertificates(Context context, long userId) {
+    public void showCertificates(Context context, long userId, boolean isCurrentUser) {
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Certificates.SCREEN_OPENED);
-        Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userId, isCurrentUser);
         context.startActivity(intent);
     }
 
@@ -734,5 +734,16 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showUserReviews(Context context) {
         context.startActivity(UserReviewsActivity.Companion.createIntent(context));
+    }
+
+    @Override
+    public void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainIntent = new Intent(context, MainFeedActivity.class);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, course, courseViewSource, true, courseScreenTab);
+        taskStackBuilder.addParentStack(MainFeedActivity.class);
+        taskStackBuilder.addNextIntent(mainIntent);
+        taskStackBuilder.addNextIntent(courseIntent);
+        taskStackBuilder.startActivities();
     }
 }

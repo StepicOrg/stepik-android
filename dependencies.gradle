@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2230,
-        name                 : '1.200',
+        code                 : 2232,
+        name                 : '1.202',
 
         minSdk               : 21,
         targetSdk            : 30,
@@ -68,7 +68,7 @@ ext.versions = [
         googleauth           : '18.1.0',
         firebaseBoM          : '28.4.1',
 
-        checkout             : '1.2.3',
+        billing              : '4.0.0',
 
         facebook             : '8.1.0',
         vk                   : '2.2.3',
@@ -196,7 +196,8 @@ ext.libraries = [
         firebaseMessaging    : "com.google.firebase:firebase-messaging",
         firebasePerf         : "com.google.firebase:firebase-perf",
 
-        checkout             : "org.solovyev.android:checkout:$versions.checkout",
+        billing              : "com.android.billingclient:billing:$versions.billing",
+        billingKtx           : "com.android.billingclient:billing-ktx:$versions.billing",
 
         facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
         vkSdk                : "com.vk:androidsdk:$versions.vk",

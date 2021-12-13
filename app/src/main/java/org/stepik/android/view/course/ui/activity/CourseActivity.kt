@@ -21,9 +21,6 @@ import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
-import org.solovyev.android.checkout.Billing
-import org.solovyev.android.checkout.Checkout
-import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -45,6 +42,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
 import org.stepik.android.view.base.web.CustomTabsHelper
@@ -68,7 +66,12 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback, MagicLinkDialogFragment.Callback {
+class CourseActivity :
+    FragmentActivityBase(),
+    CourseView,
+    InAppWebViewDialogFragment.Callback,
+    MagicLinkDialogFragment.Callback,
+    CoursePurchaseBottomSheetDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
@@ -159,12 +162,7 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
     @Inject
-    internal lateinit var billing: Billing
-
-    @Inject
     internal lateinit var courseHeaderDelegateFactory: CourseHeaderDelegateFactory
-
-    private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -228,14 +226,11 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                             .newInstance(courseId, course?.title.orEmpty())
                             .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
                     },
-                    coursePurchaseFlowAction = {
-                        CoursePurchaseBottomSheetDialogFragment
-                            .newInstance(it)
-                            .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
+                    coursePurchaseFlowAction = { coursePurchaseData, isNeedRestoreMessage ->
+                        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage)
                     }
                 )
 
-        uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId, course?.title.toString())
         initViewStateDelegate()
 
@@ -437,9 +432,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
                 EnrollmentError.UNAUTHORIZED ->
                     R.string.unauthorization_detail
 
-                EnrollmentError.SERVER_ERROR ->
-                    R.string.course_purchase_server_error
-
                 EnrollmentError.BILLING_ERROR ->
                     R.string.course_purchase_billing_error
 
@@ -527,12 +519,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         coursePager.snackbar(messageRes = errorMessage)
     }
 
-    /**
-     * BillingView
-     */
-    override fun createUiCheckout(): UiCheckout =
-        uiCheckout
-
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
         when (coursePurchaseWebviewSplitTest.currentGroup) {
@@ -556,12 +542,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
     override fun showTrialLesson(lessonId: Long, unitId: Long) {
         screenManager.showTrialLesson(this, lessonId, unitId)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
     }
 
     override fun onDestroy() {
@@ -616,5 +596,19 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             customTabsIntent.intent.`package` = packageName
             customTabsIntent.launchUrl(this, Uri.parse(url))
         }
+    }
+
+    override fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData) {
+        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage = false)
+    }
+
+    override fun continueLearning() {
+        coursePresenter.continueLearning()
+    }
+
+    private fun showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean) {
+        CoursePurchaseBottomSheetDialogFragment
+            .newInstance(coursePurchaseData, isNeedRestoreMessage = isNeedRestoreMessage)
+            .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
     }
 }
