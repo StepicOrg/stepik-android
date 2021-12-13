@@ -1,10 +1,11 @@
-package org.stepik.android.view.lesson.ui.dialog
+package org.stepik.android.view.lesson_demo.ui.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -12,19 +13,23 @@ import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepik.android.data.course.repository.CoursePurchaseDataRepositoryImpl
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.presentation.lesson_demo.LessonDemoFeature
+import org.stepik.android.presentation.lesson_demo.LessonDemoViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course.routing.CourseScreenTab
+import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() {
+class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(), ReduxView<LessonDemoFeature.State, LessonDemoFeature.Action.ViewAction> {
     companion object {
         const val TAG = "LessonDemoCompleteBottomSheetDialog"
 
@@ -40,18 +45,27 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
     lateinit var screenManager: ScreenManager
 
     @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
     lateinit var displayPriceMapper: DisplayPriceMapper
 
     @Inject
     lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
 
-    @Inject
-    lateinit var coursePurchaseDataRepository: CoursePurchaseDataRepositoryImpl
+    private val lessonDemoViewModel: LessonDemoViewModel by reduxViewModel(this) { viewModelFactory }
+    private val viewStateDelegate = ViewStateDelegate<LessonDemoFeature.State>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.componentManager().courseComponent(course.id).inject(this)
+        App.componentManager()
+            .courseComponent(course.id)
+            .lessonDemoPresentationComponentBuilder()
+            .build()
+            .inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
+        initViewStateDelegate()
+        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -65,17 +79,32 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
+    }
 
-        if (coursePurchaseDataRepository.coursePurchaseData != null) {
-            setupIAP(coursePurchaseDataRepository.coursePurchaseData!!)
-        } else {
-            setupWeb(coursePurchaseDataRepository.deeplinkPromoCode)
+    override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
+        // no op
+    }
+
+    override fun render(state: LessonDemoFeature.State) {
+        if (state is LessonDemoFeature.State.Content) {
+            if (state.coursePurchaseData != null) {
+                setupIAP(state.coursePurchaseData)
+            } else {
+                setupWeb(state.deeplinkPromoCode)
+            }
         }
     }
 
     override fun onDestroy() {
         App.componentManager().releaseCourseComponent(course.id)
         super.onDestroy()
+    }
+
+    private fun initViewStateDelegate() {
+        viewStateDelegate.addState<LessonDemoFeature.State.Idle>()
+        viewStateDelegate.addState<LessonDemoFeature.State.Loading>(demoCompleteProgressbar)
+        viewStateDelegate.addState<LessonDemoFeature.State.Error>(demoCompleteNetworkError)
+        viewStateDelegate.addState<LessonDemoFeature.State.Content>(demoCompleteContent)
     }
 
     private fun setupWeb(deeplinkPromoCode: DeeplinkPromoCode) {

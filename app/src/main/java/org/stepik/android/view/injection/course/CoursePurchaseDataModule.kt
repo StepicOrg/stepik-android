@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.course
 import dagger.Module
 import dagger.Provides
 import org.stepik.android.data.course.repository.CoursePurchaseDataRepositoryImpl
+import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 
 @Module
 abstract class CoursePurchaseDataModule {
@@ -11,7 +12,7 @@ abstract class CoursePurchaseDataModule {
         @Provides
         @JvmStatic
         @CourseScope
-        fun provideCoursePurchaseDataRepository(): CoursePurchaseDataRepositoryImpl =
+        fun provideCoursePurchaseDataRepository(): CoursePurchaseDataRepository =
             CoursePurchaseDataRepositoryImpl()
     }
 }

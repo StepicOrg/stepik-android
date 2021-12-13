@@ -12,6 +12,7 @@ import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModul
 import org.stepik.android.view.injection.course_reviews.CourseReviewsDataModule
 import org.stepik.android.view.injection.exam_session.ExamSessionDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
+import org.stepik.android.view.injection.lesson_demo.LessonDemoComponent
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.proctor_session.ProctorSessionDataModule
@@ -19,7 +20,6 @@ import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.wishlist.WishlistDataModule
-import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 
 @CourseScope
 @Subcomponent(modules = [
@@ -56,9 +56,9 @@ interface CourseComponent {
     }
 
     fun coursePresentationComponentBuilder(): CoursePresentationComponent.Builder
+    fun lessonDemoPresentationComponentBuilder(): LessonDemoComponent.Builder
 
     fun inject(courseInfoFragment: CourseInfoFragment)
     fun inject(courseReviewsFragment: CourseReviewsFragment)
     fun inject(courseContentFragment: CourseContentFragment)
-    fun inject(lessonDemoCompleteBottomSheetDialogFragment: LessonDemoCompleteBottomSheetDialogFragment)
 }

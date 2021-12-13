@@ -2,16 +2,17 @@ package org.stepik.android.domain.course.interactor
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.configuration.RemoteConfig
-import org.stepik.android.data.course.repository.CoursePurchaseDataRepositoryImpl
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
@@ -21,6 +22,7 @@ import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.view.injection.course.CourseScope
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
 
@@ -34,7 +36,7 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
-    private val coursePurchaseDataRepository: CoursePurchaseDataRepositoryImpl
+    private val coursePurchaseDataRepository: CoursePurchaseDataRepository
 ) {
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -82,21 +84,21 @@ constructor(
             )
         }
             .toMaybe()
-            .doOnSuccess { courseHeaderData ->
-                val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
-                val coursePurchaseData =
-                    if (notEnrolledMobileTierState != null) {
-                        val promoCodeSku = when {
-                            courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                                courseHeaderData.deeplinkPromoCodeSku
+            .doCompletableOnSuccess { courseHeaderData ->
+            val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
+                if (notEnrolledMobileTierState != null) {
+                    val promoCodeSku = when {
+                        courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
+                            courseHeaderData.deeplinkPromoCodeSku
 
-                            notEnrolledMobileTierState.promoLightSku != null -> {
-                                PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
-                            }
-
-                            else ->
-                                PromoCodeSku.EMPTY
+                        notEnrolledMobileTierState.promoLightSku != null -> {
+                            PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
                         }
+
+                        else ->
+                            PromoCodeSku.EMPTY
+                    }
+                    val coursePurchaseData =
                         CoursePurchaseData(
                             courseHeaderData.course,
                             courseHeaderData.stats,
@@ -104,10 +106,11 @@ constructor(
                             promoCodeSku,
                             courseHeaderData.course.isInWishlist
                         )
-                    } else {
-                        null
-                    }
-                coursePurchaseDataRepository.coursePurchaseData = coursePurchaseData
-                coursePurchaseDataRepository.deeplinkPromoCode = courseHeaderData.deeplinkPromoCode
+                    coursePurchaseDataRepository
+                        .saveCoursePurchaseData(coursePurchaseData)
+                        .andThen(coursePurchaseDataRepository.saveDeeplinkPromoCode(courseHeaderData.deeplinkPromoCode))
+                } else {
+                    Completable.complete()
+                }
             }
 }

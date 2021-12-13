@@ -53,8 +53,6 @@ import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.analytic.AnalyticComponent
 import org.stepik.android.view.injection.auth.AuthComponent
 import org.stepik.android.view.injection.billing.BillingComponent
-import org.stepik.android.view.injection.billing.BillingDataModule
-import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
 import org.stepik.android.view.injection.catalog.CatalogComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
@@ -124,7 +122,6 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
 import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModule
 import org.stepik.android.view.latex.ui.widget.LatexView
-import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.onboarding.ui.activity.OnboardingCourseListsActivity
@@ -387,7 +384,6 @@ interface AppCoreComponent {
     fun inject(onboardingGoalActivity: OnboardingGoalActivity)
     fun inject(onboardingCourseListsActivity: OnboardingCourseListsActivity)
 
-    fun inject(lessonDemoCompleteBottomSheetDialogFragment: LessonDemoCompleteBottomSheetDialogFragment)
     fun inject(transactionBottomSheetDialogFragmentFragment: TransactionBottomSheetDialogFragment)
     fun inject(videoPlayerForegroundService: VideoPlayerForegroundService)
 }
