@@ -1191,7 +1191,9 @@
     <string name="course_purchase_payment_processing">Обработка платежа</string>
     <string name="course_purchase_payment_success">Оплата прошла успешно</string>
     <string name="course_purchase_payment_failure">Оплата прошла, покупка не завершена</string>
-    <string name="course_purchase_payment_failure_body">При обработке платежа произошла ошибка, попробуйте восстановить покупку и свяжитесь с поддержкой, если ошибка не будет устранена. Повторного списания средств не произойдет.</string>
+    <string name="course_purchase_payment_failure_body_part_1">"При обработке платежа произошла ошибка, попробуйте восстановить покупку и "</string>
+    <string name="course_purchase_payment_failure_body_part_2">свяжитесь с поддержкой</string>
+    <string name="course_purchase_payment_failure_body_part_3">, если ошибка не будет устранена. Повторного списания средств не произойдет.</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Изменить имя получателя</string>

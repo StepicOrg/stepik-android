@@ -91,7 +91,6 @@
                 android:id="@+id/coursePurchasePaymentFeedback"
                 style="@style/StepQuizFeedback.Wrong"
                 android:layout_margin="16dp"
-                android:text="@string/course_purchase_payment_failure_body"
                 android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_purchase_error"
                 app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"

@@ -37,6 +37,7 @@ import javax.inject.Inject
 import androidx.annotation.StringRes
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
@@ -131,6 +132,26 @@ class CoursePurchaseBottomSheetDialogFragment :
             .fitCenter()
             .into(coursePurchaseBinding.coursePurchaseCourseIcon)
 
+        val supportSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                coursePurchaseViewModel.onNewMessage(
+                    CoursePurchaseFeature.Message.SetupFeedback(
+                        getString(R.string.feedback_subject),
+                        DeviceInfoUtil.getInfosAboutDevice(requireContext(), "\n")
+                    )
+                )
+            }
+        }
+
+        coursePurchaseBinding.coursePurchasePaymentFeedback.text = buildSpannedString {
+            append(getString(R.string.course_purchase_payment_failure_body_part_1))
+            inSpans(supportSpan) {
+                append(getString(R.string.course_purchase_payment_failure_body_part_2))
+            }
+            append(getString(R.string.course_purchase_payment_failure_body_part_3))
+        }
+        coursePurchaseBinding.coursePurchasePaymentFeedback.movementMethod = LinkMovementMethod.getInstance()
+
         val userAgreementLinkSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val userAgreementUrl = getString(R.string.course_purchase_commission_url)
@@ -208,6 +229,10 @@ class CoursePurchaseBottomSheetDialogFragment :
             is CoursePurchaseFeature.Action.ViewAction.StartStudyAction -> {
                 (activity as? Callback)?.continueLearning()
                 dismiss()
+            }
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowContactSupport -> {
+                screenManager.openTextFeedBack(requireContext(), action.supportEmailData)
             }
         }
     }

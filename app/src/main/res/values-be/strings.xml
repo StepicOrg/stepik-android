@@ -1054,7 +1054,9 @@
     <string name="course_purchase_payment_processing">Апрацоўка плацяжу</string>
     <string name="course_purchase_payment_success">Аплата прайшла паспяхова</string>
     <string name="course_purchase_payment_failure">Аплата прайшла, пакупка не завершана</string>
-    <string name="course_purchase_payment_failure_body">Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і звяжыцеся з падтрымкай, калі памылка не будзе ліквідаваная. Паўторнага спісання сродкаў не адбудзецца.</string>
+    <string name="course_purchase_payment_failure_body_part_1">"Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і "</string>
+    <string name="course_purchase_payment_failure_body_part_2">сзвяжыцеся з падтрымкай</string>
+    <string name="course_purchase_payment_failure_body_part_3">, калі памылка не будзе ліквідаваная. Паўторнага спісання сродкаў не адбудзецца.</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Змяніць імя атрымальніка</string>

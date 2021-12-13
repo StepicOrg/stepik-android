@@ -23,7 +23,6 @@ constructor() : StateReducer<State, Message, Action> {
                     } else {
                         CoursePurchaseFeature.PromoCodeState.Idle
                     }
-//                    val wishlistState = CoursePurchaseFeature.WishlistState.Adding
                     val wishlistState = if (message.coursePurchaseData.isWishlisted) {
                         CoursePurchaseFeature.WishlistState.Wishlisted
                     } else {
@@ -142,6 +141,20 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.StartLearningMessage -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
                     state to setOf(Action.ViewAction.StartStudyAction)
+                } else {
+                    null
+                }
+            }
+            is Message.SetupFeedback -> {
+                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure) {
+                    state to setOf(Action.GenerateSupportEmailData(message.subject, message.deviceInfo))
+                } else {
+                    null
+                }
+            }
+            is Message.SetupFeedbackSuccess -> {
+                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure) {
+                    state to setOf(Action.ViewAction.ShowContactSupport(message.supportEmailData))
                 } else {
                     null
                 }

@@ -4,6 +4,7 @@ import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -42,6 +43,9 @@ interface CoursePurchaseFeature {
 
         object StartLearningMessage : Message()
 
+        data class SetupFeedback(val subject: String, val deviceInfo: String) : Message()
+        data class SetupFeedbackSuccess(val supportEmailData: SupportEmailData) : Message()
+
         /**
          * Wishlist messages
          */
@@ -71,6 +75,8 @@ interface CoursePurchaseFeature {
         data class RestorePurchaseWithSkuId(val skuId: String) : Action()
         data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
 
+        data class GenerateSupportEmailData(val subject: String, val deviceInfo: String) : Action()
+
         sealed class ViewAction : Action() {
             data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : ViewAction()
             data class Error(val error: EnrollmentError) : ViewAction()
@@ -79,6 +85,7 @@ interface CoursePurchaseFeature {
             object ShowConsumeSuccess : Action.ViewAction()
             object ShowConsumeFailure : Action.ViewAction()
             object StartStudyAction : Action.ViewAction()
+            data class ShowContactSupport(val supportEmailData: SupportEmailData) : Action.ViewAction()
         }
     }
 
@@ -87,8 +94,6 @@ interface CoursePurchaseFeature {
         object ProcessingInitialCheck : PaymentState()
         data class ProcessingBillingPayment(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : PaymentState()
         data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
-
-//        data class RestoringPayment(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()
         data class PaymentFailure(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()

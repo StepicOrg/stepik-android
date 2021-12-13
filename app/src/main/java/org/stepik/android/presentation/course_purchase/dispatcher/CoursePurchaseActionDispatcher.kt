@@ -15,11 +15,13 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.interactor.CoursePurchaseInteractor
+import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.view.injection.billing.BillingSingleton
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
 
@@ -30,6 +32,7 @@ constructor(
     purchaseListenerBehaviorRelay: PublishRelay<Pair<BillingResult, List<Purchase>?>>,
 
     private val analytic: Analytic,
+    private val feedbackInteractor: FeedbackInteractor,
     private val wishlistInteractor: WishlistInteractor,
     private val coursePurchaseInteractor: CoursePurchaseInteractor,
     @BackgroundScheduler
@@ -122,6 +125,16 @@ constructor(
                     .subscribeBy(
                         onComplete = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseSuccess) },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseFailure(action.skuDetails, action.purchase, it.toEnrollmentError())) }
+                    )
+            }
+            is CoursePurchaseFeature.Action.GenerateSupportEmailData -> {
+                compositeDisposable += feedbackInteractor
+                    .createSupportEmailData(action.subject, action.deviceInfo)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { onNewMessage(CoursePurchaseFeature.Message.SetupFeedbackSuccess(it)) },
+                        onError = emptyOnErrorStub
                     )
             }
         }

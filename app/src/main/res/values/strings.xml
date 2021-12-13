@@ -1277,7 +1277,9 @@
     <string name="course_purchase_payment_processing">Processing payment</string>
     <string name="course_purchase_payment_success">Payment was successful</string>
     <string name="course_purchase_payment_failure">Payment has passed, but the purchase has not been completed</string>
-    <string name="course_purchase_payment_failure_body">An error has occurred when processing the payment, please try to restore the purchase and contact our support team, if the error still remains. Funds will not be debited again.</string>
+    <string name="course_purchase_payment_failure_body_part_1">"An error has occurred when processing the payment, please try to restore the purchase and "</string>
+    <string name="course_purchase_payment_failure_body_part_2">contact our support team</string>
+    <string name="course_purchase_payment_failure_body_part_3">, if the error still remains. Funds will not be debited again.</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Change recipient name</string>
