@@ -1258,9 +1258,6 @@
 
     <!-- Course purchase -->
     <string name="course_purchase_commission_web_view_title">User Agreement</string>
-    <string name="course_purchase_commission_information_part_1">The price includes 15% commission from Google Play.\nBy paying for access to this course you agree to the terms </string>
-    <string name="course_purchase_commission_information_part_2">user agreement</string>
-    <string name="course_purchase_commission_url">https://welcome.stepik.org/en/payment-terms</string>
 
     <string name="course_purchase_promocode_hint">Enter promo code</string>
     <string name="course_purchase_promocode_available">I have a promo code</string>

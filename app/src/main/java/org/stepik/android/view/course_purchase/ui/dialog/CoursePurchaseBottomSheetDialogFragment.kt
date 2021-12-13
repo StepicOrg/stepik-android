@@ -1,8 +1,10 @@
 package org.stepik.android.view.course_purchase.ui.dialog
 
 import android.os.Bundle
+import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.URLSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,19 +30,26 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course_purchase.delegate.PromoCodeViewDelegate
 import org.stepik.android.view.course_purchase.delegate.WishlistViewDelegate
-import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
-import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import androidx.annotation.StringRes
+import androidx.core.text.HtmlCompat
+import androidx.core.text.getSpans
+import androidx.core.text.toSpannable
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.defaultLocale
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CoursePurchaseBottomSheetDialogFragment :
@@ -54,7 +63,12 @@ class CoursePurchaseBottomSheetDialogFragment :
                 this.coursePurchaseData = coursePurchaseData
                 this.isNeedRestoreMessage = isNeedRestoreMessage
             }
+
+        private const val RUSSIAN_LANGUAGE_CODE = "ru"
     }
+
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -152,21 +166,8 @@ class CoursePurchaseBottomSheetDialogFragment :
         }
         coursePurchaseBinding.coursePurchasePaymentFeedback.movementMethod = LinkMovementMethod.getInstance()
 
-        val userAgreementLinkSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                val userAgreementUrl = getString(R.string.course_purchase_commission_url)
-
-                InAppWebViewDialogFragment
-                    .newInstance(getString(R.string.course_purchase_commission_web_view_title), userAgreementUrl, isProvideAuth = false)
-                    .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
-            }
-        }
         coursePurchaseBinding.coursePurchaseCommissionNotice.text = buildSpannedString {
-            append(getString(R.string.course_purchase_commission_information_part_1))
-            inSpans(userAgreementLinkSpan) {
-                append(getString(R.string.course_purchase_commission_information_part_2))
-            }
-            append(getString(R.string.full_stop))
+            append(resolveCommissionSpannedText())
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
     }
@@ -267,6 +268,36 @@ class CoursePurchaseBottomSheetDialogFragment :
         } else {
             R.color.color_overlay_violet
         }
+
+    private fun resolveCommissionSpannedText(): Spanned {
+        val userAgreementConfigKey =
+            if (resources.configuration.defaultLocale.language == RUSSIAN_LANGUAGE_CODE) {
+                RemoteConfig.PURCHASE_FLOW_DISCLAIMER_RU
+            } else {
+                RemoteConfig.PURCHASE_FLOW_DISCLAIMER_EN
+            }
+
+        val userAgreementSpannedText = HtmlCompat.fromHtml(firebaseRemoteConfig[userAgreementConfigKey].asString(), HtmlCompat.FROM_HTML_MODE_COMPACT).toSpannable()
+
+        for (span in userAgreementSpannedText.getSpans<URLSpan>()) {
+            val start = userAgreementSpannedText.getSpanStart(span)
+            val end = userAgreementSpannedText.getSpanEnd(span)
+            val flags = userAgreementSpannedText.getSpanFlags(span)
+
+            val userAgreementLinkSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    InAppWebViewDialogFragment
+                        .newInstance(getString(R.string.course_purchase_commission_web_view_title), span.url, isProvideAuth = false)
+                        .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+                }
+            }
+
+            userAgreementSpannedText.removeSpan(span)
+            userAgreementSpannedText.setSpan(userAgreementLinkSpan, start, end, flags)
+        }
+
+        return userAgreementSpannedText
+    }
 
     interface Callback {
         fun continueLearning()

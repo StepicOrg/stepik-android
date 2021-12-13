@@ -1035,9 +1035,6 @@
 
     <!-- Course purchase -->
     <string name="course_purchase_commission_web_view_title">Карыстацкае пагадненне</string>
-    <string name="course_purchase_commission_information_part_1">У кошт уключана 15% камісія Google Play.\nАплачваючы доступ да гэтага курсу вы згаджаецеся з умовамі </string>
-    <string name="course_purchase_commission_information_part_2">карыстацкага пагаднення</string>
-    <string name="course_purchase_commission_url">https://welcome.stepik.org/ru/payment-terms</string>
 
     <string name="course_purchase_promocode_hint">Увядзіце промокод</string>
     <string name="course_purchase_promocode_available">У мяне ёсць промокод</string>

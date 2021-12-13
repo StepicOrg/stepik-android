@@ -40,4 +40,12 @@
         <key>purchase_flow_android</key>
         <value>web</value>
     </entry>
+    <entry>
+        <key>purchase_flow_android_disclaimer_en</key>
+        <value><![CDATA[The price includes commission from Google Play and VAT. By paying for access to this course you agree to the <a href="https://welcome.stepik.org/en/payment-terms">user agreement</a>.]]></value>
+    </entry>
+    <entry>
+        <key>purchase_flow_android_disclaimer_ru</key>
+        <value><![CDATA[В цену включена комиссия Google Play и НДС. Оплачивая доступ к этому курсу вы соглашаетесь с условиями <a href="https://welcome.stepik.org/ru/payment-terms">пользовательского соглашения</a>.]]></value>
+    </entry>
 </defaultsMap>
