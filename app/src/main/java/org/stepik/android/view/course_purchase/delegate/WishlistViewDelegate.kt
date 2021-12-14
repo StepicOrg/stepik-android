@@ -31,10 +31,14 @@ class WishlistViewDelegate(
                 WishlistState.Wishlisted ->
                     R.string.course_purchase_wishlist_added
             }
-        wishlistButton.isEnabled = state.wishlistState is WishlistState.Idle &&
+
+        val isButtonEnabled = state.wishlistState is WishlistState.Idle &&
             (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
-            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
-            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess)
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess)
+
+        wishlistButton.isChecked = isButtonEnabled
+        wishlistButton.isEnabled = isButtonEnabled
         wishlistButton.setText(messageResId)
         resolveButtonDrawable(state.wishlistState)
     }

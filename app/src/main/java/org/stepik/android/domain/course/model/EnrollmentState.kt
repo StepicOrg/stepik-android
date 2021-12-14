@@ -19,5 +19,8 @@ sealed class EnrollmentState : Parcelable {
     object NotEnrolledWeb : EnrollmentState()
 
     @Parcelize
+    object NotEnrolledUnavailable : EnrollmentState()
+
+    @Parcelize
     object Pending : EnrollmentState()
 }

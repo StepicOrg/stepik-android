@@ -1,6 +1,7 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.graphics.drawable.AnimationDrawable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
@@ -52,6 +53,7 @@ import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
+import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import java.util.TimeZone
 import kotlin.math.abs
 
@@ -83,6 +85,8 @@ constructor(
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
+
+        private const val EVALUATION_FRAME_DURATION_MS = 250
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -151,6 +155,18 @@ constructor(
                 }
             }
 
+            courseWishlistAction.setOnClickListener {
+                courseHeaderData?.let {
+                    val action =
+                        if (it.course.isInWishlist) {
+                            WishlistAction.REMOVE
+                        } else {
+                            WishlistAction.ADD
+                        }
+                    coursePresenter.toggleWishlist(action)
+                }
+            }
+
             courseBuyInWebAction.setOnClickListener {
                 courseHeaderData?.let(::setupBuyAction)
             }
@@ -183,6 +199,7 @@ constructor(
             viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledUnavailable>(courseWishlistAction, coursePurchaseFeedback)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(purchaseContainer)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledMobileTier>(purchaseContainer)
             // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
@@ -213,6 +230,7 @@ constructor(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
+            setupWishlistAction(courseHeaderData)
             /**
              * Purchase setup section
              */
@@ -363,6 +381,40 @@ constructor(
             } else {
                 courseBuyInWebAction.isVisible = true
                 courseBuyInWebActionDiscounted.isVisible = false
+            }
+        }
+    }
+
+    private fun setupWishlistAction(courseHeaderData: CourseHeaderData) {
+        with(courseActivity) {
+            courseWishlistAction.isEnabled = !courseHeaderData.course.isInWishlist && !courseHeaderData.isWishlistUpdating
+
+            val wishlistText = if (courseHeaderData.isWishlistUpdating) {
+                if (courseHeaderData.course.isInWishlist) {
+                    getString(R.string.course_purchase_wishlist_removing)
+                } else {
+                    getString(R.string.course_purchase_wishlist_adding)
+                }
+            } else {
+                if (courseHeaderData.course.isInWishlist) {
+                    getString(R.string.course_purchase_wishlist_added)
+                } else {
+                    getString(R.string.course_purchase_wishlist_add)
+                }
+            }
+            courseWishlistAction.text = wishlistText
+
+            if (courseHeaderData.isWishlistUpdating) {
+                val evaluationDrawable = AnimationDrawable()
+                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.isOneShot = false
+
+                courseWishlistAction.icon = evaluationDrawable
+                evaluationDrawable.start()
+            } else {
+                courseWishlistAction.icon = null
             }
         }
     }

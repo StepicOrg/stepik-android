@@ -8,7 +8,6 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.model.SourceTypeComposition
@@ -17,6 +16,7 @@ import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.mobile_tiers.interactor.MobileTiersInteractor
 import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.mobile_tiers.model.MobileTier
@@ -46,11 +46,19 @@ constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
 
-    fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> =
-        coursePaymentsRepository
+    fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> {
+        val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+
+        return coursePaymentsRepository
             .checkDeeplinkPromoCodeValidity(courseId, promo)
             .flatMap { deeplinkPromoCode ->
-                if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+                if (isInAppActive) {
                     mobileTiersRepository
                         .calculateMobileTier(MobileTierCalculation(course = courseId, promo = promo), dataSourceType = DataSourceType.REMOTE)
                         .flatMapSingle { mobileTier ->
@@ -67,6 +75,7 @@ constructor(
                 }
             }
             .onErrorReturnItem(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY)
+    }
 
     // <editor-fold desc="CourseStats Web Purchase Flow">
     fun getCourseStats(
@@ -222,7 +231,21 @@ constructor(
 
     private fun resolvePaidEnrollmentState(standardLightSku: LightSku?, promoLightSku: LightSku?): EnrollmentState =
         if (standardLightSku == null) {
-            EnrollmentState.NotEnrolledWeb
+            val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
+                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                    .asString()
+                    .uppercase()
+            )
+
+            /**
+             * If we are using strictly IAP, then we it is not possible to purchase courses
+             * through the application
+             */
+            if (currentFlow == CoursePurchaseFlow.IAP) {
+                EnrollmentState.NotEnrolledUnavailable
+            } else {
+                EnrollmentState.NotEnrolledWeb
+            }
         } else {
             EnrollmentState.NotEnrolledMobileTier(standardLightSku, promoLightSku)
         }

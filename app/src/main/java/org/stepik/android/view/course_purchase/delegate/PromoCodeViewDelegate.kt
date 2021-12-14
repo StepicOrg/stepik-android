@@ -44,7 +44,7 @@ class PromoCodeViewDelegate(
 
     init {
         coursePromoCodeAction.setOnClickListener {
-            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeEditingMessage)
+            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.HavePromoCodeMessage)
         }
         coursePromoCodeInput.doAfterTextChanged { text: Editable? ->
             val length = text?.length ?: 0
