@@ -5,12 +5,15 @@ import org.stepik.android.model.Course
 
 class RestoreCoursePurchaseFailureAnalyticEvent(
     course: Course,
+    type: String,
     throwable: Throwable
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
         private const val PARAM_TITLE = "title"
-        private const val PARAM_ERROR_MESSAGE = "error_message"
+        private const val PARAM_TYPE = "type"
+        private const val PARAM_MESSAGE = "message"
+        private const val PARAM_STACKTRACE = "stacktrace"
     }
     override val name: String =
         "Restore course purchase failure"
@@ -19,6 +22,8 @@ class RestoreCoursePurchaseFailureAnalyticEvent(
         mapOf(
             PARAM_COURSE to course.id,
             PARAM_TITLE to course.title.toString(),
-            PARAM_ERROR_MESSAGE to throwable.message.toString()
+            PARAM_TYPE to type,
+            PARAM_MESSAGE to throwable.message.toString(),
+            PARAM_STACKTRACE to throwable.stackTraceToString()
         )
 }

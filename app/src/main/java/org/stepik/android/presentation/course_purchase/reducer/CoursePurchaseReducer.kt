@@ -146,6 +146,7 @@ constructor() : StateReducer<State, Message, Action> {
                             Action.LogAnalyticEvent(
                                 BuyCourseVerificationFailureAnalyticEvent(
                                     state.coursePurchaseData.course,
+                                    message.throwable.toEnrollmentError().name,
                                     message.throwable
                                 )
                             )
@@ -201,6 +202,7 @@ constructor() : StateReducer<State, Message, Action> {
                     val analyticEventAction = Action.LogAnalyticEvent(
                         RestoreCoursePurchaseFailureAnalyticEvent(
                             state.coursePurchaseData.course,
+                            enrollmentError.name,
                             message.throwable
                         )
                     )
