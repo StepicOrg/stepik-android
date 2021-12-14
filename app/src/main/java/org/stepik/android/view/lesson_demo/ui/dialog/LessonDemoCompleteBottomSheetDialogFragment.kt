@@ -9,12 +9,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.model.Course
@@ -24,9 +28,11 @@ import org.stepik.android.presentation.lesson_demo.LessonDemoViewModel
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course.routing.CourseScreenTab
+import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
@@ -49,10 +55,13 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var displayPriceMapper: DisplayPriceMapper
+    internal lateinit var displayPriceMapper: DisplayPriceMapper
 
     @Inject
-    lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
+    internal lateinit var coursePromoCodeResolver: CoursePromoCodeResolver
+
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private val lessonDemoViewModel: LessonDemoViewModel by reduxViewModel(this) { viewModelFactory }
     private val viewStateDelegate = ViewStateDelegate<LessonDemoFeature.State>()
@@ -80,11 +89,31 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         super.onViewCreated(view, savedInstanceState)
         initViewStateDelegate()
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
+        demoCompleteAction.setOnClickListener {
+            lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.BuyActionMessage)
+        }
         tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course, forceUpdate = true)) }
     }
 
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
-        // no op
+        if (action is LessonDemoFeature.Action.ViewAction.BuyAction) {
+            val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
+                RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+
+            if (isInAppActive && action.coursePurchaseData != null) {
+                CoursePurchaseBottomSheetDialogFragment
+                    .newInstance(action.coursePurchaseData, isNeedRestoreMessage = false)
+                    .showIfNotExists(childFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
+            } else {
+                screenManager.showCoursePurchaseFromLessonDemoDialog(
+                    requireContext(),
+                    course.id,
+                    CourseViewSource.LessonDemoDialog,
+                    CourseScreenTab.INFO,
+                    action.deeplinkPromoCode
+                )
+            }
+        }
     }
 
     override fun render(state: LessonDemoFeature.State) {
@@ -132,10 +161,6 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             } else {
                 getString(R.string.course_payments_purchase_in_web)
             }
-
-        demoCompleteAction.setOnClickListener {
-            screenManager.showCoursePurchaseFromLessonDemoDialog(requireContext(), course.id, CourseViewSource.LessonDemoDialog, CourseScreenTab.INFO, deeplinkPromoCode)
-        }
     }
 
     private fun setupIAP(coursePurchaseData: CoursePurchaseData) {

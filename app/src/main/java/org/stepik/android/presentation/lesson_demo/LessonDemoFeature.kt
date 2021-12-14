@@ -16,10 +16,14 @@ interface LessonDemoFeature {
         data class InitMessage(val course: Course, val forceUpdate: Boolean = false) : Message()
         data class FetchLessonDemoDataSuccess(val deeplinkPromoCode: DeeplinkPromoCode, val coursePurchaseData: CoursePurchaseData?) : Message()
         object FetchLessonDemoDataFailure : Message()
+
+        object BuyActionMessage : Message()
     }
 
     sealed class Action {
         data class FetchLessonDemoData(val course: Course) : Action()
-        sealed class ViewAction : Action()
+        sealed class ViewAction : Action() {
+            data class BuyAction(val deeplinkPromoCode: DeeplinkPromoCode, val coursePurchaseData: CoursePurchaseData?) : ViewAction()
+        }
     }
 }

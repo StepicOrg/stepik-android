@@ -39,7 +39,7 @@ constructor(
                         LessonDemoData(deeplinkPromoCode, (coursePurchaseDataFallbackResult as? CoursePurchaseDataResult.Result)?.coursePurchaseData)
                     }
             } else {
-                Single.just(LessonDemoData(deeplinkPromoCode, null))
+                Single.just(LessonDemoData(deeplinkPromoCode, (initialCoursePurchaseDataResult as CoursePurchaseDataResult.Result).coursePurchaseData))
             }
         } else {
             val deeplinkPromoCode = requireNotNull(coursePurchaseDataRepository.getDeeplinkPromoCode().value)

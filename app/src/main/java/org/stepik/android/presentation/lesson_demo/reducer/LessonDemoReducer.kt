@@ -33,5 +33,12 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.BuyActionMessage -> {
+                if (state is State.Content) {
+                    state to setOf(Action.ViewAction.BuyAction(state.deeplinkPromoCode, state.coursePurchaseData))
+                } else {
+                    null
+                }
+            }
         } ?: state to emptySet()
 }
