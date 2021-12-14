@@ -2,7 +2,6 @@ package org.stepik.android.domain.course.interactor
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
@@ -21,6 +20,7 @@ import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 import org.stepik.android.view.injection.course.CourseScope
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.first
@@ -107,10 +107,10 @@ constructor(
                             courseHeaderData.course.isInWishlist
                         )
                     coursePurchaseDataRepository
-                        .saveCoursePurchaseData(coursePurchaseData)
+                        .saveCoursePurchaseData(CoursePurchaseDataResult.Result(coursePurchaseData))
                         .andThen(coursePurchaseDataRepository.saveDeeplinkPromoCode(courseHeaderData.deeplinkPromoCode))
                 } else {
-                    Completable.complete()
+                    coursePurchaseDataRepository.saveDeeplinkPromoCode(courseHeaderData.deeplinkPromoCode)
                 }
             }
 }

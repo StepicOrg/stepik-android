@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -27,7 +28,6 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
-import timber.log.Timber
 import javax.inject.Inject
 
 class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(), ReduxView<LessonDemoFeature.State, LessonDemoFeature.Action.ViewAction> {
@@ -65,6 +65,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             .build()
             .inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
+        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -78,8 +79,8 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewStateDelegate()
-        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage())
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
+        tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course, forceUpdate = true)) }
     }
 
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
@@ -87,6 +88,7 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
     }
 
     override fun render(state: LessonDemoFeature.State) {
+        viewStateDelegate.switchState(state)
         if (state is LessonDemoFeature.State.Content) {
             if (state.coursePurchaseData != null) {
                 setupIAP(state.coursePurchaseData)

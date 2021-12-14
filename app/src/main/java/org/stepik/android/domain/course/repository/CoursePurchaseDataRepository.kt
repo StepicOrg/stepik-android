@@ -1,14 +1,13 @@
 package org.stepik.android.domain.course.repository
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
-import io.reactivex.Maybe
-import io.reactivex.Single
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
-import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 
 interface CoursePurchaseDataRepository {
-    fun getDeeplinkPromoCode(): Single<DeeplinkPromoCode>
-    fun getCoursePurchaseData(): Maybe<CoursePurchaseData>
+    fun getDeeplinkPromoCode(): BehaviorRelay<DeeplinkPromoCode>
+    fun getCoursePurchaseData(): BehaviorRelay<CoursePurchaseDataResult>
     fun saveDeeplinkPromoCode(deeplinkPromoCode: DeeplinkPromoCode): Completable
-    fun saveCoursePurchaseData(coursePurchaseData: CoursePurchaseData): Completable
+    fun saveCoursePurchaseData(coursePurchaseData: CoursePurchaseDataResult): Completable
 }
