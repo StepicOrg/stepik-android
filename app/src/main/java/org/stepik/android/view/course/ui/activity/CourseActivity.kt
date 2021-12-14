@@ -400,6 +400,7 @@ class CourseActivity :
                  */
                 val deeplinkPromoCode = intent.getParcelableExtra<DeeplinkPromoCode>(EXTRA_DEEPLINK_PROMO_CODE)
                 if (deeplinkPromoCode != null) {
+                    intent.removeExtra(EXTRA_DEEPLINK_PROMO_CODE)
                     val queryParams = if (deeplinkPromoCode != DeeplinkPromoCode.EMPTY) {
                         mapOf(QUERY_PARAM_PROMO to listOf(deeplinkPromoCode.name))
                     } else {
