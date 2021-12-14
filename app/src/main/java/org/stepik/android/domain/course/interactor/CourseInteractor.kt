@@ -2,17 +2,13 @@ package org.stepik.android.domain.course.interactor
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import okhttp3.ResponseBody
 import org.stepic.droid.configuration.RemoteConfig
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -22,14 +18,12 @@ import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
-import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 import org.stepik.android.view.injection.course.CourseScope
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.first
-import java.net.HttpURLConnection
 import javax.inject.Inject
 
 @CourseScope
@@ -68,12 +62,13 @@ constructor(
                 .uppercase()
         )
 
-        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val isInAppActive =
+            currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return zip(
             if (isInAppActive) {
                 courseStatsInteractor.getCourseStatsMobileTiers(listOf(course)).first()
-            } else  {
+            } else {
                 courseStatsInteractor.getCourseStats(listOf(course)).first()
             },
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
@@ -99,14 +94,18 @@ constructor(
         }
             .toMaybe()
             .doCompletableOnSuccess { courseHeaderData ->
-            val notEnrolledMobileTierState = (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
+                val notEnrolledMobileTierState =
+                    (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
                 if (notEnrolledMobileTierState != null) {
                     val promoCodeSku = when {
                         courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
                             courseHeaderData.deeplinkPromoCodeSku
 
                         notEnrolledMobileTierState.promoLightSku != null -> {
-                            PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
+                            PromoCodeSku(
+                                courseHeaderData.course.defaultPromoCodeName.orEmpty(),
+                                notEnrolledMobileTierState.promoLightSku
+                            )
                         }
 
                         else ->
@@ -127,4 +126,5 @@ constructor(
                     coursePurchaseDataRepository.saveDeeplinkPromoCode(courseHeaderData.deeplinkPromoCode)
                 }
             }
+    }
 }
