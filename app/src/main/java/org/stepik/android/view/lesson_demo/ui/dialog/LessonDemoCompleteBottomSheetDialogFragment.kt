@@ -27,6 +27,7 @@ import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import timber.log.Timber
 import javax.inject.Inject
 
 class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(), ReduxView<LessonDemoFeature.State, LessonDemoFeature.Action.ViewAction> {
@@ -64,8 +65,6 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             .build()
             .inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        initViewStateDelegate()
-        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -78,6 +77,8 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewStateDelegate()
+        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage())
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
     }
 
