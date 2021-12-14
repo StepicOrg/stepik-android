@@ -79,6 +79,7 @@ class CourseActivity :
         private const val EXTRA_TAB = "tab"
         private const val EXTRA_SOURCE = "source"
         private const val EXTRA_DEEPLINK_PROMO_CODE = "deeplink_promo_code"
+        private const val EXTRA_CONTINUE_LEARNING = "continue_learning"
 
         private const val NO_ID = -1L
 
@@ -86,11 +87,12 @@ class CourseActivity :
 
         private const val QUERY_PARAM_PROMO = "promo"
 
-        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, continueLearning: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
                 .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
+                .putExtra(EXTRA_CONTINUE_LEARNING, continueLearning)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
         fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
@@ -387,8 +389,13 @@ class CourseActivity :
                     )
                 }
 
+                if (intent.getBooleanExtra(EXTRA_CONTINUE_LEARNING, false)) {
+                    intent.removeExtra(EXTRA_CONTINUE_LEARNING)
+                    coursePresenter.continueLearning()
+                }
+
                 /**
-                 * Obtain promo code from LessonDemoCompleteBottomSheeetDialog
+                 * Obtain promo code from LessonDemoCompleteBottomSheetDialog
                  */
                 val deeplinkPromoCode = intent.getParcelableExtra<DeeplinkPromoCode>(EXTRA_DEEPLINK_PROMO_CODE)
                 if (deeplinkPromoCode != null) {

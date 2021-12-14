@@ -206,7 +206,7 @@ class CoursePurchaseBottomSheetDialogFragment :
             }
 
             is CoursePurchaseFeature.Action.ViewAction.StartStudyAction -> {
-                (activity as? Callback)?.continueLearning()
+                (activity as? Callback ?: parentFragment as? Callback)?.continueLearning()
                 dismiss()
             }
         }

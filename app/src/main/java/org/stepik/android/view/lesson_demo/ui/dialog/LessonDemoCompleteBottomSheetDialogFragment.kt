@@ -36,7 +36,10 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
-class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(), ReduxView<LessonDemoFeature.State, LessonDemoFeature.Action.ViewAction> {
+class LessonDemoCompleteBottomSheetDialogFragment :
+    BottomSheetDialogFragment(),
+    CoursePurchaseBottomSheetDialogFragment.Callback,
+    ReduxView<LessonDemoFeature.State, LessonDemoFeature.Action.ViewAction> {
     companion object {
         const val TAG = "LessonDemoCompleteBottomSheetDialog"
 
@@ -175,5 +178,9 @@ class LessonDemoCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             } else {
                 getString(R.string.course_payments_purchase_in_web)
             }
+    }
+
+    override fun continueLearning() {
+        screenManager.showCourseAfterPurchase(requireContext(), course, CourseViewSource.LessonDemoDialog, CourseScreenTab.INFO)
     }
 }

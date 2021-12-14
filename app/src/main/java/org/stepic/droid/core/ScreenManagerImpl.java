@@ -243,7 +243,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     private Intent getIntentForDescription(Context context, @NotNull Course course, @NotNull CourseViewSource courseViewSource, boolean autoEnroll, CourseScreenTab tab) {
-        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, tab);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, false, tab);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -740,7 +740,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainIntent = new Intent(context, MainFeedActivity.class);
-        Intent courseIntent = CourseActivity.Companion.createIntent(context, course, courseViewSource, true, courseScreenTab);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, course, courseViewSource, false, true, courseScreenTab);
         taskStackBuilder.addParentStack(MainFeedActivity.class);
         taskStackBuilder.addNextIntent(mainIntent);
         taskStackBuilder.addNextIntent(courseIntent);
