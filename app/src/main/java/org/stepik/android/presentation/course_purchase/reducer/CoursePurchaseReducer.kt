@@ -12,6 +12,7 @@ import org.stepik.android.domain.course_purchase.analytic.BuyCourseVerificationF
 import org.stepik.android.domain.course_purchase.analytic.BuyCourseVerificationSuccessAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseFailureAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchasePressedAnalyticEvent
+import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseSuccessAnalyticEvent
 import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
@@ -41,7 +42,7 @@ constructor() : StateReducer<State, Message, Action> {
                     } else {
                         CoursePurchaseFeature.WishlistState.Idle
                     }
-                    State.Content(message.coursePurchaseData, CoursePurchaseFeature.PaymentState.Idle, promoCodeState, wishlistState) to emptySet()
+                    State.Content(message.coursePurchaseData, message.coursePurchaseSource, CoursePurchaseFeature.PaymentState.Idle, promoCodeState, wishlistState) to emptySet()
                 } else {
                     null
                 }
@@ -67,7 +68,14 @@ constructor() : StateReducer<State, Message, Action> {
                             message.skuDetails)
                     ) to setOf(
                         Action.ViewAction.LaunchPurchaseFlowBilling(message.obfuscatedParams, message.skuDetails),
-                        Action.LogAnalyticEvent(BuyCourseIAPFlowStartAnalyticEvent(state.coursePurchaseData.course))
+                        Action.LogAnalyticEvent(
+                            BuyCourseIAPFlowStartAnalyticEvent(
+                                state.coursePurchaseData.course.id,
+                                state.coursePurchaseSource,
+                                state.coursePurchaseData.isWishlisted,
+                                (state.promoCodeState as? CoursePurchaseFeature.PromoCodeState.Valid)?.text
+                            )
+                        )
                     )
                 } else {
                     null
@@ -99,7 +107,10 @@ constructor() : StateReducer<State, Message, Action> {
                             ),
                             Action.LogAnalyticEvent(
                                 BuyCourseIAPFlowSuccessAnalyticEvent(
-                                    state.coursePurchaseData.course
+                                    state.coursePurchaseData.course.id,
+                                    state.coursePurchaseSource,
+                                    state.coursePurchaseData.isWishlisted,
+                                    promoCode
                                 )
                             )
                         )
@@ -114,7 +125,7 @@ constructor() : StateReducer<State, Message, Action> {
                             Action.ViewAction.Error(message.billingException.toEnrollmentError()),
                             Action.LogAnalyticEvent(
                                 BuyCourseIAPFlowFailureAnalyticEvent(
-                                    state.coursePurchaseData.course,
+                                    state.coursePurchaseData.course.id,
                                     message.billingException.responseCode,
                                     message.billingException.errorMessage
                                 )
@@ -131,7 +142,10 @@ constructor() : StateReducer<State, Message, Action> {
                             Action.ViewAction.ShowConsumeSuccess,
                             Action.LogAnalyticEvent(
                                 BuyCourseVerificationSuccessAnalyticEvent(
-                                    state.coursePurchaseData.course
+                                    state.coursePurchaseData.course.id,
+                                    state.coursePurchaseSource,
+                                    state.coursePurchaseData.isWishlisted,
+                                    (state.promoCodeState as? CoursePurchaseFeature.PromoCodeState.Valid)?.text
                                 )
                             )
                         )
@@ -145,7 +159,7 @@ constructor() : StateReducer<State, Message, Action> {
                         setOf(
                             Action.LogAnalyticEvent(
                                 BuyCourseVerificationFailureAnalyticEvent(
-                                    state.coursePurchaseData.course,
+                                    state.coursePurchaseData.course.id,
                                     message.throwable.toEnrollmentError().name,
                                     message.throwable
                                 )
@@ -167,7 +181,8 @@ constructor() : StateReducer<State, Message, Action> {
                         Action.RestorePurchaseWithSkuId(skuId),
                         Action.LogAnalyticEvent(
                             RestoreCoursePurchasePressedAnalyticEvent(
-                                state.coursePurchaseData.course
+                                state.coursePurchaseData.course.id,
+                                message.restoreCoursePurchaseSource
                             )
                         )
                     )
@@ -191,7 +206,15 @@ constructor() : StateReducer<State, Message, Action> {
             }
             is Message.RestorePurchaseSuccess -> {
                 if (state is State.Content) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to setOf(Action.ViewAction.ShowConsumeSuccess)
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to
+                        setOf(
+                            Action.ViewAction.ShowConsumeSuccess,
+                            Action.LogAnalyticEvent(
+                                RestoreCoursePurchaseSuccessAnalyticEvent(
+                                    state.coursePurchaseData.course.id
+                                )
+                            )
+                        )
                 } else {
                     null
                 }
@@ -201,7 +224,7 @@ constructor() : StateReducer<State, Message, Action> {
                     val enrollmentError = message.throwable.toEnrollmentError()
                     val analyticEventAction = Action.LogAnalyticEvent(
                         RestoreCoursePurchaseFailureAnalyticEvent(
-                            state.coursePurchaseData.course,
+                            state.coursePurchaseData.course.id,
                             enrollmentError.name,
                             message.throwable
                         )
@@ -270,6 +293,20 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.HavePromoCodeMessage -> {
+                if (state is State.Content) {
+                    state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Editing) to
+                        setOf(
+                            Action.LogAnalyticEvent(
+                                BuyCoursePromoStartPressedAnalyticEvent(
+                                    state.coursePurchaseData.course
+                                )
+                            )
+                        )
+                } else {
+                    null
+                }
+            }
             is Message.PromoCodeEditingMessage -> {
                 if (state is State.Content) {
                     state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Editing) to emptySet()
@@ -280,15 +317,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.PromoCodeCheckMessage -> {
                 if (state is State.Content && state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Editing) {
                     state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Checking(message.text)) to
-                        setOf(
-                            Action.CheckPromoCode(state.coursePurchaseData.course.id, message.text),
-                            Action.LogAnalyticEvent(
-                                BuyCoursePromoStartPressedAnalyticEvent(
-                                    state.coursePurchaseData.course,
-                                    message.text
-                                )
-                            )
-                        )
+                        setOf(Action.CheckPromoCode(state.coursePurchaseData.course.id, message.text))
                 } else {
                     null
                 }

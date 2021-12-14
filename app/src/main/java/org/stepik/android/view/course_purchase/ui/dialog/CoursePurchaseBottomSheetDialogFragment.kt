@@ -45,6 +45,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.defaultLocale
+import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseSource
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
@@ -57,9 +58,10 @@ class CoursePurchaseBottomSheetDialogFragment :
     companion object {
         const val TAG = "CoursePurchaseBottomSheetDialogFragment"
 
-        fun newInstance(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean): DialogFragment =
+        fun newInstance(coursePurchaseData: CoursePurchaseData, coursePurchaseSource: String, isNeedRestoreMessage: Boolean): DialogFragment =
             CoursePurchaseBottomSheetDialogFragment().apply {
                 this.coursePurchaseData = coursePurchaseData
+                this.coursePurchaseSource = coursePurchaseSource
                 this.isNeedRestoreMessage = isNeedRestoreMessage
             }
 
@@ -86,6 +88,7 @@ class CoursePurchaseBottomSheetDialogFragment :
     internal lateinit var billingClient: BillingClient
 
     private var coursePurchaseData: CoursePurchaseData by argument()
+    private var coursePurchaseSource: String by argument()
     private var isNeedRestoreMessage: Boolean by argument()
 
     private val coursePurchaseViewModel: CoursePurchaseViewModel by reduxViewModel(this) { viewModelFactory }
@@ -110,9 +113,11 @@ class CoursePurchaseBottomSheetDialogFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
+        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData, coursePurchaseSource))
         if (isNeedRestoreMessage) {
-            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow)
+            coursePurchaseViewModel.onNewMessage(
+                CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.COURSE_SCREEN)
+            )
         }
     }
 
@@ -129,7 +134,11 @@ class CoursePurchaseBottomSheetDialogFragment :
         buyActionViewDelegate = BuyActionViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper,
             launchPurchaseFlowAction =  { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) },
             launchStartStudying = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.StartLearningMessage) },
-            launchRestoreAction = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow) }
+            launchRestoreAction = {
+                coursePurchaseViewModel.onNewMessage(
+                    CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.BUY_COURSE_DIALOG)
+                )
+            }
         )
         promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)

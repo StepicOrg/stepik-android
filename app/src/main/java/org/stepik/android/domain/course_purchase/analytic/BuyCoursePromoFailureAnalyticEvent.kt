@@ -9,7 +9,6 @@ class BuyCoursePromoFailureAnalyticEvent(
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
-        private const val PARAM_TITLE = "title"
         private const val PARAM_PROMO = "promo"
     }
     override val name: String =
@@ -18,7 +17,6 @@ class BuyCoursePromoFailureAnalyticEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_COURSE to course.id,
-            PARAM_TITLE to course.title.toString(),
             PARAM_PROMO to promoName
         )
 }

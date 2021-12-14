@@ -17,6 +17,7 @@ interface CoursePurchaseFeature {
         object Idle : State()
         data class Content(
             val coursePurchaseData: CoursePurchaseData,
+            val coursePurchaseSource: String,
             val paymentState: PaymentState,
             val promoCodeState: PromoCodeState,
             val wishlistState: WishlistState
@@ -24,7 +25,7 @@ interface CoursePurchaseFeature {
     }
 
     sealed class Message {
-        data class InitMessage(val coursePurchaseData: CoursePurchaseData) : Message()
+        data class InitMessage(val coursePurchaseData: CoursePurchaseData, val coursePurchaseSource: String) : Message()
 
         object LaunchPurchaseFlow : Message()
         data class LaunchPurchaseFlowSuccess(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : Message()
@@ -36,7 +37,7 @@ interface CoursePurchaseFeature {
         object ConsumePurchaseSuccess : Message()
         data class ConsumePurchaseFailure(val throwable: Throwable) : Message()
 
-        object LaunchRestorePurchaseFlow : Message()
+        data class LaunchRestorePurchaseFlow(val restoreCoursePurchaseSource: String) : Message()
         data class LaunchRestorePurchaseSuccess(val skuDetails: SkuDetails, val purchase: Purchase) : Message()
         data class LaunchRestorePurchaseFailure(val throwable: Throwable) : Message()
 
@@ -58,6 +59,7 @@ interface CoursePurchaseFeature {
         /**
          * PromoCode
          */
+        object HavePromoCodeMessage : Message()
         object PromoCodeEditingMessage : Message()
         data class PromoCodeCheckMessage(val text: String) : Message()
         data class PromoCodeValidMessage(val promoCodeSku: PromoCodeSku) : Message()
