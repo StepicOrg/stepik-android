@@ -18,9 +18,10 @@ import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.course.analytic.CourseViewSource
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
+import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature
@@ -100,12 +101,18 @@ class LessonDemoCompleteBottomSheetDialogFragment :
 
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
         if (action is LessonDemoFeature.Action.ViewAction.BuyAction) {
-            val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
-                RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
+                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                    .asString()
+                    .uppercase()
+            )
+
+            val isInAppActive =
+                currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
             if (isInAppActive && action.coursePurchaseData != null) {
                 CoursePurchaseBottomSheetDialogFragment
-                    .newInstance(action.coursePurchaseData, isNeedRestoreMessage = false)
+                    .newInstance(action.coursePurchaseData, CoursePurchaseSource.DEMO_LESSON_DIALOG_SOURCE, isNeedRestoreMessage = false)
                     .showIfNotExists(childFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
             } else {
                 screenManager.showCoursePurchaseFromLessonDemoDialog(

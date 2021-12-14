@@ -6,11 +6,11 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.lesson_demo.model.LessonDemoData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -26,8 +26,14 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
     fun getLessonDemoData(course: Course): Single<LessonDemoData> {
-        val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
-                RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive =
+            currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return if (isInAppActive) {
             val deeplinkPromoCode = requireNotNull(coursePurchaseDataRepository.getDeeplinkPromoCode().value)
