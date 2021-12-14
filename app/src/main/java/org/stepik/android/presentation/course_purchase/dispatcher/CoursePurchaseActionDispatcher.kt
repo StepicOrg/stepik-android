@@ -11,14 +11,11 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
-import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.interactor.CoursePurchaseInteractor
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
-import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
-import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -49,7 +46,7 @@ constructor(
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases?.firstOrNull() != null) {
                         onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases.first()))
                     } else {
-                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode).toEnrollmentError()))
+                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode, billingResult.debugMessage)))
                     }
                 }
             )
@@ -62,10 +59,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onComplete = {
-                            analytic.report(CourseWishlistAddedEvent(action.course, CourseViewSource.CoursePurchase))
-                            onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess)
-                        },
+                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess) },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddFailure) }
                     )
             }
@@ -92,7 +86,7 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { (obfuscatedParams, skuDetails) -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(obfuscatedParams, skuDetails)) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it.toEnrollmentError())) }
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it)) }
                     )
             }
             is CoursePurchaseFeature.Action.ConsumePurchaseAction -> {
@@ -102,7 +96,7 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onComplete = { onNewMessage(CoursePurchaseFeature.Message.ConsumePurchaseSuccess) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.ConsumePurchaseFailure(it.toEnrollmentError())) }
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.ConsumePurchaseFailure(it)) }
                     )
             }
             is CoursePurchaseFeature.Action.RestorePurchaseWithSkuId -> {
@@ -112,8 +106,8 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { (skuDetails, purchase) -> onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseSuccess(skuDetails, purchase)) },
-                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFailure(NoPurchasesToRestoreException().toEnrollmentError())) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFailure(it.toEnrollmentError())) }
+                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFailure(NoPurchasesToRestoreException())) },
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFailure(it)) }
                     )
             }
 
@@ -124,7 +118,7 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onComplete = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseSuccess) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseFailure(action.skuDetails, action.purchase, it.toEnrollmentError())) }
+                        onError = { onNewMessage(CoursePurchaseFeature.Message.RestorePurchaseFailure(action.skuDetails, action.purchase, it)) }
                     )
             }
             is CoursePurchaseFeature.Action.GenerateSupportEmailData -> {
@@ -137,6 +131,8 @@ constructor(
                         onError = emptyOnErrorStub
                     )
             }
+            is CoursePurchaseFeature.Action.LogAnalyticEvent ->
+                analytic.report(action.analyticEvent)
         }
     }
 }
