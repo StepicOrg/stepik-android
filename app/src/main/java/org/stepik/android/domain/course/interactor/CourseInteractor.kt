@@ -9,11 +9,11 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
@@ -50,9 +50,13 @@ constructor(
             .flatMap(::obtainCourseHeaderData)
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> {
-        val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP_FALLBACK_WEB ||
-            RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val currentFlow = CoursePurchaseFlow.valueOf(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive = currentFlow.isInAppActive() && RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return zip(
             if (isInAppActive) {

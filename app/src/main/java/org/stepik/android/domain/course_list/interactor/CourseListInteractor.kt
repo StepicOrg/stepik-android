@@ -9,12 +9,12 @@ import org.stepic.droid.configuration.RemoteConfig
 import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
@@ -67,9 +67,13 @@ constructor(
         courseViewSource: CourseViewSource,
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> {
-        val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP_FALLBACK_WEB ||
-            RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val currentFlow = CoursePurchaseFlow.valueOf(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return if (isInAppActive) {
             mapCourseStats(

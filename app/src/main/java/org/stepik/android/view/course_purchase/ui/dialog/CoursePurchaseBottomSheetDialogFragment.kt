@@ -8,7 +8,6 @@ import android.text.style.URLSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.fragment.app.DialogFragment
@@ -241,10 +240,15 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
-            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+
             buyActionViewDelegate.render(state)
 
-            if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
+            if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            ) {
                 promoCodeViewDelegate.setViewVisibility(isVisible = false)
                 wishlistViewDelegate.setViewVisibility(isVisible = false)
             } else {
@@ -253,13 +257,16 @@ class CoursePurchaseBottomSheetDialogFragment :
                 wishlistViewDelegate.render(state)
             }
 
-            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess).let { mustEnable ->
+            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            ).let { mustEnable ->
                 isCancelable = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
             }
 
-            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), getWishlistActionStrokeColor(state))
+//            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), getWishlistActionStrokeColor(state))
         }
     }
 

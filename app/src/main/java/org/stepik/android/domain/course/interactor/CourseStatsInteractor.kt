@@ -8,7 +8,6 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.model.SourceTypeComposition
@@ -17,6 +16,7 @@ import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.mobile_tiers.interactor.MobileTiersInteractor
 import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.mobile_tiers.model.MobileTier
@@ -47,9 +47,13 @@ constructor(
 ) {
 
     fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> {
-        val isInAppActive = firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP ||
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP_FALLBACK_WEB ||
-            RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val currentFlow = CoursePurchaseFlow.valueOf(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return coursePaymentsRepository
             .checkDeeplinkPromoCodeValidity(courseId, promo)
@@ -227,7 +231,17 @@ constructor(
 
     private fun resolvePaidEnrollmentState(standardLightSku: LightSku?, promoLightSku: LightSku?): EnrollmentState =
         if (standardLightSku == null) {
-            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP) {
+            val currentFlow = CoursePurchaseFlow.valueOf(
+                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                    .asString()
+                    .uppercase()
+            )
+
+            /**
+             * If we are using strictly IAP, then we it is not possible to purchase courses
+             * through the application
+             */
+            if (currentFlow == CoursePurchaseFlow.IAP) {
                 EnrollmentState.NotEnrolledUnavailable
             } else {
                 EnrollmentState.NotEnrolledWeb
