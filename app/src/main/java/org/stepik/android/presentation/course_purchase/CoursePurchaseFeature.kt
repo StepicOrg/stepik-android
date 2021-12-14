@@ -2,8 +2,11 @@ package org.stepik.android.presentation.course_purchase
 
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -14,6 +17,7 @@ interface CoursePurchaseFeature {
         object Idle : State()
         data class Content(
             val coursePurchaseData: CoursePurchaseData,
+            val coursePurchaseSource: String,
             val paymentState: PaymentState,
             val promoCodeState: PromoCodeState,
             val wishlistState: WishlistState
@@ -21,26 +25,29 @@ interface CoursePurchaseFeature {
     }
 
     sealed class Message {
-        data class InitMessage(val coursePurchaseData: CoursePurchaseData) : Message()
+        data class InitMessage(val coursePurchaseData: CoursePurchaseData, val coursePurchaseSource: String) : Message()
 
         object LaunchPurchaseFlow : Message()
         data class LaunchPurchaseFlowSuccess(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : Message()
-        data class LaunchPurchaseFlowFailure(val enrollmentError: EnrollmentError) : Message()
+        data class LaunchPurchaseFlowFailure(val throwable: Throwable) : Message()
 
         data class PurchaseFlowBillingSuccess(val purchase: Purchase) : Message()
-        data class PurchaseFlowBillingFailure(val enrollmentError: EnrollmentError) : Message()
+        data class PurchaseFlowBillingFailure(val billingException: BillingException) : Message()
 
         object ConsumePurchaseSuccess : Message()
-        data class ConsumePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
+        data class ConsumePurchaseFailure(val throwable: Throwable) : Message()
 
-        object LaunchRestorePurchaseFlow : Message()
+        data class LaunchRestorePurchaseFlow(val restoreCoursePurchaseSource: String) : Message()
         data class LaunchRestorePurchaseSuccess(val skuDetails: SkuDetails, val purchase: Purchase) : Message()
-        data class LaunchRestorePurchaseFailure(val enrollmentError: EnrollmentError) : Message()
+        data class LaunchRestorePurchaseFailure(val throwable: Throwable) : Message()
 
         object RestorePurchaseSuccess : Message()
-        data class RestorePurchaseFailure(val skuDetails: SkuDetails, val purchase: Purchase, val enrollmentError: EnrollmentError) : Message()
+        data class RestorePurchaseFailure(val skuDetails: SkuDetails, val purchase: Purchase, val throwable: Throwable) : Message()
 
         object StartLearningMessage : Message()
+
+        data class SetupFeedback(val subject: String, val deviceInfo: String) : Message()
+        data class SetupFeedbackSuccess(val supportEmailData: SupportEmailData) : Message()
 
         /**
          * Wishlist messages
@@ -52,6 +59,7 @@ interface CoursePurchaseFeature {
         /**
          * PromoCode
          */
+        object HavePromoCodeMessage : Message()
         object PromoCodeEditingMessage : Message()
         data class PromoCodeCheckMessage(val text: String) : Message()
         data class PromoCodeValidMessage(val promoCodeSku: PromoCodeSku) : Message()
@@ -71,6 +79,10 @@ interface CoursePurchaseFeature {
         data class RestorePurchaseWithSkuId(val skuId: String) : Action()
         data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
 
+        data class GenerateSupportEmailData(val subject: String, val deviceInfo: String) : Action()
+
+        data class LogAnalyticEvent(val analyticEvent: AnalyticEvent) : Action()
+
         sealed class ViewAction : Action() {
             data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : ViewAction()
             data class Error(val error: EnrollmentError) : ViewAction()
@@ -79,6 +91,7 @@ interface CoursePurchaseFeature {
             object ShowConsumeSuccess : Action.ViewAction()
             object ShowConsumeFailure : Action.ViewAction()
             object StartStudyAction : Action.ViewAction()
+            data class ShowContactSupport(val supportEmailData: SupportEmailData) : Action.ViewAction()
         }
     }
 
@@ -87,8 +100,6 @@ interface CoursePurchaseFeature {
         object ProcessingInitialCheck : PaymentState()
         data class ProcessingBillingPayment(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : PaymentState()
         data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
-
-//        data class RestoringPayment(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()
         data class PaymentFailure(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()

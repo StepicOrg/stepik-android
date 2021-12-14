@@ -35,6 +35,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
@@ -587,7 +588,7 @@ class CourseActivity :
 
     private fun showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean) {
         CoursePurchaseBottomSheetDialogFragment
-            .newInstance(coursePurchaseData, isNeedRestoreMessage = isNeedRestoreMessage)
+            .newInstance(coursePurchaseData, coursePurchaseSource = CoursePurchaseSource.COURSE_SCREEN_SOURCE, isNeedRestoreMessage = isNeedRestoreMessage)
             .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
     }
 }

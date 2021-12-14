@@ -2,30 +2,23 @@ package org.stepik.android.domain.course.interactor
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
-import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import okhttp3.ResponseBody
 import org.stepic.droid.configuration.RemoteConfig
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
-import org.stepik.android.domain.wishlist.repository.WishlistRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
-import retrofit2.HttpException
-import retrofit2.Response
 import ru.nobird.android.domain.rx.first
-import java.net.HttpURLConnection
 import javax.inject.Inject
 
 @CourseScope
@@ -37,15 +30,8 @@ constructor(
     private val coursePublishSubject: BehaviorSubject<Course>,
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
-    private val wishlistRepository: WishlistRepository,
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig
 ) {
-    companion object {
-//        private const val COURSE_TIER_PREFIX = "course_tier_"
-        private val UNAUTHORIZED_EXCEPTION_STUB =
-            HttpException(Response.error<Nothing>(HttpURLConnection.HTTP_UNAUTHORIZED, ResponseBody.create(null, "")))
-    }
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
         courseRepository
@@ -63,9 +49,17 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
-    private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> =
-        zip(
-            if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+    private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> {
+        val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+
+        return zip(
+            if (isInAppActive) {
                 courseStatsInteractor.getCourseStatsMobileTiers(listOf(course)).first()
             } else  {
                 courseStatsInteractor.getCourseStats(listOf(course)).first()
@@ -92,13 +86,5 @@ constructor(
             )
         }
             .toMaybe()
-
-    private fun requireAuthorization(): Completable =
-        Completable.create { emitter ->
-            if (sharedPreferenceHelper.authResponseFromStore != null) {
-                emitter.onComplete()
-            } else {
-                emitter.onError(UNAUTHORIZED_EXCEPTION_STUB)
-            }
-        }
+    }
 }

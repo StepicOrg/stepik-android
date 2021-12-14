@@ -1,12 +1,13 @@
 package org.stepik.android.view.course_purchase.ui.dialog
 
 import android.os.Bundle
+import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.text.style.URLSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.fragment.app.DialogFragment
@@ -28,18 +29,27 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course_purchase.delegate.PromoCodeViewDelegate
 import org.stepik.android.view.course_purchase.delegate.WishlistViewDelegate
-import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
-import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import androidx.annotation.StringRes
+import androidx.core.text.HtmlCompat
+import androidx.core.text.getSpans
+import androidx.core.text.toSpannable
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.defaultLocale
+import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseSource
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CoursePurchaseBottomSheetDialogFragment :
@@ -48,12 +58,19 @@ class CoursePurchaseBottomSheetDialogFragment :
     companion object {
         const val TAG = "CoursePurchaseBottomSheetDialogFragment"
 
-        fun newInstance(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean): DialogFragment =
+        fun newInstance(coursePurchaseData: CoursePurchaseData, coursePurchaseSource: String, isNeedRestoreMessage: Boolean): DialogFragment =
             CoursePurchaseBottomSheetDialogFragment().apply {
                 this.coursePurchaseData = coursePurchaseData
+                this.coursePurchaseSource = coursePurchaseSource
                 this.isNeedRestoreMessage = isNeedRestoreMessage
             }
+
+        private const val RUSSIAN_LANGUAGE_CODE = "ru"
+        private const val BELARUSIAN_LANGUAGE_CODE = "be"
     }
+
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -71,6 +88,7 @@ class CoursePurchaseBottomSheetDialogFragment :
     internal lateinit var billingClient: BillingClient
 
     private var coursePurchaseData: CoursePurchaseData by argument()
+    private var coursePurchaseSource: String by argument()
     private var isNeedRestoreMessage: Boolean by argument()
 
     private val coursePurchaseViewModel: CoursePurchaseViewModel by reduxViewModel(this) { viewModelFactory }
@@ -95,9 +113,11 @@ class CoursePurchaseBottomSheetDialogFragment :
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData))
+        coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData, coursePurchaseSource))
         if (isNeedRestoreMessage) {
-            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow)
+            coursePurchaseViewModel.onNewMessage(
+                CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.COURSE_SCREEN)
+            )
         }
     }
 
@@ -114,7 +134,11 @@ class CoursePurchaseBottomSheetDialogFragment :
         buyActionViewDelegate = BuyActionViewDelegate(coursePurchaseBinding, coursePurchaseData, displayPriceMapper,
             launchPurchaseFlowAction =  { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlow) },
             launchStartStudying = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.StartLearningMessage) },
-            launchRestoreAction = { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow) }
+            launchRestoreAction = {
+                coursePurchaseViewModel.onNewMessage(
+                    CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.BUY_COURSE_DIALOG)
+                )
+            }
         )
         promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
@@ -131,21 +155,28 @@ class CoursePurchaseBottomSheetDialogFragment :
             .fitCenter()
             .into(coursePurchaseBinding.coursePurchaseCourseIcon)
 
-        val userAgreementLinkSpan = object : ClickableSpan() {
+        val supportSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val userAgreementUrl = getString(R.string.course_purchase_commission_url)
-
-                InAppWebViewDialogFragment
-                    .newInstance(getString(R.string.course_purchase_commission_web_view_title), userAgreementUrl, isProvideAuth = false)
-                    .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+                coursePurchaseViewModel.onNewMessage(
+                    CoursePurchaseFeature.Message.SetupFeedback(
+                        getString(R.string.feedback_subject),
+                        DeviceInfoUtil.getInfosAboutDevice(requireContext(), "\n")
+                    )
+                )
             }
         }
-        coursePurchaseBinding.coursePurchaseCommissionNotice.text = buildSpannedString {
-            append(getString(R.string.course_purchase_commission_information_part_1))
-            inSpans(userAgreementLinkSpan) {
-                append(getString(R.string.course_purchase_commission_information_part_2))
+
+        coursePurchaseBinding.coursePurchasePaymentFeedback.text = buildSpannedString {
+            append(getString(R.string.course_purchase_payment_failure_body_part_1))
+            inSpans(supportSpan) {
+                append(getString(R.string.course_purchase_payment_failure_body_part_2))
             }
-            append(getString(R.string.full_stop))
+            append(getString(R.string.course_purchase_payment_failure_body_part_3))
+        }
+        coursePurchaseBinding.coursePurchasePaymentFeedback.movementMethod = LinkMovementMethod.getInstance()
+
+        coursePurchaseBinding.coursePurchaseCommissionNotice.text = buildSpannedString {
+            append(resolveCommissionSpannedText())
         }
         coursePurchaseBinding.coursePurchaseCommissionNotice.movementMethod = LinkMovementMethod.getInstance()
     }
@@ -209,15 +240,24 @@ class CoursePurchaseBottomSheetDialogFragment :
                 (activity as? Callback)?.continueLearning()
                 dismiss()
             }
+
+            is CoursePurchaseFeature.Action.ViewAction.ShowContactSupport -> {
+                screenManager.openTextFeedBack(requireContext(), action.supportEmailData)
+            }
         }
     }
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
-            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+
             buyActionViewDelegate.render(state)
 
-            if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess) {
+            if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            ) {
                 promoCodeViewDelegate.setViewVisibility(isVisible = false)
                 wishlistViewDelegate.setViewVisibility(isVisible = false)
             } else {
@@ -226,33 +266,49 @@ class CoursePurchaseBottomSheetDialogFragment :
                 wishlistViewDelegate.render(state)
             }
 
-            val (strokeColor, textColor) = getWishlistActionColor(state)
-
-            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess).let { mustEnable ->
+            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+            ).let { mustEnable ->
                 isCancelable = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
             }
-
-            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), strokeColor)
-            coursePurchaseBinding.coursePurchaseWishlistAction.setTextColor(AppCompatResources.getColorStateList(requireContext(), textColor))
         }
     }
 
-    private fun getWishlistActionColor(state: CoursePurchaseFeature.State.Content): Pair<Int, Int> =
-        if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-            if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
-                R.color.color_overlay_green_alpha_12 to R.color.color_overlay_green
-            } else {
-                R.color.color_overlay_green to R.color.color_overlay_green
+    private fun resolveCommissionSpannedText(): Spanned {
+        val userAgreementConfigKey =
+            when (resources.configuration.defaultLocale.language) {
+                RUSSIAN_LANGUAGE_CODE ->
+                    RemoteConfig.PURCHASE_FLOW_DISCLAIMER_RU
+                BELARUSIAN_LANGUAGE_CODE ->
+                    RemoteConfig.PURCHASE_FLOW_DISCLAIMER_BE
+                else ->
+                    RemoteConfig.PURCHASE_FLOW_DISCLAIMER_EN
             }
-        } else {
-            if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
-                R.color.color_overlay_violet_alpha_12 to R.color.color_overlay_violet
-            } else {
-                R.color.color_overlay_violet to R.color.color_overlay_violet
+
+        val userAgreementSpannedText = HtmlCompat.fromHtml(firebaseRemoteConfig[userAgreementConfigKey].asString(), HtmlCompat.FROM_HTML_MODE_COMPACT).toSpannable()
+
+        for (span in userAgreementSpannedText.getSpans<URLSpan>()) {
+            val start = userAgreementSpannedText.getSpanStart(span)
+            val end = userAgreementSpannedText.getSpanEnd(span)
+            val flags = userAgreementSpannedText.getSpanFlags(span)
+
+            val userAgreementLinkSpan = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    InAppWebViewDialogFragment
+                        .newInstance(getString(R.string.course_purchase_commission_web_view_title), span.url, isProvideAuth = false)
+                        .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+                }
             }
+
+            userAgreementSpannedText.removeSpan(span)
+            userAgreementSpannedText.setSpan(userAgreementLinkSpan, start, end, flags)
         }
+
+        return userAgreementSpannedText
+    }
 
     interface Callback {
         fun continueLearning()
