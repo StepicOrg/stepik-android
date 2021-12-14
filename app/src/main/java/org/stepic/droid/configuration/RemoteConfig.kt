@@ -15,6 +15,7 @@ object RemoteConfig {
     const val PURCHASE_FLOW_ANDROID = "purchase_flow_android"
     const val PURCHASE_FLOW_DISCLAIMER_EN = "purchase_flow_android_disclaimer_en"
     const val PURCHASE_FLOW_DISCLAIMER_RU = "purchase_flow_android_disclaimer_ru"
+    const val PURCHASE_FLOW_DISCLAIMER_BE = "purchase_flow_android_disclaimer_be"
 
     // TODO APPS-3443: Remove after finishing feature
     const val PURCHASE_FLOW_ANDROID_TESTING_FLAG = false

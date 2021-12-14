@@ -65,6 +65,7 @@ class CoursePurchaseBottomSheetDialogFragment :
             }
 
         private const val RUSSIAN_LANGUAGE_CODE = "ru"
+        private const val BELARUSIAN_LANGUAGE_CODE = "be"
     }
 
     @Inject
@@ -271,10 +272,13 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     private fun resolveCommissionSpannedText(): Spanned {
         val userAgreementConfigKey =
-            if (resources.configuration.defaultLocale.language == RUSSIAN_LANGUAGE_CODE) {
-                RemoteConfig.PURCHASE_FLOW_DISCLAIMER_RU
-            } else {
-                RemoteConfig.PURCHASE_FLOW_DISCLAIMER_EN
+            when (resources.configuration.defaultLocale.language) {
+                RUSSIAN_LANGUAGE_CODE ->
+                    RemoteConfig.PURCHASE_FLOW_DISCLAIMER_RU
+                BELARUSIAN_LANGUAGE_CODE ->
+                    RemoteConfig.PURCHASE_FLOW_DISCLAIMER_BE
+                else ->
+                    RemoteConfig.PURCHASE_FLOW_DISCLAIMER_EN
             }
 
         val userAgreementSpannedText = HtmlCompat.fromHtml(firebaseRemoteConfig[userAgreementConfigKey].asString(), HtmlCompat.FROM_HTML_MODE_COMPACT).toSpannable()

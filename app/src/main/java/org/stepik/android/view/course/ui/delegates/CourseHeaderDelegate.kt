@@ -53,7 +53,6 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
-import timber.log.Timber
 import java.util.TimeZone
 import kotlin.math.abs
 
@@ -211,7 +210,6 @@ constructor(
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
-            Timber.d("APPS Update state")
             val multi = MultiTransformation(BlurTransformation(), CenterCrop())
             Glide
                 .with(this)
