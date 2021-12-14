@@ -303,9 +303,9 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/coursePurchaseBuyActionsBarrier"
-                app:strokeColor="?colorPrimary"
                 app:strokeWidth="1dp"
                 app:iconPadding="-18dp"
+                android:checkable="true"
                 tools:text="Добавить в Список желаний" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

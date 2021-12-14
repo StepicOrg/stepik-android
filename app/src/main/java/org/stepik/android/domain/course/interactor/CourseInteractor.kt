@@ -50,13 +50,13 @@ constructor(
             .flatMap(::obtainCourseHeaderData)
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> {
-        val currentFlow = CoursePurchaseFlow.valueOf(
+        val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
             firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
                 .asString()
                 .uppercase()
         )
 
-        val isInAppActive = currentFlow.isInAppActive() && RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return zip(
             if (isInAppActive) {

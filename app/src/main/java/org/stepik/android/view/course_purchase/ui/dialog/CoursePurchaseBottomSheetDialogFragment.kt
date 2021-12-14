@@ -265,17 +265,8 @@ class CoursePurchaseBottomSheetDialogFragment :
                 coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
                 coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
             }
-
-//            coursePurchaseBinding.coursePurchaseWishlistAction.strokeColor = AppCompatResources.getColorStateList(requireContext(), getWishlistActionStrokeColor(state))
         }
     }
-
-    private fun getWishlistActionStrokeColor(state: CoursePurchaseFeature.State.Content): Int =
-        if (state.wishlistState is CoursePurchaseFeature.WishlistState.Wishlisted) {
-            R.color.color_overlay_violet_alpha_12
-        } else {
-            R.color.color_overlay_violet
-        }
 
     private fun resolveCommissionSpannedText(): Spanned {
         val userAgreementConfigKey =

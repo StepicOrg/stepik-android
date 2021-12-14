@@ -14,4 +14,13 @@ enum class CoursePurchaseFlow {
 
     fun isInAppActive(): Boolean =
         this in EnumSet.of(IAP, IAP_FALLBACK_WEB)
+
+    companion object {
+        fun valueOfWithFallback(value: String): CoursePurchaseFlow =
+            try {
+                valueOf(value)
+            } catch (exception: IllegalArgumentException) {
+                WEB
+            }
+    }
 }

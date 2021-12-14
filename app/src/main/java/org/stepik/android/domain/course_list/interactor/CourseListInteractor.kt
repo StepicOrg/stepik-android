@@ -67,7 +67,7 @@ constructor(
         courseViewSource: CourseViewSource,
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> {
-        val currentFlow = CoursePurchaseFlow.valueOf(
+        val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
             firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
                 .asString()
                 .uppercase()
