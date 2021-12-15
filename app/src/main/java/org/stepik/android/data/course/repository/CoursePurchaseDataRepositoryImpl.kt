@@ -19,6 +19,7 @@ constructor() : CoursePurchaseDataRepository {
     override fun getCoursePurchaseData(): CoursePurchaseDataResult =
         coursePurchaseDataResult
 
+    @Synchronized
     override fun savePurchaseData(deeplinkPromoCode: DeeplinkPromoCode, coursePurchaseDataResult: CoursePurchaseDataResult) {
         this.deeplinkPromoCode = deeplinkPromoCode
         this.coursePurchaseDataResult = coursePurchaseDataResult
