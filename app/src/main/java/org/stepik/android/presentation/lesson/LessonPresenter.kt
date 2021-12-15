@@ -108,8 +108,8 @@ constructor(
         obtainLessonData(lessonInteractor.getLessonData(deepLinkData), forceUpdate)
     }
 
-    fun onTrialLesson(trialLessonId: Long, forceUpdate: Boolean = false) {
-        obtainLessonData(lessonInteractor.getLessonData(trialLessonId), forceUpdate)
+    fun onTrialLesson(trialLessonId: Long, trialUnitId: Long, forceUpdate: Boolean = false) {
+        obtainLessonData(lessonInteractor.getLessonData(trialLessonId, trialUnitId), forceUpdate)
     }
 
     fun onLessonData(lessonData: LessonData, forceUpdate: Boolean = false) {

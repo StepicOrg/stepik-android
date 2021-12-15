@@ -618,7 +618,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             when (actionStringRes) {
                 R.string.course_complete_action_back_to_assignments -> {
                     analytic.report(FinishedStepsBackToAssignmentsPressedAnalyticEvent(course, completeRate))
-                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.SYLLABUS, false)
+                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.SYLLABUS)
                 }
                 R.string.course_complete_action_find_new_course -> {
                     analytic.report(FinishedStepsFindNewCoursePressedAnalyticEvent(course, completeRate))
@@ -626,7 +626,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
                 }
                 R.string.course_complete_action_leave_review -> {
                     analytic.report(FinishedStepsLeaveReviewPressedAnalyticEvent(course, completeRate))
-                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.REVIEWS, false)
+                    screenManager.showCourseFromNavigationDialog(requireContext(), course.id, CourseViewSource.CourseCompleteDialog, CourseScreenTab.REVIEWS)
                 }
             }
         }

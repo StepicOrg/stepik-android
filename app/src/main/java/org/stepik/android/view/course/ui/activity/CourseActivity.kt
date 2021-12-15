@@ -35,6 +35,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
@@ -78,25 +79,35 @@ class CourseActivity :
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
         private const val EXTRA_TAB = "tab"
         private const val EXTRA_SOURCE = "source"
-        private const val EXTRA_OPEN_COURSE_PURCHASE = "open_course_purchase"
+        private const val EXTRA_DEEPLINK_PROMO_CODE = "deeplink_promo_code"
+        private const val EXTRA_CONTINUE_LEARNING = "continue_learning"
 
         private const val NO_ID = -1L
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
-        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        private const val QUERY_PARAM_PROMO = "promo"
+
+        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, continueLearning: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
                 .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
+                .putExtra(EXTRA_CONTINUE_LEARNING, continueLearning)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO, openCoursePurchase: Boolean = false): Intent =
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
                 .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_TAB, tab.ordinal)
-                .putExtra(EXTRA_OPEN_COURSE_PURCHASE, openCoursePurchase)
+
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO, deeplinkPromoCode: DeeplinkPromoCode): Intent =
+            Intent(context, CourseActivity::class.java)
+                .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_SOURCE, source)
+                .putExtra(EXTRA_TAB, tab.ordinal)
+                .putExtra(EXTRA_DEEPLINK_PROMO_CODE, deeplinkPromoCode)
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -246,7 +257,10 @@ class CourseActivity :
         if (course != null) {
             coursePresenter.onCourse(course, courseViewSource, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, courseViewSource, intent.getPromoCodeFromDeepLink(), forceUpdate)
+            /**
+             * Fallback to DeeplinkPromoCode from LessonDemoCompleteBottomSheetDialogFragment
+             */
+            coursePresenter.onCourseId(courseId, courseViewSource, intent.getPromoCodeFromDeepLink() ?: intent.getParcelableExtra<DeeplinkPromoCode>(EXTRA_DEEPLINK_PROMO_CODE)?.name, forceUpdate)
         }
     }
 
@@ -376,8 +390,23 @@ class CourseActivity :
                     )
                 }
 
-                if (intent.getBooleanExtra(EXTRA_OPEN_COURSE_PURCHASE, false)) {
-                    coursePresenter.openCoursePurchaseInWeb()
+                if (intent.getBooleanExtra(EXTRA_CONTINUE_LEARNING, false)) {
+                    intent.removeExtra(EXTRA_CONTINUE_LEARNING)
+                    coursePresenter.continueLearning()
+                }
+
+                /**
+                 * Obtain promo code from LessonDemoCompleteBottomSheetDialog
+                 */
+                val deeplinkPromoCode = intent.getParcelableExtra<DeeplinkPromoCode>(EXTRA_DEEPLINK_PROMO_CODE)
+                if (deeplinkPromoCode != null) {
+                    intent.removeExtra(EXTRA_DEEPLINK_PROMO_CODE)
+                    val queryParams = if (deeplinkPromoCode != DeeplinkPromoCode.EMPTY) {
+                        mapOf(QUERY_PARAM_PROMO to listOf(deeplinkPromoCode.name))
+                    } else {
+                        null
+                    }
+                    coursePresenter.openCoursePurchaseInWeb(queryParams)
                 }
 
                 ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
@@ -520,8 +549,8 @@ class CourseActivity :
         }
     }
 
-    override fun showTrialLesson(lessonId: Long) {
-        screenManager.showTrialLesson(this, lessonId)
+    override fun showTrialLesson(lessonId: Long, unitId: Long) {
+        screenManager.showTrialLesson(this, lessonId, unitId)
     }
 
     override fun onDestroy() {

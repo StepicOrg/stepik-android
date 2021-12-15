@@ -49,7 +49,7 @@ import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course_complete.ui.dialog.CourseCompleteBottomSheetDialogFragment
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.step.StepComponent
-import org.stepik.android.view.lesson.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
+import org.stepik.android.view.lesson_demo.ui.dialog.LessonDemoCompleteBottomSheetDialogFragment
 import org.stepik.android.view.lesson.ui.dialog.SectionUnavailableDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.Moveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
@@ -497,7 +497,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun onSyllabusAction(courseViewSource: CourseViewSource) {
         val course = lessonData.course ?: return
-        screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS, false)
+        screenManager.showCourseFromNavigationDialog(requireContext(), course.id, courseViewSource, CourseScreenTab.SYLLABUS)
     }
 
     override fun showErrorMessage() {

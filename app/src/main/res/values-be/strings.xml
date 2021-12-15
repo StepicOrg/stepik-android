@@ -1055,6 +1055,7 @@
     <string name="course_purchase_payment_failure_body_part_1">"Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і "</string>
     <string name="course_purchase_payment_failure_body_part_2">сзвяжыцеся з падтрымкай</string>
     <string name="course_purchase_payment_failure_body_part_3">, калі памылка не будзе ліквідаваная. Паўторнага спісання сродкаў не адбудзецца.</string>
+    <string name="course_purchase_unavailable">Дадзены курс недаступны для пакупкі ў мабільным дадатку</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Змяніць імя атрымальніка</string>
