@@ -1,7 +1,5 @@
 package org.stepik.android.data.course.repository
 
-import com.jakewharton.rxrelay2.BehaviorRelay
-import io.reactivex.Completable
 import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
@@ -10,18 +8,19 @@ import javax.inject.Inject
 class CoursePurchaseDataRepositoryImpl
 @Inject
 constructor() : CoursePurchaseDataRepository {
-    private val deeplinkPromoCode: BehaviorRelay<DeeplinkPromoCode> = BehaviorRelay.createDefault(DeeplinkPromoCode.EMPTY)
-    private val coursePurchaseData: BehaviorRelay<CoursePurchaseDataResult> = BehaviorRelay.createDefault(CoursePurchaseDataResult.Empty)
+    private var deeplinkPromoCode: DeeplinkPromoCode = DeeplinkPromoCode.EMPTY
+    private var coursePurchaseDataResult: CoursePurchaseDataResult = CoursePurchaseDataResult.Empty
 
-    override fun getDeeplinkPromoCode(): BehaviorRelay<DeeplinkPromoCode> =
+    @Synchronized
+    override fun getDeeplinkPromoCode(): DeeplinkPromoCode =
         deeplinkPromoCode
 
-    override fun getCoursePurchaseData(): BehaviorRelay<CoursePurchaseDataResult> =
-        coursePurchaseData
+    @Synchronized
+    override fun getCoursePurchaseData(): CoursePurchaseDataResult =
+        coursePurchaseDataResult
 
-    override fun saveDeeplinkPromoCode(deeplinkPromoCode: DeeplinkPromoCode): Completable =
-        Completable.fromAction { this.deeplinkPromoCode.accept(deeplinkPromoCode) }
-
-    override fun saveCoursePurchaseData(coursePurchaseData: CoursePurchaseDataResult): Completable =
-        Completable.fromAction { this.coursePurchaseData.accept(coursePurchaseData) }
+    override fun savePurchaseData(deeplinkPromoCode: DeeplinkPromoCode, coursePurchaseDataResult: CoursePurchaseDataResult) {
+        this.deeplinkPromoCode = deeplinkPromoCode
+        this.coursePurchaseDataResult = coursePurchaseDataResult
+    }
 }

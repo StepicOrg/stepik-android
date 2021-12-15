@@ -11,8 +11,8 @@
     <string name="app_name" translatable="false">Stepik</string>
     <integer name="com_vk_sdk_AppId" translatable="false">5628680</integer>
     <string name="facebook_app_id" translatable="false">171127739724012</string>
-    <string name="host_name" translatable="false">stepik.org</string>
-    <string name="secondary_host_name" translatable="false">stepic.org</string>
+    <string name="host_name" translatable="false">release.stepik.org</string>
+    <string name="secondary_host_name" translatable="false">release.stepic.org</string>
     <string name="sign_up">Sign up</string>
     <string name="email" translatable="false">E-mail</string>
     <string name="remind_password">Forgot password?</string>
@@ -1278,6 +1278,7 @@
     <string name="course_purchase_payment_failure_body_part_1">"An error has occurred when processing the payment, please try to restore the purchase and "</string>
     <string name="course_purchase_payment_failure_body_part_2">contact our support team</string>
     <string name="course_purchase_payment_failure_body_part_3">, if the error still remains. Funds will not be debited again.</string>
+    <string name="course_purchase_unavailable">This course is not available for purchase on the mobile app</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Change recipient name</string>

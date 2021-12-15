@@ -27,7 +27,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(LessonDemoFeature.Message.FetchLessonDemoDataSuccess(it.deeplinkPromoCode, it.coursePurchaseData)) },
+                        onSuccess = { onNewMessage(LessonDemoFeature.Message.FetchLessonDemoDataSuccess(it.deeplinkPromoCode, it.coursePurchaseDataResult)) },
                         onError = { onNewMessage(LessonDemoFeature.Message.FetchLessonDemoDataFailure) }
                     )
             }

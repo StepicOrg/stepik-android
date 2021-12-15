@@ -120,10 +120,7 @@
             style="@style/Widget.AppTheme.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
 
             android:theme="@style/ThemeOverlay.Green"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -133,6 +130,24 @@
             app:layout_constraintVertical_bias="0"
 
             tools:text="Купить за 2399 ₽" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/demoPurchaseUnavailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/StepQuizFeedback.Wrong"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintVertical_bias="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/demoCompleteTitle"
+            app:drawableStartCompat="@drawable/ic_course_info_about"
+            android:text="@string/course_purchase_unavailable"
+            tools:text="Данный курс недоступен для покупки в мобильном приложении"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

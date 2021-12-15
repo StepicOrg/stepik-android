@@ -13,7 +13,7 @@ import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.lesson_demo.model.LessonDemoData
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
@@ -23,7 +23,8 @@ class LessonDemoInteractor
 constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val coursePurchaseDataRepository: CoursePurchaseDataRepository,
-    private val courseStatsInteractor: CourseStatsInteractor
+    private val courseStatsInteractor: CourseStatsInteractor,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver
 ) {
     fun getLessonDemoData(course: Course): Single<LessonDemoData> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
@@ -35,21 +36,20 @@ constructor(
         val isInAppActive =
             currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
-        return if (isInAppActive) {
-            val deeplinkPromoCode = requireNotNull(coursePurchaseDataRepository.getDeeplinkPromoCode().value)
-            val initialCoursePurchaseDataResult = requireNotNull(coursePurchaseDataRepository.getCoursePurchaseData().value)
+        val deeplinkPromoCode = coursePurchaseDataRepository.getDeeplinkPromoCode()
+        val initialCoursePurchaseDataResult = coursePurchaseDataRepository.getCoursePurchaseData()
 
+        return if (isInAppActive) {
             if (initialCoursePurchaseDataResult is CoursePurchaseDataResult.Empty) {
                 coursePurchaseDataFallback(course, deeplinkPromoCode)
                     .map { coursePurchaseDataFallbackResult ->
-                        LessonDemoData(deeplinkPromoCode, (coursePurchaseDataFallbackResult as? CoursePurchaseDataResult.Result)?.coursePurchaseData)
+                        LessonDemoData(deeplinkPromoCode, coursePurchaseDataFallbackResult)
                     }
             } else {
-                Single.just(LessonDemoData(deeplinkPromoCode, (initialCoursePurchaseDataResult as CoursePurchaseDataResult.Result).coursePurchaseData))
+                Single.just(LessonDemoData(deeplinkPromoCode, initialCoursePurchaseDataResult))
             }
         } else {
-            val deeplinkPromoCode = requireNotNull(coursePurchaseDataRepository.getDeeplinkPromoCode().value)
-            Single.just(LessonDemoData(deeplinkPromoCode, null))
+            Single.just(LessonDemoData(coursePurchaseDataRepository.getDeeplinkPromoCode(), CoursePurchaseDataResult.Empty))
         }
     }
 
@@ -64,35 +64,18 @@ constructor(
             } else {
                 courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, deeplinkPromoCode.name)
             }
-        ) { courseStats, (_, deeplinkPromoCodeSku) ->
-            val notEnrolledMobileTierState = (courseStats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
-            if (notEnrolledMobileTierState != null) {
-                val promoCodeSku = when {
-                    deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                        deeplinkPromoCodeSku
+        ) { stats, (_, deeplinkPromoCodeSku) ->
+            when (stats.enrollmentState) {
+                is EnrollmentState.NotEnrolledMobileTier ->
+                    coursePurchaseDataResolver
+                        .resolveCoursePurchaseData(course, stats, stats.enrollmentState, deeplinkPromoCodeSku)
+                        .let { CoursePurchaseDataResult.Result(it) }
 
-                    notEnrolledMobileTierState.promoLightSku != null -> {
-                        PromoCodeSku(
-                            course.defaultPromoCodeName.orEmpty(),
-                            notEnrolledMobileTierState.promoLightSku
-                        )
-                    }
+                is EnrollmentState.NotEnrolledUnavailable ->
+                    CoursePurchaseDataResult.NotAvailable
 
-                    else ->
-                        PromoCodeSku.EMPTY
-                }
-
-                CoursePurchaseDataResult.Result(
-                    CoursePurchaseData(
-                        course,
-                        courseStats,
-                        notEnrolledMobileTierState.standardLightSku,
-                        promoCodeSku,
-                        course.isInWishlist
-                    )
-                )
-            } else {
-                CoursePurchaseDataResult.Empty
+                else ->
+                    CoursePurchaseDataResult.Empty
             }
         }
 }

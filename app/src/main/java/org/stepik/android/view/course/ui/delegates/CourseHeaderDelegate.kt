@@ -260,7 +260,9 @@ constructor(
             courseTryFree.isVisible = courseHeaderData.course.previewLesson != 0L &&
                     courseHeaderData.course.enrollment == 0L &&
                     courseHeaderData.course.isPaid &&
-                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
+                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier ||
+                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb ||
+                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledUnavailable)
 
             shareCourseMenuItem?.isVisible = true
         }

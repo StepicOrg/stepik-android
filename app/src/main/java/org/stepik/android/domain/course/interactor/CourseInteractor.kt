@@ -19,10 +19,9 @@ import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 import org.stepik.android.view.injection.course.CourseScope
-import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
 
@@ -36,7 +35,8 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
-    private val coursePurchaseDataRepository: CoursePurchaseDataRepository
+    private val coursePurchaseDataRepository: CoursePurchaseDataRepository,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver
 ) {
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -93,38 +93,23 @@ constructor(
             )
         }
             .toMaybe()
-            .doCompletableOnSuccess { courseHeaderData ->
-                val notEnrolledMobileTierState =
-                    (courseHeaderData.stats.enrollmentState as? EnrollmentState.NotEnrolledMobileTier)
-                if (notEnrolledMobileTierState != null) {
-                    val promoCodeSku = when {
-                        courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                            courseHeaderData.deeplinkPromoCodeSku
+            .doOnSuccess { courseHeaderData ->
+                val coursePurchaseDataResult =
+                    when (courseHeaderData.stats.enrollmentState) {
+                        is EnrollmentState.NotEnrolledMobileTier ->
+                            coursePurchaseDataResolver
+                                .resolveCoursePurchaseData(courseHeaderData)
+                                ?.let { CoursePurchaseDataResult.Result(it) }
+                                ?: CoursePurchaseDataResult.Empty
 
-                        notEnrolledMobileTierState.promoLightSku != null -> {
-                            PromoCodeSku(
-                                courseHeaderData.course.defaultPromoCodeName.orEmpty(),
-                                notEnrolledMobileTierState.promoLightSku
-                            )
-                        }
+                        is EnrollmentState.NotEnrolledUnavailable ->
+                            CoursePurchaseDataResult.NotAvailable
 
                         else ->
-                            PromoCodeSku.EMPTY
+                            CoursePurchaseDataResult.Empty
                     }
-                    val coursePurchaseData =
-                        CoursePurchaseData(
-                            courseHeaderData.course,
-                            courseHeaderData.stats,
-                            notEnrolledMobileTierState.standardLightSku,
-                            promoCodeSku,
-                            courseHeaderData.course.isInWishlist
-                        )
-                    coursePurchaseDataRepository
-                        .saveCoursePurchaseData(CoursePurchaseDataResult.Result(coursePurchaseData))
-                        .andThen(coursePurchaseDataRepository.saveDeeplinkPromoCode(courseHeaderData.deeplinkPromoCode))
-                } else {
-                    coursePurchaseDataRepository.saveDeeplinkPromoCode(courseHeaderData.deeplinkPromoCode)
-                }
+
+                coursePurchaseDataRepository.savePurchaseData(courseHeaderData.deeplinkPromoCode, coursePurchaseDataResult)
             }
     }
 }

@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.lesson_demo.reducer
 
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature.State
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature.Message
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature.Action
@@ -21,7 +22,13 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchLessonDemoDataSuccess -> {
                 if (state is State.Loading) {
-                    State.Content(message.deeplinkPromoCode, message.coursePurchaseData) to emptySet()
+                    val state =
+                        if (message.coursePurchaseDataResult is CoursePurchaseDataResult.NotAvailable) {
+                            State.Unavailable
+                        } else {
+                            State.Content(message.deeplinkPromoCode, (message.coursePurchaseDataResult as? CoursePurchaseDataResult.Result)?.coursePurchaseData)
+                        }
+                    state to emptySet()
                 } else {
                     null
                 }
