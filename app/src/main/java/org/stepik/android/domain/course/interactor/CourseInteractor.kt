@@ -9,6 +9,8 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
@@ -17,6 +19,8 @@ import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
+import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataResult
 import org.stepik.android.view.injection.course.CourseScope
 import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
@@ -30,7 +34,9 @@ constructor(
     private val coursePublishSubject: BehaviorSubject<Course>,
     private val courseStatsInteractor: CourseStatsInteractor,
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
-    private val firebaseRemoteConfig: FirebaseRemoteConfig
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
+    private val coursePurchaseDataRepository: CoursePurchaseDataRepository,
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver
 ) {
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -56,12 +62,13 @@ constructor(
                 .uppercase()
         )
 
-        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val isInAppActive =
+            currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
 
         return zip(
             if (isInAppActive) {
                 courseStatsInteractor.getCourseStatsMobileTiers(listOf(course)).first()
-            } else  {
+            } else {
                 courseStatsInteractor.getCourseStats(listOf(course)).first()
             },
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
@@ -86,5 +93,23 @@ constructor(
             )
         }
             .toMaybe()
+            .doOnSuccess { courseHeaderData ->
+                val coursePurchaseDataResult =
+                    when (courseHeaderData.stats.enrollmentState) {
+                        is EnrollmentState.NotEnrolledMobileTier ->
+                            coursePurchaseDataResolver
+                                .resolveCoursePurchaseData(courseHeaderData)
+                                ?.let { CoursePurchaseDataResult.Result(it) }
+                                ?: CoursePurchaseDataResult.Empty
+
+                        is EnrollmentState.NotEnrolledUnavailable ->
+                            CoursePurchaseDataResult.NotAvailable
+
+                        else ->
+                            CoursePurchaseDataResult.Empty
+                    }
+
+                coursePurchaseDataRepository.savePurchaseData(courseHeaderData.deeplinkPromoCode, coursePurchaseDataResult)
+            }
     }
 }

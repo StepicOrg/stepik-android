@@ -35,5 +35,5 @@ interface CourseView : CourseContinueView {
     fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>? = null)
     fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData)
 
-    fun showTrialLesson(lessonId: Long)
+    fun showTrialLesson(lessonId: Long, unitId: Long)
 }

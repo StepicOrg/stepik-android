@@ -117,7 +117,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp"
         app:drawableStartCompat="@drawable/ic_course_info_about"
-        android:text="Данный курс недоступен для покупки в мобильном приложении"
+        android:text="@string/course_purchase_unavailable"
         tools:text="Данный курс недоступен для покупки в мобильном приложении"/>
 
     <include

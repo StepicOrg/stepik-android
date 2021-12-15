@@ -82,6 +82,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         private const val EXTRA_LAST_STEP = "last_step"
 
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
+        private const val EXTRA_TRIAL_UNIT_ID = "trial_unit_id"
 
         private const val EXTRA_LESSON_DATA = "lesson_data"
 
@@ -103,9 +104,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_LAST_STEP, lastStep)
 
-        fun createIntent(context: Context, trialLessonId: Long): Intent =
+        fun createIntent(context: Context, trialLessonId: Long, trialUnitId: Long): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_TRIAL_LESSON_ID, trialLessonId)
+                .putExtra(EXTRA_TRIAL_UNIT_ID, trialUnitId)
     }
 
     @Inject
@@ -223,7 +225,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         val deepLinkData = intent.getLessonDeepLinkData()
 
-        val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, -1L)
+        val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, 0L)
+        val trialUnitId = intent.getLongExtra(EXTRA_TRIAL_UNIT_ID, 0L)
 
         val lessonData = intent.getParcelableExtra<LessonData>(EXTRA_LESSON_DATA)
 
@@ -237,8 +240,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             lesson != null && unit != null && section != null ->
                 lessonPresenter.onLesson(lesson, unit, section, isFromNextLesson, forceUpdate)
 
-            trialLessonId != -1L ->
-                lessonPresenter.onTrialLesson(trialLessonId, forceUpdate)
+            trialLessonId != 0L ->
+                lessonPresenter.onTrialLesson(trialLessonId, trialUnitId, forceUpdate)
 
             lessonData != null ->
                 lessonPresenter.onLessonData(lessonData)
