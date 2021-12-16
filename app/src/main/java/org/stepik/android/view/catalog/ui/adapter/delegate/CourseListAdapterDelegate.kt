@@ -168,6 +168,9 @@ constructor(
         if (catalogBlockFullCourseList.catalogBlock.content !is CatalogBlockContent.FullCourseList) {
             return
         }
+        if (catalogBlockFullCourseList.state !is CourseListFeature.State.Idle) {
+            return
+        }
         onBlockSeen(catalogBlockFullCourseList.id, catalogBlockFullCourseList.catalogBlock.content)
     }
 }
