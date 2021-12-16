@@ -59,7 +59,10 @@ class BuyActionViewDelegate(
 
     fun render(state: CoursePurchaseFeature.State.Content) {
         this.paymentState = state.paymentState
-        val isTerminalState = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+        val isTerminalState =
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+
         coursePurchasePaymentTitle.isVisible = isTerminalState
         coursePurchasePaymentIcon.isVisible = isTerminalState
         coursePurchasePaymentFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure
@@ -80,8 +83,13 @@ class BuyActionViewDelegate(
                 val courseDisplayPrice = coursePurchaseData.course.displayPrice
                 coursePurchaseBuyAction.text =
                     if (courseDisplayPrice != null) {
-                        if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid && state.promoCodeState.promoCodeSku.lightSku != null) {
-                            displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(coursePurchaseData.primarySku.price, state.promoCodeState.promoCodeSku.lightSku.price)
+                        if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid &&
+                            state.promoCodeState.promoCodeSku.lightSku != null
+                        ) {
+                            displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(
+                                coursePurchaseData.primarySku.price,
+                                state.promoCodeState.promoCodeSku.lightSku.price
+                            )
                         } else {
                             context.getString(R.string.course_payments_purchase_in_web_with_price, coursePurchaseData.primarySku.price)
                         }

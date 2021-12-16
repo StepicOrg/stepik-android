@@ -9,13 +9,12 @@ import org.stepic.droid.configuration.RemoteConfig
 import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
-import org.stepik.android.domain.course.model.CoursePurchaseFlow
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
-import org.stepik.android.domain.mobile_tiers.interactor.MobileTiersInteractor
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
@@ -25,8 +24,7 @@ constructor(
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val courseRepository: CourseRepository,
-    private val courseStatsInteractor: CourseStatsInteractor,
-    private val mobileTiersInteractor: MobileTiersInteractor
+    private val courseStatsInteractor: CourseStatsInteractor
 ) {
 
     fun getAllCourses(courseListQuery: CourseListQuery): Single<List<Course>> =
@@ -68,8 +66,16 @@ constructor(
         courses: PagedList<Course>,
         courseViewSource: CourseViewSource,
         sourceTypeComposition: SourceTypeComposition
-    ): Single<PagedList<CourseListItem.Data>> =
-        if (firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString() == CoursePurchaseFlow.PURCHASE_FLOW_IAP || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG) {
+    ): Single<PagedList<CourseListItem.Data>> {
+        val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                .asString()
+                .uppercase()
+        )
+
+        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+
+        return if (isInAppActive) {
             mapCourseStats(
                 courseStatsInteractor.getCourseStatsMobileTiers(courses, sourceTypeComposition, resolveEnrollmentState = false),
                 courses,
@@ -82,6 +88,7 @@ constructor(
                 courseViewSource
             )
         }
+    }
 
     private fun mapCourseStats(courseStatsSource: Single<List<CourseStats>>, courses: PagedList<Course>, courseViewSource: CourseViewSource): Single<PagedList<CourseListItem.Data>> =
         courseStatsSource

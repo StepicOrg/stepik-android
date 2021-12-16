@@ -38,6 +38,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
     internal lateinit var screenManager: ScreenManager
 
     private var userId: Long by argument()
+    private var isCurrentUser: Boolean = false
 
     private val certificatesPresenter: ProfileCertificatesPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCertificatesView.State>
@@ -71,7 +72,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         viewStateDelegate.addState<ProfileCertificatesView.State.NoCertificates>()
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        profileCertificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), profileId) }
+        profileCertificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), profileId, isCurrentUser) }
 
         profileCertificatesRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         profileCertificatesRecycler.isNestedScrollingEnabled = false
@@ -103,15 +104,18 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
 
         when (state) {
             is ProfileCertificatesView.State.Loading -> {
-                profileId = state.userId
+                profileId = state.profileData.user.id
+                isCurrentUser = state.profileData.isCurrentUser
             }
             is ProfileCertificatesView.State.CertificatesCache -> {
                 certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
-                profileId = state.userId
+                profileId = state.profileData.user.id
+                isCurrentUser = state.profileData.isCurrentUser
             }
             is ProfileCertificatesView.State.CertificatesRemote -> {
                 certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
-                profileId = state.userId
+                profileId = state.profileData.user.id
+                isCurrentUser = state.profileData.isCurrentUser
             }
         }
     }

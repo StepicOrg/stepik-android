@@ -1172,10 +1172,6 @@
 
     <!-- Course purchase -->
     <string name="course_purchase_commission_web_view_title">Пользовательское соглашение</string>
-    <string name="course_purchase_commission_information_part_1">"В цену включена 15% комиссия Google Play.\nОплачивая доступ к этому курсу вы соглашаетесь с условиями "</string>
-    <string name="course_purchase_commission_information_part_2">пользовательского соглашения</string>
-    <string name="course_purchase_commission_url">https://welcome.stepik.org/ru/payment-terms</string>
-
     <string name="course_purchase_promocode_hint">Введите промокод</string>
     <string name="course_purchase_promocode_available">У меня есть промокод</string>
     <string name="course_purchase_promocode_checking">Проверка промокода</string>
@@ -1184,20 +1180,23 @@
 
     <string name="course_purchase_wishlist_add">Добавить в Список желаний</string>
     <string name="course_purchase_wishlist_adding">Добавляем</string>
-    <string name="course_purchase_wishlist_added">Курс добавлен в Список желаний</string>
+    <string name="course_purchase_wishlist_removing">Удаляем</string>
+    <string name="course_purchase_wishlist_added">Добавлен в Список желаний</string>
 
     <string name="course_purchase_payment_learn_action">Начать учиться</string>
     <string name="course_purchase_payment_restore_action">Восстановить покупку</string>
     <string name="course_purchase_payment_processing">Обработка платежа</string>
     <string name="course_purchase_payment_success">Оплата прошла успешно</string>
     <string name="course_purchase_payment_failure">Оплата прошла, покупка не завершена</string>
-    <string name="course_purchase_payment_failure_body">При обработке платежа произошла ошибка, попробуйте восстановить покупку и свяжитесь с поддержкой, если ошибка не будет устранена. Повторного списания средств не произойдет.</string>
+    <string name="course_purchase_payment_failure_body_part_1">"При обработке платежа произошла ошибка, попробуйте восстановить покупку и "</string>
+    <string name="course_purchase_payment_failure_body_part_2">свяжитесь с поддержкой</string>
+    <string name="course_purchase_payment_failure_body_part_3">, если ошибка не будет устранена. Повторного списания средств не произойдет.</string>
+    <string name="course_purchase_unavailable">Данный курс недоступен для покупки в мобильном приложении</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Изменить имя получателя</string>
     <string name="certificate_name_change_dialog_title">Изменить имя получателя</string>
     <string name="certificate_name_change_dialog_body_warning">Внимание! Изменить имя получателя сертификата можно только %s.\nВведите имя:</string>
-    <!-- <![CDATA[Вы решаете <b>%s</b> подряд!]]> -->
     <string name="certificate_name_change_dialog_body_confirmation"><![CDATA[Вы уверены, что хотите изменить имя получателя сертификата с <b>%s</b> на <b>%s</b>?]]></string>
     <string name="certificate_name_change_dialog_body_last_edit_warning">Внимание! После этого изменения вы больше не сможете поменять имя.</string>
     <string name="certificate_name_change_snackbar_success">Имя получателя сертификата изменено.</string>

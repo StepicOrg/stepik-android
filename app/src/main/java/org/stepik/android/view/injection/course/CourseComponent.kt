@@ -12,6 +12,7 @@ import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModul
 import org.stepik.android.view.injection.course_reviews.CourseReviewsDataModule
 import org.stepik.android.view.injection.exam_session.ExamSessionDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
+import org.stepik.android.view.injection.lesson_demo.LessonDemoComponent
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.proctor_session.ProctorSessionDataModule
@@ -42,7 +43,8 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
     ExamSessionDataModule::class,
     ProctorSessionDataModule::class,
 
-    WishlistDataModule::class
+    WishlistDataModule::class,
+    CoursePurchaseDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder
@@ -54,6 +56,7 @@ interface CourseComponent {
     }
 
     fun coursePresentationComponentBuilder(): CoursePresentationComponent.Builder
+    fun lessonDemoPresentationComponentBuilder(): LessonDemoComponent.Builder
 
     fun inject(courseInfoFragment: CourseInfoFragment)
     fun inject(courseReviewsFragment: CourseReviewsFragment)

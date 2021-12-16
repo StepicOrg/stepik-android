@@ -1258,9 +1258,6 @@
 
     <!-- Course purchase -->
     <string name="course_purchase_commission_web_view_title">User Agreement</string>
-    <string name="course_purchase_commission_information_part_1">The price includes 15% commission from Google Play.\nBy paying for access to this course you agree to the terms </string>
-    <string name="course_purchase_commission_information_part_2">user agreement</string>
-    <string name="course_purchase_commission_url">https://welcome.stepik.org/en/payment-terms</string>
 
     <string name="course_purchase_promocode_hint">Enter promo code</string>
     <string name="course_purchase_promocode_available">I have a promo code</string>
@@ -1270,14 +1267,18 @@
 
     <string name="course_purchase_wishlist_add">Add to Wishlist</string>
     <string name="course_purchase_wishlist_adding">Adding</string>
-    <string name="course_purchase_wishlist_added">Course added to Wishlist</string>
+    <string name="course_purchase_wishlist_removing">Removing</string>
+    <string name="course_purchase_wishlist_added">Added to Wishlist</string>
 
     <string name="course_purchase_payment_learn_action">Begin to study</string>
     <string name="course_purchase_payment_restore_action">Restore purchase</string>
     <string name="course_purchase_payment_processing">Processing payment</string>
     <string name="course_purchase_payment_success">Payment was successful</string>
     <string name="course_purchase_payment_failure">Payment has passed, but the purchase has not been completed</string>
-    <string name="course_purchase_payment_failure_body">An error has occurred when processing the payment, please try to restore the purchase and contact our support team, if the error still remains. Funds will not be debited again.</string>
+    <string name="course_purchase_payment_failure_body_part_1">"An error has occurred when processing the payment, please try to restore the purchase and "</string>
+    <string name="course_purchase_payment_failure_body_part_2">contact our support team</string>
+    <string name="course_purchase_payment_failure_body_part_3">, if the error still remains. Funds will not be debited again.</string>
+    <string name="course_purchase_unavailable">This course is not available for purchase on the mobile app</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Change recipient name</string>

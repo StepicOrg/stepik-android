@@ -1,6 +1,7 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.graphics.drawable.AnimationDrawable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
@@ -38,6 +39,7 @@ import org.stepik.android.domain.course.analytic.batch.BuyCoursePressedAnalyticB
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
@@ -51,6 +53,7 @@ import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
+import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import java.util.TimeZone
 import kotlin.math.abs
 
@@ -82,6 +85,8 @@ constructor(
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
             get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
+
+        private const val EVALUATION_FRAME_DURATION_MS = 250
     }
 
     var courseHeaderData: CourseHeaderData? = null
@@ -150,6 +155,18 @@ constructor(
                 }
             }
 
+            courseWishlistAction.setOnClickListener {
+                courseHeaderData?.let {
+                    val action =
+                        if (it.course.isInWishlist) {
+                            WishlistAction.REMOVE
+                        } else {
+                            WishlistAction.ADD
+                        }
+                    coursePresenter.toggleWishlist(action)
+                }
+            }
+
             courseBuyInWebAction.setOnClickListener {
                 courseHeaderData?.let(::setupBuyAction)
             }
@@ -159,14 +176,11 @@ constructor(
             }
 
             courseTryFree.setOnClickListener {
-                val lessonId = courseHeaderData
+                val course = courseHeaderData
                     ?.course
-                    ?.courseOptions
-                    ?.coursePreview
-                    ?.previewLessonId
                     ?: return@setOnClickListener
 
-                coursePresenter.tryLessonFree(lessonId)
+                coursePresenter.tryLessonFree(course.previewLesson, course.previewUnit)
             }
         }
     }
@@ -185,6 +199,7 @@ constructor(
             viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledUnavailable>(courseWishlistAction, coursePurchaseFeedback)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(purchaseContainer)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledMobileTier>(purchaseContainer)
             // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
@@ -215,6 +230,7 @@ constructor(
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
+            setupWishlistAction(courseHeaderData)
             /**
              * Purchase setup section
              */
@@ -231,7 +247,8 @@ constructor(
             }
 
             courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
-                    courseHeaderData.course.enrollment == 0L
+                courseHeaderData.course.enrollment == 0L &&
+                (courseHeaderData.deeplinkPromoCode == DeeplinkPromoCode.EMPTY || courseHeaderData.deeplinkPromoCode.name == courseHeaderData.defaultPromoCode.defaultPromoCodeName)
 
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
@@ -240,10 +257,12 @@ constructor(
                 restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledMobileTier
             }
 
-            courseTryFree.isVisible = courseHeaderData.course.courseOptions?.coursePreview?.previewLessonId != null &&
+            courseTryFree.isVisible = courseHeaderData.course.previewLesson != 0L &&
                     courseHeaderData.course.enrollment == 0L &&
                     courseHeaderData.course.isPaid &&
-                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier || courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb)
+                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier ||
+                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb ||
+                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledUnavailable)
 
             shareCourseMenuItem?.isVisible = true
         }
@@ -364,6 +383,40 @@ constructor(
             } else {
                 courseBuyInWebAction.isVisible = true
                 courseBuyInWebActionDiscounted.isVisible = false
+            }
+        }
+    }
+
+    private fun setupWishlistAction(courseHeaderData: CourseHeaderData) {
+        with(courseActivity) {
+            courseWishlistAction.isEnabled = !courseHeaderData.course.isInWishlist && !courseHeaderData.isWishlistUpdating
+
+            val wishlistText = if (courseHeaderData.isWishlistUpdating) {
+                if (courseHeaderData.course.isInWishlist) {
+                    getString(R.string.course_purchase_wishlist_removing)
+                } else {
+                    getString(R.string.course_purchase_wishlist_adding)
+                }
+            } else {
+                if (courseHeaderData.course.isInWishlist) {
+                    getString(R.string.course_purchase_wishlist_added)
+                } else {
+                    getString(R.string.course_purchase_wishlist_add)
+                }
+            }
+            courseWishlistAction.text = wishlistText
+
+            if (courseHeaderData.isWishlistUpdating) {
+                val evaluationDrawable = AnimationDrawable()
+                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
+                evaluationDrawable.isOneShot = false
+
+                courseWishlistAction.icon = evaluationDrawable
+                evaluationDrawable.start()
+            } else {
+                courseWishlistAction.icon = null
             }
         }
     }

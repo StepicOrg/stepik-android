@@ -31,6 +31,16 @@
         android:text="@string/course_item_join"
         android:layout_marginTop="?actionBarSize" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/courseWishlistAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
+        android:minWidth="200dp"
+        android:text="@string/course_purchase_wishlist_add"
+        android:layout_marginTop="?actionBarSize" />
+
     <FrameLayout
         android:id="@+id/purchaseContainer"
         android:layout_width="wrap_content"
@@ -97,6 +107,18 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/coursePurchaseFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/StepQuizFeedback.Wrong"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
+        app:drawableStartCompat="@drawable/ic_course_info_about"
+        android:text="@string/course_purchase_unavailable"
+        tools:text="Данный курс недоступен для покупки в мобильном приложении"/>
 
     <include
         android:id="@+id/courseProgressSeparator"

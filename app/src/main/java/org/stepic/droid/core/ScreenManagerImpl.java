@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.FileProvider;
+import androidx.core.net.UriKt;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -50,6 +51,7 @@ import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
+import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.domain.lesson.model.LessonData;
@@ -215,7 +217,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource) {
-        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO, false);
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO);
         context.startActivity(intent);
     }
 
@@ -241,7 +243,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     private Intent getIntentForDescription(Context context, @NotNull Course course, @NotNull CourseViewSource courseViewSource, boolean autoEnroll, CourseScreenTab tab) {
-        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, tab);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, false, tab);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -263,20 +265,20 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        Intent intent = CertificatesActivity.Companion.createIntent(context, userPreferences.getUserId());
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userPreferences.getUserId(), true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
     @Override
     public void showCertificates(Context context) {
-        showCertificates(context, userPreferences.getUserId());
+        showCertificates(context, userPreferences.getUserId(), true);
     }
 
     @Override
-    public void showCertificates(Context context, long userId) {
+    public void showCertificates(Context context, long userId, boolean isCurrentUser) {
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Certificates.SCREEN_OPENED);
-        Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userId, isCurrentUser);
         context.startActivity(intent);
     }
 
@@ -509,7 +511,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep) {
-        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS, false);
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS);
         Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
         activity.startActivity(courseIntent);
         activity.startActivity(stepsIntent);
@@ -572,8 +574,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showTrialLesson(Activity sourceActivity, Long lessonId) {
-        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, lessonId);
+    public void showTrialLesson(Activity sourceActivity, Long lessonId, Long unitId) {
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, lessonId, unitId);
         sourceActivity.startActivity(intent);
     }
 
@@ -698,10 +700,21 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, boolean openCoursePurchase) {
+    public void showCourseFromNavigationDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainIntent = new Intent(context, MainFeedActivity.class);
-        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, courseScreenTab, openCoursePurchase);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, courseScreenTab);
+        taskStackBuilder.addParentStack(MainFeedActivity.class);
+        taskStackBuilder.addNextIntent(mainIntent);
+        taskStackBuilder.addNextIntent(courseIntent);
+        taskStackBuilder.startActivities();
+    }
+
+    @Override
+    public void showCoursePurchaseFromLessonDemoDialog(Context context, long courseId, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab, DeeplinkPromoCode deeplinkPromoCode) {
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        Intent mainIntent = new Intent(context, MainFeedActivity.class);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, courseId, courseViewSource, courseScreenTab, deeplinkPromoCode);
         taskStackBuilder.addParentStack(MainFeedActivity.class);
         taskStackBuilder.addNextIntent(mainIntent);
         taskStackBuilder.addNextIntent(courseIntent);
@@ -727,7 +740,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab) {
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         Intent mainIntent = new Intent(context, MainFeedActivity.class);
-        Intent courseIntent = CourseActivity.Companion.createIntent(context, course, courseViewSource, true, courseScreenTab);
+        Intent courseIntent = CourseActivity.Companion.createIntent(context, course, courseViewSource, false, true, courseScreenTab);
         taskStackBuilder.addParentStack(MainFeedActivity.class);
         taskStackBuilder.addNextIntent(mainIntent);
         taskStackBuilder.addNextIntent(courseIntent);
