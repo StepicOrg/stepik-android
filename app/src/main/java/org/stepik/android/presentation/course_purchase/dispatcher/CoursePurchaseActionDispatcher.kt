@@ -51,16 +51,6 @@ constructor(
     }
     override fun handleAction(action: CoursePurchaseFeature.Action) {
         when (action) {
-//            is CoursePurchaseFeature.Action.AddToWishlist -> {
-//                compositeDisposable += wishlistInteractor
-//                    .updateWishlistWithOperation(action.wishlistOperationData)
-//                    .subscribeOn(backgroundScheduler)
-//                    .observeOn(mainScheduler)
-//                    .subscribeBy(
-//                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess) },
-//                        onError = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddFailure) }
-//                    )
-//            }
             is CoursePurchaseFeature.Action.CheckPromoCode -> {
                 compositeDisposable += coursePurchaseInteractor
                     .checkPromoCodeValidity(action.courseId, action.promoCodeName)
