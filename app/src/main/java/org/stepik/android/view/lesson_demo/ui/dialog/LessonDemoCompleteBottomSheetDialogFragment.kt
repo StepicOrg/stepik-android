@@ -82,7 +82,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
             .build()
             .inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course))
+        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -108,7 +108,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
                 )
             )
         }
-        tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course, forceUpdate = true)) }
+        tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(forceUpdate = true)) }
     }
 
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {

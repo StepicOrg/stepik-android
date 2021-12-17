@@ -14,7 +14,7 @@ interface LessonDemoFeature {
     )
 
     sealed class Message {
-        data class InitMessage(val course: Course, val forceUpdate: Boolean = false) : Message()
+        data class InitMessage(val forceUpdate: Boolean = false) : Message()
         data class FetchLessonDemoDataSuccess(val deeplinkPromoCode: DeeplinkPromoCode, val coursePurchaseDataResult: CoursePurchaseDataResult) : Message()
         object FetchLessonDemoDataFailure : Message()
 

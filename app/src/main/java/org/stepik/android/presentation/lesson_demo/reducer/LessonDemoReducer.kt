@@ -21,13 +21,13 @@ constructor(
                 if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Idle ||
                     (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Error && message.forceUpdate)
                 ) {
-                    val wishlistOperationState = if (message.course.isInWishlist) {
+                    val wishlistOperationState = if (state.course.isInWishlist) {
                         WishlistOperationFeature.State.Wishlisted
                     } else {
                         WishlistOperationFeature.State.Idle
                     }
                     state.copy(lessonDemoState = LessonDemoFeature.LessonDemoState.Loading, wishlistOperationState = wishlistOperationState) to
-                        setOf(Action.FetchLessonDemoData(message.course))
+                        setOf(Action.FetchLessonDemoData(state.course))
                 } else {
                     null
                 }
