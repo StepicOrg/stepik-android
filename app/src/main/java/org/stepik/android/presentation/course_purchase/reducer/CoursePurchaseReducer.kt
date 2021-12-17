@@ -336,37 +336,5 @@ constructor(
                     null
                 }
             }
-//            is Message.WishlistAddMessage -> {
-//                if (state is State.Content) {
-//                    val wishlistOperationData = WishlistOperationData(state.coursePurchaseData.course.id, WishlistAction.ADD)
-//                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding) to
-//                        setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistOperationData))
-//                } else {
-//                    null
-//                }
-//            }
-//            is Message.WishlistAddSuccess -> {
-//                if (state is State.Content) {
-//                    val updatedCoursePurchaseData = state.coursePurchaseData.copy(isWishlisted = true)
-//                    state.copy(coursePurchaseData = updatedCoursePurchaseData, wishlistState = CoursePurchaseFeature.WishlistState.Wishlisted) to
-//                        setOf(
-//                            Action.LogAnalyticEvent(
-//                                CourseWishlistAddedEvent(
-//                                    state.coursePurchaseData.course,
-//                                    CourseViewSource.CoursePurchase
-//                                )
-//                            )
-//                        )
-//                } else {
-//                    null
-//                }
-//            }
-//            is Message.WishlistAddFailure -> {
-//                if (state is State.Content) {
-//                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Idle) to emptySet()
-//                } else {
-//                    null
-//                }
-//            }
         } ?: state to emptySet()
 }
