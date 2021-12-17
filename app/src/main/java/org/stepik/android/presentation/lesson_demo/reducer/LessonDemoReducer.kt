@@ -18,13 +18,15 @@ constructor(
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
-                if (state is State.Idle || (state is State.Content && state.lessonDemoState is LessonDemoFeature.LessonDemoState.Error && message.forceUpdate)) {
+                if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Idle ||
+                    (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Error && message.forceUpdate)
+                ) {
                     val wishlistOperationState = if (message.course.isInWishlist) {
                         WishlistOperationFeature.State.Wishlisted
                     } else {
                         WishlistOperationFeature.State.Idle
                     }
-                    State.Content(message.course, LessonDemoFeature.LessonDemoState.Loading, wishlistOperationState) to
+                    state.copy(lessonDemoState = LessonDemoFeature.LessonDemoState.Loading, wishlistOperationState = wishlistOperationState) to
                         setOf(Action.FetchLessonDemoData(message.course))
                 } else {
                     null
@@ -32,7 +34,7 @@ constructor(
             }
 
             is Message.FetchLessonDemoDataSuccess -> {
-                if (state is State.Content && state.lessonDemoState is LessonDemoFeature.LessonDemoState.Loading) {
+                if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Loading) {
                     val newLessonDemoState =
                         if (message.coursePurchaseDataResult is CoursePurchaseDataResult.NotAvailable) {
                             LessonDemoFeature.LessonDemoState.Unavailable
@@ -45,23 +47,22 @@ constructor(
                 }
             }
             is Message.FetchLessonDemoDataFailure -> {
-                if (state is State.Content && state.lessonDemoState is LessonDemoFeature.LessonDemoState.Loading) {
+                if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Loading) {
                     state.copy(lessonDemoState = LessonDemoFeature.LessonDemoState.Error) to emptySet()
                 } else {
                     null
                 }
             }
             is Message.BuyActionMessage -> {
-                if (state is State.Content && state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content) {
+                if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content) {
                     state to setOf(Action.ViewAction.BuyAction(state.lessonDemoState.deeplinkPromoCode, state.lessonDemoState.coursePurchaseData))
                 } else {
                     null
                 }
             }
             is Message.WishlistMessage -> {
-                if (state is State.Content &&
-                    (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Unavailable ||
-                        state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content)
+                if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Unavailable ||
+                    state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content
                 ) {
                     val (wishlistOperationState, wishlistOperationActions) = wishlistOperationReducer.reduce(state.wishlistOperationState, message.wishlistMessage)
                     val newState = if (message.wishlistMessage is WishlistOperationFeature.Message.WishlistAddSuccess) {

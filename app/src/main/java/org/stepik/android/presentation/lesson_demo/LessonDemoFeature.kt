@@ -7,14 +7,11 @@ import org.stepik.android.presentation.course_purchase.model.CoursePurchaseDataR
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 
 interface LessonDemoFeature {
-    sealed class State {
-        object Idle : State()
-        data class Content(
-            val course: Course,
-            val lessonDemoState: LessonDemoState,
-            val wishlistOperationState: WishlistOperationFeature.State
-        ) : State()
-    }
+    data class State(
+        val course: Course,
+        val lessonDemoState: LessonDemoState,
+        val wishlistOperationState: WishlistOperationFeature.State
+    )
 
     sealed class Message {
         data class InitMessage(val course: Course, val forceUpdate: Boolean = false) : Message()

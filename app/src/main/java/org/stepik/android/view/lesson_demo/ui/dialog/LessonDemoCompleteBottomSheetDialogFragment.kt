@@ -78,6 +78,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
         App.componentManager()
             .courseComponent(course.id)
             .lessonDemoPresentationComponentBuilder()
+            .course(course)
             .build()
             .inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
@@ -138,17 +139,14 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     }
 
     override fun render(state: LessonDemoFeature.State) {
-        if (state is LessonDemoFeature.State.Content) {
-            viewStateDelegate.switchState(state.lessonDemoState)
-            if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content) {
-                if (state.lessonDemoState.coursePurchaseData != null) {
-                    setupIAP(state.lessonDemoState.coursePurchaseData)
-                } else {
-                    setupWeb(state.lessonDemoState.deeplinkPromoCode)
-                }
+        viewStateDelegate.switchState(state.lessonDemoState)
+        wishlistViewDelegate.render(state.wishlistOperationState, mustEnable = true)
+        if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content) {
+            if (state.lessonDemoState.coursePurchaseData != null) {
+                setupIAP(state.lessonDemoState.coursePurchaseData)
+            } else {
+                setupWeb(state.lessonDemoState.deeplinkPromoCode)
             }
-
-            wishlistViewDelegate.render(state.wishlistOperationState, mustEnable = true)
         }
     }
 
