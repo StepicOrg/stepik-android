@@ -4,8 +4,7 @@ import android.graphics.drawable.AnimationDrawable
 import androidx.core.view.isVisible
 import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
-import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
-import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.WishlistState
+import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
 class WishlistViewDelegate(
@@ -21,30 +20,27 @@ class WishlistViewDelegate(
         wishlistButton.isVisible = isVisible
     }
 
-    fun render(state: CoursePurchaseFeature.State.Content) {
+    fun render(state: WishlistOperationFeature.State, mustEnable: Boolean) {
         val messageResId =
-            when (state.wishlistState) {
-                WishlistState.Idle ->
+            when (state) {
+                WishlistOperationFeature.State.Idle ->
                     R.string.course_purchase_wishlist_add
-                WishlistState.Adding ->
+                WishlistOperationFeature.State.Adding ->
                     R.string.course_purchase_wishlist_adding
-                WishlistState.Wishlisted ->
+                WishlistOperationFeature.State.Wishlisted ->
                     R.string.course_purchase_wishlist_added
             }
 
-        val isButtonEnabled = state.wishlistState is WishlistState.Idle &&
-            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
-                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
-                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess)
+        val isButtonEnabled = state is WishlistOperationFeature.State.Idle && mustEnable
 
         wishlistButton.isChecked = isButtonEnabled
         wishlistButton.isEnabled = isButtonEnabled
         wishlistButton.setText(messageResId)
-        resolveButtonDrawable(state.wishlistState)
+        resolveButtonDrawable(state)
     }
 
-    private fun resolveButtonDrawable(state: WishlistState) {
-        if (state is WishlistState.Adding) {
+    private fun resolveButtonDrawable(state: WishlistOperationFeature.State) {
+        if (state is WishlistOperationFeature.State.Adding) {
             val evaluationDrawable = AnimationDrawable()
             evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
             evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)

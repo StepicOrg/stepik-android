@@ -15,7 +15,6 @@ import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.interactor.CoursePurchaseInteractor
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
-import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -30,7 +29,6 @@ constructor(
 
     private val analytic: Analytic,
     private val feedbackInteractor: FeedbackInteractor,
-    private val wishlistInteractor: WishlistInteractor,
     private val coursePurchaseInteractor: CoursePurchaseInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -53,16 +51,6 @@ constructor(
     }
     override fun handleAction(action: CoursePurchaseFeature.Action) {
         when (action) {
-            is CoursePurchaseFeature.Action.AddToWishlist -> {
-                compositeDisposable += wishlistInteractor
-                    .updateWishlistWithOperation(action.wishlistOperationData)
-                    .subscribeOn(backgroundScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddSuccess) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.WishlistAddFailure) }
-                    )
-            }
             is CoursePurchaseFeature.Action.CheckPromoCode -> {
                 compositeDisposable += coursePurchaseInteractor
                     .checkPromoCodeValidity(action.courseId, action.promoCodeName)

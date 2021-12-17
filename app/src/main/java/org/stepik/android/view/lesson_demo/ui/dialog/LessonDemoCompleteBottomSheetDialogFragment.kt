@@ -26,9 +26,11 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature
 import org.stepik.android.presentation.lesson_demo.LessonDemoViewModel
+import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course.routing.CourseScreenTab
+import org.stepik.android.view.course_purchase.delegate.WishlistViewDelegate
 import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
 import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
@@ -68,17 +70,19 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     private val lessonDemoViewModel: LessonDemoViewModel by reduxViewModel(this) { viewModelFactory }
-    private val viewStateDelegate = ViewStateDelegate<LessonDemoFeature.State>()
+    private val viewStateDelegate = ViewStateDelegate<LessonDemoFeature.LessonDemoState>()
+    private lateinit var wishlistViewDelegate: WishlistViewDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.componentManager()
             .courseComponent(course.id)
             .lessonDemoPresentationComponentBuilder()
+            .course(course)
             .build()
             .inject(this)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
-        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course))
+        lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -92,11 +96,19 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewStateDelegate()
+        wishlistViewDelegate = WishlistViewDelegate(demoWishlistAction)
         demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
         demoCompleteAction.setOnClickListener {
             lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.BuyActionMessage)
         }
-        tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(course, forceUpdate = true)) }
+        demoWishlistAction.setOnClickListener {
+            lessonDemoViewModel.onNewMessage(
+                LessonDemoFeature.Message.WishlistMessage(
+                    WishlistOperationFeature.Message.WishlistAddMessage(course, CourseViewSource.LessonDemoDialog)
+                )
+            )
+        }
+        tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(forceUpdate = true)) }
     }
 
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
@@ -127,12 +139,13 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     }
 
     override fun render(state: LessonDemoFeature.State) {
-        viewStateDelegate.switchState(state)
-        if (state is LessonDemoFeature.State.Content) {
-            if (state.coursePurchaseData != null) {
-                setupIAP(state.coursePurchaseData)
+        viewStateDelegate.switchState(state.lessonDemoState)
+        wishlistViewDelegate.render(state.wishlistOperationState, mustEnable = true)
+        if (state.lessonDemoState is LessonDemoFeature.LessonDemoState.Content) {
+            if (state.lessonDemoState.coursePurchaseData != null) {
+                setupIAP(state.lessonDemoState.coursePurchaseData)
             } else {
-                setupWeb(state.deeplinkPromoCode)
+                setupWeb(state.lessonDemoState.deeplinkPromoCode)
             }
         }
     }
@@ -143,11 +156,11 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     }
 
     private fun initViewStateDelegate() {
-        viewStateDelegate.addState<LessonDemoFeature.State.Idle>()
-        viewStateDelegate.addState<LessonDemoFeature.State.Loading>(demoCompleteProgressbar)
-        viewStateDelegate.addState<LessonDemoFeature.State.Error>(demoCompleteNetworkError)
-        viewStateDelegate.addState<LessonDemoFeature.State.Unavailable>(demoCompleteContent, demoCompleteTitle, demoPurchaseUnavailable)
-        viewStateDelegate.addState<LessonDemoFeature.State.Content>(demoCompleteContent, demoCompleteTitle, demoCompleteInfo, demoCompleteDivider, demoCompleteAction)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Idle>()
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Loading>(demoCompleteProgressbar)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Error>(demoCompleteNetworkError)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Unavailable>(demoCompleteContent, demoCompleteTitle, demoPurchaseUnavailable, demoWishlistAction)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Content>(demoCompleteContent, demoCompleteTitle, demoCompleteInfo, demoCompleteDivider, demoCompleteAction, demoWishlistAction)
     }
 
     private fun setupWeb(deeplinkPromoCode: DeeplinkPromoCode) {
