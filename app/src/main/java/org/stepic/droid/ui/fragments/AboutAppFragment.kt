@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,6 +36,12 @@ class AboutAppFragment : FragmentBase() {
             analytic.reportEvent(Analytic.Interaction.CLICK_TERMS_OF_SERVICE)
             screenManager.openTermsOfServiceWeb(activity)
         }
+        val versionName = requireContext()
+            .packageManager
+            .getPackageInfo(requireContext().packageName, PackageManager.GET_META_DATA)
+            .versionName
+
+        appVersionName.text = getString(R.string.settings_app_version, versionName)
         initSocialRecycler()
     }
 

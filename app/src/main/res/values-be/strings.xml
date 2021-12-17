@@ -1067,4 +1067,10 @@
     <string name="certificate_name_change_failure">Не ўдалося змяніць імя атрымальніка сертыфіката.</string>
     <string name="certificate_name_change_recipient_name">Імя атрымальніка</string>
     <string name="certificate_name_change_empty_field_error">Поле не можа быць пустым</string>
+
+    <!-- Settings -->
+    <string name="settings_contact_support">Напісаць у падтрымку</string>
+    <string name="settings_help_center">Даведачны цэнтр</string>
+    <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
+    <string name="settings_app_version">Версія: %s</string>
 </resources>
