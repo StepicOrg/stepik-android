@@ -22,13 +22,13 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchLessonDemoDataSuccess -> {
                 if (state is State.Loading) {
-                    val state =
+                    val newState =
                         if (message.coursePurchaseDataResult is CoursePurchaseDataResult.NotAvailable) {
                             State.Unavailable
                         } else {
                             State.Content(message.deeplinkPromoCode, (message.coursePurchaseDataResult as? CoursePurchaseDataResult.Result)?.coursePurchaseData)
                         }
-                    state to emptySet()
+                    newState to emptySet()
                 } else {
                     null
                 }

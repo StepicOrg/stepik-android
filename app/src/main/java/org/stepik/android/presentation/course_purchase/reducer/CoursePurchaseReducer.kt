@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_purchase.reducer
 
-import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.analytic.BuyCourseIAPFlowFailureAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.BuyCourseIAPFlowStartAnalyticEvent
@@ -13,21 +12,22 @@ import org.stepik.android.domain.course_purchase.analytic.BuyCourseVerificationS
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseFailureAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchasePressedAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseSuccessAnalyticEvent
-import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
-import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.State
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Message
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Action
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
-import org.stepik.android.presentation.wishlist.model.WishlistAction
+import org.stepik.android.presentation.wishlist.WishlistOperationFeature
+import org.stepik.android.presentation.wishlist.reducer.WishlistOperationReducer
 import ru.nobird.android.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CoursePurchaseReducer
 @Inject
-constructor() : StateReducer<State, Message, Action> {
+constructor(
+    private val wishlistOperationReducer: WishlistOperationReducer
+) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
         when (message) {
             is Message.InitMessage -> {
@@ -38,9 +38,9 @@ constructor() : StateReducer<State, Message, Action> {
                         CoursePurchaseFeature.PromoCodeState.Idle
                     }
                     val wishlistState = if (message.coursePurchaseData.isWishlisted) {
-                        CoursePurchaseFeature.WishlistState.Wishlisted
+                        WishlistOperationFeature.State.Wishlisted
                     } else {
-                        CoursePurchaseFeature.WishlistState.Idle
+                        WishlistOperationFeature.State.Idle
                     }
                     State.Content(message.coursePurchaseData, message.coursePurchaseSource, CoursePurchaseFeature.PaymentState.Idle, promoCodeState, wishlistState) to emptySet()
                 } else {
@@ -261,38 +261,6 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
-            is Message.WishlistAddMessage -> {
-                if (state is State.Content) {
-                    val wishlistOperationData = WishlistOperationData(state.coursePurchaseData.course.id, WishlistAction.ADD)
-                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding) to
-                        setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistOperationData))
-                } else {
-                    null
-                }
-            }
-            is Message.WishlistAddSuccess -> {
-                if (state is State.Content) {
-                    val updatedCoursePurchaseData = state.coursePurchaseData.copy(isWishlisted = true)
-                    state.copy(coursePurchaseData = updatedCoursePurchaseData, wishlistState = CoursePurchaseFeature.WishlistState.Wishlisted) to
-                        setOf(
-                            Action.LogAnalyticEvent(
-                                CourseWishlistAddedEvent(
-                                    state.coursePurchaseData.course,
-                                    CourseViewSource.CoursePurchase
-                                )
-                            )
-                        )
-                } else {
-                    null
-                }
-            }
-            is Message.WishlistAddFailure -> {
-                if (state is State.Content) {
-                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Idle) to emptySet()
-                } else {
-                    null
-                }
-            }
             is Message.HavePromoCodeMessage -> {
                 if (state is State.Content) {
                     state.copy(promoCodeState = CoursePurchaseFeature.PromoCodeState.Editing) to
@@ -352,5 +320,53 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.WishlistMessage -> {
+                if (state is State.Content) {
+                    val (wishlistState, wishlistAction) = wishlistOperationReducer.reduce(state.wishlistState, message.wishlistMessage)
+                    val newState = if (message.wishlistMessage is WishlistOperationFeature.Message.WishlistAddSuccess) {
+                        state.copy(
+                            coursePurchaseData = state.coursePurchaseData.copy(isWishlisted = true),
+                            wishlistState = wishlistState
+                        )
+                    } else {
+                        state.copy(wishlistState = wishlistState)
+                    }
+                    newState to wishlistAction.map(Action::WishlistAction).toSet()
+                } else {
+                    null
+                }
+            }
+//            is Message.WishlistAddMessage -> {
+//                if (state is State.Content) {
+//                    val wishlistOperationData = WishlistOperationData(state.coursePurchaseData.course.id, WishlistAction.ADD)
+//                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Adding) to
+//                        setOf(Action.AddToWishlist(state.coursePurchaseData.course, wishlistOperationData))
+//                } else {
+//                    null
+//                }
+//            }
+//            is Message.WishlistAddSuccess -> {
+//                if (state is State.Content) {
+//                    val updatedCoursePurchaseData = state.coursePurchaseData.copy(isWishlisted = true)
+//                    state.copy(coursePurchaseData = updatedCoursePurchaseData, wishlistState = CoursePurchaseFeature.WishlistState.Wishlisted) to
+//                        setOf(
+//                            Action.LogAnalyticEvent(
+//                                CourseWishlistAddedEvent(
+//                                    state.coursePurchaseData.course,
+//                                    CourseViewSource.CoursePurchase
+//                                )
+//                            )
+//                        )
+//                } else {
+//                    null
+//                }
+//            }
+//            is Message.WishlistAddFailure -> {
+//                if (state is State.Content) {
+//                    state.copy(wishlistState = CoursePurchaseFeature.WishlistState.Idle) to emptySet()
+//                } else {
+//                    null
+//                }
+//            }
         } ?: state to emptySet()
 }
