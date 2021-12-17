@@ -146,8 +146,8 @@ class LessonDemoCompleteBottomSheetDialogFragment :
         viewStateDelegate.addState<LessonDemoFeature.State.Idle>()
         viewStateDelegate.addState<LessonDemoFeature.State.Loading>(demoCompleteProgressbar)
         viewStateDelegate.addState<LessonDemoFeature.State.Error>(demoCompleteNetworkError)
-        viewStateDelegate.addState<LessonDemoFeature.State.Unavailable>(demoCompleteContent, demoCompleteTitle, demoPurchaseUnavailable)
-        viewStateDelegate.addState<LessonDemoFeature.State.Content>(demoCompleteContent, demoCompleteTitle, demoCompleteInfo, demoCompleteDivider, demoCompleteAction)
+        viewStateDelegate.addState<LessonDemoFeature.State.Unavailable>(demoCompleteContent, demoCompleteTitle, demoPurchaseUnavailable, demoWishlistAction)
+        viewStateDelegate.addState<LessonDemoFeature.State.Content>(demoCompleteContent, demoCompleteTitle, demoCompleteInfo, demoCompleteDivider, demoCompleteAction, demoWishlistAction)
     }
 
     private fun setupWeb(deeplinkPromoCode: DeeplinkPromoCode) {
