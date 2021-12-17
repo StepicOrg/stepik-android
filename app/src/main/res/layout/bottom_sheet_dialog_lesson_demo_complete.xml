@@ -160,7 +160,7 @@
 
             android:layout_marginBottom="16dp"
             android:theme="@style/ThemeOverlay.Violet"
-            android:visibility="visible"
+            android:visibility="gone"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -168,7 +168,6 @@
             app:strokeWidth="1dp"
             app:iconPadding="-18dp"
             android:checkable="true"
-            android:text="Добавить в Список желаний"
             tools:text="Добавить в Список желаний" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

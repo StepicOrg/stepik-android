@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.wishlist.interactor.WishlistInteractor
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class WishlistOperationActionDispatcher
@@ -34,6 +35,7 @@ constructor(
                     )
             }
             is WishlistOperationFeature.Action.LogAnalyticEvent -> {
+                Timber.d("APPS Event: ${action.analyticEvent.params}")
                 analytic.report(action.analyticEvent)
             }
         }
