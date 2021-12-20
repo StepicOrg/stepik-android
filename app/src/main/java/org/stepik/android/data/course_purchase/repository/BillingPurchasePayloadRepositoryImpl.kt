@@ -12,9 +12,12 @@ class BillingPurchasePayloadRepositoryImpl
 constructor(
     private val billingPurchasePayloadCacheDataSource: BillingPurchasePayloadCacheDataSource
 ) : BillingPurchasePayloadRepository {
-    override fun getPurchaseOrderPayload(orderId: String): Single<BillingPurchasePayload> =
+    override fun getBillingPurchasePayload(orderId: String): Single<BillingPurchasePayload> =
         billingPurchasePayloadCacheDataSource.getPurchaseOrderPayload(orderId)
 
-    override fun savePurchaseOrderPayload(billingPurchasePayload: BillingPurchasePayload): Completable =
+    override fun saveBillingPurchasePayload(billingPurchasePayload: BillingPurchasePayload): Completable =
         billingPurchasePayloadCacheDataSource.savePurchaseOrderPayload(billingPurchasePayload)
+
+    override fun deleteBillingPurchasePayload(orderId: String): Completable =
+        billingPurchasePayloadCacheDataSource.deletePurchaseOrderPayload(orderId)
 }

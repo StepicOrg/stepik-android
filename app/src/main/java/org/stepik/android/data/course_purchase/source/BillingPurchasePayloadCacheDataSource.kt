@@ -7,4 +7,5 @@ import org.stepik.android.domain.course_purchase.model.BillingPurchasePayload
 interface BillingPurchasePayloadCacheDataSource {
     fun getPurchaseOrderPayload(orderId: String): Single<BillingPurchasePayload>
     fun savePurchaseOrderPayload(billingPurchasePayload: BillingPurchasePayload): Completable
+    fun deletePurchaseOrderPayload(orderId: String): Completable
 }

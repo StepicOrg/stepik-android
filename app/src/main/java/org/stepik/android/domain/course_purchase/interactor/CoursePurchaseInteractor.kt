@@ -4,9 +4,8 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Maybes.zip
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.subjects.PublishSubject
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
@@ -18,7 +17,9 @@ import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerific
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.course_purchase.model.BillingPurchasePayload
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
+import org.stepik.android.domain.course_purchase.repository.BillingPurchasePayloadRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
 import org.stepik.android.domain.mobile_tiers.repository.MobileTiersRepository
@@ -27,7 +28,6 @@ import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
-import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 class CoursePurchaseInteractor
@@ -42,6 +42,7 @@ constructor(
     private val courseRepository: CourseRepository,
     private val lessonRepository: LessonRepository,
     private val profileRepository: ProfileRepository,
+    private val billingPurchasePayloadRepository: BillingPurchasePayloadRepository,
 
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>
@@ -71,6 +72,17 @@ constructor(
                 }
             }
 
+    fun saveBillingPurchasePayload(purchase: Purchase, promoCodeName: String?): Completable =
+        billingPurchasePayloadRepository
+            .saveBillingPurchasePayload(
+                BillingPurchasePayload(
+                    orderId = purchase.orderId,
+                    obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId!!,
+                    obfuscatedProfileId = purchase.accountIdentifiers?.obfuscatedProfileId!!,
+                    promoCode = promoCodeName
+                )
+            )
+
     fun completePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
         coursePaymentsRepository
             .createCoursePayment(courseId, sku, purchase, promoCodeName)
@@ -82,27 +94,37 @@ constructor(
                 }
             }
             .andThen(billingRepository.consumePurchase(purchase))
+            .andThen(billingPurchasePayloadRepository.deleteBillingPurchasePayload(purchase.orderId))
             .andThen(updateCourseAfterEnrollment(courseId))
 
-    fun fetchSkuDetailsAndPurchase(skuId: String): Maybe<Pair<SkuDetails, Purchase>> =
-        zip(
-            billingRepository
-                .getInventory(BillingClient.SkuType.INAPP, skuId),
-            billingRepository
-                .getAllPurchases(BillingClient.SkuType.INAPP, listOf(skuId))
-                .maybeFirst()
-        )
+    fun restorePurchase(courseId: Long): Completable =
+        Singles.zip(
+            getCurrentProfileId(),
+            billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
+        ).filter { (profileId, purchases) ->
+            val purchase = purchases.firstOrNull()
+            val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
+            purchase?.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
+                purchase?.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+        }
+        .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
+        .flatMapCompletable { (_, purchases) ->
+            completePurchaseRestore(courseId, purchases.first())
+        }
 
-    fun restorePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase): Completable =
-        getCurrentProfileId()
-            .filter { profileId ->
-                val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
-                purchase.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId && purchase.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+    private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =
+        Singles.zip(
+            billingPurchasePayloadRepository.getBillingPurchasePayload(purchase.orderId),
+            billingRepository.getInventory(BillingClient.SkuType.INAPP, purchase.skus.first()).toSingle()
+        ).flatMapCompletable { (billingPurchasePayload, skuDetails) ->
+            if (billingPurchasePayload.obfuscatedAccountId == purchase.accountIdentifiers?.obfuscatedAccountId &&
+                billingPurchasePayload.obfuscatedProfileId == purchase.accountIdentifiers?.obfuscatedProfileId
+            ) {
+                completePurchase(courseId, skuDetails, purchase, billingPurchasePayload.promoCode)
+            } else {
+                Completable.error(NoPurchasesToRestoreException())
             }
-            .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
-            .flatMapCompletable {
-                completePurchase(courseId, sku, purchase)
-            }
+        }
 
     private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
         getCurrentProfileId()

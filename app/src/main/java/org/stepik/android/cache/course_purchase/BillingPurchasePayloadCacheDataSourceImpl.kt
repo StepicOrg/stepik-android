@@ -17,4 +17,7 @@ constructor(
 
     override fun savePurchaseOrderPayload(billingPurchasePayload: BillingPurchasePayload): Completable =
         billingPurchasePayloadDao.saveBillingPurchasePayload(billingPurchasePayload)
+
+    override fun deletePurchaseOrderPayload(orderId: String): Completable =
+        billingPurchasePayloadDao.deleteBillingPurchasePayload(orderId)
 }

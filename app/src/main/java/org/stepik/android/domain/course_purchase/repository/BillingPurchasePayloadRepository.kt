@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.stepik.android.domain.course_purchase.model.BillingPurchasePayload
 
 interface BillingPurchasePayloadRepository {
-    fun getPurchaseOrderPayload(orderId: String): Single<BillingPurchasePayload>
-    fun savePurchaseOrderPayload(billingPurchasePayload: BillingPurchasePayload): Completable
+    fun getBillingPurchasePayload(orderId: String): Single<BillingPurchasePayload>
+    fun saveBillingPurchasePayload(billingPurchasePayload: BillingPurchasePayload): Completable
+    fun deleteBillingPurchasePayload(orderId: String): Completable
 }

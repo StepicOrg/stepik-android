@@ -34,15 +34,18 @@ interface CoursePurchaseFeature {
         data class PurchaseFlowBillingSuccess(val purchase: Purchase) : Message()
         data class PurchaseFlowBillingFailure(val billingException: BillingException) : Message()
 
+        data class SaveBillingPurchasePayloadSuccess(val purchase: Purchase) : Message()
+        data class SaveBillingPurchasePayloadFailure(val throwable: Throwable) : Message()
+
         object ConsumePurchaseSuccess : Message()
         data class ConsumePurchaseFailure(val throwable: Throwable) : Message()
 
         data class LaunchRestorePurchaseFlow(val restoreCoursePurchaseSource: String) : Message()
-        data class LaunchRestorePurchaseSuccess(val skuDetails: SkuDetails, val purchase: Purchase) : Message()
-        data class LaunchRestorePurchaseFailure(val throwable: Throwable) : Message()
+//        data class LaunchRestorePurchaseSuccess(val skuDetails: SkuDetails, val purchase: Purchase) : Message()
+//        data class LaunchRestorePurchaseFailure(val throwable: Throwable) : Message()
 
         object RestorePurchaseSuccess : Message()
-        data class RestorePurchaseFailure(val skuDetails: SkuDetails, val purchase: Purchase, val throwable: Throwable) : Message()
+        data class RestorePurchaseFailure(val throwable: Throwable) : Message()
 
         object StartLearningMessage : Message()
 
@@ -74,10 +77,11 @@ interface CoursePurchaseFeature {
 
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
+        data class SaveBillingPurchasePayload(val purchase: Purchase, val promoCode: String?) : Action()
         data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase, val promoCode: String?) : Action()
 
-        data class RestorePurchaseWithSkuId(val skuId: String) : Action()
-        data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
+        data class RestorePurchase(val courseId: Long) : Action()
+//        data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
 
         data class GenerateSupportEmailData(val subject: String, val deviceInfo: String) : Action()
 
@@ -102,7 +106,8 @@ interface CoursePurchaseFeature {
         data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()
-        data class PaymentFailure(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
+        object PaymentFailure : PaymentState()
+//        data class PaymentFailure(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
     }
 
     sealed class PromoCodeState {
