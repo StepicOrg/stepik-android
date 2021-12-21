@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_about_app.*
+import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
@@ -36,12 +36,8 @@ class AboutAppFragment : FragmentBase() {
             analytic.reportEvent(Analytic.Interaction.CLICK_TERMS_OF_SERVICE)
             screenManager.openTermsOfServiceWeb(activity)
         }
-        val versionName = requireContext()
-            .packageManager
-            .getPackageInfo(requireContext().packageName, PackageManager.GET_META_DATA)
-            .versionName
 
-        appVersionName.text = getString(R.string.settings_app_version, versionName)
+        appVersionName.text = getString(R.string.settings_app_version, BuildConfig.VERSION_NAME)
         initSocialRecycler()
     }
 
