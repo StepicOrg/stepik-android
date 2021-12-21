@@ -20,10 +20,13 @@ import org.stepik.android.view.filter.ui.dialog.CoursesLangDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
+import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.presentation.settings.SettingsPresenter
 import org.stepik.android.presentation.settings.SettingsView
 import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.settings.ui.dialog.NightModeSettingDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -145,6 +148,19 @@ class SettingsFragment :
             screenManager.showDownloads(requireContext())
         }
 
+        contactSupportButton.setOnClickListener {
+            presenter.contactSupport(
+                getString(R.string.feedback_subject),
+                DeviceInfoUtil.getInfosAboutDevice(context, "\n")
+            )
+        }
+
+        helpCenterButton.setOnClickListener {
+            InAppWebViewDialogFragment
+                .newInstance(getString(R.string.settings_help_center), getString(R.string.settings_help_center_url))
+                .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+        }
+
         feedbackSettingsButton.setOnClickListener {
             analytic.reportEvent(Analytic.Screens.USER_OPEN_FEEDBACK)
             screenManager.openFeedbackActivity(requireActivity())
@@ -214,6 +230,10 @@ class SettingsFragment :
         } else {
             ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
+    }
+
+    override fun sendTextFeedback(supportEmailData: SupportEmailData) {
+        screenManager.openTextFeedBack(requireContext(), supportEmailData)
     }
 
     override fun onLogoutSuccess() {
