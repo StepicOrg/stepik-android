@@ -87,7 +87,6 @@ class CourseListItemAdapterDelegate(
             courseDescription.isVisible = !isEnrolled
             if (!isEnrolled) {
                 courseDescription.text = HtmlCompat.fromHtml(data.course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-                courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
             coursePrice.isVisible = !isEnrolled
 
