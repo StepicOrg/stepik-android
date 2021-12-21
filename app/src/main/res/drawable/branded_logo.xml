@@ -4,7 +4,7 @@
     </item>
     <item>
         <bitmap
-            android:src="@drawable/stepic_logo"
+            android:src="@drawable/stepik_logo_ny2022"
             android:tileMode="disabled"
             android:gravity="center"/>
     </item>
