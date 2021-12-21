@@ -11,7 +11,7 @@
     <item android:bottom="64dp">
         <bitmap
             android:gravity="bottom"
-            android:src="@drawable/study_home" />
+            android:src="@drawable/splash_edvent_season_2022" />
     </item>
 
 </layer-list>
