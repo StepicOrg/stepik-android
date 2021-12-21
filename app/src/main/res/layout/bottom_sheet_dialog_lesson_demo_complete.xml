@@ -123,7 +123,7 @@
             android:layout_margin="16dp"
 
             android:theme="@style/ThemeOverlay.Green"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/demoWishlistAction"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/demoCompleteDivider"
@@ -141,13 +141,34 @@
             android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintVertical_bias="1"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/demoWishlistAction"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/demoCompleteTitle"
             app:drawableStartCompat="@drawable/ic_course_info_about"
             android:text="@string/course_purchase_unavailable"
             tools:text="Данный курс недоступен для покупки в мобильном приложении"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/demoWishlistAction"
+            style="@style/Widget.AppTheme.Button.OutlinedButton"
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+
+            android:layout_marginBottom="16dp"
+            android:theme="@style/ThemeOverlay.Violet"
+            android:visibility="gone"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:strokeWidth="1dp"
+            app:iconPadding="-18dp"
+            android:checkable="true"
+            tools:text="Добавить в Список желаний" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
