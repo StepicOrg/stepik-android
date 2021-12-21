@@ -188,10 +188,9 @@ class VideoPlayerForegroundService : Service() {
                 }
             }
 
-        playerNotificationManager = PlayerNotificationManager.Builder(this, PLAYER_NOTIFICATION_ID, PLAYER_CHANNEL_ID)
+        playerNotificationManager = PlayerNotificationManager.Builder(this, PLAYER_NOTIFICATION_ID, PLAYER_CHANNEL_ID, videoPlayerMediaDescriptionAdapter)
             .setChannelNameResourceId(R.string.video_player_control_notification_channel_name)
             .setChannelDescriptionResourceId(R.string.video_player_control_notification_channel_description)
-            .setMediaDescriptionAdapter(videoPlayerMediaDescriptionAdapter)
             .setNotificationListener(notificationListener)
             .build()
 
