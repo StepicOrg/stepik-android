@@ -88,11 +88,23 @@
                 tools:text="Алгоритмический фундамент программиста" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/coursePurchasePaymentFeedback"
+                android:id="@+id/coursePurchasePaymentFailureFeedback"
                 style="@style/StepQuizFeedback.Wrong"
                 android:layout_margin="16dp"
                 android:visibility="gone"
                 app:drawableStartCompat="@drawable/ic_purchase_error"
+                app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/coursePurchaseCourseIcon" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/coursePurchasePaymentPendingFeedback"
+                style="@style/StepQuizFeedback.Info"
+                android:layout_margin="16dp"
+                android:visibility="gone"
+                android:text="@string/course_purchase_payment_pending_body"
+                app:drawableStartCompat="@drawable/ic_lesson_info"
                 app:layout_constraintBottom_toTopOf="@id/coursePurchaseDivider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

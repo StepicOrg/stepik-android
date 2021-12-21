@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_purchase.reducer
 
+import com.android.billingclient.api.Purchase
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.analytic.BuyCourseIAPFlowFailureAnalyticEvent
@@ -13,6 +14,7 @@ import org.stepik.android.domain.course_purchase.analytic.BuyCourseVerificationS
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseFailureAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchasePressedAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseSuccessAnalyticEvent
+import org.stepik.android.domain.course_purchase.model.PurchaseResult
 import org.stepik.android.domain.wishlist.analytic.CourseWishlistAddedEvent
 import org.stepik.android.domain.wishlist.model.WishlistOperationData
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
@@ -32,6 +34,15 @@ constructor() : StateReducer<State, Message, Action> {
         when (message) {
             is Message.InitMessage -> {
                 if (state is State.Idle) {
+                    val obfuscatedParams = when (message.purchaseResult) {
+                        is PurchaseResult.Empty ->
+                            message.purchaseResult.obfuscatedParams
+                        is PurchaseResult.Result ->
+                            message.purchaseResult.obfuscatedParams
+                        else ->
+                            throw IllegalArgumentException()
+                    }
+
                     val promoCodeState = if (message.coursePurchaseData.promoCodeSku != PromoCodeSku.EMPTY) {
                         CoursePurchaseFeature.PromoCodeState.Valid(message.coursePurchaseData.promoCodeSku.name, message.coursePurchaseData.promoCodeSku)
                     } else {
@@ -42,7 +53,7 @@ constructor() : StateReducer<State, Message, Action> {
                     } else {
                         CoursePurchaseFeature.WishlistState.Idle
                     }
-                    State.Content(message.coursePurchaseData, message.coursePurchaseSource, CoursePurchaseFeature.PaymentState.Idle, promoCodeState, wishlistState) to emptySet()
+                    State.Content(message.coursePurchaseData, message.coursePurchaseSource, obfuscatedParams, CoursePurchaseFeature.PaymentState.Idle, promoCodeState, wishlistState) to emptySet()
                 } else {
                     null
                 }
@@ -63,11 +74,9 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.LaunchPurchaseFlowSuccess -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingInitialCheck) {
                     state.copy(
-                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingBillingPayment(
-                            message.obfuscatedParams,
-                            message.skuDetails)
+                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingBillingPayment(message.skuDetails)
                     ) to setOf(
-                        Action.ViewAction.LaunchPurchaseFlowBilling(message.obfuscatedParams, message.skuDetails),
+                        Action.ViewAction.LaunchPurchaseFlowBilling(state.obfuscatedParams, message.skuDetails),
                         Action.LogAnalyticEvent(
                             BuyCourseIAPFlowStartAnalyticEvent(
                                 state.coursePurchaseData.course.id,
@@ -97,10 +106,25 @@ constructor() : StateReducer<State, Message, Action> {
                         null
                     }
 
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, message.purchase)) to
+                    val (obfuscatedAccountId, obfuscatedProfileId) = state.obfuscatedParams
+
+                    val purchase = message.purchases.find {
+                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
+                        it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+                    }
+
+                    requireNotNull(purchase)
+
+                    val newPaymentsState = if (purchase.purchaseState == Purchase.PurchaseState.PENDING) {
+                        CoursePurchaseFeature.PaymentState.PaymentPending
+                    } else {
+                        CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, purchase)
+                    }
+
+                    state.copy(paymentState = newPaymentsState) to
                         setOf(
                             Action.SaveBillingPurchasePayload(
-                                message.purchase,
+                                purchase,
                                 promoCode
                             ),
                             Action.LogAnalyticEvent(
@@ -204,7 +228,7 @@ constructor() : StateReducer<State, Message, Action> {
                 if (state is State.Content) {
                     state to setOf(
                         Action.ViewAction.ShowLoading,
-                        Action.RestorePurchase(state.coursePurchaseData.course.id),
+                        Action.RestorePurchase(state.coursePurchaseData.course.id, state.obfuscatedParams),
                         Action.LogAnalyticEvent(
                             RestoreCoursePurchasePressedAnalyticEvent(
                                 state.coursePurchaseData.course.id,
@@ -212,6 +236,13 @@ constructor() : StateReducer<State, Message, Action> {
                             )
                         )
                     )
+                } else {
+                    null
+                }
+            }
+            is Message.LaunchPendingFlow -> {
+                if (state is State.Content) {
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentPending) to setOf()
                 } else {
                     null
                 }

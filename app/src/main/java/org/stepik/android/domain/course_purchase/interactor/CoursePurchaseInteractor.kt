@@ -4,6 +4,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.subjects.PublishSubject
@@ -61,12 +62,12 @@ constructor(
                 }
             }
 
-    fun fetchPurchaseFlowData(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
+    fun fetchPurchaseFlowData(courseId: Long, skuId: String): Single<SkuDetails> =
         coursePaymentsRepository
             .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .flatMap { payments ->
                 if (payments.isEmpty()) {
-                    getSkuDetails(courseId, skuId)
+                    getSkuDetails(skuId)
                 } else {
                     Single.error(CourseAlreadyOwnedException(courseId))
                 }
@@ -96,25 +97,27 @@ constructor(
             .andThen(billingRepository.consumePurchase(purchase))
             .andThen(billingPurchasePayloadRepository.deleteBillingPurchasePayload(purchase.orderId))
             .andThen(updateCourseAfterEnrollment(courseId))
+    //        Completable.error(Exception()) // TODO Use this to break purchase, in order to test Restore
 
-    fun restorePurchase(courseId: Long): Completable =
-        Singles.zip(
-            getCurrentProfileId(),
-            billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
-        ) { profileId, purchases ->
-            val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
-            val purchase =
-                purchases.find {
-                    it.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
-                    it.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+    fun restorePurchase(courseId: Long, obfuscatedParams: CoursePurchaseObfuscatedParams): Completable =
+        billingRepository
+            .getAllPurchases(BillingClient.SkuType.INAPP)
+            .flatMapMaybe { purchases ->
+                val purchase =
+                    purchases.find {
+                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
+                        it.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+                    }
+                if (purchase == null) {
+                    Maybe.empty()
+                } else {
+                    Maybe.just(purchase)
                 }
-            purchase
-        }
-        .toMaybe()
-        .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
-        .flatMapCompletable { purchase ->
-            completePurchaseRestore(courseId, purchase)
-        }
+            }
+            .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
+            .flatMapCompletable { purchase ->
+                completePurchaseRestore(courseId, purchase)
+            }
 
     private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =
         Singles.zip(
@@ -130,14 +133,10 @@ constructor(
             }
         }
 
-    private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
-        getCurrentProfileId()
-            .flatMap { profileId ->
-                billingRepository
-                    .getInventory(BillingClient.SkuType.INAPP, skuId)
-                    .toSingle()
-                    .map { skuDetails -> createCoursePurchaseObfuscatedParams(profileId, courseId) to skuDetails }
-            }
+    private fun getSkuDetails(skuId: String): Single<SkuDetails> =
+        billingRepository
+            .getInventory(BillingClient.SkuType.INAPP, skuId)
+            .toSingle()
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
         userCoursesInteractor.addUserCourse(courseId)

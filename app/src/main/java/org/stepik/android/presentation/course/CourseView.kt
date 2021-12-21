@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course
 
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course_purchase.model.PurchaseResult
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.CourseContinueView
@@ -33,7 +34,7 @@ interface CourseView : CourseContinueView {
     fun showCourseShareTooltip()
 
     fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>? = null)
-    fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData)
+    fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData, purchaseResult: PurchaseResult)
 
     fun showTrialLesson(lessonId: Long, unitId: Long)
 }

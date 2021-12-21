@@ -22,6 +22,7 @@ import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
+import org.stepik.android.domain.course_purchase.model.PurchaseResult
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature
@@ -112,7 +113,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
 
             if (isInAppActive && action.coursePurchaseData != null) {
                 CoursePurchaseBottomSheetDialogFragment
-                    .newInstance(action.coursePurchaseData, CoursePurchaseSource.DEMO_LESSON_DIALOG_SOURCE, isNeedRestoreMessage = false)
+                    .newInstance(action.coursePurchaseData, CoursePurchaseSource.DEMO_LESSON_DIALOG_SOURCE, purchaseResult = PurchaseResult.Unavailable)
                     .showIfNotExists(childFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
             } else {
                 screenManager.showCoursePurchaseFromLessonDemoDialog(

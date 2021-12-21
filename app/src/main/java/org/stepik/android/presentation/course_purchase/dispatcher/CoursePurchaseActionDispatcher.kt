@@ -42,8 +42,8 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (billingResult, purchases) ->
-                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases?.firstOrNull() != null) {
-                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases.first()))
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases))
                     } else {
                         onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode, billingResult.debugMessage)))
                     }
@@ -84,7 +84,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { (obfuscatedParams, skuDetails) -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(obfuscatedParams, skuDetails)) },
+                        onSuccess = { skuDetails -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(skuDetails)) },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it)) }
                     )
             }
@@ -110,7 +110,7 @@ constructor(
             }
             is CoursePurchaseFeature.Action.RestorePurchase -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .restorePurchase(action.courseId)
+                    .restorePurchase(action.courseId, action.obfuscatedParams)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

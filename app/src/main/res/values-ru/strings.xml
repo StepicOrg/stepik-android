@@ -1185,12 +1185,15 @@
 
     <string name="course_purchase_payment_learn_action">Начать учиться</string>
     <string name="course_purchase_payment_restore_action">Восстановить покупку</string>
+    <string name="course_purchase_payment_ok_action">Хорошо</string>
     <string name="course_purchase_payment_processing">Обработка платежа</string>
     <string name="course_purchase_payment_success">Оплата прошла успешно</string>
+    <string name="course_purchase_payment_pending">Ожидание оплаты</string>
     <string name="course_purchase_payment_failure">Оплата прошла, покупка не завершена</string>
     <string name="course_purchase_payment_failure_body_part_1">"При обработке платежа произошла ошибка, попробуйте восстановить покупку и "</string>
     <string name="course_purchase_payment_failure_body_part_2">свяжитесь с поддержкой</string>
     <string name="course_purchase_payment_failure_body_part_3">, если ошибка не будет устранена. Повторного списания средств не произойдет.</string>
+    <string name="course_purchase_payment_pending_body">После завершения оплаты, вернитесь на экран курса для завершения процесса покупки.</string>
     <string name="course_purchase_unavailable">Данный курс недоступен для покупки в мобильном приложении</string>
 
     <!-- Certificate name change -->

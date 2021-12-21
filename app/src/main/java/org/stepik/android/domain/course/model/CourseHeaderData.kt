@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.model.PurchaseResult
 import org.stepik.android.model.Course
 
 @Parcelize
@@ -19,5 +20,6 @@ data class CourseHeaderData(
     val deeplinkPromoCode: DeeplinkPromoCode,
     val deeplinkPromoCodeSku: PromoCodeSku,
     val defaultPromoCode: DefaultPromoCode,
-    val isWishlistUpdating: Boolean
+    val isWishlistUpdating: Boolean,
+    val purchaseResult: PurchaseResult
 ) : Parcelable

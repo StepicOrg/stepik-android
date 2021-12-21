@@ -37,6 +37,7 @@ import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
+import org.stepik.android.domain.course_purchase.model.PurchaseResult
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
@@ -229,8 +230,8 @@ class CourseActivity :
                             .newInstance(courseId, course?.title.orEmpty())
                             .showIfNotExists(supportFragmentManager, CourseSearchDialogFragment.TAG)
                     },
-                    coursePurchaseFlowAction = { coursePurchaseData, isNeedRestoreMessage ->
-                        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage)
+                    coursePurchaseFlowAction = { coursePurchaseData, purchaseResult ->
+                        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, purchaseResult)
                     }
                 )
 
@@ -607,17 +608,17 @@ class CourseActivity :
         }
     }
 
-    override fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData) {
-        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, isNeedRestoreMessage = false)
+    override fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData, purchaseResult: PurchaseResult) {
+        showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData, purchaseResult)
     }
 
     override fun continueLearning() {
         coursePresenter.continueLearning()
     }
 
-    private fun showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData: CoursePurchaseData, isNeedRestoreMessage: Boolean) {
+    private fun showCoursePurchaseBottomSheetDialogFragment(coursePurchaseData: CoursePurchaseData, purchaseResult: PurchaseResult) {
         CoursePurchaseBottomSheetDialogFragment
-            .newInstance(coursePurchaseData, coursePurchaseSource = CoursePurchaseSource.COURSE_SCREEN_SOURCE, isNeedRestoreMessage = isNeedRestoreMessage)
+            .newInstance(coursePurchaseData, coursePurchaseSource = CoursePurchaseSource.COURSE_SCREEN_SOURCE, purchaseResult = purchaseResult)
             .showIfNotExists(supportFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
     }
 }

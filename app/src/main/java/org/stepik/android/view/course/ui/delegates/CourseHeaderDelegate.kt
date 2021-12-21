@@ -13,6 +13,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.strikeThrough
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import com.android.billingclient.api.Purchase
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -41,6 +42,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_continue.analytic.CourseContinuePressedEvent
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_purchase.model.PurchaseResult
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.resolver.CoursePurchaseDataResolver
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -80,7 +82,7 @@ constructor(
     isLocalSubmissionsEnabled: Boolean,
     @Assisted("showCourseSearchAction")
     private val showSearchCourseAction: () -> Unit,
-    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData, Boolean) -> Unit
+    @Assisted private val coursePurchaseFlowAction: (CoursePurchaseData, PurchaseResult) -> Unit
 ) {
     companion object {
         private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
@@ -355,7 +357,7 @@ constructor(
         analytic.report(BuyCoursePressedAnalyticBatchEvent(courseHeaderData.courseId))
         val coursePurchaseData = coursePurchaseDataResolver.resolveCoursePurchaseData(courseHeaderData)
         if (coursePurchaseData != null) {
-            coursePurchaseFlowAction(coursePurchaseData, false)
+            coursePurchaseFlowAction(coursePurchaseData, courseHeaderData.purchaseResult)
         } else {
             buyInWebAction()
         }
@@ -496,7 +498,8 @@ constructor(
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
-        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledMobileTier
+        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledMobileTier &&
+            (courseHeaderData?.purchaseResult as? PurchaseResult.Result)?.purchase?.purchaseState == Purchase.PurchaseState.PURCHASED
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -565,8 +568,9 @@ constructor(
             }
             R.id.restore_purchase -> {
                 val coursePurchaseData = courseHeaderData?.let(coursePurchaseDataResolver::resolveCoursePurchaseData)
-                if (coursePurchaseData != null) {
-                    coursePurchaseFlowAction(coursePurchaseData, true)
+                val purchaseResult = courseHeaderData?.purchaseResult
+                if (coursePurchaseData != null && purchaseResult != null) {
+                    coursePurchaseFlowAction(coursePurchaseData, purchaseResult)
                 }
                 true
             }

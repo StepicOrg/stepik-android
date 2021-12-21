@@ -34,6 +34,7 @@ class WishlistViewDelegate(
 
         val isButtonEnabled = state.wishlistState is WishlistState.Idle &&
             (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess)
 

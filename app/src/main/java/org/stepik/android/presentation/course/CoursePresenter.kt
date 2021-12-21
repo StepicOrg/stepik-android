@@ -1,5 +1,9 @@
 package org.stepik.android.presentation.course
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -43,6 +47,7 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
+import org.stepik.android.view.injection.billing.BillingSingleton
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.WishlistOperationBus
@@ -92,6 +97,9 @@ constructor(
     @WishlistOperationBus
     private val wishlistOperationObservable: Observable<WishlistOperationData>,
 
+    @BillingSingleton
+    private val purchaseListenerBehaviorRelay: PublishRelay<Pair<BillingResult, List<Purchase>?>>,
+
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -121,6 +129,7 @@ constructor(
         subscribeForLocalSubmissionsUpdates()
         subscribeForUserCoursesUpdates()
         subscribeForWishlistUpdates()
+        subscribeForPurchaseUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -218,7 +227,7 @@ constructor(
                 coursePurchaseDataResolver
                     .resolveCoursePurchaseData(headerData)
                     ?.let { coursePurchaseData ->
-                        view?.openCoursePurchaseInApp(coursePurchaseData)
+                        view?.openCoursePurchaseInApp(coursePurchaseData, headerData.purchaseResult)
                     }
             }
         }
@@ -513,6 +522,32 @@ constructor(
                             isWishlistUpdating = false
                         )
                     )
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun subscribeForPurchaseUpdates() {
+        compositeDisposable += purchaseListenerBehaviorRelay
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { (billingResult, purchases) ->
+                    val oldState = state.safeCast<CourseView.State.CourseLoaded>()
+                        ?: return@subscribeBy
+
+                    val updatedPurchaseResult =
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                            courseInteractor.resolvePurchaseResult(oldState.courseHeaderData.purchaseResult, purchases)
+                        } else {
+                            null
+                        }
+
+                    if (updatedPurchaseResult != null) {
+                        state = CourseView.State.CourseLoaded(
+                            courseHeaderData = oldState.courseHeaderData.copy(purchaseResult = updatedPurchaseResult)
+                        )
+                    }
                 },
                 onError = emptyOnErrorStub
             )
