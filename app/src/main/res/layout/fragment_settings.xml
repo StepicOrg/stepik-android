@@ -197,6 +197,20 @@
             android:text="@string/setting_section_other" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/contactSupportButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_contact_support" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/helpCenterButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_help_center" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/feedbackSettingsButton"
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
