@@ -45,7 +45,7 @@ ext.versions = [
         viewInjection        : '1.0.1',
         model                : '1.0.6',
         domainRx             : '1.0.1',
-        viewBindingDelegate  : '1.4.6',
+        viewBindingDelegate  : '1.4.7',
         multisnaprecycler    : '2.0.3',
 
         retrofit             : '2.6.1',
