@@ -175,6 +175,7 @@ dependencies {
     implementation libraries.domainRx
     implementation libraries.viewInjection
     implementation libraries.viewBindingDelegate
+    implementation libraries.multisnaprecycler
 
     implementation libraries.exoPlayerCore
     implementation libraries.exoPlayerUI
