@@ -3,10 +3,10 @@ package org.stepik.android.view.course_list.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_collection_horizontal_list.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -49,7 +49,7 @@ class CourseCollectionAuthorListAdapterDelegate(
             horizontalListRecycler.setHasFixedSize(true)
             horizontalListRecycler.adapter = adapter
 
-            val snapHelper = CoursesSnapHelper(rowCount)
+            val snapHelper = MultiSnapHelper(interval = 1)
             snapHelper.attachToRecyclerView(horizontalListRecycler)
         }
 

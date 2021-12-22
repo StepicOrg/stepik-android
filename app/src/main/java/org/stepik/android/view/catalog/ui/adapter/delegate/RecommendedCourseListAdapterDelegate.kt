@@ -3,6 +3,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.android.extensions.LayoutContainer
@@ -10,7 +11,6 @@ import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -94,7 +94,7 @@ constructor(
                 adapter = courseItemAdapter
                 layoutManager = tableLayoutManager
                 itemAnimator?.changeDuration = 0
-                val snapHelper = CoursesSnapHelper(rowCount)
+                val snapHelper = MultiSnapHelper(interval = 1)
                 snapHelper.attachToRecyclerView(this)
                 setRecycledViewPool(sharedViewPool)
             }
@@ -138,6 +138,9 @@ constructor(
 
     private fun initLoading(catalogBlockFullCourseList: CatalogBlockStateWrapper.RecommendedCourseList) {
         if (catalogBlockFullCourseList.catalogBlockItem.content !is CatalogBlockContent.RecommendedCourses) {
+            return
+        }
+        if (catalogBlockFullCourseList.state !is CourseListFeature.State.Idle) {
             return
         }
         onBlockSeen(catalogBlockFullCourseList.id)
