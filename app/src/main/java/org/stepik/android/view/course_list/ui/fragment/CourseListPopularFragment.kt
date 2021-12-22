@@ -7,13 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
@@ -83,7 +83,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
         with(courseListCoursesRecycler) {
             layoutManager = tableLayoutManager
             itemAnimator?.changeDuration = 0
-            val snapHelper = CoursesSnapHelper(rowCount)
+            val snapHelper = MultiSnapHelper(interval = 1)
             snapHelper.attachToRecyclerView(this)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {

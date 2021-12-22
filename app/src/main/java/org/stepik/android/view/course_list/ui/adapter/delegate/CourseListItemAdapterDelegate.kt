@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
