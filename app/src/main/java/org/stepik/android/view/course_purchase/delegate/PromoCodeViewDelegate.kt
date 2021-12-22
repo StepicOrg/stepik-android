@@ -15,6 +15,7 @@ import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature.Pro
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
+import ru.nobird.android.view.base.ui.extension.setTextIfChanged
 
 class PromoCodeViewDelegate(
     coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
@@ -42,6 +43,8 @@ class PromoCodeViewDelegate(
         (coursePromoCodeSubmitAction.background as RippleDrawable).findDrawableByLayerId(R.id.promo_code_layer_list) as LayerDrawable
     )
 
+    private var promoCodeState: PromoCodeState = PromoCodeState.Idle
+
     init {
         coursePromoCodeAction.setOnClickListener {
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.HavePromoCodeMessage)
@@ -50,10 +53,15 @@ class PromoCodeViewDelegate(
             val length = text?.length ?: 0
             coursePromoCodeDismiss.isVisible = length != 0
             coursePromoCodeSubmitAction.isVisible = length != 0
+
+            if ((promoCodeState as? PromoCodeState.Valid)?.text == text.toString()) {
+                return@doAfterTextChanged
+            }
+
+            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeEditingMessage)
         }
         coursePromoCodeDismiss.setOnClickListener {
             coursePromoCodeInput.setText("")
-            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeEditingMessage)
         }
         coursePromoCodeSubmitAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeCheckMessage(coursePromoCodeInput.text.toString())) }
     }
@@ -68,11 +76,12 @@ class PromoCodeViewDelegate(
     }
 
     fun render(state: PromoCodeState) {
+        this.promoCodeState = state
         coursePromoCodeAction.isVisible = state is PromoCodeState.Idle
         coursePromoCodeContainer.isVisible = state !is PromoCodeState.Idle
         coursePromoCodeDismiss.isEnabled = state !is PromoCodeState.Checking
         coursePromoCodeSubmitAction.isEnabled = state is PromoCodeState.Editing
-        coursePromoCodeInput.isEnabled = state is PromoCodeState.Editing
+        coursePromoCodeInput.isEnabled = state !is PromoCodeState.Checking
 
         coursePurchasePromoCodeResultMessage.isVisible = state is PromoCodeState.Checking || state is PromoCodeState.Valid || state is PromoCodeState.Invalid
 
@@ -101,10 +110,11 @@ class PromoCodeViewDelegate(
 
     private fun setEditTextFromState(state: PromoCodeState) {
         when (state) {
-            is PromoCodeState.Checking ->
-                coursePromoCodeInput.setText(state.text)
+            is PromoCodeState.Checking -> {
+                coursePromoCodeInput.setTextIfChanged(state.text)
+            }
             is PromoCodeState.Valid ->
-                coursePromoCodeInput.setText(state.text)
+                coursePromoCodeInput.setTextIfChanged(state.text)
             else ->
                 return
         }
