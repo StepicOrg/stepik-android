@@ -4,6 +4,7 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.subjects.PublishSubject
@@ -101,15 +102,22 @@ constructor(
         Singles.zip(
             getCurrentProfileId(),
             billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
-        ).filter { (profileId, purchases) ->
-            val purchase = purchases.firstOrNull()
+        ).flatMapMaybe { (profileId, purchases) ->
             val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
-            purchase?.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
-                purchase?.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+            val purchase =
+                purchases.find {
+                    it.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
+                        it.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+                }
+            if (purchase == null) {
+                Maybe.empty()
+            } else {
+                Maybe.just(purchase)
+            }
         }
         .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
-        .flatMapCompletable { (_, purchases) ->
-            completePurchaseRestore(courseId, purchases.first())
+        .flatMapCompletable { purchase ->
+            completePurchaseRestore(courseId, purchase)
         }
 
     private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =

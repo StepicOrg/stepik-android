@@ -31,7 +31,7 @@ interface CoursePurchaseFeature {
         data class LaunchPurchaseFlowSuccess(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : Message()
         data class LaunchPurchaseFlowFailure(val throwable: Throwable) : Message()
 
-        data class PurchaseFlowBillingSuccess(val purchase: Purchase) : Message()
+        data class PurchaseFlowBillingSuccess(val purchases: List<Purchase>) : Message()
         data class PurchaseFlowBillingFailure(val billingException: BillingException) : Message()
 
         data class SaveBillingPurchasePayloadSuccess(val purchase: Purchase) : Message()
@@ -41,8 +41,6 @@ interface CoursePurchaseFeature {
         data class ConsumePurchaseFailure(val throwable: Throwable) : Message()
 
         data class LaunchRestorePurchaseFlow(val restoreCoursePurchaseSource: String) : Message()
-//        data class LaunchRestorePurchaseSuccess(val skuDetails: SkuDetails, val purchase: Purchase) : Message()
-//        data class LaunchRestorePurchaseFailure(val throwable: Throwable) : Message()
 
         object RestorePurchaseSuccess : Message()
         data class RestorePurchaseFailure(val throwable: Throwable) : Message()
@@ -81,7 +79,6 @@ interface CoursePurchaseFeature {
         data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase, val promoCode: String?) : Action()
 
         data class RestorePurchase(val courseId: Long) : Action()
-//        data class RestorePurchase(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase) : Action()
 
         data class GenerateSupportEmailData(val subject: String, val deviceInfo: String) : Action()
 
@@ -107,7 +104,6 @@ interface CoursePurchaseFeature {
 
         object PaymentSuccess : PaymentState()
         object PaymentFailure : PaymentState()
-//        data class PaymentFailure(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
     }
 
     sealed class PromoCodeState {

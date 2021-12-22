@@ -97,10 +97,19 @@ constructor() : StateReducer<State, Message, Action> {
                         null
                     }
 
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, message.purchase)) to
+                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.obfuscatedParams
+
+                    val purchase = message.purchases.find {
+                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
+                            it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+                    }
+
+                    requireNotNull(purchase)
+
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, purchase)) to
                         setOf(
                             Action.SaveBillingPurchasePayload(
-                                message.purchase,
+                                purchase,
                                 promoCode
                             ),
                             Action.LogAnalyticEvent(
@@ -151,20 +160,7 @@ constructor() : StateReducer<State, Message, Action> {
              * WIP - temporary duplication of ConsumePurchaseFailure
              */
             is Message.SaveBillingPurchasePayloadFailure -> {
-                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to
-                        setOf(
-                            Action.LogAnalyticEvent(
-                                BuyCourseVerificationFailureAnalyticEvent(
-                                    state.coursePurchaseData.course.id,
-                                    message.throwable.toEnrollmentError().name,
-                                    message.throwable
-                                )
-                            )
-                        )
-                } else {
-                    null
-                }
+                mapProcessingConsumeFailure(state, message.throwable)
             }
             is Message.ConsumePurchaseSuccess -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
@@ -185,20 +181,7 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
             is Message.ConsumePurchaseFailure -> {
-                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to
-                        setOf(
-                            Action.LogAnalyticEvent(
-                                BuyCourseVerificationFailureAnalyticEvent(
-                                    state.coursePurchaseData.course.id,
-                                    message.throwable.toEnrollmentError().name,
-                                    message.throwable
-                                )
-                            )
-                        )
-                } else {
-                    null
-                }
+                mapProcessingConsumeFailure(state, message.throwable)
             }
             is Message.LaunchRestorePurchaseFlow -> {
                 if (state is State.Content) {
@@ -364,4 +347,20 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
         } ?: state to emptySet()
+
+    private fun mapProcessingConsumeFailure(state: State, throwable: Throwable): Pair<State, Set<Action>>? =
+        if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
+            state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to
+                setOf(
+                    Action.LogAnalyticEvent(
+                        BuyCourseVerificationFailureAnalyticEvent(
+                            state.coursePurchaseData.course.id,
+                            throwable.toEnrollmentError().name,
+                            throwable
+                        )
+                    )
+                )
+        } else {
+            null
+        }
 }

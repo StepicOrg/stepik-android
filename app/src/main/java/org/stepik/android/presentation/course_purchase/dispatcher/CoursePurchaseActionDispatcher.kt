@@ -42,8 +42,8 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (billingResult, purchases) ->
-                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases?.firstOrNull() != null) {
-                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases.first()))
+                    if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                        onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases))
                     } else {
                         onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode, billingResult.debugMessage)))
                     }
