@@ -10,4 +10,8 @@ data class BillingPurchasePayload(
     val obfuscatedAccountId: String,
     val obfuscatedProfileId: String,
     val promoCode: String?
-)
+) {
+    companion object {
+        val EMPTY = BillingPurchasePayload("", "", "", null)
+    }
+}

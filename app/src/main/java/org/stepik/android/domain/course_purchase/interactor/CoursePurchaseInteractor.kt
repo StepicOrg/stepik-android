@@ -126,16 +126,18 @@ constructor(
 
     private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =
         Singles.zip(
-            billingPurchasePayloadRepository.getBillingPurchasePayload(purchase.orderId),
+            billingPurchasePayloadRepository.getBillingPurchasePayload(purchase.orderId).onErrorReturnItem(BillingPurchasePayload.EMPTY),
             billingRepository.getInventory(BillingClient.SkuType.INAPP, purchase.skus.first()).toSingle()
         ).flatMapCompletable { (billingPurchasePayload, skuDetails) ->
-            if (billingPurchasePayload.obfuscatedAccountId == purchase.accountIdentifiers?.obfuscatedAccountId &&
-                billingPurchasePayload.obfuscatedProfileId == purchase.accountIdentifiers?.obfuscatedProfileId
-            ) {
-                completePurchase(courseId, skuDetails, purchase, billingPurchasePayload.promoCode)
-            } else {
-                Completable.error(NoPurchasesToRestoreException())
-            }
+            val promoCode =
+                if (billingPurchasePayload.obfuscatedAccountId == purchase.accountIdentifiers?.obfuscatedAccountId &&
+                    billingPurchasePayload.obfuscatedProfileId == purchase.accountIdentifiers?.obfuscatedProfileId
+                ) {
+                    billingPurchasePayload.promoCode
+                } else {
+                    null
+                }
+            completePurchase(courseId, skuDetails, purchase, promoCode)
         }
 
     private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
