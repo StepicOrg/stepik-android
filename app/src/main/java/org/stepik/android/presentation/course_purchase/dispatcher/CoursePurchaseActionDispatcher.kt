@@ -76,19 +76,9 @@ constructor(
                         onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it)) }
                     )
             }
-            is CoursePurchaseFeature.Action.SaveBillingPurchasePayload -> {
-                compositeDisposable += coursePurchaseInteractor
-                    .saveBillingPurchasePayload(action.purchase, action.promoCode)
-                    .subscribeOn(backgroundScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onComplete = { onNewMessage(CoursePurchaseFeature.Message.SaveBillingPurchasePayloadSuccess(action.purchase)) },
-                        onError = { onNewMessage(CoursePurchaseFeature.Message.SaveBillingPurchasePayloadFailure(it)) }
-                    )
-            }
             is CoursePurchaseFeature.Action.ConsumePurchaseAction -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .completePurchase(action.courseId, action.skuDetails, action.purchase, action.promoCode)
+                    .consumePurchase(action.courseId, action.skuDetails, action.purchase, action.promoCode)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

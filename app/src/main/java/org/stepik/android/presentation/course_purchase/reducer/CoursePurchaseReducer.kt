@@ -108,7 +108,9 @@ constructor(
 
                     state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, purchase)) to
                         setOf(
-                            Action.SaveBillingPurchasePayload(
+                            Action.ConsumePurchaseAction(
+                                state.coursePurchaseData.course.id,
+                                state.paymentState.skuDetails,
                                 purchase,
                                 promoCode
                             ),
@@ -142,26 +144,6 @@ constructor(
                     null
                 }
             }
-            is Message.SaveBillingPurchasePayloadSuccess -> {
-                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-                    state to setOf(
-                        Action.ConsumePurchaseAction(
-                            state.coursePurchaseData.course.id,
-                            state.paymentState.skuDetails,
-                            state.paymentState.purchase,
-                            (state.promoCodeState as? CoursePurchaseFeature.PromoCodeState.Valid)?.text
-                        )
-                    )
-                } else {
-                    null
-                }
-            }
-            /**
-             * WIP - temporary duplication of ConsumePurchaseFailure
-             */
-            is Message.SaveBillingPurchasePayloadFailure -> {
-                mapProcessingConsumeFailure(state, message.throwable)
-            }
             is Message.ConsumePurchaseSuccess -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
                     state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to
@@ -181,7 +163,20 @@ constructor(
                 }
             }
             is Message.ConsumePurchaseFailure -> {
-                mapProcessingConsumeFailure(state, message.throwable)
+                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to
+                        setOf(
+                            Action.LogAnalyticEvent(
+                                BuyCourseVerificationFailureAnalyticEvent(
+                                    state.coursePurchaseData.course.id,
+                                    message.throwable.toEnrollmentError().name,
+                                    message.throwable
+                                )
+                            )
+                        )
+                } else {
+                    null
+                }
             }
             is Message.LaunchRestorePurchaseFlow -> {
                 if (state is State.Content) {
@@ -331,20 +326,4 @@ constructor(
                 }
             }
         } ?: state to emptySet()
-
-    private fun mapProcessingConsumeFailure(state: State, throwable: Throwable): Pair<State, Set<Action>>? =
-        if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-            state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to
-                setOf(
-                    Action.LogAnalyticEvent(
-                        BuyCourseVerificationFailureAnalyticEvent(
-                            state.coursePurchaseData.course.id,
-                            throwable.toEnrollmentError().name,
-                            throwable
-                        )
-                    )
-                )
-        } else {
-            null
-        }
 }

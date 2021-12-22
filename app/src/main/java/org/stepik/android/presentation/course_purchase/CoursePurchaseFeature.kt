@@ -33,9 +33,6 @@ interface CoursePurchaseFeature {
         data class PurchaseFlowBillingSuccess(val purchases: List<Purchase>) : Message()
         data class PurchaseFlowBillingFailure(val billingException: BillingException) : Message()
 
-        data class SaveBillingPurchasePayloadSuccess(val purchase: Purchase) : Message()
-        data class SaveBillingPurchasePayloadFailure(val throwable: Throwable) : Message()
-
         object ConsumePurchaseSuccess : Message()
         data class ConsumePurchaseFailure(val throwable: Throwable) : Message()
 
@@ -67,7 +64,6 @@ interface CoursePurchaseFeature {
     sealed class Action {
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
-        data class SaveBillingPurchasePayload(val purchase: Purchase, val promoCode: String?) : Action()
         data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase, val promoCode: String?) : Action()
 
         data class RestorePurchase(val courseId: Long) : Action()

@@ -73,30 +73,9 @@ constructor(
                 }
             }
 
-    fun saveBillingPurchasePayload(purchase: Purchase, promoCodeName: String?): Completable =
-        billingPurchasePayloadRepository
-            .saveBillingPurchasePayload(
-                BillingPurchasePayload(
-                    orderId = purchase.orderId,
-                    obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId!!,
-                    obfuscatedProfileId = purchase.accountIdentifiers?.obfuscatedProfileId!!,
-                    promoCode = promoCodeName
-                )
-            )
-
-    fun completePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
-        coursePaymentsRepository
-            .createCoursePayment(courseId, sku, purchase, promoCodeName)
-            .flatMapCompletable { payment ->
-                if (payment.status == CoursePayment.Status.SUCCESS) {
-                    Completable.complete()
-                } else {
-                    Completable.error(CoursePurchaseVerificationException())
-                }
-            }
-            .andThen(billingRepository.consumePurchase(purchase))
-            .andThen(billingPurchasePayloadRepository.deleteBillingPurchasePayload(purchase.orderId))
-            .andThen(updateCourseAfterEnrollment(courseId))
+    fun consumePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
+        saveBillingPurchasePayload(purchase, promoCodeName)
+            .andThen(completePurchase(courseId, sku, purchase, promoCodeName))
 
     fun restorePurchase(courseId: Long): Completable =
         Singles.zip(
@@ -119,6 +98,31 @@ constructor(
         .flatMapCompletable { purchase ->
             completePurchaseRestore(courseId, purchase)
         }
+
+    private fun saveBillingPurchasePayload(purchase: Purchase, promoCodeName: String?): Completable =
+        billingPurchasePayloadRepository
+            .saveBillingPurchasePayload(
+                BillingPurchasePayload(
+                    orderId = purchase.orderId,
+                    obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId!!,
+                    obfuscatedProfileId = purchase.accountIdentifiers?.obfuscatedProfileId!!,
+                    promoCode = promoCodeName
+                )
+            )
+
+    private fun completePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
+        coursePaymentsRepository
+            .createCoursePayment(courseId, sku, purchase, promoCodeName)
+            .flatMapCompletable { payment ->
+                if (payment.status == CoursePayment.Status.SUCCESS) {
+                    Completable.complete()
+                } else {
+                    Completable.error(CoursePurchaseVerificationException())
+                }
+            }
+            .andThen(billingRepository.consumePurchase(purchase))
+            .andThen(billingPurchasePayloadRepository.deleteBillingPurchasePayload(purchase.orderId))
+            .andThen(updateCourseAfterEnrollment(courseId))
 
     private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =
         Singles.zip(
