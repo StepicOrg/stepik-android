@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
 import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
@@ -14,7 +15,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -88,7 +88,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         with(courseListCoursesRecycler) {
             layoutManager = tableLayoutManager
             itemAnimator?.changeDuration = 0
-            val snapHelper = CoursesSnapHelper(rowCount)
+            val snapHelper = MultiSnapHelper(interval = 1)
             snapHelper.attachToRecyclerView(this)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {

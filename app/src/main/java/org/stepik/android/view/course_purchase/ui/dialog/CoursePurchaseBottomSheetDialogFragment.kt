@@ -45,8 +45,10 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.defaultLocale
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_purchase.analytic.RestoreCoursePurchaseSource
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -144,7 +146,14 @@ class CoursePurchaseBottomSheetDialogFragment :
         promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
         coursePurchaseBinding.coursePurchaseWishlistAction.setOnClickListener {
-            coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.WishlistAddMessage)
+            coursePurchaseViewModel.onNewMessage(
+                CoursePurchaseFeature.Message.WishlistMessage(
+                    WishlistOperationFeature.Message.WishlistAddMessage(
+                        coursePurchaseData.course,
+                        CourseViewSource.CoursePurchase
+                    )
+                )
+            )
         }
 
         coursePurchaseBinding.coursePurchaseCourseTitle.text = coursePurchaseData.course.title.orEmpty()
@@ -251,9 +260,11 @@ class CoursePurchaseBottomSheetDialogFragment :
 
     override fun render(state: CoursePurchaseFeature.State) {
         if (state is CoursePurchaseFeature.State.Content) {
-            isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
+            val isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
+
+            this.isCancelable = isCancelable
 
             buyActionViewDelegate.render(state)
 
@@ -265,17 +276,11 @@ class CoursePurchaseBottomSheetDialogFragment :
             } else {
                 promoCodeViewDelegate.render(state.promoCodeState)
                 wishlistViewDelegate.setViewVisibility(isVisible = true)
-                wishlistViewDelegate.render(state)
+                wishlistViewDelegate.render(state.wishlistState, isCancelable)
             }
 
-            (state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
-                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
-                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
-            ).let { mustEnable ->
-                isCancelable = mustEnable
-                coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = mustEnable
-                coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = mustEnable
-            }
+            coursePurchaseBinding.coursePurchaseBuyActionGreen.isEnabled = isCancelable
+            coursePurchaseBinding.coursePurchaseBuyActionViolet.isEnabled = isCancelable
         }
     }
 

@@ -46,6 +46,7 @@ ext.versions = [
         model                : '1.0.6',
         domainRx             : '1.0.1',
         viewBindingDelegate  : '1.4.7',
+        multisnaprecycler    : '2.0.3',
 
         retrofit             : '2.6.1',
         okhttp               : '4.9.0',
@@ -167,6 +168,7 @@ ext.libraries = [
         viewInjection        : "ru.nobird.android.view:injection:$versions.viewInjection",
         model                : "ru.nobird.android.core:model:$versions.model",
         viewBindingDelegate  : "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$versions.viewBindingDelegate",
+        multisnaprecycler    : "com.github.takusemba:multisnaprecyclerview:$versions.multisnaprecycler",
 
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",

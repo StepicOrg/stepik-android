@@ -7,10 +7,9 @@ import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
 import org.stepik.android.domain.feedback.model.SupportEmailData
-import org.stepik.android.domain.wishlist.model.WishlistOperationData
-import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
+import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 
 interface CoursePurchaseFeature {
     sealed class State {
@@ -20,7 +19,7 @@ interface CoursePurchaseFeature {
             val coursePurchaseSource: String,
             val paymentState: PaymentState,
             val promoCodeState: PromoCodeState,
-            val wishlistState: WishlistState
+            val wishlistState: WishlistOperationFeature.State
         ) : State()
     }
 
@@ -51,13 +50,6 @@ interface CoursePurchaseFeature {
         data class SetupFeedbackSuccess(val supportEmailData: SupportEmailData) : Message()
 
         /**
-         * Wishlist messages
-         */
-        object WishlistAddMessage : Message()
-        object WishlistAddSuccess : Message()
-        object WishlistAddFailure : Message()
-
-        /**
          * PromoCode
          */
         object HavePromoCodeMessage : Message()
@@ -65,14 +57,14 @@ interface CoursePurchaseFeature {
         data class PromoCodeCheckMessage(val text: String) : Message()
         data class PromoCodeValidMessage(val promoCodeSku: PromoCodeSku) : Message()
         object PromoCodeInvalidMessage : Message()
+
+        /**
+         * Wishlist message wrapper
+         */
+        data class WishlistMessage(val wishlistMessage: WishlistOperationFeature.Message) : Message()
     }
 
     sealed class Action {
-        data class AddToWishlist(
-            val course: Course,
-            val wishlistOperationData: WishlistOperationData
-        ) : Action()
-
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
         data class SaveBillingPurchasePayload(val purchase: Purchase, val promoCode: String?) : Action()
@@ -83,6 +75,11 @@ interface CoursePurchaseFeature {
         data class GenerateSupportEmailData(val subject: String, val deviceInfo: String) : Action()
 
         data class LogAnalyticEvent(val analyticEvent: AnalyticEvent) : Action()
+
+        /**
+         * Wishlist action wrapper
+         */
+        data class WishlistAction(val action: WishlistOperationFeature.Action) : Action()
 
         sealed class ViewAction : Action() {
             data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : ViewAction()
