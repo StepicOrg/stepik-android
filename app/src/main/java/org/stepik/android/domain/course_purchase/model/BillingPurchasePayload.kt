@@ -7,11 +7,13 @@ import androidx.room.PrimaryKey
 data class BillingPurchasePayload(
     @PrimaryKey
     val orderId: String,
+    val courseId: Long,
+    val profileId: Long,
     val obfuscatedAccountId: String,
     val obfuscatedProfileId: String,
     val promoCode: String?
 ) {
     companion object {
-        val EMPTY = BillingPurchasePayload("", "", "", null)
+        val EMPTY = BillingPurchasePayload("", 0L, 0L, "", "", null)
     }
 }

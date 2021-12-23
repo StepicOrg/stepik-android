@@ -6,6 +6,7 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
+import org.stepik.android.domain.course_purchase.model.PurchaseFlowData
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -27,7 +28,7 @@ interface CoursePurchaseFeature {
         data class InitMessage(val coursePurchaseData: CoursePurchaseData, val coursePurchaseSource: String) : Message()
 
         object LaunchPurchaseFlow : Message()
-        data class LaunchPurchaseFlowSuccess(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : Message()
+        data class LaunchPurchaseFlowSuccess(val purchaseFlowData: PurchaseFlowData) : Message()
         data class LaunchPurchaseFlowFailure(val throwable: Throwable) : Message()
 
         data class PurchaseFlowBillingSuccess(val purchases: List<Purchase>) : Message()
@@ -64,7 +65,13 @@ interface CoursePurchaseFeature {
     sealed class Action {
         data class CheckPromoCode(val courseId: Long, val promoCodeName: String) : Action()
         data class FetchLaunchFlowData(val courseId: Long, val skuId: String) : Action()
-        data class ConsumePurchaseAction(val courseId: Long, val skuDetails: SkuDetails, val purchase: Purchase, val promoCode: String?) : Action()
+        data class ConsumePurchaseAction(
+            val courseId: Long,
+            val profileId: Long,
+            val skuDetails: SkuDetails,
+            val purchase: Purchase,
+            val promoCode: String?
+        ) : Action()
 
         data class RestorePurchase(val courseId: Long) : Action()
 
@@ -92,7 +99,7 @@ interface CoursePurchaseFeature {
     sealed class PaymentState {
         object Idle : PaymentState()
         object ProcessingInitialCheck : PaymentState()
-        data class ProcessingBillingPayment(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : PaymentState()
+        data class ProcessingBillingPayment(val purchaseFlowData: PurchaseFlowData) : PaymentState()
         data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()

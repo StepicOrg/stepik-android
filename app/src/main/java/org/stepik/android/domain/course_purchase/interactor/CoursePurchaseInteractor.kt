@@ -20,6 +20,7 @@ import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.course_purchase.model.BillingPurchasePayload
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
+import org.stepik.android.domain.course_purchase.model.PurchaseFlowData
 import org.stepik.android.domain.course_purchase.repository.BillingPurchasePayloadRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.mobile_tiers.repository.LightSkuRepository
@@ -62,7 +63,7 @@ constructor(
                 }
             }
 
-    fun fetchPurchaseFlowData(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
+    fun fetchPurchaseFlowData(courseId: Long, skuId: String): Single<PurchaseFlowData> =
         coursePaymentsRepository
             .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .flatMap { payments ->
@@ -73,8 +74,14 @@ constructor(
                 }
             }
 
-    fun consumePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
-        saveBillingPurchasePayload(purchase, promoCodeName)
+    fun consumePurchase(
+        courseId: Long,
+        profileId: Long,
+        sku: SkuDetails,
+        purchase: Purchase,
+        promoCodeName: String? = null
+    ): Completable =
+        saveBillingPurchasePayload(courseId, profileId, purchase, promoCodeName)
             .andThen(completePurchase(courseId, sku, purchase, promoCodeName))
 
     fun restorePurchase(courseId: Long): Completable =
@@ -99,11 +106,13 @@ constructor(
             completePurchaseRestore(courseId, purchase)
         }
 
-    private fun saveBillingPurchasePayload(purchase: Purchase, promoCodeName: String?): Completable =
+    private fun saveBillingPurchasePayload(courseId: Long, profileId: Long, purchase: Purchase, promoCodeName: String?): Completable =
         billingPurchasePayloadRepository
             .saveBillingPurchasePayload(
                 BillingPurchasePayload(
                     orderId = purchase.orderId,
+                    courseId = courseId,
+                    profileId = profileId,
                     obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId!!,
                     obfuscatedProfileId = purchase.accountIdentifiers?.obfuscatedProfileId!!,
                     promoCode = promoCodeName
@@ -140,13 +149,19 @@ constructor(
             completePurchase(courseId, skuDetails, purchase, promoCode)
         }
 
-    private fun getSkuDetails(courseId: Long, skuId: String): Single<Pair<CoursePurchaseObfuscatedParams, SkuDetails>> =
+    private fun getSkuDetails(courseId: Long, skuId: String): Single<PurchaseFlowData> =
         getCurrentProfileId()
             .flatMap { profileId ->
                 billingRepository
                     .getInventory(BillingClient.SkuType.INAPP, skuId)
                     .toSingle()
-                    .map { skuDetails -> createCoursePurchaseObfuscatedParams(profileId, courseId) to skuDetails }
+                    .map { skuDetails ->
+                        PurchaseFlowData(
+                            CoursePurchasePayload(profileId, courseId),
+                            createCoursePurchaseObfuscatedParams(profileId, courseId),
+                            skuDetails
+                        )
+                    }
             }
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =

@@ -64,10 +64,10 @@ constructor(
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingInitialCheck) {
                     state.copy(
                         paymentState = CoursePurchaseFeature.PaymentState.ProcessingBillingPayment(
-                            message.obfuscatedParams,
-                            message.skuDetails)
+                            message.purchaseFlowData
+                        )
                     ) to setOf(
-                        Action.ViewAction.LaunchPurchaseFlowBilling(message.obfuscatedParams, message.skuDetails),
+                        Action.ViewAction.LaunchPurchaseFlowBilling(message.purchaseFlowData.obfuscatedParams, message.purchaseFlowData.skuDetails),
                         Action.LogAnalyticEvent(
                             BuyCourseIAPFlowStartAnalyticEvent(
                                 state.coursePurchaseData.course.id,
@@ -97,7 +97,7 @@ constructor(
                         null
                     }
 
-                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.obfuscatedParams
+                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.purchaseFlowData.obfuscatedParams
 
                     val purchase = message.purchases.find {
                         it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
@@ -106,11 +106,16 @@ constructor(
 
                     requireNotNull(purchase)
 
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, purchase)) to
+                    state.copy(
+                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(
+                            state.paymentState.purchaseFlowData.skuDetails, purchase
+                        )
+                    ) to
                         setOf(
                             Action.ConsumePurchaseAction(
                                 state.coursePurchaseData.course.id,
-                                state.paymentState.skuDetails,
+                                state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
+                                state.paymentState.purchaseFlowData.skuDetails,
                                 purchase,
                                 promoCode
                             ),

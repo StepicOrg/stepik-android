@@ -72,13 +72,13 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { (obfuscatedParams, skuDetails) -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(obfuscatedParams, skuDetails)) },
+                        onSuccess = { purchaseFlowData -> onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowSuccess(purchaseFlowData)) },
                         onError = { onNewMessage(CoursePurchaseFeature.Message.LaunchPurchaseFlowFailure(it)) }
                     )
             }
             is CoursePurchaseFeature.Action.ConsumePurchaseAction -> {
                 compositeDisposable += coursePurchaseInteractor
-                    .consumePurchase(action.courseId, action.skuDetails, action.purchase, action.promoCode)
+                    .consumePurchase(action.courseId, action.profileId, action.skuDetails, action.purchase, action.promoCode)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
