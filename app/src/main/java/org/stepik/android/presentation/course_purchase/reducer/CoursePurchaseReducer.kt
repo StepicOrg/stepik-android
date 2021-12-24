@@ -64,10 +64,10 @@ constructor(
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingInitialCheck) {
                     state.copy(
                         paymentState = CoursePurchaseFeature.PaymentState.ProcessingBillingPayment(
-                            message.obfuscatedParams,
-                            message.skuDetails)
+                            message.purchaseFlowData
+                        )
                     ) to setOf(
-                        Action.ViewAction.LaunchPurchaseFlowBilling(message.obfuscatedParams, message.skuDetails),
+                        Action.ViewAction.LaunchPurchaseFlowBilling(message.purchaseFlowData.obfuscatedParams, message.purchaseFlowData.skuDetails),
                         Action.LogAnalyticEvent(
                             BuyCourseIAPFlowStartAnalyticEvent(
                                 state.coursePurchaseData.course.id,
@@ -97,12 +97,26 @@ constructor(
                         null
                     }
 
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(state.paymentState.skuDetails, message.purchase)) to
+                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.purchaseFlowData.obfuscatedParams
+
+                    val purchase = message.purchases.find {
+                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
+                            it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+                    }
+
+                    requireNotNull(purchase)
+
+                    state.copy(
+                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(
+                            state.paymentState.purchaseFlowData.skuDetails, purchase
+                        )
+                    ) to
                         setOf(
                             Action.ConsumePurchaseAction(
                                 state.coursePurchaseData.course.id,
-                                state.paymentState.skuDetails,
-                                message.purchase,
+                                state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
+                                state.paymentState.purchaseFlowData.skuDetails,
+                                purchase,
                                 promoCode
                             ),
                             Action.LogAnalyticEvent(
@@ -155,7 +169,7 @@ constructor(
             }
             is Message.ConsumePurchaseFailure -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
-                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure(state.paymentState.skuDetails, state.paymentState.purchase)) to
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to
                         setOf(
                             Action.LogAnalyticEvent(
                                 BuyCourseVerificationFailureAnalyticEvent(
@@ -171,14 +185,9 @@ constructor(
             }
             is Message.LaunchRestorePurchaseFlow -> {
                 if (state is State.Content) {
-                    val skuId = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-                        requireNotNull(state.promoCodeState.promoCodeSku.lightSku?.id)
-                    } else {
-                        state.coursePurchaseData.primarySku.id
-                    }
                     state to setOf(
                         Action.ViewAction.ShowLoading,
-                        Action.RestorePurchaseWithSkuId(skuId),
+                        Action.RestorePurchase(state.coursePurchaseData.course.id),
                         Action.LogAnalyticEvent(
                             RestoreCoursePurchasePressedAnalyticEvent(
                                 state.coursePurchaseData.course.id,
@@ -186,20 +195,6 @@ constructor(
                             )
                         )
                     )
-                } else {
-                    null
-                }
-            }
-            is Message.LaunchRestorePurchaseSuccess -> {
-                if (state is State.Content) {
-                    state to setOf(Action.RestorePurchase(state.coursePurchaseData.course.id, message.skuDetails, message.purchase))
-                } else {
-                    null
-                }
-            }
-            is Message.LaunchRestorePurchaseFailure -> {
-                if (state is State.Content) {
-                    state to setOf(Action.ViewAction.ShowConsumeFailure, Action.ViewAction.Error(message.throwable.toEnrollmentError()))
                 } else {
                     null
                 }
@@ -233,8 +228,7 @@ constructor(
                     if (enrollmentError == EnrollmentError.BILLING_NO_PURCHASES_TO_RESTORE) {
                         state to setOf(Action.ViewAction.ShowConsumeFailure, Action.ViewAction.Error(enrollmentError), analyticEventAction)
                     } else {
-                        state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure(message.skuDetails, message.purchase)) to
-                            setOf(Action.ViewAction.ShowConsumeFailure, analyticEventAction)
+                        state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to setOf(Action.ViewAction.ShowConsumeFailure, analyticEventAction)
                     }
                 } else {
                     null
