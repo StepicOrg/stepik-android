@@ -27,6 +27,7 @@ object MigrationWrappers {
                 object : MigrationWrapper(MigrationFrom73To74) {},
                 object : MigrationWrapper(MigrationFrom74To75) {},
                 object : MigrationWrapper(MigrationFrom75To76) {},
-                object : MigrationWrapper(MigrationFrom76To77) {}
+                object : MigrationWrapper(MigrationFrom76To77) {},
+                object : MigrationWrapper(MigrationFrom77To78) {}
             )
 }
