@@ -53,7 +53,6 @@ import org.stepik.android.view.course_purchase.delegate.BuyActionViewDelegate
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
-import timber.log.Timber
 
 class CoursePurchaseBottomSheetDialogFragment :
     BottomSheetDialogFragment(),
@@ -243,7 +242,6 @@ class CoursePurchaseBottomSheetDialogFragment :
             }
 
             is CoursePurchaseFeature.Action.ViewAction.ShowConsumeFailure -> {
-                Timber.d("APPS Action: $action")
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
             }
 

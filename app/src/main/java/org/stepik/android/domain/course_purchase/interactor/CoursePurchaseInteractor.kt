@@ -4,7 +4,6 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.subjects.PublishSubject
@@ -30,6 +29,7 @@ import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import ru.nobird.android.domain.rx.toMaybe
 import javax.inject.Inject
 
 class CoursePurchaseInteractor
@@ -95,11 +95,7 @@ constructor(
                     it.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
                         it.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
                 }
-            if (purchase == null) {
-                Maybe.empty()
-            } else {
-                Maybe.just(purchase)
-            }
+            purchase.toMaybe()
         }
         .switchIfEmpty(Single.error(NoPurchasesToRestoreException()))
         .flatMapCompletable { purchase ->
@@ -113,8 +109,8 @@ constructor(
                     orderId = purchase.orderId,
                     courseId = courseId,
                     profileId = profileId,
-                    obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId!!,
-                    obfuscatedProfileId = purchase.accountIdentifiers?.obfuscatedProfileId!!,
+                    obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId.orEmpty(),
+                    obfuscatedProfileId = purchase.accountIdentifiers?.obfuscatedProfileId.orEmpty(),
                     promoCode = promoCodeName
                 )
             )
