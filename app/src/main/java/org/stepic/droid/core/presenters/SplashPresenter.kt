@@ -194,6 +194,7 @@ constructor(
         analytic.reportUserProperty(NewHomeScreenEnabledUserProperty(firebaseRemoteConfig[RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED].asBoolean()))
         analytic.reportUserProperty(PersonalizedOnboardingCourseListsUserProperty(firebaseRemoteConfig[RemoteConfig.PERSONALIZED_ONBOARDING_COURSE_LISTS].asString()))
         analytic.reportUserProperty(CourseRevenueAvailableUserProperty(firebaseRemoteConfig[RemoteConfig.IS_COURSE_REVENUE_AVAILABLE_ANDROID].asBoolean()))
+        analytic.reportUserProperty(CoursePurchaseFlowProperty(firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID].asString()))
     }
 
     private fun countNumberOfLaunches() {

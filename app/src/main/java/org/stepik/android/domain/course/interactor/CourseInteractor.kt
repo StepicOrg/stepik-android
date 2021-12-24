@@ -57,7 +57,7 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
                 .asString()
                 .uppercase()
         )
