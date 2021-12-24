@@ -57,13 +57,13 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
                 .asString()
                 .uppercase()
         )
 
         val isInAppActive =
-            currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            currentFlow.isInAppActive()
 
         return zip(
             if (isInAppActive) {

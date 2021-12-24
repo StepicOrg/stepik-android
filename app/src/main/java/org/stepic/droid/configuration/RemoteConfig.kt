@@ -13,10 +13,8 @@ object RemoteConfig {
     const val PERSONALIZED_ONBOARDING_COURSE_LISTS = "personalized_onboarding_course_lists"
     const val IS_COURSE_REVENUE_AVAILABLE_ANDROID = "is_course_revenue_available_android"
     const val PURCHASE_FLOW_ANDROID = "purchase_flow_android"
+    const val PURCHASE_FLOW_ANDROID_TEST = "purchase_flow_android_test"
     const val PURCHASE_FLOW_DISCLAIMER_EN = "purchase_flow_android_disclaimer_en"
     const val PURCHASE_FLOW_DISCLAIMER_RU = "purchase_flow_android_disclaimer_ru"
     const val PURCHASE_FLOW_DISCLAIMER_BE = "purchase_flow_android_disclaimer_be"
-
-    // TODO APPS-3443: Remove after finishing feature
-    const val PURCHASE_FLOW_ANDROID_TESTING_FLAG = false
 }
