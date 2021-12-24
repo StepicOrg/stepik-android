@@ -63,7 +63,7 @@ constructor(
         )
 
         val isInAppActive =
-            currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            currentFlow.isInAppActive()
 
         return zip(
             if (isInAppActive) {

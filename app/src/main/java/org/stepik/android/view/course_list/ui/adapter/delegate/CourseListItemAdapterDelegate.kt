@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
@@ -87,7 +86,6 @@ class CourseListItemAdapterDelegate(
             courseDescription.isVisible = !isEnrolled
             if (!isEnrolled) {
                 courseDescription.text = HtmlCompat.fromHtml(data.course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-                courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
             coursePrice.isVisible = !isEnrolled
 

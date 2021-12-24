@@ -34,7 +34,7 @@ constructor(
         )
 
         val isInAppActive =
-            currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+            currentFlow.isInAppActive()
 
         val deeplinkPromoCode = coursePurchaseDataRepository.getDeeplinkPromoCode()
         val initialCoursePurchaseDataResult = coursePurchaseDataRepository.getCoursePurchaseData()

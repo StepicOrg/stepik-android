@@ -4,14 +4,14 @@
     </item>
     <item>
         <bitmap
-            android:src="@drawable/stepic_logo"
+            android:src="@drawable/stepik_logo_ny2022"
             android:tileMode="disabled"
             android:gravity="center"/>
     </item>
     <item android:bottom="64dp">
         <bitmap
             android:gravity="bottom"
-            android:src="@drawable/study_home" />
+            android:src="@drawable/splash_edvent_season_2022" />
     </item>
 
 </layer-list>

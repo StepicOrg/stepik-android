@@ -8,8 +8,11 @@ import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.course_purchase.CoursePurchaseViewModel
 import org.stepik.android.presentation.course_purchase.dispatcher.CoursePurchaseActionDispatcher
+import org.stepik.android.presentation.wishlist.dispatcher.WishlistOperationActionDispatcher
 import org.stepik.android.presentation.course_purchase.reducer.CoursePurchaseReducer
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.android.presentation.redux.dispatcher.transform
 import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
 import ru.nobird.android.presentation.redux.feature.ReduxFeature
 
@@ -20,11 +23,18 @@ object CoursePurchasePresentationModule {
     @ViewModelKey(CoursePurchaseViewModel::class)
     internal fun provideCoursePurchasePresenter(
         coursePurchaseReducer: CoursePurchaseReducer,
-        coursePurchaseActionDispatcher: CoursePurchaseActionDispatcher
+        coursePurchaseActionDispatcher: CoursePurchaseActionDispatcher,
+        wishlistOperationActionDispatcher: WishlistOperationActionDispatcher
     ): ViewModel =
         CoursePurchaseViewModel(
             ReduxFeature(CoursePurchaseFeature.State.Idle, coursePurchaseReducer)
                 .wrapWithActionDispatcher(coursePurchaseActionDispatcher)
+                .wrapWithActionDispatcher(
+                    wishlistOperationActionDispatcher.transform(
+                        transformAction = { it.safeCast<CoursePurchaseFeature.Action.WishlistAction>()?.action },
+                        transformMessage = CoursePurchaseFeature.Message::WishlistMessage
+                    )
+                )
                 .wrapWithViewContainer()
         )
 }

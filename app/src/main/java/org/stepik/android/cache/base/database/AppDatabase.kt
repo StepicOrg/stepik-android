@@ -18,6 +18,7 @@ import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.cache.code_preference.model.CodePreference
+import org.stepik.android.cache.course_purchase.dao.BillingPurchasePayloadDao
 import org.stepik.android.cache.course_recommendations.dao.CourseRecommendationsDao
 import org.stepik.android.cache.exam_session.dao.ExamSessionDao
 import org.stepik.android.cache.mobile_tiers.dao.LightSkuDao
@@ -25,6 +26,7 @@ import org.stepik.android.cache.mobile_tiers.dao.MobileTiersDao
 import org.stepik.android.cache.proctor_session.dao.ProctorSessionDao
 import org.stepik.android.cache.rubric.dao.RubricDao
 import org.stepik.android.cache.wishlist.dao.WishlistDao
+import org.stepik.android.domain.course_purchase.model.BillingPurchasePayload
 import org.stepik.android.domain.course_recommendations.model.CourseRecommendation
 import org.stepik.android.domain.exam_session.model.ExamSession
 import org.stepik.android.domain.mobile_tiers.model.LightSku
@@ -48,7 +50,8 @@ import org.stepik.android.domain.wishlist.model.WishlistEntry
         ProctorSession::class,
         MobileTier::class,
         LightSku::class,
-        WishlistEntry::class
+        WishlistEntry::class,
+        BillingPurchasePayload::class
     ],
     version = AppDatabase.VERSION,
     exportSchema = false
@@ -62,7 +65,7 @@ import org.stepik.android.domain.wishlist.model.WishlistEntry
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val VERSION = 77
+        const val VERSION = 78
         const val NAME = "stepic_database.db"
     }
 
@@ -79,4 +82,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun mobileTiersDao(): MobileTiersDao
     abstract fun lightSkuDao(): LightSkuDao
     abstract fun wishlistDao(): WishlistDao
+    abstract fun billingPurchasePayloadDao(): BillingPurchasePayloadDao
 }

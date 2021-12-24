@@ -73,7 +73,7 @@ constructor(
                 .uppercase()
         )
 
-        val isInAppActive = currentFlow.isInAppActive() || RemoteConfig.PURCHASE_FLOW_ANDROID_TESTING_FLAG
+        val isInAppActive = currentFlow.isInAppActive()
 
         return if (isInAppActive) {
             mapCourseStats(

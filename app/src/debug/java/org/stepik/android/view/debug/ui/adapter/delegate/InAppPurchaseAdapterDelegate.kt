@@ -35,12 +35,6 @@ class InAppPurchaseAdapterDelegate(
 
             inAppPurchaseCourse.isVisible = data.developerPayload.isNotEmpty()
             inAppPurchaseUser.isVisible = data.developerPayload.isNotEmpty()
-            if (data.developerPayload.isNotEmpty()) {
-                data.developerPayload.toObject<CoursePurchasePayload>().let {
-                    inAppPurchaseCourse.text = context.getString(R.string.debug_purchase_course, it.courseId)
-                    inAppPurchaseUser.text = context.getString(R.string.debug_purchase_profile, it.profileId)
-                }
-            }
         }
     }
 }

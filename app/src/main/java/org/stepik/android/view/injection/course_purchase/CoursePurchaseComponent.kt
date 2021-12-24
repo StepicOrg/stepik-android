@@ -7,6 +7,7 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
 
 @Subcomponent(modules = [
     CoursePurchasePresentationModule::class,
+    CoursePurchaseDataModule::class,
     WishlistDataModule::class,
     FeedbackDataModule::class
 ])
