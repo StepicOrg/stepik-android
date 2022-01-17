@@ -10,5 +10,15 @@ enum class RetentionNotificationType(
     val messageRes: Int
 ) {
     DAY1(R.string.retention_notification_day1_title, R.string.retention_notification_day1_message),
-    DAY3(R.string.retention_notification_day3_title, R.string.retention_notification_day3_message)
+    DAY3(R.string.retention_notification_day3_title, R.string.retention_notification_day3_message);
+
+    fun getDayInt(): Int =
+        when (this.name) {
+            DAY1.name ->
+                1
+            DAY3.name ->
+                3
+            else ->
+                throw IllegalStateException("Invalid enum state")
+        }
 }

@@ -31,9 +31,12 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.remind.analytic.RemindAppNotificationClicked
+import org.stepik.android.domain.remind.analytic.RemindAppNotificationDismissed
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
+import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
 import org.stepik.android.view.debug.ui.fragment.DebugMenu
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
@@ -169,6 +172,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             .inject(this)
 
         setContentView(R.layout.activity_main_feed)
+
+        if (intent.action == RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED) {
+            analytic.report(RemindAppNotificationClicked)
+        }
 
         notificationClickedCheck(intent)
 

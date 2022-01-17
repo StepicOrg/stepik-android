@@ -2,20 +2,19 @@ package org.stepik.android.view.course_list.notification
 
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_list.interactor.RemindAppNotificationInteractor
+import org.stepik.android.domain.remind.analytic.RemindAppNotificationShown
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
+import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -31,6 +30,7 @@ constructor(
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("show_new_user_notification", stepikNotificationManager) {
     companion object {
+        const val REMIND_APP_NOTIFICATION_CLICKED = "remind_app_notification_clicked"
         private const val NEW_USER_REMIND_NOTIFICATION_ID = 4L
     }
 
@@ -39,23 +39,13 @@ constructor(
             analytic.reportEvent(Analytic.Notification.REMIND_HIDDEN)
             return
         }
-        val dayType = if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)) {
-            SharedPreferenceHelper.NotificationDay.DAY_ONE
-        } else if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)) {
-            SharedPreferenceHelper.NotificationDay.DAY_SEVEN
-        } else {
-            null
-        }
 
-        val deleteIntent = Intent(context, NotificationBroadcastReceiver::class.java)
-        deleteIntent.action = AppConstants.NOTIFICATION_CANCELED_REMINDER
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DismissedNotificationReceiver.REMIND_APP_NOTIFICATION_DISMISSED)
         val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         // now we can show notification
         val intent = screenManager.getCatalogIntent(context)
-        intent.action = AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER
-        val analyticDayTypeName = dayType?.name ?: ""
-        intent.putExtra(MainFeedActivity.reminderKey, analyticDayTypeName)
+        intent.action = REMIND_APP_NOTIFICATION_CLICKED
         val taskBuilder: TaskStackBuilder =
             TaskStackBuilder
                     .create(context)
@@ -70,6 +60,7 @@ constructor(
             id = NEW_USER_REMIND_NOTIFICATION_ID
         )
 
+        analytic.report(RemindAppNotificationShown)
         showNotification(NEW_USER_REMIND_NOTIFICATION_ID, notification.build())
 
         if (!sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)) {

@@ -435,6 +435,16 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="org.stepik.android.view.base.receiver.DismissedNotificationReceiver">
+            <intent-filter>
+                <action android:name="remind_app_notification_dismissed" />
+                <action android:name="remind_registration_notification_dismissed" />
+                <action android:name="retention_notification_dismissed" />
+                <action android:name="deadlines_notification_dismissed" />
+                <action android:name="streak_notification_dismissed" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".persistence.service.DownloadCompleteService"
             android:permission="android.permission.BIND_JOB_SERVICE"

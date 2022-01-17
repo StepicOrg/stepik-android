@@ -38,6 +38,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.personal_deadlines.analytic.DeadlinesNotificationClicked
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -62,6 +63,8 @@ import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeL
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.course.CourseHeaderDelegateFactory
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.personal_deadlines.model.DeadlinesNotificationData
+import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
 import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -81,6 +84,8 @@ class CourseActivity :
         private const val EXTRA_SOURCE = "source"
         private const val EXTRA_DEEPLINK_PROMO_CODE = "deeplink_promo_code"
         private const val EXTRA_CONTINUE_LEARNING = "continue_learning"
+
+        const val EXTRA_DEADLINES_NOTIFICATION_DATA = "deadlines_notification_data"
 
         private const val NO_ID = -1L
 
@@ -203,8 +208,18 @@ class CourseActivity :
 
         injectComponent(courseId)
 
-        if (intent.action == PurchaseNotificationDelegate.NOTIFICATION_CLICKED) {
-            analytic.report(PurchaseNotificationClicked(courseId))
+        when (intent.action) {
+            PurchaseNotificationDelegate.NOTIFICATION_CLICKED -> {
+                analytic.report(PurchaseNotificationClicked(courseId))
+            }
+            DeadlinesNotificationDelegate.DEADLINES_NOTIFICATION_CLICKED -> {
+                val deadlinesNotificationData = intent
+                    .getParcelableExtra<DeadlinesNotificationData>(EXTRA_DEADLINES_NOTIFICATION_DATA)
+
+                if (deadlinesNotificationData != null) {
+                    analytic.report(DeadlinesNotificationClicked(deadlinesNotificationData.course, deadlinesNotificationData.hours))
+                }
+            }
         }
 
         val courseViewSource = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
