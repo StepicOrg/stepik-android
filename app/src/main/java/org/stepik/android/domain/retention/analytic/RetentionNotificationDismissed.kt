@@ -4,7 +4,7 @@ import kotlinx.android.parcel.Parcelize
 import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 
 @Parcelize
-class RetentionNotificationDismissed(
+data class RetentionNotificationDismissed(
     val day: Int
 ) : ParcelableAnalyticEvent {
     companion object {

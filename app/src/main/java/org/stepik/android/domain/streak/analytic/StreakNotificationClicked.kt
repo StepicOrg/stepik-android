@@ -4,7 +4,7 @@ import kotlinx.android.parcel.Parcelize
 import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 
 @Parcelize
-class StreakNotificationClicked(
+data class StreakNotificationClicked(
     val type: String
 ) : ParcelableAnalyticEvent {
     companion object {

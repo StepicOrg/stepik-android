@@ -4,7 +4,7 @@ import kotlinx.android.parcel.Parcelize
 import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 
 @Parcelize
-class PurchaseNotificationClicked(val courseId: Long) : ParcelableAnalyticEvent {
+data class PurchaseNotificationClicked(val courseId: Long) : ParcelableAnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
     }
