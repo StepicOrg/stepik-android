@@ -11,6 +11,8 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
+import org.stepik.android.domain.streak.analytic.StreakNotificationClicked
+import org.stepik.android.domain.streak.analytic.StreakNotificationDismissed
 import org.stepik.android.domain.streak.analytic.StreakNotificationShown
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
@@ -128,7 +130,7 @@ constructor(
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         val myCoursesIntent = screenManager.getMyCoursesIntent(context) // This opens MainFeedActivity
         myCoursesIntent.action = STREAK_NOTIFICATION_CLICKED
-        myCoursesIntent.putExtra(MainFeedActivity.EXTRA_STREAK_TYPE, notificationType.type)
+        myCoursesIntent.putExtra(MainFeedActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, StreakNotificationClicked(notificationType.type))
         taskBuilder.addNextIntent(myCoursesIntent)
         return taskBuilder
     }
@@ -149,7 +151,7 @@ constructor(
     }
 
     private fun getDeleteIntentForStreaks(notificationType: StreakNotificationType): PendingIntent {
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DismissedNotificationReceiver.STREAK_NOTIFICATION_DISMISSED, notificationType.type)
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, StreakNotificationDismissed(notificationType.type))
         return PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }

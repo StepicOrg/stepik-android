@@ -30,9 +30,8 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
+import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
-import org.stepik.android.domain.remind.analytic.RemindAppNotificationClicked
-import org.stepik.android.domain.streak.analytic.StreakNotificationClicked
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
@@ -77,7 +76,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val NOTIFICATIONS_INDEX: Int = 4
         const val DEBUG_INDEX: Int = 5
 
-        const val EXTRA_STREAK_TYPE = "streak_type"
+        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -134,18 +133,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val action = intent.action
         if (action != null) {
             when (action) {
-                RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED -> {
+                RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED ->
                     sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
-                    analytic.report(RemindAppNotificationClicked)
-                }
 
-                StreakNotificationDelegate.STREAK_NOTIFICATION_CLICKED -> {
+                StreakNotificationDelegate.STREAK_NOTIFICATION_CLICKED ->
                     sharedPreferenceHelper.resetNumberOfStreakNotifications()
-                    val streakType = intent.getStringExtra(EXTRA_STREAK_TYPE)
-                    if (streakType != null) {
-                        analytic.report(StreakNotificationClicked(streakType))
-                    }
-                }
             }
 
             //after tracking check on null user
@@ -181,8 +173,14 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         setContentView(R.layout.activity_main_feed)
 
-        checkShortcutAction(intent)
-        checkNotificationClick(intent)
+        if (savedInstanceState == null) {
+            checkShortcutAction(intent)
+            checkNotificationClick(intent)
+            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            if (analyticEvent != null) {
+                analytic.report(analyticEvent)
+            }
+        }
 
         initGoogleApiClient(true)
 

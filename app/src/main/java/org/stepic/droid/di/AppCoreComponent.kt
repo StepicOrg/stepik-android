@@ -128,7 +128,6 @@ import org.stepik.android.view.onboarding.ui.activity.OnboardingCourseListsActiv
 import org.stepik.android.view.onboarding.ui.activity.OnboardingGoalActivity
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
-import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
@@ -377,8 +376,6 @@ interface AppCoreComponent {
     fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
 
     fun inject(onboardingActivity: AnimatedOnboardingActivity)
-
-    fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
 
     fun inject(filterBottomSheetDialogFragment: FilterBottomSheetDialogFragment)
 

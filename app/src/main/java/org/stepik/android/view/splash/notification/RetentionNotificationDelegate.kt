@@ -11,13 +11,14 @@ import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.retention.analytic.RetentionNotificationClicked
+import org.stepik.android.domain.retention.analytic.RetentionNotificationDismissed
 import org.stepik.android.domain.retention.analytic.RetentionNotificationShown
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import org.stepik.android.view.retention.model.RetentionNotificationData
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -55,15 +56,14 @@ constructor(
                 RetentionNotificationType.DAY1
             }
 
-        val retentionNotificationData = RetentionNotificationData(notificationType.getDayInt())
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DismissedNotificationReceiver.RETENTION_NOTIFICATION_DISMISSED, retentionNotificationData)
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RetentionNotificationDismissed(notificationType.dayValue))
         val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(notificationType.titleRes)
         val message = context.getString(notificationType.messageRes)
 
         val intent = Intent(context, SplashActivity::class.java)
-        intent.putExtra(SplashActivity.EXTRA_RETENTION_NOTIFICATION_DATA, retentionNotificationData)
+        intent.putExtra(SplashActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, RetentionNotificationClicked(notificationType.dayValue))
         val taskBuilder = TaskStackBuilder
                 .create(context)
                 .addNextIntent(intent)
@@ -77,7 +77,7 @@ constructor(
             id = RETENTION_NOTIFICATION_ID
         )
 
-        analytic.report(RetentionNotificationShown(retentionNotificationData.retentionDay))
+        analytic.report(RetentionNotificationShown(notificationType.dayValue))
         showNotification(RETENTION_NOTIFICATION_ID, notification.build())
         scheduleRetentionNotification()
     }

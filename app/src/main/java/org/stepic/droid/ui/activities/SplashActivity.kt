@@ -23,19 +23,15 @@ import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.defaultLocale
-import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationClicked
-import org.stepik.android.domain.retention.analytic.RetentionNotificationClicked
-import org.stepik.android.view.retention.model.RetentionNotificationData
+import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 import org.stepik.android.view.routing.deeplink.BranchRoute
-import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
-import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import java.util.Arrays
 import javax.inject.Inject
 
 class SplashActivity : BackToExitActivityBase(), SplashView {
 
     companion object {
-        const val EXTRA_RETENTION_NOTIFICATION_DATA = "retention_notification_data"
+        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         private const val RUSSIAN_LANGUAGE_CODE = "ru"
     }
@@ -63,20 +59,9 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 //            return
 //        }
         if (savedInstanceState == null) {
-            when (intent.action) {
-                RemindRegistrationNotificationDelegate.REMIND_REGISTRATION_NOTIFICATION_CLICKED ->
-                    analytics.report(RemindRegistrationNotificationClicked)
-
-                RetentionNotificationDelegate.RETENTION_NOTIFICATION_CLICKED -> {
-                    val retentionNotificationData = intent
-                        .getParcelableExtra<RetentionNotificationData>(
-                            EXTRA_RETENTION_NOTIFICATION_DATA
-                        )
-
-                    if (retentionNotificationData != null) {
-                        analytics.report(RetentionNotificationClicked(retentionNotificationData.retentionDay))
-                    }
-                }
+            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            if (analyticEvent != null) {
+                analytics.report(analyticEvent)
             }
         }
         defineShortcuts()

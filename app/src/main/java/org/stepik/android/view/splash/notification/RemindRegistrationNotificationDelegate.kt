@@ -10,6 +10,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationClicked
+import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationDismissed
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationShown
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
@@ -28,7 +30,6 @@ constructor(
 ) : NotificationDelegate("show_registration_notification", stepikNotificationManager) {
 
     companion object {
-        const val REMIND_REGISTRATION_NOTIFICATION_CLICKED = "remind_registration_notification_clicked"
         private const val REGISTRATION_REMIND_NOTIFICATION_ID = 5L
     }
 
@@ -36,12 +37,12 @@ constructor(
         if (sharedPreferenceHelper.isEverLogged) return
 
         val intent = Intent(context, SplashActivity::class.java)
-        intent.action = REMIND_REGISTRATION_NOTIFICATION_CLICKED
+        intent.putExtra(SplashActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, RemindRegistrationNotificationClicked)
         val taskBuilder = TaskStackBuilder
                 .create(context)
                 .addNextIntent(intent)
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DismissedNotificationReceiver.REMIND_REGISTRATION_NOTIFICATION_DISMISSED)
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RemindRegistrationNotificationDismissed)
         val deletePendingIntent = PendingIntent.getBroadcast(context, DismissedNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(R.string.stepik_free_courses_title)
