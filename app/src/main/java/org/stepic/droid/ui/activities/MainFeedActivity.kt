@@ -45,7 +45,6 @@ import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragm
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -62,7 +61,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
 
-        const val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
@@ -125,55 +123,34 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         checkNotificationClick(intent)
-        notificationClickedCheck(intent)
 
         openFragment(intent)
     }
 
     private fun checkNotificationClick(intent: Intent) {
-        when (intent.action) {
-            RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED ->
-                analytic.report(RemindAppNotificationClicked)
-
-            StreakNotificationDelegate.STREAK_NOTIFICATION_CLICKED -> {
-                val streakType = intent.getStringExtra(EXTRA_STREAK_TYPE)
-                if (streakType != null) {
-                    analytic.report(StreakNotificationClicked(streakType))
-                }
-            }
-        }
-    }
-
-    private fun notificationClickedCheck(intent: Intent) {
         val action = intent.action
         if (action != null) {
-            if (action == AppConstants.OPEN_NOTIFICATION) {
-                analytic.reportEvent(AppConstants.OPEN_NOTIFICATION)
-            } else if (action == AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER) {
-                var dayTypeString: String? = intent.getStringExtra(reminderKey)
-                if (dayTypeString == null) {
-                    dayTypeString = ""
-                }
-                analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString)
-                Timber.d(Analytic.Notification.REMIND_OPEN)
-                sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
-            } else if (action == AppConstants.OPEN_NOTIFICATION_FROM_STREAK) {
-                sharedPreferenceHelper.resetNumberOfStreakNotifications()
-                if (intent.hasExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM)) {
-                    val notificationType = intent.getSerializableExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM) as Analytic.Streak.NotificationType
-                    val bundle = Bundle()
-                    bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType.name)
-                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED, bundle)
-                } else {
-                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
-                }
-            } else if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
-                analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-                    getSystemService(ShortcutManager::class.java)
-                        ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
+            when (action) {
+                RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED -> {
+                    sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
+                    analytic.report(RemindAppNotificationClicked)
                 }
 
+                StreakNotificationDelegate.STREAK_NOTIFICATION_CLICKED -> {
+                    sharedPreferenceHelper.resetNumberOfStreakNotifications()
+                    val streakType = intent.getStringExtra(EXTRA_STREAK_TYPE)
+                    if (streakType != null) {
+                        analytic.report(StreakNotificationClicked(streakType))
+                    }
+                }
+
+                AppConstants.OPEN_SHORTCUT_CATALOG -> {
+                    analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                        getSystemService(ShortcutManager::class.java)
+                            ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
+                    }
+                }
             }
 
             //after tracking check on null user
@@ -192,7 +169,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         setContentView(R.layout.activity_main_feed)
 
         checkNotificationClick(intent)
-        notificationClickedCheck(intent)
 
         initGoogleApiClient(true)
 
