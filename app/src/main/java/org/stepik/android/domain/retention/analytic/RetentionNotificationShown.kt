@@ -3,7 +3,7 @@ package org.stepik.android.domain.retention.analytic
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class RetentionNotificationShown(
-    val day: Int
+    day: Int
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_DAY = "day"
