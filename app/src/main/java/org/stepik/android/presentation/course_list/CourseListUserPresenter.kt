@@ -24,6 +24,7 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListUserStateMapper
+import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
@@ -44,6 +45,7 @@ constructor(
     private val courseListUserStateMapper: CourseListUserStateMapper,
     private val courseListUserInteractor: CourseListUserInteractor,
     private val deadlinesSynchronizationInteractor: DeadlinesSynchronizationInteractor,
+    private val remindAppNotificationDelegate: RemindAppNotificationDelegate,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -116,6 +118,9 @@ constructor(
                     if (userCourseQuery.isMainTab()) {
                         analytic.setCoursesCount(it.size)
                         synchronizeDeadlines()
+                    }
+                    if (it.isEmpty()) {
+                        remindAppNotificationDelegate.scheduleRemindAppNotification()
                     }
                     fetchCourses()
                 },
