@@ -208,16 +208,18 @@ class CourseActivity :
 
         injectComponent(courseId)
 
-        when (intent.action) {
-            PurchaseNotificationDelegate.NOTIFICATION_CLICKED -> {
-                analytic.report(PurchaseNotificationClicked(courseId))
-            }
-            DeadlinesNotificationDelegate.DEADLINES_NOTIFICATION_CLICKED -> {
-                val deadlinesNotificationData = intent
-                    .getParcelableExtra<DeadlinesNotificationData>(EXTRA_DEADLINES_NOTIFICATION_DATA)
+        if (savedInstanceState == null) {
+            when (intent.action) {
+                PurchaseNotificationDelegate.NOTIFICATION_CLICKED -> {
+                    analytic.report(PurchaseNotificationClicked(courseId))
+                }
+                DeadlinesNotificationDelegate.DEADLINES_NOTIFICATION_CLICKED -> {
+                    val deadlinesNotificationData = intent
+                        .getParcelableExtra<DeadlinesNotificationData>(EXTRA_DEADLINES_NOTIFICATION_DATA)
 
-                if (deadlinesNotificationData != null) {
-                    analytic.report(DeadlinesNotificationClicked(deadlinesNotificationData.course, deadlinesNotificationData.hours))
+                    if (deadlinesNotificationData != null) {
+                        analytic.report(DeadlinesNotificationClicked(deadlinesNotificationData.course, deadlinesNotificationData.hours))
+                    }
                 }
             }
         }

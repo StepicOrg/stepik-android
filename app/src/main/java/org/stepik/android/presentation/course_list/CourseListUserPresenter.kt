@@ -118,9 +118,9 @@ constructor(
                     if (userCourseQuery.isMainTab()) {
                         analytic.setCoursesCount(it.size)
                         synchronizeDeadlines()
-                    }
-                    if (it.isEmpty()) {
-                        remindAppNotificationDelegate.scheduleRemindAppNotification()
+                        if (it.isEmpty()) {
+                            remindAppNotificationDelegate.scheduleRemindAppNotification()
+                        }
                     }
                     fetchCourses()
                 },

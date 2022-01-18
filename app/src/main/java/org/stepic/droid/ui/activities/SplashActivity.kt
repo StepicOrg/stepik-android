@@ -62,16 +62,20 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 //            finish()
 //            return
 //        }
-        when (intent.action) {
-            RemindRegistrationNotificationDelegate.REMIND_REGISTRATION_NOTIFICATION_CLICKED ->
-                analytics.report(RemindRegistrationNotificationClicked)
+        if (savedInstanceState == null) {
+            when (intent.action) {
+                RemindRegistrationNotificationDelegate.REMIND_REGISTRATION_NOTIFICATION_CLICKED ->
+                    analytics.report(RemindRegistrationNotificationClicked)
 
-            RetentionNotificationDelegate.RETENTION_NOTIFICATION_CLICKED -> {
-                val retentionNotificationData = intent
-                    .getParcelableExtra<RetentionNotificationData>(EXTRA_RETENTION_NOTIFICATION_DATA)
+                RetentionNotificationDelegate.RETENTION_NOTIFICATION_CLICKED -> {
+                    val retentionNotificationData = intent
+                        .getParcelableExtra<RetentionNotificationData>(
+                            EXTRA_RETENTION_NOTIFICATION_DATA
+                        )
 
-                if (retentionNotificationData != null) {
-                    analytics.report(RetentionNotificationClicked(retentionNotificationData.retentionDay))
+                    if (retentionNotificationData != null) {
+                        analytics.report(RetentionNotificationClicked(retentionNotificationData.retentionDay))
+                    }
                 }
             }
         }
