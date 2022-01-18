@@ -429,7 +429,7 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver">
+        <receiver android:name="org.stepik.android.view.base.receiver.DismissedNotificationReceiver">
             <intent-filter>
                 <action android:name="notification_dismissed" />
             </intent-filter>

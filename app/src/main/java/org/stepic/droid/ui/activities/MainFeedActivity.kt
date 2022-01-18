@@ -30,18 +30,20 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
+import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
+import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
 import org.stepik.android.view.course_list.routing.getCourseListCollectionId
 import org.stepik.android.view.debug.ui.fragment.DebugMenu
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.story_deeplink.routing.getStoryId
 import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragment
+import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -58,7 +60,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
 
-        const val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
@@ -74,6 +75,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val PROFILE_INDEX: Int = 3
         const val NOTIFICATIONS_INDEX: Int = 4
         const val DEBUG_INDEX: Int = 5
+
+        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -118,41 +121,41 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        notificationClickedCheck(intent)
+        checkShortcutAction(intent)
 
         openFragment(intent)
     }
 
-    private fun notificationClickedCheck(intent: Intent) {
+    /**
+     * We call this only from onCreate, because all the notifications launch MainFeedActivity through FLAG_ACTIVITY_NEW_TASK
+     */
+    private fun checkNotificationClick(intent: Intent) {
         val action = intent.action
         if (action != null) {
-            if (action == AppConstants.OPEN_NOTIFICATION) {
-                analytic.reportEvent(AppConstants.OPEN_NOTIFICATION)
-            } else if (action == AppConstants.OPEN_NOTIFICATION_FOR_ENROLL_REMINDER) {
-                var dayTypeString: String? = intent.getStringExtra(reminderKey)
-                if (dayTypeString == null) {
-                    dayTypeString = ""
-                }
-                analytic.reportEvent(Analytic.Notification.REMIND_OPEN, dayTypeString)
-                Timber.d(Analytic.Notification.REMIND_OPEN)
-                sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
-            } else if (action == AppConstants.OPEN_NOTIFICATION_FROM_STREAK) {
-                sharedPreferenceHelper.resetNumberOfStreakNotifications()
-                if (intent.hasExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM)) {
-                    val notificationType = intent.getSerializableExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM) as Analytic.Streak.NotificationType
-                    val bundle = Bundle()
-                    bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType.name)
-                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED, bundle)
-                } else {
-                    analytic.reportEvent(Analytic.Streak.STREAK_NOTIFICATION_OPENED)
-                }
-            } else if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
+            when (action) {
+                RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED ->
+                    sharedPreferenceHelper.clickEnrollNotification(DateTimeHelper.nowUtc())
+
+                StreakNotificationDelegate.STREAK_NOTIFICATION_CLICKED ->
+                    sharedPreferenceHelper.resetNumberOfStreakNotifications()
+            }
+
+            //after tracking check on null user
+            if (sharedPreferenceHelper.authResponseFromStore == null) {
+                screenManager.openSplash(this)
+            }
+        }
+    }
+
+    private fun checkShortcutAction(intent: Intent) {
+        val action = intent.action
+        if (action != null) {
+            if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
                 analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
                     getSystemService(ShortcutManager::class.java)
                         ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
                 }
-
             }
 
             //after tracking check on null user
@@ -170,7 +173,14 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         setContentView(R.layout.activity_main_feed)
 
-        notificationClickedCheck(intent)
+        if (savedInstanceState == null) {
+            checkShortcutAction(intent)
+            checkNotificationClick(intent)
+            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            if (analyticEvent != null) {
+                analytic.report(analyticEvent)
+            }
+        }
 
         initGoogleApiClient(true)
 

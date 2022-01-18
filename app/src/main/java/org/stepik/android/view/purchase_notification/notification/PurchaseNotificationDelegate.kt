@@ -11,13 +11,15 @@ import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
+import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationDismissed
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationShown
 import org.stepik.android.domain.purchase_notification.interactor.PurchaseNotificationInteractor
+import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
-import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
 import javax.inject.Inject
 
 class PurchaseNotificationDelegate
@@ -30,10 +32,9 @@ constructor(
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("purchase_course_notification", stepikNotificationManager) {
     companion object {
-        const val NOTIFICATION_CLICKED = "notification_clicked"
-
         private const val PURCHASE_NOTIFICATION_ID = 5123L
     }
+
     override fun onNeedShowNotification() {
         val scheduledNotification = purchaseNotificationInteractor.getClosestExpiredScheduledNotification()
         showPurchaseNotification(scheduledNotification)
@@ -61,15 +62,15 @@ constructor(
             course,
             CourseViewSource.PurchaseReminderNotification
         )
-        intent.action = NOTIFICATION_CLICKED
+        intent.putExtra(CourseActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, PurchaseNotificationClicked(course.id))
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        val deleteIntent = PurchaseNotificationReceiver.createIntent(context, course.id)
-        val deletePendingIntent = PendingIntent.getBroadcast(context, PurchaseNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, PurchaseNotificationDismissed(course.id))
+        val deletePendingIntent = PendingIntent.getBroadcast(context, DismissedNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val largeIcon = notificationHelper.getPictureByCourse(course)
         val colorArgb = context.resolveColorAttribute(R.attr.colorSecondary)
