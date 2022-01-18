@@ -8,6 +8,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
@@ -34,6 +35,7 @@ constructor(
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("show_streak_notification", stepikNotificationManager) {
     companion object {
+        const val STREAK_NOTIFICATION_CLICKED = "streak_notification_clicked"
         private const val STREAK_NOTIFICATION_ID = 3214L
     }
 
@@ -130,9 +132,9 @@ constructor(
 
     private fun getStreakNotificationTaskBuilder(notificationType: StreakNotificationType): TaskStackBuilder {
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
-        val myCoursesIntent = screenManager.getMyCoursesIntent(context)
-        myCoursesIntent.action = AppConstants.OPEN_NOTIFICATION_FROM_STREAK
-        myCoursesIntent.putExtra(Analytic.Streak.NOTIFICATION_TYPE_PARAM, notificationType)
+        val myCoursesIntent = screenManager.getMyCoursesIntent(context) // This opens MainFeedActivity
+        myCoursesIntent.action = STREAK_NOTIFICATION_CLICKED
+        myCoursesIntent.putExtra(MainFeedActivity.EXTRA_STREAK_TYPE, notificationType.type)
         taskBuilder.addNextIntent(myCoursesIntent)
         return taskBuilder
     }

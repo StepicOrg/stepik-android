@@ -32,7 +32,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.remind.analytic.RemindAppNotificationClicked
-import org.stepik.android.domain.remind.analytic.RemindAppNotificationDismissed
+import org.stepik.android.domain.streak.analytic.StreakNotificationClicked
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
@@ -42,6 +42,7 @@ import org.stepik.android.view.debug.ui.fragment.DebugMenu
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.story_deeplink.routing.getStoryId
 import org.stepik.android.view.story_deeplink.ui.dialog.StoryDeepLinkDialogFragment
+import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import timber.log.Timber
@@ -77,6 +78,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val PROFILE_INDEX: Int = 3
         const val NOTIFICATIONS_INDEX: Int = 4
         const val DEBUG_INDEX: Int = 5
+
+        const val EXTRA_STREAK_TYPE = "streak_type"
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -121,9 +124,24 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        checkNotificationClick(intent)
         notificationClickedCheck(intent)
 
         openFragment(intent)
+    }
+
+    private fun checkNotificationClick(intent: Intent) {
+        when (intent.action) {
+            RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED ->
+                analytic.report(RemindAppNotificationClicked)
+
+            StreakNotificationDelegate.STREAK_NOTIFICATION_CLICKED -> {
+                val streakType = intent.getStringExtra(EXTRA_STREAK_TYPE)
+                if (streakType != null) {
+                    analytic.report(StreakNotificationClicked(streakType))
+                }
+            }
+        }
     }
 
     private fun notificationClickedCheck(intent: Intent) {
@@ -173,10 +191,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         setContentView(R.layout.activity_main_feed)
 
-        if (intent.action == RemindAppNotificationDelegate.REMIND_APP_NOTIFICATION_CLICKED) {
-            analytic.report(RemindAppNotificationClicked)
-        }
-
+        checkNotificationClick(intent)
         notificationClickedCheck(intent)
 
         initGoogleApiClient(true)
