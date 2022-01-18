@@ -8,7 +8,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 import org.stepik.android.domain.streak.analytic.StreakNotificationDismissed
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -50,7 +49,6 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
                     sharedPreferences.resetNumberOfStreakNotifications()
                 }
             }
-            Timber.d("APPS: Dismissed - $analyticEvent")
         }
     }
 }
