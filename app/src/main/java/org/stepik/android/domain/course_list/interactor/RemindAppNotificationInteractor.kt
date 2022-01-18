@@ -20,6 +20,8 @@ constructor(
     }
 
     fun hasUserInteractedWithApp(): Boolean =
+        sharedPreferenceHelper.authResponseFromStore == null ||
+        sharedPreferenceHelper.isStreakNotificationEnabled ||
         hasEnrolledCourses() ||
         sharedPreferenceHelper.anyStepIsSolved()
 

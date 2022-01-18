@@ -1,11 +1,13 @@
 package org.stepik.android.domain.personal_deadlines.analytic
 
-import org.stepik.android.domain.base.analytic.AnalyticEvent
+import kotlinx.android.parcel.Parcelize
+import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 
+@Parcelize
 class DeadlinesNotificationClicked(
-    course: Long,
-    hours: Long
-) : AnalyticEvent {
+    val course: Long,
+    val hours: Long
+) : ParcelableAnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
         private const val PARAM_HOURS = "hours"

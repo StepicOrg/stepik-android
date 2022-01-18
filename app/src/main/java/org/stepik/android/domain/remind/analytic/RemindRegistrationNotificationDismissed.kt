@@ -1,8 +1,10 @@
 package org.stepik.android.domain.remind.analytic
 
-import org.stepik.android.domain.base.analytic.AnalyticEvent
+import kotlinx.android.parcel.Parcelize
+import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 
-object RemindRegistrationNotificationDismissed : AnalyticEvent {
+@Parcelize
+object RemindRegistrationNotificationDismissed : ParcelableAnalyticEvent {
     override val name: String =
         "Remind registration notification dismissed"
 }
