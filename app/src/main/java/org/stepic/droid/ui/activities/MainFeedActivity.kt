@@ -122,11 +122,14 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        checkNotificationClick(intent)
+        checkShortcutAction(intent)
 
         openFragment(intent)
     }
 
+    /**
+     * We call this only from onCreate, because all the notifications launch MainFeedActivity through FLAG_ACTIVITY_NEW_TASK
+     */
     private fun checkNotificationClick(intent: Intent) {
         val action = intent.action
         if (action != null) {
@@ -143,13 +146,23 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                         analytic.report(StreakNotificationClicked(streakType))
                     }
                 }
+            }
 
-                AppConstants.OPEN_SHORTCUT_CATALOG -> {
-                    analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-                        getSystemService(ShortcutManager::class.java)
-                            ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
-                    }
+            //after tracking check on null user
+            if (sharedPreferenceHelper.authResponseFromStore == null) {
+                screenManager.openSplash(this)
+            }
+        }
+    }
+
+    private fun checkShortcutAction(intent: Intent) {
+        val action = intent.action
+        if (action != null) {
+            if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
+                analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                    getSystemService(ShortcutManager::class.java)
+                        ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
                 }
             }
 
@@ -168,6 +181,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         setContentView(R.layout.activity_main_feed)
 
+        checkShortcutAction(intent)
         checkNotificationClick(intent)
 
         initGoogleApiClient(true)

@@ -63,9 +63,9 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 //            return
 //        }
         when (intent.action) {
-            RemindRegistrationNotificationDelegate.REMIND_REGISTRATION_NOTIFICATION_CLICKED -> {
+            RemindRegistrationNotificationDelegate.REMIND_REGISTRATION_NOTIFICATION_CLICKED ->
                 analytics.report(RemindRegistrationNotificationClicked)
-            }
+
             RetentionNotificationDelegate.RETENTION_NOTIFICATION_CLICKED -> {
                 val retentionNotificationData = intent
                     .getParcelableExtra<RetentionNotificationData>(EXTRA_RETENTION_NOTIFICATION_DATA)

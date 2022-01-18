@@ -2,7 +2,6 @@ package org.stepik.android.view.streak.notification
 
 import android.app.PendingIntent
 import android.content.Context
-import android.os.Bundle
 import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -57,16 +56,11 @@ constructor(
                         // if current streak is > 0 -> streaks works! -> continue send it
                         // it will reset before sending, after sending it will be incremented
                         sharedPreferenceHelper.resetNumberOfStreakNotifications()
-
-                        val bundle = Bundle()
                         if (isSolvedToday) {
                             showNotificationStreakImprovement(currentStreak)
-                            bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, StreakNotificationType.SOLVED_TODAY.type)
                         } else {
                             showNotificationWithStreakCallToAction(currentStreak)
-                            bundle.putString(Analytic.Streak.NOTIFICATION_TYPE_PARAM, StreakNotificationType.NOT_SOLVED_TODAY.type)
                         }
-                        analytic.reportEvent(Analytic.Streak.GET_NON_ZERO_STREAK_NOTIFICATION, bundle)
                     }
                 } catch (exception: Exception) {
                     // no internet || cant get streaks -> show some notification without streak information.
