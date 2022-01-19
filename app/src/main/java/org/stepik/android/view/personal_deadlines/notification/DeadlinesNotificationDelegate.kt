@@ -13,7 +13,11 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.personal_deadlines.analytic.DeadlinesNotificationClicked
+import org.stepik.android.domain.personal_deadlines.analytic.DeadlinesNotificationDismissed
+import org.stepik.android.domain.personal_deadlines.analytic.DeadlinesNotificationShown
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesNotificationInteractor
+import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
@@ -26,6 +30,7 @@ constructor(
     private val context: Context,
     private val deadlinesNotificationInteractor: DeadlinesNotificationInteractor,
     private val notificationHelper: NotificationHelper,
+    private val analytic: Analytic,
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("show_deadlines_notification", stepikNotificationManager) {
 
@@ -81,6 +86,7 @@ constructor(
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
         val intent = CourseActivity.createIntent(context, course, source = CourseViewSource.Notification)
+        intent.putExtra(CourseActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, DeadlinesNotificationClicked(course.id, hoursDiff))
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -88,10 +94,14 @@ constructor(
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DeadlinesNotificationDismissed(course.id, hoursDiff))
+        val deletePendingIntent = PendingIntent.getBroadcast(context, deadline.sectionId.toInt(), deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
         val title = context.getString(R.string.app_name)
         val message = context.getString(
             R.string.deadlines_notification, section.title, course.title,
-            context.resources.getQuantityString(R.plurals.hours, hoursDiff.toInt(), hoursDiff))
+            context.resources.getQuantityString(R.plurals.hours, hoursDiff.toInt(), hoursDiff)
+        )
 
         val pendingIntent = taskBuilder.getPendingIntent(deadline.sectionId.toInt(), PendingIntent.FLAG_ONE_SHOT)
         val notification = NotificationCompat.Builder(context, StepikNotificationChannel.user.channelId)
@@ -103,10 +113,11 @@ constructor(
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setDeleteIntent(notificationHelper.getDeleteIntent(deadline.sectionId))
+                .setDeleteIntent(deletePendingIntent)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setNumber(1)
 
+        analytic.report(DeadlinesNotificationShown(course.id, hoursDiff))
         showNotification(deadline.sectionId, notification.build())
     }
 }

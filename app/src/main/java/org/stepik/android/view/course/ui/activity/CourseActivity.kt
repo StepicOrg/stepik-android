@@ -33,12 +33,12 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
@@ -62,7 +62,6 @@ import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeL
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.course.CourseHeaderDelegateFactory
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
-import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -81,6 +80,8 @@ class CourseActivity :
         private const val EXTRA_SOURCE = "source"
         private const val EXTRA_DEEPLINK_PROMO_CODE = "deeplink_promo_code"
         private const val EXTRA_CONTINUE_LEARNING = "continue_learning"
+
+        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         private const val NO_ID = -1L
 
@@ -203,8 +204,11 @@ class CourseActivity :
 
         injectComponent(courseId)
 
-        if (intent.action == PurchaseNotificationDelegate.NOTIFICATION_CLICKED) {
-            analytic.report(PurchaseNotificationClicked(courseId))
+        if (savedInstanceState == null) {
+            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            if (analyticEvent != null) {
+                analytic.report(analyticEvent)
+            }
         }
 
         val courseViewSource = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
