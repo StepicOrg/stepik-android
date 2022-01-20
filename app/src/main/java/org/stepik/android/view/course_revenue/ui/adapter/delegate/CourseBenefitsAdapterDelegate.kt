@@ -47,7 +47,18 @@ class CourseBenefitsAdapterDelegate(
             decimalFormat.minimumFractionDigits = 2
 
             purchaseRefundIcon.setImageDrawable(getIconDrawable(data.courseBenefit))
-            purchaseRefundName.text = data.user?.fullName ?: data.courseBenefit.buyer.toString()
+            purchaseRefundName.text =
+                if (data.courseBenefit.buyer == null && !data.courseBenefit.isInvoicePayment) {
+                    buildString {
+                        append(context.getString(R.string.transaction_manual_channel))
+                        if (data.courseBenefit.description != null) {
+                            append(": ${data.courseBenefit.description}")
+                        }
+                    }
+                } else {
+                    data.user?.fullName ?: data.courseBenefit.buyer.toString()
+                }
+
             purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
                 data.courseBenefit.time,
                 DateTimeHelper.DISPLAY_DATETIME_PATTERN,
@@ -55,7 +66,7 @@ class CourseBenefitsAdapterDelegate(
             )
 
             val transactionSum = if (data.courseBenefit.status == CourseBenefit.Status.DEBITED) {
-                revenuePriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, decimalFormat.format(data.courseBenefit.paymentAmount.toDoubleOrNull() ?: 0.0))
+                revenuePriceMapper.mapToDisplayPrice(data.courseBenefit.currencyCode, decimalFormat.format(data.courseBenefit.paymentAmount?.toDoubleOrNull() ?: 0.0))
             } else {
                 context.getString(R.string.course_benefits_refund)
             }
@@ -79,26 +90,33 @@ class CourseBenefitsAdapterDelegate(
         }
 
         private fun getIconDrawable(data: CourseBenefit): Drawable? =
-            if (data.status == CourseBenefit.Status.DEBITED) {
-                when {
-                    data.isZLinkUsed == true ->
-                        AppCompatResources.getDrawable(context, R.drawable.ic_purchase_z_link)
-
-                    data.isInvoicePayment -> {
-                        AppCompatResources
-                            .getDrawable(context, R.drawable.ic_purchase_stepik)
-                            ?.mutate()
-                            ?.let { DrawableCompat.wrap(it) }
-                            ?.also {
-                                DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.color_on_background))
-                                DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
-                            }
-                    }
-                    else ->
-                        AppCompatResources.getDrawable(context, R.drawable.ic_purchase_stepik)
-                }
+            if (data.buyer == null && !data.isInvoicePayment) {
+                getTintedDrawable(R.color.color_on_surface_alpha_38)
             } else {
-                AppCompatResources.getDrawable(context, R.drawable.ic_refund)
+                if (data.status == CourseBenefit.Status.DEBITED) {
+                    when {
+                        data.isZLinkUsed == true ->
+                            AppCompatResources.getDrawable(context, R.drawable.ic_purchase_z_link)
+
+                        data.isInvoicePayment ->
+                            getTintedDrawable(R.color.color_on_background)
+
+                        else ->
+                            AppCompatResources.getDrawable(context, R.drawable.ic_purchase_stepik)
+                    }
+                } else {
+                    AppCompatResources.getDrawable(context, R.drawable.ic_refund)
+                }
             }
+
+        private fun getTintedDrawable(tint: Int): Drawable? =
+            AppCompatResources
+                .getDrawable(context, R.drawable.ic_purchase_stepik)
+                ?.mutate()
+                ?.let { DrawableCompat.wrap(it) }
+                ?.also {
+                    DrawableCompat.setTint(it, ContextCompat.getColor(context, tint))
+                    DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+                }
     }
 }
