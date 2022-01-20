@@ -3,13 +3,14 @@ package org.stepik.android.domain.announcement.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
 @Entity
 data class Announcement(
     @SerializedName("id")
     @PrimaryKey
-    val id: Long,
+    override val id: Long,
     @SerializedName("course")
     val course: Long,
     @SerializedName("user")
@@ -62,4 +63,4 @@ data class Announcement(
     val estimatedFinishDate: Date?,
     @SerializedName("notice_dates")
     val noticeDates: List<Date> = emptyList()
-)
+) : Identifiable<Long>

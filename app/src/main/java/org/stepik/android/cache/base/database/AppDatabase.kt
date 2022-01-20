@@ -3,6 +3,7 @@ package org.stepik.android.cache.base.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import org.stepik.android.cache.announcement.dao.AnnouncementDao
 import org.stepik.android.cache.base.mapper.CollectionConverter
 import org.stepik.android.cache.base.mapper.DateConverter
 import org.stepik.android.cache.catalog.dao.CatalogBlockDao
@@ -85,4 +86,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun lightSkuDao(): LightSkuDao
     abstract fun wishlistDao(): WishlistDao
     abstract fun billingPurchasePayloadDao(): BillingPurchasePayloadDao
+    abstract fun announcementDao(): AnnouncementDao
 }
