@@ -26,6 +26,7 @@ import org.stepik.android.cache.mobile_tiers.dao.MobileTiersDao
 import org.stepik.android.cache.proctor_session.dao.ProctorSessionDao
 import org.stepik.android.cache.rubric.dao.RubricDao
 import org.stepik.android.cache.wishlist.dao.WishlistDao
+import org.stepik.android.domain.announcement.model.Announcement
 import org.stepik.android.domain.course_purchase.model.BillingPurchasePayload
 import org.stepik.android.domain.course_recommendations.model.CourseRecommendation
 import org.stepik.android.domain.exam_session.model.ExamSession
@@ -51,7 +52,8 @@ import org.stepik.android.domain.wishlist.model.WishlistEntry
         MobileTier::class,
         LightSku::class,
         WishlistEntry::class,
-        BillingPurchasePayload::class
+        BillingPurchasePayload::class,
+        Announcement::class
     ],
     version = AppDatabase.VERSION,
     exportSchema = false
