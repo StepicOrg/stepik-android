@@ -37,6 +37,7 @@ constructor(
             intro = cursor.getString(DbStructureCourse.Columns.INTRO),
             introVideo = Video(id = cursor.getLong(DbStructureCourse.Columns.INTRO_VIDEO_ID)),
             language = cursor.getString(DbStructureCourse.Columns.LANGUAGE),
+            announcements = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.ANNOUNCEMENTS)),
             authors = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.AUTHORS)),
             instructors = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.INSTRUCTORS)),
             sections = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.SECTIONS)),
@@ -106,6 +107,7 @@ constructor(
         values.put(DbStructureCourse.Columns.INTRO, course.intro)
         values.put(DbStructureCourse.Columns.INTRO_VIDEO_ID, course.introVideo?.id ?: -1) // todo add complete course entity and remove this hack
         values.put(DbStructureCourse.Columns.LANGUAGE, course.language)
+        values.put(DbStructureCourse.Columns.ANNOUNCEMENTS, DbParseHelper.parseLongListToString(course.announcements))
         values.put(DbStructureCourse.Columns.AUTHORS, DbParseHelper.parseLongListToString(course.authors))
         values.put(DbStructureCourse.Columns.INSTRUCTORS, DbParseHelper.parseLongListToString(course.instructors))
         values.put(DbStructureCourse.Columns.SECTIONS, DbParseHelper.parseLongListToString(course.sections))
