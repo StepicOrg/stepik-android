@@ -65,7 +65,7 @@ import org.stepik.android.domain.wishlist.model.WishlistEntry
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val VERSION = 78
+        const val VERSION = 79
         const val NAME = "stepic_database.db"
     }
 

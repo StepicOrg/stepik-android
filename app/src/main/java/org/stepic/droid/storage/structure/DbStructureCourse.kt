@@ -19,6 +19,7 @@ object DbStructureCourse {
         const val INTRO_VIDEO_ID = "intro_video_id"
         const val LANGUAGE = "language"
 
+        const val ANNOUNCEMENTS = "announcements"
         const val AUTHORS = "authors"
         const val INSTRUCTORS = "instructors"
         const val SECTIONS = "sections"
