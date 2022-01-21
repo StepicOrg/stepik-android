@@ -15,6 +15,7 @@ import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesView
 import org.stepik.android.view.certificate.ui.adapter.delegate.CertificateProfileAdapterDelegate
+import org.stepik.android.view.certificate.ui.adapter.delegate.CertificatesProfilePlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
@@ -50,6 +51,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         injectComponent()
 
         certificatesAdapter = DefaultDelegateAdapter()
+        certificatesAdapter += CertificatesProfilePlaceholderAdapterDelegate()
         certificatesAdapter += CertificateProfileAdapterDelegate(::onCertificateClicked)
     }
 
@@ -102,6 +104,11 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
 
         when (state) {
             is ProfileCertificatesView.State.Loading -> {
+                certificatesAdapter.items = listOf(
+                    CertificateListItem.Placeholder,
+                    CertificateListItem.Placeholder,
+                    CertificateListItem.Placeholder
+                )
                 profileId = state.profileData.user.id
                 isCurrentUser = state.profileData.isCurrentUser
             }
