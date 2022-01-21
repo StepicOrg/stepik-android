@@ -22,6 +22,7 @@ object DbStructureCertificate {
         const val SAVED_FULLNAME = "saved_fullname"
         const val EDITS_COUNT = "edits_count"
         const val ALLOWED_EDITS_COUNT = "allowed_edits_count"
+        const val IS_WITH_SCORE = "is_with_score"
     }
 
     fun createTable(db: SupportSQLiteDatabase) {
