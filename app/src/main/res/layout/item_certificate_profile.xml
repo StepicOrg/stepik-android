@@ -7,7 +7,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:background="@drawable/bg_certificate_profile_item"
-    android:minHeight="104dp"
+    android:minHeight="114dp"
     android:padding="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView

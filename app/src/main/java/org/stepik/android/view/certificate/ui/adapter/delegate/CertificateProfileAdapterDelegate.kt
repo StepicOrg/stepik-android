@@ -52,7 +52,7 @@ class CertificateProfileAdapterDelegate(
                         ContextCompat.getColor(context, R.color.white)
                 }
 
-            val hasGrade = data.certificate.grade != null
+            val hasGrade = data.certificate.isWithScore
 
             viewBinding.certificateProgress.isVisible = hasGrade
             viewBinding.certificateProgressPercentage.isVisible = hasGrade

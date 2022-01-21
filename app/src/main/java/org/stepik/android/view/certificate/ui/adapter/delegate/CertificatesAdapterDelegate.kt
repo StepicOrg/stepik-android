@@ -60,6 +60,7 @@ class CertificatesAdapterDelegate(
             certificateGradeView.text =
                 context.resources.getString(R.string.certificate_result_with_substitution, data.certificate.grade ?: "")
 
+            certificateGradeView.isVisible = data.certificate.isWithScore
             certificateNameChangeButton.isVisible = data.certificate.editsCount < data.certificate.allowedEditsCount && isCurrentUser
 
             Glide.with(context)

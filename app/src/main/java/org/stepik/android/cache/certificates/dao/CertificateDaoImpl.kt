@@ -4,7 +4,11 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.util.*
+import org.stepic.droid.util.getDate
+import org.stepic.droid.util.getInt
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
+import org.stepic.droid.util.getBoolean
 import org.stepik.android.cache.certificates.structure.DbStructureCertificate
 import org.stepik.android.model.Certificate
 import javax.inject.Inject
