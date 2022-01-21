@@ -8,24 +8,24 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.databinding.ItemCertificateProfileBinding
-import org.stepic.droid.model.CertificateViewItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
+import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.model.Certificate
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 
 class CertificateProfileAdapterDelegate(
     private val onItemClick: (String) -> Unit
-) : AdapterDelegate<CertificateViewItem, DelegateViewHolder<CertificateViewItem>>() {
-    override fun isForViewType(position: Int, data: CertificateViewItem): Boolean =
-        true
+) : AdapterDelegate<CertificateListItem, DelegateViewHolder<CertificateListItem>>() {
+    override fun isForViewType(position: Int, data: CertificateListItem): Boolean =
+        data is CertificateListItem.Data
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CertificateViewItem> =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CertificateListItem> =
         ViewHolder(createView(parent, R.layout.item_certificate_profile))
 
-    private inner class ViewHolder(root: View) : DelegateViewHolder<CertificateViewItem>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<CertificateListItem>(root) {
         private val viewBinding: ItemCertificateProfileBinding by viewBinding { ItemCertificateProfileBinding.bind(root) }
         private val layerListDrawableDelegate = LayerListDrawableDelegate(
             listOf(
@@ -36,10 +36,11 @@ class CertificateProfileAdapterDelegate(
         )
 
         init {
-            viewBinding.root.setOnClickListener { onItemClick(itemData?.certificate?.url.orEmpty()) }
+            viewBinding.root.setOnClickListener { (itemData as? CertificateListItem.Data)?.let { onItemClick(it.certificate.url.orEmpty()) } }
         }
 
-        override fun onBind(data: CertificateViewItem) {
+        override fun onBind(data: CertificateListItem) {
+            data as CertificateListItem.Data
             viewBinding.certificateCourseTitle.text = data.title.orEmpty()
 
             val certificateColor =

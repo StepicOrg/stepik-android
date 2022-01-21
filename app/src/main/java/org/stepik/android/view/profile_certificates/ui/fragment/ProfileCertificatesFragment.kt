@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_profile_certificates.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesView
 import org.stepik.android.view.certificate.ui.adapter.delegate.CertificateProfileAdapterDelegate
@@ -22,8 +22,6 @@ import javax.inject.Inject
 
 class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certificates), ProfileCertificatesView {
     companion object {
-        private const val CERTIFICATES_TO_DISPLAY = 4
-
         fun newInstance(userId: Long): Fragment =
             ProfileCertificatesFragment()
                 .apply {
@@ -42,7 +40,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
 
     private val certificatesPresenter: ProfileCertificatesPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCertificatesView.State>
-    private lateinit var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem>
+    private lateinit var certificatesAdapter: DefaultDelegateAdapter<CertificateListItem>
 
     private var profileId = 0L
 

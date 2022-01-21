@@ -6,7 +6,7 @@ import android.net.Uri
 import org.stepic.droid.R
 import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepik.android.model.*
@@ -46,8 +46,8 @@ constructor(
         return getShareIntentBase(textForSharing)
     }
 
-    override fun getIntentForShareCertificate(certificateViewItem: CertificateViewItem): Intent =
-            getShareIntentBase(certificateViewItem.certificate.url ?: " ")
+    override fun getIntentForShareCertificate(certificateListItem: CertificateListItem.Data): Intent =
+            getShareIntentBase(certificateListItem.certificate.url ?: " ")
 
     override fun getIntentForStepSharing(step: Step, lesson: Lesson, unit: Unit?): Intent {
         val textForSharing = Uri.parse(StringUtil.getUriForStep(endpointResolver.getBaseUrl(), lesson, unit, step)).toString()
