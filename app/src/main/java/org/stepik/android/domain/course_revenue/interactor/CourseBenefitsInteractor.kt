@@ -58,7 +58,7 @@ constructor(
 
     private fun resolveCourseBenefitListItems(courseBenefits: PagedList<CourseBenefit>): Single<PagedList<CourseBenefitListItem.Data>> =
         userRepository
-            .getUsers(courseBenefits.map(CourseBenefit::buyer))
+            .getUsers(courseBenefits.mapNotNull(CourseBenefit::buyer))
             .map { users ->
                 val userMap = users.associateBy(User::id)
                 courseBenefits.transform {

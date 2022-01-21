@@ -95,20 +95,31 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionBuyerValue.isVisible = user != null
         buyerOverlayView.setOnClickListener { user?.let { screenManager.openProfile(requireContext(), it.id) } }
 
-        transactionPaymentValue.text = revenuePriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, decimalFormat.format(courseBenefit.paymentAmount.toDoubleOrNull() ?: 0.0))
+        transactionPaymentValue.text =
+            revenuePriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, decimalFormat.format(courseBenefit.paymentAmount?.toDoubleOrNull() ?: 0.0))
 
         transactionPromoCodeValue.text = courseBenefit.promoCode.orEmpty()
         transactionPromoCodeTitle.isVisible = courseBenefit.promoCode != null
         transactionPromoCodeValue.isVisible = courseBenefit.promoCode != null
 
-        transactionChannelTitle.isVisible = courseBenefit.status == CourseBenefit.Status.DEBITED
-        transactionChannelValue.isVisible = courseBenefit.status == CourseBenefit.Status.DEBITED
+        val isChannelInfoVisible = courseBenefit.status == CourseBenefit.Status.DEBITED || courseBenefit.isManual
+
+        transactionChannelTitle.isVisible = isChannelInfoVisible
+        transactionChannelValue.isVisible = isChannelInfoVisible
         transactionChannelValue.text =
             when {
                 courseBenefit.isZLinkUsed == true ->
                     getString(R.string.transaction_z_link_channel)
                 courseBenefit.isInvoicePayment ->
                     getString(R.string.transaction_invoice_channel)
+                courseBenefit.isManual -> {
+                    buildString {
+                        append(getString(R.string.transaction_manual_channel))
+                        if (courseBenefit.description != null) {
+                            append(": ${courseBenefit.description}")
+                        }
+                    }
+                }
                 else ->
                     getString(R.string.transaction_stepik_channel)
             }

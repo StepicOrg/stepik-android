@@ -32,6 +32,8 @@ data class Course(
     @SerializedName("language")
     val language: String? = null,
 
+    @SerializedName("announcements")
+    val announcements: List<Long>? = null,
     @SerializedName("authors")
     val authors: List<Long>? = null,
     @SerializedName("instructors")
