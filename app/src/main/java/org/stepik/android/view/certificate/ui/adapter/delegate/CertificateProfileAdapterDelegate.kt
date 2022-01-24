@@ -43,18 +43,19 @@ class CertificateProfileAdapterDelegate(
             data as CertificateListItem.Data
             viewBinding.certificateCourseTitle.text = data.title.orEmpty()
 
-            val certificateColor =
+            val (certificateColor, certificateHeading) =
                 when (data.certificate.type) {
                     Certificate.Type.REGULAR ->
-                        ContextCompat.getColor(context, R.color.certificate_regular)
+                        ContextCompat.getColor(context, R.color.certificate_regular) to context.getString(R.string.certificates_regular_title)
                     Certificate.Type.DISTINCTION ->
-                        ContextCompat.getColor(context, R.color.certificate_distinction)
+                        ContextCompat.getColor(context, R.color.certificate_distinction) to context.getString(R.string.certificates_distinction_title)
                     else ->
-                        ContextCompat.getColor(context, R.color.white)
+                        ContextCompat.getColor(context, R.color.white) to ""
                 }
 
             val hasGrade = data.certificate.isWithScore
 
+            viewBinding.certificateHeading.text = certificateHeading
             viewBinding.certificateProgress.isVisible = hasGrade
             viewBinding.certificateProgressPercentage.isVisible = hasGrade
             viewBinding.certificateCourseTitle.maxLines =

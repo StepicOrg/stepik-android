@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="160dp"
     android:layout_height="114dp"
@@ -14,36 +13,44 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
 
-        app:radius="@dimen/course_image_radius"/>
+        app:radius="@dimen/course_image_radius" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/certificateHeadingPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_alignBaseline="@id/certificateCourseIconPlaceholder"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/certificateCourseIconPlaceholder" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseTitleFirstPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="12dp"
         android:layout_below="@id/certificateCourseIconPlaceholder"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="12dp" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseTitleSecondPlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="12dp"
         android:layout_below="@id/courseTitleFirstPlaceholder"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/certificateProgressPercentagePlaceholder"
         android:layout_width="24dp"
         android:layout_height="12dp"
-        android:layout_alignParentRight="true"
         android:layout_above="@id/certificateProgressPlaceholder"
-        android:layout_marginTop="8dp" />
+        android:layout_alignParentRight="true" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/certificateProgressPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="4dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="2dp" />
 
 
 </RelativeLayout>
