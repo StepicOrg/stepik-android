@@ -1050,6 +1050,7 @@
 
     <string name="course_purchase_payment_learn_action">Пачаць вучыцца</string>
     <string name="course_purchase_payment_restore_action">Аднавіць пакупку</string>
+    <string name="course_purchase_payment_ok_action">Добра</string>
     <string name="course_purchase_payment_processing">Апрацоўка плацяжу</string>
     <string name="course_purchase_payment_success">Аплата прайшла паспяхова</string>
     <string name="course_purchase_payment_pending">Чаканне аплаты</string>

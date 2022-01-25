@@ -1273,6 +1273,7 @@
 
     <string name="course_purchase_payment_learn_action">Begin to study</string>
     <string name="course_purchase_payment_restore_action">Restore purchase</string>
+    <string name="course_purchase_payment_ok_action">OK</string>
     <string name="course_purchase_payment_processing">Processing payment</string>
     <string name="course_purchase_payment_success">Payment was successful</string>
     <string name="course_purchase_payment_pending">Waiting for payment</string>

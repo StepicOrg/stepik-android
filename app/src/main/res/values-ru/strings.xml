@@ -1186,6 +1186,7 @@
 
     <string name="course_purchase_payment_learn_action">Начать учиться</string>
     <string name="course_purchase_payment_restore_action">Восстановить покупку</string>
+    <string name="course_purchase_payment_ok_action">Хорошо</string>
     <string name="course_purchase_payment_processing">Обработка платежа</string>
     <string name="course_purchase_payment_success">Оплата прошла успешно</string>
     <string name="course_purchase_payment_pending">Ожидание оплаты</string>

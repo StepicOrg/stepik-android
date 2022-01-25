@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.course_purchase.reducer
 
+import com.android.billingclient.api.Purchase
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.analytic.BuyCourseIAPFlowFailureAnalyticEvent
 import org.stepik.android.domain.course_purchase.analytic.BuyCourseIAPFlowStartAnalyticEvent
@@ -21,6 +22,7 @@ import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import org.stepik.android.presentation.wishlist.reducer.WishlistOperationReducer
 import ru.nobird.android.presentation.redux.reducer.StateReducer
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseReducer
@@ -90,47 +92,120 @@ constructor(
                 }
             }
             is Message.PurchaseFlowBillingSuccess -> {
-                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment) {
-                    val promoCode = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-                        state.promoCodeState.promoCodeSku.name
-                    } else {
-                        null
-                    }
+                if (state is State.Content) {
+                    Timber.d("APPS: BillingSuccess - PaymentState - ${state.paymentState} Purchases: ${message.purchases}")
+                    when (state.paymentState) {
+                        is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment -> {
+                            val promoCode = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+                                state.promoCodeState.promoCodeSku.name
+                            } else {
+                                null
+                            }
 
-                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.purchaseFlowData.obfuscatedParams
+                            val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.purchaseFlowData.obfuscatedParams
 
-                    val purchase = message.purchases.find {
-                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
-                            it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
-                    }
+                            val purchase = message.purchases.find {
+                                it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
+                                    it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+                            }
 
-                    requireNotNull(purchase)
+                            requireNotNull(purchase)
 
-                    state.copy(
-                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(
-                            state.paymentState.purchaseFlowData.skuDetails, purchase
-                        )
-                    ) to
-                        setOf(
-                            Action.ConsumePurchaseAction(
-                                state.coursePurchaseData.course.id,
-                                state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
-                                state.paymentState.purchaseFlowData.skuDetails,
-                                purchase,
-                                promoCode
-                            ),
-                            Action.LogAnalyticEvent(
-                                BuyCourseIAPFlowSuccessAnalyticEvent(
-                                    state.coursePurchaseData.course.id,
-                                    state.coursePurchaseSource,
-                                    state.coursePurchaseData.isWishlisted,
-                                    promoCode
-                                )
+                            when (purchase.purchaseState) {
+                                Purchase.PurchaseState.PENDING -> {
+                                    state.copy(
+                                        paymentState = CoursePurchaseFeature.PaymentState.PaymentPending
+                                    ) to setOf(
+                                        Action.SaveBillingPurchasePayload(
+                                            state.coursePurchaseData.course.id,
+                                            state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
+                                            state.paymentState.purchaseFlowData.skuDetails,
+                                            purchase,
+                                            promoCode
+                                        )
+                                    )
+                                }
+                                Purchase.PurchaseState.PURCHASED -> {
+                                    state.copy(
+                                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(
+                                            state.paymentState.purchaseFlowData.skuDetails, purchase
+                                        )
+                                    ) to
+                                        setOf(
+                                            Action.ConsumePurchaseAction(
+                                                state.coursePurchaseData.course.id,
+                                                state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
+                                                state.paymentState.purchaseFlowData.skuDetails,
+                                                purchase,
+                                                promoCode
+                                            ),
+                                            Action.LogAnalyticEvent(
+                                                BuyCourseIAPFlowSuccessAnalyticEvent(
+                                                    state.coursePurchaseData.course.id,
+                                                    state.coursePurchaseSource,
+                                                    state.coursePurchaseData.isWishlisted,
+                                                    promoCode
+                                                )
+                                            )
+                                        )
+                                }
+                                else ->
+                                    state to emptySet()
+                            }
+                        }
+                        is CoursePurchaseFeature.PaymentState.PaymentPending -> {
+                            state to setOf(
+                                Action.ViewAction.ShowLoading,
+                                Action.RestorePurchase(state.coursePurchaseData.course.id)
                             )
-                        )
+                        }
+                        else ->
+                            null
+                    }
                 } else {
                     null
                 }
+//                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment) {
+//                    val promoCode = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
+//                        state.promoCodeState.promoCodeSku.name
+//                    } else {
+//                        null
+//                    }
+//
+//                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.purchaseFlowData.obfuscatedParams
+//
+//                    val purchase = message.purchases.find {
+//                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
+//                            it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
+//                    }
+//
+//                    requireNotNull(purchase)
+//
+//                    state.copy(
+//                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(
+//                            state.paymentState.purchaseFlowData.skuDetails, purchase
+//                        )
+//                    ) to
+//                        setOf(
+//                            Action.ConsumePurchaseAction(
+//                                state.coursePurchaseData.course.id,
+//                                state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
+//                                state.paymentState.purchaseFlowData.skuDetails,
+//                                purchase,
+//                                promoCode
+//                            ),
+//                            Action.LogAnalyticEvent(
+//                                BuyCourseIAPFlowSuccessAnalyticEvent(
+//                                    state.coursePurchaseData.course.id,
+//                                    state.coursePurchaseSource,
+//                                    state.coursePurchaseData.isWishlisted,
+//                                    promoCode
+//                                )
+//                            )
+//                        )
+//                } else {
+//                    null
+//                }
             }
             is Message.PurchaseFlowBillingFailure -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment) {
@@ -150,7 +225,7 @@ constructor(
                 }
             }
             is Message.ConsumePurchaseSuccess -> {
-                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume) {
+                if (state is State.Content && (state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingConsume || state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending)) {
                     state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentSuccess) to
                         setOf(
                             Action.ViewAction.ShowConsumeSuccess,
@@ -230,6 +305,13 @@ constructor(
                     } else {
                         state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentFailure) to setOf(Action.ViewAction.ShowConsumeFailure, analyticEventAction)
                     }
+                } else {
+                    null
+                }
+            }
+            is Message.LaunchPendingPurchaseFlow -> {
+                if (state is State.Content) {
+                    state.copy(paymentState = CoursePurchaseFeature.PaymentState.PaymentPending) to emptySet()
                 } else {
                     null
                 }

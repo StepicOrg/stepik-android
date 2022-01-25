@@ -22,7 +22,8 @@ class BuyActionViewDelegate(
     private val displayPriceMapper: DisplayPriceMapper,
     launchPurchaseFlowAction: () -> Unit,
     launchStartStudying: () -> Unit,
-    launchRestoreAction: () -> Unit
+    launchRestoreAction: () -> Unit,
+    closeDialog: () -> Unit
 ) {
     private val context = coursePurchaseBinding.root.context
     private val coursePurchaseBuyActionGreen = coursePurchaseBinding.coursePurchaseBuyActionGreen
@@ -30,7 +31,8 @@ class BuyActionViewDelegate(
     private val coursePurchaseTerminalAction = coursePurchaseBinding.coursePurchaseTerminalAction
     private val coursePurchasePaymentIcon = coursePurchaseBinding.coursePurchasePaymentIcon
     private val coursePurchasePaymentTitle = coursePurchaseBinding.coursePurchasePaymentTitle
-    private val coursePurchasePaymentFeedback = coursePurchaseBinding.coursePurchasePaymentFailureFeedback
+    private val coursePurchasePaymentFailureFeedback = coursePurchaseBinding.coursePurchasePaymentFailureFeedback
+    private val coursePurchasePaymentPendingFeedback = coursePurchaseBinding.coursePurchasePaymentPendingFeedback
     private val coursePurchaseCommissionNotice = coursePurchaseBinding.coursePurchaseCommissionNotice
 
     private var paymentState: CoursePurchaseFeature.PaymentState = CoursePurchaseFeature.PaymentState.Idle
@@ -52,6 +54,9 @@ class BuyActionViewDelegate(
                 is CoursePurchaseFeature.PaymentState.PaymentFailure -> {
                     launchRestoreAction()
                 }
+                is CoursePurchaseFeature.PaymentState.PaymentPending -> {
+                    closeDialog()
+                }
                 else -> {}
             }
         }
@@ -61,11 +66,13 @@ class BuyActionViewDelegate(
         this.paymentState = state.paymentState
         val isTerminalState =
             state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+            state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending ||
             state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
 
         coursePurchasePaymentTitle.isVisible = isTerminalState
         coursePurchasePaymentIcon.isVisible = isTerminalState
-        coursePurchasePaymentFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure
+        coursePurchasePaymentFailureFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure
+        coursePurchasePaymentPendingFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending
         coursePurchaseCommissionNotice.isGone = isTerminalState
 
         coursePurchaseBuyActionGreen.isVisible = state.promoCodeState !is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
@@ -135,6 +142,13 @@ class BuyActionViewDelegate(
                 coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_restore_action)
                 coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_failure)
                 coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_fail))
+            }
+
+            is CoursePurchaseFeature.PaymentState.PaymentPending -> {
+                coursePurchaseTerminalAction.icon = null
+                coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_ok_action)
+                coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_pending)
+                coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_pending))
             }
             else -> {}
         }

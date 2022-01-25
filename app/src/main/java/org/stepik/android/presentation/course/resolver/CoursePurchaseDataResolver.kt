@@ -3,6 +3,7 @@ package org.stepik.android.presentation.course.resolver
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course_payments.model.CoursePurchaseInfo
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -18,7 +19,8 @@ constructor() {
                     courseHeaderData.course,
                     courseHeaderData.stats,
                     notEnrolledMobileTierState,
-                    courseHeaderData.deeplinkPromoCodeSku
+                    courseHeaderData.deeplinkPromoCodeSku,
+                    (courseHeaderData.coursePurchaseInfo as? CoursePurchaseInfo.Result)?.purchaseState ?: -1
                 )
         }
 
@@ -26,7 +28,8 @@ constructor() {
         course: Course,
         stats: CourseStats,
         notEnrolledMobileTierState: EnrollmentState.NotEnrolledMobileTier,
-        deeplinkPromoCodeSku: PromoCodeSku
+        deeplinkPromoCodeSku: PromoCodeSku,
+        purchaseState: Int
     ): CoursePurchaseData {
         val promoCodeSku = when {
             deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
@@ -47,7 +50,8 @@ constructor() {
             stats,
             notEnrolledMobileTierState.standardLightSku,
             promoCodeSku,
-            course.isInWishlist
+            course.isInWishlist,
+            purchaseState
         )
     }
 }

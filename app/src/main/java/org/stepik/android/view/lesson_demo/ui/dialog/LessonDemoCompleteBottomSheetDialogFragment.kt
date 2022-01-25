@@ -114,7 +114,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
         if (action is LessonDemoFeature.Action.ViewAction.BuyAction) {
             val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
                     .asString()
                     .uppercase()
             )
