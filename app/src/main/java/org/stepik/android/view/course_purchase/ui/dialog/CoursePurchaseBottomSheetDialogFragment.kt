@@ -175,14 +175,14 @@ class CoursePurchaseBottomSheetDialogFragment :
             }
         }
 
-        coursePurchaseBinding.coursePurchasePaymentFeedback.text = buildSpannedString {
+        coursePurchaseBinding.coursePurchasePaymentFailureFeedback.text = buildSpannedString {
             append(getString(R.string.course_purchase_payment_failure_body_part_1))
             inSpans(supportSpan) {
                 append(getString(R.string.course_purchase_payment_failure_body_part_2))
             }
             append(getString(R.string.course_purchase_payment_failure_body_part_3))
         }
-        coursePurchaseBinding.coursePurchasePaymentFeedback.movementMethod = LinkMovementMethod.getInstance()
+        coursePurchaseBinding.coursePurchasePaymentFailureFeedback.movementMethod = LinkMovementMethod.getInstance()
 
         coursePurchaseBinding.coursePurchaseCommissionNotice.text = buildSpannedString {
             append(resolveCommissionSpannedText())

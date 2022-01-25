@@ -30,7 +30,7 @@ class BuyActionViewDelegate(
     private val coursePurchaseTerminalAction = coursePurchaseBinding.coursePurchaseTerminalAction
     private val coursePurchasePaymentIcon = coursePurchaseBinding.coursePurchasePaymentIcon
     private val coursePurchasePaymentTitle = coursePurchaseBinding.coursePurchasePaymentTitle
-    private val coursePurchasePaymentFeedback = coursePurchaseBinding.coursePurchasePaymentFeedback
+    private val coursePurchasePaymentFeedback = coursePurchaseBinding.coursePurchasePaymentFailureFeedback
     private val coursePurchaseCommissionNotice = coursePurchaseBinding.coursePurchaseCommissionNotice
 
     private var paymentState: CoursePurchaseFeature.PaymentState = CoursePurchaseFeature.PaymentState.Idle
