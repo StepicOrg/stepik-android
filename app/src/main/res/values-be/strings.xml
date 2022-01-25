@@ -1074,4 +1074,8 @@
     <string name="settings_help_center">Даведачны цэнтр</string>
     <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
     <string name="settings_app_version">Версія: %s</string>
+
+    <!-- Profile certificates -->
+    <string name="certificates_regular_title">Сертыфікат</string>
+    <string name="certificates_distinction_title">Сертыфікат з адзнакай</string>
 </resources>

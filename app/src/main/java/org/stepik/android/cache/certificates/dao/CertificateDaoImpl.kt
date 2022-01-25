@@ -8,6 +8,7 @@ import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getInt
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
+import org.stepic.droid.util.getBoolean
 import org.stepik.android.cache.certificates.structure.DbStructureCertificate
 import org.stepik.android.model.Certificate
 import javax.inject.Inject
@@ -43,7 +44,8 @@ constructor(
             previewUrl = cursor.getString(DbStructureCertificate.Columns.PREVIEW_URL),
             savedFullName = cursor.getString(DbStructureCertificate.Columns.SAVED_FULLNAME),
             editsCount = cursor.getInt(DbStructureCertificate.Columns.EDITS_COUNT),
-            allowedEditsCount = cursor.getInt(DbStructureCertificate.Columns.ALLOWED_EDITS_COUNT)
+            allowedEditsCount = cursor.getInt(DbStructureCertificate.Columns.ALLOWED_EDITS_COUNT),
+            isWithScore = cursor.getBoolean(DbStructureCertificate.Columns.IS_WITH_SCORE)
         )
 
     override fun getContentValues(persistentObject: Certificate): ContentValues =
@@ -63,5 +65,6 @@ constructor(
             put(DbStructureCertificate.Columns.SAVED_FULLNAME, persistentObject.savedFullName)
             put(DbStructureCertificate.Columns.EDITS_COUNT, persistentObject.editsCount)
             put(DbStructureCertificate.Columns.ALLOWED_EDITS_COUNT, persistentObject.allowedEditsCount)
+            put(DbStructureCertificate.Columns.IS_WITH_SCORE, persistentObject.isWithScore)
         }
 }

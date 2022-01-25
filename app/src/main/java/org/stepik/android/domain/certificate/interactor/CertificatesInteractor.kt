@@ -1,7 +1,7 @@
 package org.stepik.android.domain.certificate.interactor
 
 import io.reactivex.Single
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import ru.nobird.android.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.repository.CertificateRepository
@@ -16,7 +16,7 @@ constructor(
     private val certificateRepository: CertificateRepository,
     private val courseRepository: CourseRepository
 ) {
-    fun getCertificates(userId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CertificateViewItem>> =
+    fun getCertificates(userId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CertificateListItem.Data>> =
         certificateRepository.getCertificates(userId, page, sourceType)
             .flatMap { certificates ->
                 val courseIds =
@@ -30,7 +30,7 @@ constructor(
 
                         PagedList(
                             certificates.map { certificate ->
-                                CertificateViewItem(
+                                CertificateListItem.Data(
                                     certificate,
                                     coursesMap[certificate.course]?.title,
                                     coursesMap[certificate.course]?.cover
