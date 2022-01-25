@@ -1210,4 +1210,8 @@
     <string name="settings_help_center">Справочный центр</string>
     <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
     <string name="settings_app_version">Версия: %s</string>
+
+    <!-- Profile certificates -->
+    <string name="certificates_regular_title">Сертификат</string>
+    <string name="certificates_distinction_title">Сертификат с отличием</string>
 </resources>

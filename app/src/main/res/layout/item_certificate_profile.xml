@@ -1,19 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.AppCompatTextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="160dp"
     android:layout_height="wrap_content"
-    android:drawablePadding="8dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:textAppearance="?textAppearanceBody2"
-    android:gravity="center_vertical"
-    app:drawableLeftCompat="@drawable/ic_certificate"
-    app:drawableStartCompat="@drawable/ic_certificate"
-    android:background="?selectableItemBackground"
-    tools:text="Certificate with distinction"
-    tools:viewBindingIgnore="true"/>
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:background="@drawable/bg_certificate_profile_item"
+    android:minHeight="114dp"
+    android:padding="8dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/certificateCourseIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.RoundedCorners8"
+
+        tools:src="@drawable/general_placeholder" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/certificateHeading"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:maxLines="2"
+        android:textAllCaps="true"
+        android:textAppearance="?textAppearanceCaption"
+        app:layout_constraintBottom_toBottomOf="@id/certificateCourseIcon"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/certificateCourseIcon"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/certificateCourseIcon"
+        tools:text="Сертификат с отличием" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/certificateCourseTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textAppearance="?textAppearanceSubtitle2"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/certificateProgressPercentage"
+        app:layout_constraintTop_toBottomOf="@id/certificateCourseIcon"
+        tools:text="Course title Course title Course title Course title" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/certificateProgress"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/certificateProgressPercentage"
+        app:layout_constraintTop_toBottomOf="@id/certificateCourseTitle"
+        app:layout_constraintVertical_bias="1"
+        app:trackColor="@color/transparent"
+        app:trackCornerRadius="8dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/certificateProgressPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:textAppearance="?textAppearanceSubtitle2"
+        app:layout_constraintVertical_bias="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/certificateCourseTitle"
+        tools:text="76%" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

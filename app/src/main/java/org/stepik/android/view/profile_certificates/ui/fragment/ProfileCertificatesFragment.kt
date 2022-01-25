@@ -11,10 +11,11 @@ import kotlinx.android.synthetic.main.fragment_profile_certificates.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesView
-import org.stepik.android.view.certificate.ui.adapter.CertificateProfileAdapterDelegate
+import org.stepik.android.view.certificate.ui.adapter.delegate.CertificateProfileAdapterDelegate
+import org.stepik.android.view.certificate.ui.adapter.delegate.CertificatesProfilePlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
@@ -22,8 +23,6 @@ import javax.inject.Inject
 
 class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certificates), ProfileCertificatesView {
     companion object {
-        private const val CERTIFICATES_TO_DISPLAY = 4
-
         fun newInstance(userId: Long): Fragment =
             ProfileCertificatesFragment()
                 .apply {
@@ -42,7 +41,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
 
     private val certificatesPresenter: ProfileCertificatesPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCertificatesView.State>
-    private lateinit var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem>
+    private lateinit var certificatesAdapter: DefaultDelegateAdapter<CertificateListItem>
 
     private var profileId = 0L
 
@@ -52,6 +51,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         injectComponent()
 
         certificatesAdapter = DefaultDelegateAdapter()
+        certificatesAdapter += CertificatesProfilePlaceholderAdapterDelegate()
         certificatesAdapter += CertificateProfileAdapterDelegate(::onCertificateClicked)
     }
 
@@ -65,7 +65,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileCertificatesView.State.Idle>()
         viewStateDelegate.addState<ProfileCertificatesView.State.SilentLoading>()
-        viewStateDelegate.addState<ProfileCertificatesView.State.Loading>(view, profileCertificatesLoading)
+        viewStateDelegate.addState<ProfileCertificatesView.State.Loading>(view, profileCertificatesRecycler)
         viewStateDelegate.addState<ProfileCertificatesView.State.Error>(view, certificatesLoadingError)
         viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesCache>(view, profileCertificatesRecycler)
         viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesRemote>(view, profileCertificatesRecycler)
@@ -74,7 +74,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
         profileCertificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), profileId, isCurrentUser) }
 
-        profileCertificatesRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        profileCertificatesRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         profileCertificatesRecycler.isNestedScrollingEnabled = false
         profileCertificatesRecycler.adapter = certificatesAdapter
 
@@ -104,16 +104,21 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
 
         when (state) {
             is ProfileCertificatesView.State.Loading -> {
+                certificatesAdapter.items = listOf(
+                    CertificateListItem.Placeholder,
+                    CertificateListItem.Placeholder,
+                    CertificateListItem.Placeholder
+                )
                 profileId = state.profileData.user.id
                 isCurrentUser = state.profileData.isCurrentUser
             }
             is ProfileCertificatesView.State.CertificatesCache -> {
-                certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
+                certificatesAdapter.items = state.certificates
                 profileId = state.profileData.user.id
                 isCurrentUser = state.profileData.isCurrentUser
             }
             is ProfileCertificatesView.State.CertificatesRemote -> {
-                certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
+                certificatesAdapter.items = state.certificates
                 profileId = state.profileData.user.id
                 isCurrentUser = state.profileData.isCurrentUser
             }

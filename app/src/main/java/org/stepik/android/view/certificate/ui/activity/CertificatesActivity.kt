@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -57,7 +57,7 @@ class CertificatesActivity :
 
     private val certificatesPresenter: CertificatesPresenter by viewModels { viewModelFactory }
 
-    private var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem> = DefaultDelegateAdapter()
+    private var certificatesAdapter: DefaultDelegateAdapter<CertificateListItem> = DefaultDelegateAdapter()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -174,12 +174,12 @@ class CertificatesActivity :
         showChangeNameDialog(certificate, attemptedFullName)
     }
 
-    private fun onNeedShowShareDialog(certificateViewItem: CertificateViewItem?) {
-        if (certificateViewItem == null) {
+    private fun onNeedShowShareDialog(certificateListItem: CertificateListItem.Data?) {
+        if (certificateListItem == null) {
             return
         }
         CertificateShareDialogFragment
-            .newInstance(certificateViewItem)
+            .newInstance(certificateListItem)
             .showIfNotExists(supportFragmentManager, CertificateShareDialogFragment.TAG)
     }
 

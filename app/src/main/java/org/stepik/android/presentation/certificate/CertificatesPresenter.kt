@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import ru.nobird.android.core.model.PagedList
 import ru.nobird.android.core.model.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
@@ -83,12 +83,12 @@ constructor(
                     oldState.certificates
 
                 oldState is CertificatesView.State.CertificatesCache ->
-                    emptyList<CertificateViewItem>()
+                    emptyList<CertificateListItem.Data>()
 
                 else -> return
             }
 
-        val nextPage = (currentItems as? PagedList<CertificateViewItem>)
+        val nextPage = (currentItems as? PagedList<CertificateListItem.Data>)
             ?.page
             ?.plus(1)
             ?: 1
@@ -158,11 +158,11 @@ constructor(
             .subscribeBy(
                 onSuccess = { updatedCertificate ->
                     val updatedItems = currentItems.transform {
-                        map { certificateViewItem ->
-                            if (certificateViewItem.certificate.id == updatedCertificate.id) {
-                                certificateViewItem.copy(certificate = updatedCertificate)
+                        map { certificateListItem ->
+                            if (certificateListItem.certificate.id == updatedCertificate.id) {
+                                certificateListItem.copy(certificate = updatedCertificate)
                             } else {
-                                certificateViewItem
+                                certificateListItem
                             }
                         }
                     }

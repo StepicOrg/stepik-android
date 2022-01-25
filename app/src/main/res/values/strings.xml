@@ -1297,4 +1297,9 @@
     <string name="settings_help_center">Help center</string>
     <string name="settings_help_center_url">https://support.stepik.org/hc/en-us</string>
     <string name="settings_app_version">Version: %s</string>
+
+    <!-- Profile certificates -->
+    <string name="certificates_percentage" translatable="false">%s%%</string>
+    <string name="certificates_regular_title">Certificate</string>
+    <string name="certificates_distinction_title">Certificate with distinction</string>
 </resources>

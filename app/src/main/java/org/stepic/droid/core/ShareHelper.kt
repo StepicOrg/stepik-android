@@ -1,7 +1,7 @@
 package org.stepic.droid.core
 
 import android.content.Intent
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import org.stepik.android.model.user.User
@@ -9,7 +9,7 @@ import org.stepik.android.model.user.User
 interface ShareHelper {
     fun getIntentForCourseSharing(course: Course): Intent
 
-    fun getIntentForShareCertificate(certificateViewItem: CertificateViewItem): Intent
+    fun getIntentForShareCertificate(certificateListItem: CertificateListItem.Data): Intent
 
     fun getIntentForStepSharing(step: Step, lesson: Lesson, unit: Unit?): Intent
 

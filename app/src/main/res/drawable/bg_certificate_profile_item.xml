@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple android:color="?android:attr/colorControlHighlight" xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="#000000" />
+            <corners android:radius="@dimen/onboarding_radius" />
+        </shape>
+    </item>
+    <item android:id="@+id/certificate_layer_list">
+        <layer-list>
+            <item android:id="@+id/certificate_regular">
+                <shape android:shape="rectangle">
+                    <stroke
+                        android:width="1dp"
+                        android:color="@color/color_overlay_green" />
+                    <corners android:radius="8dp" />
+                </shape>
+            </item>
+
+            <item android:id="@+id/certificate_distinction">
+                <shape android:shape="rectangle">
+                    <stroke
+                        android:width="1dp"
+                        android:color="@color/color_overlay_yellow" />
+                    <corners android:radius="8dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</ripple>

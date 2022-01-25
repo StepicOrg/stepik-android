@@ -16,7 +16,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CertificateListItem;
 import org.stepic.droid.util.ContextExtensionsKt;
 import org.stepic.droid.util.DisplayUtils;
 
@@ -25,7 +25,7 @@ import javax.inject.Inject;
 public class CertificateShareDialog extends BottomSheetDialog {
 
     @NotNull
-    private final CertificateViewItem certificateViewItem;
+    private final CertificateListItem.Data certificateListItem;
 
     @Inject
     ScreenManager screenManager;
@@ -36,9 +36,9 @@ public class CertificateShareDialog extends BottomSheetDialog {
     @Inject
     Analytic analytic;
 
-    public CertificateShareDialog(@NonNull Context context, @NotNull CertificateViewItem certificateViewItem) {
+    public CertificateShareDialog(@NonNull Context context, @NotNull CertificateListItem.Data certificateListItem) {
         super(context);
-        this.certificateViewItem = certificateViewItem;
+        this.certificateListItem = certificateListItem;
         App.Companion.component().inject(this);
     }
 
@@ -61,7 +61,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
             @Override
             public void onClick(View view) {
                 dismiss();
-                screenManager.addCertificateToLinkedIn(certificateViewItem);
+                screenManager.addCertificateToLinkedIn(certificateListItem);
             }
         });
 
@@ -73,7 +73,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
                 ContextExtensionsKt.copyTextToClipboard(
                         getContext(),
                         App.Companion.getAppContext().getString(R.string.copy_link_title),
-                        certificateViewItem.getCertificate().getUrl(),
+                        certificateListItem.getCertificate().getUrl(),
                         getContext().getResources().getString(R.string.link_copied_title)
                 );
             }
@@ -84,7 +84,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Certificate.SHARE_LINK_CERTIFICATE);
-                Intent intent = shareHelper.getIntentForShareCertificate(certificateViewItem);
+                Intent intent = shareHelper.getIntentForShareCertificate(certificateListItem);
                 getContext().startActivity(intent);
             }
         });
