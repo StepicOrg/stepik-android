@@ -52,6 +52,12 @@ allprojects {
             dirs 'libs/aars'
         }
     }
+
+    configurations.all {
+        resolutionStrategy {
+            force libraries.jdbc
+        }
+    }
 }
 
 configurations.all {
