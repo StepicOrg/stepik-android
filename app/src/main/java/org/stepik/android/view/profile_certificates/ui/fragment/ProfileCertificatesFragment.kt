@@ -65,7 +65,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileCertificatesView.State.Idle>()
         viewStateDelegate.addState<ProfileCertificatesView.State.SilentLoading>()
-        viewStateDelegate.addState<ProfileCertificatesView.State.Loading>(view, profileCertificatesLoading)
+        viewStateDelegate.addState<ProfileCertificatesView.State.Loading>(view, profileCertificatesRecycler)
         viewStateDelegate.addState<ProfileCertificatesView.State.Error>(view, certificatesLoadingError)
         viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesCache>(view, profileCertificatesRecycler)
         viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesRemote>(view, profileCertificatesRecycler)
