@@ -9,7 +9,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepik.android.domain.story.model.StoryReaction
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.ui.adapter.StoriesPagerAdapter
 import ru.nobird.android.stories.ui.custom.DismissableLayout

@@ -9,7 +9,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
 import org.stepik.android.view.catalog.model.CatalogItem
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 

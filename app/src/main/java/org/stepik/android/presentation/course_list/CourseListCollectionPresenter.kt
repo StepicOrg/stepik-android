@@ -23,9 +23,9 @@ import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.WishlistOperationBus
-import ru.nobird.android.core.model.cast
-import ru.nobird.android.core.model.safeCast
-import ru.nobird.android.core.model.slice
+import ru.nobird.app.core.model.cast
+import ru.nobird.app.core.model.safeCast
+import ru.nobird.app.core.model.slice
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer

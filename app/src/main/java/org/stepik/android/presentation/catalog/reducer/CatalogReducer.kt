@@ -21,8 +21,8 @@ import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.presentation.stories.reducer.StoriesReducer
 import org.stepik.android.presentation.user_courses.UserCoursesFeature
 import org.stepik.android.presentation.wishlist.WishlistFeature
-import ru.nobird.android.core.model.safeCast
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.core.model.safeCast
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CatalogReducer

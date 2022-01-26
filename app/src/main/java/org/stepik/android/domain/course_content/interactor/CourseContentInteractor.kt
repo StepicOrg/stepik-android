@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.exam.interactor.ExamSessionDataInteractor

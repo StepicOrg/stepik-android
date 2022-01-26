@@ -2,7 +2,7 @@ package org.stepik.android.domain.personal_deadlines.resolver
 
 import io.reactivex.Single
 import org.stepic.droid.util.AppConstants
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapToLongArray
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.personal_deadlines.model.Deadline

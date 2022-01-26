@@ -9,9 +9,9 @@ import org.stepik.android.presentation.debug.SplitTestsFeature
 import org.stepik.android.presentation.debug.SplitTestsViewModel
 import org.stepik.android.presentation.debug.dispatcher.SplitTestsActionDispatcher
 import org.stepik.android.presentation.debug.reducer.SplitTestsReducer
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object SplitTestsPresentationModule {

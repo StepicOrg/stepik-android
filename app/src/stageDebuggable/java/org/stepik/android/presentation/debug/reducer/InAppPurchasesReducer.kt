@@ -3,9 +3,9 @@ package org.stepik.android.presentation.debug.reducer
 import org.stepik.android.presentation.debug.InAppPurchasesFeature.State
 import org.stepik.android.presentation.debug.InAppPurchasesFeature.Message
 import org.stepik.android.presentation.debug.InAppPurchasesFeature.Action
-import ru.nobird.android.core.model.mutate
+import ru.nobird.app.core.model.mutate
 
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class InAppPurchasesReducer

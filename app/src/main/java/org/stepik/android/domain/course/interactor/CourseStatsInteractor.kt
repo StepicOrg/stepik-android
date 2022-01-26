@@ -30,7 +30,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
 import org.stepik.android.remote.mobile_tiers.model.MobileTierCalculation
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapToLongArray
 import javax.inject.Inject
 
 class CourseStatsInteractor

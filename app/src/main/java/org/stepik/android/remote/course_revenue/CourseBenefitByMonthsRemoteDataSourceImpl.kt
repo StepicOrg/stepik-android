@@ -6,7 +6,7 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonth
 import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.course_revenue.model.CourseBenefitByMonthsResponse
 import org.stepik.android.remote.course_revenue.service.CourseBenefitByMonthsService
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import javax.inject.Inject
 
 class CourseBenefitByMonthsRemoteDataSourceImpl

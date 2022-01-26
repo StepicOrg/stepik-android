@@ -10,10 +10,10 @@ import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
 import org.stepik.android.presentation.user_reviews.dispatcher.UserReviewsActionDispatcher
 import org.stepik.android.presentation.user_reviews.reducer.UserReviewsReducer
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.Feature
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.Feature
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object UserReviewsPresentationModule {

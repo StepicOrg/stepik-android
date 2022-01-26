@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.ResponseBody
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource

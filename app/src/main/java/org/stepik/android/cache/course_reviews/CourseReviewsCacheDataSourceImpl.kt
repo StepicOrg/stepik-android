@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.cache.course_reviews.structure.DbStructureCourseReview
 import org.stepik.android.data.course_reviews.source.CourseReviewsCacheDataSource
 import org.stepik.android.domain.course_reviews.model.CourseReview

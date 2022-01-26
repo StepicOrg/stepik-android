@@ -1,6 +1,6 @@
 package org.stepik.android.model
 
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 enum class PlatformType(
     override val id: Int,

@@ -6,7 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.configuration.RemoteConfig
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
 import org.stepik.android.domain.course.model.CourseStats

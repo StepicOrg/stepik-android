@@ -7,7 +7,7 @@ import org.stepik.android.presentation.lesson_demo.LessonDemoFeature.Message
 import org.stepik.android.presentation.lesson_demo.LessonDemoFeature.Action
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import org.stepik.android.presentation.wishlist.reducer.WishlistOperationReducer
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class LessonDemoReducer

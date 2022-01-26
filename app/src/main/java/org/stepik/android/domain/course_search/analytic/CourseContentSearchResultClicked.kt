@@ -1,7 +1,7 @@
 package org.stepik.android.domain.course_search.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 
 class CourseContentSearchResultClicked(
     val courseId: Long,

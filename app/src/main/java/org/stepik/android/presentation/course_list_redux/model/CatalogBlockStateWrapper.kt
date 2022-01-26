@@ -8,7 +8,7 @@ import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.REC
 import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.SIMPLE_COURSE_LISTS
 import org.stepik.android.domain.catalog.model.CatalogBlockContent.Companion.SPECIALIZATIONS
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CatalogBlockStateWrapper : Identifiable<String> {
     data class FullCourseList(

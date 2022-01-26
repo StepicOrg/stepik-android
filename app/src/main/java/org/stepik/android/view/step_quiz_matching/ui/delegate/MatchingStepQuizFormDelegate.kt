@@ -15,7 +15,7 @@ import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingIt
 import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingItemTitleAdapterDelegate
 import org.stepik.android.view.step_quiz_matching.ui.mapper.MatchingItemMapper
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
-import ru.nobird.android.core.model.swap
+import ru.nobird.app.core.model.swap
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class MatchingStepQuizFormDelegate(

@@ -3,7 +3,7 @@ package org.stepik.android.data.personal_deadlines.repository
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepic.droid.util.then
 import org.stepic.droid.web.storage.model.StorageRecord

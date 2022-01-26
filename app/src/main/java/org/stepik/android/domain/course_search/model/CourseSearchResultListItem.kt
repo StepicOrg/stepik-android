@@ -1,6 +1,6 @@
 package org.stepik.android.domain.course_search.model
 
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CourseSearchResultListItem {
     data class Data(val courseSearchResult: CourseSearchResult) : CourseSearchResultListItem(), Identifiable<Long> {

@@ -1,7 +1,7 @@
 package org.stepik.android.view.stories.viewmodel
 
 import org.stepik.android.presentation.stories.StoriesFeature
-import ru.nobird.android.presentation.redux.container.ReduxViewContainer
+import ru.nobird.app.presentation.redux.container.ReduxViewContainer
 import ru.nobird.android.view.redux.viewmodel.ReduxViewModel
 
 class StoriesViewModel(

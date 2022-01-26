@@ -12,7 +12,7 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Unit
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapToLongArray
 import javax.inject.Inject
 
 @AppSingleton

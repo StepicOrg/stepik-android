@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.redux
 
-import ru.nobird.android.presentation.redux.feature.Feature
+import ru.nobird.app.presentation.redux.feature.Feature
 
 fun <State, Message, Action> Feature<State, Message, Action>.wrapWithRefCounter(): Feature<State, Message, Action> =
     object : Feature<State, Message, Action> by this {

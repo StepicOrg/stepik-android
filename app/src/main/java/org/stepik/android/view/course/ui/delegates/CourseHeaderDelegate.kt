@@ -51,7 +51,7 @@ import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.view.base.ui.extension.getAllQueryParameters
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import java.util.TimeZone

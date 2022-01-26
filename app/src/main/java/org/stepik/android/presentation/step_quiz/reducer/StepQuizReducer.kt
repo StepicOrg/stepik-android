@@ -8,7 +8,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizFeature.State
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.Message
 import org.stepik.android.presentation.step_quiz.StepQuizFeature.Action
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import java.util.Calendar
 import javax.inject.Inject
 

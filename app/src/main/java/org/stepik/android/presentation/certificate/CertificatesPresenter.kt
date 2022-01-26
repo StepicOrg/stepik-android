@@ -9,13 +9,13 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.CertificateListItem
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.concatWithPagedList
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.interactor.CertificatesInteractor
 import org.stepik.android.model.Certificate
 import org.stepik.android.presentation.base.PresenterBase
-import ru.nobird.android.core.model.transform
+import ru.nobird.app.core.model.transform
 import javax.inject.Inject
 
 class CertificatesPresenter

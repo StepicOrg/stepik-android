@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_matching.ui.model
 
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class MatchingItem : Identifiable<Int> {
     data class Title(

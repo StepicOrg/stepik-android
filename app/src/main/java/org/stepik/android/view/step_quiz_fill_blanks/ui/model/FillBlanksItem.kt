@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_fill_blanks.ui.model
 
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class FillBlanksItem : Identifiable<Int> {
     data class Text(

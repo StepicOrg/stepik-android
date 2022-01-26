@@ -1,6 +1,6 @@
 package org.stepik.android.domain.debug.model
 
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 data class SplitTestData(
     val splitTestName: String,

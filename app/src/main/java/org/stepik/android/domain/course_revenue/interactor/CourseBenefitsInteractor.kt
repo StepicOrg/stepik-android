@@ -14,8 +14,8 @@ import org.stepik.android.domain.course_revenue.repository.CourseBenefitsReposit
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.user.User
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.transform
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.transform
 import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 

@@ -6,7 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.R
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapToLongArray
 import org.stepik.android.domain.calendar.model.CalendarEventData
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.calendar.repository.CalendarRepository

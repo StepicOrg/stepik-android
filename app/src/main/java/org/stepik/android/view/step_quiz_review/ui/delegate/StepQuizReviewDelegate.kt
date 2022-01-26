@@ -21,7 +21,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 
 class StepQuizReviewDelegate(
     override val containerView: View,

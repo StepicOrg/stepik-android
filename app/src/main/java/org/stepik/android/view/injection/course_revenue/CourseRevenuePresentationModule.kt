@@ -15,11 +15,11 @@ import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitsA
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseBenefitsMonthlyActionDispatcher
 import org.stepik.android.presentation.course_revenue.dispatcher.CourseRevenueActionDispatcher
 import org.stepik.android.presentation.course_revenue.reducer.CourseRevenueReducer
-import ru.nobird.android.core.model.safeCast
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.transform
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.core.model.safeCast
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.transform
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object CourseRevenuePresentationModule {
