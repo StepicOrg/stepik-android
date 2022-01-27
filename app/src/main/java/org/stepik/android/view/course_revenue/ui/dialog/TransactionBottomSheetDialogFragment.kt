@@ -102,7 +102,8 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionPromoCodeTitle.isVisible = courseBenefit.promoCode != null
         transactionPromoCodeValue.isVisible = courseBenefit.promoCode != null
 
-        val isChannelInfoVisible = courseBenefit.status == CourseBenefit.Status.DEBITED || courseBenefit.isManual
+        val isChannelInfoVisible = courseBenefit.status == CourseBenefit.Status.DEBITED ||
+            (courseBenefit.buyer == null && !courseBenefit.isInvoicePayment)
 
         transactionChannelTitle.isVisible = isChannelInfoVisible
         transactionChannelValue.isVisible = isChannelInfoVisible
@@ -112,7 +113,7 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     getString(R.string.transaction_z_link_channel)
                 courseBenefit.isInvoicePayment ->
                     getString(R.string.transaction_invoice_channel)
-                courseBenefit.isManual -> {
+                courseBenefit.buyer == null && !courseBenefit.isInvoicePayment -> {
                     buildString {
                         append(getString(R.string.transaction_manual_channel))
                         if (courseBenefit.description != null) {
