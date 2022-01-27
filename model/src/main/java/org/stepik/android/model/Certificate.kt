@@ -40,7 +40,9 @@ data class Certificate(
     @SerializedName("edits_count")
     val editsCount: Int,
     @SerializedName("allowed_edits_count")
-    val allowedEditsCount: Int
+    val allowedEditsCount: Int,
+    @SerializedName("is_with_score")
+    val isWithScore: Boolean
 ) : Parcelable {
 
     /*

@@ -12,7 +12,7 @@ data class RetentionNotificationDismissed(
     }
 
     override val name: String =
-        "Retention notification clicked"
+        "Retention notification dismissed"
 
     override val params: Map<String, Any> =
         mapOf(PARAM_DAY to day)

@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.certificate
 
-import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.model.Certificate
 import ru.nobird.android.core.model.PagedList
 
@@ -11,9 +11,9 @@ interface CertificatesView {
         object EmptyCertificates : State()
         object NetworkError : State()
 
-        class CertificatesCache(val certificates: PagedList<CertificateViewItem>) : State()
-        class CertificatesRemote(val certificates: PagedList<CertificateViewItem>) : State()
-        class CertificatesRemoteLoading(val certificates: PagedList<CertificateViewItem>) : State()
+        class CertificatesCache(val certificates: PagedList<CertificateListItem.Data>) : State()
+        class CertificatesRemote(val certificates: PagedList<CertificateListItem.Data>) : State()
+        class CertificatesRemoteLoading(val certificates: PagedList<CertificateListItem.Data>) : State()
     }
 
     fun setState(state: State)

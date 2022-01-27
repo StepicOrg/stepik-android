@@ -1141,6 +1141,7 @@
     <string name="transaction_stepik_channel">Переход через Stepik</string>
     <string name="transaction_z_link_channel">Переход по z-ссылке</string>
     <string name="transaction_invoice_channel">Оплата по счету</string>
+    <string name="transaction_manual_channel">Вручную</string>
     <string name="transaction_share">Ваш процент</string>
     <string name="transaction_share_value">%s%% с продаж за вычетом комиссии Stepik</string>
     <string name="transaction_income">Ваш доход</string>
@@ -1209,4 +1210,8 @@
     <string name="settings_help_center">Справочный центр</string>
     <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
     <string name="settings_app_version">Версия: %s</string>
+
+    <!-- Profile certificates -->
+    <string name="certificates_regular_title">Сертификат</string>
+    <string name="certificates_distinction_title">Сертификат с отличием</string>
 </resources>

@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CertificateListItem;
 import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.course.analytic.CourseViewSource;
@@ -91,7 +91,7 @@ public interface ScreenManager {
 
     void openInWeb(Activity context, String path);
 
-    void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
+    void addCertificateToLinkedIn(CertificateListItem.Data certificateListItem);
 
     void showCertificates(Context context);
 

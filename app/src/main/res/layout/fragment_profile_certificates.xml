@@ -31,11 +31,6 @@
         style="@style/ProfileItemHeader" />
 
     <include
-        android:id="@+id/profileCertificatesLoading"
-        android:visibility="gone"
-        layout="@layout/profile_details_loading_view" />
-
-    <include
         android:id="@+id/certificatesLoadingError"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -45,8 +40,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profileCertificatesRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        android:clipToPadding="false"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:visibility="gone" />
 
     <include layout="@layout/view_divider_vertical" />

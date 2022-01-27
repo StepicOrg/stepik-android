@@ -33,7 +33,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.EndpointResolver;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.model.CertificateListItem;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
@@ -531,7 +531,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void addCertificateToLinkedIn(CertificateViewItem certificateViewItem) {
+    public void addCertificateToLinkedIn(CertificateListItem.Data certificateListItem) {
         // TODO: 19/10/2017 linkedin exporting is not working due to changing API params is not filled
 
         StringBuilder sb = new StringBuilder();
@@ -539,9 +539,9 @@ public class ScreenManagerImpl implements ScreenManager {
         sb.append("_ed=");//linkedin id parameter
         sb.append(AppConstants.LINKEDIN_ED_ID);
         sb.append("&pfCertificationName="); // linkedin cert name
-        sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
+        sb.append(URLEncoder.encode(certificateListItem.getTitle()));
         sb.append("&pfCertificationUrl=");//linkedin certificate url
-        sb.append(certificateViewItem.getCertificate().getUrl());
+        sb.append(certificateListItem.getCertificate().getUrl());
 
 
         final Intent intent = new Intent(Intent.ACTION_VIEW);

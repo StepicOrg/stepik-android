@@ -2,6 +2,7 @@ package org.stepik.android.domain.course_revenue.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
@@ -12,7 +13,7 @@ data class CourseBenefit(
     @SerializedName("user")
     val user: Long,
     @SerializedName("buyer")
-    val buyer: Long,
+    val buyer: Long?,
     @SerializedName("course")
     val course: Long,
     @SerializedName("time")
@@ -22,9 +23,11 @@ data class CourseBenefit(
     @SerializedName("amount")
     val amount: String,
     @SerializedName("payment_amount")
-    val paymentAmount: String,
+    val paymentAmount: String?,
     @SerializedName("currency_code")
     val currencyCode: String,
+    @SerializedName("description")
+    val description: String?,
     @SerializedName("is_z_link_used")
     val isZLinkUsed: Boolean?,
     @SerializedName("is_invoice_payment")
@@ -40,4 +43,7 @@ data class CourseBenefit(
         @SerializedName("refunded")
         REFUNDED("refunded")
     }
+    @IgnoredOnParcel
+    val isManual: Boolean =
+        buyer == null && !isInvoicePayment
 }
