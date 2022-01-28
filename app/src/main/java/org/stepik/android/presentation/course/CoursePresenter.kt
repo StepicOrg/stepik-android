@@ -57,7 +57,6 @@ import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -183,6 +182,14 @@ constructor(
                     postCourseViewedNotification(it.courseId)
                     logCoursePreviewOpenedEvent(it.course, viewSource)
                     saveVisitedCourse(it.courseId)
+                    /**
+                     * Open IAP purchase dialog to finalize purchase
+                     */
+                    if (it.coursePurchaseInfo is CoursePurchaseInfo.Result &&
+                        it.coursePurchaseInfo.purchaseState == Purchase.PurchaseState.PURCHASED
+                    ) {
+                        resolveShowInAppAction(it)
+                    }
                 },
                 onError    = { state = CourseView.State.NetworkError }
             )
@@ -223,13 +230,8 @@ constructor(
             EnrollmentState.NotEnrolledWeb ->
                 openCoursePurchaseInWeb()
 
-            is EnrollmentState.NotEnrolledMobileTier -> {
-                coursePurchaseDataResolver
-                    .resolveCoursePurchaseData(headerData)
-                    ?.let { coursePurchaseData ->
-                        view?.openCoursePurchaseInApp(coursePurchaseData)
-                    }
-            }
+            is EnrollmentState.NotEnrolledMobileTier ->
+                resolveShowInAppAction(headerData)
         }
     }
 
@@ -546,16 +548,28 @@ constructor(
                             null
                         }
 
-                    Timber.d("APPS: Update purchase info - $updatedCoursePurchaseInfo")
-
                     if (updatedCoursePurchaseInfo != null) {
                         val updatedCourseHeaderData = oldState.courseHeaderData.copy(coursePurchaseInfo = updatedCoursePurchaseInfo)
                         state = CourseView.State.CourseLoaded(courseHeaderData = updatedCourseHeaderData)
                         courseInteractor.updatePurchaseData(updatedCourseHeaderData)
+
+                        if (updatedCoursePurchaseInfo is CoursePurchaseInfo.Result &&
+                            updatedCoursePurchaseInfo.purchaseState == Purchase.PurchaseState.PURCHASED
+                        ) {
+                            resolveShowInAppAction(updatedCourseHeaderData)
+                        }
                     }
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    private fun resolveShowInAppAction(courseHeaderData: CourseHeaderData) {
+        coursePurchaseDataResolver
+            .resolveCoursePurchaseData(courseHeaderData)
+            ?.let { coursePurchaseData ->
+                view?.openCoursePurchaseInApp(coursePurchaseData)
+            }
     }
 
     /**

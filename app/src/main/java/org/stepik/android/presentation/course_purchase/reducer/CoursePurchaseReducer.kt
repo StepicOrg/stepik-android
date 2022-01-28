@@ -165,47 +165,6 @@ constructor(
                 } else {
                     null
                 }
-//                if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment) {
-//                    val promoCode = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
-//                        state.promoCodeState.promoCodeSku.name
-//                    } else {
-//                        null
-//                    }
-//
-//                    val (obfuscatedAccountId, obfuscatedProfileId) = state.paymentState.purchaseFlowData.obfuscatedParams
-//
-//                    val purchase = message.purchases.find {
-//                        it.accountIdentifiers?.obfuscatedAccountId == obfuscatedAccountId &&
-//                            it.accountIdentifiers?.obfuscatedProfileId == obfuscatedProfileId
-//                    }
-//
-//                    requireNotNull(purchase)
-//
-//                    state.copy(
-//                        paymentState = CoursePurchaseFeature.PaymentState.ProcessingConsume(
-//                            state.paymentState.purchaseFlowData.skuDetails, purchase
-//                        )
-//                    ) to
-//                        setOf(
-//                            Action.ConsumePurchaseAction(
-//                                state.coursePurchaseData.course.id,
-//                                state.paymentState.purchaseFlowData.coursePurchasePayload.profileId,
-//                                state.paymentState.purchaseFlowData.skuDetails,
-//                                purchase,
-//                                promoCode
-//                            ),
-//                            Action.LogAnalyticEvent(
-//                                BuyCourseIAPFlowSuccessAnalyticEvent(
-//                                    state.coursePurchaseData.course.id,
-//                                    state.coursePurchaseSource,
-//                                    state.coursePurchaseData.isWishlisted,
-//                                    promoCode
-//                                )
-//                            )
-//                        )
-//                } else {
-//                    null
-//                }
             }
             is Message.PurchaseFlowBillingFailure -> {
                 if (state is State.Content && state.paymentState is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment) {
