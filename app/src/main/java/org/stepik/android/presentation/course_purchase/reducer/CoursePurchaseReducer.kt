@@ -22,7 +22,6 @@ import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature
 import org.stepik.android.presentation.wishlist.reducer.WishlistOperationReducer
 import ru.nobird.app.presentation.redux.reducer.StateReducer
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseReducer
@@ -93,7 +92,6 @@ constructor(
             }
             is Message.PurchaseFlowBillingSuccess -> {
                 if (state is State.Content) {
-                    Timber.d("APPS: BillingSuccess - PaymentState - ${state.paymentState} Purchases: ${message.purchases}")
                     when (state.paymentState) {
                         is CoursePurchaseFeature.PaymentState.ProcessingBillingPayment -> {
                             val promoCode = if (state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid) {
