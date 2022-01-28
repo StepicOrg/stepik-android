@@ -28,7 +28,6 @@ constructor(
                 val vote = commentsData
                     .votes
                     .find { it.id == comment.vote }
-                    ?: return@mapNotNull null
 
                 val solution = comment
                     .submission
@@ -57,7 +56,7 @@ constructor(
                     comment = comment,
                     textData = result,
                     user = user,
-                    voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
+                    voteStatus = if (vote == null) CommentItem.Data.VoteStatus.Unavailable else CommentItem.Data.VoteStatus.Resolved(vote),
                     isFocused = discussionId == comment.id,
                     solution = solution
                 )
