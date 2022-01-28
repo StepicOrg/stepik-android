@@ -48,7 +48,7 @@ class CourseBenefitsAdapterDelegate(
 
             purchaseRefundIcon.setImageDrawable(getIconDrawable(data.courseBenefit))
             purchaseRefundName.text =
-                if (data.courseBenefit.isManual) {
+                if (data.courseBenefit.buyer == null && !data.courseBenefit.isInvoicePayment) {
                     buildString {
                         append(context.getString(R.string.transaction_manual_channel))
                         if (data.courseBenefit.description != null) {
@@ -90,7 +90,7 @@ class CourseBenefitsAdapterDelegate(
         }
 
         private fun getIconDrawable(data: CourseBenefit): Drawable? =
-            if (data.isManual) {
+            if (data.buyer == null && !data.isInvoicePayment) {
                 getTintedDrawable(R.color.color_on_surface_alpha_38)
             } else {
                 if (data.status == CourseBenefit.Status.DEBITED) {
