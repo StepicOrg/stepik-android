@@ -75,6 +75,7 @@ class CommentDataAdapterDelegate(
 
             voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Resolved>(commentLike, commentDislike)
             voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Pending>(root.commentVoteProgress)
+            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Unavailable>(commentLike, commentDislike)
 
             commentTagsAdapter += CommentTagsAdapterDelegate()
             with(commentTags) {
@@ -123,25 +124,32 @@ class CommentDataAdapterDelegate(
             commentLike.text = data.comment.epicCount.toString()
             commentDislike.text = data.comment.abuseCount.toString()
 
-            commentLike.isEnabled = data.comment.actions?.vote == true
-            commentDislike.isEnabled = data.comment.actions?.vote == true
+            commentLike.isEnabled = data.comment.actions?.vote == true && data.voteStatus is CommentItem.Data.VoteStatus.Resolved
+            commentDislike.isEnabled = data.comment.actions?.vote == true && data.voteStatus is CommentItem.Data.VoteStatus.Resolved
 
-            if (data.voteStatus is CommentItem.Data.VoteStatus.Resolved) {
-                commentLike.alpha =
-                    when (data.voteStatus.vote.value) {
-                        Vote.Value.LIKE ->
-                            1f
-                        else ->
-                            0.5f
-                    }
+            when (data.voteStatus) {
+                is CommentItem.Data.VoteStatus.Resolved -> {
+                    commentLike.alpha =
+                        when (data.voteStatus.vote.value) {
+                            Vote.Value.LIKE ->
+                                1f
+                            else ->
+                                0.5f
+                        }
 
-                commentDislike.alpha =
-                    when (data.voteStatus.vote.value) {
-                        Vote.Value.DISLIKE ->
-                            1f
-                        else ->
-                            0.5f
-                    }
+                    commentDislike.alpha =
+                        when (data.voteStatus.vote.value) {
+                            Vote.Value.DISLIKE ->
+                                1f
+                            else ->
+                                0.5f
+                        }
+                }
+                is CommentItem.Data.VoteStatus.Unavailable -> {
+                    commentLike.alpha = 0.5f
+                    commentDislike.alpha = 0.5f
+                }
+                else -> {}
             }
 
             // solution
