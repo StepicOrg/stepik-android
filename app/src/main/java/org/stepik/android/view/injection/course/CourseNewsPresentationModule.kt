@@ -23,7 +23,7 @@ object CourseNewsPresentationModule {
         courseNewsActionDispatcher: CourseNewsActionDispatcher
     ): ViewModel =
         CourseNewsViewModel(
-            ReduxFeature(CourseNewsFeature.State.Idle, courseNewsReducer)
+            ReduxFeature(CourseNewsFeature.State.Idle(), courseNewsReducer)
                 .wrapWithActionDispatcher(courseNewsActionDispatcher)
                 .wrapWithViewContainer()
         )

@@ -316,7 +316,8 @@ class CourseActivity :
         coursePager.currentItem =
             when (tab) {
                 CourseScreenTab.REVIEWS -> 1
-                CourseScreenTab.SYLLABUS -> 2
+                CourseScreenTab.NEWS -> 2
+                CourseScreenTab.SYLLABUS -> 3
                 else -> 0
             }
         if (coursePager.currentItem == 0) {

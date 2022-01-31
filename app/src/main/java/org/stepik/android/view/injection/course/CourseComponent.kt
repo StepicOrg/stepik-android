@@ -7,6 +7,7 @@ import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 import org.stepik.android.view.course_news.ui.fragment.CourseNewsFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
+import org.stepik.android.view.injection.announcement.AnnouncementDataModule
 import org.stepik.android.view.injection.calendar.CalendarDataModule
 import org.stepik.android.view.injection.course_calendar.CourseCalendarDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
@@ -46,7 +47,8 @@ import org.stepik.android.view.injection.wishlist.WishlistDataModule
     ProctorSessionDataModule::class,
 
     WishlistDataModule::class,
-    CoursePurchaseDataModule::class
+    CoursePurchaseDataModule::class,
+    AnnouncementDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder

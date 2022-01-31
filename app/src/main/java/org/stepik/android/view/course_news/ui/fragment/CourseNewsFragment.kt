@@ -1,14 +1,26 @@
 package org.stepik.android.view.course_news.ui.fragment
 
 import android.os.Bundle
+import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentCourseNewsBinding
+import org.stepik.android.domain.course_news.model.CourseNewsListItem
 import org.stepik.android.presentation.course_news.CourseNewsFeature
 import org.stepik.android.presentation.course_news.CourseNewsViewModel
+import org.stepik.android.view.course_news.ui.adapter.delegate.CourseNewsAdapterDelegate
+import ru.nobird.android.core.model.PaginationDirection
 import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
@@ -25,12 +37,39 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news), ReduxView<Co
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val courseNewsViewModel: CourseNewsViewModel by reduxViewModel(this) { viewModelFactory }
+    private val courseNewsAdapter: DefaultDelegateAdapter<CourseNewsListItem> = DefaultDelegateAdapter()
 
     private var courseId: Long by argument()
+
+    private val courseNewsBinding: FragmentCourseNewsBinding by viewBinding(FragmentCourseNewsBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent(courseId)
+        courseNewsAdapter += adapterDelegate<CourseNewsListItem, CourseNewsListItem.Placeholder>(layoutResId = R.layout.item_course_news_placeholder)
+        courseNewsAdapter += CourseNewsAdapterDelegate()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        with(courseNewsBinding.root) {
+            adapter = courseNewsAdapter
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+                AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical_course_search)?.let(::setDrawable)
+            })
+            setOnPaginationListener { paginationDirection ->
+                if (paginationDirection == PaginationDirection.NEXT) {
+                    courseNewsViewModel.onNewMessage(CourseNewsFeature.Message.FetchNextPage)
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        courseNewsViewModel.onNewMessage(CourseNewsFeature.Message.OnScreenOpenedMessage)
     }
 
     private fun injectComponent(courseId: Long) {
@@ -45,11 +84,27 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news), ReduxView<Co
     }
 
     override fun onAction(action: CourseNewsFeature.Action.ViewAction) {
-        TODO("Not yet implemented")
+        // no op
     }
 
     override fun render(state: CourseNewsFeature.State) {
-        TODO("Not yet implemented")
+        when (state) {
+            is CourseNewsFeature.State.LoadingCourse,
+            is CourseNewsFeature.State.LoadingAnnouncements -> {
+                courseNewsAdapter.items = listOf(
+                    CourseNewsListItem.Placeholder,
+                    CourseNewsListItem.Placeholder,
+                    CourseNewsListItem.Placeholder
+                )
+            }
+            is CourseNewsFeature.State.Content -> {
+                if (state.isLoadingNextPage) {
+                    courseNewsAdapter.items = state.courseNewsListItems + CourseNewsListItem.Placeholder
+                } else {
+                    courseNewsAdapter.items = state.courseNewsListItems
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
