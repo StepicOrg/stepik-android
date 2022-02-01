@@ -9,9 +9,13 @@ fun <State, Message, Action> Feature<State, Message, Action>.wrapWithRefCounter(
         override fun  addStateListener(listener: (state: State) -> Unit): Cancellable {
             synchronized(this) {
                 refCounter++
-                this@wrapWithRefCounter.addStateListener(listener)
+                val cancellableListener = this@wrapWithRefCounter.addStateListener(listener)
+
+                return Cancellable {
+                    cancellableListener.cancel()
+                    cancel()
+                }
             }
-            return this@wrapWithRefCounter
         }
 
         override fun cancel() {
