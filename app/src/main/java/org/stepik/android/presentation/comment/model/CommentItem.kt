@@ -23,6 +23,7 @@ sealed class CommentItem {
         sealed class VoteStatus {
             data class Resolved(val vote: Vote) : VoteStatus()
             object Pending : VoteStatus()
+            object Unavailable : VoteStatus()
         }
 
         data class Solution(
