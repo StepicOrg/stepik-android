@@ -40,7 +40,7 @@ import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelega
 import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel

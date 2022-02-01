@@ -1,13 +1,13 @@
 package org.stepik.android.presentation.course_list.mapper
 
 import org.stepic.droid.util.DateTimeHelper
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.mutate
-import ru.nobird.android.core.model.insert
-import ru.nobird.android.core.model.slice
-import ru.nobird.android.core.model.filterNot
-import ru.nobird.android.core.model.plus
-import ru.nobird.android.core.model.transform
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.mutate
+import ru.nobird.app.core.model.insert
+import ru.nobird.app.core.model.slice
+import ru.nobird.app.core.model.filterNot
+import ru.nobird.app.core.model.plus
+import ru.nobird.app.core.model.transform
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded

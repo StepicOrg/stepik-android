@@ -19,7 +19,7 @@ import org.stepik.android.view.step_quiz_table.ui.adapter.delegate.TableSelectio
 import org.stepik.android.view.step_quiz_table.ui.fragment.TableColumnSelectionBottomSheetDialogFragment
 import org.stepik.android.view.step_quiz_table.ui.mapper.TableSelectionItemMapper
 import org.stepik.android.view.step_quiz_table.ui.model.TableSelectionItem
-import ru.nobird.android.core.model.mutate
+import ru.nobird.app.core.model.mutate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 

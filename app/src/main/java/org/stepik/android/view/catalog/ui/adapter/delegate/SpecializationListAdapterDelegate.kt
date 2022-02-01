@@ -12,7 +12,7 @@ import org.stepik.android.domain.catalog.model.CatalogSpecialization
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.catalog.model.CatalogItem
-import ru.nobird.android.core.model.cast
+import ru.nobird.app.core.model.cast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter

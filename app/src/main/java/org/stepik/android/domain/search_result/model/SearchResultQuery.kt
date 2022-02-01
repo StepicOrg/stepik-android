@@ -1,7 +1,7 @@
 package org.stepik.android.domain.search_result.model
 
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 import java.io.Serializable
 
 data class SearchResultQuery(

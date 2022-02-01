@@ -2,7 +2,7 @@ package org.stepik.android.presentation.download.mapper
 
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
-import ru.nobird.android.core.model.mutate
+import ru.nobird.app.core.model.mutate
 import org.stepik.android.presentation.download.DownloadView
 import javax.inject.Inject
 

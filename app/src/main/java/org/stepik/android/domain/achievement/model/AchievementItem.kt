@@ -5,7 +5,7 @@ import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.stepik.android.model.achievements.Achievement
 import org.stepik.android.model.achievements.AchievementProgress
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 @Parcelize
 data class AchievementItem(

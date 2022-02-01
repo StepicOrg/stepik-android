@@ -14,7 +14,7 @@ import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.stories.viewmodel.StoriesViewModel
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate

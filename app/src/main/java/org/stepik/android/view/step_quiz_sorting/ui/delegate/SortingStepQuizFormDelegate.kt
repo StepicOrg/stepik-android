@@ -14,7 +14,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.adapter.delegate.SortingOptionAdapterDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.mapper.SortingOptionMapper
 import org.stepik.android.view.step_quiz_sorting.ui.model.SortingOption
-import ru.nobird.android.core.model.swap
+import ru.nobird.app.core.model.swap
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SortingStepQuizFormDelegate(

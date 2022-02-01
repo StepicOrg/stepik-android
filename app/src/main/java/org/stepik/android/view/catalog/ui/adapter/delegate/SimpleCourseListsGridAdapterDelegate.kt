@@ -16,7 +16,7 @@ import org.stepik.android.presentation.course_list_redux.model.CatalogBlockState
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import org.stepik.android.view.catalog.model.CatalogItem
 import org.stepik.android.view.catalog.ui.delegate.CatalogBlockHeaderDelegate
-import ru.nobird.android.core.model.cast
+import ru.nobird.app.core.model.cast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter

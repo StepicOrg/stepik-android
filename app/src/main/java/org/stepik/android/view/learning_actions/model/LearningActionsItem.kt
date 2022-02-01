@@ -2,7 +2,7 @@ package org.stepik.android.view.learning_actions.model
 
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.wishlist.WishlistFeature
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class LearningActionsItem {
     data class Wishlist(val state: WishlistFeature.State) : LearningActionsItem(), Identifiable<String> {

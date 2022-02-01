@@ -15,7 +15,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import java.util.Locale
 
 class CoursePropertiesDelegate(

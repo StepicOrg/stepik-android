@@ -2,7 +2,7 @@ package org.stepik.android.presentation.course_search
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 
 interface CourseSearchFeature {
     sealed class State {

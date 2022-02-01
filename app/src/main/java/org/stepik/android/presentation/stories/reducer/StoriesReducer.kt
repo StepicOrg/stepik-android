@@ -3,7 +3,7 @@
 import org.stepik.android.presentation.stories.StoriesFeature.State
 import org.stepik.android.presentation.stories.StoriesFeature.Message
 import org.stepik.android.presentation.stories.StoriesFeature.Action
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class StoriesReducer

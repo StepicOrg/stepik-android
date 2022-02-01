@@ -26,8 +26,8 @@ import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.WishlistOperationBus
-import ru.nobird.android.core.model.cast
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.cast
+import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate

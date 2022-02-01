@@ -41,6 +41,7 @@ dependencies {
     implementation libraries.rxRelay
     implementation libraries.domainRx
     implementation libraries.viewInjection
+    implementation libraries.model
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric

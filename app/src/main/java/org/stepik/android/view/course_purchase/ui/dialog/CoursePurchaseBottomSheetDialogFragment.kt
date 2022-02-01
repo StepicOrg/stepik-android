@@ -29,7 +29,7 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course_purchase.delegate.PromoCodeViewDelegate
 import org.stepik.android.view.course_purchase.delegate.WishlistViewDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject

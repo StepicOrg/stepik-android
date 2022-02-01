@@ -3,7 +3,7 @@ package org.stepik.android.view.catalog.model
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CatalogItem {
     data class Stories(val state: StoriesFeature.State) : CatalogItem(), Identifiable<String> {

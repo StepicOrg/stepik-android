@@ -2,7 +2,7 @@ package org.stepik.android.domain.course_collection.model
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.PlatformType
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 
 data class CourseCollectionQuery(
     @SerializedName("language")

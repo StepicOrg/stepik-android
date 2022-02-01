@@ -4,8 +4,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.preferences.UserPreferences
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.mapToLongArray
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
@@ -17,7 +17,7 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.user.User
-import ru.nobird.android.core.model.transform
+import ru.nobird.app.core.model.transform
 import javax.inject.Inject
 
 class SubmissionInteractor

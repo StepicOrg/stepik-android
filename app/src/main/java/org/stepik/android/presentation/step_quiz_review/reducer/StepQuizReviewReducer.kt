@@ -9,8 +9,8 @@ import org.stepik.android.presentation.step_quiz.reducer.StepQuizReducer
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature.State
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature.Action
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewFeature.Message
-import ru.nobird.android.core.model.safeCast
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.core.model.safeCast
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class StepQuizReviewReducer

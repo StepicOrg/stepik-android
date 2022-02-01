@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_table.ui.model
 
 import org.stepik.android.model.Cell
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 data class TableSelectionItem(
     override val id: Int,

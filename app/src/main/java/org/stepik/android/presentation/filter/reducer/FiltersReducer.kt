@@ -3,7 +3,7 @@ package org.stepik.android.presentation.filter.reducer
 import org.stepik.android.presentation.filter.FiltersFeature.State
 import org.stepik.android.presentation.filter.FiltersFeature.Message
 import org.stepik.android.presentation.filter.FiltersFeature.Action
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class FiltersReducer

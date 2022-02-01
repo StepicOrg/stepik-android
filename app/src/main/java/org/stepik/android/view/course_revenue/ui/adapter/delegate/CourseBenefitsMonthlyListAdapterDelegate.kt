@@ -14,7 +14,7 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListIt
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
 import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
 import org.stepik.android.view.course_revenue.model.CourseBenefitOperationItem
-import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.app.core.model.PaginationDirection
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter

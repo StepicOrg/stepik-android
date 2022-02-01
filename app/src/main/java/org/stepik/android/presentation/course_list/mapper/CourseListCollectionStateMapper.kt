@@ -5,7 +5,7 @@ import org.stepik.android.domain.course_collection.model.CourseCollectionResult
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import javax.inject.Inject
 
 class CourseListCollectionStateMapper

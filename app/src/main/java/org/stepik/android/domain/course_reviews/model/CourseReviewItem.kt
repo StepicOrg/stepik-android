@@ -2,7 +2,7 @@ package org.stepik.android.domain.course_reviews.model
 
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.user.User
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CourseReviewItem {
     data class Placeholder(

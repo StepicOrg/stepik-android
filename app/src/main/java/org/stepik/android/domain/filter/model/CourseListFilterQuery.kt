@@ -3,7 +3,7 @@ package org.stepik.android.domain.filter.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 import java.io.Serializable
 
 @Parcelize

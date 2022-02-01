@@ -14,7 +14,7 @@ import org.stepic.droid.util.copyTextToClipboard
 import org.stepik.android.presentation.debug.DebugFeature
 import org.stepik.android.presentation.debug.DebugViewModel
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 import android.content.Intent
@@ -26,7 +26,8 @@ import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
 import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
-class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction> {
+class DebugFragment : Fragment(R.layout.fragment_debug),
+    ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction> {
     companion object {
         fun newInstance(): Fragment =
             DebugFragment()
