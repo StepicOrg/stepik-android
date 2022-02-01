@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.domain.course_payments.model.CoursePurchaseInfo
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
@@ -32,7 +33,8 @@ class CourseHeaderDataTest {
             deeplinkPromoCode = DeeplinkPromoCode("CODE", "200", "RUB"),
             deeplinkPromoCodeSku = PromoCodeSku("CODE", LightSku("price_tier_2", "1 899,00 ₽")),
             defaultPromoCode = DefaultPromoCode.EMPTY,
-            isWishlistUpdating = false
+            isWishlistUpdating = false,
+            coursePurchaseInfo = CoursePurchaseInfo.Unavailable
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()

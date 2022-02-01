@@ -18,6 +18,7 @@ import org.stepik.android.presentation.course_purchase.CoursePurchaseFeature
 import org.stepik.android.view.injection.billing.BillingSingleton
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePurchaseActionDispatcher
@@ -41,6 +42,7 @@ constructor(
             .subscribeBy(
                 onNext = { (billingResult, purchases) ->
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
+                        Timber.d("APPS: CoursePurchaseActionDispatcher - Code: ${billingResult.responseCode} Purchases: $purchases")
                         onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingSuccess(purchases))
                     } else {
                         onNewMessage(CoursePurchaseFeature.Message.PurchaseFlowBillingFailure(BillingException(billingResult.responseCode, billingResult.debugMessage)))
@@ -103,6 +105,14 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeBy(
                         onSuccess = { onNewMessage(CoursePurchaseFeature.Message.SetupFeedbackSuccess(it)) },
+                        onError = emptyOnErrorStub
+                    )
+            }
+            is CoursePurchaseFeature.Action.SaveBillingPurchasePayload -> {
+                compositeDisposable += coursePurchaseInteractor.saveBillingPurchasePayload(action.courseId, action.profileId, action.purchase, action.promoCode)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
                         onError = emptyOnErrorStub
                     )
             }

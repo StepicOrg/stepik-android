@@ -28,7 +28,7 @@ constructor(
 ) {
     fun getLessonDemoData(course: Course): Single<LessonDemoData> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
                 .asString()
                 .uppercase()
         )
@@ -68,7 +68,7 @@ constructor(
             when (stats.enrollmentState) {
                 is EnrollmentState.NotEnrolledMobileTier ->
                     coursePurchaseDataResolver
-                        .resolveCoursePurchaseData(course, stats, stats.enrollmentState, deeplinkPromoCodeSku)
+                        .resolveCoursePurchaseData(course, stats, stats.enrollmentState, deeplinkPromoCodeSku, -1)
                         .let { CoursePurchaseDataResult.Result(it) }
 
                 is EnrollmentState.NotEnrolledUnavailable ->

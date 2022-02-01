@@ -1,5 +1,9 @@
 package org.stepik.android.presentation.course
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.Purchase
+import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -23,6 +27,7 @@ import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.mapper.CourseStateMapper
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course_payments.model.CoursePurchaseInfo
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.purchase_notification.interactor.PurchaseReminderInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
@@ -92,6 +97,8 @@ constructor(
     @WishlistOperationBus
     private val wishlistOperationObservable: Observable<WishlistOperationData>,
 
+    private val purchaseListenerBehaviorRelay: PublishRelay<Pair<BillingResult, List<Purchase>?>>,
+
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -121,6 +128,7 @@ constructor(
         subscribeForLocalSubmissionsUpdates()
         subscribeForUserCoursesUpdates()
         subscribeForWishlistUpdates()
+        subscribeForPurchaseUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -174,6 +182,14 @@ constructor(
                     postCourseViewedNotification(it.courseId)
                     logCoursePreviewOpenedEvent(it.course, viewSource)
                     saveVisitedCourse(it.courseId)
+                    /**
+                     * Open IAP purchase dialog to finalize purchase
+                     */
+                    if (it.coursePurchaseInfo is CoursePurchaseInfo.Result &&
+                        it.coursePurchaseInfo.purchaseState == Purchase.PurchaseState.PURCHASED
+                    ) {
+                        resolveShowInAppAction(it)
+                    }
                 },
                 onError    = { state = CourseView.State.NetworkError }
             )
@@ -214,13 +230,8 @@ constructor(
             EnrollmentState.NotEnrolledWeb ->
                 openCoursePurchaseInWeb()
 
-            is EnrollmentState.NotEnrolledMobileTier -> {
-                coursePurchaseDataResolver
-                    .resolveCoursePurchaseData(headerData)
-                    ?.let { coursePurchaseData ->
-                        view?.openCoursePurchaseInApp(coursePurchaseData)
-                    }
-            }
+            is EnrollmentState.NotEnrolledMobileTier ->
+                resolveShowInAppAction(headerData)
         }
     }
 
@@ -516,6 +527,49 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    private fun subscribeForPurchaseUpdates() {
+        compositeDisposable += purchaseListenerBehaviorRelay
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { (billingResult, purchases) ->
+                    val oldState = state.safeCast<CourseView.State.CourseLoaded>()
+                        ?: return@subscribeBy
+
+                    val updatedCoursePurchaseInfo =
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK &&
+                            purchases != null &&
+                            oldState.courseHeaderData.coursePurchaseInfo !is CoursePurchaseInfo.Unavailable
+                        ) {
+                            courseInteractor.resolvePurchaseResult(oldState.courseHeaderData.coursePurchaseInfo, purchases)
+                        } else {
+                            null
+                        }
+
+                    if (updatedCoursePurchaseInfo != null) {
+                        val updatedCourseHeaderData = oldState.courseHeaderData.copy(coursePurchaseInfo = updatedCoursePurchaseInfo)
+                        state = CourseView.State.CourseLoaded(courseHeaderData = updatedCourseHeaderData)
+                        courseInteractor.updatePurchaseData(updatedCourseHeaderData)
+
+                        if (updatedCoursePurchaseInfo is CoursePurchaseInfo.Result &&
+                            updatedCoursePurchaseInfo.purchaseState == Purchase.PurchaseState.PURCHASED
+                        ) {
+                            resolveShowInAppAction(updatedCourseHeaderData)
+                        }
+                    }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun resolveShowInAppAction(courseHeaderData: CourseHeaderData) {
+        coursePurchaseDataResolver
+            .resolveCoursePurchaseData(courseHeaderData)
+            ?.let { coursePurchaseData ->
+                view?.openCoursePurchaseInApp(coursePurchaseData)
+            }
     }
 
     /**

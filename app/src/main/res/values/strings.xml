@@ -1273,12 +1273,15 @@
 
     <string name="course_purchase_payment_learn_action">Begin to study</string>
     <string name="course_purchase_payment_restore_action">Restore purchase</string>
+    <string name="course_purchase_payment_ok_action">OK</string>
     <string name="course_purchase_payment_processing">Processing payment</string>
     <string name="course_purchase_payment_success">Payment was successful</string>
+    <string name="course_purchase_payment_pending">Waiting for payment</string>
     <string name="course_purchase_payment_failure">Payment has passed, but the purchase has not been completed</string>
     <string name="course_purchase_payment_failure_body_part_1">"An error has occurred when processing the payment, please try to restore the purchase and "</string>
     <string name="course_purchase_payment_failure_body_part_2">contact our support team</string>
     <string name="course_purchase_payment_failure_body_part_3">, if the error still remains. Funds will not be debited again.</string>
+    <string name="course_purchase_payment_pending_body">After completing your payment, return to the course screen to complete the purchase process.</string>
     <string name="course_purchase_unavailable">This course is not available for purchase on the mobile app</string>
 
     <!-- Certificate name change -->
