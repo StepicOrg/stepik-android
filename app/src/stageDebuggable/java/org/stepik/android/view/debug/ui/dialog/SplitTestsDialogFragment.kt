@@ -19,7 +19,7 @@ import org.stepik.android.domain.debug.model.SplitTestData
 import org.stepik.android.presentation.debug.SplitTestsFeature
 import org.stepik.android.presentation.debug.SplitTestsViewModel
 import org.stepik.android.view.debug.ui.adapter.delegate.SplitTestDataAdapterDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject

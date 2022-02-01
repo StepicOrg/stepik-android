@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 import java.io.Serializable
 
 @Parcelize

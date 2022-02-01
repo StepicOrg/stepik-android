@@ -2,7 +2,7 @@ package org.stepik.android.model.util
 
 import android.os.Parcel
 import android.os.Parcelable
-import ru.nobird.android.core.model.putNullable
+import ru.nobird.app.core.model.putNullable
 import java.util.Date
 
 private fun getParcelableWriter(flags: Int): Parcel.(Parcelable) -> Unit = { writeParcelable(it, flags) }

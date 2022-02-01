@@ -61,7 +61,7 @@ import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
 import org.stepik.android.view.injection.course_list.factory.RecommendedCourseListAdapterDelegateFactory
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager

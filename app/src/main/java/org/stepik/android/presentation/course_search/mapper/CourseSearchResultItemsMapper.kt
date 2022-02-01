@@ -1,8 +1,8 @@
 package org.stepik.android.presentation.course_search.mapper
 
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.transform
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.transform
 import javax.inject.Inject
 
 class CourseSearchResultItemsMapper

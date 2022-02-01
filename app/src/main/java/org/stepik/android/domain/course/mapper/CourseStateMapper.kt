@@ -2,7 +2,7 @@ package org.stepik.android.domain.course.mapper
 
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CourseView
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import javax.inject.Inject
 
 class CourseStateMapper

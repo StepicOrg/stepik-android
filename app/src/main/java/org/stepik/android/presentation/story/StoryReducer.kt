@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.story
 
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import org.stepik.android.presentation.story.StoryFeature.State
 import org.stepik.android.presentation.story.StoryFeature.Message
 import org.stepik.android.presentation.story.StoryFeature.Action

@@ -2,7 +2,7 @@ package org.stepik.android.data.submission.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.submission.source.SubmissionCacheDataSource
 import org.stepik.android.data.submission.source.SubmissionRemoteDataSource

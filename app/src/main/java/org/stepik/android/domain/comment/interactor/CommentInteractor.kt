@@ -1,7 +1,7 @@
 package org.stepik.android.domain.comment.interactor
 
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.repository.CommentRepository
@@ -12,7 +12,7 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
-import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.app.core.model.PaginationDirection
 import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min

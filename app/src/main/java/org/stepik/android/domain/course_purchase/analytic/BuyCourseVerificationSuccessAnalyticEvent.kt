@@ -1,7 +1,7 @@
 package org.stepik.android.domain.course_purchase.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 
 class BuyCourseVerificationSuccessAnalyticEvent(
     courseId: Long,

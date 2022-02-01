@@ -4,7 +4,7 @@ import org.stepik.android.domain.debug.model.EndpointConfig
 import org.stepik.android.presentation.debug.DebugFeature.State
 import org.stepik.android.presentation.debug.DebugFeature.Message
 import org.stepik.android.presentation.debug.DebugFeature.Action
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class DebugReducer

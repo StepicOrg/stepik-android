@@ -15,7 +15,7 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class CodeStepQuizFragment :

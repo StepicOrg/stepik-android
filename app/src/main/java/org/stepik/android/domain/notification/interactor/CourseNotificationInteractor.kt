@@ -1,7 +1,7 @@
 package org.stepik.android.domain.notification.interactor
 
 import io.reactivex.Completable
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapToLongArray
 import org.stepik.android.domain.notification.repository.NotificationRepository
 import javax.inject.Inject
 

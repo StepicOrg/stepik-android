@@ -9,9 +9,9 @@ import org.stepik.android.presentation.wishlist.WishlistFeature
 import org.stepik.android.presentation.wishlist.WishlistViewModel
 import org.stepik.android.presentation.wishlist.dispatcher.WishlistActionDispatcher
 import org.stepik.android.presentation.wishlist.reducer.WishlistReducer
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object WishlistPresentationModule {

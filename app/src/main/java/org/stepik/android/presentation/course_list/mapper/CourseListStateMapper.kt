@@ -1,8 +1,8 @@
 package org.stepik.android.presentation.course_list.mapper
 
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.mapPaged
-import ru.nobird.android.core.model.plus
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.mapPaged
+import ru.nobird.app.core.model.plus
 import org.stepik.android.domain.course.mapper.CourseStatsMapper
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.model.UserCourse

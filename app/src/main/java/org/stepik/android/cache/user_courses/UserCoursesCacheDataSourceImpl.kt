@@ -7,7 +7,7 @@ import org.stepik.android.cache.user_courses.structure.DbStructureUserCourse
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 import javax.inject.Inject
 
 class UserCoursesCacheDataSourceImpl

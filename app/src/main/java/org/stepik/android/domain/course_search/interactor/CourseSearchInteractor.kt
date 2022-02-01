@@ -26,8 +26,8 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.SearchResult
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.mapPaged
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.mapPaged
 import javax.inject.Inject
 
 class CourseSearchInteractor

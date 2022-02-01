@@ -30,7 +30,7 @@ import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAda
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListViewAllAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter

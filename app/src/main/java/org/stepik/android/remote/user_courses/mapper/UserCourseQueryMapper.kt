@@ -1,7 +1,7 @@
 package org.stepik.android.remote.user_courses.mapper
 
 import org.stepik.android.domain.course_list.model.UserCourseQuery
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 import javax.inject.Inject
 
 class UserCourseQueryMapper

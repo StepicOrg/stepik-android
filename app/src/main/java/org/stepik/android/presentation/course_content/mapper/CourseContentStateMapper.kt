@@ -9,7 +9,7 @@ import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.model.CourseContentSectionDate
-import ru.nobird.android.core.model.isNullOrEmpty
+import ru.nobird.app.core.model.isNullOrEmpty
 import javax.inject.Inject
 
 class CourseContentStateMapper

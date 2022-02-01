@@ -48,7 +48,7 @@ import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate

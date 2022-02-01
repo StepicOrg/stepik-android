@@ -3,7 +3,7 @@ package org.stepik.android.domain.course_collection.interactor
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.domain.catalog.model.CatalogCourseList

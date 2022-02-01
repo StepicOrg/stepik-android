@@ -1,7 +1,7 @@
 package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 import java.util.*
 
 class Assignment(

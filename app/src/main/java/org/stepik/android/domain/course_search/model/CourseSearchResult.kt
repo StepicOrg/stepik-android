@@ -6,7 +6,7 @@ import org.stepik.android.model.SearchResult
 import org.stepik.android.model.Section
 import org.stepik.android.model.user.User
 import org.stepik.android.model.Unit
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 data class CourseSearchResult(
     val searchResult: SearchResult,

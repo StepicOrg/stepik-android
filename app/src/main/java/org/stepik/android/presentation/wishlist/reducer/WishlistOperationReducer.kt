@@ -6,7 +6,7 @@ import org.stepik.android.presentation.wishlist.WishlistOperationFeature.State
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature.Message
 import org.stepik.android.presentation.wishlist.WishlistOperationFeature.Action
 import org.stepik.android.presentation.wishlist.model.WishlistAction
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class WishlistOperationReducer

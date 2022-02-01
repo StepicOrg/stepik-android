@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.course_reviews.mapper
 
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsView

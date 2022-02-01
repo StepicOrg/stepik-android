@@ -3,7 +3,7 @@ package org.stepik.android.data.base.repository.delegate
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepik.android.domain.base.DataSourceType
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.requireSize
 

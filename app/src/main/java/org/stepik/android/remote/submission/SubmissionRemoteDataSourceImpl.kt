@@ -2,7 +2,7 @@ package org.stepik.android.remote.submission
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.data.submission.source.SubmissionRemoteDataSource
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.model.Submission
