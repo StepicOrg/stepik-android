@@ -94,7 +94,7 @@ ext.versions = [
 
         leakCanary           : '1.5.1',
         crashlytics          : '17.1.0',
-        crashlyticsPlugin    : '2.2.0',
+        crashlyticsPlugin    : '2.8.1',
 
         junit                : '4.12',
         robolectric          : '4.7.1',
@@ -225,7 +225,8 @@ ext.libraries = [
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
         leakCanaryNoOp       : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
-        crashlytics          : "com.google.firebase:firebase-crashlytics:$versions.crashlytics",
+        crashlytics          : "com.google.firebase:firebase-crashlytics",
+        crashlyticsNdk       : "com.google.firebase:firebase-crashlytics-ndk",
 
         // Test dependencies
         junit                : "junit:junit:$versions.junit",
