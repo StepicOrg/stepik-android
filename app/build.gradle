@@ -270,6 +270,10 @@ dependencies {
     releaseImplementation libraries.flipperNoop
 }
 
+afterEvaluate {
+    bundleRelease { finalizedBy(":app:uploadCrashlyticsSymbolFileRelease")}
+}
+
 apply plugin: 'com.google.gms.google-services'
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
     apply plugin: 'com.getkeepsafe.dexcount'
