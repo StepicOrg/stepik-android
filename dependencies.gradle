@@ -93,7 +93,6 @@ ext.versions = [
         Adapters             : '1.1.0',
 
         leakCanary           : '1.5.1',
-        crashlytics          : '17.1.0',
         crashlyticsPlugin    : '2.8.1',
 
         junit                : '4.12',
