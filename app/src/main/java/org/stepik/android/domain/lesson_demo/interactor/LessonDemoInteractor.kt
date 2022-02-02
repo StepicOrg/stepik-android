@@ -28,7 +28,7 @@ constructor(
 ) {
     fun getLessonDemoData(course: Course): Single<LessonDemoData> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
                 .asString()
                 .uppercase()
         )

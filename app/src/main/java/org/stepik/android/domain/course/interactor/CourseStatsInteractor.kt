@@ -48,7 +48,7 @@ constructor(
 
     fun checkDeeplinkPromoCodeValidity(courseId: Long, promo: String): Single<Pair<DeeplinkPromoCode, PromoCodeSku>> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
+            firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
                 .asString()
                 .uppercase()
         )
@@ -232,7 +232,7 @@ constructor(
     private fun resolvePaidEnrollmentState(standardLightSku: LightSku?, promoLightSku: LightSku?): EnrollmentState =
         if (standardLightSku == null) {
             val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
-                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID_TEST]
+                firebaseRemoteConfig[RemoteConfig.PURCHASE_FLOW_ANDROID]
                     .asString()
                     .uppercase()
             )
