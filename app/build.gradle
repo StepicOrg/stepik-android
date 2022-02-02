@@ -242,7 +242,7 @@ dependencies {
     implementation(libraries.crashlytics) {
         transitive = true
     }
-    implementation libraries.crashlytics
+    implementation libraries.crashlyticsNdk
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric
