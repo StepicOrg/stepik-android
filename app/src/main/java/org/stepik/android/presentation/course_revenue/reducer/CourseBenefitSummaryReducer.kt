@@ -4,7 +4,7 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitSummary
 import org.stepik.android.presentation.course_revenue.CourseBenefitSummaryFeature.State
 import org.stepik.android.presentation.course_revenue.CourseBenefitSummaryFeature.Message
 import org.stepik.android.presentation.course_revenue.CourseBenefitSummaryFeature.Action
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseBenefitSummaryReducer

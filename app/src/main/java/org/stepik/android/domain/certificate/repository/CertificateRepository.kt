@@ -2,7 +2,7 @@ package org.stepik.android.domain.certificate.repository
 
 import io.reactivex.Maybe
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Certificate
 

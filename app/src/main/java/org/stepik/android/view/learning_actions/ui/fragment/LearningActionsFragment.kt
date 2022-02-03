@@ -19,8 +19,8 @@ import org.stepik.android.view.injection.learning_actions.LearningActionsCompone
 import org.stepik.android.view.learning_actions.model.LearningActionsItem
 import org.stepik.android.view.learning_actions.ui.adapter.delegate.UserReviewsActionAdapterDelegate
 import org.stepik.android.view.learning_actions.ui.adapter.delegate.WishlistActionAdapterDelegate
-import ru.nobird.android.core.model.mutate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.core.model.mutate
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject

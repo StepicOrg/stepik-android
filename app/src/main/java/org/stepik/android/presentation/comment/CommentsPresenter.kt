@@ -24,7 +24,7 @@ import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.comment.mapper.CommentsStateMapper
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.injection.step.StepDiscussionBus
-import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.app.core.model.PaginationDirection
 import javax.inject.Inject
 
 class CommentsPresenter

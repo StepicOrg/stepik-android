@@ -29,7 +29,7 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course_purchase.delegate.PromoCodeViewDelegate
 import org.stepik.android.view.course_purchase.delegate.WishlistViewDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
@@ -37,6 +37,7 @@ import androidx.annotation.StringRes
 import androidx.core.text.HtmlCompat
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
+import com.android.billingclient.api.Purchase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import org.stepic.droid.configuration.RemoteConfig
@@ -116,10 +117,17 @@ class CoursePurchaseBottomSheetDialogFragment :
         injectComponent()
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.TopCornersRoundedBottomSheetDialog)
         coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.InitMessage(coursePurchaseData, coursePurchaseSource))
-        if (isNeedRestoreMessage) {
-            coursePurchaseViewModel.onNewMessage(
-                CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.COURSE_SCREEN)
-            )
+        when {
+            coursePurchaseData.purchaseState == Purchase.PurchaseState.PENDING -> {
+                coursePurchaseViewModel.onNewMessage(
+                    CoursePurchaseFeature.Message.LaunchPendingPurchaseFlow
+                )
+            }
+            isNeedRestoreMessage || coursePurchaseData.purchaseState == Purchase.PurchaseState.PURCHASED -> {
+                coursePurchaseViewModel.onNewMessage(
+                    CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.COURSE_SCREEN)
+                )
+            }
         }
     }
 
@@ -140,7 +148,8 @@ class CoursePurchaseBottomSheetDialogFragment :
                 coursePurchaseViewModel.onNewMessage(
                     CoursePurchaseFeature.Message.LaunchRestorePurchaseFlow(RestoreCoursePurchaseSource.BUY_COURSE_DIALOG)
                 )
-            }
+            },
+            closeDialog = { dismiss() }
         )
         promoCodeViewDelegate = PromoCodeViewDelegate(coursePurchaseBinding, coursePurchaseViewModel)
         wishlistViewDelegate = WishlistViewDelegate(coursePurchaseBinding.coursePurchaseWishlistAction)
@@ -175,14 +184,14 @@ class CoursePurchaseBottomSheetDialogFragment :
             }
         }
 
-        coursePurchaseBinding.coursePurchasePaymentFeedback.text = buildSpannedString {
+        coursePurchaseBinding.coursePurchasePaymentFailureFeedback.text = buildSpannedString {
             append(getString(R.string.course_purchase_payment_failure_body_part_1))
             inSpans(supportSpan) {
                 append(getString(R.string.course_purchase_payment_failure_body_part_2))
             }
             append(getString(R.string.course_purchase_payment_failure_body_part_3))
         }
-        coursePurchaseBinding.coursePurchasePaymentFeedback.movementMethod = LinkMovementMethod.getInstance()
+        coursePurchaseBinding.coursePurchasePaymentFailureFeedback.movementMethod = LinkMovementMethod.getInstance()
 
         coursePurchaseBinding.coursePurchaseCommissionNotice.text = buildSpannedString {
             append(resolveCommissionSpannedText())
@@ -260,6 +269,7 @@ class CoursePurchaseBottomSheetDialogFragment :
         if (state is CoursePurchaseFeature.State.Content) {
             val isCancelable = state.paymentState is CoursePurchaseFeature.PaymentState.Idle ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
 
             this.isCancelable = isCancelable
@@ -267,6 +277,7 @@ class CoursePurchaseBottomSheetDialogFragment :
             buyActionViewDelegate.render(state)
 
             if (state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure ||
+                state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending ||
                 state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
             ) {
                 promoCodeViewDelegate.setViewVisibility(isVisible = false)

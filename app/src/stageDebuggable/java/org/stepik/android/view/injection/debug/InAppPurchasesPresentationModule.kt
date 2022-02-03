@@ -9,9 +9,9 @@ import org.stepik.android.presentation.debug.InAppPurchasesFeature
 import org.stepik.android.presentation.debug.InAppPurchasesViewModel
 import org.stepik.android.presentation.debug.dispatcher.InAppPurchasesActionDispatcher
 import org.stepik.android.presentation.debug.reducer.InAppPurchasesReducer
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object InAppPurchasesPresentationModule {

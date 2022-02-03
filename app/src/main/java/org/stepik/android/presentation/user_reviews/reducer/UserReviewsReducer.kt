@@ -4,7 +4,7 @@ import org.stepik.android.presentation.user_reviews.UserReviewsFeature.State
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature.Message
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature.Action
 import org.stepik.android.presentation.user_reviews.mapper.UserReviewsStateMapper
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class UserReviewsReducer

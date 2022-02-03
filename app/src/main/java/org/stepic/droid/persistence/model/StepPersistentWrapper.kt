@@ -7,7 +7,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Progressable
 import org.stepik.android.model.Step
 import org.stepik.android.model.Video
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 @Parcelize
 data class StepPersistentWrapper(

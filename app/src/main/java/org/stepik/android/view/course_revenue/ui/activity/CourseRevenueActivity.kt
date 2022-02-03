@@ -31,7 +31,7 @@ import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefits
 import org.stepik.android.view.course_revenue.ui.delegate.CourseBenefitSummaryViewDelegate
 import org.stepik.android.view.course_revenue.ui.adapter.delegate.CourseBenefitsMonthlyListAdapterDelegate
 import org.stepik.android.view.course_revenue.ui.dialog.TransactionBottomSheetDialogFragment
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists

@@ -28,7 +28,7 @@ import org.stepik.android.view.certificate.ui.adapter.delegate.CertificatesAdapt
 import org.stepik.android.view.certificate.ui.dialog.CertificateNameChangeConfirmationDialog
 import org.stepik.android.view.certificate.ui.dialog.CertificateNameChangeDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.app.core.model.PaginationDirection
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.base.ui.extension.showIfNotExists

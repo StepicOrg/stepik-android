@@ -1,13 +1,13 @@
 package org.stepik.android.presentation.course_list.mapper
 
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.CourseListView
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import javax.inject.Inject
 
 class CourseListQueryStateMapper

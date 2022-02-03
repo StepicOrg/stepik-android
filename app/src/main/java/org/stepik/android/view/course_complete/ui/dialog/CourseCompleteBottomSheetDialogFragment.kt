@@ -40,7 +40,7 @@ import org.stepik.android.presentation.course_complete.CourseCompleteFeature
 import org.stepik.android.presentation.course_complete.CourseCompleteViewModel
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course_complete.model.CourseCompleteDialogViewInfo
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel

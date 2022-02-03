@@ -1,7 +1,7 @@
 package org.stepic.droid.persistence.model
 
 import org.stepik.android.model.Course
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 data class DownloadItem(
     val course: Course,

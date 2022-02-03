@@ -3,7 +3,7 @@ package org.stepik.android.domain.proctor_session.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 import java.util.Date
 
 @Entity

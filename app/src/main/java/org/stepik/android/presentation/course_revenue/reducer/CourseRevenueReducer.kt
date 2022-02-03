@@ -7,7 +7,7 @@ import org.stepik.android.presentation.course_revenue.CourseRevenueFeature.Messa
 import org.stepik.android.presentation.course_revenue.CourseRevenueFeature.Action
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseRevenueReducer

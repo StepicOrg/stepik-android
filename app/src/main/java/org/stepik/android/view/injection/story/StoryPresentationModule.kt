@@ -9,9 +9,9 @@ import org.stepik.android.presentation.story.StoryActionDispatcher
 import org.stepik.android.presentation.story.StoryFeature
 import org.stepik.android.presentation.story.StoryReducer
 import org.stepik.android.view.story.viewmodel.StoryViewModel
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 internal object StoryPresentationModule {

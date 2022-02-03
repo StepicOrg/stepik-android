@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_choice.model
 
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 data class Choice(
     val option: String,

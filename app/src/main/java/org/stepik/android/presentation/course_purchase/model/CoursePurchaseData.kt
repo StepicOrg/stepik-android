@@ -13,5 +13,6 @@ data class CoursePurchaseData(
     val stats: CourseStats,
     val primarySku: LightSku,
     val promoCodeSku: PromoCodeSku,
-    val isWishlisted: Boolean
+    val isWishlisted: Boolean,
+    val purchaseState: Int
 ) : Parcelable

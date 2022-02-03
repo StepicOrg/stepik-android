@@ -42,6 +42,8 @@ interface CoursePurchaseFeature {
         object RestorePurchaseSuccess : Message()
         data class RestorePurchaseFailure(val throwable: Throwable) : Message()
 
+        object LaunchPendingPurchaseFlow : Message()
+
         object StartLearningMessage : Message()
 
         data class SetupFeedback(val subject: String, val deviceInfo: String) : Message()
@@ -79,6 +81,14 @@ interface CoursePurchaseFeature {
 
         data class LogAnalyticEvent(val analyticEvent: AnalyticEvent) : Action()
 
+        data class SaveBillingPurchasePayload(
+            val courseId: Long,
+            val profileId: Long,
+            val skuDetails: SkuDetails,
+            val purchase: Purchase,
+            val promoCode: String?
+        ) : Action()
+
         /**
          * Wishlist action wrapper
          */
@@ -103,6 +113,7 @@ interface CoursePurchaseFeature {
         data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()
+        object PaymentPending : PaymentState()
         object PaymentFailure : PaymentState()
     }
 

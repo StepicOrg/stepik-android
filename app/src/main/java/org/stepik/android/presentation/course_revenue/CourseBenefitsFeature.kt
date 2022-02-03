@@ -2,7 +2,7 @@ package org.stepik.android.presentation.course_revenue
 
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 
 interface CourseBenefitsFeature {
     sealed class State {

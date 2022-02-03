@@ -10,7 +10,7 @@ import org.stepik.android.data.course_collection.source.CourseCollectionCacheDat
 import org.stepik.android.domain.course_collection.model.CourseCollectionQuery
 import org.stepik.android.model.CourseCollection
 import org.stepik.android.model.PlatformType
-import ru.nobird.android.core.model.mapOfNotNull
+import ru.nobird.app.core.model.mapOfNotNull
 import javax.inject.Inject
 
 class CourseCollectionCacheDataSourceImpl

@@ -31,7 +31,7 @@ import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import org.stepik.android.view.injection.course_list.WishlistOperationBus
 import retrofit2.HttpException
-import ru.nobird.android.core.model.slice
+import ru.nobird.app.core.model.slice
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate

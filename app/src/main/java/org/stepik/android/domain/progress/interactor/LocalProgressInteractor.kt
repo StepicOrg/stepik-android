@@ -5,7 +5,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.progress.mapper.getProgresses

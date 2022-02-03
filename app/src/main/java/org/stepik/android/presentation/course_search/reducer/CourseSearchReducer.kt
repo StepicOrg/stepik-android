@@ -6,9 +6,9 @@ import org.stepik.android.presentation.course_search.CourseSearchFeature.State
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Message
 import org.stepik.android.presentation.course_search.CourseSearchFeature.Action
 import org.stepik.android.presentation.course_search.mapper.CourseSearchResultItemsMapper
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.concatWithPagedList
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.concatWithPagedList
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseSearchReducer

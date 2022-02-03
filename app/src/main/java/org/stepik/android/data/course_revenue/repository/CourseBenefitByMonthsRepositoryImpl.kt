@@ -4,7 +4,7 @@ import io.reactivex.Single
 import org.stepik.android.data.course_revenue.source.CourseBenefitByMonthsRemoteDataSource
 import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonth
 import org.stepik.android.domain.course_revenue.repository.CourseBenefitByMonthsRepository
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import javax.inject.Inject
 
 class CourseBenefitByMonthsRepositoryImpl
