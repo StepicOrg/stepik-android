@@ -590,6 +590,7 @@
     <string name="course_try_free">Try for Free</string>
 
     <string name="course_info_organization_prefix">by %s</string>
+    <string name="course_info_skills">You will learn</string>
     <string name="course_info_about">About</string>
     <string name="course_info_requirements">Requirements</string>
     <string name="course_info_target_audience">Target audience</string>

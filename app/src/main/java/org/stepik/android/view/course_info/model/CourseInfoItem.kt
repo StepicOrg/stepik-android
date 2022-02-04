@@ -23,6 +23,22 @@ sealed class CourseInfoItem(
     override fun compareTo(other: CourseInfoItem): Int =
         type.ordinal.compareTo(other.type.ordinal)
 
+    class AuthorsBlock(
+        val authors: List<User?>
+    ) : CourseInfoItem(CourseInfoType.AUTHORS)
+
+    class Skills(
+        val acquiredSkills: List<String>
+    ) : CourseInfoItem(CourseInfoType.ACQUIRED_SKILLS)
+
+    class SummaryBlock(
+        val text: String
+    ) : CourseInfoItem(CourseInfoType.SUMMARY)
+
+    class AboutBlock(
+        val text: String
+    ) : CourseInfoItem(CourseInfoType.ABOUT)
+
     class OrganizationBlock(
         val organization: User
     ) : CourseInfoItem(CourseInfoType.ORGANIZATION)

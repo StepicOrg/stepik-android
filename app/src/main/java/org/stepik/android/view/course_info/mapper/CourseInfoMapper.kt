@@ -12,6 +12,14 @@ private const val NEW_LINE = "<br/>"
 fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
     val items = arrayListOf<CourseInfoItem>()
 
+    if (summary != null) {
+        items.add(CourseInfoItem.SummaryBlock(summary))
+    }
+
+    if (authors != null) {
+        items.add(CourseInfoItem.AuthorsBlock(authors))
+    }
+
     if (organization != null) {
         items.add(CourseInfoItem.OrganizationBlock(organization))
     }
@@ -20,7 +28,13 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
         items.add(CourseInfoItem.VideoBlock(videoMediaData))
     }
 
-    items.addTextItem(CourseInfoType.ABOUT, about)
+    if (acquiredSkills != null) {
+        items.add(CourseInfoItem.Skills(acquiredSkills))
+    }
+
+    if (about != null) {
+        items.add(CourseInfoItem.AboutBlock(about))
+    }
     items.addTextItem(CourseInfoType.REQUIREMENTS, requirements)
     items.addTextItem(CourseInfoType.TARGET_AUDIENCE, targetAudience)
 

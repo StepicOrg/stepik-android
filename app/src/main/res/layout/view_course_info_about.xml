@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:gravity="start|center_vertical"
+        android:text="@string/course_info_about"
+        android:textAppearance="?textAppearanceSubtitle1" />
+
+    <org.stepik.android.view.latex.ui.widget.LatexView
+        android:id="@+id/aboutText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_info_block_margin"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary" />
+
+</LinearLayout>

@@ -22,23 +22,27 @@ constructor(
     private fun getCourseInfoUsers(course: Course): Observable<CourseInfoData> {
         val emptySource = Observable.just(mapToCourseInfoData(course))
 
+        val authorsSource = userRepository.getUsers(userIds = calculateAuthorIds(course))
         val instructorsSource = userRepository.getUsers(userIds = course.instructors ?: listOf())
         val ownerSource = userRepository.getUsers(listOf(course.owner))
 
         val remoteSource =
-            zip(instructorsSource, ownerSource) { instructors, owners ->
-                mapToCourseInfoData(course, instructors, owners.firstOrNull())
+            zip(authorsSource, instructorsSource, ownerSource) { authors, instructors, owners ->
+                mapToCourseInfoData(course, authors, instructors, owners.firstOrNull())
             }
 
         return emptySource
             .concatWith(remoteSource.toObservable())
             .onErrorReturn {
-                mapToCourseInfoData(course, instructors = emptyList()) // fallback on network error
+                mapToCourseInfoData(course, authors = emptyList(), instructors = emptyList()) // fallback on network error
             }
     }
 
-    private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null): CourseInfoData =
+    private fun mapToCourseInfoData(course: Course, authors: List<User>? = null, instructors: List<User>? = null, organization: User? = null): CourseInfoData =
         CourseInfoData(
+            summary        = course.summary?.takeIf(String::isNotBlank),
+            authors        = (authors ?: calculateAuthorIds(course).map { null }).takeIf { it.isNotEmpty() },
+            acquiredSkills = course.acquiredSkills,
             organization   = organization?.takeIf(User::isOrganization),
             videoMediaData = course.introVideo
                 ?.takeUnless { it.urls.isNullOrEmpty() }
@@ -66,4 +70,7 @@ constructor(
                 },
             learnersCount = course.learnersCount
         )
+
+    private fun calculateAuthorIds(course: Course): List<Long> =
+        (course.authors ?: emptyList()) - (course.instructors ?: emptyList())
 }

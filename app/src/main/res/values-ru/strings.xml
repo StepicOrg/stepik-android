@@ -571,6 +571,7 @@
     <string name="course_try_free">Попробовать бесплатно</string>
 
     <string name="course_info_organization_prefix">от %s</string>
+    <string name="course_info_skills">Чему вы научитесь</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
     <string name="course_info_target_audience">Целевая аудитория</string>
