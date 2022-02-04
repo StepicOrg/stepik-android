@@ -99,15 +99,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
             )
         )
 
-//        courseInfoRecycler.addItemDecoration(
-//                CourseInfoBlockOffsetDecorator(resources.getDimension(R.dimen.course_info_block_margin).toInt(), intArrayOf(
-//                        courseInfoAdapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
-//                        courseInfoAdapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
-//                )))
-//        courseInfoRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-//            AppCompatResources.getDrawable(requireContext(), R.drawable.bg_divider_vertical)?.let(::setDrawable)
-//        })
-
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseInfoView.State.Loading>(courseInfoLoadingPlaceholder)
         viewStateDelegate.addState<CourseInfoView.State.CourseInfoLoaded>(courseInfoRecycler)
