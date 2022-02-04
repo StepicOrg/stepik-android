@@ -123,11 +123,16 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 
     buildFeatures {
         viewBinding true
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = versions.compose
     }
 }
 
@@ -172,6 +177,7 @@ dependencies {
     implementation libraries.media
     implementation libraries.multidex
     implementation libraries.androidKit.values()
+    implementation libraries.compose.values()
     implementation libraries.domainRx
     implementation libraries.viewInjection
     implementation libraries.viewBindingDelegate

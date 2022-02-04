@@ -49,6 +49,7 @@ ext.versions = [
         domainRx             : '1.0.1',
         viewBindingDelegate  : '1.4.7',
         multisnaprecycler    : '2.0.3',
+        compose              : '1.0.5',
 
         retrofit             : '2.6.1',
         okhttp               : '4.9.0',
@@ -172,6 +173,15 @@ ext.libraries = [
         model                : "ru.nobird.app.core:model:$versions.model",
         viewBindingDelegate  : "com.github.kirich1409:viewbindingpropertydelegate-noreflection:$versions.viewBindingDelegate",
         multisnaprecycler    : "com.github.takusemba:multisnaprecyclerview:$versions.multisnaprecycler",
+
+        compose              : [
+                composeActivity : "androidx.activity:activity-compose:1.4.0",
+                composeMaterial : "androidx.compose.material:material:$versions.compose",
+                composeAnimation : "androidx.compose.animation:animation:$versions.compose",
+                composeTooling : "androidx.compose.ui:ui-tooling:$versions.compose",
+                composeThemeAdapter : "com.google.android.material:compose-theme-adapter:1.1.3",
+                composeViewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
+        ],
 
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
