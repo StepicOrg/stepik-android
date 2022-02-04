@@ -21,7 +21,6 @@ import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoDividerDecorator
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoAuthorsAdapterDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoAboutAdapterDelegate
-import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoOrganizationDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoSkillsAdapterDelegate
@@ -70,7 +69,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         courseInfoAdapter += CourseInfoVideoBlockDelegate { mediaData ->
             screenManager.showVideo(this, mediaData, null)
         }
-        courseInfoAdapter += CourseInfoOrganizationDelegate(onUserClicked = userClick)
         courseInfoAdapter += CourseInfoAuthorsAdapterDelegate(onAuthorClicked = userClick)
     }
 
@@ -118,7 +116,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         viewStateDelegate.switchState(state)
         if (state is CourseInfoView.State.CourseInfoLoaded) {
             courseInfoAdapter.items = state.courseInfoData.toSortedItems(requireContext())
-            courseInfoAdapter.notifyDataSetChanged()
         }
     }
 

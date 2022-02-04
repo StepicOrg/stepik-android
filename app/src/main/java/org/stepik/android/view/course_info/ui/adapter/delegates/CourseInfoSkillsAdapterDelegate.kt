@@ -37,6 +37,7 @@ class CourseInfoSkillsAdapterDelegate : AdapterDelegate<CourseInfoItem, Delegate
             with(viewBinding.skillsRecycler) {
                 adapter = skillsAdapter
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                isNestedScrollingEnabled = false
             }
         }
 
