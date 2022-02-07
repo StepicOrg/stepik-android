@@ -15,16 +15,17 @@ import org.stepik.android.domain.course_news.model.CourseNewsListItem
 import org.stepik.android.presentation.course_news.CourseNewsFeature
 import org.stepik.android.presentation.course_news.CourseNewsViewModel
 import org.stepik.android.view.course_news.ui.adapter.delegate.CourseNewsAdapterDelegate
-import ru.nobird.android.core.model.PaginationDirection
-import ru.nobird.android.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import ru.nobird.app.core.model.PaginationDirection
+import ru.nobird.app.presentation.redux.container.ReduxView
 import javax.inject.Inject
 
-class CourseNewsFragment : Fragment(R.layout.fragment_course_news), ReduxView<CourseNewsFeature.State, CourseNewsFeature.Action.ViewAction> {
+class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
+    ReduxView<CourseNewsFeature.State, CourseNewsFeature.Action.ViewAction> {
 
     companion object {
         fun newInstance(courseId: Long): Fragment =
