@@ -23,9 +23,10 @@ constructor(
 
         val authorIds = course.authors ?: emptyList()
         val instructorIds = course.instructors ?: emptyList()
+        val combinedUserIds = (authorIds + instructorIds).distinct()
 
         val remoteSource =
-            userRepository.getUsers(userIds = authorIds + instructorIds).map { users ->
+            userRepository.getUsers(userIds = combinedUserIds).map { users ->
                 val usersById = users.associateBy(User::id)
                 val filteredAuthorIds = authorIds - instructorIds
 
