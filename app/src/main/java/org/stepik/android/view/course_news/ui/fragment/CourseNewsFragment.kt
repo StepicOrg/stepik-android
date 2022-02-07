@@ -17,6 +17,7 @@ import org.stepik.android.presentation.course_news.CourseNewsViewModel
 import org.stepik.android.view.course_news.ui.adapter.delegate.CourseNewsAdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
@@ -39,6 +40,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
 
     private val courseNewsViewModel: CourseNewsViewModel by reduxViewModel(this) { viewModelFactory }
     private val courseNewsAdapter: DefaultDelegateAdapter<CourseNewsListItem> = DefaultDelegateAdapter()
+    private val viewStateDelegate: ViewStateDelegate<CourseNewsFeature.State> = ViewStateDelegate()
 
     private var courseId: Long by argument()
 
@@ -54,7 +56,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(courseNewsBinding.root) {
+        with(courseNewsBinding.courseNewsRecycler) {
             adapter = courseNewsAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
@@ -66,6 +68,12 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
                 }
             }
         }
+
+        viewStateDelegate.addState<CourseNewsFeature.State.Idle>()
+        viewStateDelegate.addState<CourseNewsFeature.State.LoadingCourse>(courseNewsBinding.courseNewsRecycler)
+        viewStateDelegate.addState<CourseNewsFeature.State.LoadingAnnouncements>(courseNewsBinding.courseNewsRecycler)
+        viewStateDelegate.addState<CourseNewsFeature.State.Error>(courseNewsBinding.courseNewsError.root)
+        viewStateDelegate.addState<CourseNewsFeature.State.Empty>(courseNewsBinding.courseNewsEmpty.root)
     }
 
     override fun onResume() {
@@ -89,6 +97,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
     }
 
     override fun render(state: CourseNewsFeature.State) {
+        viewStateDelegate.switchState(state)
         when (state) {
             is CourseNewsFeature.State.LoadingCourse,
             is CourseNewsFeature.State.LoadingAnnouncements -> {
