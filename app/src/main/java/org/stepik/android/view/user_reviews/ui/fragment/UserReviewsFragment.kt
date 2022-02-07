@@ -3,11 +3,32 @@ package org.stepik.android.view.user_reviews.ui.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.composethemeadapter.MdcTheme
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_user_reviews.*
 import org.stepic.droid.R
@@ -36,6 +57,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import ru.nobird.app.presentation.redux.feature.Feature
 import javax.inject.Inject
 
 class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<UserReviewsFeature.State, UserReviewsFeature.Action.ViewAction> {
@@ -54,6 +76,9 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var userReviewsFeature: Feature<UserReviewsFeature.State, UserReviewsFeature.Message, UserReviewsFeature.Action>
+
     private val userReviewsViewModel: UserReviewsViewModel by reduxViewModel(this) { viewModelFactory }
 
     private val viewStateDelegate = ViewStateDelegate<UserReviewsFeature.State>()
@@ -65,8 +90,74 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         injectComponent()
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = ComposeView(requireContext()).apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+            MdcTheme {
+                Screen(userReviewsFeature)
+            }
+        }
+    }
+
+    @Composable
+    private fun Screen(userReviewsFeature: Feature<UserReviewsFeature.State, UserReviewsFeature.Message, UserReviewsFeature.Action>) {
+        val state by userReviewsFeature.observeState()
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = getString(R.string.user_review_title),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.h6
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { activity?.onBackPressed() }) {
+                            Icon(
+                                imageVector = Icons.Filled.ArrowBack,
+                                contentDescription = "Back",
+                                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f)
+                            )
+                        }
+                    },
+                    backgroundColor = MaterialTheme.colors.surface
+                )
+            }
+        ) {
+            when (state) {
+                is UserReviewsFeature.State.Idle,
+                is UserReviewsFeature.State.Loading -> {
+                    CircularProgressIndicator()
+                }
+                is UserReviewsFeature.State.Empty -> {
+
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun <S, M, A> Feature<S, M, A>.observeState(): State<S> {
+        val mutableState = remember { mutableStateOf(this.state) }
+        DisposableEffect(this) {
+            val cancellable = addStateListener {
+                mutableState.value = it
+            }
+            onDispose {
+                cancellable.cancel()
+            }
+        }
+        return mutableState
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        return
         initCenteredToolbar(R.string.user_review_title, true)
         initViewStateDelegate()
         userReviewItemAdapter += UserReviewsPlaceholderAdapterDelegate()
