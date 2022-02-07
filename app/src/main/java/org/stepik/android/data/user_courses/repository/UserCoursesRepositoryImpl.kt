@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource

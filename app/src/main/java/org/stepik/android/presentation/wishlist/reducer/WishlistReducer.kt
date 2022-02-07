@@ -4,8 +4,8 @@ import org.stepik.android.presentation.wishlist.WishlistFeature.State
 import org.stepik.android.presentation.wishlist.WishlistFeature.Message
 import org.stepik.android.presentation.wishlist.WishlistFeature.Action
 import org.stepik.android.presentation.wishlist.model.WishlistAction
-import ru.nobird.android.core.model.mutate
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.core.model.mutate
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class WishlistReducer

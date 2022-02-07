@@ -11,7 +11,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.features.stories.ui.delegate.StoriesActivityDelegate
 import org.stepik.android.presentation.story.StoryFeature
 import org.stepik.android.view.story.viewmodel.StoryViewModel
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.stories.ui.custom.DismissableLayout
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject

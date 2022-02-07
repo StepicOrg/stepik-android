@@ -5,7 +5,7 @@ import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.model.Course
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CourseListItem {
     data class Data(

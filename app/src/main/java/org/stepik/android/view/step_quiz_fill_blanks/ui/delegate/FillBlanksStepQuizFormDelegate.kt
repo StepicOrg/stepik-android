@@ -6,7 +6,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_fill_blanks.view.*
 import org.stepic.droid.R
-import ru.nobird.android.core.model.mutate
+import ru.nobird.app.core.model.mutate
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult

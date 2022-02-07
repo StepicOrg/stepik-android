@@ -21,7 +21,7 @@ import org.stepik.android.presentation.debug.InAppPurchasesFeature
 import org.stepik.android.presentation.debug.InAppPurchasesViewModel
 import org.stepik.android.view.debug.ui.adapter.delegate.InAppPurchaseAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject

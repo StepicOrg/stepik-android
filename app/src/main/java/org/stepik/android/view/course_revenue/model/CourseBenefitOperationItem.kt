@@ -2,7 +2,7 @@ package org.stepik.android.view.course_revenue.model
 
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CourseBenefitOperationItem {
     data class CourseBenefits(

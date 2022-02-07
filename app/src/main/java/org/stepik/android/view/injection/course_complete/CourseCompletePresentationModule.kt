@@ -9,9 +9,9 @@ import org.stepik.android.presentation.course_complete.CourseCompleteFeature
 import org.stepik.android.presentation.course_complete.CourseCompleteViewModel
 import org.stepik.android.presentation.course_complete.dispatcher.CourseCompleteActionDispatcher
 import org.stepik.android.presentation.course_complete.reducer.CourseCompleteReducer
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object CourseCompletePresentationModule {

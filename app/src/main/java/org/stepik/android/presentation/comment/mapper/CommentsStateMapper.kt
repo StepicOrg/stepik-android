@@ -1,13 +1,13 @@
 package org.stepik.android.presentation.comment.mapper
 
-import ru.nobird.android.core.model.PagedList
-import ru.nobird.android.core.model.PaginationDirection
-import ru.nobird.android.core.model.mutate
-import ru.nobird.android.core.model.mapPaged
-import ru.nobird.android.core.model.transform
-import ru.nobird.android.core.model.insert
-import ru.nobird.android.core.model.plus
-import ru.nobird.android.core.model.filterNot
+import ru.nobird.app.core.model.PagedList
+import ru.nobird.app.core.model.PaginationDirection
+import ru.nobird.app.core.model.mutate
+import ru.nobird.app.core.model.mapPaged
+import ru.nobird.app.core.model.transform
+import ru.nobird.app.core.model.insert
+import ru.nobird.app.core.model.plus
+import ru.nobird.app.core.model.filterNot
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem

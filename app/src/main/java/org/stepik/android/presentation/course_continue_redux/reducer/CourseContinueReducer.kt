@@ -3,7 +3,7 @@ package org.stepik.android.presentation.course_continue_redux.reducer
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature.State
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature.Message
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature.Action
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseContinueReducer

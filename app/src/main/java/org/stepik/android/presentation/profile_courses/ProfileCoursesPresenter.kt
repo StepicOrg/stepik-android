@@ -8,8 +8,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import ru.nobird.android.core.model.mapPaged
-import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.app.core.model.mapPaged
+import ru.nobird.app.core.model.mapToLongArray
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem

@@ -31,7 +31,7 @@ import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.resolver.TableLayoutHorizontalSpanCountResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.app.core.model.PaginationDirection
 import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 

@@ -45,7 +45,7 @@ import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBu
 import org.stepik.android.view.submission.routing.SubmissionDeepLinkBuilder
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.PaginationDirection
+import ru.nobird.app.core.model.PaginationDirection
 import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument

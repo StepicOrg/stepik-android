@@ -1,5 +1,7 @@
 package org.stepik.android.domain.course.interactor
 
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.Purchase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Maybe
@@ -8,14 +10,19 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.CoursePurchasePayload
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CoursePurchaseDataRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
+import org.stepik.android.domain.course_payments.model.CoursePurchaseInfo
 import org.stepik.android.domain.course_purchase.model.CoursePurchaseFlow
+import org.stepik.android.domain.course_purchase.model.CoursePurchaseObfuscatedParams
+import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
@@ -36,7 +43,9 @@ constructor(
     private val defaultPromoCodeMapper: DefaultPromoCodeMapper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val coursePurchaseDataRepository: CoursePurchaseDataRepository,
-    private val coursePurchaseDataResolver: CoursePurchaseDataResolver
+    private val coursePurchaseDataResolver: CoursePurchaseDataResolver,
+    private val profileRepository: ProfileRepository,
+    private val billingRepository: BillingRepository
 ) {
 
     fun getCourseHeaderData(courseId: Long, promo: String? = null, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -76,8 +85,13 @@ constructor(
                 Single.just(DeeplinkPromoCode.EMPTY to PromoCodeSku.EMPTY)
             } else {
                 courseStatsInteractor.checkDeeplinkPromoCodeValidity(course.id, promo)
+            },
+            if (isInAppActive && course.isPaid) {
+                getInitialPurchaseResult(course.id)
+            } else {
+                Single.just(CoursePurchaseInfo.Unavailable)
             }
-        ) { courseStats, localSubmissions, (promoCode, promoCodeSku) ->
+        ) { courseStats, localSubmissions, (promoCode, promoCodeSku), coursePurchaseInfo ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
@@ -89,27 +103,73 @@ constructor(
                 deeplinkPromoCode = promoCode,
                 deeplinkPromoCodeSku = promoCodeSku,
                 defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(course),
-                isWishlistUpdating = false
+                isWishlistUpdating = false,
+                coursePurchaseInfo = coursePurchaseInfo
             )
         }
             .toMaybe()
-            .doOnSuccess { courseHeaderData ->
-                val coursePurchaseDataResult =
-                    when (courseHeaderData.stats.enrollmentState) {
-                        is EnrollmentState.NotEnrolledMobileTier ->
-                            coursePurchaseDataResolver
-                                .resolveCoursePurchaseData(courseHeaderData)
-                                ?.let { CoursePurchaseDataResult.Result(it) }
-                                ?: CoursePurchaseDataResult.Empty
-
-                        is EnrollmentState.NotEnrolledUnavailable ->
-                            CoursePurchaseDataResult.NotAvailable
-
-                        else ->
-                            CoursePurchaseDataResult.Empty
-                    }
-
-                coursePurchaseDataRepository.savePurchaseData(courseHeaderData.deeplinkPromoCode, coursePurchaseDataResult)
-            }
+            .doOnSuccess { courseHeaderData -> updatePurchaseData(courseHeaderData) }
     }
+
+    fun updatePurchaseData(courseHeaderData: CourseHeaderData) {
+        val coursePurchaseDataResult =
+            when (courseHeaderData.stats.enrollmentState) {
+                is EnrollmentState.NotEnrolledMobileTier ->
+                    coursePurchaseDataResolver
+                        .resolveCoursePurchaseData(courseHeaderData)
+                        ?.let { CoursePurchaseDataResult.Result(it) }
+                        ?: CoursePurchaseDataResult.Empty
+
+                is EnrollmentState.NotEnrolledUnavailable ->
+                    CoursePurchaseDataResult.NotAvailable
+
+                else ->
+                    CoursePurchaseDataResult.Empty
+            }
+
+        coursePurchaseDataRepository.savePurchaseData(courseHeaderData.deeplinkPromoCode, coursePurchaseDataResult)
+    }
+
+    fun resolvePurchaseResult(coursePurchaseInfo: CoursePurchaseInfo, purchases: List<Purchase>): CoursePurchaseInfo {
+        val obfuscatedParams = when (coursePurchaseInfo) {
+            is CoursePurchaseInfo.Empty ->
+                coursePurchaseInfo.obfuscatedParams
+            is CoursePurchaseInfo.Result ->
+                coursePurchaseInfo.obfuscatedParams
+            else ->
+                throw IllegalArgumentException()
+        }
+        return resolvePurchaseResult(obfuscatedParams, purchases)
+    }
+
+    private fun getInitialPurchaseResult(courseId: Long): Single<CoursePurchaseInfo> =
+        zip(
+            getCurrentProfileId(),
+            billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
+        ) { profileId, purchases ->
+            val obfuscatedParams =
+                CoursePurchaseObfuscatedParams(
+                    obfuscatedAccountId = profileId.toString().hashCode().toString(),
+                    obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
+                )
+            resolvePurchaseResult(obfuscatedParams, purchases)
+        }
+
+    private fun resolvePurchaseResult(obfuscatedParams: CoursePurchaseObfuscatedParams, purchases: List<Purchase>): CoursePurchaseInfo {
+        val purchase =
+            purchases.find {
+                it.accountIdentifiers?.obfuscatedAccountId == obfuscatedParams.obfuscatedAccountId &&
+                    it.accountIdentifiers?.obfuscatedProfileId == obfuscatedParams.obfuscatedProfileId
+            }
+        return if (purchase == null) {
+            CoursePurchaseInfo.Empty(obfuscatedParams)
+        } else {
+            CoursePurchaseInfo.Result(obfuscatedParams, purchase.purchaseState)
+        }
+    }
+
+    private fun getCurrentProfileId(): Single<Long> =
+        profileRepository
+            .getProfile()
+            .map { profile -> profile.id }
 }

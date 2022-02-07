@@ -1,7 +1,7 @@
 package org.stepik.android.model.user
 
 import com.google.gson.annotations.SerializedName
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 data class EmailAddress(
     @SerializedName("id")

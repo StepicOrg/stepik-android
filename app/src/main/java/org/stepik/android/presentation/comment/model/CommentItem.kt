@@ -6,7 +6,7 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.model.user.User
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 sealed class CommentItem {
     data class Data(
@@ -23,6 +23,7 @@ sealed class CommentItem {
         sealed class VoteStatus {
             data class Resolved(val vote: Vote) : VoteStatus()
             object Pending : VoteStatus()
+            object Unavailable : VoteStatus()
         }
 
         data class Solution(

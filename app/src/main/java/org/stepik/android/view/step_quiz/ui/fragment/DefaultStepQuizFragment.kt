@@ -31,7 +31,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDeleg
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizViewStateDelegateFactory
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject

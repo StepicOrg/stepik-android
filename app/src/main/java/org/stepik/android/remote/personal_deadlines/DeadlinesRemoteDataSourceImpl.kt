@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import ru.nobird.android.domain.rx.toMaybe
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.data.personal_deadlines.getKindOfRecord

@@ -68,7 +68,7 @@ constructor(
             when (stats.enrollmentState) {
                 is EnrollmentState.NotEnrolledMobileTier ->
                     coursePurchaseDataResolver
-                        .resolveCoursePurchaseData(course, stats, stats.enrollmentState, deeplinkPromoCodeSku)
+                        .resolveCoursePurchaseData(course, stats, stats.enrollmentState, deeplinkPromoCodeSku, -1)
                         .let { CoursePurchaseDataResult.Result(it) }
 
                 is EnrollmentState.NotEnrolledUnavailable ->

@@ -17,11 +17,11 @@ import org.stepik.android.presentation.step_quiz_review.dispatcher.StepQuizRevie
 import org.stepik.android.presentation.step_quiz_review.dispatcher.StepQuizReviewTeacherActionDispatcher
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewTeacherReducer
-import ru.nobird.android.core.model.safeCast
-import ru.nobird.android.presentation.redux.container.wrapWithViewContainer
-import ru.nobird.android.presentation.redux.dispatcher.transform
-import ru.nobird.android.presentation.redux.dispatcher.wrapWithActionDispatcher
-import ru.nobird.android.presentation.redux.feature.ReduxFeature
+import ru.nobird.app.core.model.safeCast
+import ru.nobird.app.presentation.redux.container.wrapWithViewContainer
+import ru.nobird.app.presentation.redux.dispatcher.transform
+import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
+import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
 @Module
 object StepQuizPresentationModule {

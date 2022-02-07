@@ -8,7 +8,7 @@ import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.wishlist.model.WishlistEntry
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import javax.inject.Inject
 
 class CourseListWishInteractor

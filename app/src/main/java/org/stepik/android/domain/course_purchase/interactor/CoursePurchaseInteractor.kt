@@ -102,7 +102,7 @@ constructor(
             completePurchaseRestore(courseId, purchase)
         }
 
-    private fun saveBillingPurchasePayload(courseId: Long, profileId: Long, purchase: Purchase, promoCodeName: String?): Completable =
+    fun saveBillingPurchasePayload(courseId: Long, profileId: Long, purchase: Purchase, promoCodeName: String?): Completable =
         billingPurchasePayloadRepository
             .saveBillingPurchasePayload(
                 BillingPurchasePayload(

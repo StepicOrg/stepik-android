@@ -32,7 +32,7 @@ import org.stepik.android.view.course.resolver.CoursePromoCodeResolver
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course_purchase.delegate.WishlistViewDelegate
 import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
-import ru.nobird.android.presentation.redux.container.ReduxView
+import ru.nobird.app.presentation.redux.container.ReduxView
 import ru.nobird.android.view.base.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists

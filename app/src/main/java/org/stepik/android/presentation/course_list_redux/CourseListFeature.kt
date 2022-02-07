@@ -1,10 +1,10 @@
 package org.stepik.android.presentation.course_list_redux
 
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
-import ru.nobird.android.core.model.Identifiable
+import ru.nobird.app.core.model.Identifiable
 
 interface CourseListFeature {
     sealed class State {

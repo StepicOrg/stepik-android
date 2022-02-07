@@ -4,7 +4,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.presentation.course_list.CourseListWishView
-import ru.nobird.android.core.model.safeCast
+import ru.nobird.app.core.model.safeCast
 import javax.inject.Inject
 
 class CourseListWishStateMapper

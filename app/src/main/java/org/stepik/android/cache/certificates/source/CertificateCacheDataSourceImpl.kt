@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.cache.certificates.structure.DbStructureCertificate
 import org.stepik.android.data.certificate.source.CertificateCacheDataSource
 import org.stepik.android.model.Certificate

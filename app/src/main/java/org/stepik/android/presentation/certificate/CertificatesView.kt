@@ -2,7 +2,7 @@ package org.stepik.android.presentation.certificate
 
 import org.stepic.droid.model.CertificateListItem
 import org.stepik.android.model.Certificate
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 
 interface CertificatesView {
     sealed class State {

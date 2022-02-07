@@ -2,7 +2,7 @@ package org.stepik.android.data.course.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.data.base.repository.delegate.ListRepositoryDelegate
 import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource

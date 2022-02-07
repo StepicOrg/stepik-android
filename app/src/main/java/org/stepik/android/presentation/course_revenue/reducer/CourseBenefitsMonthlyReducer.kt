@@ -4,8 +4,8 @@ import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListIt
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature.State
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature.Message
 import org.stepik.android.presentation.course_revenue.CourseBenefitsMonthlyFeature.Action
-import ru.nobird.android.core.model.concatWithPagedList
-import ru.nobird.android.presentation.redux.reducer.StateReducer
+import ru.nobird.app.core.model.concatWithPagedList
+import ru.nobird.app.presentation.redux.reducer.StateReducer
 import javax.inject.Inject
 
 class CourseBenefitsMonthlyReducer

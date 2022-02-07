@@ -2,7 +2,7 @@ package org.stepik.android.domain.certificate.interactor
 
 import io.reactivex.Single
 import org.stepic.droid.model.CertificateListItem
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.repository.CertificateRepository
 import org.stepik.android.domain.course.repository.CourseRepository

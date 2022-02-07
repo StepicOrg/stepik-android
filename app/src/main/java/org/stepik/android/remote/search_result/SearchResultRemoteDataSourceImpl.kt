@@ -1,7 +1,7 @@
 package org.stepik.android.remote.search_result
 
 import io.reactivex.Single
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import org.stepik.android.data.search_result.source.SearchResultRemoteDataSource
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.SearchResult

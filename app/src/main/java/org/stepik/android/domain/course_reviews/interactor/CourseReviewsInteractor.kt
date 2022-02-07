@@ -5,7 +5,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.zipWith
-import ru.nobird.android.core.model.PagedList
+import ru.nobird.app.core.model.PagedList
 import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
