@@ -74,6 +74,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
         viewStateDelegate.addState<CourseNewsFeature.State.LoadingAnnouncements>(courseNewsBinding.courseNewsRecycler)
         viewStateDelegate.addState<CourseNewsFeature.State.Error>(courseNewsBinding.courseNewsError.root)
         viewStateDelegate.addState<CourseNewsFeature.State.Empty>(courseNewsBinding.courseNewsEmpty.root)
+        viewStateDelegate.addState<CourseNewsFeature.State.Content>(courseNewsBinding.courseNewsRecycler)
     }
 
     override fun onResume() {

@@ -14,6 +14,7 @@ interface CourseNewsFeature {
             val announcementIds: List<Long>,
             val courseNewsListItems: List<CourseNewsListItem.Data>,
             val sourceType: DataSourceType,
+            val isLoadingRemote: Boolean,
             val isLoadingNextPage: Boolean
         ) : State()
     }

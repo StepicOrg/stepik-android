@@ -23,5 +23,5 @@ constructor(
         )
 
     override fun getAnnouncements(announcementIds: List<Long>, sourceType: DataSourceType): Single<List<Announcement>> =
-        delegate.get(announcementIds, sourceType, allowFallback = true)
+        delegate.get(announcementIds, sourceType, allowFallback = false)
 }

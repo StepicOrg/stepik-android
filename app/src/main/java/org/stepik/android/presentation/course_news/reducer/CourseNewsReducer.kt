@@ -24,7 +24,12 @@ constructor() : StateReducer<State, Message, Action> {
                 }
 
                 val fetchAnnouncementIds = message.announcementIds.slice(0, PAGE_SIZE)
-                State.LoadingAnnouncements(message.announcementIds, sourceType) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, sourceType))
+
+                if (fetchAnnouncementIds.isEmpty()) {
+                    State.Empty to emptySet()
+                } else {
+                    State.LoadingAnnouncements(message.announcementIds, sourceType) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, sourceType))
+                }
             }
             is Message.OnScreenOpenedMessage -> {
                 when (state) {
@@ -37,15 +42,15 @@ constructor() : StateReducer<State, Message, Action> {
                     is State.LoadingAnnouncements -> {
                         if (state.sourceType == DataSourceType.CACHE) {
                             State.LoadingAnnouncements(state.announcementIds, DataSourceType.REMOTE) to
-                                setOf(Action.FetchAnnouncements(state.announcementIds, DataSourceType.REMOTE))
+                                setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
                         } else {
                             null
                         }
                     }
                     is State.Content -> {
                         if (state.sourceType == DataSourceType.CACHE) {
-                            State.LoadingAnnouncements(state.announcementIds, DataSourceType.REMOTE) to
-                                setOf(Action.FetchAnnouncements(state.announcementIds, DataSourceType.REMOTE))
+                            state.copy(isLoadingRemote = true) to
+                                setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
                         } else {
                             null
                         }
@@ -62,21 +67,41 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
             is Message.FetchCourseNewsSuccess -> {
-                if (state is State.LoadingAnnouncements) {
-                    State.Content(state.announcementIds, message.courseNewsListItems, state.sourceType, isLoadingNextPage = false) to emptySet()
-                } else {
-                    null
+                when (state) {
+                    is State.LoadingAnnouncements -> {
+                        State.Content(
+                            state.announcementIds,
+                            message.courseNewsListItems,
+                            state.sourceType,
+                            isLoadingRemote = false,
+                            isLoadingNextPage = false
+                        ) to emptySet()
+                    }
+                    is State.Content -> {
+                        state.copy(
+                            courseNewsListItems = message.courseNewsListItems,
+                            sourceType = DataSourceType.REMOTE,
+                            isLoadingRemote = false
+                        ) to emptySet()
+                    }
+                    else ->
+                        null
                 }
             }
             is Message.FetchCourseNewsFailure -> {
                 if (state is State.LoadingAnnouncements) {
-                    State.Error to emptySet()
+                    if (state.sourceType == DataSourceType.REMOTE) {
+                        state.copy(sourceType = DataSourceType.CACHE) to
+                            setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.CACHE))
+                    } else {
+                        State.Error to emptySet()
+                    }
                 } else {
                     null
                 }
             }
             is Message.FetchNextPage -> {
-                if (state is State.Content) {
+                if (state is State.Content && !state.isLoadingRemote && !state.isLoadingNextPage) {
                     val offset = state.courseNewsListItems.size
                     val fetchAnnouncementIds = state.announcementIds.slice(offset, offset + PAGE_SIZE)
                     if (fetchAnnouncementIds.isNotEmpty()) {
