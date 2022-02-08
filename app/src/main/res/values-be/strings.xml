@@ -515,6 +515,7 @@
     <string name="course_promo_code_date">Зніжка дзейнічае да %s</string>
     <string name="course_try_free">Паспрабаваць бясплатна</string>
     <string name="course_info_organization_prefix">ад %s</string>
+    <string name="course_info_skills">Чаму вы навучыцеся</string>
     <string name="course_info_about">Пра курс</string>
     <string name="course_info_requirements">Патрабаванні</string>
     <string name="course_info_target_audience">Мэтавая аўдыторыя</string>

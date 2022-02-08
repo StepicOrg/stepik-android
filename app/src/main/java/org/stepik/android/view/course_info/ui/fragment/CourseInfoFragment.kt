@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -12,14 +13,21 @@ import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepik.android.model.user.User
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
 import org.stepik.android.view.course_info.mapper.toSortedItems
-import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
-import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlockOffsetDecorator
+import org.stepik.android.view.course_info.model.CourseInfoItem
+import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoDividerDecorator
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoAuthorsAdapterDelegate
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoAboutAdapterDelegate
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoSkillsAdapterDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
+import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoSummaryAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -39,7 +47,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
     private var courseId: Long by argument()
 
-    private lateinit var courseInfoAdapter: CourseInfoAdapter
+    private val courseInfoAdapter: DefaultDelegateAdapter<CourseInfoItem> = DefaultDelegateAdapter()
     private val courseInfoPresenter: CourseInfoPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseInfoView.State>
@@ -49,15 +57,19 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         injectComponent(courseId)
 
         savedInstanceState?.let(courseInfoPresenter::onRestoreInstanceState)
+        val userClick: ((User) -> Unit) = { user ->
+            screenManager.openProfile(requireContext(), user.id)
+        }
 
-        courseInfoAdapter = CourseInfoAdapter(
-            onVideoClicked = { mediaData ->
-                screenManager.showVideo(this, mediaData, null)
-            },
-            onUserClicked = { user ->
-                screenManager.openProfile(requireContext(), user.id)
-            }
-        )
+        courseInfoAdapter += CourseInfoAboutAdapterDelegate()
+        courseInfoAdapter += CourseInfoTextBlockDelegate()
+        courseInfoAdapter += CourseInfoSummaryAdapterDelegate()
+        courseInfoAdapter += CourseInfoSkillsAdapterDelegate()
+        courseInfoAdapter += CourseInfoInstructorsDelegate(onInstructorClicked = userClick)
+        courseInfoAdapter += CourseInfoVideoBlockDelegate { mediaData ->
+            screenManager.showVideo(this, mediaData, null)
+        }
+        courseInfoAdapter += CourseInfoAuthorsAdapterDelegate(onAuthorClicked = userClick)
     }
 
     private fun injectComponent(courseId: Long) {
@@ -79,10 +91,11 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         courseInfoRecycler.adapter = courseInfoAdapter
 
         courseInfoRecycler.addItemDecoration(
-                CourseInfoBlockOffsetDecorator(resources.getDimension(R.dimen.course_info_block_margin).toInt(), intArrayOf(
-                        courseInfoAdapter.delegates.indexOfFirst { it is CourseInfoTextBlockDelegate },
-                        courseInfoAdapter.delegates.indexOfFirst { it is CourseInfoInstructorsDelegate }
-                )))
+            CourseInfoDividerDecorator(
+                ContextCompat.getColor(requireContext(), R.color.color_divider),
+                CourseInfoDividerDecorator.SeparatorSize(resources.getDimensionPixelSize(R.dimen.comment_item_separator_small))
+            )
+        )
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseInfoView.State.Loading>(courseInfoLoadingPlaceholder)
@@ -102,7 +115,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     override fun setState(state: CourseInfoView.State) {
         viewStateDelegate.switchState(state)
         if (state is CourseInfoView.State.CourseInfoLoaded) {
-            courseInfoAdapter.setSortedData(state.courseInfoData.toSortedItems(requireContext()))
+            courseInfoAdapter.items = state.courseInfoData.toSortedItems(requireContext())
         }
     }
 
