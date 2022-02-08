@@ -1218,4 +1218,7 @@
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертификат</string>
     <string name="certificates_distinction_title">Сертификат с отличием</string>
+
+    <!-- Course news -->
+    <string name="course_news_not_enrolled_message">Для просмотра новостей, необходимо записаться на курс</string>
 </resources>

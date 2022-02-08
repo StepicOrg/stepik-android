@@ -5,6 +5,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.course_news.exception.NotEnrolledException
 import org.stepik.android.domain.course_news.interactor.CourseNewsInteractor
 import org.stepik.android.presentation.course_news.CourseNewsFeature
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
@@ -20,16 +21,9 @@ constructor(
     private val mainScheduler: Scheduler
 ) : RxActionDispatcher<CourseNewsFeature.Action, CourseNewsFeature.Message>() {
     init {
-        compositeDisposable += courseNewsInteractor
-            .getCourse()
-            .map { course -> course.announcements?.sortedDescending() ?: emptyList() }
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onNext = { announcementIds -> onNewMessage(CourseNewsFeature.Message.InitMessage(announcementIds)) },
-                onError = { onNewMessage(CourseNewsFeature.Message.FetchAnnouncementIdsFailure) }
-            )
+        subscribeCourseUpdates()
     }
+
     override fun handleAction(action: CourseNewsFeature.Action) {
         when (action) {
             is CourseNewsFeature.Action.FetchAnnouncements -> {
@@ -55,5 +49,28 @@ constructor(
                     )
             }
         }
+    }
+
+    private fun subscribeCourseUpdates() {
+        compositeDisposable += courseNewsInteractor
+            .getCourse()
+            .map { course ->
+                if (course.enrollment != 0L) {
+                    Result.success(course.announcements?.sortedDescending() ?: emptyList())
+                } else {
+                    Result.failure(NotEnrolledException())
+                }
+            }
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onNext = { result ->
+                    result.fold(
+                        onSuccess = { onNewMessage(CourseNewsFeature.Message.InitMessage(it)) },
+                        onFailure = { onNewMessage(CourseNewsFeature.Message.FetchAnnouncementIdsFailure(it)) }
+                    )
+                },
+                onError = { onNewMessage(CourseNewsFeature.Message.FetchAnnouncementIdsFailure(it)); subscribeCourseUpdates(); }
+            )
     }
 }

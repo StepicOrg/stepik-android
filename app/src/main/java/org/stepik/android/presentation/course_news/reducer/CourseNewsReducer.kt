@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_news.reducer
 
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_news.exception.NotEnrolledException
 import org.stepik.android.presentation.course_news.CourseNewsFeature.State
 import org.stepik.android.presentation.course_news.CourseNewsFeature.Message
 import org.stepik.android.presentation.course_news.CourseNewsFeature.Action
@@ -64,8 +65,12 @@ constructor() : StateReducer<State, Message, Action> {
                 }
             }
             is Message.FetchAnnouncementIdsFailure -> {
-                if (state is State.LoadingCourse) {
-                    State.Error to emptySet()
+                if (state is State.Idle) {
+                    if (message.throwable is NotEnrolledException) {
+                        State.NotEnrolled to emptySet()
+                    } else {
+                        State.Error to emptySet()
+                    }
                 } else {
                     null
                 }

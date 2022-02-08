@@ -7,8 +7,8 @@ interface CourseNewsFeature {
     sealed class State {
         data class Idle(val mustFetchRemote: Boolean = false) : State()
         data class Empty(val announcementIds: List<Long>) : State()
+        object NotEnrolled : State()
         object Error : State()
-        object LoadingCourse : State()
         data class LoadingAnnouncements(val announcementIds: List<Long>, val sourceType: DataSourceType) : State()
         data class Content(
             val announcementIds: List<Long>,
@@ -23,7 +23,7 @@ interface CourseNewsFeature {
         data class InitMessage(val announcementIds: List<Long>) : Message()
         object OnScreenOpenedMessage : Message()
 
-        object FetchAnnouncementIdsFailure : Message()
+        data class FetchAnnouncementIdsFailure(val throwable: Throwable) : Message()
 
         data class FetchCourseNewsSuccess(val courseNewsListItems: List<CourseNewsListItem.Data>) : Message()
         object FetchCourseNewsFailure : Message()

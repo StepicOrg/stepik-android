@@ -1308,4 +1308,5 @@
     <string name="certificates_distinction_title">Certificate with distinction</string>
 
     <!-- Course news -->
+    <string name="course_news_not_enrolled_message">To view course news, you must be enrolled in the course</string>
 </resources>

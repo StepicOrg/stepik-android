@@ -70,8 +70,8 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
         }
 
         viewStateDelegate.addState<CourseNewsFeature.State.Idle>()
-        viewStateDelegate.addState<CourseNewsFeature.State.LoadingCourse>(courseNewsBinding.courseNewsRecycler)
         viewStateDelegate.addState<CourseNewsFeature.State.LoadingAnnouncements>(courseNewsBinding.courseNewsRecycler)
+        viewStateDelegate.addState<CourseNewsFeature.State.NotEnrolled>(courseNewsBinding.courseNewsEmpty.root)
         viewStateDelegate.addState<CourseNewsFeature.State.Error>(courseNewsBinding.courseNewsError.root)
         viewStateDelegate.addState<CourseNewsFeature.State.Empty>(courseNewsBinding.courseNewsEmpty.root)
         viewStateDelegate.addState<CourseNewsFeature.State.Content>(courseNewsBinding.courseNewsRecycler)
@@ -100,7 +100,10 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
     override fun render(state: CourseNewsFeature.State) {
         viewStateDelegate.switchState(state)
         when (state) {
-            is CourseNewsFeature.State.LoadingCourse,
+            is CourseNewsFeature.State.Empty ->
+                courseNewsBinding.courseNewsEmpty.placeholderMessage.text = getString(R.string.empty_try_later)
+            is CourseNewsFeature.State.NotEnrolled ->
+                courseNewsBinding.courseNewsEmpty.placeholderMessage.text = getString(R.string.course_news_not_enrolled_message)
             is CourseNewsFeature.State.LoadingAnnouncements -> {
                 courseNewsAdapter.items = listOf(
                     CourseNewsListItem.Placeholder,

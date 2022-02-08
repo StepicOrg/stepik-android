@@ -1082,4 +1082,7 @@
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертыфікат</string>
     <string name="certificates_distinction_title">Сертыфікат з адзнакай</string>
+
+    <!-- Course news -->
+    <string name="course_news_not_enrolled_message">Для прагляду навін, неабходна запісацца на курс</string>
 </resources>
