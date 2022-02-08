@@ -1085,4 +1085,9 @@
 
     <!-- Course news -->
     <string name="course_news_not_enrolled_message">Для прагляду навін, неабходна запісацца на курс</string>
+    <string name="course_news_publish_count">"Рассылак зроблена: "</string>
+    <string name="course_news_queued_count">"Бачаць на старонцы: "</string>
+    <string name="course_news_sent_count">"Атрымалі на пошту: "</string>
+    <string name="course_news_open_count">"Адкрылі ліст: "</string>
+    <string name="course_news_click_count">"Клікнулі па спасылцы: "</string>
 </resources>

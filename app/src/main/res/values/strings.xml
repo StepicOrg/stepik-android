@@ -1309,4 +1309,9 @@
 
     <!-- Course news -->
     <string name="course_news_not_enrolled_message">To view course news, you must be enrolled in the course</string>
+    <string name="course_news_publish_count">"Published: "</string>
+    <string name="course_news_queued_count">"Queued: "</string>
+    <string name="course_news_sent_count">"Sent: "</string>
+    <string name="course_news_open_count">"Opened: "</string>
+    <string name="course_news_click_count">"Clicked: "</string>
 </resources>

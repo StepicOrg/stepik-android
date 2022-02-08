@@ -33,10 +33,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/newsStatistics"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/newsSubject"
         app:layout_constraintVertical_bias="0" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/newsStatistics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_item_course_news"
+        android:layout_marginTop="16dp"
+        android:padding="16dp"
+        android:textAppearance="?textAppearanceBody2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/newsText"
+        tools:text="Рассылок сделано: 1\nВидят на странице: 102824\nПолучили на почту: 88589" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

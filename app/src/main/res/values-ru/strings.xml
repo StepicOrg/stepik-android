@@ -1221,4 +1221,9 @@
 
     <!-- Course news -->
     <string name="course_news_not_enrolled_message">Для просмотра новостей, необходимо записаться на курс</string>
+    <string name="course_news_publish_count">"Рассылок сделано: "</string>
+    <string name="course_news_queued_count">"Видят на странице: "</string>
+    <string name="course_news_sent_count">"Получили на почту: "</string>
+    <string name="course_news_open_count">"Открыли письмо: "</string>
+    <string name="course_news_click_count">"Кликнули по ссылке: "</string>
 </resources>
