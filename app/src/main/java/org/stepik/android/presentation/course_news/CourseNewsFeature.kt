@@ -13,8 +13,8 @@ interface CourseNewsFeature {
         data class Content(
             val announcementIds: List<Long>,
             val courseNewsListItems: List<CourseNewsListItem.Data>,
-            val sourceType: DataSourceType,
-            val isLoadingRemote: Boolean,
+            val sourceType: DataSourceType, // Necessary for next page loading
+            val isLoadingRemote: Boolean, // Needed to block next page loading, when cache is loaded and we are loading remote
             val isLoadingNextPage: Boolean
         ) : State()
     }
