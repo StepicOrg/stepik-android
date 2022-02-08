@@ -1090,4 +1090,11 @@
     <string name="course_news_sent_count">"Атрымалі на пошту: "</string>
     <string name="course_news_open_count">"Адкрылі ліст: "</string>
     <string name="course_news_click_count">"Клікнулі па спасылцы: "</string>
+
+    <string name="course_news_composing_badge">Чарнавік</string>
+    <string name="course_news_scheduled_badge">Запланавана</string>
+    <string name="course_news_sending_badge">Рассылаецца</string>
+    <string name="course_news_sent_badge">Адпраўлена</string>
+    <string name="course_news_on_event_badge">Па падзеі</string>
+    <string name="course_news_one_time_badge">Разавая</string>
 </resources>

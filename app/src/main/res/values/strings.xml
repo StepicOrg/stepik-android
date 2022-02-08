@@ -1314,4 +1314,11 @@
     <string name="course_news_sent_count">"Sent: "</string>
     <string name="course_news_open_count">"Opened: "</string>
     <string name="course_news_click_count">"Clicked: "</string>
+
+    <string name="course_news_composing_badge">Draft</string>
+    <string name="course_news_scheduled_badge">Scheduled</string>
+    <string name="course_news_sending_badge">Active</string>
+    <string name="course_news_sent_badge">Sent</string>
+    <string name="course_news_on_event_badge">By Event</string>
+    <string name="course_news_one_time_badge">One-time</string>
 </resources>
