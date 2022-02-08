@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/newDatePlaceholder"
+        android:layout_width="80dp"
+        android:layout_height="10dp"
+        android:layout_alignParentTop="true" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/newsSubjectPlaceholder"
+        android:layout_width="140dp"
+        android:layout_height="16dp"
+        android:layout_below="@id/newDatePlaceholder"
+        android:layout_marginTop="16dp" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/newsTextPlaceholder1"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_below="@id/newsSubjectPlaceholder"
+        android:layout_marginTop="16dp" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/newsTextPlaceholder2"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_below="@id/newsTextPlaceholder1"
+        android:layout_marginTop="8dp" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/newsTextPlaceholder3"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_below="@id/newsTextPlaceholder2"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>

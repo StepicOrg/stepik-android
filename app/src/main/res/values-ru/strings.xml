@@ -559,6 +559,7 @@
 
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
+    <string name="course_tab_news">Новости</string>
     <string name="course_tab_modules">Модули</string>
 
     <string name="course_progress_current">Текущий прогресс</string>
@@ -1218,4 +1219,7 @@
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертификат</string>
     <string name="certificates_distinction_title">Сертификат с отличием</string>
+
+    <!-- Course news -->
+    <string name="course_news_not_enrolled_message">Для просмотра новостей, необходимо записаться на курс</string>
 </resources>

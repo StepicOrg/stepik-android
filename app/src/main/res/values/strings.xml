@@ -578,6 +578,7 @@
 
     <string name="course_tab_info">Info</string>
     <string name="course_tab_reviews">Reviews</string>
+    <string name="course_tab_news">News</string>
     <string name="course_tab_modules">Modules</string>
 
     <string name="course_progress_current">Current progress</string>
@@ -1306,4 +1307,7 @@
     <string name="certificates_percentage" translatable="false">%s%%</string>
     <string name="certificates_regular_title">Certificate</string>
     <string name="certificates_distinction_title">Certificate with distinction</string>
+
+    <!-- Course news -->
+    <string name="course_news_not_enrolled_message">To view course news, you must be enrolled in the course</string>
 </resources>

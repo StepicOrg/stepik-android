@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import org.stepic.droid.R
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
+import org.stepik.android.view.course_news.ui.fragment.CourseNewsFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 
@@ -20,6 +21,7 @@ class CoursePagerAdapter(
     private val fragments = listOf(
         { CourseInfoFragment.newInstance(courseId) }    to context.getString(R.string.course_tab_info),
         { CourseReviewsFragment.newInstance(courseId, courseTitle) } to context.getString(R.string.course_tab_reviews),
+        { CourseNewsFragment.newInstance(courseId) } to context.getString(R.string.course_tab_news),
         { CourseContentFragment.newInstance(courseId) } to context.getString(R.string.course_tab_modules)
     )
 
