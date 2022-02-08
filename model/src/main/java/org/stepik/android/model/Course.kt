@@ -17,6 +17,8 @@ data class Course(
     @SerializedName("cover")
     val cover: String? = null,
 
+    @SerializedName("acquired_skills")
+    val acquiredSkills: List<String>? = null,
     @SerializedName("certificate")
     val certificate: String? = null,
     @SerializedName("requirements")

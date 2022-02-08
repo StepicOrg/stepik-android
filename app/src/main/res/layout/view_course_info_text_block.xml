@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/course_info_block_margin"
-    tools:viewBindingIgnore="true">
+    android:padding="16dp">
 
-    <include layout="@layout/view_course_info_block" />
+    <include
+        android:id="@+id/blockHeader"
+        layout="@layout/view_course_info_block" />
 
     <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/blockMessage"

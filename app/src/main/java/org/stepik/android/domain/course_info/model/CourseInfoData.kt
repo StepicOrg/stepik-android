@@ -12,6 +12,9 @@ import org.stepik.android.view.video_player.model.VideoPlayerMediaData
  */
 @Parcelize
 data class CourseInfoData(
+    val summary: String? = null,
+    val authors: List<User?>? = null,
+    val acquiredSkills: List<String>? = null,
     val organization: User? = null,
     val videoMediaData: VideoPlayerMediaData? = null,
     val about: String? = null,

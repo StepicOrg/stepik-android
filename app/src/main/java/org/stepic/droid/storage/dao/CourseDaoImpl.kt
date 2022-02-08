@@ -30,6 +30,7 @@ constructor(
             title = cursor.getString(DbStructureCourse.Columns.TITLE),
             description = cursor.getString(DbStructureCourse.Columns.DESCRIPTION),
             cover = cursor.getString(DbStructureCourse.Columns.COVER),
+            acquiredSkills = DbParseHelper.parseStringToStringList(cursor.getString(DbStructureCourse.Columns.ACQUIRED_SKILLS)),
             certificate = cursor.getString(DbStructureCourse.Columns.CERTIFICATE),
             requirements = cursor.getString(DbStructureCourse.Columns.REQUIREMENTS),
             summary = cursor.getString(DbStructureCourse.Columns.SUMMARY),
@@ -100,6 +101,7 @@ constructor(
         values.put(DbStructureCourse.Columns.TITLE, course.title)
         values.put(DbStructureCourse.Columns.DESCRIPTION, course.description)
         values.put(DbStructureCourse.Columns.COVER, course.cover)
+        values.put(DbStructureCourse.Columns.ACQUIRED_SKILLS, DbParseHelper.parseStringArrayToString(course.acquiredSkills?.toTypedArray()))
         values.put(DbStructureCourse.Columns.CERTIFICATE, course.certificate)
         values.put(DbStructureCourse.Columns.REQUIREMENTS, course.requirements)
         values.put(DbStructureCourse.Columns.SUMMARY, course.summary)
