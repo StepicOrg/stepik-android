@@ -49,8 +49,6 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent(courseId)
-        courseNewsAdapter += adapterDelegate<CourseNewsListItem, CourseNewsListItem.Placeholder>(layoutResId = R.layout.item_course_news_placeholder)
-        courseNewsAdapter += CourseNewsAdapterDelegate()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -105,6 +103,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
             is CourseNewsFeature.State.NotEnrolled ->
                 courseNewsBinding.courseNewsEmpty.placeholderMessage.text = getString(R.string.course_news_not_enrolled_message)
             is CourseNewsFeature.State.LoadingAnnouncements -> {
+                handleDelegateAdapters(state.isTeacher)
                 courseNewsAdapter.items = listOf(
                     CourseNewsListItem.Placeholder,
                     CourseNewsListItem.Placeholder,
@@ -112,6 +111,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
                 )
             }
             is CourseNewsFeature.State.Content -> {
+                handleDelegateAdapters(state.isTeacher)
                 if (state.isLoadingNextPage) {
                     courseNewsAdapter.items = state.courseNewsListItems + CourseNewsListItem.Placeholder
                 } else {
@@ -124,5 +124,11 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
     override fun onDestroy() {
         releaseComponent(courseId)
         super.onDestroy()
+    }
+
+    private fun handleDelegateAdapters(isTeacher: Boolean) {
+        if (courseNewsAdapter.delegates.isNotEmpty()) return
+        courseNewsAdapter += adapterDelegate<CourseNewsListItem, CourseNewsListItem.Placeholder>(layoutResId = R.layout.item_course_news_placeholder)
+        courseNewsAdapter += CourseNewsAdapterDelegate(isTeacher)
     }
 }

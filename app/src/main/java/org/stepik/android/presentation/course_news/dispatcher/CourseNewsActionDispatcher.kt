@@ -56,7 +56,7 @@ constructor(
             .getCourse()
             .map { course ->
                 if (course.enrollment != 0L) {
-                    Result.success(course.announcements?.sortedDescending() ?: emptyList())
+                    Result.success(course)
                 } else {
                     Result.failure(NotEnrolledException())
                 }
@@ -66,7 +66,14 @@ constructor(
             .subscribeBy(
                 onNext = { result ->
                     result.fold(
-                        onSuccess = { onNewMessage(CourseNewsFeature.Message.InitMessage(it)) },
+                        onSuccess = { course ->
+                            onNewMessage(
+                                CourseNewsFeature.Message.InitMessage(
+                                    course.announcements?.sortedDescending() ?: emptyList(),
+                                    course.actions?.createAnnouncements != null
+                                )
+                            )
+                        },
                         onFailure = { onNewMessage(CourseNewsFeature.Message.FetchAnnouncementIdsFailure(it)) }
                     )
                 },

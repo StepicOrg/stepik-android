@@ -12,7 +12,9 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import java.util.TimeZone
 
-class CourseNewsAdapterDelegate : AdapterDelegate<CourseNewsListItem, DelegateViewHolder<CourseNewsListItem>>() {
+class CourseNewsAdapterDelegate(
+    val isTeacher: Boolean
+) : AdapterDelegate<CourseNewsListItem, DelegateViewHolder<CourseNewsListItem>>() {
     override fun isForViewType(position: Int, data: CourseNewsListItem): Boolean =
         data is CourseNewsListItem.Data
 

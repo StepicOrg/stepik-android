@@ -27,9 +27,9 @@ constructor() : StateReducer<State, Message, Action> {
                 val fetchAnnouncementIds = message.announcementIds.slice(0, PAGE_SIZE)
 
                 if (fetchAnnouncementIds.isEmpty()) {
-                    State.Empty(message.announcementIds) to emptySet()
+                    State.Empty(message.announcementIds, message.isTeacher) to emptySet()
                 } else {
-                    State.LoadingAnnouncements(message.announcementIds, sourceType) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, sourceType))
+                    State.LoadingAnnouncements(message.announcementIds, message.isTeacher, sourceType) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, sourceType))
                 }
             }
             is Message.OnScreenOpenedMessage -> {
@@ -41,12 +41,12 @@ constructor() : StateReducer<State, Message, Action> {
                         State.Idle(mustFetchRemote = true) to emptySet()
                     }
                     is State.Empty -> {
-                        State.LoadingAnnouncements(state.announcementIds, DataSourceType.REMOTE) to
+                        State.LoadingAnnouncements(state.announcementIds, state.isTeacher, DataSourceType.REMOTE) to
                             setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
                     }
                     is State.LoadingAnnouncements -> {
                         if (state.sourceType == DataSourceType.CACHE) {
-                            State.LoadingAnnouncements(state.announcementIds, DataSourceType.REMOTE) to
+                            State.LoadingAnnouncements(state.announcementIds, state.isTeacher, DataSourceType.REMOTE) to
                                 setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
                         } else {
                             null
@@ -79,11 +79,12 @@ constructor() : StateReducer<State, Message, Action> {
                 when (state) {
                     is State.LoadingAnnouncements -> {
                         if (message.courseNewsListItems.isEmpty()) {
-                            State.Empty(state.announcementIds) to emptySet()
+                            State.Empty(state.announcementIds, state.isTeacher) to emptySet()
                         } else {
                             State.Content(
                                 state.announcementIds,
                                 message.courseNewsListItems,
+                                state.isTeacher,
                                 state.sourceType,
                                 isLoadingRemote = false,
                                 isLoadingNextPage = false
