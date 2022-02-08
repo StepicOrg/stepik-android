@@ -6,13 +6,14 @@ import org.stepik.android.domain.course_news.model.CourseNewsListItem
 interface CourseNewsFeature {
     sealed class State {
         data class Idle(val mustFetchRemote: Boolean = false) : State()
-        data class Empty(val announcementIds: List<Long>) : State()
+        data class Empty(val announcementIds: List<Long>, val isTeacher: Boolean) : State()
         object NotEnrolled : State()
         object Error : State()
-        data class LoadingAnnouncements(val announcementIds: List<Long>, val sourceType: DataSourceType) : State()
+        data class LoadingAnnouncements(val announcementIds: List<Long>, val isTeacher: Boolean, val sourceType: DataSourceType) : State()
         data class Content(
             val announcementIds: List<Long>,
             val courseNewsListItems: List<CourseNewsListItem.Data>,
+            val isTeacher: Boolean,
             val sourceType: DataSourceType, // Necessary for next page loading
             val isLoadingRemote: Boolean, // Needed to block next page loading, when cache is loaded and we are loading remote
             val isLoadingNextPage: Boolean
@@ -20,7 +21,7 @@ interface CourseNewsFeature {
     }
 
     sealed class Message {
-        data class InitMessage(val announcementIds: List<Long>) : Message()
+        data class InitMessage(val announcementIds: List<Long>, val isTeacher: Boolean) : Message()
         object OnScreenOpenedMessage : Message()
 
         data class FetchAnnouncementIdsFailure(val throwable: Throwable) : Message()

@@ -1222,4 +1222,16 @@
 
     <!-- Course news -->
     <string name="course_news_not_enrolled_message">Для просмотра новостей, необходимо записаться на курс</string>
+    <string name="course_news_publish_count">"Рассылок сделано: "</string>
+    <string name="course_news_queued_count">"Видят на странице: "</string>
+    <string name="course_news_sent_count">"Получили на почту: "</string>
+    <string name="course_news_open_count">"Открыли письмо: "</string>
+    <string name="course_news_click_count">"Кликнули по ссылке: "</string>
+
+    <string name="course_news_composing_badge">Черновик</string>
+    <string name="course_news_scheduled_badge">Запланирована</string>
+    <string name="course_news_sending_badge">Рассылается</string>
+    <string name="course_news_sent_badge">Отправлена</string>
+    <string name="course_news_on_event_badge">По событию</string>
+    <string name="course_news_one_time_badge">Разовая</string>
 </resources>
