@@ -26,7 +26,7 @@ constructor() : StateReducer<State, Message, Action> {
                 val fetchAnnouncementIds = message.announcementIds.slice(0, PAGE_SIZE)
 
                 if (fetchAnnouncementIds.isEmpty()) {
-                    State.Empty to emptySet()
+                    State.Empty(message.announcementIds) to emptySet()
                 } else {
                     State.LoadingAnnouncements(message.announcementIds, sourceType) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, sourceType))
                 }
@@ -38,6 +38,10 @@ constructor() : StateReducer<State, Message, Action> {
                      */
                     is State.Idle -> {
                         State.Idle(mustFetchRemote = true) to emptySet()
+                    }
+                    is State.Empty -> {
+                        State.LoadingAnnouncements(state.announcementIds, DataSourceType.REMOTE) to
+                            setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
                     }
                     is State.LoadingAnnouncements -> {
                         if (state.sourceType == DataSourceType.CACHE) {
@@ -69,13 +73,17 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.FetchCourseNewsSuccess -> {
                 when (state) {
                     is State.LoadingAnnouncements -> {
-                        State.Content(
-                            state.announcementIds,
-                            message.courseNewsListItems,
-                            state.sourceType,
-                            isLoadingRemote = false,
-                            isLoadingNextPage = false
-                        ) to emptySet()
+                        if (message.courseNewsListItems.isEmpty()) {
+                            State.Empty(state.announcementIds) to emptySet()
+                        } else {
+                            State.Content(
+                                state.announcementIds,
+                                message.courseNewsListItems,
+                                state.sourceType,
+                                isLoadingRemote = false,
+                                isLoadingNextPage = false
+                            ) to emptySet()
+                        }
                     }
                     is State.Content -> {
                         state.copy(

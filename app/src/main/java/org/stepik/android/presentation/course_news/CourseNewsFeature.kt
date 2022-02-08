@@ -6,7 +6,7 @@ import org.stepik.android.domain.course_news.model.CourseNewsListItem
 interface CourseNewsFeature {
     sealed class State {
         data class Idle(val mustFetchRemote: Boolean = false) : State()
-        object Empty : State()
+        data class Empty(val announcementIds: List<Long>) : State()
         object Error : State()
         object LoadingCourse : State()
         data class LoadingAnnouncements(val announcementIds: List<Long>, val sourceType: DataSourceType) : State()
