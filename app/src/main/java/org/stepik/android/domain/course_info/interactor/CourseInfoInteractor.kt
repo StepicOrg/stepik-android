@@ -1,7 +1,6 @@
 package org.stepik.android.domain.course_info.interactor
 
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Singles.zip
 import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.Course
@@ -22,24 +21,32 @@ constructor(
     private fun getCourseInfoUsers(course: Course): Observable<CourseInfoData> {
         val emptySource = Observable.just(mapToCourseInfoData(course))
 
-        val instructorsSource = userRepository.getUsers(userIds = course.instructors ?: listOf())
-        val ownerSource = userRepository.getUsers(listOf(course.owner))
+        val authorIds = course.authors ?: emptyList()
+        val instructorIds = course.instructors ?: emptyList()
+        val combinedUserIds = (authorIds + instructorIds).distinct()
 
         val remoteSource =
-            zip(instructorsSource, ownerSource) { instructors, owners ->
-                mapToCourseInfoData(course, instructors, owners.firstOrNull())
+            userRepository.getUsers(userIds = combinedUserIds).map { users ->
+                val usersById = users.associateBy(User::id)
+                val filteredAuthorIds = authorIds - instructorIds
+
+                val filteredAuthors = filteredAuthorIds.mapNotNull { usersById[it] }
+                val instructors = instructorIds.mapNotNull { usersById[it] }
+                mapToCourseInfoData(course, filteredAuthors, instructors)
             }
 
         return emptySource
             .concatWith(remoteSource.toObservable())
             .onErrorReturn {
-                mapToCourseInfoData(course, instructors = emptyList()) // fallback on network error
+                mapToCourseInfoData(course, authors = emptyList(), instructors = emptyList()) // fallback on network error
             }
     }
 
-    private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null): CourseInfoData =
+    private fun mapToCourseInfoData(course: Course, authors: List<User>? = null, instructors: List<User>? = null): CourseInfoData =
         CourseInfoData(
-            organization   = organization?.takeIf(User::isOrganization),
+            summary        = course.summary?.takeIf(String::isNotBlank),
+            authors        = (authors ?: calculateAuthorIds(course).map { null }).takeIf { it.isNotEmpty() },
+            acquiredSkills = course.acquiredSkills,
             videoMediaData = course.introVideo
                 ?.takeUnless { it.urls.isNullOrEmpty() }
                 ?.let { video ->
@@ -66,4 +73,7 @@ constructor(
                 },
             learnersCount = course.learnersCount
         )
+
+    private fun calculateAuthorIds(course: Course): List<Long> =
+        (course.authors ?: emptyList()) - (course.instructors ?: emptyList())
 }
