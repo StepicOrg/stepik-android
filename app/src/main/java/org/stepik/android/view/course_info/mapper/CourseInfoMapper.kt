@@ -24,7 +24,7 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
         items.add(CourseInfoItem.VideoBlock(videoMediaData))
     }
 
-    if (acquiredSkills != null) {
+    if (acquiredSkills != null && acquiredSkills.isNotEmpty()) {
         items.add(CourseInfoItem.Skills(acquiredSkills))
     }
 
