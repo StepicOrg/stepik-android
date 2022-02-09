@@ -28,7 +28,7 @@ constructor(
         when (action) {
             is CourseNewsFeature.Action.FetchAnnouncements -> {
                 compositeDisposable += courseNewsInteractor
-                    .getAnnouncements(action.announcementIds, action.sourceType)
+                    .getAnnouncements(action.announcementIds, action.isTeacher, action.sourceType)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(

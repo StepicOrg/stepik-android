@@ -29,7 +29,8 @@ constructor() : StateReducer<State, Message, Action> {
                 if (fetchAnnouncementIds.isEmpty()) {
                     State.Empty(message.announcementIds, message.isTeacher) to emptySet()
                 } else {
-                    State.LoadingAnnouncements(message.announcementIds, message.isTeacher, sourceType) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, sourceType))
+                    State.LoadingAnnouncements(message.announcementIds, message.isTeacher, sourceType) to
+                        setOf(Action.FetchAnnouncements(fetchAnnouncementIds, message.isTeacher, sourceType))
                 }
             }
             is Message.OnScreenOpenedMessage -> {
@@ -42,12 +43,12 @@ constructor() : StateReducer<State, Message, Action> {
                     }
                     is State.Empty -> {
                         State.LoadingAnnouncements(state.announcementIds, state.isTeacher, DataSourceType.REMOTE) to
-                            setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
+                            setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), state.isTeacher, DataSourceType.REMOTE))
                     }
                     is State.LoadingAnnouncements -> {
                         if (state.sourceType == DataSourceType.CACHE) {
                             State.LoadingAnnouncements(state.announcementIds, state.isTeacher, DataSourceType.REMOTE) to
-                                setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
+                                setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), state.isTeacher, DataSourceType.REMOTE))
                         } else {
                             null
                         }
@@ -55,7 +56,7 @@ constructor() : StateReducer<State, Message, Action> {
                     is State.Content -> {
                         if (state.sourceType == DataSourceType.CACHE) {
                             state.copy(isLoadingRemote = true) to
-                                setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.REMOTE))
+                                setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), state.isTeacher, DataSourceType.REMOTE))
                         } else {
                             null
                         }
@@ -106,7 +107,7 @@ constructor() : StateReducer<State, Message, Action> {
                 if (state is State.LoadingAnnouncements) {
                     if (state.sourceType == DataSourceType.REMOTE) {
                         state.copy(sourceType = DataSourceType.CACHE) to
-                            setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), DataSourceType.CACHE))
+                            setOf(Action.FetchAnnouncements(state.announcementIds.slice(0, PAGE_SIZE), state.isTeacher, DataSourceType.CACHE))
                     } else {
                         State.Error to emptySet()
                     }
@@ -119,7 +120,7 @@ constructor() : StateReducer<State, Message, Action> {
                     val offset = state.courseNewsListItems.size
                     val fetchAnnouncementIds = state.announcementIds.slice(offset, offset + PAGE_SIZE)
                     if (fetchAnnouncementIds.isNotEmpty()) {
-                        state.copy(isLoadingNextPage = true) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, state.sourceType, isNextPage = true))
+                        state.copy(isLoadingNextPage = true) to setOf(Action.FetchAnnouncements(fetchAnnouncementIds, state.isTeacher, state.sourceType, isNextPage = true))
                     } else {
                         null
                     }

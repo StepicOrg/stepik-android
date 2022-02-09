@@ -35,7 +35,7 @@ interface CourseNewsFeature {
     }
 
     sealed class Action {
-        data class FetchAnnouncements(val announcementIds: List<Long>, val sourceType: DataSourceType, val isNextPage: Boolean = false) : Action()
+        data class FetchAnnouncements(val announcementIds: List<Long>, val isTeacher: Boolean, val sourceType: DataSourceType, val isNextPage: Boolean = false) : Action()
         sealed class ViewAction : Action()
     }
 }

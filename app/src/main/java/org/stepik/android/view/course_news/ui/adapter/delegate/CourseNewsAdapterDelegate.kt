@@ -228,6 +228,6 @@ class CourseNewsAdapterDelegate(
         }
 
         private fun formatDateTimePattern(date: Date): String =
-            DateTimeHelper.getPrintableDate(date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+            DateTimeHelper.getPrintableDate(date, DateTimeHelper.DISPLAY_DATETIME_COMMA_PATTERN, TimeZone.getDefault())
     }
 }
