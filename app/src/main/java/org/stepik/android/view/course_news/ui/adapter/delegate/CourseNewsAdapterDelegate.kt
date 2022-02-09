@@ -75,7 +75,7 @@ class CourseNewsAdapterDelegate(
             viewBinding.newsText.setText(data.announcement.text)
 
             val mustShowStatistics = isTeacher &&
-                (data.announcement.status == Announcement.AnnouncementStatus.SENDING ||
+                (data.announcement.status == Announcement.AnnouncementStatus.SCHEDULED ||
                     data.announcement.status == Announcement.AnnouncementStatus.SENT)
 
             val teacherInformation =
