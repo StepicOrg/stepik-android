@@ -86,4 +86,10 @@ data class Announcement(
         @SerializedName("aborted")
         ABORTED("aborted")
     }
+
+    val displayedStartDate: Date?
+        get() = this.estimatedStartDate ?: this.startDate
+
+    val displayedFinishDate: Date?
+        get() = this.estimatedFinishDate ?: this.sentDate
 }

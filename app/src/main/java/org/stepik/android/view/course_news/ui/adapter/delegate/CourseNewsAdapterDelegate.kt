@@ -21,6 +21,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import java.util.Date
 import java.util.TimeZone
 
 class CourseNewsAdapterDelegate(
@@ -54,6 +55,10 @@ class CourseNewsAdapterDelegate(
         override fun onBind(data: CourseNewsListItem) {
             data as CourseNewsListItem.Data
 
+            val isOneTimeEvent = !data.announcement.isInfinite && !data.announcement.onEnroll
+            val isActiveEvent = data.announcement.onEnroll ||
+                (data.announcement.isInfinite && (data.announcement.startDate == null || data.announcement.startDate.time < DateTimeHelper.nowUtc()))
+
             with(viewBinding.newsBadges) {
                 itemAnimator = null
                 isNestedScrollingEnabled = false
@@ -62,18 +67,9 @@ class CourseNewsAdapterDelegate(
             }
 
             viewBinding.newsBadges.isVisible = isTeacher
-            badgesAdapter.items = buildBadgesList(data.announcement)
+            badgesAdapter.items = buildBadgesList(data.announcement, isOneTimeEvent, isActiveEvent)
 
-            val formattedDate = data.announcement.sentDate?.let {
-                DateTimeHelper.getPrintableDate(
-                    it,
-                    DateTimeHelper.DISPLAY_DATETIME_PATTERN,
-                    TimeZone.getDefault()
-                )
-            }
-
-            viewBinding.newsDate.text = formattedDate
-            viewBinding.newsDate.isVisible = formattedDate != null
+            viewBinding.newsDate.text = formatAnnouncementDate(data.announcement, isActiveEvent)
 
             viewBinding.newsSubject.text = data.announcement.subject
             viewBinding.newsText.setText(data.announcement.text)
@@ -117,11 +113,7 @@ class CourseNewsAdapterDelegate(
             }
         }
 
-        private fun buildBadgesList(announcement: Announcement): List<AnnouncementBadge> {
-            val isOneTimeEvent = !announcement.isInfinite && !announcement.onEnroll
-            val isActiveEvent = announcement.onEnroll ||
-                (announcement.isInfinite && (announcement.startDate == null || announcement.startDate.time < DateTimeHelper.nowUtc()))
-
+        private fun buildBadgesList(announcement: Announcement, isOneTimeEvent: Boolean, isActiveEvent: Boolean): List<AnnouncementBadge> {
             val statusBadge =
                 when (announcement.status) {
                     Announcement.AnnouncementStatus.COMPOSING ->
@@ -153,5 +145,89 @@ class CourseNewsAdapterDelegate(
 
             return listOf(statusBadge, eventBadge)
         }
+
+        private fun formatAnnouncementDate(announcement: Announcement, isActiveEvent: Boolean): String {
+            val defaultDate = (announcement.sentDate ?: announcement.createDate) ?: Date()
+
+            val formattedDate =
+                if (!isTeacher) {
+                    if (isActiveEvent && announcement.noticeDates.lastOrNull() != null) {
+                        formatDateTimePattern(announcement.noticeDates.last())
+                    } else {
+                        null
+                    }
+                } else {
+                    when (announcement.status) {
+                        Announcement.AnnouncementStatus.COMPOSING -> {
+                            announcement.displayedStartDate?.let { displayedStartDate ->
+                                val formattedStartDate = formatDateTimePattern(displayedStartDate)
+                                if (isActiveEvent) {
+                                    context.getString(
+                                        R.string.course_news_on_event_composing,
+                                        formattedStartDate
+                                    )
+                                } else {
+                                    formattedStartDate
+                                }
+                            }
+                        }
+                        Announcement.AnnouncementStatus.SCHEDULED -> {
+                            announcement.displayedStartDate?.let { displayedStartDate ->
+                                val formattedStartDate = formatDateTimePattern(displayedStartDate)
+                                if (isActiveEvent) {
+                                    context.getString(
+                                        R.string.course_news_on_event_sending,
+                                        formattedStartDate
+                                    )
+                                } else {
+                                    context.getString(
+                                        R.string.course_news_one_time_scheduled,
+                                        formattedStartDate
+                                    )
+                                }
+                            }
+                        }
+                        Announcement.AnnouncementStatus.QUEUEING,
+                        Announcement.AnnouncementStatus.QUEUED,
+                        Announcement.AnnouncementStatus.SENDING -> {
+                            announcement.displayedStartDate?.let { displayedStartDate ->
+                                val formattedStartDate = formatDateTimePattern(displayedStartDate)
+                                if (isActiveEvent) {
+                                    context.getString(
+                                        R.string.course_news_on_event_sending,
+                                        formattedStartDate
+                                    )
+                                } else {
+                                    context.getString(
+                                        R.string.course_news_one_time_sending,
+                                        formattedStartDate
+                                    )
+                                }
+                            }
+                        }
+                        Announcement.AnnouncementStatus.SENT,
+                        Announcement.AnnouncementStatus.ABORTED -> {
+                            announcement.displayedStartDate?.let { displayedStartDate ->
+                                val formattedStartDate = formatDateTimePattern(displayedStartDate)
+                                if (isActiveEvent) {
+                                    announcement.displayedFinishDate?.let { displayedFinishDate ->
+                                        context.getString(
+                                            R.string.course_news_on_event_sent,
+                                            formattedStartDate,
+                                            formatDateTimePattern(displayedFinishDate)
+                                        )
+                                    }
+                                } else {
+                                    formattedStartDate
+                                }
+                            }
+                        }
+                    }
+                }
+            return formattedDate ?: formatDateTimePattern(defaultDate)
+        }
+
+        private fun formatDateTimePattern(date: Date): String =
+            DateTimeHelper.getPrintableDate(date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
     }
 }

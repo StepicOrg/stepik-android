@@ -1098,4 +1098,10 @@
     <string name="course_news_sent_badge">Адпраўлена</string>
     <string name="course_news_on_event_badge">Па падзеі</string>
     <string name="course_news_one_time_badge">Разавая</string>
+
+    <string name="course_news_on_event_composing">З %s</string>
+    <string name="course_news_on_event_sending">З %s</string>
+    <string name="course_news_on_event_sent">%s - %s</string>
+    <string name="course_news_one_time_scheduled">Запланавана на %s</string>
+    <string name="course_news_one_time_sending">З %s</string>
 </resources>

@@ -1322,4 +1322,10 @@
     <string name="course_news_sent_badge">Sent</string>
     <string name="course_news_on_event_badge">By Event</string>
     <string name="course_news_one_time_badge">One-time</string>
+
+    <string name="course_news_on_event_composing">From %s</string>
+    <string name="course_news_on_event_sending">From %s</string>
+    <string name="course_news_on_event_sent">%s - %s</string>
+    <string name="course_news_one_time_scheduled">Scheduled for %s</string>
+    <string name="course_news_one_time_sending">From %s</string>
 </resources>
