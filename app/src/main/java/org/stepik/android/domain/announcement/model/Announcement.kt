@@ -26,7 +26,7 @@ data class Announcement(
     @SerializedName("sent_date")
     val sentDate: Date?,
     @SerializedName("status")
-    val status: String,
+    val status: AnnouncementStatus,
     @SerializedName("is_restricted_by_score")
     val isRestrictedByScore: Boolean,
     @SerializedName("score_percent_min")
@@ -63,4 +63,33 @@ data class Announcement(
     val estimatedFinishDate: Date?,
     @SerializedName("notice_dates")
     val noticeDates: List<Date> = emptyList()
-) : Identifiable<Long>
+) : Identifiable<Long> {
+    enum class AnnouncementStatus(val status: String) {
+        @SerializedName("composing")
+        COMPOSING("composing"),
+
+        @SerializedName("scheduled")
+        SCHEDULED("scheduled"),
+
+        @SerializedName("queueing")
+        QUEUEING("queueing"),
+
+        @SerializedName("queued")
+        QUEUED("queued"),
+
+        @SerializedName("sending")
+        SENDING("sending"),
+
+        @SerializedName("sent")
+        SENT("sent"),
+
+        @SerializedName("aborted")
+        ABORTED("aborted")
+    }
+
+    val displayedStartDate: Date?
+        get() = this.estimatedStartDate ?: this.startDate
+
+    val displayedFinishDate: Date?
+        get() = this.estimatedFinishDate ?: this.sentDate
+}

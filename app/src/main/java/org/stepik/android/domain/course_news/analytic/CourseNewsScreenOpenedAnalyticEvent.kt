@@ -1,0 +1,22 @@
+package org.stepik.android.domain.course_news.analytic
+
+import org.stepik.android.domain.base.analytic.AnalyticEvent
+
+class CourseNewsScreenOpenedAnalyticEvent(
+    courseId: Long,
+    title: String
+) : AnalyticEvent {
+    companion object {
+        private const val PARAM_COURSE = "course"
+        private const val PARAM_TITLE = "title"
+    }
+
+    override val name: String =
+        "Course news screen opened"
+
+    override val params: Map<String, Any> =
+        mapOf(
+            PARAM_COURSE to courseId,
+            PARAM_TITLE to title
+        )
+}

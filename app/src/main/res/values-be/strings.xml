@@ -506,6 +506,7 @@
     <string name="course_share_description">Падзяліцеся спасылкай з сябрамі, каб праходзіць курс разам!</string>
     <string name="course_tab_info">Інфа</string>
     <string name="course_tab_reviews">Водгукі</string>
+    <string name="course_tab_news">Навіны</string>
     <string name="course_tab_modules">Модулі</string>
     <string name="course_progress_current">Наяўны прагрэс</string>
     <string name="course_progress_solutions">Недасланыя рашэнні</string>
@@ -514,6 +515,7 @@
     <string name="course_promo_code_date">Зніжка дзейнічае да %s</string>
     <string name="course_try_free">Паспрабаваць бясплатна</string>
     <string name="course_info_organization_prefix">ад %s</string>
+    <string name="course_info_skills">Чаму вы навучыцеся</string>
     <string name="course_info_about">Пра курс</string>
     <string name="course_info_requirements">Патрабаванні</string>
     <string name="course_info_target_audience">Мэтавая аўдыторыя</string>
@@ -1081,4 +1083,25 @@
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертыфікат</string>
     <string name="certificates_distinction_title">Сертыфікат з адзнакай</string>
+
+    <!-- Course news -->
+    <string name="course_news_not_enrolled_message">Для прагляду навін, неабходна запісацца на курс</string>
+    <string name="course_news_publish_count">"Рассылак зроблена: "</string>
+    <string name="course_news_queued_count">"Бачаць на старонцы: "</string>
+    <string name="course_news_sent_count">"Атрымалі на пошту: "</string>
+    <string name="course_news_open_count">"Адкрылі ліст: "</string>
+    <string name="course_news_click_count">"Клікнулі па спасылцы: "</string>
+
+    <string name="course_news_composing_badge">Чарнавік</string>
+    <string name="course_news_scheduled_badge">Запланавана</string>
+    <string name="course_news_sending_badge">Рассылаецца</string>
+    <string name="course_news_sent_badge">Адпраўлена</string>
+    <string name="course_news_on_event_badge">Па падзеі</string>
+    <string name="course_news_one_time_badge">Разавая</string>
+
+    <string name="course_news_on_event_composing">З %s</string>
+    <string name="course_news_on_event_sending">З %s</string>
+    <string name="course_news_on_event_sent">%s - %s</string>
+    <string name="course_news_one_time_scheduled">Запланавана на %s</string>
+    <string name="course_news_one_time_sending">З %s</string>
 </resources>

@@ -9,6 +9,7 @@ import java.util.TimeZone
 
 object DateTimeHelper {
     const val DISPLAY_DATETIME_PATTERN = "dd MMMM yyyy HH:mm"
+    const val DISPLAY_DATETIME_COMMA_PATTERN = "dd MMMM yyyy, HH:mm"
     const val DISPLAY_DAY_MONTH_PATTERN = "dd MMMM"
 
     const val DISPLAY_MONTH_YEAR_NOMINAL_PATTERN = "LLLL yyyy"

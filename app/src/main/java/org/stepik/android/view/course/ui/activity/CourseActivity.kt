@@ -36,6 +36,7 @@ import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course_news.analytic.CourseNewsScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.domain.last_step.model.LastStep
@@ -55,6 +56,7 @@ import org.stepik.android.view.course.routing.getPromoCodeFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
+import org.stepik.android.view.course_news.ui.fragment.CourseNewsFragment
 import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.course_search.dialog.CourseSearchDialogFragment
@@ -84,6 +86,7 @@ class CourseActivity :
         const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         private const val NO_ID = -1L
+        private const val NO_TITLE = ""
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
@@ -116,6 +119,7 @@ class CourseActivity :
     }
 
     private var courseId: Long = NO_ID
+    private var courseTitle: String = NO_TITLE
     private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(page: Int) {
             when (coursePagerAdapter.getItem(page)) {
@@ -125,6 +129,9 @@ class CourseActivity :
                             AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
                             mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
                         )
+
+                is CourseNewsFragment ->
+                    analytic.report(CourseNewsScreenOpenedAnalyticEvent(courseId, courseTitle))
 
                 is CourseContentFragment ->
                     analytic
@@ -193,6 +200,7 @@ class CourseActivity :
         }
 
         if (course != null) {
+            courseTitle = course.title.orEmpty()
             courseToolbarTitle.text = course.title
         }
 
@@ -316,7 +324,8 @@ class CourseActivity :
         coursePager.currentItem =
             when (tab) {
                 CourseScreenTab.REVIEWS -> 1
-                CourseScreenTab.SYLLABUS -> 2
+                CourseScreenTab.NEWS -> 2
+                CourseScreenTab.SYLLABUS -> 3
                 else -> 0
             }
         if (coursePager.currentItem == 0) {

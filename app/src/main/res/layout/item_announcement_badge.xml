@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
+    android:drawablePadding="4dp"
+    android:gravity="center"
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="4dp"
+    android:textAppearance="?textAppearanceCaption"
+    android:textSize="10sp"
+    android:textStyle="bold"
+
+    tools:ignore="SmallSp"
+    tools:text="Разовая" />

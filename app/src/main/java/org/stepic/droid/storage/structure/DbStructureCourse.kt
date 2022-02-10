@@ -10,6 +10,7 @@ object DbStructureCourse {
         const val TITLE = "title"
         const val DESCRIPTION = "description"
         const val COVER = "cover"
+        const val ACQUIRED_SKILLS = "acquired_skills"
         const val CERTIFICATE = "certificate"
 
         const val REQUIREMENTS = "requirements"

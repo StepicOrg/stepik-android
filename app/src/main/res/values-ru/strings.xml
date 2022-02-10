@@ -559,6 +559,7 @@
 
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
+    <string name="course_tab_news">Новости</string>
     <string name="course_tab_modules">Модули</string>
 
     <string name="course_progress_current">Текущий прогресс</string>
@@ -571,6 +572,7 @@
     <string name="course_try_free">Попробовать бесплатно</string>
 
     <string name="course_info_organization_prefix">от %s</string>
+    <string name="course_info_skills">Чему вы научитесь</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
     <string name="course_info_target_audience">Целевая аудитория</string>
@@ -1217,4 +1219,25 @@
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертификат</string>
     <string name="certificates_distinction_title">Сертификат с отличием</string>
+
+    <!-- Course news -->
+    <string name="course_news_not_enrolled_message">Для просмотра новостей, необходимо записаться на курс</string>
+    <string name="course_news_publish_count">"Рассылок сделано: "</string>
+    <string name="course_news_queued_count">"Видят на странице: "</string>
+    <string name="course_news_sent_count">"Получили на почту: "</string>
+    <string name="course_news_open_count">"Открыли письмо: "</string>
+    <string name="course_news_click_count">"Кликнули по ссылке: "</string>
+
+    <string name="course_news_composing_badge">Черновик</string>
+    <string name="course_news_scheduled_badge">Запланирована</string>
+    <string name="course_news_sending_badge">Рассылается</string>
+    <string name="course_news_sent_badge">Отправлена</string>
+    <string name="course_news_on_event_badge">По событию</string>
+    <string name="course_news_one_time_badge">Разовая</string>
+
+    <string name="course_news_on_event_composing">С %s</string>
+    <string name="course_news_on_event_sending">С %s</string>
+    <string name="course_news_on_event_sent">%s - %s</string>
+    <string name="course_news_one_time_scheduled">Запланирована на %s</string>
+    <string name="course_news_one_time_sending">С %s</string>
 </resources>
