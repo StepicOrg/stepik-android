@@ -3,6 +3,7 @@ package org.stepik.android.presentation.catalog.reducer
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.presentation.banner.reducer.BannerReducer
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogFeature.State
 import org.stepik.android.presentation.catalog.CatalogFeature.Message
@@ -32,6 +33,7 @@ constructor(
     private val filtersReducer: FiltersReducer,
     private val courseListReducer: CourseListReducer,
     private val courseContinueReducer: CourseContinueReducer,
+    private val bannerReducer: BannerReducer,
     private val courseListStateMapper: CourseListStateMapper
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
@@ -255,6 +257,11 @@ constructor(
                 } else {
                     null
                 }
+            }
+
+            is Message.BannerMessage -> {
+                val (bannerState, bannerActions) = bannerReducer.reduce(state.bannerState, message.message)
+                state.copy(bannerState = bannerState) to bannerActions.map(Action::BannerAction).toSet()
             }
         } ?: state to emptySet()
 
