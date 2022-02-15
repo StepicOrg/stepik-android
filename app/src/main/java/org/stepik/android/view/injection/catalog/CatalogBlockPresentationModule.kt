@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import org.stepik.android.presentation.banner.BannerFeature
+import org.stepik.android.presentation.banner.dispatcher.BannerActionDispatcher
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
@@ -41,7 +43,8 @@ object CatalogBlockPresentationModule {
         userCoursesActionDispatcher: UserCoursesActionDispatcher,
         progressActionDispatcher: ProgressActionDispatcher,
         enrollmentActionDispatcher: EnrollmentActionDispatcher,
-        wishlistActionDispatcher: WishlistActionDispatcher
+        wishlistActionDispatcher: WishlistActionDispatcher,
+        bannerActionDispatcher: BannerActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
@@ -49,7 +52,8 @@ object CatalogBlockPresentationModule {
                     storiesState = StoriesFeature.State.Idle,
                     filtersState = FiltersFeature.State.Idle,
                     blocksState = CatalogFeature.BlocksState.Idle,
-                    courseContinueState = CourseContinueFeature.State.Idle
+                    courseContinueState = CourseContinueFeature.State.Idle,
+                    bannerState = BannerFeature.State.Idle
                 ), catalogReducer
             )
                 .wrapWithActionDispatcher(catalogActionDispatcher)
@@ -99,6 +103,12 @@ object CatalogBlockPresentationModule {
                     wishlistActionDispatcher.transform(
                         transformAction = { null },
                         transformMessage = CatalogFeature.Message::WishlistMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    bannerActionDispatcher.transform(
+                        transformAction = { it.safeCast<CatalogFeature.Action.BannerAction>()?.action },
+                        transformMessage = CatalogFeature.Message::BannerMessage
                     )
                 )
                 .wrapWithViewContainer()

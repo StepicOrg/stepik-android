@@ -27,6 +27,7 @@ import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
+import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.SearchQuery
@@ -37,13 +38,18 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
+import org.stepik.android.presentation.banner.BannerFeature
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.view.banner.mapper.BannerResourcesMapper
+import org.stepik.android.view.banner.extension.bind
+import org.stepik.android.view.banner.extension.handleItemClick
 import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
@@ -66,10 +72,14 @@ import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import ru.nobird.app.core.model.mutate
 import javax.inject.Inject
 
 class CatalogFragment :
@@ -124,6 +134,9 @@ class CatalogFragment :
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
+    @Inject
+    lateinit var bannerResourcesMapper: BannerResourcesMapper
+
     private lateinit var searchIcon: ImageView
 
     // This workaround is necessary, because onFocus get activated multiple times
@@ -148,6 +161,13 @@ class CatalogFragment :
         } else {
             catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
         }
+        catalogViewModel.onNewMessage(
+            CatalogFeature.Message.BannerMessage(
+                BannerFeature.Message.InitMessage(
+                    screen = Banner.Screen.CATALOG
+                )
+            )
+        )
     }
 
     private fun injectComponent() {
@@ -223,6 +243,7 @@ class CatalogFragment :
         )
 
         catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }
+        catalogItemAdapter += buildBannerBlockAdapterDelegate()
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -316,6 +337,13 @@ class CatalogFragment :
     }
 
     override fun render(state: CatalogFeature.State) {
+        val bannerBlocks =
+            if (state.bannerState is BannerFeature.State.Content) {
+                state.bannerState.banners
+            } else {
+                emptyList()
+            }
+
         val collectionCatalogItems = when (state.blocksState) {
             is CatalogFeature.BlocksState.Error ->
                 listOf(CatalogItem.Offline)
@@ -331,7 +359,13 @@ class CatalogFragment :
         }
 
         catalogRecyclerView.post {
-            catalogItemAdapter.items = resolveAdapter(state) + collectionCatalogItems
+            val catalogItems =
+                if (state.blocksState is CatalogFeature.BlocksState.Content) {
+                    resolveCatalogItems(bannerBlocks, collectionCatalogItems)
+                } else {
+                    collectionCatalogItems
+                }
+            catalogItemAdapter.items = resolveAdapter(state) + catalogItems
         }
 
         when (state.courseContinueState) {
@@ -348,6 +382,11 @@ class CatalogFragment :
             listOf(CatalogItem.Stories(state = state.storiesState), CatalogItem.Filters(state = state.filtersState))
         } else {
             listOf(CatalogItem.Stories(state = state.storiesState))
+        }
+
+    private fun resolveCatalogItems(banners: List<Banner>, collectionCatalogItems: List<CatalogItem>): List<CatalogItem> =
+        collectionCatalogItems.mutate {
+            banners.forEach { banner -> add(banner.position, CatalogItem.BannerBlock(banner)) }
         }
 
     private fun showStories(position: Int) {
@@ -499,4 +538,23 @@ class CatalogFragment :
         searchViewToolbar.onActionViewExpanded()
         searchViewToolbar.clearFocus()
     }
+
+    private fun buildBannerBlockAdapterDelegate(): AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>> =
+        adapterDelegate<CatalogItem, CatalogItem>(
+            layoutResId = R.layout.item_banner,
+            isForViewType = { _, viewType -> viewType is CatalogItem.BannerBlock }
+        ) {
+            val bannerBinding = ItemBannerBinding.bind(this.itemView)
+
+            bannerBinding.root.setOnClickListener {
+                (item as? CatalogItem.BannerBlock)?.let { bannerBlock ->
+                    bannerBinding.handleItemClick(bannerBlock.banner, childFragmentManager)
+                }
+            }
+
+            onBind { data ->
+                data as CatalogItem.BannerBlock
+                bannerBinding.bind(data.banner, bannerResourcesMapper)
+            }
+        }
 }
