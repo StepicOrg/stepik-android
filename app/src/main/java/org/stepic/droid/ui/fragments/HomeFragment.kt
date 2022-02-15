@@ -1,12 +1,9 @@
 package org.stepic.droid.ui.fragments
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
@@ -14,7 +11,6 @@ import androidx.fragment.app.findFragment
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
-import kotlinx.android.synthetic.main.item_banner.view.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -25,23 +21,21 @@ import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepic.droid.util.commitNow
-import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.banner.interactor.BannerInteractor
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.home.interactor.HomeInteractor
-import org.stepik.android.view.banner.BannerResourcesMapper
-import org.stepik.android.view.base.routing.InternalDeeplinkRouter
+import org.stepik.android.view.banner.mapper.BannerResourcesMapper
+import org.stepik.android.view.banner.extension.bind
+import org.stepik.android.view.banner.extension.handleItemClick
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueNewHomeFragment
-import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.learning_actions.ui.fragment.LearningActionsFragment
 import org.stepik.android.view.stories.ui.fragment.StoriesFragment
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
-import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -179,23 +173,12 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
 
         banners.forEach { banner ->
             val binding = ItemBannerBinding.inflate(layoutInflater, homeMainContainer, false)
-            val imageRes = bannerResourcesMapper.mapBannerTypeToImageResource(banner.type)
-            val backgroundColorRes = bannerResourcesMapper.mapBannerTypeToBackgroundColor(banner.type)
-            val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(banner.type)
 
             binding.root.setOnClickListener {
-                InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(banner.url)) {
-                    InAppWebViewDialogFragment
-                        .newInstance(banner.title, banner.url, isProvideAuth = false)
-                        .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
-                }
+                binding.handleItemClick(requireContext(), childFragmentManager, banner)
             }
 
-            binding.bannerTitle.text = banner.title
-            binding.bannerDescription.text = banner.description
-            binding.bannerImage.setImageResource(imageRes)
-            ViewCompat.setBackgroundTintList(binding.root.bannerRoot, AppCompatResources.getColorStateList(requireContext(), backgroundColorRes))
-            binding.bannerDescription.setTextColor(descriptionTextColorRes)
+            binding.bind(requireContext(), banner, bannerResourcesMapper)
 
             val insertionIndex = min(banner.position + offset, homeMainContainer.childCount - 1)
             val previousFragment = homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()

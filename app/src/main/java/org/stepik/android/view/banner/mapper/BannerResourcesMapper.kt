@@ -1,4 +1,4 @@
-package org.stepik.android.view.banner
+package org.stepik.android.view.banner.mapper
 
 import android.content.Context
 import androidx.annotation.ColorInt

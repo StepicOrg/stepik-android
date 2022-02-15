@@ -9,9 +9,7 @@ import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -19,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_catalog.*
-import kotlinx.android.synthetic.main.item_banner.view.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -50,9 +47,10 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
-import org.stepik.android.view.banner.BannerResourcesMapper
+import org.stepik.android.view.banner.mapper.BannerResourcesMapper
+import org.stepik.android.view.banner.extension.bind
+import org.stepik.android.view.banner.extension.handleItemClick
 import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
-import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
@@ -67,7 +65,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGrid
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
 import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
-import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
 import org.stepik.android.view.injection.course_list.factory.RecommendedCourseListAdapterDelegateFactory
 import ru.nobird.app.presentation.redux.container.ReduxView
@@ -550,27 +547,14 @@ class CatalogFragment :
             val bannerBinding = ItemBannerBinding.bind(this.itemView)
 
             bannerBinding.root.setOnClickListener {
-                (item as? CatalogItem.BannerBlock)?.let {
-                    InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(it.banner.url)) {
-                        InAppWebViewDialogFragment
-                            .newInstance(it.banner.title, it.banner.url, isProvideAuth = false)
-                            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
-                    }
+                (item as? CatalogItem.BannerBlock)?.let { bannerBlock ->
+                    bannerBinding.handleItemClick(requireContext(), childFragmentManager, bannerBlock.banner)
                 }
             }
 
             onBind { data ->
                 data as CatalogItem.BannerBlock
-                bannerBinding.bannerTitle.text = data.banner.title
-                bannerBinding.bannerDescription.text = data.banner.description
-
-                val imageRes = bannerResourcesMapper.mapBannerTypeToImageResource(data.banner.type)
-                val backgroundColorRes = bannerResourcesMapper.mapBannerTypeToBackgroundColor(data.banner.type)
-                val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(data.banner.type)
-
-                bannerBinding.bannerImage.setImageResource(imageRes)
-                ViewCompat.setBackgroundTintList(bannerBinding.root.bannerRoot, AppCompatResources.getColorStateList(context, backgroundColorRes))
-                bannerBinding.bannerDescription.setTextColor(descriptionTextColorRes)
+                bannerBinding.bind(context, data.banner, bannerResourcesMapper)
             }
         }
 }
