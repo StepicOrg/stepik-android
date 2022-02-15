@@ -38,7 +38,7 @@ constructor(private val context: Context) {
             Banner.ColorType.BLUE, Banner.ColorType.VIOLET ->
                 context.resolveColorAttribute(R.attr.colorOnSecondary)
             Banner.ColorType.GREEN ->
-                context.resolveColorAttribute(R.attr.colorControlNormal)
+                context.resolveColorAttribute(R.attr.colorPrimary)
             else ->
                 -1
         }

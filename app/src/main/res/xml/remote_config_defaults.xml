@@ -67,6 +67,42 @@
             "url": "https://www.raywenderlich.com/18330247-deep-links-in-android-getting-started",
             "screen": "home", // "home"
             "position": 4 // позиция блока с баннером относительно остальных блоков на экране
+            },
+            {
+            "type": "green",
+            "lang" : "ru",
+            "title":"Заголовок заголовочный",
+            "description": "Описание описывающее описуемое",
+            "url": "https://www.raywenderlich.com/18330247-deep-links-in-android-getting-started",
+            "screen": "home", // "home"
+            "position": 2 // позиция блока с баннером относительно остальных блоков на экране
+            },
+            {
+            "type": "blue",
+            "lang" : "ru",
+            "title":"Заголовок заголовочный",
+            "description": "Описание описывающее описуемое",
+            "url": "https://www.raywenderlich.com/18330247-deep-links-in-android-getting-started",
+            "screen": "catalog", // "home"
+            "position": 4 // позиция блока с баннером относительно остальных блоков на экране
+            },
+            {
+            "type": "violet",
+            "lang" : "ru",
+            "title":"Заголовок заголовочный",
+            "description": "Описание описывающее описуемое",
+            "url": "https://www.raywenderlich.com/18330247-deep-links-in-android-getting-started",
+            "screen": "catalog", // "home"
+            "position": 2 // позиция блока с баннером относительно остальных блоков на экране
+            },
+            {
+            "type": "red",
+            "lang" : "ru",
+            "title":"Заголовок заголовочный",
+            "description": "Описание описывающее описуемое",
+            "url": "https://www.raywenderlich.com/18330247-deep-links-in-android-getting-started",
+            "screen": "teach", // "home"
+            "position": 2 // позиция блока с баннером относительно остальных блоков на экране
             }
             ]
         </value>

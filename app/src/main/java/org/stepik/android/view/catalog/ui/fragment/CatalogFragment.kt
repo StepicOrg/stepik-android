@@ -366,7 +366,13 @@ class CatalogFragment :
         }
 
         catalogRecyclerView.post {
-            catalogItemAdapter.items = resolveAdapter(state) + resolveCatalogItems(bannerBlocks, collectionCatalogItems)
+            val catalogItems =
+                if (state.blocksState is CatalogFeature.BlocksState.Content) {
+                    resolveCatalogItems(bannerBlocks, collectionCatalogItems)
+                } else {
+                    collectionCatalogItems
+                }
+            catalogItemAdapter.items = resolveAdapter(state) + catalogItems
         }
 
         when (state.courseContinueState) {
