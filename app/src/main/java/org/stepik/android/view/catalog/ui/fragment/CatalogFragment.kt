@@ -549,7 +549,7 @@ class CatalogFragment :
                 bannerBinding.root.setOnClickListener {
                     InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(data.banner.url)) {
                         InAppWebViewDialogFragment
-                            .newInstance("", data.banner.url, isProvideAuth = true)
+                            .newInstance("", data.banner.url, isProvideAuth = false)
                             .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
                     }
                 }
