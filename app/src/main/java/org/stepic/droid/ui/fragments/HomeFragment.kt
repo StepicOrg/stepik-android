@@ -1,15 +1,14 @@
 package org.stepic.droid.ui.fragments
 
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -180,8 +179,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             }
 
         banners.forEach { banner ->
-            val inflatedView = View.inflate(requireContext(), R.layout.item_banner, null)
-            val binding = ItemBannerBinding.bind(inflatedView)
+            val binding = ItemBannerBinding.inflate(LayoutInflater.from(requireContext()), homeMainContainer, false)
             val imageRes = bannerResourcesMapper.mapBannerTypeToImageResource(banner.type)
             val backgroundColorRes = bannerResourcesMapper.mapBannerTypeToBackgroundColor(banner.type)
             val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(banner.type)
@@ -197,28 +195,21 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             binding.bannerTitle.text = banner.title
             binding.bannerDescription.text = banner.description
             binding.bannerImage.setImageResource(imageRes)
-            binding.root.bannerRoot.background = AppCompatResources
-                .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
-                ?.mutate()
-                ?.let { DrawableCompat.wrap(it) }
-                ?.also {
-                    DrawableCompat.setTint(it, ContextCompat.getColor(requireContext(), backgroundColorRes))
-                    DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
-                }
+            ViewCompat.setBackgroundTintList(binding.root.bannerRoot, AppCompatResources.getColorStateList(requireContext(), backgroundColorRes))
             binding.bannerDescription.setTextColor(descriptionTextColorRes)
 
             val insertionIndex = min(banner.position + offset, homeMainContainer.childCount - 1)
             val previousFragment = homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()
 
-            homeMainContainer.addView(inflatedView, insertionIndex)
-            binding.root.layoutParams = (binding.root.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                val margin = resources.getDimensionPixelOffset(R.dimen.comment_item_reply_offset)
-                setMargins(
-                    margin,
-                    if (previousFragment is LearningActionsFragment) margin else 0,
-                    margin,
-                    margin
-                )
+            homeMainContainer.addView(binding.root, insertionIndex)
+            binding.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                val margin =
+                    if (previousFragment is LearningActionsFragment) {
+                        resources.getDimensionPixelOffset(R.dimen.course_list_side_padding)
+                    } else {
+                        0
+                    }
+                topMargin = margin
             }
         }
     }

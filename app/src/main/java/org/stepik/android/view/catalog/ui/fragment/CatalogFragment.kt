@@ -3,7 +3,6 @@ package org.stepik.android.view.catalog.ui.fragment
 import android.app.SearchManager
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
@@ -12,8 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -553,15 +551,18 @@ class CatalogFragment :
         ) {
             val bannerBinding = ItemBannerBinding.bind(this.itemView)
 
-            onBind { data ->
-                data as CatalogItem.BannerBlock
-                bannerBinding.root.setOnClickListener {
-                    InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(data.banner.url)) {
+            bannerBinding.root.setOnClickListener {
+                (item as? CatalogItem.BannerBlock)?.let {
+                    InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(it.banner.url)) {
                         InAppWebViewDialogFragment
-                            .newInstance("", data.banner.url, isProvideAuth = false)
+                            .newInstance(it.banner.title, it.banner.url, isProvideAuth = false)
                             .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
                     }
                 }
+            }
+
+            onBind { data ->
+                data as CatalogItem.BannerBlock
                 bannerBinding.bannerTitle.text = data.banner.title
                 bannerBinding.bannerDescription.text = data.banner.description
 
@@ -570,14 +571,7 @@ class CatalogFragment :
                 val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(data.banner.type)
 
                 bannerBinding.bannerImage.setImageResource(imageRes)
-                bannerBinding.root.bannerRoot.background = AppCompatResources
-                    .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
-                    ?.mutate()
-                    ?.let { DrawableCompat.wrap(it) }
-                    ?.also {
-                        DrawableCompat.setTint(it, ContextCompat.getColor(requireContext(), backgroundColorRes))
-                        DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
-                    }
+                ViewCompat.setBackgroundTintList(bannerBinding.root.bannerRoot, AppCompatResources.getColorStateList(context, backgroundColorRes))
                 bannerBinding.bannerDescription.setTextColor(descriptionTextColorRes)
             }
         }

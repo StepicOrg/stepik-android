@@ -1,6 +1,9 @@
 package org.stepik.android.view.banner
 
 import android.content.Context
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.banner.model.Banner
@@ -9,6 +12,7 @@ import javax.inject.Inject
 class BannerResourcesMapper
 @Inject
 constructor(private val context: Context) {
+    @DrawableRes
     fun mapBannerTypeToImageResource(bannerType: Banner.ColorType?): Int =
         when (bannerType) {
             Banner.ColorType.BLUE ->
@@ -21,6 +25,7 @@ constructor(private val context: Context) {
                 -1
         }
 
+    @ColorRes
     fun mapBannerTypeToBackgroundColor(bannerType: Banner.ColorType?): Int =
         when (bannerType) {
             Banner.ColorType.BLUE ->
@@ -33,6 +38,7 @@ constructor(private val context: Context) {
                 -1
         }
 
+    @ColorInt
     fun mapBannerTypeToDescriptionTextColor(bannerType: Banner.ColorType?): Int =
         when (bannerType) {
             Banner.ColorType.BLUE, Banner.ColorType.VIOLET ->
