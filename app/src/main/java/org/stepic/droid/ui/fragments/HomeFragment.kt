@@ -178,7 +178,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             }
 
         banners.forEach { banner ->
-            val binding = ItemBannerBinding.inflate(LayoutInflater.from(requireContext()), homeMainContainer, false)
+            val binding = ItemBannerBinding.inflate(layoutInflater, homeMainContainer, false)
             val imageRes = bannerResourcesMapper.mapBannerTypeToImageResource(banner.type)
             val backgroundColorRes = bannerResourcesMapper.mapBannerTypeToBackgroundColor(banner.type)
             val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(banner.type)
@@ -186,7 +186,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             binding.root.setOnClickListener {
                 InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(banner.url)) {
                     InAppWebViewDialogFragment
-                        .newInstance("", banner.url, isProvideAuth = false)
+                        .newInstance(banner.title, banner.url, isProvideAuth = false)
                         .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
                 }
             }
