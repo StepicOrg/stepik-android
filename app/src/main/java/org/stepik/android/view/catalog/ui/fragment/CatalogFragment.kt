@@ -44,7 +44,6 @@ import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.defaultLocale
-import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.banner.BannerFeature
@@ -54,6 +53,7 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
+import org.stepik.android.view.banner.BannerResourcesMapper
 import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
 import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
@@ -139,6 +139,9 @@ class CatalogFragment :
 
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
+
+    @Inject
+    lateinit var bannerResourcesMapper: BannerResourcesMapper
 
     private lateinit var searchIcon: ImageView
 
@@ -556,33 +559,20 @@ class CatalogFragment :
                 bannerBinding.bannerTitle.text = data.banner.title
                 bannerBinding.bannerDescription.text = data.banner.description
 
-                val (imageRes, colorRes) =
-                    when (data.banner.type) {
-                        Banner.ColorType.BLUE ->
-                            R.drawable.ic_banner_blue to R.color.color_blue_200
-                        Banner.ColorType.GREEN ->
-                            R.drawable.ic_banner_green to R.color.color_green_400_alpha_12
-                        Banner.ColorType.VIOLET ->
-                            R.drawable.ic_banner_violet to R.color.color_violet_200
-                    }
+                val imageRes = bannerResourcesMapper.mapBannerTypeToImageResource(data.banner.type)
+                val backgroundColorRes = bannerResourcesMapper.mapBannerTypeToBackgroundColor(data.banner.type)
+                val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(data.banner.type)
+
                 bannerBinding.bannerImage.setImageResource(imageRes)
                 bannerBinding.root.bannerRoot.background = AppCompatResources
                     .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
                     ?.mutate()
                     ?.let { DrawableCompat.wrap(it) }
                     ?.also {
-                        DrawableCompat.setTint(it, ContextCompat.getColor(requireContext(), colorRes))
+                        DrawableCompat.setTint(it, ContextCompat.getColor(requireContext(), backgroundColorRes))
                         DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
                     }
-
-                val descriptionColor =
-                    when (data.banner.type) {
-                        Banner.ColorType.BLUE, Banner.ColorType.VIOLET ->
-                            context.resolveColorAttribute(R.attr.colorOnSecondary)
-                        Banner.ColorType.GREEN ->
-                            context.resolveColorAttribute(R.attr.colorControlNormal)
-                    }
-                bannerBinding.bannerDescription.setTextColor(descriptionColor)
+                bannerBinding.bannerDescription.setTextColor(descriptionTextColorRes)
             }
         }
 }

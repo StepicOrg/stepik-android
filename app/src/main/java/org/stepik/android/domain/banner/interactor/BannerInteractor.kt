@@ -31,7 +31,12 @@ constructor(
                             ).type
                         )
 
-                    banners.filter { it.language == language && it.screen == screen }
+                    banners.filter {
+                        it.type != null &&
+                        it.screen != null &&
+                        it.language == language &&
+                        it.screen == screen
+                    }
                 } catch (e: Exception) {
                     emptyList()
                 }

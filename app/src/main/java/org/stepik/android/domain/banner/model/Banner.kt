@@ -6,7 +6,7 @@ data class Banner(
     @SerializedName("title")
     val title: String,
     @SerializedName("type")
-    val type: ColorType,
+    val type: ColorType?,
     @SerializedName("lang")
     val language: String,
     @SerializedName("description")
@@ -14,7 +14,7 @@ data class Banner(
     @SerializedName("url")
     val url: String,
     @SerializedName("screen")
-    val screen: Screen,
+    val screen: Screen?,
     @SerializedName("position")
     val position: Int
 ) {
