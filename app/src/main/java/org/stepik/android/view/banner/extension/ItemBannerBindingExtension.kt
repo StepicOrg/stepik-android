@@ -1,6 +1,5 @@
 package org.stepik.android.view.banner.extension
 
-import android.content.Context
 import android.net.Uri
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
@@ -13,15 +12,15 @@ import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
-fun ItemBannerBinding.handleItemClick(context: Context, fragmentManager: FragmentManager, banner: Banner) {
-    InternalDeeplinkRouter.openInternalDeeplink(context, Uri.parse(banner.url)) {
+fun ItemBannerBinding.handleItemClick(banner: Banner, fragmentManager: FragmentManager) {
+    InternalDeeplinkRouter.openInternalDeeplink(root.context, Uri.parse(banner.url)) {
         InAppWebViewDialogFragment
             .newInstance(banner.title, banner.url, isProvideAuth = false)
             .showIfNotExists(fragmentManager, InAppWebViewDialogFragment.TAG)
     }
 }
 
-fun ItemBannerBinding.bind(context: Context, banner: Banner, bannerResourcesMapper: BannerResourcesMapper) {
+fun ItemBannerBinding.bind(banner: Banner, bannerResourcesMapper: BannerResourcesMapper) {
     bannerTitle.text = banner.title
     bannerDescription.text = banner.description
 
@@ -30,6 +29,6 @@ fun ItemBannerBinding.bind(context: Context, banner: Banner, bannerResourcesMapp
     val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(banner.type)
 
     bannerImage.setImageResource(imageRes)
-    ViewCompat.setBackgroundTintList(root.bannerRoot, AppCompatResources.getColorStateList(context, backgroundColorRes))
+    ViewCompat.setBackgroundTintList(root.bannerRoot, AppCompatResources.getColorStateList(root.context, backgroundColorRes))
     bannerDescription.setTextColor(descriptionTextColorRes)
 }

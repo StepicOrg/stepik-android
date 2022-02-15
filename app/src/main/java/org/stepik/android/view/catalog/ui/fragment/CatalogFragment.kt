@@ -548,13 +548,13 @@ class CatalogFragment :
 
             bannerBinding.root.setOnClickListener {
                 (item as? CatalogItem.BannerBlock)?.let { bannerBlock ->
-                    bannerBinding.handleItemClick(requireContext(), childFragmentManager, bannerBlock.banner)
+                    bannerBinding.handleItemClick(bannerBlock.banner, childFragmentManager)
                 }
             }
 
             onBind { data ->
                 data as CatalogItem.BannerBlock
-                bannerBinding.bind(context, data.banner, bannerResourcesMapper)
+                bannerBinding.bind(data.banner, bannerResourcesMapper)
             }
         }
 }

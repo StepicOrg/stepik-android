@@ -175,10 +175,10 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             val binding = ItemBannerBinding.inflate(layoutInflater, homeMainContainer, false)
 
             binding.root.setOnClickListener {
-                binding.handleItemClick(requireContext(), childFragmentManager, banner)
+                binding.handleItemClick(banner, childFragmentManager)
             }
 
-            binding.bind(requireContext(), banner, bannerResourcesMapper)
+            binding.bind(banner, bannerResourcesMapper)
 
             val insertionIndex = min(banner.position + offset, homeMainContainer.childCount - 1)
             val previousFragment = homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()
