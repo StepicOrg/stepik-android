@@ -3,13 +3,17 @@ package org.stepik.android.view.catalog.ui.fragment
 import android.app.SearchManager
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -17,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_catalog.*
+import kotlinx.android.synthetic.main.item_banner.view.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -27,6 +32,7 @@ import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
+import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.SearchQuery
@@ -37,7 +43,11 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.defaultLocale
+import org.stepic.droid.util.resolveColorAttribute
+import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
+import org.stepik.android.presentation.banner.BannerFeature
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
@@ -66,10 +76,14 @@ import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.dsl.adapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
+import ru.nobird.app.core.model.mutate
 import javax.inject.Inject
 
 class CatalogFragment :
@@ -148,6 +162,14 @@ class CatalogFragment :
         } else {
             catalogViewModel.onNewMessage(CatalogFeature.Message.InitMessage())
         }
+        catalogViewModel.onNewMessage(
+            CatalogFeature.Message.BannerMessage(
+                BannerFeature.Message.InitMessage(
+                    language = resources.configuration.defaultLocale.language,
+                    screen = Banner.Screen.CATALOG
+                )
+            )
+        )
     }
 
     private fun injectComponent() {
@@ -223,6 +245,7 @@ class CatalogFragment :
         )
 
         catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }
+        catalogItemAdapter += buildBannerBlockAdapterDelegate()
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -316,6 +339,13 @@ class CatalogFragment :
     }
 
     override fun render(state: CatalogFeature.State) {
+        val bannerBlocks =
+            if (state.bannerState is BannerFeature.State.Content) {
+                state.bannerState.banners
+            } else {
+                emptyList()
+            }
+
         val collectionCatalogItems = when (state.blocksState) {
             is CatalogFeature.BlocksState.Error ->
                 listOf(CatalogItem.Offline)
@@ -331,7 +361,7 @@ class CatalogFragment :
         }
 
         catalogRecyclerView.post {
-            catalogItemAdapter.items = resolveAdapter(state) + collectionCatalogItems
+            catalogItemAdapter.items = resolveAdapter(state) + resolveCatalogItems(bannerBlocks, collectionCatalogItems)
         }
 
         when (state.courseContinueState) {
@@ -348,6 +378,11 @@ class CatalogFragment :
             listOf(CatalogItem.Stories(state = state.storiesState), CatalogItem.Filters(state = state.filtersState))
         } else {
             listOf(CatalogItem.Stories(state = state.storiesState))
+        }
+
+    private fun resolveCatalogItems(banners: List<Banner>, collectionCatalogItems: List<CatalogItem>): List<CatalogItem> =
+        collectionCatalogItems.mutate {
+            banners.forEach { banner -> add(banner.position, CatalogItem.BannerBlock(banner)) }
         }
 
     private fun showStories(position: Int) {
@@ -499,4 +534,46 @@ class CatalogFragment :
         searchViewToolbar.onActionViewExpanded()
         searchViewToolbar.clearFocus()
     }
+
+    private fun buildBannerBlockAdapterDelegate(): AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>> =
+        adapterDelegate<CatalogItem, CatalogItem>(
+            layoutResId = R.layout.item_banner,
+            isForViewType = { _, viewType -> viewType is CatalogItem.BannerBlock }
+        ) {
+            val bannerBinding = ItemBannerBinding.bind(this.itemView)
+
+            onBind { data ->
+                data as CatalogItem.BannerBlock
+                bannerBinding.bannerTitle.text = data.banner.title
+                bannerBinding.bannerDescription.text = data.banner.description
+
+                val (imageRes, colorRes) =
+                    when (data.banner.type) {
+                        Banner.ColorType.BLUE ->
+                            R.drawable.ic_banner_blue to R.color.color_blue_200
+                        Banner.ColorType.GREEN ->
+                            R.drawable.ic_banner_green to R.color.color_green_400_alpha_12
+                        Banner.ColorType.VIOLET ->
+                            R.drawable.ic_banner_violet to R.color.color_violet_200
+                    }
+                bannerBinding.bannerImage.setImageResource(imageRes)
+                bannerBinding.root.bannerRoot.background = AppCompatResources
+                    .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
+                    ?.mutate()
+                    ?.let { DrawableCompat.wrap(it) }
+                    ?.also {
+                        DrawableCompat.setTint(it, ContextCompat.getColor(requireContext(), colorRes))
+                        DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+                    }
+
+                val descriptionColor =
+                    when (data.banner.type) {
+                        Banner.ColorType.BLUE, Banner.ColorType.VIOLET ->
+                            context.resolveColorAttribute(R.attr.colorOnSecondary)
+                        Banner.ColorType.GREEN ->
+                            context.resolveColorAttribute(R.attr.colorControlNormal)
+                    }
+                bannerBinding.bannerDescription.setTextColor(descriptionColor)
+            }
+        }
 }

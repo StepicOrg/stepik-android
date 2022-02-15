@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R

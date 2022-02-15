@@ -3,6 +3,8 @@ package org.stepik.android.domain.banner.model
 import com.google.gson.annotations.SerializedName
 
 data class Banner(
+    @SerializedName("title")
+    val title: String,
     @SerializedName("type")
     val type: ColorType,
     @SerializedName("lang")
@@ -20,7 +22,7 @@ data class Banner(
         @SerializedName("blue")
         BLUE("blue"),
 
-        @SerializedName("violent")
+        @SerializedName("violet")
         VIOLET("violet"),
 
         @SerializedName("green")
