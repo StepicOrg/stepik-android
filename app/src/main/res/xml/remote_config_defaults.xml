@@ -56,4 +56,19 @@
         <key>purchase_flow_android_disclaimer_be</key>
         <value><![CDATA[У цану ўключана камісія Google Play і ПДВ. Аплачваючы доступ да гэтага курсу вы згаджаецеся з умовамі <a href="https://welcome.stepik.org/ru/payment-terms">карыстацкай дамовы</a>.]]></value>
     </entry>
+    <entry>
+        <key>banners_android</key>
+        <value>[
+            {
+            "type": "blue",
+            "lang" : "ru",
+            "title":"Заголовок заголовочный",
+            "description": "Описание описывающее описуемое",
+            "url": "https://www.raywenderlich.com/18330247-deep-links-in-android-getting-started",
+            "screen": "home", // "home"
+            "position": 4 // позиция блока с баннером относительно остальных блоков на экране
+            }
+            ]
+        </value>
+    </entry>
 </defaultsMap>
