@@ -16,6 +16,7 @@ interface BannerFeature {
             val screen: Banner.Screen,
             val forceUpdate: Boolean = false
         ) : Message()
+        object BannersError : Message()
         data class BannersResult(val banners: List<Banner>) : Message()
     }
 

@@ -7,7 +7,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.banner.interactor.BannerInteractor
 import org.stepik.android.presentation.banner.BannerFeature
-import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.redux.dispatcher.RxActionDispatcher
 import javax.inject.Inject
 
@@ -29,7 +28,7 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
                         onSuccess = { onNewMessage(BannerFeature.Message.BannersResult(it)) },
-                        onError = emptyOnErrorStub
+                        onError = { onNewMessage(BannerFeature.Message.BannersError) }
                     )
             }
         }

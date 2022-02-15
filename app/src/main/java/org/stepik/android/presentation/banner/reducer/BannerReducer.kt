@@ -18,6 +18,13 @@ constructor() : StateReducer<State, Message, Action> {
                     null
                 }
             }
+            is Message.BannersError -> {
+                if (state is State.Loading) {
+                    State.Empty to emptySet()
+                } else {
+                    null
+                }
+            }
             is Message.BannersResult -> {
                 if (state is State.Loading) {
                     val newState =
