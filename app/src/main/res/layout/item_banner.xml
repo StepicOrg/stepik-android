@@ -6,13 +6,13 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/course_list_side_padding"
     android:layout_marginBottom="20dp"
-    android:minHeight="106dp"
     app:cardElevation="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bannerRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="106dp"
         tools:background="">
 
         <androidx.appcompat.widget.AppCompatTextView
