@@ -23,7 +23,7 @@ constructor(
         when (action) {
             is BannerFeature.Action.LoadBanners -> {
                 compositeDisposable += bannerInteractor
-                    .getBanners(action.language, action.screen)
+                    .getBanners(action.screen)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(

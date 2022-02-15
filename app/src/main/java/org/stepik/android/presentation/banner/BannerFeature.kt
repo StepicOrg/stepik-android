@@ -12,7 +12,6 @@ interface BannerFeature {
 
     sealed class Message {
         data class InitMessage(
-            val language: String,
             val screen: Banner.Screen,
             val forceUpdate: Boolean = false
         ) : Message()
@@ -21,6 +20,6 @@ interface BannerFeature {
     }
 
     sealed class Action {
-        data class LoadBanners(val language: String, val screen: Banner.Screen) : Action()
+        data class LoadBanners(val screen: Banner.Screen) : Action()
     }
 }

@@ -13,7 +13,7 @@ constructor() : StateReducer<State, Message, Action> {
         when (message) {
             is Message.InitMessage -> {
                 if (state is State.Idle || message.forceUpdate) {
-                    State.Loading to setOf(Action.LoadBanners(message.language, message.screen))
+                    State.Loading to setOf(Action.LoadBanners(message.screen))
                 } else {
                     null
                 }

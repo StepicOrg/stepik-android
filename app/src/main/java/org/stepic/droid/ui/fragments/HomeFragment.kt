@@ -42,7 +42,6 @@ import org.stepik.android.view.stories.ui.fragment.StoriesFragment
 import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -165,7 +164,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
 
     private fun setupBanners() {
         val banners = bannerInteractor
-            .getBanners(resources.configuration.defaultLocale.language, Banner.Screen.HOME)
+            .getBanners(Banner.Screen.HOME)
             .blockingGet()
 
         /**

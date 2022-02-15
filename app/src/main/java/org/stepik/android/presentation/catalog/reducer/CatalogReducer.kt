@@ -1,8 +1,10 @@
 package org.stepik.android.presentation.catalog.reducer
 
+import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.presentation.banner.BannerFeature
 import org.stepik.android.presentation.banner.reducer.BannerReducer
 import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogFeature.State
@@ -100,22 +102,29 @@ constructor(
             }
 
             is Message.FiltersMessage -> {
-                val (storiesState, collectionsState, refreshAction) =
+                val (storiesState, collectionsState, bannerState) =
                     if (message.message is FiltersFeature.Message.LoadFiltersSuccess) {
                         Triple(
                             StoriesFeature.State.Loading,
                             CatalogFeature.BlocksState.Loading,
-                            setOf(Action.StoriesAction(StoriesFeature.Action.FetchStories), Action.FetchCatalogBlocks)
+                            BannerFeature.State.Loading
                         )
                     } else {
                         Triple(
                             state.storiesState,
                             state.blocksState,
-                            emptySet()
+                            state.bannerState
                         )
                     }
+
+                val refreshAction =
+                    if (message.message is FiltersFeature.Message.LoadFiltersSuccess) {
+                        setOf(Action.StoriesAction(StoriesFeature.Action.FetchStories), Action.FetchCatalogBlocks, Action.BannerAction(BannerFeature.Action.LoadBanners(Banner.Screen.CATALOG)))
+                    } else {
+                        emptySet()
+                    }
                 val (filtersState, filtersActions) = filtersReducer.reduce(state.filtersState, message.message)
-                state.copy(storiesState = storiesState, blocksState = collectionsState, filtersState = filtersState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
+                state.copy(storiesState = storiesState, blocksState = collectionsState, filtersState = filtersState, bannerState = bannerState) to filtersActions.map(Action::FiltersAction).toSet() + refreshAction
             }
 
             is Message.CourseListMessage -> {

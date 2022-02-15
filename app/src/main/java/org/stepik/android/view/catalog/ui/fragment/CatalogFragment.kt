@@ -41,7 +41,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.defaultLocale
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.banner.BannerFeature
@@ -168,7 +167,6 @@ class CatalogFragment :
         catalogViewModel.onNewMessage(
             CatalogFeature.Message.BannerMessage(
                 BannerFeature.Message.InitMessage(
-                    language = resources.configuration.defaultLocale.language,
                     screen = Banner.Screen.CATALOG
                 )
             )
