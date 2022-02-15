@@ -93,13 +93,14 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
 
         if (savedInstanceState == null) {
             setupFragments(remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED))
-            homeMainContainer.post { setupBanners() }
         }
 
         appBarLayout.isVisible = !remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)
 
         homeStreakPresenter.attachView(this)
         homeStreakPresenter.onNeedShowStreak()
+
+        homeMainContainer.post { setupBanners() }
     }
 
     override fun onStart() {
