@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_shape_rounded"
-        android:minHeight="106dp"
         tools:background="">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -22,6 +21,7 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:paddingHorizontal="16dp"
+            android:paddingTop="16dp"
             android:textColor="@color/color_on_surface"
             android:textSize="18sp"
             app:fontFamily="@font/stories_bold"
@@ -36,9 +36,10 @@
             android:id="@+id/bannerDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:maxLines="2"
             android:paddingHorizontal="16dp"
-
+            android:paddingBottom="16dp"
             android:textColor="@color/color_control_normal"
             app:fontFamily="@font/stories_medium"
             app:layout_constraintBottom_toBottomOf="parent"
