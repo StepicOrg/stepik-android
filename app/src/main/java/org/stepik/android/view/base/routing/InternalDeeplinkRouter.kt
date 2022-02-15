@@ -11,7 +11,7 @@ import org.stepic.droid.R
 object InternalDeeplinkRouter {
     private const val PARAM_MOBILE_INTERNAL_DEEPLINK = "mobile_internal_deeplink"
 
-    fun openInternalDeeplink(context: Context, uri: Uri) {
+    fun openInternalDeeplink(context: Context, uri: Uri, fallback: () -> Unit = { openInExternal(context, uri) }) {
         try {
             val path = uri.buildUpon()
                 .appendQueryParameter(PARAM_MOBILE_INTERNAL_DEEPLINK, "true")
@@ -21,7 +21,7 @@ object InternalDeeplinkRouter {
             intent.`package` = BuildConfig.APPLICATION_ID
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            openInExternal(context, uri)
+            fallback.invoke()
         }
     }
 

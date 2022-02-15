@@ -55,6 +55,7 @@ import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
+import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.base.ui.extension.enforceSingleScrollDirection
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
@@ -69,6 +70,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGrid
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
 import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
+import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
 import org.stepik.android.view.injection.course_list.factory.RecommendedCourseListAdapterDelegateFactory
 import ru.nobird.app.presentation.redux.container.ReduxView
@@ -544,6 +546,13 @@ class CatalogFragment :
 
             onBind { data ->
                 data as CatalogItem.BannerBlock
+                bannerBinding.root.setOnClickListener {
+                    InternalDeeplinkRouter.openInternalDeeplink(requireContext(), Uri.parse(data.banner.url)) {
+                        InAppWebViewDialogFragment
+                            .newInstance("", data.banner.url, isProvideAuth = true)
+                            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+                    }
+                }
                 bannerBinding.bannerTitle.text = data.banner.title
                 bannerBinding.bannerDescription.text = data.banner.description
 
