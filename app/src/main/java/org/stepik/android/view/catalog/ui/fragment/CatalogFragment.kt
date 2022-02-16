@@ -83,6 +83,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import ru.nobird.app.core.model.mutate
 import javax.inject.Inject
+import kotlin.math.min
 
 class CatalogFragment :
     Fragment(R.layout.fragment_catalog),
@@ -388,7 +389,10 @@ class CatalogFragment :
 
     private fun resolveCatalogItems(banners: List<Banner>, collectionCatalogItems: List<CatalogItem>): List<CatalogItem> =
         collectionCatalogItems.mutate {
-            banners.forEach { banner -> add(banner.position, CatalogItem.BannerBlock(banner)) }
+            banners.forEach { banner ->
+                val insertionIndex = min(banner.position, collectionCatalogItems.size)
+                add(insertionIndex, CatalogItem.BannerBlock(banner))
+            }
         }
 
     private fun showStories(position: Int) {

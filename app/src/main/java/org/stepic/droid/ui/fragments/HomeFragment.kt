@@ -186,7 +186,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
 
             binding.bind(banner, bannerResourcesMapper)
 
-            val insertionIndex = min(banner.position + offset, homeMainContainer.childCount - 1)
+            val insertionIndex = min(banner.position + offset, homeMainContainer.childCount)
             val previousFragment = homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()
 
             homeMainContainer.addView(binding.root, insertionIndex)
