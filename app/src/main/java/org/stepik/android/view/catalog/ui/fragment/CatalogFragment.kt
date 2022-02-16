@@ -38,6 +38,8 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.banner.analytic.PromoBannerClickedAnalyticEvent
+import org.stepik.android.domain.banner.analytic.PromoBannerSeen
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.banner.BannerFeature
@@ -548,12 +550,14 @@ class CatalogFragment :
 
             bannerBinding.root.setOnClickListener {
                 (item as? CatalogItem.BannerBlock)?.let { bannerBlock ->
+                    analytic.report(PromoBannerClickedAnalyticEvent(bannerBlock.banner))
                     bannerBinding.handleItemClick(bannerBlock.banner, childFragmentManager)
                 }
             }
 
             onBind { data ->
                 data as CatalogItem.BannerBlock
+                analytic.report(PromoBannerSeen(data.banner))
                 bannerBinding.bind(data.banner, bannerResourcesMapper)
             }
         }
