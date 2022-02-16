@@ -110,8 +110,9 @@ public class SharedPreferenceHelper {
     private final static String NIGHT_MODE = "night_mode";
     private final static String PERSONALIZED_COURSE_LIST = "personalized_course_list";
     private final static String IS_PERSONALIZED_ONBOARDING_WAS_SHOWN = "is_personalized_onboarding_was_shown";
-    private final static String WISHLIST = "wishlist";
     private final static String ENDPOINT_CONFIG = "endpoint_config";
+
+    private final static String BANNERS_JSON = "banners_json";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -871,6 +872,14 @@ public class SharedPreferenceHelper {
 
     public int getEndpointConfig() {
         return getInt(PreferenceType.DEVICE_SPECIFIC, ENDPOINT_CONFIG, 2);
+    }
+
+    public void putBannersJson(String json) {
+        put(PreferenceType.DEVICE_SPECIFIC, BANNERS_JSON, json);
+    }
+
+    public String getBannersJson() {
+        return getString(PreferenceType.DEVICE_SPECIFIC, BANNERS_JSON);
     }
 
     @Nullable

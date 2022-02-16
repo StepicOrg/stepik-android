@@ -4,7 +4,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reactivex.Single
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.banner.model.Banner
 import java.lang.Exception
@@ -19,8 +18,10 @@ constructor(
 ) {
     fun getBanners(screen: Banner.Screen): Single<List<Banner>> =
         Single.fromCallable {
-            val bannersJson = firebaseRemoteConfig.getString(RemoteConfig.BANNERS_ANDROID)
-            if (bannersJson.isEmpty()) {
+            val bannersJson: String? = sharedPreferenceHelper.bannersJson
+//            val bannersJson = firebaseRemoteConfig.getString(RemoteConfig.BANNERS_ANDROID)
+            if (bannersJson == null || bannersJson.isEmpty()) {
+                sharedPreferenceHelper.putBannersJson("")
                 emptyList()
             } else {
                 try {
