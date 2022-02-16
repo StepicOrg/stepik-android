@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
+import androidx.recyclerview.widget.LinearSnapHelper
 import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -66,10 +66,9 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
         containerTitle.text = resources.getString(R.string.visited_courses_title)
 
         with(courseListCoursesRecycler) {
-            val rowCount = 1
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
-            val snapHelper = MultiSnapHelper(interval = 1)
+            val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(this)
         }
 

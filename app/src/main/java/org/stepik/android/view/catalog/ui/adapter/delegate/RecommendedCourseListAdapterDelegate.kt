@@ -2,8 +2,8 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.android.extensions.LayoutContainer
@@ -94,7 +94,7 @@ constructor(
                 adapter = courseItemAdapter
                 layoutManager = tableLayoutManager
                 itemAnimator?.changeDuration = 0
-                val snapHelper = MultiSnapHelper(interval = 1)
+                val snapHelper = LinearSnapHelper()
                 snapHelper.attachToRecyclerView(this)
                 setRecycledViewPool(sharedViewPool)
             }
