@@ -38,6 +38,8 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.banner.analytic.PromoBannerClickedAnalyticEvent
+import org.stepik.android.domain.banner.analytic.PromoBannerSeen
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.banner.BannerFeature
@@ -81,6 +83,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import ru.nobird.app.core.model.mutate
 import javax.inject.Inject
+import kotlin.math.min
 
 class CatalogFragment :
     Fragment(R.layout.fragment_catalog),
@@ -386,7 +389,10 @@ class CatalogFragment :
 
     private fun resolveCatalogItems(banners: List<Banner>, collectionCatalogItems: List<CatalogItem>): List<CatalogItem> =
         collectionCatalogItems.mutate {
-            banners.forEach { banner -> add(banner.position, CatalogItem.BannerBlock(banner)) }
+            banners.forEach { banner ->
+                val insertionIndex = min(banner.position, collectionCatalogItems.size)
+                add(insertionIndex, CatalogItem.BannerBlock(banner))
+            }
         }
 
     private fun showStories(position: Int) {
@@ -548,12 +554,14 @@ class CatalogFragment :
 
             bannerBinding.root.setOnClickListener {
                 (item as? CatalogItem.BannerBlock)?.let { bannerBlock ->
+                    analytic.report(PromoBannerClickedAnalyticEvent(bannerBlock.banner))
                     bannerBinding.handleItemClick(bannerBlock.banner, childFragmentManager)
                 }
             }
 
             onBind { data ->
                 data as CatalogItem.BannerBlock
+                analytic.report(PromoBannerSeen(data.banner))
                 bannerBinding.bind(data.banner, bannerResourcesMapper)
             }
         }

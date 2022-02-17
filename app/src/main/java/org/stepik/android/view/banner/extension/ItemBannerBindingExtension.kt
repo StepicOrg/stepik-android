@@ -26,7 +26,7 @@ fun ItemBannerBinding.bind(banner: Banner, bannerResourcesMapper: BannerResource
 
     val imageRes = bannerResourcesMapper.mapBannerTypeToImageResource(banner.type)
     val backgroundColorRes = bannerResourcesMapper.mapBannerTypeToBackgroundColor(banner.type)
-    val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(banner.type)
+    val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(root.context, banner.type)
 
     bannerImage.setImageResource(imageRes)
     ViewCompat.setBackgroundTintList(root.bannerRoot, AppCompatResources.getColorStateList(root.context, backgroundColorRes))

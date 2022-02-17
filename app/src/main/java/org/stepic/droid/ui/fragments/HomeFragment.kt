@@ -21,6 +21,8 @@ import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepic.droid.util.commitNow
+import org.stepik.android.domain.banner.analytic.PromoBannerClickedAnalyticEvent
+import org.stepik.android.domain.banner.analytic.PromoBannerSeen
 import org.stepik.android.domain.banner.interactor.BannerInteractor
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.domain.home.interactor.HomeInteractor
@@ -175,12 +177,16 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             val binding = ItemBannerBinding.inflate(layoutInflater, homeMainContainer, false)
 
             binding.root.setOnClickListener {
+                // TODO // Probably better to move into ViewTreeObserver
+                analytic.report(PromoBannerSeen(banner))
+
+                analytic.report(PromoBannerClickedAnalyticEvent(banner))
                 binding.handleItemClick(banner, childFragmentManager)
             }
 
             binding.bind(banner, bannerResourcesMapper)
 
-            val insertionIndex = min(banner.position + offset, homeMainContainer.childCount - 1)
+            val insertionIndex = min(banner.position + offset, homeMainContainer.childCount)
             val previousFragment = homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()
 
             homeMainContainer.addView(binding.root, insertionIndex)
