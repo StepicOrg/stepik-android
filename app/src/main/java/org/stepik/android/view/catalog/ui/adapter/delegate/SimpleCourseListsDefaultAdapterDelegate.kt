@@ -4,11 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.header_catalog_block.*
 import kotlinx.android.synthetic.main.item_block_simple_course_lists_default.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -57,7 +57,7 @@ class SimpleCourseListsDefaultAdapterDelegate(
             courseListsRecycler.setHasFixedSize(true)
             courseListsRecycler.adapter = adapter
 
-            val snapHelper = MultiSnapHelper(interval = 1)
+            val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(courseListsRecycler)
         }
 

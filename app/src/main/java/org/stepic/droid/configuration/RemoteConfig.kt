@@ -17,4 +17,6 @@ object RemoteConfig {
     const val PURCHASE_FLOW_DISCLAIMER_EN = "purchase_flow_android_disclaimer_en"
     const val PURCHASE_FLOW_DISCLAIMER_RU = "purchase_flow_android_disclaimer_ru"
     const val PURCHASE_FLOW_DISCLAIMER_BE = "purchase_flow_android_disclaimer_be"
+
+    const val BANNERS_ANDROID = "banners_android"
 }
