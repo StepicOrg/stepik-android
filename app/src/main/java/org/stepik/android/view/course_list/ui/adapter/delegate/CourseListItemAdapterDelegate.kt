@@ -22,6 +22,7 @@ import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
+import org.stepik.android.view.course_list.ui.widget.CertificateProgressView
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
@@ -48,6 +49,7 @@ class CourseListItemAdapterDelegate(
     }
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
+        private val courseCertificateProgress = root.courseCertificateProgress
         private val coursePropertiesDelegate = CoursePropertiesDelegate(root, root.coursePropertiesContainer as ViewGroup)
         private val courseItemImage = root.courseItemImage
         private val courseItemName = root.courseItemName
@@ -115,6 +117,35 @@ class CourseListItemAdapterDelegate(
             adaptiveCourseMarker.isVisible = data.isAdaptive
 
             coursePropertiesDelegate.setStats(data)
+
+            val progress = data.courseStats.progress
+            val state =
+                if (progress != null && data.course.enrollment != 0L) {
+                    val score = progress
+                        .score
+                        ?.toFloatOrNull()
+                        ?: 0f
+
+                    if (score >= 0f) {
+                        when {
+                            data.course.certificateRegularThreshold != 0L && data.course.certificateDistinctionThreshold != 0L ->
+                                CertificateProgressView.State.HasBoth(score, progress.cost, data.course.certificateRegularThreshold, data.course.certificateDistinctionThreshold)
+                            data.course.certificateDistinctionThreshold != 0L ->
+                                CertificateProgressView.State.HasDistinct(score, progress.cost, data.course.certificateDistinctionThreshold)
+                            data.course.certificateRegularThreshold != 0L ->
+                                CertificateProgressView.State.HasRegular(score, progress.cost, data.course.certificateRegularThreshold)
+                            else ->
+                                CertificateProgressView.State.NoCertificate(score, progress.cost)
+                        }
+                    } else {
+                        CertificateProgressView.State.Idle
+                    }
+                } else {
+                    CertificateProgressView.State.Idle
+                }
+
+            courseCertificateProgress.isVisible = progress != null && data.course.enrollment != 0L
+            courseCertificateProgress.state = state
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
             analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))

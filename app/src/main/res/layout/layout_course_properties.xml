@@ -42,31 +42,14 @@
         android:layout_toRightOf="@id/courseRatingImage"
         tools:text="4.7"/>
 
-    <org.stepic.droid.ui.custom.CircleProgressView
-        android:id="@+id/courseItemProgressView"
-        android:layout_width="@dimen/course_item_progress_size"
-        android:layout_height="@dimen/course_item_progress_size"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/courseRatingText"
-        android:layout_toRightOf="@id/courseRatingText"
-        android:theme="@style/ThemeOverlay.Secondary.Green"
-        app:progressBarStroke="@dimen/course_item_progress_bar_size" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/courseItemProgressTitle"
-        style="@style/CourseWidgetPropertyTextView"
-        android:layout_toEndOf="@id/courseItemProgressView"
-        android:layout_toRightOf="@id/courseItemProgressView"
-        tools:text="77%"/>
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/courseCertificateImage"
         style="@style/CourseWidgetPropertyImageView"
         android:layout_marginTop="5dp"
         android:layout_width="14dp"
         android:layout_height="12dp"
-        android:layout_toEndOf="@id/courseItemProgressTitle"
-        android:layout_toRightOf="@id/courseItemProgressTitle"
+        android:layout_toEndOf="@id/courseRatingText"
+        android:layout_toRightOf="@id/courseRatingText"
         android:contentDescription="@string/course_info_certificate"
         app:srcCompat="@drawable/ic_course_info_certificate"/>
 
