@@ -14,6 +14,7 @@ object DateTimeHelper {
 
     const val DISPLAY_MONTH_YEAR_NOMINAL_PATTERN = "LLLL yyyy"
     const val DISPLAY_MONTH_YEAR_GENITIVE_PATTERN = "MMMM yyyy"
+    const val DISPLAY_DAY_MONTH_YEAR_GENITIVE_PATTERN = "dd MMMM yyyy"
 
     const val ISO_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ"
     private val millisecondsInHour = 1000 * 60 * 60

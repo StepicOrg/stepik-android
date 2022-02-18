@@ -114,6 +114,9 @@ constructor(
             course.enrollment > 0 ->
                 profileRepository.getProfile().map { profile -> course.id to resolveEnrolledEnrollmentState(course, profile.id) }
 
+            course.scheduleType == Course.SCHEDULE_TYPE_ENDED ->
+                Single.just(course.id to EnrollmentState.NotEnrolledEnded)
+
             !course.isPaid ->
                 Single.just(course.id to EnrollmentState.NotEnrolledFree)
 
@@ -122,7 +125,11 @@ constructor(
                     .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = sourceType)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
-                            Single.just(course.id to EnrollmentState.NotEnrolledWeb)
+                            if (course.actions?.canBeBought?.enabled == true) {
+                                Single.just(course.id to EnrollmentState.NotEnrolledWeb) // web
+                            } else {
+                                Single.just(course.id to EnrollmentState.NotEnrolledCantBeBought)
+                            }
                         } else {
                             Single.just(course.id to EnrollmentState.NotEnrolledFree)
                         }
@@ -193,6 +200,9 @@ constructor(
             !course.isPaid ->
                 Single.just(EnrollmentState.NotEnrolledFree)
 
+            course.scheduleType == Course.SCHEDULE_TYPE_ENDED ->
+                Single.just(EnrollmentState.NotEnrolledEnded)
+
             course.isPaid -> {
                 val (standardLightSku, promoLightSku) = course.let {
                     val currentMobileTier = mobileTiersByCourseId[it.id]
@@ -203,7 +213,11 @@ constructor(
                         .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = sourceType)
                         .flatMap { payments ->
                             if (payments.isEmpty()) {
-                                Single.just(resolvePaidEnrollmentState(standardLightSku, promoLightSku))
+                                if (course.actions?.canBeBought?.enabled == true) {
+                                    Single.just(resolvePaidEnrollmentState(standardLightSku, promoLightSku))
+                                } else {
+                                    Single.just(EnrollmentState.NotEnrolledCantBeBought)
+                                }
                             } else {
                                 Single.just(EnrollmentState.NotEnrolledFree)
                             }
@@ -242,7 +256,7 @@ constructor(
              * through the application
              */
             if (currentFlow == CoursePurchaseFlow.IAP) {
-                EnrollmentState.NotEnrolledUnavailable
+                EnrollmentState.NotEnrolledUnavailableIAP
             } else {
                 EnrollmentState.NotEnrolledWeb
             }
