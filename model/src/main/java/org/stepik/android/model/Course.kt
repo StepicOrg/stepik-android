@@ -85,6 +85,8 @@ data class Course(
     val isProctored: Boolean = false,
     @SerializedName("is_in_wishlist")
     val isInWishlist: Boolean = false,
+    @SerializedName("is_enabled")
+    val isEnabled: Boolean = false,
 
     @SerializedName("certificate_distinction_threshold")
     val certificateDistinctionThreshold: Long = 0,

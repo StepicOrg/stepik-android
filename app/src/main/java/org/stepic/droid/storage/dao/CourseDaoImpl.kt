@@ -61,6 +61,7 @@ constructor(
             isFavorite = cursor.getBoolean(DbStructureCourse.Columns.IS_FAVORITE),
             isProctored = cursor.getBoolean(DbStructureCourse.Columns.IS_PROCTORED),
             isInWishlist = cursor.getBoolean(DbStructureCourse.Columns.IS_IN_WISHLIST),
+            isEnabled = cursor.getBoolean(DbStructureCourse.Columns.IS_ENABLED),
             certificateDistinctionThreshold = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD),
             certificateRegularThreshold = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD),
             certificateLink = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_LINK),
@@ -132,6 +133,7 @@ constructor(
         values.put(DbStructureCourse.Columns.IS_FAVORITE, course.isFavorite)
         values.put(DbStructureCourse.Columns.IS_PROCTORED, course.isProctored)
         values.put(DbStructureCourse.Columns.IS_IN_WISHLIST, course.isInWishlist)
+        values.put(DbStructureCourse.Columns.IS_ENABLED, course.isEnabled)
         values.put(DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD, course.certificateDistinctionThreshold)
         values.put(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD, course.certificateRegularThreshold)
         values.put(DbStructureCourse.Columns.CERTIFICATE_LINK, course.certificateLink)
