@@ -5,8 +5,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
 import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
@@ -88,7 +88,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         with(courseListCoursesRecycler) {
             layoutManager = tableLayoutManager
             itemAnimator?.changeDuration = 0
-            val snapHelper = MultiSnapHelper(interval = 1)
+            val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(this)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {

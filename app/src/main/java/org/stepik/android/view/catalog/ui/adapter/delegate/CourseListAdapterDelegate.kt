@@ -2,11 +2,10 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import kotlinx.android.synthetic.main.header_catalog_block.view.*
 import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R
@@ -107,7 +106,7 @@ constructor(
                 adapter = courseItemAdapter
                 layoutManager = tableLayoutManager
                 itemAnimator?.changeDuration = 0
-                val snapHelper = MultiSnapHelper(interval = 1)
+                val snapHelper = LinearSnapHelper()
                 snapHelper.attachToRecyclerView(this)
                 setRecycledViewPool(sharedViewPool)
             }

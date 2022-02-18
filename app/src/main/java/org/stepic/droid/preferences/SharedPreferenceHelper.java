@@ -110,7 +110,6 @@ public class SharedPreferenceHelper {
     private final static String NIGHT_MODE = "night_mode";
     private final static String PERSONALIZED_COURSE_LIST = "personalized_course_list";
     private final static String IS_PERSONALIZED_ONBOARDING_WAS_SHOWN = "is_personalized_onboarding_was_shown";
-    private final static String WISHLIST = "wishlist";
     private final static String ENDPOINT_CONFIG = "endpoint_config";
 
     private OAuthResponse cachedAuthStepikResponse = null;

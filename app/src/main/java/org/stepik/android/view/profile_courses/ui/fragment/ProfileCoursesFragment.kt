@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
@@ -129,7 +129,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
 
             adapter = coursesAdapter
             itemAnimator?.changeDuration = 0
-            val snapHelper = MultiSnapHelper(interval = 1)
+            val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(this)
         }
     }

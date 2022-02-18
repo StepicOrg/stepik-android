@@ -1,5 +1,6 @@
 package org.stepik.android.view.catalog.model
 
+import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
@@ -24,5 +25,9 @@ sealed class CatalogItem {
 
     data class Block(val catalogBlockStateWrapper: CatalogBlockStateWrapper) : CatalogItem(), Identifiable<String> {
         override val id: String = "block_${catalogBlockStateWrapper.id}"
+    }
+
+    data class BannerBlock(val banner: Banner) : CatalogItem(), Identifiable<String> {
+        override val id: String = "banner_block_${banner.position}"
     }
 }

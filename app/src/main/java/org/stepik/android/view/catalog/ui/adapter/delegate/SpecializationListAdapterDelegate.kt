@@ -3,8 +3,8 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.takusemba.multisnaprecyclerview.MultiSnapHelper
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_specialization_list.*
 import org.stepic.droid.R
@@ -51,7 +51,7 @@ class SpecializationListAdapterDelegate(
             specializationListRecycler.setHasFixedSize(true)
             specializationListRecycler.adapter = adapter
 
-            val snapHelper = MultiSnapHelper(interval = 1)
+            val snapHelper = LinearSnapHelper()
             snapHelper.attachToRecyclerView(specializationListRecycler)
 
             specializationInfoAction.setOnClickListener {
