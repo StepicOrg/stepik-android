@@ -1,15 +1,15 @@
 package org.stepik.android.view.course_list.ui.widget
 
 import android.content.Context
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Canvas
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.Canvas
-import android.graphics.RectF
 import androidx.core.graphics.toRectF
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.dp
@@ -20,7 +20,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
     private val labelTextSize = 12f.sp.toPx()
     private val progressLabelBottomMargin = 4.dp.toPx()
-    private val certificateLabelBottomMargin = 16.dp.toPx()
+    private val certificateLabelBottomMargin = 12.dp.toPx()
     private val progressBarThickness = 2.dp.toPx()
 
     private val regularCertificateColor = ContextCompat.getColor(context, R.color.color_overlay_green)
@@ -46,7 +46,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
                 field
             }
 
-    var state: State = State.Idle // State.HasBoth(125f, 200L, 115, 182) - Can be used to test corner-cases
+    var state: State = State.Idle // State.HasBoth(115f, 116L, 100, 115)
         set(value) {
             field = value
             invalidate()
@@ -115,40 +115,27 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             is State.NoCertificate -> {
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), regularProgressBarPaint)
-                drawProgressLabel(
-                    canvas,
-                    progressText,
-                    paddingLeft,
-                    (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt()
-                )
+                drawProgressLabel(canvas, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
             }
 
             is State.HasRegular -> {
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), regularProgressBarPaint)
-                drawProgressLabel(canvas, progressText, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
+                drawProgressLabel(canvas, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
 
-                val regularThresholdX = resolveThresholdX(currentState.regularThreshold.toFloat(), currentState.cost.toFloat())
-                val regularText = currentState.regularThreshold.toString()
-
-                drawThresholdIcon(canvas, currentState.currentProgress >= currentState.regularThreshold, regularThresholdX, (bottom - (progressBarThickness.value / 2) - paddingBottom).toInt(), regularProgressBarPaint)
-                calculateLabelBounds(regularText, regularThresholdX, bottom - paddingBottom - certificateLabelBottomMargin.value.toInt(), regularLabelTextPaint, regularLabelBounds)
+                handleRegularCertificate(canvas, currentState.currentProgress, currentState.cost, currentState.regularThreshold)
                 handleProgressIntersection(regularLabelBounds, progressTextPaint.measureText(progressText))
-                drawLabel(canvas, regularDrawable, regularText, regularLabelBounds.centerX(), regularLabelBounds.centerY() + 8, regularLabelPaint, regularLabelTextPaint, regularLabelBounds)
+                drawLabel(canvas, regularDrawable, currentState.regularThreshold.toString(), regularLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, regularLabelBounds.centerY(), regularLabelPaint, regularLabelTextPaint, regularLabelBounds)
             }
 
             is State.HasDistinct -> {
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), distinctProgressbarPaint)
-                drawProgressLabel(canvas, progressText, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
+                drawProgressLabel(canvas, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
 
-                val distinctThresholdX = resolveThresholdX(currentState.distinctThreshold.toFloat(), currentState.cost.toFloat())
-                val distinctText = currentState.distinctThreshold.toString()
-
-                drawThresholdIcon(canvas, currentState.currentProgress >= currentState.distinctThreshold, distinctThresholdX, (bottom - (progressBarThickness.value / 2) - paddingBottom).toInt(), distinctProgressbarPaint)
-                calculateLabelBounds(distinctText, distinctThresholdX, bottom - paddingBottom - certificateLabelBottomMargin.value.toInt(), distinctLabelTextPaint, distinctLabelBounds)
+                handleDistinctCertificate(canvas, currentState.currentProgress, currentState.cost, currentState.distinctThreshold)
                 handleProgressIntersection(distinctLabelBounds, progressTextPaint.measureText(progressText))
-                drawLabel(canvas, distinctDrawable, distinctText, distinctLabelBounds.centerX(), distinctLabelBounds.centerY() + 8, distinctLabelPaint, distinctLabelTextPaint, distinctLabelBounds)
+                drawLabel(canvas, distinctDrawable, currentState.distinctThreshold.toString(), distinctLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, distinctLabelBounds.centerY(), distinctLabelPaint, distinctLabelTextPaint, distinctLabelBounds)
             }
             is State.HasBoth -> {
                 val progress = if (currentState.currentProgress >= currentState.regularThreshold) {
@@ -160,7 +147,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), distinctProgressbarPaint)
                 drawProgressbar(canvas, progress.toFloat(), currentState.cost.toFloat(), regularProgressBarPaint)
-                drawProgressLabel(canvas, progressText, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
+                drawProgressLabel(canvas, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
 
                 handleRegularCertificate(canvas, currentState.currentProgress, currentState.cost, currentState.regularThreshold)
                 handleDistinctCertificate(canvas, currentState.currentProgress, currentState.cost, currentState.distinctThreshold)
@@ -168,8 +155,8 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
                 handleProgressIntersection(regularLabelBounds, progressTextWidth)
                 handleProgressIntersection(distinctLabelBounds, progressTextWidth)
                 handleLabelsIntersection(regularLabelBounds, distinctLabelBounds)
-                drawLabel(canvas, regularDrawable, currentState.regularThreshold.toString(), regularLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, regularLabelBounds.centerY() + 8, regularLabelPaint, regularLabelTextPaint, regularLabelBounds)
-                drawLabel(canvas, distinctDrawable, currentState.distinctThreshold.toString(), distinctLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, distinctLabelBounds.centerY() + 8, distinctLabelPaint, distinctLabelTextPaint, distinctLabelBounds)
+                drawLabel(canvas, regularDrawable, currentState.regularThreshold.toString(), regularLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, regularLabelBounds.centerY(), regularLabelPaint, regularLabelTextPaint, regularLabelBounds)
+                drawLabel(canvas, distinctDrawable, currentState.distinctThreshold.toString(), distinctLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, distinctLabelBounds.centerY(), distinctLabelPaint, distinctLabelTextPaint, distinctLabelBounds)
             }
         }
     }
@@ -249,7 +236,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
         return (thresholdX + paddingLeft).toInt()
     }
 
-    private fun drawProgressLabel(canvas: Canvas, progressText: String, x: Int, y: Int) {
+    private fun drawProgressLabel(canvas: Canvas, x: Int, y: Int) {
         canvas.drawText(progressText, x.toFloat(), y.toFloat(), progressTextPaint)
         progressTextBounds.set(
             0 + paddingLeft,
