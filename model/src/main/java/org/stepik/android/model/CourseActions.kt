@@ -9,5 +9,9 @@ data class CourseActions(
     @SerializedName("create_announcements")
     val createAnnouncements: String?,
     @SerializedName("view_revenue")
-    val viewRevenue: ViewRevenue?
+    val viewRevenue: ViewRevenue?,
+    @SerializedName("can_be_bought")
+    val courseBuyAction: CourseBuyAction?,
+    @SerializedName("edit_course")
+    val editCourse: String?
 ) : Parcelable
