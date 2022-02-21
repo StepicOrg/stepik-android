@@ -210,9 +210,9 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
         if (labelBounds.right > width - paddingLeft - paddingRight) {
             labelBounds.set(
-                width - labelBounds.width(),
+                width - paddingLeft - paddingRight - labelBounds.width(),
                 labelBounds.top,
-                width - paddingRight,
+                width - paddingLeft - paddingRight,
                 labelBounds.bottom
             )
         }
@@ -221,15 +221,16 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private fun handleLabelsIntersection(regularLabel: Rect, distinctLabel: Rect) {
         if (Rect.intersects(regularLabel, distinctLabel)) {
             val tryLeftRegularX =
-                regularLabel.left - (regularLabel.right - distinctLabel.left)
+                (distinctLabel.left - regularLabel.width()) - 2.dp.toPx().value
+
             val tryRightDistinctX =
                 distinctLabel.right + (regularLabel.right - distinctLabel.left)
 
             if (tryLeftRegularX > progressTextBounds.right) {
                 regularLabel.set(
-                    regularLabel.left - (regularLabel.right - distinctLabel.left),
+                    tryLeftRegularX.toInt(),
                     regularLabel.top,
-                    distinctLabel.left - paddingRight,
+                    distinctLabel.left,
                     regularLabel.bottom
                 )
             } else if (tryRightDistinctX < width - paddingRight) {
