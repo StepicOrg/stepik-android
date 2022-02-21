@@ -140,8 +140,8 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
                 drawLabel(canvas, distinctDrawable, currentState.distinctThreshold.toString(), distinctLabelBounds.centerX() + (paddingLeft + paddingRight) / 2, distinctLabelBounds.centerY(), distinctLabelPaint, distinctLabelTextPaint, distinctLabelBounds)
             }
             is State.HasBoth -> {
-                val progress = if (currentState.currentProgress >= currentState.regularThreshold) {
-                    currentState.regularThreshold
+                val progress = if (currentState.currentProgress >= currentState.distinctThreshold) {
+                    currentState.distinctThreshold
                 } else {
                     currentState.currentProgress
                 }
