@@ -7,13 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -68,7 +68,7 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
         with(courseListCoursesRecycler) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
-            val snapHelper = LinearSnapHelper()
+            val snapHelper = CoursesSnapHelper(1)
             snapHelper.attachToRecyclerView(this)
         }
 
