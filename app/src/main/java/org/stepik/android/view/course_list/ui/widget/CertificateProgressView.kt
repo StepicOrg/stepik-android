@@ -197,9 +197,9 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
         if (labelBounds.right > width - paddingLeft - paddingRight) {
             labelBounds.set(
-                width - paddingLeft - paddingRight - labelBounds.width(),
+                width - paddingLeft - labelBounds.width(),
                 labelBounds.top,
-                width - paddingLeft - paddingRight,
+                width - paddingLeft,
                 labelBounds.bottom
             )
         }
