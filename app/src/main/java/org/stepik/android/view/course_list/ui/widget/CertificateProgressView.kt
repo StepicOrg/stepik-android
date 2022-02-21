@@ -3,7 +3,6 @@ package org.stepik.android.view.course_list.ui.widget
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
@@ -32,6 +31,20 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private val checkmarkDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_checkmark)
 
     private val labelDrawableWidth = regularDrawable?.intrinsicWidth ?: 0
+
+    private val progressText: String = ""
+        get() =
+            field.ifEmpty {
+                "${state.currentProgress.toInt()} / ${state.cost}"
+            }
+
+    private val progressTextWidth: Float = 0.0f
+        get() =
+            if (field <= 0f) {
+                progressTextPaint.measureText(progressText)
+            } else {
+                field
+            }
 
     var state: State = State.Idle // State.HasBoth(125f, 200L, 115, 182) - Can be used to test corner-cases
         set(value) {
@@ -100,7 +113,6 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
         when (val currentState = state) {
             is State.Idle -> {}
             is State.NoCertificate -> {
-                val progressText = "${currentState.currentProgress.toInt()} / ${currentState.cost}"
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), regularProgressBarPaint)
                 drawProgressLabel(
@@ -112,7 +124,6 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             }
 
             is State.HasRegular -> {
-                val progressText = "${currentState.currentProgress.toInt()} / ${currentState.cost}"
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), regularProgressBarPaint)
                 drawProgressLabel(canvas, progressText, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
@@ -127,7 +138,6 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             }
 
             is State.HasDistinct -> {
-                val progressText = "${currentState.currentProgress.toInt()} / ${currentState.cost}"
                 drawProgressbar(canvas, currentState.cost.toFloat(), currentState.cost.toFloat(), initialProgressBarPaint)
                 drawProgressbar(canvas, currentState.currentProgress, currentState.cost.toFloat(), distinctProgressbarPaint)
                 drawProgressLabel(canvas, progressText, paddingLeft, (bottom - progressBarThickness.value - paddingBottom - progressLabelBottomMargin.value).toInt())
@@ -141,7 +151,6 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
                 drawLabel(canvas, distinctDrawable, distinctText, distinctLabelBounds.centerX(), distinctLabelBounds.centerY() + 8, distinctLabelPaint, distinctLabelTextPaint, distinctLabelBounds)
             }
             is State.HasBoth -> {
-                val progressText = "${currentState.currentProgress.toInt()}/ ${currentState.cost}"
                 val progress = if (currentState.currentProgress >= currentState.regularThreshold) {
                     currentState.regularThreshold
                 } else {
@@ -156,7 +165,6 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
                 handleRegularCertificate(canvas, currentState.currentProgress, currentState.cost, currentState.regularThreshold)
                 handleDistinctCertificate(canvas, currentState.currentProgress, currentState.cost, currentState.distinctThreshold)
 
-                val progressTextWidth = progressTextPaint.measureText(progressText)
                 handleProgressIntersection(regularLabelBounds, progressTextWidth)
                 handleProgressIntersection(distinctLabelBounds, progressTextWidth)
                 handleLabelsIntersection(regularLabelBounds, distinctLabelBounds)
@@ -241,7 +249,6 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     }
 
     private fun drawProgressLabel(canvas: Canvas, progressText: String, x: Int, y: Int) {
-        val progressTextWidth = progressTextPaint.measureText(progressText)
         canvas.drawText(progressText, x.toFloat(), y.toFloat(), progressTextPaint)
         progressTextBounds.set(
             0 + paddingLeft,
@@ -315,16 +322,16 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
         canvas.drawRoundRect(rect, 4f, 4f, paint)
     }
 
-    sealed class State {
-        object Idle : State()
-        data class NoCertificate(val currentProgress: Float, val cost: Long) : State()
-        data class HasRegular(val currentProgress: Float, val cost: Long, val regularThreshold: Long) : State()
-        data class HasDistinct(val currentProgress: Float, val cost: Long, val distinctThreshold: Long) : State()
-        data class HasBoth(
-            val currentProgress: Float,
-            val cost: Long,
+    sealed class State(val currentProgress: Float, val cost: Long) {
+        object Idle : State(0f, 0)
+        class NoCertificate(currentProgress: Float, cost: Long) : State(currentProgress, cost)
+        class HasRegular(currentProgress: Float, cost: Long, val regularThreshold: Long) : State(currentProgress, cost)
+        class HasDistinct(currentProgress: Float, cost: Long, val distinctThreshold: Long) : State(currentProgress, cost)
+        class HasBoth(
+            currentProgress: Float,
+            cost: Long,
             val regularThreshold: Long,
             val distinctThreshold: Long
-        ) : State()
+        ) : State(currentProgress, cost)
     }
 }
