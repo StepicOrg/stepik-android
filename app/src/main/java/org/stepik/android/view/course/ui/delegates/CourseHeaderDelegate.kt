@@ -22,7 +22,6 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_course_purchase.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.view_discounted_purchase_button.*
 import org.stepic.droid.R
@@ -31,6 +30,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.DateTimeHelper.getPrintableOfIsoDate
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.analytic.BuyCoursePressedEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
@@ -199,7 +199,9 @@ constructor(
             viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
-            viewStateDelegate.addState<EnrollmentState.NotEnrolledUnavailable>(courseWishlistAction, coursePurchaseFeedback)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledUnavailableIAP>(courseWishlistAction, coursePurchaseFeedback)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledEnded>(courseWishlistAction, coursePurchaseFeedback)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledCantBeBought>(courseWishlistAction, coursePurchaseFeedback)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(purchaseContainer)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledMobileTier>(purchaseContainer)
             // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
@@ -262,10 +264,33 @@ constructor(
                     courseHeaderData.course.isPaid &&
                     (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier ||
                         courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb ||
-                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledUnavailable)
+                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledUnavailableIAP)
 
             shareCourseMenuItem?.isVisible = true
+            setupPurchaseFeedback(courseHeaderData)
         }
+
+    private fun setupPurchaseFeedback(courseHeaderData: CourseHeaderData) {
+        with(courseActivity) {
+            coursePurchaseFeedback.text =
+                when (courseHeaderData.stats.enrollmentState) {
+                    is EnrollmentState.NotEnrolledUnavailableIAP ->
+                        getString(R.string.course_purchase_unavailable)
+                    is EnrollmentState.NotEnrolledEnded ->
+                        if (courseHeaderData.course.endDate != null) {
+                            getString(
+                                R.string.course_payments_not_available_ended,
+                                getPrintableOfIsoDate(courseHeaderData.course.endDate, DateTimeHelper.DISPLAY_DAY_MONTH_YEAR_GENITIVE_PATTERN, TimeZone.getDefault())
+                            )
+                        } else {
+                            getString(R.string.course_payments_not_available)
+                        }
+                    is EnrollmentState.NotEnrolledCantBeBought ->
+                        getString(R.string.course_payments_cant_be_bought)
+                    else -> ""
+                }
+        }
+    }
 
     private fun setupIAP(courseHeaderData: CourseHeaderData) {
         with(courseActivity) {

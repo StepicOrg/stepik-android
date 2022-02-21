@@ -18,8 +18,17 @@ sealed class EnrollmentState : Parcelable {
     @Parcelize
     object NotEnrolledWeb : EnrollmentState()
 
+    /**
+     * Course cannot be purchased via IAP
+     */
     @Parcelize
-    object NotEnrolledUnavailable : EnrollmentState()
+    object NotEnrolledUnavailableIAP : EnrollmentState()
+
+    @Parcelize
+    object NotEnrolledEnded : EnrollmentState()
+
+    @Parcelize
+    object NotEnrolledCantBeBought : EnrollmentState()
 
     @Parcelize
     object Pending : EnrollmentState()

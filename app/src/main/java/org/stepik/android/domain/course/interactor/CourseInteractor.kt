@@ -120,7 +120,7 @@ constructor(
                         ?.let { CoursePurchaseDataResult.Result(it) }
                         ?: CoursePurchaseDataResult.Empty
 
-                is EnrollmentState.NotEnrolledUnavailable ->
+                is EnrollmentState.NotEnrolledUnavailableIAP ->
                     CoursePurchaseDataResult.NotAvailable
 
                 else ->

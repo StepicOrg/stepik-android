@@ -660,6 +660,9 @@
     <string name="course_payments_purchase_in_web">Buy in web version</string>
     <string name="course_payments_purchase_in_web_with_price">Buy for %s</string>
     <string name="course_payments_purchase_in_web_with_price_promo">"Buy for "</string>
+    <string name="course_payments_not_available">Course currently unavailable</string>
+    <string name="course_payments_not_available_ended">Course ended on %s</string>
+    <string name="course_payments_cant_be_bought">You cannot buy this course yet</string>
 
     <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
     <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>

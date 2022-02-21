@@ -6,3 +6,4 @@ val Course.canContinue: Boolean
     get() = totalUnits != 0L
             && scheduleType != Course.SCHEDULE_TYPE_UPCOMMING
             && scheduleType != Course.SCHEDULE_TYPE_ENDED
+            && (isEnabled || actions?.editCourse == null)

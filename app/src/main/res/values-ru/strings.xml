@@ -630,6 +630,9 @@
     <string name="course_payments_purchase_in_web">Купить в веб версии</string>
     <string name="course_payments_purchase_in_web_with_price">Купить за %s</string>
     <string name="course_payments_purchase_in_web_with_price_promo">"Купить за "</string>
+    <string name="course_payments_not_available">Курс сейчас недоступен</string>
+    <string name="course_payments_not_available_ended">Курс закончился %s</string>
+    <string name="course_payments_cant_be_bought">Пока нельзя купить этот курс</string>
 
     <string name="course_purchase_server_error">При обработке платежа произошла ошибка, попробуйте восстановить покупку и свяжитесь с поддержкой, если ошибка не будет устранена</string>
     <string name="course_purchase_billing_error">При обработке платежа произошла ошибка</string>
