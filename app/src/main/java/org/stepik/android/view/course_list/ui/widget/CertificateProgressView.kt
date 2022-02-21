@@ -269,24 +269,22 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             labelRadius.value,
             labelPaint
         )
-        val totalWidth = labelDrawableWidth + textPaint.measureText(labelText)
         textPaint.getTextBounds(labelText, 0, labelText.length, textBoundsRect)
-        val textHeight = textBoundsRect.height()
         val textWidth = textPaint.measureText(labelText)
 
         labelDrawable?.setBounds(
-            (x.toFloat() - (totalWidth / 2f) - labelInnerPadding.value * 2).toInt(),
+            (labelBounds.left + labelInnerPadding.value * 1.5).toInt(),
             (y - labelDrawable.intrinsicWidth / 2),
-            ((x.toFloat() - (totalWidth / 2f) - labelInnerPadding.value * 2) + labelDrawable.intrinsicWidth).toInt(),
-            (y - labelDrawable.intrinsicWidth / 2 + labelDrawable.intrinsicHeight)
+            ((labelBounds.left + labelInnerPadding.value * 1.5) + labelDrawable.intrinsicWidth * 1.1).toInt(),
+            (y - labelDrawable.intrinsicWidth / 2 + (labelDrawable.intrinsicHeight * 1.1)).toInt()
         )
         labelDrawable?.draw(canvas)
-        canvas.drawText(labelText, x - (textWidth / 2f), y + (textHeight / 2f), textPaint)
+        canvas.drawText(labelText, x - (textWidth / 2f), y.toFloat() + labelBounds.height() / 4, textPaint)
     }
 
     private fun drawThresholdIcon(canvas: Canvas, thresholdAchieved: Boolean, x: Int, y: Int, paint: Paint) {
         if (thresholdAchieved) {
-            canvas.drawCircle(x.toFloat(), y.toFloat(), 12f, paint)
+            canvas.drawCircle(x.toFloat(), y.toFloat(), 4.5f.dp.toPx().value, paint)
             checkmarkDrawable?.setBounds(
                 x - checkmarkDrawable.intrinsicWidth / 2,
                 y - checkmarkDrawable.intrinsicWidth / 2,
@@ -295,7 +293,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             )
             checkmarkDrawable?.draw(canvas)
         } else {
-            canvas.drawCircle(x.toFloat(), y.toFloat(), 8f, paint)
+            canvas.drawCircle(x.toFloat(), y.toFloat(), 2.5f.dp.toPx().value, paint)
         }
     }
 
