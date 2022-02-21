@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Canvas
-import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
@@ -22,6 +21,9 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private val progressLabelBottomMargin = 4.dp.toPx()
     private val certificateLabelBottomMargin = 12.dp.toPx()
     private val progressBarThickness = 2.dp.toPx()
+    private val progressBarRadius = 4.dp.toPx()
+    private val labelRadius = 8.dp.toPx()
+    private val labelInnerPadding = 4.dp.toPx()
 
     private val regularCertificateColor = ContextCompat.getColor(context, R.color.color_overlay_green)
     private val distinctCertificateColor = ContextCompat.getColor(context, R.color.color_overlay_yellow)
@@ -239,7 +241,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private fun drawProgressLabel(canvas: Canvas, x: Int, y: Int) {
         canvas.drawText(progressText, x.toFloat(), y.toFloat(), progressTextPaint)
         progressTextBounds.set(
-            0 + paddingLeft,
+            paddingLeft,
             y - 40,
             progressTextWidth.toInt() + paddingLeft,
             y - 20
@@ -251,12 +253,11 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
         textPaint.getTextBounds(labelText, 0, labelText.length, textBoundsRect)
         val textHeight = textBoundsRect.height()
 
-        val padding = 8f // Padding around icon and text
         labelBounds.set(
-            (x.toFloat() - (totalWidth / 2f) - padding - (regularDrawable?.intrinsicWidth ?: 0)).toInt(),
-            (y.toFloat() - (textHeight / 2f) - padding).toInt(),
-            (x + (totalWidth / 2f) + padding).toInt(),
-            (y + (textHeight / 2f) + padding).toInt()
+            (x.toFloat() - (totalWidth / 2f) - labelInnerPadding.value - (regularDrawable?.intrinsicWidth ?: 0)).toInt(),
+            (y.toFloat() - (textHeight / 2f) - labelInnerPadding.value).toInt(),
+            (x + (totalWidth / 2f) + labelInnerPadding.value).toInt(),
+            (y + (textHeight / 2f) + labelInnerPadding.value).toInt()
         )
     }
 
@@ -264,8 +265,8 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
         calculateLabelBounds(labelText, x, y, textPaint, labelBounds)
         canvas.drawRoundRect(
             labelBounds.toRectF(),
-            20f,
-            20f,
+            labelRadius.value,
+            labelRadius.value,
             labelPaint
         )
         val totalWidth = labelDrawableWidth + textPaint.measureText(labelText)
@@ -273,12 +274,11 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
         val textHeight = textBoundsRect.height()
         val textWidth = textPaint.measureText(labelText)
 
-        val padding = 8 // Padding around icon and text
         labelDrawable?.setBounds(
-            (x.toFloat() - (totalWidth / 2f) - padding * 2).toInt(),
-            (y.toFloat() - (textHeight / 2f) + 2).toInt(),
-            ((x.toFloat() - (totalWidth / 2f) - padding * 2) + labelDrawable.intrinsicWidth).toInt(),
-            (y.toFloat() - (textHeight / 2f) + 2 + labelDrawable.intrinsicHeight).toInt()
+            (x.toFloat() - (totalWidth / 2f) - labelInnerPadding.value * 2).toInt(),
+            (y - labelDrawable.intrinsicWidth / 2),
+            ((x.toFloat() - (totalWidth / 2f) - labelInnerPadding.value * 2) + labelDrawable.intrinsicWidth).toInt(),
+            (y - labelDrawable.intrinsicWidth / 2 + labelDrawable.intrinsicHeight)
         )
         labelDrawable?.draw(canvas)
         canvas.drawText(labelText, x - (textWidth / 2f), y + (textHeight / 2f), textPaint)
@@ -301,13 +301,15 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
     private fun drawProgressbar(canvas: Canvas, progress: Float, max: Float, paint: Paint) {
         val right = progress * (width.toFloat() - (paddingLeft + paddingRight)) / max
-        val rect = RectF(
+        canvas.drawRoundRect(
             paddingLeft.toFloat(),
             bottom - progressBarThickness.value - paddingBottom,
             right + paddingLeft,
-            (bottom - paddingBottom).toFloat()
+            (bottom - paddingBottom).toFloat(),
+            progressBarRadius.value,
+            progressBarRadius.value,
+            paint
         )
-        canvas.drawRoundRect(rect, 4f, 4f, paint)
     }
 
     sealed class State(val currentProgress: Float, val cost: Long) {
