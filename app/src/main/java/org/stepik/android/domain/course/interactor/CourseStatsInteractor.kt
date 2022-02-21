@@ -125,7 +125,7 @@ constructor(
                     .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = sourceType)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
-                            if (course.actions?.canBeBought?.enabled == true) {
+                            if (course.actions?.courseBuyAction?.enabled == true) {
                                 Single.just(course.id to EnrollmentState.NotEnrolledWeb) // web
                             } else {
                                 Single.just(course.id to EnrollmentState.NotEnrolledCantBeBought)
@@ -213,7 +213,7 @@ constructor(
                         .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = sourceType)
                         .flatMap { payments ->
                             if (payments.isEmpty()) {
-                                if (course.actions?.canBeBought?.enabled == true) {
+                                if (course.actions?.courseBuyAction?.enabled == true) {
                                     Single.just(resolvePaidEnrollmentState(standardLightSku, promoLightSku))
                                 } else {
                                     Single.just(EnrollmentState.NotEnrolledCantBeBought)
