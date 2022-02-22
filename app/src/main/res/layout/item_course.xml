@@ -99,6 +99,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
                 app:layout_constraintRight_toLeftOf="@id/courseListFavorite"
                 app:layout_constraintTop_toTopOf="parent"
+                android:includeFontPadding="false"
                 tools:ignore="MissingPrefix"
                 android:ellipsize="end"
                 android:maxLines="3"

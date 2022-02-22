@@ -18,7 +18,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
     private val labelTextSize = 12f.sp.toPx()
     private val progressLabelBottomMargin = 4.dp.toPx()
-    private val certificateLabelBottomMargin = 12.dp.toPx()
+    private val certificateLabelBottomMargin = 14.dp.toPx()
     private val progressBarThickness = 2.dp.toPx()
     private val progressBarRadius = 4.dp.toPx()
     private val labelRadius = 8.dp.toPx()
@@ -43,7 +43,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private var distinctThresholdText: String = ""
     private var distinctThresholdWidth: Float = 0.0f
 
-    var state: State = State.Idle // State.HasBoth(115f, 116L, 100, 115)
+    var state: State = State.Idle
         set(value) {
             field = value
             progressText = "${state.currentProgress.toInt()} / ${state.cost}"
