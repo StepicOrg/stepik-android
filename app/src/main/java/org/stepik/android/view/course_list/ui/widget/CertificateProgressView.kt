@@ -9,7 +9,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toRectF
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.dp
 import ru.nobird.android.view.base.ui.extension.sp
@@ -24,6 +23,8 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private val progressBarRadius = 4.dp.toPx()
     private val labelRadius = 8.dp.toPx()
     private val labelInnerPadding = 4.dp.toPx()
+    private val thresholdCheckedRadius = 4.5f.dp.toPx()
+    private val thresholdUncheckRadius = 2.5f.dp.toPx()
 
     private val regularCertificateColor = ContextCompat.getColor(context, R.color.color_overlay_green)
     private val distinctCertificateColor = ContextCompat.getColor(context, R.color.color_overlay_yellow)
@@ -188,11 +189,11 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             )
         }
 
-        if (labelBounds.right > width - paddingLeft - paddingRight) {
+        if (labelBounds.right > width - paddingRight) {
             labelBounds.set(
-                width - paddingLeft - labelBounds.width(),
+                width - paddingRight - labelBounds.width(),
                 labelBounds.top,
-                width - paddingLeft,
+                width - paddingRight,
                 labelBounds.bottom
             )
         }
@@ -255,7 +256,10 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
     private fun drawLabel(canvas: Canvas, labelDrawable: Drawable?, labelText: String, x: Int, y: Int, labelPaint: Paint, textPaint: Paint, labelBounds: Rect) {
         calculateLabelBounds(labelText, x, y, textPaint, labelBounds)
         canvas.drawRoundRect(
-            labelBounds.toRectF(),
+            labelBounds.left.toFloat(),
+            labelBounds.top.toFloat(),
+            labelBounds.right.toFloat(),
+            labelBounds.bottom.toFloat(),
             labelRadius.value,
             labelRadius.value,
             labelPaint
@@ -275,7 +279,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
     private fun drawThresholdIcon(canvas: Canvas, thresholdAchieved: Boolean, x: Int, y: Int, paint: Paint) {
         if (thresholdAchieved) {
-            canvas.drawCircle(x.toFloat(), y.toFloat(), 4.5f.dp.toPx().value, paint)
+            canvas.drawCircle(x.toFloat(), y.toFloat(), thresholdCheckedRadius.value, paint)
             checkmarkDrawable?.setBounds(
                 x - checkmarkDrawable.intrinsicWidth / 2,
                 y - checkmarkDrawable.intrinsicWidth / 2,
@@ -284,7 +288,7 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
             )
             checkmarkDrawable?.draw(canvas)
         } else {
-            canvas.drawCircle(x.toFloat(), y.toFloat(), 2.5f.dp.toPx().value, paint)
+            canvas.drawCircle(x.toFloat(), y.toFloat(), thresholdUncheckRadius.value, paint)
         }
     }
 
