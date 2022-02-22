@@ -34,23 +34,14 @@ class CertificateProgressView @JvmOverloads constructor(context: Context, attrs:
 
     private val labelDrawableWidth = regularDrawable?.intrinsicWidth ?: 0
 
-    private val progressText: String = ""
-        get() =
-            field.ifEmpty {
-                "${state.currentProgress.toInt()} / ${state.cost}"
-            }
-
-    private val progressTextWidth: Float = 0.0f
-        get() =
-            if (field <= 0f) {
-                progressTextPaint.measureText(progressText)
-            } else {
-                field
-            }
+    private var progressText: String = ""
+    private var progressTextWidth: Float = 0.0f
 
     var state: State = State.Idle // State.HasBoth(115f, 116L, 100, 115)
         set(value) {
             field = value
+            progressText = "${state.currentProgress.toInt()} / ${state.cost}"
+            progressTextWidth = progressTextPaint.measureText(progressText)
             invalidate()
         }
 
