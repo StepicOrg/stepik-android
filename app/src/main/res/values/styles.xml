@@ -178,7 +178,7 @@
     <style name="StepQuizFeedback.PurchaseInfo">
         <item name="android:background">@drawable/bg_shape_rounded</item>
         <item name="backgroundTint">@color/color_red_300_alpha_12</item>
-        <item name="drawableTint">@color/color_red_500</item>
+        <item name="drawableTint">@color/color_red_300</item>
     </style>
 
     <style name="StepQuizDescription">

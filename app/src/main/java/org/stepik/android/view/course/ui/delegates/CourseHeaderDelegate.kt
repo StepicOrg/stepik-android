@@ -199,9 +199,9 @@ constructor(
             viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
-            viewStateDelegate.addState<EnrollmentState.NotEnrolledUnavailableIAP>(courseWishlistAction, coursePurchaseFeedback)
-            viewStateDelegate.addState<EnrollmentState.NotEnrolledEnded>(courseWishlistAction, coursePurchaseFeedback)
-            viewStateDelegate.addState<EnrollmentState.NotEnrolledCantBeBought>(courseWishlistAction, coursePurchaseFeedback)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledUnavailableIAP>(courseWishlistAction, courseFeedbackContainer)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledEnded>(courseWishlistAction, courseFeedbackContainer)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledCantBeBought>(courseWishlistAction, courseFeedbackContainer)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(purchaseContainer)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledMobileTier>(purchaseContainer)
             // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
@@ -272,6 +272,7 @@ constructor(
 
     private fun setupPurchaseFeedback(courseHeaderData: CourseHeaderData) {
         with(courseActivity) {
+            ViewCompat.setBackgroundTintList(coursePurchaseFeedbackUnder, AppCompatResources.getColorStateList(courseActivity, R.color.black_alpha_30))
             coursePurchaseFeedback.text =
                 when (courseHeaderData.stats.enrollmentState) {
                     is EnrollmentState.NotEnrolledUnavailableIAP ->
