@@ -99,10 +99,28 @@
                 app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
                 app:layout_constraintRight_toLeftOf="@id/courseListFavorite"
                 app:layout_constraintTop_toTopOf="parent"
+                android:includeFontPadding="false"
                 tools:ignore="MissingPrefix"
                 android:ellipsize="end"
                 android:maxLines="3"
                 tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
+                app:layout_constraintTop_toBottomOf="@id/courseItemName"
+                app:layout_constraintBottom_toTopOf="@id/courseButtonSeparator"
+                app:layout_constraintRight_toRightOf="parent">
+                <org.stepik.android.view.course_list.ui.widget.CertificateProgressView
+                    android:id="@+id/courseCertificateProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:padding="8dp"
+                    tools:visibility="visible" />
+            </FrameLayout>
+
 
             <include
                 android:id="@+id/coursePropertiesContainer"

@@ -46,6 +46,7 @@ object DbStructureCourse {
         const val IS_ARCHIVED = "is_archived"
         const val IS_FAVORITE = "is_favorite"
         const val IS_IN_WISHLIST = "is_in_wishlist"
+        const val IS_ENABLED = "is_enabled"
 
         const val CERTIFICATE_DISTINCTION_THRESHOLD = "certificate_distinction_threshold"
         const val CERTIFICATE_REGULAR_THRESHOLD = "certificate_regular_threshold"

@@ -71,7 +71,7 @@ constructor(
                         .resolveCoursePurchaseData(course, stats, stats.enrollmentState, deeplinkPromoCodeSku, -1)
                         .let { CoursePurchaseDataResult.Result(it) }
 
-                is EnrollmentState.NotEnrolledUnavailable ->
+                is EnrollmentState.NotEnrolledUnavailableIAP ->
                     CoursePurchaseDataResult.NotAvailable
 
                 else ->

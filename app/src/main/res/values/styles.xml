@@ -175,6 +175,12 @@
         <item name="drawableTint">?android:textColorPrimary</item>
     </style>
 
+    <style name="StepQuizFeedback.PurchaseInfo">
+        <item name="android:background">@drawable/bg_shape_rounded</item>
+        <item name="backgroundTint">@color/color_red_300_alpha_12</item>
+        <item name="drawableTint">@color/color_red_300</item>
+    </style>
+
     <style name="StepQuizDescription">
         <item name="android:textAppearance">?textAppearanceCaption</item>
         <item name="android:textColor">?android:textColorSecondary</item>
