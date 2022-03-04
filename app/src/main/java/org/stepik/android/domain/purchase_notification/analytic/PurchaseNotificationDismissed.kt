@@ -2,7 +2,7 @@ package org.stepik.android.domain.purchase_notification.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-data class PurchaseNotificationDismissed(val courseId: Long) : AnalyticEvent {
+class PurchaseNotificationDismissed(courseId: Long) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
     }

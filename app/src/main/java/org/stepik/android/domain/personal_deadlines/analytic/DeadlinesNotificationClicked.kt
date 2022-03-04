@@ -2,9 +2,9 @@ package org.stepik.android.domain.personal_deadlines.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-data class DeadlinesNotificationClicked(
-    val course: Long,
-    val hours: Long
+class DeadlinesNotificationClicked(
+    course: Long,
+    hours: Long
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"

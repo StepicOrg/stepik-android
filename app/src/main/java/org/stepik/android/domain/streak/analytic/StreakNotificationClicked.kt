@@ -2,8 +2,8 @@ package org.stepik.android.domain.streak.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-data class StreakNotificationClicked(
-    val type: String
+class StreakNotificationClicked(
+    type: String
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_TYPE = "type"

@@ -2,8 +2,8 @@ package org.stepik.android.domain.streak.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-data class StreakNotificationDismissed(
-    val type: String
+class StreakNotificationDismissed(
+    type: String
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_TYPE = "type"

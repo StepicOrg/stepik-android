@@ -2,8 +2,8 @@ package org.stepik.android.domain.retention.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-data class RetentionNotificationClicked(
-    val day: Int
+class RetentionNotificationClicked(
+    day: Int
 ) : AnalyticEvent {
     companion object {
         const val PARAM_DAY = "day"
