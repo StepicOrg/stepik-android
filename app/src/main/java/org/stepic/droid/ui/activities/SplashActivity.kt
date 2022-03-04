@@ -23,7 +23,8 @@ import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.defaultLocale
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.util.Arrays
 import javax.inject.Inject
@@ -31,8 +32,6 @@ import javax.inject.Inject
 class SplashActivity : BackToExitActivityBase(), SplashView {
 
     companion object {
-        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
-
         private const val RUSSIAN_LANGUAGE_CODE = "ru"
     }
 
@@ -59,7 +58,10 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 //            return
 //        }
         if (savedInstanceState == null) {
-            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            val analyticEvent = intent
+                .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+                ?.toGenericAnalyticEvent()
+
             if (analyticEvent != null) {
                 analytics.report(analyticEvent)
             }

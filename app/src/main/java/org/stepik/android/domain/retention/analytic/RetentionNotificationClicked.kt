@@ -1,14 +1,12 @@
 package org.stepik.android.domain.retention.analytic
 
-import kotlinx.android.parcel.Parcelize
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
 
-@Parcelize
 data class RetentionNotificationClicked(
     val day: Int
-) : ParcelableAnalyticEvent {
+) : BundleableAnalyticEvent {
     companion object {
-        private const val PARAM_DAY = "day"
+        const val PARAM_DAY = "day"
     }
 
     override val name: String =

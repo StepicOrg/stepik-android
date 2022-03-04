@@ -130,7 +130,7 @@ constructor(
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         val myCoursesIntent = screenManager.getMyCoursesIntent(context) // This opens MainFeedActivity
         myCoursesIntent.action = STREAK_NOTIFICATION_CLICKED
-        myCoursesIntent.putExtra(MainFeedActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, StreakNotificationClicked(notificationType.type))
+        myCoursesIntent.putExtra(MainFeedActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, StreakNotificationClicked(notificationType.type).toBundle())
         taskBuilder.addNextIntent(myCoursesIntent)
         return taskBuilder
     }
@@ -151,7 +151,7 @@ constructor(
     }
 
     private fun getDeleteIntentForStreaks(notificationType: StreakNotificationType): PendingIntent {
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, StreakNotificationDismissed(notificationType.type))
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, StreakNotificationDismissed(notificationType.type).toBundle())
         return PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }

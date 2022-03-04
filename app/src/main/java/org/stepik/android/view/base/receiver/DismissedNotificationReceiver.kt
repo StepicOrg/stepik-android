@@ -3,11 +3,13 @@ package org.stepik.android.view.base.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
-import org.stepik.android.domain.streak.analytic.StreakNotificationDismissed
+import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
+import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -16,12 +18,11 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
         const val REQUEST_CODE = 13202
 
         private const val NOTIFICATION_DISMISSED = "notification_dismissed"
-        private const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
-        fun createIntent(context: Context, analyticEvent: ParcelableAnalyticEvent): Intent =
+        fun createIntent(context: Context, bundleableAnalyticEvent: Bundle): Intent =
             Intent(context, DismissedNotificationReceiver::class.java)
                 .setAction(NOTIFICATION_DISMISSED)
-                .putExtra(EXTRA_PARCELABLE_ANALYTIC_EVENT, analyticEvent)
+                .putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
     }
 
     @Inject
@@ -40,15 +41,20 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action ?: return
         if (action == NOTIFICATION_DISMISSED) {
-            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            val analyticEvent = intent
+                .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+                ?.toGenericAnalyticEvent()
+
             if (analyticEvent != null) {
+                Timber.tag("APPS!").d("Dismissed - Event name: ${analyticEvent.name} Event params: ${analyticEvent.params}")
                 analytic.report(analyticEvent)
             }
-            if (analyticEvent is StreakNotificationDismissed) {
-                threadPool.execute {
-                    sharedPreferences.resetNumberOfStreakNotifications()
-                }
-            }
+            // TODO Handle this case
+//            if (analyticEvent?.name == StreakNotificationDismissed) {
+//                threadPool.execute {
+//                    sharedPreferences.resetNumberOfStreakNotifications()
+//                }
+//            }
         }
     }
 }

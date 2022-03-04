@@ -12,6 +12,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
+import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.personal_deadlines.analytic.DeadlinesNotificationClicked
 import org.stepik.android.domain.personal_deadlines.analytic.DeadlinesNotificationDismissed
@@ -86,7 +87,7 @@ constructor(
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
         val intent = CourseActivity.createIntent(context, course, source = CourseViewSource.Notification)
-        intent.putExtra(CourseActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, DeadlinesNotificationClicked(course.id, hoursDiff))
+        intent.putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, DeadlinesNotificationClicked(course.id, hoursDiff).toBundle())
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -94,7 +95,7 @@ constructor(
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DeadlinesNotificationDismissed(course.id, hoursDiff))
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DeadlinesNotificationDismissed(course.id, hoursDiff).toBundle())
         val deletePendingIntent = PendingIntent.getBroadcast(context, deadline.sectionId.toInt(), deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(R.string.app_name)

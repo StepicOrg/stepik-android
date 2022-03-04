@@ -10,6 +10,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationClicked
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationDismissed
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationShown
@@ -37,12 +38,12 @@ constructor(
         if (sharedPreferenceHelper.isEverLogged) return
 
         val intent = Intent(context, SplashActivity::class.java)
-        intent.putExtra(SplashActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, RemindRegistrationNotificationClicked)
+        intent.putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, RemindRegistrationNotificationClicked.toBundle())
         val taskBuilder = TaskStackBuilder
                 .create(context)
                 .addNextIntent(intent)
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RemindRegistrationNotificationDismissed)
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RemindRegistrationNotificationDismissed.toBundle())
         val deletePendingIntent = PendingIntent.getBroadcast(context, DismissedNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(R.string.stepik_free_courses_title)
