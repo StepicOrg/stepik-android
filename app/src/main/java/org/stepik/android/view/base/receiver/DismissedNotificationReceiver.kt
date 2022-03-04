@@ -9,7 +9,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
 import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
-import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -18,10 +17,16 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
         const val REQUEST_CODE = 13202
 
         private const val NOTIFICATION_DISMISSED = "notification_dismissed"
+        private const val STREAK_NOTIFICATION_DISMISSED = "streak_notification_dismissed"
 
         fun createIntent(context: Context, bundleableAnalyticEvent: Bundle): Intent =
             Intent(context, DismissedNotificationReceiver::class.java)
                 .setAction(NOTIFICATION_DISMISSED)
+                .putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
+
+        fun createStreakNotificationIntent(context: Context, bundleableAnalyticEvent: Bundle): Intent =
+            Intent(context, DismissedNotificationReceiver::class.java)
+                .setAction(STREAK_NOTIFICATION_DISMISSED)
                 .putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
     }
 
@@ -40,21 +45,25 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action ?: return
-        if (action == NOTIFICATION_DISMISSED) {
-            val analyticEvent = intent
-                .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
-                ?.toGenericAnalyticEvent()
-
-            if (analyticEvent != null) {
-                Timber.tag("APPS!").d("Dismissed - Event name: ${analyticEvent.name} Event params: ${analyticEvent.params}")
-                analytic.report(analyticEvent)
+        when (action) {
+            NOTIFICATION_DISMISSED ->
+                logAnalyticEvent(intent)
+            STREAK_NOTIFICATION_DISMISSED -> {
+                logAnalyticEvent(intent)
+                threadPool.execute {
+                    sharedPreferences.resetNumberOfStreakNotifications()
+                }
             }
-            // TODO Handle this case
-//            if (analyticEvent?.name == StreakNotificationDismissed) {
-//                threadPool.execute {
-//                    sharedPreferences.resetNumberOfStreakNotifications()
-//                }
-//            }
+        }
+    }
+
+    private fun logAnalyticEvent(intent: Intent) {
+        val analyticEvent = intent
+            .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+            ?.toGenericAnalyticEvent()
+
+        if (analyticEvent != null) {
+            analytic.report(analyticEvent)
         }
     }
 }

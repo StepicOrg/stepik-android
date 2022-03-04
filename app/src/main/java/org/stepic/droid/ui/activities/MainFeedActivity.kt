@@ -77,8 +77,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val NOTIFICATIONS_INDEX: Int = 4
         const val DEBUG_INDEX: Int = 5
 
-        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
-
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
             if (course != null) {
