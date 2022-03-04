@@ -33,7 +33,8 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_news.analytic.CourseNewsScreenOpenedAnalyticEvent
@@ -82,8 +83,6 @@ class CourseActivity :
         private const val EXTRA_SOURCE = "source"
         private const val EXTRA_DEEPLINK_PROMO_CODE = "deeplink_promo_code"
         private const val EXTRA_CONTINUE_LEARNING = "continue_learning"
-
-        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         private const val NO_ID = -1L
         private const val NO_TITLE = ""
@@ -213,7 +212,10 @@ class CourseActivity :
         injectComponent(courseId)
 
         if (savedInstanceState == null) {
-            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            val analyticEvent = intent
+                .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
+                ?.toAnalyticEvent()
+
             if (analyticEvent != null) {
                 analytic.report(analyticEvent)
             }

@@ -1,12 +1,10 @@
 package org.stepik.android.domain.streak.analytic
 
-import kotlinx.android.parcel.Parcelize
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-@Parcelize
-data class StreakNotificationDismissed(
-    val type: String
-) : ParcelableAnalyticEvent {
+class StreakNotificationDismissed(
+    type: String
+) : AnalyticEvent {
     companion object {
         private const val PARAM_TYPE = "type"
     }

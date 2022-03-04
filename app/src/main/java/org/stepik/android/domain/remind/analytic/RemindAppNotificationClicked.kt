@@ -1,10 +1,8 @@
 package org.stepik.android.domain.remind.analytic
 
-import kotlinx.android.parcel.Parcelize
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-@Parcelize
-object RemindAppNotificationClicked : ParcelableAnalyticEvent {
+object RemindAppNotificationClicked : AnalyticEvent {
     override val name: String =
         "Remind app notification clicked"
 }
