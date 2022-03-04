@@ -1,8 +1,8 @@
 package org.stepik.android.domain.remind.analytic
 
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-object RemindRegistrationNotificationDismissed : BundleableAnalyticEvent {
+object RemindRegistrationNotificationDismissed : AnalyticEvent {
     override val name: String =
         "Remind registration notification dismissed"
 }

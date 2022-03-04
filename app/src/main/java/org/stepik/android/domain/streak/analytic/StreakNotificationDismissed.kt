@@ -1,10 +1,10 @@
 package org.stepik.android.domain.streak.analytic
 
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 data class StreakNotificationDismissed(
     val type: String
-) : BundleableAnalyticEvent {
+) : AnalyticEvent {
     companion object {
         private const val PARAM_TYPE = "type"
     }

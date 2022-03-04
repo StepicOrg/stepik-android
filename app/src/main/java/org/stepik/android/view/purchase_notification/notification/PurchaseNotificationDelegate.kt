@@ -10,7 +10,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationDismissed
@@ -63,7 +64,7 @@ constructor(
             course,
             CourseViewSource.PurchaseReminderNotification
         )
-        intent.putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, PurchaseNotificationClicked(course.id).toBundle())
+        intent.putExtra(BUNDLEABLE_ANALYTIC_EVENT, PurchaseNotificationClicked(course.id).toBundle())
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)

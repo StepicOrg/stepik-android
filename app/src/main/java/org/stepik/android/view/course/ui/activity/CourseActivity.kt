@@ -33,7 +33,7 @@ import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -213,7 +213,7 @@ class CourseActivity :
 
         if (savedInstanceState == null) {
             val analyticEvent = intent
-                .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+                .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
                 ?.toGenericAnalyticEvent()
 
             if (analyticEvent != null) {

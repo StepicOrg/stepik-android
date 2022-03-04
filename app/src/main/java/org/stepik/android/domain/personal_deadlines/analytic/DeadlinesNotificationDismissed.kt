@@ -1,11 +1,11 @@
 package org.stepik.android.domain.personal_deadlines.analytic
 
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 data class DeadlinesNotificationDismissed(
     val course: Long,
     val hours: Long
-) : BundleableAnalyticEvent {
+) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
         private const val PARAM_HOURS = "hours"

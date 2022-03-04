@@ -1,10 +1,10 @@
 package org.stepik.android.domain.retention.analytic
 
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 data class RetentionNotificationDismissed(
     val day: Int
-) : BundleableAnalyticEvent {
+) : AnalyticEvent {
     companion object {
         const val PARAM_DAY = "day"
     }

@@ -10,7 +10,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationClicked
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationDismissed
 import org.stepik.android.domain.remind.analytic.RemindRegistrationNotificationShown
@@ -38,7 +39,7 @@ constructor(
         if (sharedPreferenceHelper.isEverLogged) return
 
         val intent = Intent(context, SplashActivity::class.java)
-        intent.putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, RemindRegistrationNotificationClicked.toBundle())
+        intent.putExtra(BUNDLEABLE_ANALYTIC_EVENT, RemindRegistrationNotificationClicked.toBundle())
         val taskBuilder = TaskStackBuilder
                 .create(context)
                 .addNextIntent(intent)

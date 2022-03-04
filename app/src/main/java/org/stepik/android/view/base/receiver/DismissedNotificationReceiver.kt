@@ -7,7 +7,7 @@ import android.os.Bundle
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -22,12 +22,12 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
         fun createIntent(context: Context, bundleableAnalyticEvent: Bundle): Intent =
             Intent(context, DismissedNotificationReceiver::class.java)
                 .setAction(NOTIFICATION_DISMISSED)
-                .putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
+                .putExtra(BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
 
         fun createStreakNotificationIntent(context: Context, bundleableAnalyticEvent: Bundle): Intent =
             Intent(context, DismissedNotificationReceiver::class.java)
                 .setAction(STREAK_NOTIFICATION_DISMISSED)
-                .putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
+                .putExtra(BUNDLEABLE_ANALYTIC_EVENT, bundleableAnalyticEvent)
     }
 
     @Inject
@@ -59,7 +59,7 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
 
     private fun logAnalyticEvent(intent: Intent) {
         val analyticEvent = intent
-            .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+            .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
             ?.toGenericAnalyticEvent()
 
         if (analyticEvent != null) {

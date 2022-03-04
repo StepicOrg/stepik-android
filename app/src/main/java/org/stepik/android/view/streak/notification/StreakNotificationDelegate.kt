@@ -10,7 +10,8 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.streak.analytic.StreakNotificationClicked
 import org.stepik.android.domain.streak.analytic.StreakNotificationDismissed
 import org.stepik.android.domain.streak.analytic.StreakNotificationShown
@@ -130,7 +131,7 @@ constructor(
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         val myCoursesIntent = screenManager.getMyCoursesIntent(context) // This opens MainFeedActivity
         myCoursesIntent.action = STREAK_NOTIFICATION_CLICKED
-        myCoursesIntent.putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, StreakNotificationClicked(notificationType.type).toBundle())
+        myCoursesIntent.putExtra(BUNDLEABLE_ANALYTIC_EVENT, StreakNotificationClicked(notificationType.type).toBundle())
         taskBuilder.addNextIntent(myCoursesIntent)
         return taskBuilder
     }

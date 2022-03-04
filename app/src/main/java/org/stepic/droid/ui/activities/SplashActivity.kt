@@ -23,7 +23,7 @@ import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.defaultLocale
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import java.util.Arrays
@@ -59,7 +59,7 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 //        }
         if (savedInstanceState == null) {
             val analyticEvent = intent
-                .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+                .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
                 ?.toGenericAnalyticEvent()
 
             if (analyticEvent != null) {

@@ -1,8 +1,8 @@
 package org.stepik.android.domain.purchase_notification.analytic
 
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 
-data class PurchaseNotificationClicked(val courseId: Long) : BundleableAnalyticEvent {
+data class PurchaseNotificationClicked(val courseId: Long) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"
     }

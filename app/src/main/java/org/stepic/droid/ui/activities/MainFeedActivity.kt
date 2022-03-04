@@ -30,7 +30,7 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
@@ -176,7 +176,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             checkShortcutAction(intent)
             checkNotificationClick(intent)
             val analyticEvent = intent
-                .getBundleExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT)
+                .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
                 ?.toGenericAnalyticEvent()
 
             if (analyticEvent != null) {

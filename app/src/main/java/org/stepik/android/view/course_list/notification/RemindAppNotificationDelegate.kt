@@ -9,7 +9,8 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepik.android.domain.base.analytic.BundleableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.course_list.interactor.RemindAppNotificationInteractor
 import org.stepik.android.domain.remind.analytic.RemindAppNotificationClicked
 import org.stepik.android.domain.remind.analytic.RemindAppNotificationDismissed
@@ -49,7 +50,7 @@ constructor(
         // now we can show notification
         val intent = screenManager.getCatalogIntent(context)
         intent.action = REMIND_APP_NOTIFICATION_CLICKED
-        intent.putExtra(BundleableAnalyticEvent.BUNDLEABLE_ANALYTIC_EVENT, RemindAppNotificationClicked.toBundle())
+        intent.putExtra(BUNDLEABLE_ANALYTIC_EVENT, RemindAppNotificationClicked.toBundle())
         val taskBuilder: TaskStackBuilder =
             TaskStackBuilder
                     .create(context)

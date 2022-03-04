@@ -1,10 +1,22 @@
 package org.stepik.android.domain.base.analytic
 
 import android.os.Bundle
+import androidx.core.os.bundleOf
+
+const val BUNDLEABLE_ANALYTIC_EVENT = "bundleable_analytic_event"
+
+private const val BUNDLEABLE_EVENT_NAME = "bundleable_event_name"
+private const val BUNDLEABLE_EVENT_PARAMS = "bundleable_event_params"
+
+fun AnalyticEvent.toBundle(): Bundle =
+    bundleOf(
+        BUNDLEABLE_EVENT_NAME to name,
+        BUNDLEABLE_EVENT_PARAMS to bundleOf(*params.map { (a, b) -> a to b }.toTypedArray())
+    )
 
 fun Bundle.toGenericAnalyticEvent(): AnalyticEvent? {
-    val eventName = getString(BundleableAnalyticEvent.BUNDLEABLE_EVENT_NAME)
-    val eventParams = getBundle(BundleableAnalyticEvent.BUNDLEABLE_EVENT_PARAMS)
+    val eventName = getString(BUNDLEABLE_EVENT_NAME)
+    val eventParams = getBundle(BUNDLEABLE_EVENT_PARAMS)
     return if (eventName == null) {
         null
     } else {
