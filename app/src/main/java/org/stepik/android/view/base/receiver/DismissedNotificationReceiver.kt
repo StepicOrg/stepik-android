@@ -8,7 +8,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
-import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
+import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -60,7 +60,7 @@ class DismissedNotificationReceiver : BroadcastReceiver() {
     private fun logAnalyticEvent(intent: Intent) {
         val analyticEvent = intent
             .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
-            ?.toGenericAnalyticEvent()
+            ?.toAnalyticEvent()
 
         if (analyticEvent != null) {
             analytic.report(analyticEvent)

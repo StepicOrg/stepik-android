@@ -31,7 +31,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
 import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
-import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
+import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
@@ -177,7 +177,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             checkNotificationClick(intent)
             val analyticEvent = intent
                 .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
-                ?.toGenericAnalyticEvent()
+                ?.toAnalyticEvent()
 
             if (analyticEvent != null) {
                 analytic.report(analyticEvent)

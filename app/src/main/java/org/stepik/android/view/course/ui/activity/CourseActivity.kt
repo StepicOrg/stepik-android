@@ -34,7 +34,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
-import org.stepik.android.domain.base.analytic.toGenericAnalyticEvent
+import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_news.analytic.CourseNewsScreenOpenedAnalyticEvent
@@ -214,7 +214,7 @@ class CourseActivity :
         if (savedInstanceState == null) {
             val analyticEvent = intent
                 .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
-                ?.toGenericAnalyticEvent()
+                ?.toAnalyticEvent()
 
             if (analyticEvent != null) {
                 analytic.report(analyticEvent)

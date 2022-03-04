@@ -14,7 +14,7 @@ fun AnalyticEvent.toBundle(): Bundle =
         BUNDLEABLE_EVENT_PARAMS to bundleOf(*params.map { (a, b) -> a to b }.toTypedArray())
     )
 
-fun Bundle.toGenericAnalyticEvent(): AnalyticEvent? {
+fun Bundle.toAnalyticEvent(): AnalyticEvent? {
     val eventName = getString(BUNDLEABLE_EVENT_NAME)
     val eventParams = getBundle(BUNDLEABLE_EVENT_PARAMS)
     return if (eventName == null) {
