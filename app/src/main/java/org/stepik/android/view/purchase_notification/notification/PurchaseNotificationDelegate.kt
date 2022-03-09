@@ -10,6 +10,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationDismissed
@@ -62,14 +64,14 @@ constructor(
             course,
             CourseViewSource.PurchaseReminderNotification
         )
-        intent.putExtra(CourseActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, PurchaseNotificationClicked(course.id))
+        intent.putExtra(BUNDLEABLE_ANALYTIC_EVENT, PurchaseNotificationClicked(course.id).toBundle())
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, PurchaseNotificationDismissed(course.id))
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, PurchaseNotificationDismissed(course.id).toBundle())
         val deletePendingIntent = PendingIntent.getBroadcast(context, DismissedNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val largeIcon = notificationHelper.getPictureByCourse(course)

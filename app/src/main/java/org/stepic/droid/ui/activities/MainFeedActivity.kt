@@ -30,7 +30,8 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
-import org.stepik.android.domain.base.analytic.ParcelableAnalyticEvent
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
@@ -75,8 +76,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val PROFILE_INDEX: Int = 3
         const val NOTIFICATIONS_INDEX: Int = 4
         const val DEBUG_INDEX: Int = 5
-
-        const val EXTRA_PARCELABLE_ANALYTIC_EVENT = "parcelable_analytic_event"
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -176,7 +175,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (savedInstanceState == null) {
             checkShortcutAction(intent)
             checkNotificationClick(intent)
-            val analyticEvent = intent.getParcelableExtra<ParcelableAnalyticEvent>(EXTRA_PARCELABLE_ANALYTIC_EVENT)
+            val analyticEvent = intent
+                .getBundleExtra(BUNDLEABLE_ANALYTIC_EVENT)
+                ?.toAnalyticEvent()
+
             if (analyticEvent != null) {
                 analytic.report(analyticEvent)
             }

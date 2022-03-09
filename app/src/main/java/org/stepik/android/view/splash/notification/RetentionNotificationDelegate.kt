@@ -11,6 +11,8 @@ import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
+import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.retention.analytic.RetentionNotificationClicked
 import org.stepik.android.domain.retention.analytic.RetentionNotificationDismissed
 import org.stepik.android.domain.retention.analytic.RetentionNotificationShown
@@ -56,14 +58,14 @@ constructor(
                 RetentionNotificationType.DAY1
             }
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RetentionNotificationDismissed(notificationType.dayValue))
+        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RetentionNotificationDismissed(notificationType.dayValue).toBundle())
         val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(notificationType.titleRes)
         val message = context.getString(notificationType.messageRes)
 
         val intent = Intent(context, SplashActivity::class.java)
-        intent.putExtra(SplashActivity.EXTRA_PARCELABLE_ANALYTIC_EVENT, RetentionNotificationClicked(notificationType.dayValue))
+        intent.putExtra(BUNDLEABLE_ANALYTIC_EVENT, RetentionNotificationClicked(notificationType.dayValue).toBundle())
         val taskBuilder = TaskStackBuilder
                 .create(context)
                 .addNextIntent(intent)
