@@ -72,7 +72,7 @@ ext.versions = [
 
         billing              : '4.0.0',
 
-        facebook             : '8.1.0',
+//        facebook             : '8.1.0',
         vk                   : '2.2.3',
 
         timber               : '4.7.1',
@@ -201,7 +201,7 @@ ext.libraries = [
         billing              : "com.android.billingclient:billing:$versions.billing",
         billingKtx           : "com.android.billingclient:billing-ktx:$versions.billing",
 
-        facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
+//        facebookSdk          : "com.facebook.android:facebook-android-sdk:$versions.facebook",
         vkSdk                : "com.vk:androidsdk:$versions.vk",
 
         timber               : "com.jakewharton.timber:timber:$versions.timber",

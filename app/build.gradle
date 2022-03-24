@@ -216,7 +216,7 @@ dependencies {
     implementation libraries.firebaseConfig
     implementation libraries.firebasePerf
 
-    implementation libraries.facebookSdk
+//    implementation libraries.facebookSdk
     implementation libraries.vkSdk
 
     implementation libraries.timber

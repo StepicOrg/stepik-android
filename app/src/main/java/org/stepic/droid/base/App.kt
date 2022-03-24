@@ -6,8 +6,6 @@ import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.android.billingclient.api.BillingClient
-import com.facebook.appevents.AppEventsLogger
-import com.google.android.gms.security.ProviderInstaller
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.api.sdk.VK
@@ -109,7 +107,7 @@ class App : MultiDexApplication() {
             WebView.setWebContentsDebuggingEnabled(true)
         }
 
-        AppEventsLogger.activateApp(this)
+//        AppEventsLogger.activateApp(this)
         VK.initialize(this)
         
         // init AppMetrica SDK

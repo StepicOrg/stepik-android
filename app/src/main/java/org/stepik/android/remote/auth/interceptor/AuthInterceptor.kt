@@ -1,7 +1,6 @@
 package org.stepik.android.remote.auth.interceptor
 
 import android.content.Context
-import com.facebook.login.LoginManager
 import com.vk.api.sdk.VK
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -113,7 +112,7 @@ constructor(
                                     extendedMessage = "failed ${oAuthResponse.code()} ${oAuthResponse.errorBody()?.string()}"
                                     if (oAuthResponse.code() == 401) {
                                         stepikLogoutManager.logout {
-                                            LoginManager.getInstance().logOut()
+//                                            LoginManager.getInstance().logOut()
                                             VK.logout()
                                             screenManager.showLaunchScreen(context)
                                         }

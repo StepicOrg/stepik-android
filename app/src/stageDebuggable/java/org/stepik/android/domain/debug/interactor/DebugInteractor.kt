@@ -1,6 +1,5 @@
 package org.stepik.android.domain.debug.interactor
 
-import com.facebook.login.LoginManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vk.api.sdk.VK
 import io.reactivex.Completable
@@ -33,7 +32,7 @@ constructor(
             sharedPreferenceHelper.putEndpointConfig(endpointConfig.ordinal)
         }.andThen(
             logoutManager.logoutCompletable {
-                LoginManager.getInstance().logOut()
+//                LoginManager.getInstance().logOut()
                 VK.logout()
             }
         )

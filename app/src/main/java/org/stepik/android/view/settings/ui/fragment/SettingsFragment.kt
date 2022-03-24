@@ -6,7 +6,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.facebook.login.LoginManager
 import com.vk.api.sdk.VK
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
@@ -237,7 +236,7 @@ class SettingsFragment :
     }
 
     override fun onLogoutSuccess() {
-        LoginManager.getInstance().logOut()
+//        LoginManager.getInstance().logOut()
         VK.logout()
         (activity as? SignOutListener)?.onSignOut()
         screenManager.showLaunchScreenAfterLogout(requireContext())

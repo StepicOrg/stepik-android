@@ -12,11 +12,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.vk.api.sdk.VK
@@ -90,7 +85,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
-    private lateinit var callbackManager: CallbackManager
+//    private lateinit var callbackManager: CallbackManager
 
     private var selectedSocialType: SocialNetwork? = null
 
@@ -144,20 +139,20 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
         signInText.text = spannableSignIn
 
-        callbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult) {
-                socialAuthPresenter
-                    .authWithNativeCode(loginResult.accessToken.token, SocialNetwork.FACEBOOK)
-            }
-
-            override fun onCancel() {}
-
-            override fun onError(exception: FacebookException) {
-                analytic.reportError(Analytic.Login.FACEBOOK_ERROR, exception)
-                showNetworkError()
-            }
-        })
+//        callbackManager = CallbackManager.Factory.create()
+//        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+//            override fun onSuccess(loginResult: LoginResult) {
+//                socialAuthPresenter
+//                    .authWithNativeCode(loginResult.accessToken.token, SocialNetwork.FACEBOOK)
+//            }
+//
+//            override fun onCancel() {}
+//
+//            override fun onError(exception: FacebookException) {
+//                analytic.reportError(Analytic.Login.FACEBOOK_ERROR, exception)
+//                showNetworkError()
+//            }
+//        })
 
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
@@ -238,8 +233,8 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
                 }
             }
 
-            SocialNetwork.FACEBOOK ->
-                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
+//            SocialNetwork.FACEBOOK ->
+//                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
 
             SocialNetwork.VK ->
                 VK.login(this, listOf(VKScope.OFFLINE, VKScope.EMAIL))
@@ -314,7 +309,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
         super.onActivityResult(requestCode, resultCode, data)
 
-        callbackManager.onActivityResult(requestCode, resultCode, data)
+//        callbackManager.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
@@ -360,7 +355,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             Auth.GoogleSignInApi.signOut(googleApiClient)
         }
         // fb:
-        LoginManager.getInstance().logOut()
+//        LoginManager.getInstance().logOut()
     }
 
     override fun showNetworkError() {
