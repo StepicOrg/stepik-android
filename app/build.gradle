@@ -162,6 +162,7 @@ dependencies {
     implementation libraries.appCompat
     implementation libraries.ktx
     implementation libraries.recyclerview
+    implementation libraries.swiperefreshlayout
     implementation libraries.viewPager
     implementation libraries.viewPager2
     implementation libraries.cardView
@@ -216,7 +217,7 @@ dependencies {
     implementation libraries.firebaseConfig
     implementation libraries.firebasePerf
 
-    implementation libraries.facebookSdk
+//    implementation libraries.facebookSdk
     implementation libraries.vkSdk
 
     implementation libraries.timber
