@@ -22,7 +22,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     private State state;
 
     public enum State {
-        EXPANDED(1), NORMAL(2);
+        EXPANDED(4), NORMAL(3);
 
         public final int multiplier;
         State(int multiplier) {
@@ -56,7 +56,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public int getItemCount() {
-        return socialList.length / state.multiplier + (socialList.length % state.multiplier == 0 ? 0 : 1);
+        return state.multiplier;
     }
 
     @Override
