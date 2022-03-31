@@ -256,6 +256,8 @@ dependencies {
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.kaspresso
+    androidTestImplementation libraries.kaspressoAllure
 
     debugImplementation libraries.soloader
     debugImplementation libraries.flipperCore
