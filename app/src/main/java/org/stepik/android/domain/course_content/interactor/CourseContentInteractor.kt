@@ -1,6 +1,5 @@
 package org.stepik.android.domain.course_content.interactor
 
-import com.google.firebase.perf.FirebasePerformance
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
@@ -8,8 +7,6 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import org.stepic.droid.analytic.AmplitudeAnalytic
-import org.stepic.droid.analytic.Analytic
 import ru.nobird.app.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
@@ -74,21 +71,12 @@ constructor(
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())
 
-    private fun getContent(course: Course, items: List<CourseContentItem>, dataSourceType: DataSourceType): Observable<Pair<Course, List<CourseContentItem>>> {
-        val courseContentLoadingTrace = FirebasePerformance.getInstance().newTrace(Analytic.Traces.COURSE_CONTENT_LOADING)
-        courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.COURSE, course.id.toString())
-        courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.SOURCE, dataSourceType.name)
-        courseContentLoadingTrace.start()
-
-        return getSectionsOfCourse(course, dataSourceType)
+    private fun getContent(course: Course, items: List<CourseContentItem>, dataSourceType: DataSourceType): Observable<Pair<Course, List<CourseContentItem>>> =
+        getSectionsOfCourse(course, dataSourceType)
             .flatMap { populateSections(course, it, items, dataSourceType) }
             .flatMapObservable { populatedItems ->
                 Observable.just(course to populatedItems) + loadUnits(course, populatedItems, dataSourceType)
             }
-            .doOnComplete {
-                courseContentLoadingTrace.stop()
-            }
-    }
 
     private fun getSectionsOfCourse(course: Course, dataSourceType: DataSourceType): Single<List<Section>> =
         sectionRepository

@@ -16,7 +16,6 @@ buildscript {
         classpath gradlePlugins.android
         classpath gradlePlugins.googleServices
         classpath gradlePlugins.crashlyticsPlugin
-        classpath gradlePlugins.firebasePerfPlugin
         classpath gradlePlugins.kotlin
         classpath gradlePlugins.dexcount
     }

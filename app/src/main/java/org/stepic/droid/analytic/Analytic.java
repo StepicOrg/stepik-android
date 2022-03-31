@@ -337,11 +337,6 @@ public interface Analytic {
         }
     }
 
-    interface Traces {
-        String COURSE_CONTENT_LOADING = "course_content_loading";
-        String SPLASH_LOADING = "splash_loading";
-    }
-
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
