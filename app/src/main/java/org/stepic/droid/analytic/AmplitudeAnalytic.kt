@@ -13,6 +13,8 @@ interface AmplitudeAnalytic {
         const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
         const val IS_AR_SUPPORTED = "is_ar_supported"
         const val IS_GOOGLE_SERVICES_AVAILABLE = "is_google_services_available"
+        const val ACCESSIBILITY_FONT_SCALE = "accessibility_font_scale"
+        const val ACCESSIBILITY_SCREEN_READER_ENABLED = "accessibility_screen_reader_enabled"
     }
 
     object Launch {
