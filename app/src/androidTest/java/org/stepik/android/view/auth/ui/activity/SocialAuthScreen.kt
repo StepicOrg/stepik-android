@@ -16,4 +16,11 @@ object SocialAuthScreen : KScreen<SocialAuthScreen>() {
     val moreButton = KButton { withId(R.id.showMore) }
     val lessButton = KButton { withId(R.id.showLess) }
     val launchSignUpButton = KButton { withId(R.id.launchSignUpButton) }
+
+    fun openCredentialAuthScreen() {
+        signInWithEmailButton {
+            isDisplayed()
+            click()
+        }
+    }
 }

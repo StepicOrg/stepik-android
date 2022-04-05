@@ -25,7 +25,9 @@ class SocialAuthScreenTest : TestCase() {
             step("Should be Stepik logo") {
                 testLogger.d("Should be Stepik logo on social auth screen")
                 SocialAuthScreen {
-                    stepikLogo.isVisible()
+                    stepikLogo {
+                        isVisible()
+                    }
                 }
             }
 

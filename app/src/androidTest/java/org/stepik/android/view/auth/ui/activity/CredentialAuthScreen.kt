@@ -8,7 +8,25 @@ object CredentialAuthScreen : KScreen<CredentialAuthScreen>() {
     override val layoutId: Int = R.layout.activity_auth_credential
     override val viewClass: Class<*> = CredentialAuthActivity::class.java
 
-    val loginField = KEditText { withId(R.id.loginField) }
-    val passwordField = KEditText { withId(R.id.passwordField) }
+    val loginField = KEditText {
+        withId(R.id.loginField)
+        isDisplayed()
+    }
 
+    val passwordField = KEditText {
+        withId(R.id.passwordField)
+        isDisplayed()
+    }
+
+    fun loginWithEmailAndPassword(email: String, password: String) {
+        loginField {
+            click()
+            replaceText(email)
+        }
+
+        passwordField {
+            click()
+            replaceText(password)
+        }
+    }
 }
