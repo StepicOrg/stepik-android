@@ -215,7 +215,6 @@ dependencies {
     implementation libraries.firebaseAppindexing
     implementation libraries.googleauth
     implementation libraries.firebaseConfig
-    implementation libraries.firebasePerf
 
 //    implementation libraries.facebookSdk
     implementation libraries.vkSdk
@@ -256,6 +255,8 @@ dependencies {
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
     androidTestImplementation libraries.espressoIntents
+    androidTestImplementation libraries.kaspresso
+    androidTestImplementation libraries.kaspressoAllure
 
     debugImplementation libraries.soloader
     debugImplementation libraries.flipperCore
@@ -278,4 +279,3 @@ apply plugin: 'com.google.gms.google-services'
 if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
     apply plugin: 'com.getkeepsafe.dexcount'
 }
-apply plugin: 'com.google.firebase.firebase-perf'

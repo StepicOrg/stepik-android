@@ -18,9 +18,9 @@ import com.yandex.metrica.profile.UserProfile
 import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
+import org.stepic.droid.util.isScreenReaderOn
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.base.analytic.AnalyticSource
 import org.stepik.android.domain.base.analytic.UserProperty
@@ -66,17 +66,23 @@ constructor(
                 .set(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
                 .set(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
                 .set(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
+                .set(AmplitudeAnalytic.Properties.ACCESSIBILITY_FONT_SCALE, context.resources.configuration.fontScale.toString())
+                .set(AmplitudeAnalytic.Properties.ACCESSIBILITY_SCREEN_READER_ENABLED, context.isScreenReaderOn().toString())
         )
 
         updateYandexUserProfile {
             apply(Attribute.notificationsEnabled().withValue(isNotificationsEnabled))
             apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED).withValue(context.isNightModeEnabled()))
             apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED).withValue(context.isARSupported()))
+            apply(Attribute.customNumber(AmplitudeAnalytic.Properties.ACCESSIBILITY_FONT_SCALE).withValue(context.resources.configuration.fontScale.toDouble()))
+            apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.ACCESSIBILITY_SCREEN_READER_ENABLED).withValue(context.isScreenReaderOn()))
         }
 
         setFirebaseUserProperty(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
         setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
         setFirebaseUserProperty(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.ACCESSIBILITY_FONT_SCALE, context.resources.configuration.fontScale.toString())
+        setFirebaseUserProperty(AmplitudeAnalytic.Properties.ACCESSIBILITY_SCREEN_READER_ENABLED, context.isScreenReaderOn().toString())
     }
 
     // Amplitude properties

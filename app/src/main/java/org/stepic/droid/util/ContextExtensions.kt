@@ -1,19 +1,16 @@
 package org.stepic.droid.util
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.TypedValue
+import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.appcompat.content.res.AppCompatResources
 
 fun Context.copyTextToClipboard(label: String? = null, textToCopy: String, toastMessage: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -62,3 +59,8 @@ fun Context.isARSupported(): Boolean =
     } catch (e : PackageManager.NameNotFoundException) {
         false
     }
+
+fun Context.isScreenReaderOn(): Boolean {
+    val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    return am.isEnabled && am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN).isNotEmpty()
+}

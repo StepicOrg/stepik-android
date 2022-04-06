@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2245,
-        name                 : '1.216',
+        code                 : 2246,
+        name                 : '1.217',
 
         minSdk               : 21,
         targetSdk            : 30,
@@ -103,6 +103,7 @@ ext.versions = [
         hamcrest             : '2.1',
         espresso             : '3.1.0',
         testCore             : '1.1.1',
+        kaspresso            : '1.4.1',
 
         ktlint               : '0.34.2',
         ktlintRules          : '1.0.0',
@@ -241,6 +242,9 @@ ext.libraries = [
         espressoCore         : "androidx.test.espresso:espresso-core:$versions.espresso",
         espressoContrib      : "androidx.test.espresso:espresso-contrib:$versions.espresso",
         espressoIntents      : "androidx.test.espresso:espresso-intents:$versions.espresso",
+        kaspresso            : "com.kaspersky.android-components:kaspresso:$versions.kaspresso",
+        kaspressoAllure      : "com.kaspersky.android-components:kaspresso-allure-support:$versions.kaspresso",
+
 
         ktlint               : "com.pinterest:ktlint:$versions.ktlint",
         ktlintRules          : "ru.nobird.android.ktlint:rules:$versions.ktlintRules",
