@@ -1,7 +1,10 @@
 package org.stepik.android.view.auth.ui.activity
 
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import org.stepic.droid.R
 import org.junit.Rule
 import org.junit.Test
 
@@ -13,6 +16,8 @@ class SocialAuthScreenTest : TestCase() {
     // @Link("https://vyahhi.myjetbrains.com/youtrack/issue/TESTAPPS-174")
     fun testGuestCanSeeSocialAuthScreen() =
         run {
+            val applicationResources = ApplicationProvider.getApplicationContext<Context>().resources
+
             step("Should be dismiss button") {
                 testLogger.d("Should be dismiss button on social auth screen")
                 SocialAuthScreen {
@@ -36,7 +41,12 @@ class SocialAuthScreenTest : TestCase() {
                 SocialAuthScreen {
                     titleScreen {
                         isVisible()
-                        hasText("Sign In with social accounts")
+                        val expectedText =
+                            buildString {
+                                append(applicationResources.getString(R.string.sign_in))
+                                append(applicationResources.getString(R.string.sign_in_with_social_suffix))
+                            }
+                        hasText(expectedText)
                     }
                 }
             }
@@ -46,7 +56,8 @@ class SocialAuthScreenTest : TestCase() {
                 SocialAuthScreen {
                     moreButton {
                         isVisible()
-                        hasText("More")
+
+                        hasText(R.string.social_recycler_show_more)
                     }
                 }
             }
