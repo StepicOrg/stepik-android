@@ -25,5 +25,12 @@ class AuthSampleTest : TestCase() {
                     loginWithEmailAndPassword(email = "testlearner@stepik.org", password = "512")
                 }
             }
+
+            step("Should be a home screen after login") {
+                testLogger.i("Should be a home screen after login")
+                MainFeedActivity {
+                    shouldBeHomeScreen()
+                }
+            }
         }
 }
