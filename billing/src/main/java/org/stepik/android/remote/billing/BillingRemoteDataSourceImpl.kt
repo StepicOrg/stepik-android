@@ -39,7 +39,7 @@ constructor(
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetails != null) {
                             emitter.onSuccess(skuDetails)
                         } else {
-                            emitter.onError(Exception(billingResult.debugMessage))
+                            emitter.onError(BillingNotSupportedException(billingResult))
                         }
                     }
                 }
@@ -55,7 +55,7 @@ constructor(
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                             emitter.onSuccess(purchases)
                         } else {
-                            emitter.onError(Exception(billingResult.debugMessage))
+                            emitter.onError(BillingNotSupportedException(billingResult))
                         }
                     }
             }
@@ -72,7 +72,7 @@ constructor(
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                             emitter.onComplete()
                         } else {
-                            emitter.onError(BillingNotSupportedException())
+                            emitter.onError(BillingNotSupportedException(billingResult))
                         }
                     }
                 }
