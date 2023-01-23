@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.billing.exception.BillingNotSupportedException
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.CoursePurchasePayload
@@ -153,6 +154,12 @@ constructor(
                     obfuscatedProfileId = CoursePurchasePayload(profileId, courseId).hashCode().toString()
                 )
             resolvePurchaseResult(obfuscatedParams, purchases)
+        }.onErrorReturn {
+            if (it is BillingNotSupportedException) {
+                CoursePurchaseInfo.Unavailable
+            } else {
+                throw it
+            }
         }
 
     private fun resolvePurchaseResult(obfuscatedParams: CoursePurchaseObfuscatedParams, purchases: List<Purchase>): CoursePurchaseInfo {

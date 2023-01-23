@@ -41,6 +41,10 @@
         <value>web</value>
     </entry>
     <entry>
+        <key>purchase_flow_android_1_218_and_later</key>
+        <value>iap</value>
+    </entry>
+    <entry>
         <key>purchase_flow_android_test</key>
         <value>web</value>
     </entry>
