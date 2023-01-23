@@ -20,7 +20,7 @@ enum class CoursePurchaseFlow {
             try {
                 valueOf(value)
             } catch (exception: IllegalArgumentException) {
-                WEB
+                IAP
             }
     }
 }
