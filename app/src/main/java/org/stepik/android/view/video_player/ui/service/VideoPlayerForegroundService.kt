@@ -199,7 +199,8 @@ class VideoPlayerForegroundService : Service() {
         playerNotificationManager.setPlayer(player)
         playerNotificationManager.setUsePreviousAction(false)
 
-        mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
+        mediaSession =
+            MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
 
         registerReceiver(mediaButtonReceiver, IntentFilter(Intent.ACTION_MEDIA_BUTTON))

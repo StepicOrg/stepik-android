@@ -12,6 +12,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import org.stepic.droid.R
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 import ru.nobird.android.view.base.ui.extension.toBitmap
@@ -28,7 +29,7 @@ class VideoPlayerMediaDescriptionAdapter(
         videoPlayerMediaData
             ?.let(::createIntent)
             ?.let { intent ->
-                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                PendingIntentCompat.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             }
 
     override fun getCurrentContentText(player: Player): String? =
