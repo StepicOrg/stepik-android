@@ -22,6 +22,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.Course
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import javax.inject.Inject
 
 class NotificationHelperImpl
@@ -40,22 +41,27 @@ constructor(
         deleteIntent: PendingIntent,
         id: Long
     ):  NotificationCompat.Builder {
-        val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) // fixme if it will overlay courses id -> bug
+        val pendingIntent = taskBuilder.getPendingIntent(
+            id.toInt(),
+            PendingIntentCompat.getFlags(PendingIntent.FLAG_ONE_SHOT, isMutable = false)
+        )
+        // fixme if it will overlay courses id -> bug
 
         val colorArgb = context.resolveColorAttribute(R.attr.colorSecondary)
-        val notification = NotificationCompat.Builder(context, stepikNotification?.type?.channel?.channelId ?: StepikNotificationChannel.user.channelId)
-                .setSmallIcon(R.drawable.ic_notification_icon_1)
-                .setContentTitle(title)
-                .setContentText(justText)
-                .setColor(colorArgb)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setDeleteIntent(deleteIntent)
+        val notification = NotificationCompat
+            .Builder(context, stepikNotification?.type?.channel?.channelId ?: StepikNotificationChannel.user.channelId)
+            .setSmallIcon(R.drawable.ic_notification_icon_1)
+            .setContentTitle(title)
+            .setContentText(justText)
+            .setColor(colorArgb)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setDeleteIntent(deleteIntent)
 
-        notification.setStyle(NotificationCompat.BigTextStyle()
-                .bigText(justText))
-                .setContentText(justText)
+        notification
+            .setStyle(NotificationCompat.BigTextStyle().bigText(justText))
+            .setContentText(justText)
 
         // if notification is null (for example for streaks) -> show it always with sound and vibrate
 
@@ -81,7 +87,7 @@ constructor(
         }
         intent.putExtras(bundle)
         // add course id for bundle
-        return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntentCompat.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     override fun addVibrationIfNeed(builder: NotificationCompat.Builder) {

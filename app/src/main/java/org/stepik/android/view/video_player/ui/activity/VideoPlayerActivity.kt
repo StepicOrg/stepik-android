@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.TargetApi
-import android.app.PendingIntent
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
 import android.content.BroadcastReceiver
@@ -58,6 +57,7 @@ import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
 import org.stepik.android.presentation.video_player.VideoPlayerView
 import org.stepik.android.view.lesson.ui.activity.LessonActivity
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
@@ -557,14 +557,23 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 Icon.createWithResource(this, R.drawable.ic_replay_10_24),
                 labelRewind,
                 labelRewind,
-                PendingIntent.getBroadcast(this, REQUEST_REWIND, Intent(ACTION_MEDIA_CONTROL).putExtra(
-                    EXTRA_CONTROL_TYPE, CONTROL_TYPE_REWIND), 0)
+                PendingIntentCompat.getBroadcast(
+                    this,
+                    REQUEST_REWIND,
+                    Intent(ACTION_MEDIA_CONTROL)
+                        .putExtra(EXTRA_CONTROL_TYPE, CONTROL_TYPE_REWIND),
+                    flags = 0
+                )
             )
         )
 
-        val intent = PendingIntent.getBroadcast(this,
-            requestCode, Intent(ACTION_MEDIA_CONTROL)
-                .putExtra(EXTRA_CONTROL_TYPE, controlType), 0)
+        val intent = PendingIntentCompat.getBroadcast(
+            context = this,
+            requestCode,
+            Intent(ACTION_MEDIA_CONTROL)
+                .putExtra(EXTRA_CONTROL_TYPE, controlType),
+            flags = 0
+        )
         val icon = Icon.createWithResource(this, iconId)
         actions.add(RemoteAction(icon, title, title, intent))
 
@@ -573,8 +582,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 Icon.createWithResource(this, R.drawable.ic_forward_10_24),
                 labelForward,
                 labelForward,
-                PendingIntent.getBroadcast(this, REQUEST_FORWARD, Intent(ACTION_MEDIA_CONTROL).putExtra(
-                    EXTRA_CONTROL_TYPE, CONTROL_TYPE_FORWARD), 0)
+                PendingIntentCompat.getBroadcast(
+                    context = this,
+                    REQUEST_FORWARD,
+                    Intent(ACTION_MEDIA_CONTROL)
+                        .putExtra(EXTRA_CONTROL_TYPE, CONTROL_TYPE_FORWARD),
+                    flags = 0
+                )
             )
         )
 

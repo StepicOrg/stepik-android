@@ -19,6 +19,7 @@ import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import javax.inject.Inject
 
 class RemindRegistrationNotificationDelegate
@@ -44,8 +45,15 @@ constructor(
                 .create(context)
                 .addNextIntent(intent)
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RemindRegistrationNotificationDismissed.toBundle())
-        val deletePendingIntent = PendingIntent.getBroadcast(context, DismissedNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val deleteIntent = DismissedNotificationReceiver
+            .createIntent(context, RemindRegistrationNotificationDismissed.toBundle())
+        val deletePendingIntent = PendingIntentCompat
+            .getBroadcast(
+                context,
+                DismissedNotificationReceiver.REQUEST_CODE,
+                deleteIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
         val title = context.getString(R.string.stepik_free_courses_title)
         val remindMessage = context.getString(R.string.registration_remind_message)

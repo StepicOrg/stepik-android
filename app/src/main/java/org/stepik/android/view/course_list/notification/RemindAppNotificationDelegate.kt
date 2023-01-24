@@ -19,6 +19,7 @@ import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -44,8 +45,10 @@ constructor(
             return
         }
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RemindAppNotificationDismissed.toBundle())
-        val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val deleteIntent = DismissedNotificationReceiver
+            .createIntent(context, RemindAppNotificationDismissed.toBundle())
+        val deletePendingIntent = PendingIntentCompat
+            .getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         // now we can show notification
         val intent = screenManager.getCatalogIntent(context)
@@ -77,8 +80,10 @@ constructor(
     }
 
     fun scheduleRemindAppNotification() {
-        val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
-        val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
+        val isFirstDayNotificationShown = sharedPreferenceHelper
+            .isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
+        val isSevenDayNotificationShown = sharedPreferenceHelper
+            .isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
         if (remindAppNotificationInteractor.isNotificationShown()) {
             // already shown.
             // do not show again

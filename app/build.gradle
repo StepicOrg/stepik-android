@@ -233,7 +233,7 @@ dependencies {
     implementation libraries.shortcutBadger
     implementation libraries.StoriesKit
 
-    debugImplementation libraries.leakCanary
+    debugImplementation libraries.leakCanaryNoOp // TODO APPS-3670: Update LeakCanary to support Android 12
     releaseImplementation libraries.leakCanaryNoOp
     stageImplementation libraries.leakCanaryNoOp
     stageDebuggableImplementation libraries.leakCanaryNoOp

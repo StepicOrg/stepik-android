@@ -20,6 +20,7 @@ import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import java.util.Calendar
 import javax.inject.Inject
@@ -58,8 +59,10 @@ constructor(
                 RetentionNotificationType.DAY1
             }
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, RetentionNotificationDismissed(notificationType.dayValue).toBundle())
-        val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val deleteIntent = DismissedNotificationReceiver
+            .createIntent(context, RetentionNotificationDismissed(notificationType.dayValue).toBundle())
+        val deletePendingIntent = PendingIntentCompat
+            .getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(notificationType.titleRes)
         val message = context.getString(notificationType.messageRes)

@@ -19,6 +19,7 @@ import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.profile.ui.activity.ProfileActivity
 import org.stepik.android.view.streak.model.StreakNotificationType
@@ -152,7 +153,8 @@ constructor(
     }
 
     private fun getDeleteIntentForStreaks(notificationType: StreakNotificationType): PendingIntent {
-        val deleteIntent = DismissedNotificationReceiver.createStreakNotificationIntent(context, StreakNotificationDismissed(notificationType.type).toBundle())
-        return PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val deleteIntent = DismissedNotificationReceiver
+            .createStreakNotificationIntent(context, StreakNotificationDismissed(notificationType.type).toBundle())
+        return PendingIntentCompat.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }
