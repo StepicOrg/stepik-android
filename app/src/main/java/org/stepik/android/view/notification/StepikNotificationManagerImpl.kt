@@ -9,7 +9,6 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.notification.receiver.AlarmReceiver
-import ru.nobird.android.view.base.ui.extension.scheduleCompat
 import javax.inject.Inject
 
 class StepikNotificationManagerImpl
@@ -32,7 +31,8 @@ constructor(
                 .getBroadcast(context, AlarmReceiver.REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         alarmManager.cancel(pendingIntent)
-        alarmManager.scheduleCompat(millis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
+        alarmManager.setWindow(AlarmManager.RTC_WAKEUP, millis, AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent)
+        // TODO APPS-3670: re-check Notifications
 
         sharedPreferenceHelper.putAlarmTimestamp(id, millis)
     }
