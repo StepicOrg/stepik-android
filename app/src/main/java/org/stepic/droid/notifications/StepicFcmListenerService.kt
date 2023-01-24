@@ -23,6 +23,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.story_deeplink.model.StoryDeepLinkNotification
 import org.stepik.android.view.notification.FcmNotificationHandler
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import java.io.IOException
 import javax.inject.Inject
 
@@ -88,14 +89,19 @@ class StepicFcmListenerService : FirebaseMessagingService() {
             .setContentText(storyDeepLinkNotification.body)
             .setColor(applicationContext.resolveColorAttribute(R.attr.colorSecondary))
             .setAutoCancel(true)
-            .setContentIntent(PendingIntent.getActivity(applicationContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+            .setContentIntent(
+                PendingIntentCompat
+                    .getActivity(applicationContext, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            )
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
         notification.setStyle(NotificationCompat.BigTextStyle()
             .bigText(storyDeepLinkNotification.body))
             .setContentText(storyDeepLinkNotification.body)
 
-        val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         notificationManager.notify(requestCode, notification.build())
     }
 

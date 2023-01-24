@@ -23,6 +23,7 @@ import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
@@ -96,8 +97,10 @@ constructor(
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        val deleteIntent = DismissedNotificationReceiver.createIntent(context, DeadlinesNotificationDismissed(course.id, hoursDiff).toBundle())
-        val deletePendingIntent = PendingIntent.getBroadcast(context, deadline.sectionId.toInt(), deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val deleteIntent = DismissedNotificationReceiver
+            .createIntent(context, DeadlinesNotificationDismissed(course.id, hoursDiff).toBundle())
+        val deletePendingIntent = PendingIntentCompat
+            .getBroadcast(context, deadline.sectionId.toInt(), deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val title = context.getString(R.string.app_name)
         val message = context.getString(

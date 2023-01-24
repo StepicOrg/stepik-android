@@ -8,7 +8,14 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepik.android.model.Course
 
 interface NotificationHelper {
-    fun makeSimpleNotificationBuilder(stepikNotification: Notification?, justText: String, taskBuilder: TaskStackBuilder, title: String?, deleteIntent: PendingIntent = getDeleteIntent(), id: Long): NotificationCompat.Builder
+    fun makeSimpleNotificationBuilder(
+        stepikNotification: Notification?,
+        justText: String,
+        taskBuilder: TaskStackBuilder,
+        title: String?,
+        deleteIntent: PendingIntent = getDeleteIntent(),
+        id: Long
+    ): NotificationCompat.Builder
     fun getDeleteIntent(courseId: Long = -1): PendingIntent
     fun addVibrationIfNeed(builder: NotificationCompat.Builder)
     fun addSoundIfNeed(builder: NotificationCompat.Builder)

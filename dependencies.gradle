@@ -60,7 +60,7 @@ ext.versions = [
         glideAnnotations     : '4.11.0',
 
         amplitude            : '2.23.2',
-        appMetrica           : '3.8.0',
+        appMetrica           : '5.0.1',
         branch               : '5.0.0',
         installreferrer      : '1.0',
 
