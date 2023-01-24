@@ -48,7 +48,7 @@ public class AppConstants {
 
     public static final String COURSE_ID_KEY = "course_id";
 
-    public static final String NOTIFICATION_CANCELED = "notification_canceled";
+    public static final String NOTIFICATION_CANCELED = "notification_cancelled";
 
 
     public static final String KEY_NOTIFICATION_ID = "key_notification_id";

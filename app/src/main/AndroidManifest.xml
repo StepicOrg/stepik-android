@@ -46,7 +46,8 @@
 
         <activity-alias
             android:name="org.stepic.droid.view.activities.SplashActivity"
-            android:targetActivity="org.stepic.droid.ui.activities.SplashActivity">
+            android:targetActivity="org.stepic.droid.ui.activities.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -77,7 +78,8 @@
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.SocialAuthActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -104,7 +106,8 @@
         <activity
             android:name="org.stepic.droid.ui.activities.MainFeedActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:exported="true">
 
             <intent-filter
                 android:autoVerify="true"
@@ -160,7 +163,8 @@
         <activity
             android:name=".ui.activities.NotificationSettingsActivity"
             android:enabled="@bool/notification_activity_enabled"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
@@ -217,7 +221,8 @@
             android:screenOrientation="unspecified"/>
 
         <activity
-            android:name="org.stepik.android.view.course.ui.activity.CourseActivity">
+            android:name="org.stepik.android.view.course.ui.activity.CourseActivity"
+            android:exported="true">
 
             <intent-filter
                 android:autoVerify="true"
@@ -254,7 +259,8 @@
         <activity
             android:name="org.stepik.android.view.lesson.ui.activity.LessonActivity"
             android:launchMode="singleTop"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
@@ -319,7 +325,8 @@
 
         <activity
             android:name="org.stepik.android.view.profile.ui.activity.ProfileActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:exported="true">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <intent-filter
                 android:autoVerify="true"
@@ -352,7 +359,8 @@
 
         <activity
             android:name="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -367,7 +375,9 @@
         <activity
             android:name="org.stepik.android.view.onboarding.ui.activity.OnboardingCourseListsActivity" />
 
-        <activity android:name="org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity">
+        <activity
+            android:name="org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity"
+            android:exported="true">
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">
@@ -418,7 +428,9 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".notifications.NotificationBroadcastReceiver">
+        <receiver
+            android:name=".notifications.NotificationBroadcastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="notification_cancelled" />
             </intent-filter>
@@ -426,13 +438,17 @@
 
         <receiver android:name="org.stepik.android.view.notification.receiver.AlarmReceiver" />
 
-        <service android:name=".notifications.StepicFcmListenerService">
+        <service
+            android:name=".notifications.StepicFcmListenerService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <receiver android:name="org.stepik.android.view.base.receiver.DismissedNotificationReceiver">
+        <receiver
+            android:name="org.stepik.android.view.base.receiver.DismissedNotificationReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="notification_dismissed" />
             </intent-filter>
