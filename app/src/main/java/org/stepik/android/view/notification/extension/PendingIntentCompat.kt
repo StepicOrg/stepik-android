@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.core.app.TaskStackBuilder
 
 object PendingIntentCompat {
     fun getBroadcast(
@@ -38,4 +39,11 @@ object PendingIntentCompat {
             else ->
                 flags
         }
+
+    fun TaskStackBuilder.getPendingIntentCompat(
+        requestCode: Int,
+        flags: Int,
+        isMutable: Boolean = false
+    ): PendingIntent? =
+        getPendingIntent(requestCode, getFlags(flags, isMutable))
 }

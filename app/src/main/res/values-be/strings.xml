@@ -1007,7 +1007,7 @@
     <string name="transaction_promo_code">Промокод</string>
     <string name="transaction_channel">Канал</string>
     <string name="transaction_stepik_channel">Пераход праз Stepik</string>
-    <string name="transaction_z_link_channel">Пераход па z-спасылцы</string>
+    <string name="transaction_a_link_channel">Пераход па a-спасылцы</string>
     <string name="transaction_invoice_channel">Аплаты па ліку</string>
     <string name="transaction_manual_channel">Уручную</string>
     <string name="transaction_share">Ваш працэнт</string>
@@ -1020,7 +1020,7 @@
     <string name="course_benefit_by_month_refunds">Звароты</string>
     <string name="course_benefit_by_month_purchases">Пакупкі</string>
     <string name="course_benefit_by_month_channel_stepik">Пераходы праз Stepik</string>
-    <string name="course_benefit_by_month_channel_z_link">Пераходы па z-спасылцы</string>
+    <string name="course_benefit_by_month_channel_a_link">Пераходы па a-спасылцы</string>
     <string name="course_benefit_by_month_channel_invoice">Аплата па ліку</string>
 
     <!-- User course reviews -->
