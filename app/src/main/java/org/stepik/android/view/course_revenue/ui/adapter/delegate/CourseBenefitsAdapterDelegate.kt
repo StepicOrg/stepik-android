@@ -96,7 +96,7 @@ class CourseBenefitsAdapterDelegate(
                 if (data.status == CourseBenefit.Status.DEBITED) {
                     when {
                         data.isZLinkUsed == true ->
-                            AppCompatResources.getDrawable(context, R.drawable.ic_purchase_z_link)
+                            AppCompatResources.getDrawable(context, R.drawable.ic_purchase_a_link)
 
                         data.isInvoicePayment ->
                             getTintedDrawable(R.color.color_on_background)

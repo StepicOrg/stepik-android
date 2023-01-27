@@ -1205,7 +1205,7 @@
     <string name="transaction_promo_code">Promo code</string>
     <string name="transaction_channel">Channel</string>
     <string name="transaction_stepik_channel">Came via Stepik</string>
-    <string name="transaction_z_link_channel">Came via Z-link</string>
+    <string name="transaction_a_link_channel">Came via a-link</string>
     <string name="transaction_invoice_channel">Payment on account</string>
     <string name="transaction_manual_channel">Manually</string>
     <string name="transaction_share">Your share</string>
@@ -1218,7 +1218,7 @@
     <string name="course_benefit_by_month_refunds">Refunds</string>
     <string name="course_benefit_by_month_purchases">Purchases</string>
     <string name="course_benefit_by_month_channel_stepik">Came via Stepik</string>
-    <string name="course_benefit_by_month_channel_z_link">Came via Z-link</string>
+    <string name="course_benefit_by_month_channel_a_link">Came via a-link</string>
     <string name="course_benefit_by_month_channel_invoice">Payments on account</string>
 
     <!-- Debug menu -->

@@ -23,6 +23,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.Course
 import org.stepik.android.view.notification.extension.PendingIntentCompat
+import org.stepik.android.view.notification.extension.PendingIntentCompat.getPendingIntentCompat
 import javax.inject.Inject
 
 class NotificationHelperImpl
@@ -41,10 +42,8 @@ constructor(
         deleteIntent: PendingIntent,
         id: Long
     ):  NotificationCompat.Builder {
-        val pendingIntent = taskBuilder.getPendingIntent(
-            id.toInt(),
-            PendingIntentCompat.getFlags(PendingIntent.FLAG_ONE_SHOT, isMutable = false)
-        )
+        val pendingIntent = taskBuilder
+            .getPendingIntentCompat(id.toInt(), PendingIntent.FLAG_ONE_SHOT)
         // fixme if it will overlay courses id -> bug
 
         val colorArgb = context.resolveColorAttribute(R.attr.colorSecondary)
