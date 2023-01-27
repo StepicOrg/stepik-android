@@ -151,12 +151,12 @@
         android:layout_marginBottom="24dp"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
-        android:text="@string/course_benefit_by_month_channel_z_link"
+        android:text="@string/course_benefit_by_month_channel_a_link"
         android:textAppearance="?textAppearanceBody1"
-        app:drawableLeftCompat="@drawable/ic_purchase_z_link"
+        app:drawableLeftCompat="@drawable/ic_purchase_a_link"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/courseBenefitByMonthStepikPaymentsTitle"
-        tools:text="Переходы через Z-Link" />
+        tools:text="Переходы через a-Link" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/courseBenefitByMonthZLinkPaymentsValue"

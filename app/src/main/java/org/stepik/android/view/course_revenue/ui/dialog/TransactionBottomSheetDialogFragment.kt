@@ -110,7 +110,7 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         transactionChannelValue.text =
             when {
                 courseBenefit.isZLinkUsed == true ->
-                    getString(R.string.transaction_z_link_channel)
+                    getString(R.string.transaction_a_link_channel)
                 courseBenefit.isInvoicePayment ->
                     getString(R.string.transaction_invoice_channel)
                 courseBenefit.buyer == null && !courseBenefit.isInvoicePayment -> {
