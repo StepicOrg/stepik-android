@@ -22,6 +22,7 @@ import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.extension.PendingIntentCompat
+import org.stepik.android.view.notification.extension.PendingIntentCompat.getPendingIntentCompat
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
@@ -85,7 +86,7 @@ constructor(
             course.title
         )
 
-        val pendingIntent = taskBuilder.getPendingIntent(course.id.toInt(), PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = taskBuilder.getPendingIntentCompat(course.id.toInt(), PendingIntent.FLAG_ONE_SHOT)
         val notification = NotificationCompat.Builder(context, StepikNotificationChannel.user.channelId)
             .setLargeIcon(largeIcon)
             .setSmallIcon(R.drawable.ic_notification_icon_1)

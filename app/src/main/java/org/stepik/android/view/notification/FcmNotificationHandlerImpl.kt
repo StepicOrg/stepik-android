@@ -32,6 +32,7 @@ import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.in_app_web_view.ui.activity.InAppWebViewActivity
 import org.stepik.android.view.lesson.ui.activity.LessonActivity
+import org.stepik.android.view.notification.extension.PendingIntentCompat.getPendingIntentCompat
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import javax.inject.Inject
 
@@ -262,7 +263,7 @@ constructor(
             taskBuilder.addParentStack(CourseActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
-            val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
+            val pendingIntent = taskBuilder.getPendingIntentCompat(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
 
             val title = applicationContext.getString(R.string.app_name)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
