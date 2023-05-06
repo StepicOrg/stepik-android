@@ -126,11 +126,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/StepQuizFeedback.PurchaseInfo"
-            android:textColor="@color/color_red_300"
+            android:textColor="?colorOnSurface"
+            android:textAppearance="?textAppearanceSubtitle1"
 
             app:drawableStartCompat="@drawable/ic_course_info_about"
             android:text="@string/course_purchase_unavailable"
-            tools:text="Данный курс недоступен для покупки в мобильном приложении"/>
+            tools:text="@string/course_purchase_unavailable"/>
     </FrameLayout>
 
 
