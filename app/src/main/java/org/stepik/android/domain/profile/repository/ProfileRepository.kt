@@ -9,7 +9,10 @@ interface ProfileRepository {
     /**
      * Returns current profile
      */
-    fun getProfile(primarySourceType: DataSourceType = DataSourceType.CACHE): Single<Profile>
+    fun getProfile(
+        primarySourceType: DataSourceType = DataSourceType.CACHE,
+        canFallback: Boolean = true
+    ): Single<Profile>
 
     /**
      * Updates profile data

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vk.api.sdk.VK
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -34,7 +35,8 @@ class SettingsFragment :
     Fragment(R.layout.fragment_settings),
     AllowMobileDataDialogFragment.Callback,
     LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
-    SettingsView {
+    SettingsView,
+    InAppWebViewDialogFragment.Callback {
     companion object {
         fun newInstance(): SettingsFragment =
             SettingsFragment()
@@ -171,7 +173,14 @@ class SettingsFragment :
         }
 
         deleteAccountButton.setOnClickListener {
-
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Settings.DELETE_ACCOUNT_CLICKED)
+            InAppWebViewDialogFragment
+                .newInstance(
+                    title = getString(R.string.settings_delete_account),
+                    url = "https://stepik.org/users/delete-account/",
+                    isProvideAuth = true
+                )
+                .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
         }
 
         logoutSettingsButton.setOnClickListener {
@@ -244,6 +253,13 @@ class SettingsFragment :
         VK.logout()
         (activity as? SignOutListener)?.onSignOut()
         screenManager.showLaunchScreenAfterLogout(requireContext())
+    }
+
+    /**
+     * InAppWebViewDialogFragment.Callback to check account deletion
+     */
+    override fun onDismissed() {
+        presenter.handleAccountDeletion()
     }
 
     /***
