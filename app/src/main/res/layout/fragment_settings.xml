@@ -225,12 +225,24 @@
             android:text="@string/about_app_title" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/deleteAccountButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_delete_account"
+            android:textColor="?colorError"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/logoutSettingsButton"
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/logout_title"
             android:textColor="?colorError"
+            android:layout_marginTop="@dimen/settings_offset_vertical"
             android:layout_marginBottom="@dimen/settings_offset_vertical" />
     </LinearLayout>
 </ScrollView>

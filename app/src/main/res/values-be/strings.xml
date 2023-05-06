@@ -1082,6 +1082,7 @@
     <string name="settings_help_center">Даведачны цэнтр</string>
     <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
     <string name="settings_app_version">Версія: %s</string>
+    <string name="settings_delete_account">Выдаліць уліковы запіс</string>
 
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертыфікат</string>

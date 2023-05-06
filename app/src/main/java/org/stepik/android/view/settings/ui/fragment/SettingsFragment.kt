@@ -170,6 +170,10 @@ class SettingsFragment :
             screenManager.openAboutActivity(requireActivity())
         }
 
+        deleteAccountButton.setOnClickListener {
+
+        }
+
         logoutSettingsButton.setOnClickListener {
             val supportFragmentManager = activity
                 ?.supportFragmentManager
