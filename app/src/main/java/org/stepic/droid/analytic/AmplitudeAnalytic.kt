@@ -314,6 +314,7 @@ interface AmplitudeAnalytic {
 
     object Settings {
         const val SCREEN_OPENED = "Settings screen opened"
+        const val DELETE_ACCOUNT_CLICKED = "Delete account clicked"
     }
 
     object Sections {

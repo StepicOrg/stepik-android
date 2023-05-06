@@ -1305,6 +1305,7 @@
     <string name="settings_help_center">Help center</string>
     <string name="settings_help_center_url">https://support.stepik.org/hc/en-us</string>
     <string name="settings_app_version">Version: %s</string>
+    <string name="settings_delete_account">Delete account</string>
 
     <!-- Profile certificates -->
     <string name="certificates_percentage" translatable="false">%s%%</string>

@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.webkit.JsResult
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -19,6 +21,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.dialog_in_app_web_view.*
 import kotlinx.android.synthetic.main.dialog_in_app_web_view.view.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -116,6 +119,27 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
 
                             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                                 inAppWebViewPresenter.onError()
+                            }
+                        }
+                        it.webChromeClient = object : WebChromeClient() {
+                            override fun onJsConfirm(
+                                view: WebView?,
+                                url: String?,
+                                message: String?,
+                                result: JsResult
+                            ): Boolean {
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle(title)
+                                    .setMessage(message)
+                                    .setPositiveButton(R.string.yes) { _, _ ->
+                                        result.confirm()
+                                    }
+                                    .setNegativeButton(R.string.no) { _, _ ->
+                                        result.cancel()
+                                    }
+                                    .setOnDismissListener { result.cancel() }
+                                    .show()
+                                return true
                             }
                         }
                         it.setDownloadListener { url, _, _, _, _ ->
