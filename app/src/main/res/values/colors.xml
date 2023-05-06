@@ -88,6 +88,9 @@
     <color name="color_blue_200">#91C7FF</color>
     <color name="color_blue_200_alpha_12">#1F91C7FF</color>
 
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_white_alpha_12">#1EFFFFFF</color>
+    <color name="color_white_alpha_38">#61FFFFFF</color>
     <!-- stepic brand book-->
     <color name="correct_answer_background">@color/color_overlay_green_alpha_12</color>
 

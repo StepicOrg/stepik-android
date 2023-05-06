@@ -1064,7 +1064,7 @@
     <string name="course_purchase_payment_failure_body_part_2">сзвяжыцеся з падтрымкай</string>
     <string name="course_purchase_payment_failure_body_part_3">, калі памылка не будзе ліквідаваная. Паўторнага спісання сродкаў не адбудзецца.</string>
     <string name="course_purchase_payment_pending_body">Пасля завяршэння аплаты, вярніцеся на экран курса для завяршэння працэсу пакупкі.</string>
-    <string name="course_purchase_unavailable">Дадзены курс недаступны для пакупкі ў мабільным дадатку</string>
+    <string name="course_purchase_unavailable">Курс пакуль нельга купіць у мабільным дадатку.\nДадайце курс у Спіс жаданняў, каб вярнуцца да яго пазней або даведацца пра зніжэнне цаны</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Змяніць імя атрымальніка</string>
