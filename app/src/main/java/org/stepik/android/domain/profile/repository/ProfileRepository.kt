@@ -9,7 +9,14 @@ interface ProfileRepository {
     /**
      * Returns current profile
      */
-    fun getProfile(primarySourceType: DataSourceType = DataSourceType.CACHE): Single<Profile>
+    fun getProfile(
+        primarySourceType: DataSourceType = DataSourceType.CACHE
+    ): Single<Profile>
+
+    /**
+     * Returns current profile from remote without caching
+     */
+    fun getProfileFromRemoteWithoutCaching(): Single<Profile>
 
     /**
      * Updates profile data

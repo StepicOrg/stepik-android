@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vk.api.sdk.VK
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -26,6 +27,7 @@ import org.stepik.android.presentation.settings.SettingsPresenter
 import org.stepik.android.presentation.settings.SettingsView
 import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
+import org.stepik.android.view.settings.routing.DeleteAccountDeepLinkBuilder
 import org.stepik.android.view.settings.ui.dialog.NightModeSettingDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -34,7 +36,8 @@ class SettingsFragment :
     Fragment(R.layout.fragment_settings),
     AllowMobileDataDialogFragment.Callback,
     LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
-    SettingsView {
+    SettingsView,
+    InAppWebViewDialogFragment.Callback {
     companion object {
         fun newInstance(): SettingsFragment =
             SettingsFragment()
@@ -53,6 +56,9 @@ class SettingsFragment :
 
     @Inject
     internal lateinit var userPreferences: UserPreferences
+
+    @Inject
+    internal lateinit var deleteAccountDeepLinkBuilder: DeleteAccountDeepLinkBuilder
 
     @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -170,6 +176,17 @@ class SettingsFragment :
             screenManager.openAboutActivity(requireActivity())
         }
 
+        deleteAccountButton.setOnClickListener {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Settings.DELETE_ACCOUNT_CLICKED)
+            InAppWebViewDialogFragment
+                .newInstance(
+                    title = getString(R.string.settings_delete_account),
+                    url = deleteAccountDeepLinkBuilder.buildDeleteAccountUrl(),
+                    isProvideAuth = true
+                )
+                .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+        }
+
         logoutSettingsButton.setOnClickListener {
             val supportFragmentManager = activity
                 ?.supportFragmentManager
@@ -240,6 +257,13 @@ class SettingsFragment :
         VK.logout()
         (activity as? SignOutListener)?.onSignOut()
         screenManager.showLaunchScreenAfterLogout(requireContext())
+    }
+
+    /**
+     * InAppWebViewDialogFragment.Callback to check account deletion
+     */
+    override fun onDismissed() {
+        presenter.handleAccountDeletion()
     }
 
     /***

@@ -1287,7 +1287,7 @@
     <string name="course_purchase_payment_failure_body_part_2">contact our support team</string>
     <string name="course_purchase_payment_failure_body_part_3">, if the error still remains. Funds will not be debited again.</string>
     <string name="course_purchase_payment_pending_body">After completing your payment, return to the course screen to complete the purchase process.</string>
-    <string name="course_purchase_unavailable">This course is not available for purchase on the mobile app</string>
+    <string name="course_purchase_unavailable">The course cannot be purchased in the mobile app yet.\nAdd it to your Wishlist to come back later or be notified of the price drop</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Change recipient name</string>
@@ -1305,6 +1305,7 @@
     <string name="settings_help_center">Help center</string>
     <string name="settings_help_center_url">https://support.stepik.org/hc/en-us</string>
     <string name="settings_app_version">Version: %s</string>
+    <string name="settings_delete_account">Delete account</string>
 
     <!-- Profile certificates -->
     <string name="certificates_percentage" translatable="false">%s%%</string>

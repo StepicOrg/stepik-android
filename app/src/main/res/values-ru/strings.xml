@@ -1200,7 +1200,7 @@
     <string name="course_purchase_payment_failure_body_part_2">свяжитесь с поддержкой</string>
     <string name="course_purchase_payment_failure_body_part_3">, если ошибка не будет устранена. Повторного списания средств не произойдет.</string>
     <string name="course_purchase_payment_pending_body">После завершения оплаты, вернитесь на экран курса для завершения процесса покупки.</string>
-    <string name="course_purchase_unavailable">Курс недоступен для покупки в мобильном приложении</string>
+    <string name="course_purchase_unavailable">Курс пока нельзя купить в мобильном приложении.\nДобавьте курс в Cписок желаний, чтобы вернуться к нему позже или узнать о снижении цены</string>
 
     <!-- Certificate name change -->
     <string name="certificate_name_change_action">Изменить имя получателя</string>
@@ -1218,6 +1218,7 @@
     <string name="settings_help_center">Справочный центр</string>
     <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
     <string name="settings_app_version">Версия: %s</string>
+    <string name="settings_delete_account">Удалить учётную запись</string>
 
     <!-- Profile certificates -->
     <string name="certificates_regular_title">Сертификат</string>

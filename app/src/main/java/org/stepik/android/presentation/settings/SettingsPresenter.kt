@@ -8,6 +8,7 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
+import org.stepik.android.domain.settings.interactor.SettingsAccountDeletionInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import javax.inject.Inject
@@ -18,6 +19,7 @@ constructor(
     private val analytic: Analytic,
     private val stepikLogoutManager: StepikLogoutManager,
 
+    private val accountDeletionInteractor: SettingsAccountDeletionInteractor,
     private val feedbackInteractor: FeedbackInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -42,6 +44,25 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { view?.sendTextFeedback(it) },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    fun handleAccountDeletion() {
+        isBlockingLoading = true
+        compositeDisposable += accountDeletionInteractor
+            .isCurrentAccountWasDeleted()
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .doFinally {
+                isBlockingLoading = false
+            }
+            .subscribeBy(
+                onSuccess = { isCurrentAccountWasDeleted ->
+                    if (isCurrentAccountWasDeleted) {
+                        onLogoutClicked()
+                    }
+                },
                 onError = emptyOnErrorStub
             )
     }

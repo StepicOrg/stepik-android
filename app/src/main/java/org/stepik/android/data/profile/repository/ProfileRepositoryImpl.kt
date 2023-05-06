@@ -37,6 +37,9 @@ constructor(
         }
     }
 
+    override fun getProfileFromRemoteWithoutCaching(): Single<Profile> =
+        profileRemoteDataSource.getProfile()
+
     override fun saveProfile(profile: Profile): Single<Profile> =
         profileRemoteDataSource
             .saveProfile(profile)
