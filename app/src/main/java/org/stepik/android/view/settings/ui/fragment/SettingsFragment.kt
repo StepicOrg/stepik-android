@@ -27,6 +27,7 @@ import org.stepik.android.presentation.settings.SettingsPresenter
 import org.stepik.android.presentation.settings.SettingsView
 import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
+import org.stepik.android.view.settings.routing.DeleteAccountDeepLinkBuilder
 import org.stepik.android.view.settings.ui.dialog.NightModeSettingDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -55,6 +56,9 @@ class SettingsFragment :
 
     @Inject
     internal lateinit var userPreferences: UserPreferences
+
+    @Inject
+    internal lateinit var deleteAccountDeepLinkBuilder: DeleteAccountDeepLinkBuilder
 
     @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
@@ -177,7 +181,7 @@ class SettingsFragment :
             InAppWebViewDialogFragment
                 .newInstance(
                     title = getString(R.string.settings_delete_account),
-                    url = "https://stepik.org/users/delete-account/",
+                    url = deleteAccountDeepLinkBuilder.buildDeleteAccountUrl(),
                     isProvideAuth = true
                 )
                 .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
