@@ -17,7 +17,7 @@ constructor(
     private val profileCacheDataSource: ProfileCacheDataSource
 ) : ProfileRepository {
 
-    override fun getProfile(primarySourceType: DataSourceType, canFallback: Boolean): Single<Profile> {
+    override fun getProfile(primarySourceType: DataSourceType): Single<Profile> {
         val remoteSource = profileRemoteDataSource
             .getProfile()
             .doCompletableOnSuccess(profileCacheDataSource::saveProfile)
@@ -27,23 +27,18 @@ constructor(
 
         return when (primarySourceType) {
             DataSourceType.REMOTE ->
-                if (canFallback) {
-                    remoteSource.onErrorResumeNext(cacheSource.toSingle())
-                } else {
-                    remoteSource
-                }
+                remoteSource.onErrorResumeNext(cacheSource.toSingle())
 
             DataSourceType.CACHE ->
-                if (canFallback) {
-                    cacheSource.switchIfEmpty(remoteSource)
-                } else {
-                    cacheSource.toSingle()
-                }
+                cacheSource.switchIfEmpty(remoteSource)
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }
     }
+
+    override fun getProfileFromRemoteWithoutCaching(): Single<Profile> =
+        profileRemoteDataSource.getProfile()
 
     override fun saveProfile(profile: Profile): Single<Profile> =
         profileRemoteDataSource
