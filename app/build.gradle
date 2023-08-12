@@ -24,6 +24,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
+
+        buildConfigField "boolean", "IS_GOOGLE_PLAY", "true"
     }
 
     sourceSets {
@@ -102,6 +104,16 @@ android {
             firebaseCrashlytics {
                 mappingFileUploadEnabled false
             }
+        }
+
+        /**
+         * Release with old keys for app distribution provider other than Google Play
+         */
+        releaseOldKeys {
+            initWith release
+            signingConfig signingConfigs.stage
+            buildConfigField "boolean", "IS_GOOGLE_PLAY", "false"
+            matchingFallbacks = ['release']
         }
 
         //the apk of this type is signed by old prod keys
@@ -235,6 +247,7 @@ dependencies {
 
     debugImplementation libraries.leakCanaryNoOp // TODO APPS-3670: Update LeakCanary to support Android 12
     releaseImplementation libraries.leakCanaryNoOp
+    releaseOldKeysImplementation libraries.leakCanaryNoOp
     stageImplementation libraries.leakCanaryNoOp
     stageDebuggableImplementation libraries.leakCanaryNoOp
 
@@ -268,6 +281,7 @@ dependencies {
     stageDebuggableImplementation libraries.toolargetool
 
     stageImplementation libraries.flipperNoop
+    releaseOldKeysImplementation libraries.flipperNoop
     releaseImplementation libraries.flipperNoop
 }
 
