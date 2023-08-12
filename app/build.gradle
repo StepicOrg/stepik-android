@@ -25,6 +25,9 @@ android {
 
         multiDexEnabled true
 
+        /**
+         * Field changes behaviour of Course purchases for different stores
+         */
         buildConfigField "boolean", "IS_GOOGLE_PLAY", "true"
     }
 
