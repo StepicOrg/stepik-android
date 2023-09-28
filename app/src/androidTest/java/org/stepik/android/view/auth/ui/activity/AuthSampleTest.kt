@@ -10,24 +10,26 @@ class AuthSampleTest : TestCase() {
     val activityTestRule = ActivityScenarioRule(SocialAuthActivity::class.java)
 
     @Test
-    fun test() =
+    fun testGuestCanLoginWithCorrectCredentials() =
         run {
-            step("Open Social Auth Screen") {
-                testLogger.d("I am testLogger")
+            step("Open Credential Auth Screen") {
+                testLogger.d("Open Credential Auth Screen")
                 SocialAuthScreen {
-                    signInWithEmailButton {
-                        isVisible()
-                        click()
-                    }
+                    openCredentialAuthScreen()
                 }
             }
 
-            step("Open Credential Auth Screen") {
+            step("Login with email and password on credential auth screen") {
+                testLogger.i("Login with email and password on credential auth screen")
                 CredentialAuthScreen {
-                    loginField.isVisible()
-                    loginField.typeText("test@stepik.org")
-                    passwordField.typeText("stepikthebest")
-                    loginField.hasText("test@stepik.org")
+                    loginWithEmailAndPassword(email = "testlearner@stepik.org", password = "512")
+                }
+            }
+
+            step("Should be a home screen after login") {
+                testLogger.i("Should be a home screen after login")
+                MainFeedActivity {
+                    shouldBeHomeScreen()
                 }
             }
         }
