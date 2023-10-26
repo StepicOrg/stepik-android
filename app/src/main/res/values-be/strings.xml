@@ -639,7 +639,7 @@
 
     <string name="step_disabled_teacher_tariff_description">"\n\nЗа крок выкарыстаная платная функцыянальнасць "</string>
     <string name="step_disabled_teacher_tariff_title">Аб тарыфных планах</string>
-    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/ru/articles/360012252539</string>
+    <string name="step_disabled_teacher_tariff_url">https://help.stepik.org/article/54722</string>
 
     <string name="step_disabled_student_title">Убачыць задачу пакуль нельга</string>
     <string name="step_disabled_student_description_part_1">"Напішыце аўтарам курсу, каб яны звярнулі ўвагу на налады "</string>
@@ -1080,7 +1080,7 @@
     <!-- Settings -->
     <string name="settings_contact_support">Напісаць у падтрымку</string>
     <string name="settings_help_center">Даведачны цэнтр</string>
-    <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
+    <string name="settings_help_center_url">https://help.stepik.org/</string>
     <string name="settings_app_version">Версія: %s</string>
     <string name="settings_delete_account">Выдаліць уліковы запіс</string>
 
