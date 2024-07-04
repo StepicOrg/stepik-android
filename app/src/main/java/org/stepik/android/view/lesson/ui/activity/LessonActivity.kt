@@ -2,7 +2,6 @@ package org.stepik.android.view.lesson.ui.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,13 +15,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.play.core.review.ReviewInfo
-import com.google.android.play.core.review.ReviewManager
-import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_is_exam.*
@@ -36,12 +31,10 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
-import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
-import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.REQUEST_NOTIFICATION_PERMISSION
 import org.stepic.droid.util.RatingUtil
 import org.stepic.droid.util.isNotificationPermissionGranted
@@ -137,12 +130,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     private lateinit var stepsAdapter: StepFragmentAdapter
 
-    private lateinit var manager: ReviewManager
-    private var reviewInfo: ReviewInfo? = null
-
-    private val progressDialogFragment: DialogFragment =
-        LoadingProgressDialogFragment.newInstance()
-
     private var infoMenuItem: MenuItem? = null
     private var isInfoMenuItemVisible: Boolean = false
         set(value) {
@@ -155,8 +142,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lesson)
-
-        initReview()
 
         if (savedInstanceState == null) {
             if (intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)) {
@@ -496,7 +481,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
 
         if (config.isAppInStore) {
-            requestReview()
+            screenManager.showStoreWithApp(this)
         } else {
             setupTextFeedback()
         }
@@ -523,37 +508,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             getString(R.string.feedback_subject),
             DeviceInfoUtil.getInfosAboutDevice(this, "\n")
         )
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun initReview() {
-        manager = ReviewManagerFactory.create(this)
-        manager.requestReviewFlow()
-            .addOnCompleteListener { request ->
-                if (request.isSuccessful) {
-                    reviewInfo = request.result
-                }
-            }
-    }
-
-    /*
-    * Google Play enforces a time-bound quota on how often a user can be shown the review dialog, so
-    * launchReviewFlow may not always display the dialog.
-    */
-    private fun requestReview() {
-        if (reviewInfo != null) {
-            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
-            manager.launchReviewFlow(this, reviewInfo)
-                .addOnFailureListener {
-                    ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
-                    screenManager.showStoreWithApp(this)
-                }
-                .addOnCompleteListener {
-                    ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
-                }
-        } else {
-            screenManager.showStoreWithApp(this)
-        }
     }
 
     @SuppressLint("NewApi") // Suppressed, because isNotificationPermissionGranted() returns true for less that Build.VERSION_CODES.TIRAMISU
