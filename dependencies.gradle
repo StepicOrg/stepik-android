@@ -71,7 +71,7 @@ ext.versions = [
         googleauth           : '18.1.0',
         firebaseBoM          : '28.4.1',
 
-        billing              : '4.0.0',
+        billing              : '6.0.0',
 
 //        facebook             : '8.1.0',
         vk                   : '2.2.3',
