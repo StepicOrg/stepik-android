@@ -1332,4 +1332,6 @@
     <string name="course_news_on_event_sent">%s - %s</string>
     <string name="course_news_one_time_scheduled">Scheduled for %s</string>
     <string name="course_news_one_time_sending">From %s</string>
+
+    <string name="notification_permission_error">Grant permission to show notifications manually in settings</string>
 </resources>

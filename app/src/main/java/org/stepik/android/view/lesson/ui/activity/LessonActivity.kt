@@ -1,8 +1,11 @@
 package org.stepik.android.view.lesson.ui.activity
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -10,6 +13,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -37,8 +42,11 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.REQUEST_NOTIFICATION_PERMISSION
 import org.stepic.droid.util.RatingUtil
+import org.stepic.droid.util.isNotificationPermissionGranted
 import org.stepic.droid.util.reportRateEvent
+import org.stepic.droid.util.requestMultiplePermissions
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
@@ -548,8 +556,45 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         }
     }
 
+    @SuppressLint("NewApi") // Suppressed, because isNotificationPermissionGranted() returns true for less that Build.VERSION_CODES.TIRAMISU
+    override fun onStreakNotificationDialogAccepted() {
+        if (isNotificationPermissionGranted()) {
+            TimeIntervalPickerDialogFragment
+                .newInstance()
+                .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+        } else {
+            requestNotificationPermission()
+        }
+    }
+
     override fun onStreakNotificationDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
         lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_NOTIFICATION_PERMISSION -> {
+                val deniedPermissionIndex = grantResults
+                    .indexOf(PackageManager.PERMISSION_DENIED)
+
+                if (deniedPermissionIndex != -1) {
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[deniedPermissionIndex])) {
+                        lessonPager.snackbar(messageRes = R.string.notification_permission_error)
+                    }
+                } else {
+                    TimeIntervalPickerDialogFragment
+                        .newInstance()
+                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        val permissions = listOf(Manifest.permission.POST_NOTIFICATIONS)
+        requestMultiplePermissions(permissions, REQUEST_NOTIFICATION_PERMISSION)
     }
 }

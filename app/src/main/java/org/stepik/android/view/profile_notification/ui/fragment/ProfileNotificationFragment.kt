@@ -1,9 +1,15 @@
 package org.stepik.android.view.profile_notification.ui.fragment
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,7 +22,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.REQUEST_NOTIFICATION_PERMISSION
+import org.stepic.droid.util.isNotificationPermissionGranted
+import org.stepic.droid.util.requestMultiplePermissions
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.profile_notification.ProfileNotificationPresenter
 import org.stepik.android.presentation.profile_notification.ProfileNotificationView
@@ -92,18 +102,26 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
         }
     }
 
+    @SuppressLint("NewApi") // Suppressed, because isNotificationPermissionGranted() returns true for less that Build.VERSION_CODES.TIRAMISU
     override fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String) {
-        notificationStreakSwitch.isChecked = notificationEnabled
+        val notificationEnabledWithPermission = notificationEnabled && requireContext().isNotificationPermissionGranted()
+
+        notificationStreakSwitch.isChecked = notificationEnabledWithPermission
         if (notificationStreakSwitch.visibility != View.VISIBLE) {
             notificationStreakSwitch.visibility = View.VISIBLE
         }
-        if (notificationEnabled) {
+        if (notificationEnabledWithPermission) {
             hideNotificationTime(false)
         } else {
             hideNotificationTime(true)
         }
 
         notificationStreakSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (!requireContext().isNotificationPermissionGranted()) {
+                requestNotificationPermission()
+                profileNotificationPresenter.tryShowNotificationSetting()
+                return@setOnCheckedChangeListener
+            }
             profileNotificationPresenter.switchNotificationStreak(isChecked)
             hideNotificationTime(!isChecked)
         }
@@ -152,6 +170,29 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         profileNotificationPresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString() + "")
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_NOTIFICATION_PERMISSION -> {
+                val deniedPermissionIndex = grantResults
+                    .indexOf(PackageManager.PERMISSION_DENIED)
+
+                if (deniedPermissionIndex != -1) {
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), permissions[deniedPermissionIndex])) {
+                        view?.snackbar(messageRes = R.string.notification_permission_error)
+                    }
+                } else {
+                    profileNotificationPresenter.tryShowNotificationSettingAfterGrantingPermission()
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        val permissions = listOf(Manifest.permission.POST_NOTIFICATIONS)
+        requestMultiplePermissions(permissions, REQUEST_NOTIFICATION_PERMISSION)
     }
 
     private fun initTimezone() {

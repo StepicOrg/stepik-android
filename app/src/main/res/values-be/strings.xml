@@ -1108,4 +1108,6 @@
     <string name="course_news_on_event_sent">%s - %s</string>
     <string name="course_news_one_time_scheduled">Запланавана на %s</string>
     <string name="course_news_one_time_sending">З %s</string>
+
+    <string name="notification_permission_error">Дазвольце паказ апавяшчэнняў у наладах</string>
 </resources>

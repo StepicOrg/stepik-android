@@ -1,11 +1,18 @@
 package org.stepic.droid.ui.activities
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.IdRes
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -27,9 +34,13 @@ import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.REQUEST_NOTIFICATION_PERMISSION
 import org.stepic.droid.util.commit
+import org.stepic.droid.util.isNotificationPermissionGranted
+import org.stepic.droid.util.requestMultiplePermissions
 import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -56,6 +67,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         ProfileMainFeedView,
         EarlyStreakListener,
         NotificationsBadgesListener,
+        StreakNotificationDialogFragment.Callback,
         TimeIntervalPickerDialogFragment.Companion.Callback {
 
     companion object {
@@ -411,10 +423,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onShowStreakSuggestion() {
-        if (intent.action == LOGGED_ACTION) {
+        if (intent.action == LOGGED_ACTION && !streakPresenter.wasStreakDialogSeenOnHomeScreen()) {
             intent.action = null
 
             analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_SHOWN)
+            streakPresenter.onStreakDialogSeenOnHomeScreen()
 
             StreakNotificationDialogFragment
                 .newInstance(
@@ -441,5 +454,46 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         badge.maxCharacterCount = 3
         badge.isVisible = true
         badge.verticalOffset = 8
+    }
+
+    @SuppressLint("NewApi") // // Suppressed, because isNotificationPermissionGranted() returns true for less that Build.VERSION_CODES.TIRAMISU
+    override fun onStreakNotificationDialogAccepted() {
+        if (isNotificationPermissionGranted()) {
+            TimeIntervalPickerDialogFragment
+                .newInstance()
+                .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+        } else {
+            requestNotificationPermission()
+        }
+    }
+
+    override fun onStreakNotificationDialogCancelled() {
+        analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_NOTIFICATION_PERMISSION -> {
+                val deniedPermissionIndex = grantResults
+                    .indexOf(PackageManager.PERMISSION_DENIED)
+
+                if (deniedPermissionIndex != -1) {
+                    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[deniedPermissionIndex])) {
+                        frame.snackbar(messageRes = R.string.notification_permission_error)
+                    }
+                } else {
+                    TimeIntervalPickerDialogFragment
+                        .newInstance()
+                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+                }
+            }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun requestNotificationPermission() {
+        val permissions = listOf(Manifest.permission.POST_NOTIFICATIONS)
+        requestMultiplePermissions(permissions, REQUEST_NOTIFICATION_PERMISSION)
     }
 }

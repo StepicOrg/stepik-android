@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.isNotificationPermissionGranted
 import org.stepik.android.view.notification.extension.PendingIntentCompat
 import org.stepik.android.view.notification.receiver.AlarmReceiver
 import javax.inject.Inject
@@ -45,6 +46,9 @@ constructor(
     }
 
     override fun showNotification(id: Long, notification: Notification) {
+        if (!context.isNotificationPermissionGranted()) {
+            return
+        }
         notificationManager.notify(id.toInt(), notification)
     }
 }
