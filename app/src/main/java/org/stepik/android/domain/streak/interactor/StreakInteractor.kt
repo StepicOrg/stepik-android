@@ -34,6 +34,13 @@ constructor(
         streakNotificationDelegate.scheduleStreakNotification()
     }
 
+    fun wasStreakDialogSeenOnHomeScreen(): Boolean =
+        sharedPreferenceHelper.wasStreakDialogSeenHomeScreen
+
+    fun onStreakDialogSeenOnHomeScreen() {
+        sharedPreferenceHelper.putWasStreakDialogSeenHomeScreen(true)
+    }
+
     private fun isStreakNotificationEnabled(): Boolean =
         sharedPreferenceHelper.isStreakNotificationEnabledNullable == null // default value, user not change in profile
 

@@ -9,9 +9,7 @@ import kotlinx.android.synthetic.main.header_streak_suggestion_dialog.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
-import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class StreakNotificationDialogFragment : DialogFragment() {
@@ -48,9 +46,8 @@ class StreakNotificationDialogFragment : DialogFragment() {
             .setMessage(message)
             .setPositiveButton(R.string.ok) { _, _ ->
                 analytic.reportEvent(positiveEvent)
-                TimeIntervalPickerDialogFragment
-                    .newInstance()
-                    .showIfNotExists(requireFragmentManager(), TimeIntervalPickerDialogFragment.TAG)
+                (activity as? Callback)
+                    ?.onStreakNotificationDialogAccepted()
             }
             .setNegativeButton(R.string.later_tatle) { _, _ ->
                 (activity as? Callback)
@@ -60,6 +57,7 @@ class StreakNotificationDialogFragment : DialogFragment() {
     }
 
     interface Callback {
+        fun onStreakNotificationDialogAccepted()
         fun onStreakNotificationDialogCancelled()
     }
 }

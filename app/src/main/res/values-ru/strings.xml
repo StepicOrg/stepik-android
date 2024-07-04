@@ -1244,4 +1244,6 @@
     <string name="course_news_on_event_sent">%s - %s</string>
     <string name="course_news_one_time_scheduled">Запланирована на %s</string>
     <string name="course_news_one_time_sending">С %s</string>
+
+    <string name="notification_permission_error">Разрешите показ уведомлений в настройках</string>
 </resources>
