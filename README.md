@@ -13,7 +13,22 @@ Features:
 
 ## Installation
 
-<a href="https://play.google.com/store/apps/details?id=org.stepic.droid&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" height="50" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"/></a>
+<a href="https://play.google.com/store/apps/details?id=org.stepic.droid&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" height="100" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"/></a>
+
+## Tech Stack
+
+|Category|Library|
+|:-:|:-:|
+|Networking|[Retrofit 2](https://github.com/square/retrofit)|
+|Serialization|[Gson](https://github.com/google/gson)|
+|Local Storage|[Room](https://developer.android.com/jetpack/androidx/releases/room)|
+|Asynchronous|[RxJava 2](https://github.com/ReactiveX/RxJava)|
+|Architecture|[Clean](https://hackmd.io/@eadm/BJg82eA7N)|
+|Dependency Injection|[Dagger 2](https://dagger.dev/)|
+|Presentation|[The Elm Architecture](https://github.com/eadm/AndroidKit/tree/master/presentation/presentation-redux)|
+|Crash Reporting / Performance Monitoring|[Firebase](https://firebase.google.com/)|
+|Navigation|Manual|
+|Image Loading|[Glide](https://github.com/bumptech/glide)|
 
 ## Support
 
