@@ -1,15 +1,15 @@
 # Stepik for Android
 
-Learn anywhere you want with the [Stepik](https://stepik.org)! [Stepik](https://stepik.org) is a platform offering the best online courses in Computer Science and various tech-related subjects. Whether you want to learn data structures, Python programming, statistics, or any other tech skill, Stepik has you covered.
+Learn anywhere you want with the Stepik! [Stepik](https://stepik.org) is a platform offering the best online courses in Computer Science and various tech-related subjects. Whether you want to learn data structures, Python programming, statistics, or any other tech skill, Stepik has you covered.
 
 <img src="/screenshots/01.webp?raw=true" width="33%" alt="Become smarter every day" title="Become smarter every day"><img src="/screenshots/02.webp?raw=true" width="33%" alt="Choose your course" title="Choose your course"><img src="/screenshots/03.webp?raw=true" width="33%" alt="Learn anywhere" title="Learn anywhere">
 
 Features:
-* Access on the Go: Watch video lectures and complete assignments wherever you are.
-* Offline Learning: Download lectures to study even when you don’t have internet access.
-* Community: Engage with fellow students in the comment section to get your questions answered.
-* Study Reminders: Set reminders to help you study regularly and keep improving your personal record.
-* Certification: Earn certificates upon course completion and share them on LinkedIn to boost your job prospects.
+* **Access on the Go:** Watch video lectures and complete assignments wherever you are.
+* **Offline Learning:** Download lectures to study even when you don’t have internet access.
+* **Community:** Engage with fellow students in the comment section to get your questions answered.
+* **Study Reminders:** Set reminders to help you study regularly and keep improving your personal record.
+* **Certification:** Earn certificates upon course completion and share them on LinkedIn to boost your job prospects.
 
 ## Installation
 
