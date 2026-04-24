@@ -11,10 +11,12 @@
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <queries>
         <intent>
@@ -148,6 +150,7 @@
 
         <service
             android:name="org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService"
+            android:foregroundServiceType="mediaPlayback"
             android:stopWithTask="true" />
 
         <activity
@@ -411,6 +414,9 @@
 
         <activity
             android:name="org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.rubricator.ui.RubricatorActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

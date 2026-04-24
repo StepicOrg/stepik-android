@@ -31,6 +31,8 @@ constructor(
                         onError = { onNewMessage(LessonDemoFeature.Message.FetchLessonDemoDataFailure) }
                     )
             }
+
+            else -> Unit
         }
     }
 }

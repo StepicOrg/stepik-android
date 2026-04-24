@@ -96,7 +96,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             page = 1,
             order = CourseListQuery.Order.ACTIVITY_DESC,
             isCataloged = true,
-            filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
+            filterQuery = CourseListFilterQuery()
         )
 
         catalogBlockContainer.setOnClickListener {

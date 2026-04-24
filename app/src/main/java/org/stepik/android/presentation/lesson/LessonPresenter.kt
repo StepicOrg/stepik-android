@@ -22,7 +22,6 @@ import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import org.stepik.android.domain.step.analytic.reportStepEvent
-import org.stepik.android.domain.step.interactor.StepIndexingInteractor
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.Lesson
@@ -56,7 +55,6 @@ constructor(
     private val stepQuizObservable: Observable<Long>,
 
     private val stepViewReportInteractor: ViewAssignmentReportInteractor,
-    private val stepIndexingInteractor: StepIndexingInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -70,11 +68,6 @@ constructor(
         }
 
     private var currentStepPosition = -1
-        set(value) {
-            field = value
-            endIndexing()
-            startIndexing(value)
-        }
 
     init {
         subscribeForProgressesUpdates()
@@ -84,13 +77,6 @@ constructor(
     override fun attachView(view: LessonView) {
         super.attachView(view)
         view.setState(state)
-
-        startIndexing(currentStepPosition)
-    }
-
-    override fun detachView(view: LessonView) {
-        endIndexing()
-        super.detachView(view)
     }
 
     /**
@@ -370,27 +356,6 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
-    }
-
-    /**
-     * Indexing
-     */
-    private fun startIndexing(position: Int) {
-        val state = (state as? LessonView.State.LessonLoaded)
-            ?: return
-
-        val step = (state.stepsState as? LessonView.StepsState.Loaded)
-            ?.stepItems
-            ?.getOrNull(position)
-            ?.stepWrapper
-            ?.step
-            ?: return
-
-        stepIndexingInteractor.startIndexing(state.lessonData.unit, state.lessonData.lesson, step)
-    }
-
-    private fun endIndexing() {
-        stepIndexingInteractor.endIndexing()
     }
 
     /**

@@ -6,19 +6,22 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.core.content.ContextCompat
 import androidx.media.session.MediaButtonReceiver
-import com.google.android.exoplayer2.PlaybackParameters
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ForwardingPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
 import com.google.android.exoplayer2.source.MediaSource
@@ -184,7 +187,11 @@ class VideoPlayerForegroundService : Service() {
                 }
 
                 override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
-                    startForeground(notificationId, notification)
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                        startForeground(notificationId, notification)
+                    } else {
+                        startForeground(notificationId, notification, FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
+                    }
                 }
             }
 
@@ -203,14 +210,13 @@ class VideoPlayerForegroundService : Service() {
             MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
         mediaSession.isActive = true
 
-        registerReceiver(mediaButtonReceiver, IntentFilter(Intent.ACTION_MEDIA_BUTTON))
+        ContextCompat.registerReceiver(this, mediaButtonReceiver, IntentFilter(Intent.ACTION_MEDIA_BUTTON), ContextCompat.RECEIVER_EXPORTED)
 
         playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
-
         mediaSessionConnector = MediaSessionConnector(mediaSession)
         mediaSessionConnector.setPlayer(player)
 
-        registerReceiver(headphonesReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
+        ContextCompat.registerReceiver(this, headphonesReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), ContextCompat.RECEIVER_EXPORTED)
     }
 
     private fun setPlayerData(videoPlayerData: VideoPlayerData?) {

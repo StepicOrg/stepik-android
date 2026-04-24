@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/ic_grip"
+        app:tint="?colorControlNormal" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/priceBackArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back"
+            app:tint="?colorControlNormal" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/priceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/filter_root_dialog_price_item_title"
+            android:textAppearance="?textAppearanceSubtitle1"
+            app:layout_constraintStart_toEndOf="@id/priceBackArrow"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/priceBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toStartOf="@id/priceTitle"
+            app:layout_constraintTop_toBottomOf="@id/priceTitle"
+            tools:text="@string/filter_dialog_price_any" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/filterPriceReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="16dp"
+            android:text="@string/filter_dialog_reset_action"
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="@color/color_overlay_violet"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/priceTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/view_divider_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_margin="16dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/startPriceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_dialog_price_from"
+            app:layout_constraintStart_toStartOf="@id/startPriceContainer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/endPriceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/filter_dialog_price_to"
+            app:layout_constraintStart_toStartOf="@id/endPriceContainer"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/startPriceContainer"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/startPriceTitle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/startPriceField"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_step_quiz_text_field"
+
+                android:gravity="center_vertical"
+                android:hint="@string/filter_dialog_price_from_hint"
+
+                android:inputType="number"
+                android:maxLength="6"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:paddingLeft="16dp"
+
+                android:paddingTop="12dp"
+                android:paddingRight="24dp"
+                android:paddingBottom="12dp"
+                android:singleLine="true"
+                android:textAppearance="?textAppearanceBody1"
+                app:backgroundTint="@color/material_outlined_stroke_color"
+                app:fontFamily="@font/roboto_medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/filter_dialog_price_ruble_sign"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/priceDivider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:text="@string/filter_dialog_price_divider"
+            app:layout_constraintBottom_toBottomOf="@id/startPriceContainer"
+            app:layout_constraintStart_toEndOf="@id/startPriceContainer"
+            app:layout_constraintTop_toTopOf="@id/startPriceContainer" />
+
+        <FrameLayout
+            android:id="@+id/endPriceContainer"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/priceDivider">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/endPriceField"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_step_quiz_text_field"
+
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:hint="@string/filter_dialog_price_to_hint"
+
+                android:inputType="number"
+                android:maxLength="6"
+                android:maxLines="1"
+                android:minHeight="48dp"
+                android:paddingLeft="16dp"
+
+                android:paddingTop="12dp"
+                android:paddingRight="24dp"
+                android:paddingBottom="12dp"
+                android:singleLine="true"
+                android:textAppearance="?textAppearanceBody1"
+                app:backgroundTint="@color/material_outlined_stroke_color"
+                app:fontFamily="@font/roboto_medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginHorizontal="8dp"
+                android:text="@string/filter_dialog_price_ruble_sign"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RadioGroup
+        android:id="@+id/priceDefaultsRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/priceDefaultFree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/filter_dialog_free" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/priceDefault5000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/filter_dialog_price_to_5000" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/priceDefault10000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/filter_dialog_price_to_10000" />
+    </RadioGroup>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/applyFilterAction"
+        style="@style/Widget.AppTheme.Button"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+
+        android:text="@string/filter_dialog_apply"
+        android:theme="@style/ThemeOverlay.Violet" />
+</androidx.appcompat.widget.LinearLayoutCompat>

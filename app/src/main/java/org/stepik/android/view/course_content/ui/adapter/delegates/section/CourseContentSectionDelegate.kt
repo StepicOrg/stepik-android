@@ -83,6 +83,8 @@ class CourseContentSectionDelegate(
 
                     is DownloadProgress.Status.Cached ->
                         sectionClickListener.onItemRemoveClicked(item)
+
+                    else -> Unit
                 }
             }
 
@@ -217,6 +219,8 @@ class CourseContentSectionDelegate(
                         ContextCompat.getColor(context, R.color.color_overlay_green)
                     )
                 }
+
+                else -> Unit
             }
 
             val examActionTitle = when (sectionItem.examStatus) {

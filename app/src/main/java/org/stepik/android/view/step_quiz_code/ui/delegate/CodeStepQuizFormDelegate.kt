@@ -37,6 +37,7 @@ class CodeStepQuizFormDelegate(
             when (value) {
                 is CodeStepQuizFormState.Lang ->
                     codeLayoutDelegate.setLanguage(value.lang, value.code)
+                else -> Unit
             }
             codeLayoutDelegate.setDetailsContentData((value as? CodeStepQuizFormState.Lang)?.lang)
         }

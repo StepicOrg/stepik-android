@@ -65,6 +65,7 @@ class CourseContentControlBarDelegate(
                                         controlBarClickListener.onDownloadAllClicked(data.course)
                                     is DownloadProgress.Status.Cached ->
                                         controlBarClickListener.onRemoveAllClicked(data.course)
+                                    else -> Unit
                                 }
                             }
                         }
@@ -157,6 +158,8 @@ class CourseContentControlBarDelegate(
                     }
                     popupMenu.show()
                 }
+
+                else -> Unit
             }
         }
     }

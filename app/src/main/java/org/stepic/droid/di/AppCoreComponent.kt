@@ -129,6 +129,8 @@ import org.stepik.android.view.onboarding.ui.activity.OnboardingGoalActivity
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.base.receiver.DismissedNotificationReceiver
+import org.stepik.android.view.injection.filter_search.FilterSearchComponent
+import org.stepik.android.view.injection.rubricator.RubricatorComponent
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
 
@@ -296,6 +298,10 @@ interface AppCoreComponent {
     fun splitTestsComponentBuilder(): SplitTestsComponent.Builder
 
     fun inAppPurchasesComponentBuilder(): InAppPurchasesComponent.Builder
+
+    fun rubricatorComponentBuilder(): RubricatorComponent.Builder
+
+    fun filterSearchComponentBuilder(): FilterSearchComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

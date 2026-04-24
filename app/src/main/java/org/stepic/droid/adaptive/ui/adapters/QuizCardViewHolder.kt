@@ -179,6 +179,8 @@ class QuizCardViewHolder(
                     CardAnimations.playWiggleAnimation(container)
                 }
             }
+
+            else -> Unit
         }
     }
 

@@ -159,6 +159,8 @@ class EditStepSourceDialogFragment :
 
                 super.dismiss()
             }
+
+            else -> Unit
         }
     }
 

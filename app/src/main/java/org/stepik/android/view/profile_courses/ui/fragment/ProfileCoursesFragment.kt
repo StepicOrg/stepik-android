@@ -158,6 +158,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
                 (profileCoursesRecycler.layoutManager as? GridLayoutManager)
                     ?.spanCount = min(resources.getInteger(R.integer.course_list_rows), state.courseListDataItems.size)
             }
+            else -> Unit
         }
         tableLayoutHorizontalSpanCountResolver.resolveSpanCount(coursesAdapter.itemCount).let { resolvedSpanCount ->
             if (tableLayoutManager.spanCount != resolvedSpanCount) {

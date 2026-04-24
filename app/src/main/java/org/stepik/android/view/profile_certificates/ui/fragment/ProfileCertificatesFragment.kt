@@ -122,6 +122,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
                 profileId = state.profileData.user.id
                 isCurrentUser = state.profileData.isCurrentUser
             }
+            else -> Unit
         }
     }
 }

@@ -9,8 +9,8 @@ import com.android.billingclient.api.BillingClient
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.api.sdk.VK
-import com.yandex.metrica.YandexMetrica
-import com.yandex.metrica.YandexMetricaConfig
+import io.appmetrica.analytics.AppMetrica
+import io.appmetrica.analytics.AppMetricaConfig
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
@@ -111,8 +111,9 @@ class App : MultiDexApplication() {
         VK.initialize(this)
         
         // init AppMetrica SDK
-        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
-        YandexMetrica.enableActivityAutoTracking(this)
+        val config = AppMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build()
+        AppMetrica.activate(this, config)
+        AppMetrica.enableActivityAutoTracking(this)
 
         component = DaggerAppCoreComponent.builder()
                 .context(application)

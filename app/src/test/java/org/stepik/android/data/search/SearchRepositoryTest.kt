@@ -35,7 +35,7 @@ class SearchRepositoryTest {
             SearchResultQuery(
                 page = page,
                 query = rawQuery,
-                filterQuery = CourseListFilterQuery(language = lang)
+                filterQuery = CourseListFilterQuery()
             )
         )) doReturn Single.just(remoteResult)
 
@@ -44,7 +44,7 @@ class SearchRepositoryTest {
                 SearchResultQuery(
                     page = page,
                     query = rawQuery,
-                    filterQuery = CourseListFilterQuery(language = lang)
+                    filterQuery = CourseListFilterQuery()
                 )
             )
             .test()

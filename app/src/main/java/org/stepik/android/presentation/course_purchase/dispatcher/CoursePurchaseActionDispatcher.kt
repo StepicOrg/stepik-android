@@ -118,6 +118,8 @@ constructor(
             }
             is CoursePurchaseFeature.Action.LogAnalyticEvent ->
                 analytic.report(action.analyticEvent)
+
+            else -> Unit
         }
     }
 }

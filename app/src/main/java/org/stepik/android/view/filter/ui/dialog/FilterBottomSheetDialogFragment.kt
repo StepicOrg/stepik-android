@@ -103,6 +103,7 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     private fun setupFilters(filterQuery: CourseListFilterQuery) {
+        /**
         val radioButton = when (filterQuery.language) {
             StepikFilter.RUSSIAN.language ->
                 rusRadioButton
@@ -123,37 +124,11 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
         if (filterQuery.isPaid == false) {
             freeSwitch.isChecked = true
         }
+         **/
     }
 
-    private fun mapFiltersToQuery(): CourseListFilterQuery {
-        val language = when {
-            rusRadioButton.isChecked ->
-                StepikFilter.RUSSIAN.language
-
-            engRadioButton.isChecked ->
-                StepikFilter.ENGLISH.language
-
-            anyRadioButton.isChecked ->
-                null
-
-            else ->
-                null
-        }
-
-        val hasCertificate = if (certificatesSwitch.isChecked) {
-            true
-        } else {
-            null
-        }
-
-        val isPaid = if (freeSwitch.isChecked) {
-            false
-        } else {
-            null
-        }
-
-        return CourseListFilterQuery(language, isPaid, hasCertificate)
-    }
+    private fun mapFiltersToQuery(): CourseListFilterQuery =
+        CourseListFilterQuery()
 
     private fun onRadioButtonClicked(buttonView: CompoundButton) {
         radioButtons.forEach {

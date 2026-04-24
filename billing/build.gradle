@@ -57,5 +57,5 @@ dependencies {
     androidTestImplementation libraries.espressoIntents
 
     api libraries.billing
-    api libraries.billingKtx
+//    api libraries.billingKtx
 }

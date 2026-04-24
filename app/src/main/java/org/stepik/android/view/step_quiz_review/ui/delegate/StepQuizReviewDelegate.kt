@@ -226,6 +226,7 @@ class StepQuizReviewDelegate(
                 reviewStep3Loading.isVisible = false
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.COMPLETED)
             }
+            else -> Unit
         }
     }
 
@@ -287,6 +288,7 @@ class StepQuizReviewDelegate(
                 reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
                 reviewStep4Hint.isVisible = false
             }
+            else -> Unit
         }
     }
 

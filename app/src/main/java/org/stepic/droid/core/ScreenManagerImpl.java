@@ -16,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.FileProvider;
-import androidx.core.net.UriKt;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -89,6 +88,7 @@ import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
+import org.stepik.android.view.rubricator.ui.RubricatorActivity;
 import org.stepik.android.view.settings.ui.activity.SettingsActivity;
 import org.stepik.android.view.solutions.ui.activity.SolutionsActivity;
 import org.stepik.android.view.user_reviews.ui.activity.UserReviewsActivity;
@@ -644,8 +644,12 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openSocialMediaLink(Context context, String link) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-        context.startActivity(browserIntent);
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+            context.startActivity(browserIntent);
+        } catch (Exception ex) {
+            // Silent handling
+        }
     }
 
     @Override
@@ -745,5 +749,10 @@ public class ScreenManagerImpl implements ScreenManager {
         taskStackBuilder.addNextIntent(mainIntent);
         taskStackBuilder.addNextIntent(courseIntent);
         taskStackBuilder.startActivities();
+    }
+
+    @Override
+    public void showRubricator(Context context, String rubricatorUrl) {
+        context.startActivity(RubricatorActivity.Companion.createIntent(context, rubricatorUrl));
     }
 }

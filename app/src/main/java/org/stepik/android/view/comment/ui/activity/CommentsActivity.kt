@@ -281,6 +281,8 @@ class CommentsActivity :
 
                     is CommentsView.CommentsState.Loaded ->
                         commentsAdapter.items = state.commentsState.commentItems
+
+                    else -> Unit
                 }
 
                 if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
@@ -288,6 +290,8 @@ class CommentsActivity :
                     intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
                 }
             }
+
+            else -> Unit
         }
 
         invalidateOptionsMenu()

@@ -17,6 +17,7 @@ import org.stepik.android.presentation.course_list_redux.mapper.CourseListStateM
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.course_list_redux.reducer.CourseListReducer
 import org.stepik.android.presentation.enrollment.EnrollmentFeature
+import org.stepik.android.presentation.features.reducer.FeaturesReducer
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.reducer.FiltersReducer
 import org.stepik.android.presentation.progress.ProgressFeature
@@ -36,6 +37,7 @@ constructor(
     private val courseListReducer: CourseListReducer,
     private val courseContinueReducer: CourseContinueReducer,
     private val bannerReducer: BannerReducer,
+    private val featuresReducer: FeaturesReducer,
     private val courseListStateMapper: CourseListStateMapper
 ) : StateReducer<State, Message, Action> {
     override fun reduce(state: State, message: Message): Pair<State, Set<Action>> =
@@ -271,6 +273,11 @@ constructor(
             is Message.BannerMessage -> {
                 val (bannerState, bannerActions) = bannerReducer.reduce(state.bannerState, message.message)
                 state.copy(bannerState = bannerState) to bannerActions.map(Action::BannerAction).toSet()
+            }
+
+            is Message.FeaturesMessage -> {
+                val (featuresState, featuresActions) = featuresReducer.reduce(state.featuresState, message.message)
+                state.copy(featuresState = featuresState) to featuresActions.map(Action::FeaturesAction).toSet()
             }
         } ?: state to emptySet()
 
