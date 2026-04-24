@@ -43,6 +43,7 @@ constructor(
                         onError = emptyOnErrorStub
                     )
             }
+            else -> Unit
         }
     }
 }

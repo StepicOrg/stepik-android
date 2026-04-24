@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        app:srcCompat="@drawable/ic_grip"
+        app:tint="?colorControlNormal" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/difficultyBackArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back"
+            app:tint="?colorControlNormal" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/difficultyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/filter_root_dialog_level_item_title"
+            android:textAppearance="?textAppearanceSubtitle1"
+            app:layout_constraintStart_toEndOf="@id/difficultyBackArrow"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/difficultyBody"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toStartOf="@id/difficultyTitle"
+            app:layout_constraintTop_toBottomOf="@id/difficultyTitle"
+            tools:text="@string/filter_dialog_language_any" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/filterDifficultyReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="16dp"
+            android:text="@string/filter_dialog_reset_action"
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="@color/color_overlay_violet"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintStart_toEndOf="@id/difficultyTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        layout="@layout/view_divider_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_margin="16dp" />
+
+    <CheckBox
+        android:id="@+id/beginnerCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/filter_dialog_level_easy"
+        android:textAppearance="?textAppearanceBody1" />
+
+    <CheckBox
+        android:id="@+id/intermediateCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/filter_dialog_level_normal"
+        android:textAppearance="?textAppearanceBody1" />
+
+    <CheckBox
+        android:id="@+id/expertCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="@string/filter_dialog_level_hard"
+        android:textAppearance="?textAppearanceBody1" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/applyFilterAction"
+        style="@style/Widget.AppTheme.Button"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+
+        android:text="@string/filter_dialog_apply"
+        android:theme="@style/ThemeOverlay.Violet" />
+</androidx.appcompat.widget.LinearLayoutCompat>

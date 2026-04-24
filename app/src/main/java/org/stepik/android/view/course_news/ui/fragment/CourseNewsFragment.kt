@@ -118,6 +118,7 @@ class CourseNewsFragment : Fragment(R.layout.fragment_course_news),
                     courseNewsAdapter.items = state.courseNewsListItems
                 }
             }
+            else -> Unit
         }
     }
 

@@ -6,6 +6,7 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.presentation.enrollment.EnrollmentFeature
+import org.stepik.android.presentation.features.FeaturesFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.progress.ProgressFeature
 import org.stepik.android.presentation.stories.StoriesFeature
@@ -18,7 +19,8 @@ interface CatalogFeature {
         val filtersState: FiltersFeature.State,
         val blocksState: BlocksState,
         val courseContinueState: CourseContinueFeature.State,
-        val bannerState: BannerFeature.State
+        val bannerState: BannerFeature.State,
+        val featuresState: FeaturesFeature.State
     )
 
     sealed class BlocksState {
@@ -45,6 +47,7 @@ interface CatalogFeature {
         data class EnrollmentMessage(val message: EnrollmentFeature.Message) : Message()
         data class WishlistMessage(val message: WishlistFeature.Message) : Message()
         data class BannerMessage(val message: BannerFeature.Message) : Message()
+        data class FeaturesMessage(val message: FeaturesFeature.Message) : Message()
     }
 
     sealed class Action {
@@ -58,6 +61,7 @@ interface CatalogFeature {
         data class CourseListAction(val action: CourseListFeature.Action) : Action()
         data class CourseContinueAction(val action: CourseContinueFeature.Action) : Action()
         data class BannerAction(val action: BannerFeature.Action) : Action()
+        data class FeaturesAction(val action: FeaturesFeature.Action) : Action()
 
         sealed class ViewAction : Action() {
             data class CourseContinueViewAction(val viewAction: CourseContinueFeature.Action.ViewAction) : ViewAction()

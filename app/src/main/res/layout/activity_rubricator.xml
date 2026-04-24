@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/rubricatorAppbar"
+        layout="@layout/view_centered_appbar_binding" />
+
+    <FrameLayout
+        android:id="@+id/rubricatorRootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/rubricatorProgressBar"
+            layout="@layout/progress_bar_on_empty_screen" />
+
+        <include
+            android:id="@+id/rubricatorError"
+            layout="@layout/error_no_connection_with_button_binding"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rubricatorRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:scrollbarStyle="outsideOverlay" />
+
+    </FrameLayout>
+
+</LinearLayout>

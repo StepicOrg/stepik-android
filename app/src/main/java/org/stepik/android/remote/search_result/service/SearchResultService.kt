@@ -3,9 +3,13 @@ package org.stepik.android.remote.search_result.service
 import io.reactivex.Single
 import org.stepik.android.remote.search_result.model.SearchResultResponse
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 interface SearchResultService {
     @GET("api/search-results")
-    fun getSearchResults(@QueryMap query: Map<String, String>): Single<SearchResultResponse>
+    fun getSearchResults(
+        @QueryMap query: Map<String, String>,
+        @Query("difficulty[]") difficulty: List<String>
+    ): Single<SearchResultResponse>
 }

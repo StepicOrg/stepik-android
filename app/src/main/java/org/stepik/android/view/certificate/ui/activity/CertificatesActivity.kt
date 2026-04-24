@@ -151,6 +151,7 @@ class CertificatesActivity :
                 certificatesAdapter.items = state.certificates
             is CertificatesView.State.CertificatesRemoteLoading ->
                 certificatesAdapter.items = state.certificates
+            else -> Unit
         }
     }
 

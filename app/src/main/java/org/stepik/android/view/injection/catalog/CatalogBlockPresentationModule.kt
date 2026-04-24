@@ -15,6 +15,8 @@ import org.stepik.android.presentation.course_continue_redux.CourseContinueFeatu
 import org.stepik.android.presentation.course_continue_redux.dispatcher.CourseContinueActionDispatcher
 import org.stepik.android.presentation.course_list_redux.dispatcher.CourseListActionDispatcher
 import org.stepik.android.presentation.enrollment.dispatcher.EnrollmentActionDispatcher
+import org.stepik.android.presentation.features.FeaturesFeature
+import org.stepik.android.presentation.features.dispatcher.FeaturesActionDispatcher
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.filter.dispatcher.FiltersActionDispatcher
 import org.stepik.android.presentation.progress.dispatcher.ProgressActionDispatcher
@@ -44,7 +46,8 @@ object CatalogBlockPresentationModule {
         progressActionDispatcher: ProgressActionDispatcher,
         enrollmentActionDispatcher: EnrollmentActionDispatcher,
         wishlistActionDispatcher: WishlistActionDispatcher,
-        bannerActionDispatcher: BannerActionDispatcher
+        bannerActionDispatcher: BannerActionDispatcher,
+        featuresActionDispatcher: FeaturesActionDispatcher
     ): ViewModel =
         CatalogViewModel(
             ReduxFeature(
@@ -53,7 +56,8 @@ object CatalogBlockPresentationModule {
                     filtersState = FiltersFeature.State.Idle,
                     blocksState = CatalogFeature.BlocksState.Idle,
                     courseContinueState = CourseContinueFeature.State.Idle,
-                    bannerState = BannerFeature.State.Idle
+                    bannerState = BannerFeature.State.Idle,
+                    featuresState = FeaturesFeature.State.Idle
                 ), catalogReducer
             )
                 .wrapWithActionDispatcher(catalogActionDispatcher)
@@ -109,6 +113,12 @@ object CatalogBlockPresentationModule {
                     bannerActionDispatcher.transform(
                         transformAction = { it.safeCast<CatalogFeature.Action.BannerAction>()?.action },
                         transformMessage = CatalogFeature.Message::BannerMessage
+                    )
+                )
+                .wrapWithActionDispatcher(
+                    featuresActionDispatcher.transform(
+                        transformAction = { it.safeCast<CatalogFeature.Action.FeaturesAction>()?.action },
+                        transformMessage = CatalogFeature.Message::FeaturesMessage
                     )
                 )
                 .wrapWithViewContainer()

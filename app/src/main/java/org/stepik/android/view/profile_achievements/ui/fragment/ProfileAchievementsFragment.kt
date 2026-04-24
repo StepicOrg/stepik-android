@@ -151,6 +151,8 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
                 profileId = state.userId
                 isMyProfile = state.isMyProfile
             }
+
+            else -> Unit
         }
     }
 

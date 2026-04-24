@@ -45,7 +45,7 @@ import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
-import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
+import org.stepik.android.view.filter.ui.dialog.FilterSearchBottomSheetDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.app.core.model.PaginationDirection
 import ru.nobird.android.view.base.ui.extension.argument
@@ -64,7 +64,7 @@ class CourseListSearchFragment :
         fun newInstance(query: String?, filterQuery: CourseListFilterQuery?): Fragment =
             CourseListSearchFragment().apply {
                 this.query = query ?: ""
-                this.filterQuery = filterQuery ?: CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured)
+                this.filterQuery = filterQuery ?: CourseListFilterQuery()
             }
 
         init {
@@ -239,7 +239,7 @@ class CourseListSearchFragment :
         val courseListState = (state as? CourseListSearchResultView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
         courseListViewDelegate.setState(courseListState)
         (state as? CourseListSearchResultView.State.Data)?.let {
-            val defaultFilterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured)
+            val defaultFilterQuery = CourseListFilterQuery()
             menuDrawableRes = if (defaultFilterQuery == it.searchResultQuery.filterQuery) {
                 R.drawable.ic_filter
             } else {
@@ -279,9 +279,9 @@ class CourseListSearchFragment :
 
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
         requireActivity().intent.putExtra(SearchManager.QUERY, searchViewToolbar.query.toString())
-        FilterBottomSheetDialogFragment
+        FilterSearchBottomSheetDialogFragment
             .newInstance(filterQuery)
-            .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+            .showIfNotExists(childFragmentManager, FilterSearchBottomSheetDialogFragment.TAG)
     }
 
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {

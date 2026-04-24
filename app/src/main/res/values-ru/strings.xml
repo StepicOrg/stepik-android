@@ -1087,7 +1087,7 @@
 
     <string name="course_complete_subtitle_certificate_hint">Потом его можно будет добавить в своё резюме или на страницу в соцсетях, скачать и распечатать.</string>
     <string name="course_complete_subtitle_certificate_ready">Добавьте сертификат в своё резюме или на страницу в соцсетях, это отличный результат и им можно гордиться!</string>
-    
+
     <string name="course_complete_subtitle_certificate_issued">Сертификат выдаётся за %s, а сертификат с отличием — за %d.</string>
     <string name="course_complete_subtitle_without_distinction_issued">Сертификат выдаётся за %s.</string>
     <string name="course_complete_subtitle_without_regular_issued">Сертификат с отличием выдаётся за %s.</string>
@@ -1244,4 +1244,48 @@
     <string name="course_news_on_event_sent">%s - %s</string>
     <string name="course_news_one_time_scheduled">Запланирована на %s</string>
     <string name="course_news_one_time_sending">С %s</string>
+
+    <string name="notification_permission_error">Разрешите показ уведомлений в настройках</string>
+
+    <string name="sbp_app_not_found_toast">Приложение банка не найдено, попробуйте другой метод оплаты</string>
+    <string name="mirpay_not_found_toast">Приложение Mir Pay не найдено, попробуйте другой метод оплаты</string>
+    <string name="tpay_not_found_toast">Приложение Т-Банк не найдено, попробуйте другой метод оплаты</string>
+
+    <!-- Rubricator -->
+
+    <string name="rubricator_main_toolbar_title">Рубрикатор</string>
+    <string name="rubricator_card_title">Искать курсы</string>
+
+    <!-- New filter -->
+    <string name="filter_root_dialog_title">Фильтры</string>
+    <string name="filter_root_dialog_level_item_title">Уровень сложности</string>
+    <string name="filter_root_dialog_price_item_title">Цена</string>
+    <string name="filter_root_dialog_discount_item_title">Только со скидкой</string>
+    <string name="filter_root_dialog_certificate_item_title">Только с сертификатом</string>
+    <string name="filter_root_dialog_language_item_title">Язык</string>
+    <string name="filter_root_dialog_type_item_title">Тип обучения</string>
+    <string name="filter_root_dialog_show">Показать</string>
+
+    <string name="filter_dialog_level_all">Для всех</string>
+    <string name="filter_dialog_level_easy">Для начинающих</string>
+    <string name="filter_dialog_level_normal">Для продолжающих</string>
+    <string name="filter_dialog_level_hard">Для профи</string>
+
+    <string name="filter_dialog_price_from">От</string>
+    <string name="filter_dialog_price_to">До</string>
+    <string name="filter_dialog_price_any">Любая</string>
+
+    <string name="filter_dialog_free">Бесплатно</string>
+    <string name="filter_dialog_price_to_5000">до 5000</string>
+    <string name="filter_dialog_price_to_10000">до 10000</string>
+
+    <string name="filter_dialog_language_any">Любой</string>
+    <string name="filter_dialog_language_rus">Русский</string>
+    <string name="filter_dialog_language_english">Английский</string>
+
+    <string name="filter_dialog_type_course">Курс</string>
+    <string name="filter_dialog_type_program">Программа</string>
+
+    <string name="filter_dialog_reset_action">Сбросить</string>
+    <string name="filter_dialog_apply">Применить</string>
 </resources>

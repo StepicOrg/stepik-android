@@ -222,12 +222,9 @@ dependencies {
 
     implementation libraries.lottie
 
-    implementation libraries.playCore
-    implementation libraries.playCoreKtx
     implementation platform(libraries.firebaseBoM)
     implementation libraries.firebaseMessaging
     implementation libraries.firebaseAnalytics
-    implementation libraries.firebaseAppindexing
     implementation libraries.googleauth
     implementation libraries.firebaseConfig
 

@@ -117,6 +117,7 @@ class BuyActionViewDelegate(
                 coursePurchaseBuyAction.text = context.getString(R.string.course_purchase_payment_processing)
                 evaluationDrawable.start()
             }
+            else -> Unit
         }
     }
 

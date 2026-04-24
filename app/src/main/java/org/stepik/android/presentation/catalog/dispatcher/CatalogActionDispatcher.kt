@@ -32,6 +32,8 @@ constructor(
                         onError = { onNewMessage(CatalogFeature.Message.FetchCatalogBlocksError) }
                     )
             }
+
+            else -> Unit
         }
     }
 }

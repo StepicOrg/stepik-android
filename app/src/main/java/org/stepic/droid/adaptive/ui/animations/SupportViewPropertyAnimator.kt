@@ -48,7 +48,7 @@ class SupportViewPropertyAnimator(private val view: View) {
     fun start() = set.apply {
         playTogether(animators)
         addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 endAction?.run()
             }
         })

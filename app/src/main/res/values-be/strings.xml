@@ -1108,4 +1108,48 @@
     <string name="course_news_on_event_sent">%s - %s</string>
     <string name="course_news_one_time_scheduled">Запланавана на %s</string>
     <string name="course_news_one_time_sending">З %s</string>
+
+    <string name="notification_permission_error">Дазвольце паказ апавяшчэнняў у наладах</string>
+
+    <string name="sbp_app_not_found_toast">Дадатак банка не знойдзена, паспрабуйце іншы метад аплаты</string>
+    <string name="mirpay_not_found_toast">Дадатак Mir Pay не знойдзена, паспрабуйце іншы метад аплаты</string>
+    <string name="tpay_not_found_toast">Дадатак Т-Банк не знойдзена, паспрабуйце іншы метад аплаты</string>
+
+    <!-- Rubricator -->
+
+    <string name="rubricator_main_toolbar_title">Рубрыкатар</string>
+    <string name="rubricator_card_title">Шукаць курсы</string>
+
+    <!-- New filter -->
+    <string name="filter_root_dialog_title">Фільтры</string>
+    <string name="filter_root_dialog_level_item_title">Узровень складанасці</string>
+    <string name="filter_root_dialog_price_item_title">Кошт</string>
+    <string name="filter_root_dialog_discount_item_title">Толькі са зніжкай</string>
+    <string name="filter_root_dialog_certificate_item_title">Толькі з сертыфікатам</string>
+    <string name="filter_root_dialog_language_item_title">Мова</string>
+    <string name="filter_root_dialog_type_item_title">Тып навучання</string>
+    <string name="filter_root_dialog_show">Паказаць</string>
+
+    <string name="filter_dialog_level_all">Для ўсіх</string>
+    <string name="filter_dialog_level_easy">Для пачаткоўцаў</string>
+    <string name="filter_dialog_level_normal">Для працяглых</string>
+    <string name="filter_dialog_level_hard">Для профі</string>
+
+    <string name="filter_dialog_price_from">Ад</string>
+    <string name="filter_dialog_price_to">Да</string>
+    <string name="filter_dialog_price_any">Любая</string>
+
+    <string name="filter_dialog_free">Бясплатна</string>
+    <string name="filter_dialog_price_to_5000">да 5000</string>
+    <string name="filter_dialog_price_to_10000">да 10000</string>
+
+    <string name="filter_dialog_language_any">Любой</string>
+    <string name="filter_dialog_language_rus">Русский</string>
+    <string name="filter_dialog_language_english">Английский</string>
+
+    <string name="filter_dialog_type_course">Курс</string>
+    <string name="filter_dialog_type_program">Праграма</string>
+
+    <string name="filter_dialog_reset_action">Скінуць</string>
+    <string name="filter_dialog_apply">Ужыць</string>
 </resources>

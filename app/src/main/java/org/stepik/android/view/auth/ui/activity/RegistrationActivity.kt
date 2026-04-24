@@ -243,6 +243,8 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
                         intent.getParcelableExtra(EXTRA_COURSE)
                     )
             }
+
+            else -> Unit
         }
     }
 

@@ -49,7 +49,7 @@ class MorphingAnimation(
         set.playTogether(colorAnimator, morphParamsAnimator)
 
         set.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 view.morph(to)
                 runnable?.run()
                 next?.start()

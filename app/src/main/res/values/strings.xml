@@ -552,7 +552,7 @@
     <string name="deadlines_edit_title">Edit schedule</string>
     <string name="deadlines_edit_date_picker_title">Select new deadline</string>
     <string name="deadlines_create_title">Choose learning mode</string>
-    
+
     <string name="deadlines_learning_rate_hobby">Hobby</string>
     <string name="deadlines_learning_rate_standard">Standard</string>
     <string name="deadlines_learning_rate_extreme">Extreme</string>
@@ -911,7 +911,7 @@
     <string name="comment_tag_course_team">Course Team</string>
     <string name="comment_tag_staff">Stepik Team</string>
     <string name="comment_tag_moderator">Course Moderator</string>
-    
+
     <string name="comment_auth_required">You have to login to join this discussion</string>
 
     <string name="relative_date_pattern">%s ago</string>
@@ -989,7 +989,7 @@
     <!-- Course list -->
     <string name="course_list_popular_toolbar_title">Popular</string>
     <string name="course_list_user_courses_title">My courses</string>
-    
+
     <string name="course_list_user_all_courses_tab">All courses</string>
     <string name="course_list_user_favorites_tab">Favorites</string>
     <string name="course_list_user_archive_tab">Archive</string>
@@ -1008,7 +1008,7 @@
     <string name="pip_stop_label">Pause</string>
     <string name="pip_forward_label">Forward</string>
     <string name="pip_rewind_label">Rewind</string>
-    
+
     <!-- Filter -->
     <string name="filter_menu_title">Filter</string>
     <string name="filter_dialog_title">Filters</string>
@@ -1130,13 +1130,13 @@
     <string name="course_complete_title_finished_with_success_and_certificate">Congratulations!\nYou have completed the course \"%s\" and received a certificate!</string>
     <string name="course_complete_title_finished_with_success_and_certificate_with_distinction">Congratulations!\nYou have completed the course \"%s\" and received a certificate with distinction!</string>
     <string name="course_complete_certificate_feedback">Receive %s to get a certificate.</string>
-    
+
     <string name="course_complete_action_back_to_assignments">Go Back to Assignments</string>
     <string name="course_complete_action_find_new_course">Find a New Course</string>
     <string name="course_complete_action_leave_review">Leave review</string>
     <string name="course_complete_secondary_action_share_result">Share result</string>
     <string name="course_complete_secondary_action_view_certificate">View certificate</string>
-    
+
     <string name="course_complete_subtitle_progress_part_1">"You have received "</string>
     <string name="course_complete_subtitle_progress_part_2">%s out of %d</string>
     <string name="course_complete_subtitle_progress_part_3">", which makes up %d%% of the course material."</string>
@@ -1174,7 +1174,7 @@
     <string name="course_benefits_toolbar_title">Revenue for course \"%s\"</string>
     <string name="course_benefits_earnings_title">Your earnings for %s</string>
     <string name="course_benefits_earnings_empty">Your earnings will be here</string>
-    
+
     <string name="course_benefits_earning_current_month">Your earnings for %s</string>
     <string name="course_benefits_turnover_current_month">Your sales for %s</string>
     <string name="course_benefits_earnings_total">Your earnings since %s</string>
@@ -1299,7 +1299,7 @@
     <string name="certificate_name_change_failure">Failed to change certificate recipient name</string>
     <string name="certificate_name_change_recipient_name">Recipient name</string>
     <string name="certificate_name_change_empty_field_error">Field must not be empty</string>
-    
+
     <!-- Settings -->
     <string name="settings_contact_support">Contact support</string>
     <string name="settings_help_center">Help center</string>
@@ -1332,4 +1332,53 @@
     <string name="course_news_on_event_sent">%s - %s</string>
     <string name="course_news_one_time_scheduled">Scheduled for %s</string>
     <string name="course_news_one_time_sending">From %s</string>
+
+    <string name="notification_permission_error">Grant permission to show notifications manually in settings</string>
+
+    <string name="sbp_app_not_found_toast">Banking application not found, try different payment method</string>
+    <string name="mirpay_not_found_toast">MirPay application not found, try different payment method</string>
+    <string name="tpay_not_found_toast">T-Bank application not found, try different payment method</string>
+
+    <!-- Rubricator -->
+
+    <string name="rubricator_main_toolbar_title">Rubricator</string>
+    <string name="rubricator_card_title">Search courses</string>
+
+    <!-- New filter -->
+    <string name="filter_root_dialog_title">Filters</string>
+    <string name="filter_root_dialog_level_item_title">Level</string>
+    <string name="filter_root_dialog_price_item_title">Price</string>
+    <string name="filter_root_dialog_discount_item_title">With discount</string>
+    <string name="filter_root_dialog_certificate_item_title">With certificate</string>
+    <string name="filter_root_dialog_language_item_title">Language</string>
+    <string name="filter_root_dialog_type_item_title">Type</string>
+    <string name="filter_root_dialog_show">Show</string>
+
+    <string name="filter_dialog_level_all">All levels</string>
+    <string name="filter_dialog_level_easy">Beginner</string>
+    <string name="filter_dialog_level_normal">Intermediate</string>
+    <string name="filter_dialog_level_hard">Expert</string>
+
+    <string name="filter_dialog_price_ruble_sign" translatable="false">₽</string>
+    <string name="filter_dialog_price_from_hint" translatable="false">0</string>
+    <string name="filter_dialog_price_to_hint" translatable="false">250000</string>
+    <string name="filter_dialog_price_divider" translatable="false">–</string>
+
+    <string name="filter_dialog_price_from">From</string>
+    <string name="filter_dialog_price_to">To</string>
+    <string name="filter_dialog_price_any">Any</string>
+
+    <string name="filter_dialog_free">Free</string>
+    <string name="filter_dialog_price_to_5000">up to 5000</string>
+    <string name="filter_dialog_price_to_10000">up to 10000</string>
+
+    <string name="filter_dialog_language_any">Any language</string>
+    <string name="filter_dialog_language_rus">Russian</string>
+    <string name="filter_dialog_language_english">English</string>
+
+    <string name="filter_dialog_type_course">Course</string>
+    <string name="filter_dialog_type_program">Program</string>
+
+    <string name="filter_dialog_reset_action">Reset filters</string>
+    <string name="filter_dialog_apply">Apply</string>
 </resources>

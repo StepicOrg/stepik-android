@@ -96,6 +96,8 @@ constructor(
                         onError = { onNewMessage(StepQuizReviewFeature.Message.StartReviewError) }
                     )
             }
+
+            else -> Unit
         }
     }
 

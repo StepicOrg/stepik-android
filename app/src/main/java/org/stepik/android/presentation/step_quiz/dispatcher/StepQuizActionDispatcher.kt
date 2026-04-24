@@ -146,6 +146,8 @@ constructor(
 
             is StepQuizFeature.Action.PublishCodePreference ->
                 codePreferencePublisher.onNext(action.initCodePreference)
+
+            else -> Unit
         }
     }
 

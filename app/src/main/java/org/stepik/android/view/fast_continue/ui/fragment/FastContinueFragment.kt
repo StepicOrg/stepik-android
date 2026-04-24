@@ -108,6 +108,7 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
                 fastContinueOverlay.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
                 fastContinueAction.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
             }
+            else -> Unit
         }
     }
 

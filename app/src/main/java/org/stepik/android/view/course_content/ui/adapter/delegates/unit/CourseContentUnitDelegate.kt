@@ -58,6 +58,8 @@ class CourseContentUnitDelegate(
 
                     is DownloadProgress.Status.Cached ->
                         unitClickListener.onItemRemoveClicked(item)
+
+                    else -> Unit
                 }
             }
         }

@@ -31,6 +31,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
                 is DownloadProgress.Status.InProgress ->
                     statusProgress.progress = (value.progress * statusProgress.max).toInt()
+
+                else -> Unit
             }
         }
 

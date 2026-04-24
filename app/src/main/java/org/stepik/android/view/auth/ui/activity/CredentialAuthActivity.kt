@@ -259,6 +259,8 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
                 } else {
                     openMainFeed()
                 }
+
+            else -> Unit
         }
     }
 

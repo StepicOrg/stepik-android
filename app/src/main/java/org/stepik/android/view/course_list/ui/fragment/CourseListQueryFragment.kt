@@ -31,7 +31,7 @@ import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
-import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
+import org.stepik.android.view.filter.ui.dialog.FilterSearchBottomSheetDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.app.core.model.PaginationDirection
 import ru.nobird.android.view.base.ui.extension.argument
@@ -43,7 +43,7 @@ class CourseListQueryFragment :
     Fragment(R.layout.fragment_course_list),
     CourseListQueryView,
     FilterQueryView,
-    FilterBottomSheetDialogFragment.Callback {
+    FilterSearchBottomSheetDialogFragment.Callback {
     companion object {
         fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
             CourseListQueryFragment().apply {
@@ -198,9 +198,9 @@ class CourseListQueryFragment :
         }
 
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
-        FilterBottomSheetDialogFragment
+        FilterSearchBottomSheetDialogFragment
             .newInstance(filterQuery)
-            .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+            .showIfNotExists(childFragmentManager, FilterSearchBottomSheetDialogFragment.TAG)
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
