@@ -70,6 +70,7 @@ ext.versions = [
 //        playCoreKtx          : '1.8.1',
         googleauth           : '18.1.0',
         firebaseBoM          : '32.3.1',
+        firebaseCrashlytics  : '19.0.2',
 
         billing              : '6.0.1',
 
@@ -93,7 +94,7 @@ ext.versions = [
         Adapters             : '1.1.0',
 
         leakCanary           : '1.5.1',
-        crashlyticsPlugin    : '2.8.1',
+        crashlyticsPlugin    : '2.9.9',
 
         junit                : '4.12',
         robolectric          : '4.7.1',
@@ -224,8 +225,8 @@ ext.libraries = [
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
         leakCanaryNoOp       : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
-        crashlytics          : "com.google.firebase:firebase-crashlytics",
-        crashlyticsNdk       : "com.google.firebase:firebase-crashlytics-ndk",
+        crashlytics          : "com.google.firebase:firebase-crashlytics:$versions.firebaseCrashlytics",
+        crashlyticsNdk       : "com.google.firebase:firebase-crashlytics-ndk:$versions.firebaseCrashlytics",
 
         // Test dependencies
         junit                : "junit:junit:$versions.junit",
