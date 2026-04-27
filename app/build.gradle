@@ -156,6 +156,13 @@ androidExtensions {
     experimental = true
 }
 
+configurations {
+    androidTestImplementation {
+        // accessibility-test-framework pulls the full checker jar, which duplicates checker-qual from Guava.
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
+}
+
 dependencies {
     implementation project(':androidsvg')
     implementation files('libs/flexbox-release.aar')
