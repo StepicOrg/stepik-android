@@ -278,13 +278,9 @@ dependencies {
     androidTestImplementation libraries.kaspresso
     androidTestImplementation libraries.kaspressoAllure
 
-    debugImplementation libraries.soloader
-    debugImplementation libraries.flipperCore
-    debugImplementation libraries.flipperNetwork
+    // Real Flipper packages native libflipper/libevent prebuilts that fail target SDK 35
+    // 16 KB page-size ELF/RELRO alignment checks, so debug builds keep only TooLargeTool here.
     debugImplementation libraries.toolargetool
-    stageDebuggableImplementation libraries.soloader
-    stageDebuggableImplementation libraries.flipperCore
-    stageDebuggableImplementation libraries.flipperNetwork
     stageDebuggableImplementation libraries.toolargetool
 
     stageImplementation libraries.flipperNoop

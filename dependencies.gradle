@@ -109,8 +109,8 @@ ext.versions = [
         ktlint               : '0.34.2',
         ktlintRules          : '1.0.0',
 
-        flipper              : '0.75.0',
-        soloader             : '0.9.0',
+        flipper              : '0.75.1',
+        soloader             : '0.12.1',
         toolargetool         : '0.3.0'
 ]
 
