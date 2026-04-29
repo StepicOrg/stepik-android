@@ -18,6 +18,12 @@
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
+# Optional TLS providers used by OkHttp when present on a JVM. They are not
+# packaged with the Android app, so R8 can safely ignore the absent classes.
+-dontwarn org.bouncycastle.jsse.**
+-dontwarn org.conscrypt.**
+-dontwarn org.openjsse.**
+
 -dontwarn android.support.v7.**
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }

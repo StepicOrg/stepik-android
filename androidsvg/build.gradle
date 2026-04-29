@@ -7,8 +7,6 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
     }
     buildTypes {
         release {
@@ -16,4 +14,5 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.caverock.androidsvg'
 }

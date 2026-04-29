@@ -9,6 +9,10 @@ apply from: '../code_quality_tools/checkstyle.gradle'
 apply from: '../code_quality_tools/pmd.gradle'
 apply from: '../code_quality_tools/ktlint.gradle'
 
+configurations.configureEach {
+    resolutionStrategy.force libraries.okhttp
+}
+
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.buildTools
@@ -91,8 +95,8 @@ android {
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
-                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
-                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/stripReleaseDebugSymbols/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib'
             }
         }
         debug {
@@ -150,6 +154,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'org.stepic.droid'
 }
 
 androidExtensions {
@@ -213,9 +218,7 @@ dependencies {
     implementation libraries.retrofit
     implementation libraries.retrofitGsonConverter
     implementation libraries.retrofitRxJavaAdapter
-    implementation (libraries.okhttp) {
-        force = true
-    }
+    implementation libraries.okhttp
     implementation libraries.jsoup
 
     implementation libraries.glide
