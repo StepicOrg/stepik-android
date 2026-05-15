@@ -1,7 +1,6 @@
 package org.stepic.droid.features.achievements.service
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -23,6 +22,7 @@ import org.stepik.android.view.glide.model.GlideRequestFactory
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.toObject
 import org.stepik.android.domain.achievement.repository.AchievementRepository
+import org.stepik.android.view.notification.extension.PendingIntentCompat
 import javax.inject.Inject
 
 class AchievementsNotificationService : JobIntentService() {
@@ -73,7 +73,7 @@ class AchievementsNotificationService : JobIntentService() {
             val notificationIntent = AchievementsListActivity
                     .createIntent(this, achievementNotification.user, isMyProfile = true)
 
-            val pendingIntent = PendingIntent
+            val pendingIntent = PendingIntentCompat
                     .getActivity(this, 0, notificationIntent, 0)
 
             val largeIcon = getAchievementImageBitmap(achievement)
