@@ -3,9 +3,9 @@ ext.versions = [
         name                 : '1.222.1',
 
         minSdk               : 21,
-        targetSdk            : 34,
-        compileSdk           : 34,
-        buildTools           : '34.0.0',
+        targetSdk            : 35,
+        compileSdk           : 35,
+        buildTools           : '35.0.0',
 
         androidGradlePlugin  : '8.6.1',
         kotlin               : '1.7.10',
