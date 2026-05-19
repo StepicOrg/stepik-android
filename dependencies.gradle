@@ -102,8 +102,10 @@ ext.versions = [
         mockitoKt            : '2.1.0',
         joda                 : '2.8',
         hamcrest             : '2.1',
-        espresso             : '3.1.0',
-        testCore             : '1.1.1',
+        espresso             : '3.6.1',
+        testCore             : '1.6.1',
+        testExtJunit         : '1.2.1',
+        testRunner           : '1.6.2',
         kaspresso            : '1.4.1',
 
         ktlint               : '0.34.2',
@@ -237,7 +239,9 @@ ext.libraries = [
         hamcrest             : "org.hamcrest:hamcrest-library:$versions.hamcrest",
 
         //Android Test Dependencies
-        testRunner           : "androidx.test.ext:junit:$versions.testCore",
+        testCore             : "androidx.test:core:$versions.testCore",
+        testRunner           : "androidx.test:runner:$versions.testRunner",
+        testExtJunit         : "androidx.test.ext:junit:$versions.testExtJunit",
         testRules            : "androidx.test:rules:$versions.testCore",
         espressoCore         : "androidx.test.espresso:espresso-core:$versions.espresso",
         espressoContrib      : "androidx.test.espresso:espresso-contrib:$versions.espresso",
