@@ -291,7 +291,10 @@ dependencies {
 }
 
 afterEvaluate {
-    bundleRelease { finalizedBy(":app:uploadCrashlyticsSymbolFileRelease")}
+    bundleRelease { finalizedBy(":app:uploadCrashlyticsSymbolFileRelease") }
+    tasks.named("generateCrashlyticsSymbolFileRelease") {
+        dependsOn("mergeReleaseNativeLibs")
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'
