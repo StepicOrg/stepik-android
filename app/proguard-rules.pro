@@ -18,6 +18,12 @@
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
+# Optional TLS providers used by OkHttp when present on a JVM. They are not
+# packaged with the Android app, so R8 can safely ignore the absent classes.
+-dontwarn org.bouncycastle.jsse.**
+-dontwarn org.conscrypt.**
+-dontwarn org.openjsse.**
+
 -dontwarn android.support.v7.**
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
@@ -42,6 +48,16 @@
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
+
+# Retrofit inspects service return type arguments at runtime. R8 full mode can
+# rewrite them to raw types unless the generic wrapper declarations are kept.
+-keep,allowshrinking,allowobfuscation interface retrofit2.Call
+-keep,allowshrinking,allowobfuscation class retrofit2.Response
+-keep,allowshrinking,allowobfuscation class retrofit2.adapter.rxjava2.Result
+-keep,allowshrinking,allowobfuscation class io.reactivex.Single
+-keep,allowshrinking,allowobfuscation class io.reactivex.Maybe
+-keep,allowshrinking,allowobfuscation class io.reactivex.Observable
+-keep,allowshrinking,allowobfuscation class io.reactivex.Flowable
 ##---------------End: proguard configuration for Retrofit 2  ----------
 
 
@@ -87,6 +103,13 @@
 -keep class org.stepik.android.model.** { *; }
 -keep interface org.stepik.android.model.** { *; }
 -keep public enum org.stepik.android.**{ *;}
+
+-keep class org.stepik.android.remote.**.model.** { *; }
+-keep interface org.stepik.android.remote.**.model.** { *; }
+-keep class org.stepik.android.domain.catalog.model.** { *; }
+-keep interface org.stepik.android.domain.catalog.model.** { *; }
+-keep class org.stepik.android.domain.course_recommendations.model.** { *; }
+-keep interface org.stepik.android.domain.course_recommendations.model.** { *; }
 
 #Keep Parcelable
 -keepclassmembers class * implements android.os.Parcelable {

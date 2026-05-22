@@ -9,6 +9,10 @@ apply from: '../code_quality_tools/checkstyle.gradle'
 apply from: '../code_quality_tools/pmd.gradle'
 apply from: '../code_quality_tools/ktlint.gradle'
 
+configurations.configureEach {
+    resolutionStrategy.force libraries.okhttp
+}
+
 android {
     compileSdkVersion versions.compileSdk
     buildToolsVersion versions.buildTools
@@ -91,8 +95,7 @@ android {
 
             firebaseCrashlytics {
                 nativeSymbolUploadEnabled true
-                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
-                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+                unstrippedNativeLibsDir file('build/intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib')
             }
         }
         debug {
@@ -150,10 +153,18 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'org.stepic.droid'
 }
 
 androidExtensions {
     experimental = true
+}
+
+configurations {
+    androidTestImplementation {
+        // accessibility-test-framework pulls the full checker jar, which duplicates checker-qual from Guava.
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
 }
 
 dependencies {
@@ -206,9 +217,7 @@ dependencies {
     implementation libraries.retrofit
     implementation libraries.retrofitGsonConverter
     implementation libraries.retrofitRxJavaAdapter
-    implementation (libraries.okhttp) {
-        force = true
-    }
+    implementation libraries.okhttp
     implementation libraries.jsoup
 
     implementation libraries.glide
@@ -271,13 +280,9 @@ dependencies {
     androidTestImplementation libraries.kaspresso
     androidTestImplementation libraries.kaspressoAllure
 
-    debugImplementation libraries.soloader
-    debugImplementation libraries.flipperCore
-    debugImplementation libraries.flipperNetwork
+    // Real Flipper packages native libflipper/libevent prebuilts that fail target SDK 35
+    // 16 KB page-size ELF/RELRO alignment checks, so debug builds keep only TooLargeTool here.
     debugImplementation libraries.toolargetool
-    stageDebuggableImplementation libraries.soloader
-    stageDebuggableImplementation libraries.flipperCore
-    stageDebuggableImplementation libraries.flipperNetwork
     stageDebuggableImplementation libraries.toolargetool
 
     stageImplementation libraries.flipperNoop
@@ -286,7 +291,10 @@ dependencies {
 }
 
 afterEvaluate {
-    bundleRelease { finalizedBy(":app:uploadCrashlyticsSymbolFileRelease")}
+    bundleRelease { finalizedBy(":app:uploadCrashlyticsSymbolFileRelease") }
+    tasks.named("generateCrashlyticsSymbolFileRelease") {
+        dependsOn("mergeReleaseNativeLibs")
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,15 +1,15 @@
 ext.versions = [
-        code                 : 2256,
-        name                 : '1.222.1',
+        code                 : 2257,
+        name                 : '1.223.0',
 
         minSdk               : 21,
-        targetSdk            : 34,
-        compileSdk           : 34       ,
-        buildTools           : '34.0.0',
+        targetSdk            : 35,
+        compileSdk           : 35,
+        buildTools           : '35.0.0',
 
-        androidGradlePlugin  : '7.1.2',
+        androidGradlePlugin  : '8.6.1',
         kotlin               : '1.7.10',
-        googleServicesVersion: '4.3.10',
+        googleServicesVersion: '4.4.4',
         dexcount             : '1.0.3',
         firebasePerfPlugin   : '1.3.1',
 
@@ -70,8 +70,9 @@ ext.versions = [
 //        playCoreKtx          : '1.8.1',
         googleauth           : '18.1.0',
         firebaseBoM          : '32.3.1',
+        firebaseCrashlytics  : '19.0.2',
 
-        billing              : '6.0.1',
+        billing              : '7.1.1',
 
 //        facebook             : '8.1.0',
         vk                   : '2.2.3',
@@ -93,7 +94,7 @@ ext.versions = [
         Adapters             : '1.1.0',
 
         leakCanary           : '1.5.1',
-        crashlyticsPlugin    : '2.8.1',
+        crashlyticsPlugin    : '3.0.7',
 
         junit                : '4.12',
         robolectric          : '4.7.1',
@@ -101,15 +102,17 @@ ext.versions = [
         mockitoKt            : '2.1.0',
         joda                 : '2.8',
         hamcrest             : '2.1',
-        espresso             : '3.1.0',
-        testCore             : '1.1.1',
+        espresso             : '3.6.1',
+        testCore             : '1.6.1',
+        testExtJunit         : '1.2.1',
+        testRunner           : '1.6.2',
         kaspresso            : '1.4.1',
 
         ktlint               : '0.34.2',
         ktlintRules          : '1.0.0',
 
-        flipper              : '0.75.0',
-        soloader             : '0.9.0',
+        flipper              : '0.75.1',
+        soloader             : '0.12.1',
         toolargetool         : '0.3.0'
 ]
 
@@ -224,8 +227,8 @@ ext.libraries = [
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
         leakCanaryNoOp       : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary",
-        crashlytics          : "com.google.firebase:firebase-crashlytics",
-        crashlyticsNdk       : "com.google.firebase:firebase-crashlytics-ndk",
+        crashlytics          : "com.google.firebase:firebase-crashlytics:$versions.firebaseCrashlytics",
+        crashlyticsNdk       : "com.google.firebase:firebase-crashlytics-ndk:$versions.firebaseCrashlytics",
 
         // Test dependencies
         junit                : "junit:junit:$versions.junit",
@@ -236,7 +239,9 @@ ext.libraries = [
         hamcrest             : "org.hamcrest:hamcrest-library:$versions.hamcrest",
 
         //Android Test Dependencies
-        testRunner           : "androidx.test.ext:junit:$versions.testCore",
+        testCore             : "androidx.test:core:$versions.testCore",
+        testRunner           : "androidx.test:runner:$versions.testRunner",
+        testExtJunit         : "androidx.test.ext:junit:$versions.testExtJunit",
         testRules            : "androidx.test:rules:$versions.testCore",
         espressoCore         : "androidx.test.espresso:espresso-core:$versions.espresso",
         espressoContrib      : "androidx.test.espresso:espresso-contrib:$versions.espresso",
