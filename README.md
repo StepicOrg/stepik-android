@@ -1,23 +1,42 @@
 # Stepik for Android
-Build Status: <a href="https://tc.stepik.org/viewType.html?buildTypeId=Stepic_StepicMobile_Android_GooglePlay&guest=1"><img src="https://tc.stepik.org/app/rest/builds/buildType:(id:Stepic_StepicMobile_Android_GooglePlay)/statusIcon"/></a>
 
-Code Coverage: [![codecov](https://codecov.io/gh/StepicOrg/stepik-android/branch/master/graph/badge.svg)](https://codecov.io/gh/StepicOrg/stepik-android)
+Learn anywhere you want with the Stepik! [Stepik](https://stepik.org) is a platform offering the best online courses in Computer Science and various tech-related subjects. Whether you want to learn data structures, Python programming, statistics, or any other tech skill, Stepik has you covered.
 
+<img src="/screenshots/01.webp?raw=true" width="33%" alt="Become smarter every day" title="Become smarter every day"><img src="/screenshots/02.webp?raw=true" width="33%" alt="Choose your course" title="Choose your course"><img src="/screenshots/03.webp?raw=true" width="33%" alt="Learn anywhere" title="Learn anywhere">
 
-Mobile application of [Stepik][1].
+Features:
+* **Access on the Go:** Watch video lectures and complete assignments wherever you are.
+* **Offline Learning:** Download lectures to study even when you don’t have internet access.
+* **Community:** Engage with fellow students in the comment section to get your questions answered.
+* **Study Reminders:** Set reminders to help you study regularly and keep improving your personal record.
+* **Certification:** Earn certificates upon course completion and share them on LinkedIn to boost your job prospects.
 
-## Store
-New version of Stepic App is now available on Google Play.
+## Installation
 
-<a href='https://play.google.com/store/apps/details?id=org.stepic.droid&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' height=100 src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+<a href="https://play.google.com/store/apps/details?id=org.stepic.droid&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" height="100" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"/></a>
 
+## Tech Stack
 
-## Screenshots
-<img src="/screenshots/1-eng.png?raw=true" width="256"><img src="/screenshots/2-eng.png?raw=true" width="256"><img src="/screenshots/3-eng.png?raw=true" width="256"><img src="/screenshots/4-eng.png?raw=true" width="256">
+|Category|Library|
+|:-:|:-:|
+|Networking|[Retrofit 2](https://github.com/square/retrofit)|
+|Serialization|[Gson](https://github.com/google/gson)|
+|Local Storage|[Room](https://developer.android.com/jetpack/androidx/releases/room)|
+|Asynchronous|[RxJava 2](https://github.com/ReactiveX/RxJava)|
+|Architecture|[Clean](https://hackmd.io/@eadm/BJg82eA7N)|
+|Dependency Injection|[Dagger 2](https://dagger.dev/)|
+|Presentation|[The Elm Architecture](https://github.com/eadm/AndroidKit/tree/master/presentation/presentation-redux)|
+|Crash Reporting / Performance Monitoring|[Firebase](https://firebase.google.com/)|
+|Navigation|Manual|
+|Image Loading|[Glide](https://github.com/bumptech/glide)|
+
+## Support
+
+If you encounter any issues or have questions, please open an issue in the repository, or contact our support team at support@stepik.org.
 
 ## License
 
-    Copyright 2016 Stepik.org.
+    Copyright 2024 Stepik.org.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -30,7 +49,3 @@ New version of Stepic App is now available on Google Play.
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-
- [1]: htts://stepik.org
- [2]: https://play.google.com/store/apps/details?id=org.stepic.droid
