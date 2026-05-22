@@ -9,6 +9,7 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.debug.model.EndpointConfig
 import org.stepik.android.domain.debug.model.DebugSettings
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DebugInteractor
@@ -18,6 +19,10 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val logoutManager: StepikLogoutManager
 ) {
+    private companion object {
+        const val FCM_TOKEN_TIMEOUT_SECONDS = 5L
+        const val FCM_TOKEN_UNAVAILABLE = "Unavailable"
+    }
 
     fun fetchDebugSettings(): Single<DebugSettings> =
         Singles.zip(
@@ -38,12 +43,22 @@ constructor(
         )
 
     private fun getFirebaseToken(): Single<String> =
-        Single.create { emitter ->
+        Single.create<String> { emitter ->
             firebaseMessaging
                 .token
-                .addOnSuccessListener { result -> emitter.onSuccess(result) }
-                .addOnFailureListener(emitter::onError)
+                .addOnSuccessListener { result ->
+                    if (!emitter.isDisposed) {
+                        emitter.onSuccess(result ?: FCM_TOKEN_UNAVAILABLE)
+                    }
+                }
+                .addOnFailureListener { error ->
+                    if (!emitter.isDisposed) {
+                        emitter.onError(error)
+                    }
+                }
         }
+            .timeout(FCM_TOKEN_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .onErrorReturnItem(FCM_TOKEN_UNAVAILABLE)
 
     private fun getEndpointConfig(): Single<EndpointConfig> =
         Single.fromCallable {

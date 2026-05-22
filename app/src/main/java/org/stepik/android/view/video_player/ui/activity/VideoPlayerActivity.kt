@@ -30,6 +30,7 @@ import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -353,7 +354,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun invalidatePlayer() {
-        exoPlayer?.stop(true)
+        exoPlayer?.stop()
     }
 
     override fun onStart() {
@@ -526,7 +527,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         isPIPModeActive = isInPictureInPictureMode
         if (isInPictureInPictureMode) {
-            registerReceiver(pipReceiver, IntentFilter(ACTION_MEDIA_CONTROL))
+            ContextCompat.registerReceiver(this, pipReceiver, IntentFilter(ACTION_MEDIA_CONTROL), ContextCompat.RECEIVER_EXPORTED)
         } else {
             unregisterReceiver(pipReceiver)
             if (exoPlayer?.isPlaying == false) {

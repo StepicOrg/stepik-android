@@ -99,6 +99,8 @@ class CardPresenter(
                 }
                 analytic.reportEventValue(Analytic.Adaptive.REACTION_HARD, lesson)
             }
+
+            else -> Unit
         }
         listener?.createReaction(lesson, reaction)
     }

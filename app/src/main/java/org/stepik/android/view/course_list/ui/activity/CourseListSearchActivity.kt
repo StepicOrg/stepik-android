@@ -9,9 +9,9 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.view.course_list.ui.fragment.CourseListSearchFragment
-import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
+import org.stepik.android.view.filter.ui.dialog.FilterSearchBottomSheetDialogFragment
 
-class CourseListSearchActivity : FragmentActivityBase(), FilterBottomSheetDialogFragment.Callback  {
+class CourseListSearchActivity : FragmentActivityBase(), FilterSearchBottomSheetDialogFragment.Callback  {
     private var query: String? = null
     private var filterQuery: CourseListFilterQuery? = null
 
@@ -24,7 +24,7 @@ class CourseListSearchActivity : FragmentActivityBase(), FilterBottomSheetDialog
         setTitle(R.string.search_title)
         setContentView(R.layout.activity_search_courses)
         query = intent.getStringExtra(SearchManager.QUERY)
-        filterQuery = intent.getParcelableExtra(EXTRA_COURSE_LIST_FILTER_QUERY) ?: CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
+        filterQuery = intent.getParcelableExtra(EXTRA_COURSE_LIST_FILTER_QUERY) ?: CourseListFilterQuery()
         initOrTryRestoreFragment()
     }
 

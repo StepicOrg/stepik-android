@@ -49,6 +49,11 @@ constructor(
         view?.showNotificationEnabledState(isEnabled, timeNotificationString)
     }
 
+    fun tryShowNotificationSettingAfterGrantingPermission() {
+        sharedPreferenceHelper.isStreakNotificationEnabled = true
+        tryShowNotificationSetting()
+    }
+
     fun switchNotificationStreak(isChecked: Boolean) {
         sharedPreferenceHelper.isStreakNotificationEnabled = isChecked
         analytic.reportEvent(Analytic.Streak.SWITCH_NOTIFICATION_IN_MENU, isChecked.toString() + "")

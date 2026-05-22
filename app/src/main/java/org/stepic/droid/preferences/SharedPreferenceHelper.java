@@ -112,6 +112,8 @@ public class SharedPreferenceHelper {
     private final static String IS_PERSONALIZED_ONBOARDING_WAS_SHOWN = "is_personalized_onboarding_was_shown";
     private final static String ENDPOINT_CONFIG = "endpoint_config";
 
+    private final static String WAS_STREAK_DIALOG_SEEN_HOME_SCREEN = "was_streak_dialog_seen_home_screen";
+
     private OAuthResponse cachedAuthStepikResponse = null;
 
 
@@ -869,7 +871,15 @@ public class SharedPreferenceHelper {
     }
 
     public int getEndpointConfig() {
-        return getInt(PreferenceType.DEVICE_SPECIFIC, ENDPOINT_CONFIG, 2);
+        return getInt(PreferenceType.DEVICE_SPECIFIC, ENDPOINT_CONFIG, 1);
+    }
+
+    public void putWasStreakDialogSeenHomeScreen(boolean wasSeen) {
+        put(PreferenceType.LOGIN, WAS_STREAK_DIALOG_SEEN_HOME_SCREEN, wasSeen);
+    }
+
+    public boolean getWasStreakDialogSeenHomeScreen() {
+        return getBoolean(PreferenceType.LOGIN, WAS_STREAK_DIALOG_SEEN_HOME_SCREEN);
     }
 
     @Nullable

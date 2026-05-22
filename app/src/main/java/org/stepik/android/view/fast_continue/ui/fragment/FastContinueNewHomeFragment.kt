@@ -106,6 +106,7 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
                 setCourse(state.courseListItem)
                 fastContinueInformation.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
             }
+            else -> Unit
         }
     }
 

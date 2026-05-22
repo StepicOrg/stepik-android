@@ -7,7 +7,6 @@ import io.reactivex.Single
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import ru.nobird.app.core.model.PagedList
 import org.stepik.android.data.search_result.repository.SearchResultRepositoryImpl
@@ -27,15 +26,16 @@ class SearchRepositoryTest {
 
         val page = 1
         val rawQuery = "python"
-        val lang = "en"
 
-        val remoteResult = PagedList(listOf(mock(SearchResult::class.java)))
+        // The repository only passes through the PagedList from the remote source, so the item data is irrelevant.
+        // Avoid mocking SearchResult: Mockito inline with the current Byte Buddy cannot instrument JDK 17 classes.
+        val remoteResult = PagedList(emptyList<SearchResult>())
 
         whenever(searchResultRemoteDataSource.getSearchResults(
             SearchResultQuery(
                 page = page,
                 query = rawQuery,
-                filterQuery = CourseListFilterQuery(language = lang)
+                filterQuery = CourseListFilterQuery()
             )
         )) doReturn Single.just(remoteResult)
 
@@ -44,7 +44,7 @@ class SearchRepositoryTest {
                 SearchResultQuery(
                     page = page,
                     query = rawQuery,
-                    filterQuery = CourseListFilterQuery(language = lang)
+                    filterQuery = CourseListFilterQuery()
                 )
             )
             .test()

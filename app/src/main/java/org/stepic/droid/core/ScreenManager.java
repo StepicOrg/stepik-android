@@ -169,4 +169,6 @@ public interface ScreenManager {
     void showCourseRevenue(Context context, long courseId, @Nullable String courseTitle);
     void showUserReviews(Context context);
     void showCourseAfterPurchase(Context context, Course course, CourseViewSource courseViewSource, CourseScreenTab courseScreenTab);
+
+    void showRubricator(Context context, String rubricatorUrl);
 }

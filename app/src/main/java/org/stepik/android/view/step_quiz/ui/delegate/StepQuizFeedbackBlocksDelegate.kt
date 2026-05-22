@@ -112,6 +112,8 @@ class StepQuizFeedbackBlocksDelegate(
 
             is StepQuizFeedbackState.Validation ->
                 stepQuizFeedbackValidation.text = state.message
+
+            else -> Unit
         }
     }
 

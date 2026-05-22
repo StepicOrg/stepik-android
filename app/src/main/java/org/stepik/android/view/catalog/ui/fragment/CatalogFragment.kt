@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.fragment_catalog.*
+import kotlinx.android.synthetic.main.item_catalog_rubricator.view.rubricatorCard
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -28,6 +29,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.databinding.ItemBannerBinding
+import org.stepic.droid.databinding.ItemCatalogRubricatorBinding
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.model.SearchQuery
@@ -47,6 +49,7 @@ import org.stepik.android.presentation.catalog.CatalogFeature
 import org.stepik.android.presentation.catalog.CatalogViewModel
 import org.stepik.android.presentation.course_continue_redux.CourseContinueFeature
 import org.stepik.android.presentation.course_list_redux.CourseListFeature
+import org.stepik.android.presentation.features.FeaturesFeature
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.banner.mapper.BannerResourcesMapper
@@ -66,7 +69,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsDefa
 import org.stepik.android.view.catalog.ui.adapter.delegate.SimpleCourseListsGridAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.SpecializationListAdapterDelegate
 import org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity
-import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
+import org.stepik.android.view.filter.ui.dialog.FilterSearchBottomSheetDialogFragment
 import org.stepik.android.view.injection.course_list.factory.CourseListAdapterDelegateFactory
 import org.stepik.android.view.injection.course_list.factory.RecommendedCourseListAdapterDelegateFactory
 import ru.nobird.app.presentation.redux.container.ReduxView
@@ -90,7 +93,7 @@ class CatalogFragment :
     ReduxView<CatalogFeature.State, CatalogFeature.Action.ViewAction>,
     SearchSuggestionsView,
     AutoCompleteSearchView.FocusCallback,
-    FilterBottomSheetDialogFragment.Callback,
+    FilterSearchBottomSheetDialogFragment.Callback,
     AutoCompleteSearchView.SuggestionClickCallback {
 
     companion object {
@@ -171,6 +174,11 @@ class CatalogFragment :
                 )
             )
         )
+        catalogViewModel.onNewMessage(
+            CatalogFeature.Message.FeaturesMessage(
+                FeaturesFeature.Message.InitMessage
+            )
+        )
     }
 
     private fun injectComponent() {
@@ -247,6 +255,7 @@ class CatalogFragment :
 
         catalogItemAdapter += SpecializationListAdapterDelegate { url -> openInWeb(url) }
         catalogItemAdapter += buildBannerBlockAdapterDelegate()
+        catalogItemAdapter += buildRubricatorAdapterDelegate()
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
@@ -381,10 +390,14 @@ class CatalogFragment :
     }
 
     private fun resolveAdapter(state: CatalogFeature.State): List<CatalogItem> =
-        if (sharedPreferenceHelper.isNeedShowLangWidget) {
-            listOf(CatalogItem.Stories(state = state.storiesState), CatalogItem.Filters(state = state.filtersState))
-        } else {
-            listOf(CatalogItem.Stories(state = state.storiesState))
+        buildList {
+            add(CatalogItem.Stories(state = state.storiesState))
+            if (sharedPreferenceHelper.isNeedShowLangWidget) {
+                add(CatalogItem.Filters(state = state.filtersState))
+            }
+            if (state.featuresState is FeaturesFeature.State.Success) {
+                add(CatalogItem.Rubricator(state = state.featuresState))
+            }
         }
 
     private fun resolveCatalogItems(banners: List<Banner>, collectionCatalogItems: List<CatalogItem>): List<CatalogItem> =
@@ -478,9 +491,9 @@ class CatalogFragment :
             collapseSearchView()
         }
         filterIcon.setOnClickListener {
-            FilterBottomSheetDialogFragment
-                .newInstance(CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
-                .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+            FilterSearchBottomSheetDialogFragment
+                .newInstance(CourseListFilterQuery())
+                .showIfNotExists(childFragmentManager, FilterSearchBottomSheetDialogFragment.TAG)
         }
     }
 
@@ -497,7 +510,7 @@ class CatalogFragment :
 
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    onQueryTextSubmit(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
+                    onQueryTextSubmit(query, CourseListFilterQuery())
                     return true
                 }
 
@@ -511,7 +524,7 @@ class CatalogFragment :
     }
 
     override fun onQueryTextSubmitSuggestion(query: String) {
-        onQueryTextSubmit(query, CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
+        onQueryTextSubmit(query, CourseListFilterQuery())
     }
 
     private fun openInWeb(url: String) {
@@ -563,6 +576,22 @@ class CatalogFragment :
                 data as CatalogItem.BannerBlock
                 analytic.report(PromoBannerSeen(data.banner))
                 bannerBinding.bind(data.banner, bannerResourcesMapper)
+            }
+        }
+
+    private fun buildRubricatorAdapterDelegate(): AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>> =
+        adapterDelegate<CatalogItem, CatalogItem>(
+            layoutResId = R.layout.item_catalog_rubricator,
+            isForViewType = { _, viewType -> viewType is CatalogItem.Rubricator }
+        ) {
+            val rubricatorBinding = ItemCatalogRubricatorBinding.bind(this.itemView)
+
+            rubricatorBinding.root.rubricatorCard.setOnClickListener {
+                (item as? CatalogItem.Rubricator)?.let { rubricatorBlock ->
+                    if (rubricatorBlock.state is FeaturesFeature.State.Success) {
+                        screenManager.showRubricator(requireContext(), rubricatorBlock.state.rubricatorUrl)
+                    }
+                }
             }
         }
 }

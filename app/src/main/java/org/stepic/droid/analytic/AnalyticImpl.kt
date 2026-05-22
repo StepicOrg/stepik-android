@@ -12,9 +12,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
-import com.yandex.metrica.YandexMetrica
-import com.yandex.metrica.profile.Attribute
-import com.yandex.metrica.profile.UserProfile
+import io.appmetrica.analytics.AppMetrica
+import io.appmetrica.analytics.profile.Attribute
+import io.appmetrica.analytics.profile.UserProfile
 import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
@@ -47,7 +47,7 @@ constructor(
             val userProfile = UserProfile.newBuilder()
                 .apply(mutation)
                 .build()
-            YandexMetrica.reportUserProfile(userProfile)
+            AppMetrica.reportUserProfile(userProfile)
         }
     }
 
@@ -93,7 +93,7 @@ constructor(
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
         firebaseCrashlytics.setUserId(userId)
-        YandexMetrica.setUserProfileID(userId)
+        AppMetrica.setUserProfileID(userId)
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STEPIK_ID, userId))
     }
 
@@ -136,7 +136,7 @@ constructor(
 
     override fun report(analyticEvent: AnalyticEvent) {
         if (AnalyticSource.YANDEX in analyticEvent.sources) {
-            YandexMetrica.reportEvent(analyticEvent.name, analyticEvent.params)
+            AppMetrica.reportEvent(analyticEvent.name, analyticEvent.params)
         }
 
         if (AnalyticSource.AMPLITUDE in analyticEvent.sources) {
@@ -208,7 +208,7 @@ constructor(
             }
         }
         amplitude.logEvent(eventName, properties)
-        YandexMetrica.reportEvent(eventName, params)
+        AppMetrica.reportEvent(eventName, params)
         firebaseCrashlytics.log("$eventName=$params")
 
         val bundle = bundleOf(*params?.map { (a, b) -> a to b }?.toTypedArray() ?: emptyArray())
@@ -236,9 +236,9 @@ constructor(
             map[it] = java.lang.String.valueOf(bundle[it]) // handle null as bundle[it].toString() calls object.toString() and cause NPE instead of Any?.toString()
         }
         if (map.isEmpty()) {
-            YandexMetrica.reportEvent(eventName)
+            AppMetrica.reportEvent(eventName)
         } else {
-            YandexMetrica.reportEvent(eventName, map as Map<String, Any>?)
+            AppMetrica.reportEvent(eventName, map as Map<String, Any>?)
         }
 
         val eventNameLocal = castStringToFirebaseEvent(eventName)
@@ -251,7 +251,7 @@ constructor(
 
     override fun reportError(message: String, throwable: Throwable) {
         firebaseCrashlytics.recordException(throwable)
-        YandexMetrica.reportError(message, throwable)
+        AppMetrica.reportError(message, throwable)
     }
 
     override fun reportEvent(eventName: String, id: String) {

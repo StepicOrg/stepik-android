@@ -234,6 +234,8 @@ class ComposeCommentDialogFragment :
 
                 super.dismiss()
             }
+
+            else -> Unit
         }
     }
 

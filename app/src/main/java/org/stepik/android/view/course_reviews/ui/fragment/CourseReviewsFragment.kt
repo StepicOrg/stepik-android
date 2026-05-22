@@ -168,6 +168,8 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
             is CourseReviewsView.State.CourseReviewsLoading ->
                 courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder()
+
+            else -> Unit
         }
     }
 

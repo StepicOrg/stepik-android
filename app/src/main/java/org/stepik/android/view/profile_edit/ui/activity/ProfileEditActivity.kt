@@ -65,6 +65,8 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
                     screenManager.showProfileEditInfo(this, profile)
                 ProfileEditItem.Type.PASSWORD ->
                     screenManager.showProfileEditPassword(this, profile.id)
+                else ->
+                    Unit
             }
         }
 

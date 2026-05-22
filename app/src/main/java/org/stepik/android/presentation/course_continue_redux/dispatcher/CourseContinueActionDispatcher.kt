@@ -41,6 +41,8 @@ constructor(
                         )
                 }
             }
+
+            else -> Unit
         }
     }
 }

@@ -402,6 +402,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                         stepQuizContainer.isVisible = false
                         stepQuizError.isVisible = true
                     }
+                    else -> Unit
                 }
             }
         }

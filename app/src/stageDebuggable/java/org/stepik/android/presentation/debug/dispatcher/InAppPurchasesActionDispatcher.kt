@@ -53,6 +53,8 @@ constructor(
                         onError = { onNewMessage(InAppPurchasesFeature.Message.ConsumeFailure) }
                     )
             }
+
+            else -> Unit
         }
     }
 }

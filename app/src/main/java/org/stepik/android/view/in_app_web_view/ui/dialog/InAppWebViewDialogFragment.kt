@@ -2,6 +2,7 @@ package org.stepik.android.view.in_app_web_view.ui.dialog
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -17,6 +18,8 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -47,11 +50,17 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         const val TAG = "InAppWebViewDialogFragment"
         const val IN_APP_WEB_VIEW_DIALOG_REQUEST_CODE = 2313
 
-        fun newInstance(title: String, url: String, isProvideAuth: Boolean = false): InAppWebViewDialogFragment =
+        const val MIR_PAY_SCHEME = "mirpay"
+        const val SBP_SCHEME = "bank"
+        const val TPAY_SCHEME = "tinkoffbank"
+        const val SBER_PAY_SCHEME = "sberpay"
+
+        fun newInstance(title: String, url: String, isProvideAuth: Boolean = false, isPaymentFlow: Boolean = false): InAppWebViewDialogFragment =
             InAppWebViewDialogFragment().apply {
                 this.title = title
                 this.url = url
                 this.isProvideAuth = isProvideAuth
+                this.isPaymentFlow = isPaymentFlow
             }
     }
 
@@ -72,6 +81,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     private var title: String by argument()
     private var url: String by argument()
     private var isProvideAuth: Boolean by argument()
+    private var isPaymentFlow: Boolean by argument()
 
     private var webView: WebView? = null
 
@@ -112,15 +122,12 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
                         it.settings.domStorageEnabled = true
                         it.isSoundEffectsEnabled = false
 
-                        it.webViewClient = object : WebViewClient() {
-                            override fun onPageFinished(view: WebView?, url: String?) {
-                                inAppWebViewPresenter.onSuccess()
-                            }
-
-                            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                                inAppWebViewPresenter.onError()
-                            }
+                        it.webViewClient = if (isPaymentFlow) {
+                            buildPaymentWebViewClient()
+                        } else {
+                            buildStandardWebViewClient()
                         }
+
                         it.webChromeClient = object : WebChromeClient() {
                             override fun onJsConfirm(
                                 view: WebView?,
@@ -246,6 +253,68 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         val baseUrl = getString(R.string.protocol_host_url, protocol, host)
         return baseUrl == endpointResolver.getBaseUrl()
     }
+
+    private fun handlePaymentFlow(paymentUrl: String, @StringRes errorMessageRes: Int) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(paymentUrl)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        try {
+            startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(requireContext(), errorMessageRes, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun buildStandardWebViewClient(): WebViewClient =
+        object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                inAppWebViewPresenter.onSuccess()
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                inAppWebViewPresenter.onError()
+            }
+        }
+
+    private fun buildPaymentWebViewClient(): WebViewClient =
+        object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+                val requestUrl = request.url.toString()
+                val scheme = request.url.scheme.toString()
+                return when {
+                    scheme.startsWith(MIR_PAY_SCHEME) -> {
+                        handlePaymentFlow(requestUrl, errorMessageRes = R.string.mirpay_not_found_toast)
+                        true
+                    }
+
+                    scheme.startsWith(SBP_SCHEME) -> {
+                        handlePaymentFlow(requestUrl, errorMessageRes = R.string.sbp_app_not_found_toast)
+                        true
+                    }
+
+                    scheme.startsWith(TPAY_SCHEME) -> {
+                        handlePaymentFlow(requestUrl, errorMessageRes = R.string.tpay_not_found_toast)
+                        true
+                    }
+
+                    scheme.startsWith(SBER_PAY_SCHEME) -> {
+                        handlePaymentFlow(requestUrl, errorMessageRes = R.string.sbp_app_not_found_toast)
+                        true
+                    }
+
+                    else -> super.shouldOverrideUrlLoading(view, request)
+                }
+            }
+
+            override fun onPageFinished(view: WebView?, url: String?) {
+                inAppWebViewPresenter.onSuccess()
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                inAppWebViewPresenter.onError()
+            }
+        }
 
     interface Callback {
         fun onDismissed()

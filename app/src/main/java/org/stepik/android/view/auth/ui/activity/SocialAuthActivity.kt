@@ -343,6 +343,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         when (state) {
             is SocialAuthView.State.Success ->
                 screenManager.showMainFeedAfterLogin(this, course)
+            else -> Unit
         }
     }
 

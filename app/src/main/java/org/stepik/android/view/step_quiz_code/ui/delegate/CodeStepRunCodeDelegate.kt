@@ -154,6 +154,7 @@ class CodeStepRunCodeDelegate(
                 resolveOutputText(state.userCodeRun)
             is StepQuizRunCodeView.State.UserCodeRunLoaded ->
                 resolveOutputText(state.userCodeRun)
+            else -> Unit
         }
     }
 

@@ -22,7 +22,6 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.analytic.UserCourseActionEvent
 import org.stepik.android.domain.course.analytic.batch.CoursePreviewScreenOpenedAnalyticBatchEvent
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
-import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.mapper.CourseStateMapper
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -73,7 +72,6 @@ constructor(
 
     private val courseInteractor: CourseInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
-    private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
     private val userCoursesInteractor: UserCoursesInteractor,
     private val visitedCoursesInteractor: VisitedCoursesInteractor,
@@ -110,7 +108,6 @@ constructor(
         set(value) {
             field = value
             view?.setState(value)
-            startIndexing()
         }
 
     private var isCoursePreviewLogged = false
@@ -134,12 +131,6 @@ constructor(
     override fun attachView(view: CourseView) {
         super.attachView(view)
         view.setState(state)
-        startIndexing()
-    }
-
-    override fun detachView(view: CourseView) {
-        super.detachView(view)
-        endIndexing()
     }
 
     /**
@@ -232,6 +223,9 @@ constructor(
 
             is EnrollmentState.NotEnrolledMobileTier ->
                 resolveShowInAppAction(headerData)
+
+            else ->
+                Unit
         }
     }
 
@@ -370,21 +364,6 @@ constructor(
 
     fun tryLessonFree(lessonId: Long, unitId: Long) {
         view?.showTrialLesson(lessonId, unitId)
-    }
-
-    /**
-     * Indexing
-     */
-    private fun startIndexing() {
-        (state as? CourseView.State.CourseLoaded)
-            ?.takeIf { view != null }
-            ?.courseHeaderData
-            ?.course
-            ?.let(courseIndexingInteractor::startIndexing)
-    }
-
-    private fun endIndexing() {
-        courseIndexingInteractor.endIndexing()
     }
 
     /**

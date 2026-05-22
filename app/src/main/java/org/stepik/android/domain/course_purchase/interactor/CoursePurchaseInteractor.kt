@@ -106,7 +106,7 @@ constructor(
         billingPurchasePayloadRepository
             .saveBillingPurchasePayload(
                 BillingPurchasePayload(
-                    orderId = purchase.orderId,
+                    orderId = purchase.orderId ?: "", // TODO Order ID may be null; Case must be handled, for IAP to work correctly
                     courseId = courseId,
                     profileId = profileId,
                     obfuscatedAccountId = purchase.accountIdentifiers?.obfuscatedAccountId.orEmpty(),
@@ -126,12 +126,12 @@ constructor(
                 }
             }
             .andThen(billingRepository.consumePurchase(purchase))
-            .andThen(billingPurchasePayloadRepository.deleteBillingPurchasePayload(purchase.orderId))
+            .andThen(billingPurchasePayloadRepository.deleteBillingPurchasePayload(purchase.orderId ?: "")) // TODO Order ID may be null; Case must be handled, for IAP to work correctly
             .andThen(updateCourseAfterEnrollment(courseId))
 
     private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =
         Singles.zip(
-            billingPurchasePayloadRepository.getBillingPurchasePayload(purchase.orderId).onErrorReturnItem(BillingPurchasePayload.EMPTY),
+            billingPurchasePayloadRepository.getBillingPurchasePayload(purchase.orderId ?: "").onErrorReturnItem(BillingPurchasePayload.EMPTY), // TODO Order ID may be null; Case must be handled, for IAP to work correctly
             billingRepository.getInventory(BillingClient.SkuType.INAPP, purchase.skus.first()).toSingle()
         ).flatMapCompletable { (billingPurchasePayload, skuDetails) ->
             val promoCode =

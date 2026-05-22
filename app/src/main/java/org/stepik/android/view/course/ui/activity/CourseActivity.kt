@@ -2,15 +2,12 @@ package org.stepik.android.view.course.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -32,7 +29,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseJoinedEvent
@@ -48,7 +44,6 @@ import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.presentation.wishlist.model.WishlistAction
-import org.stepik.android.view.base.web.CustomTabsHelper
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
@@ -206,8 +201,8 @@ class CourseActivity :
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
             .takeIf { it != NO_ID }
             ?: course?.id
-            ?: deepLinkCourseId
-            ?: NO_ID
+                    ?: deepLinkCourseId
+                    ?: NO_ID
 
         injectComponent(courseId)
 
@@ -379,7 +374,7 @@ class CourseActivity :
 
     private fun resolveSwipeRefreshState() {
         courseSwipeRefresh.isEnabled =
-                viewPagerScrollState == ViewPager.SCROLL_STATE_IDLE &&
+            viewPagerScrollState == ViewPager.SCROLL_STATE_IDLE &&
                     isInSwipeableViewState
     }
 
@@ -431,6 +426,8 @@ class CourseActivity :
                 courseHeaderDelegate.courseHeaderData = state.courseHeaderData
                 ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
             }
+
+            else -> Unit
         }
         viewStateDelegate.switchState(state)
         invalidateOptionsMenu()
@@ -545,23 +542,9 @@ class CourseActivity :
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
-        when (coursePurchaseWebviewSplitTest.currentGroup) {
-            CoursePurchaseWebviewSplitTest.Group.Control -> {
-                MagicLinkDialogFragment
-                    .newInstance(url)
-                    .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
-            }
-            CoursePurchaseWebviewSplitTest.Group.InAppWebview -> {
-                InAppWebViewDialogFragment
-                    .newInstance(getString(R.string.course_purchase), url, isProvideAuth = true)
-                    .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
-            }
-            CoursePurchaseWebviewSplitTest.Group.ChromeTab -> {
-                MagicLinkDialogFragment
-                    .newInstance(url, handleUrlInParent = true)
-                    .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
-            }
-        }
+        MagicLinkDialogFragment
+            .newInstance(url, handleUrlInParent = true)
+            .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
     }
 
     override fun showTrialLesson(lessonId: Long, unitId: Long) {
@@ -598,28 +581,9 @@ class CourseActivity :
     }
 
     override fun handleUrl(url: String) {
-        val builder = CustomTabsIntent.Builder()
-        builder.setShowTitle(true)
-        builder.setDefaultColorSchemeParams(
-            CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(resolveColorAttribute(R.attr.colorSurface))
-                .setSecondaryToolbarColor(resolveColorAttribute(R.attr.colorSurface))
-                .build()
-        )
-        val customTabsIntent = builder.build()
-        val packageName = CustomTabsHelper.getPackageNameToUse(this)
-        analytic.reportAmplitudeEvent(
-            AmplitudeAnalytic.ChromeTab.CHROME_TAB_OPENED,
-            mapOf(AmplitudeAnalytic.ChromeTab.Params.FALLBACK to (packageName == null))
-        )
-        if (packageName == null) {
-            InAppWebViewDialogFragment
-                .newInstance(getString(R.string.course_purchase), url, isProvideAuth = false)
-                .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
-        } else {
-            customTabsIntent.intent.`package` = packageName
-            customTabsIntent.launchUrl(this, Uri.parse(url))
-        }
+        InAppWebViewDialogFragment
+            .newInstance(getString(R.string.course_purchase), url, isProvideAuth = false, isPaymentFlow = true)
+            .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
     }
 
     override fun openCoursePurchaseInApp(coursePurchaseData: CoursePurchaseData) {
