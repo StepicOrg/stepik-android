@@ -726,7 +726,7 @@
 
     <string name="step_disabled_teacher_tariff_description">"\n\nВ шаге использована платная функциональность. "</string>
     <string name="step_disabled_teacher_tariff_title">О тарифных планах</string>
-    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/ru/articles/360012252539</string>
+    <string name="step_disabled_teacher_tariff_url">https://help.stepik.org/article/54722</string>
 
     <string name="step_disabled_student_title">Увидеть задачу пока нельзя</string>
     <string name="step_disabled_student_description_part_1">"Напишите авторам курса, чтобы они обратили внимание на настройки "</string>
@@ -1216,7 +1216,7 @@
     <!-- Settings -->
     <string name="settings_contact_support">Написать в поддержку</string>
     <string name="settings_help_center">Справочный центр</string>
-    <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
+    <string name="settings_help_center_url">https://help.stepik.org/</string>
     <string name="settings_app_version">Версия: %s</string>
     <string name="settings_delete_account">Удалить учётную запись</string>
 
