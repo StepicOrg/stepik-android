@@ -18,48 +18,22 @@ glob_scan_max_depth = 6
 "." = "write"
 
 # Android signing material and local build secrets.
-"buildsystem/**" = "none"
-"keystore/**" = "none"
-"keystores/**" = "none"
-"secrets/**" = "none"
-"secret/**" = "none"
-"credentials/**" = "none"
-"credential/**" = "none"
+"buildsystem/**" = "deny"
+"keystore/**" = "deny"
+"keystores/**" = "deny"
+"secrets/**" = "deny"
+"secret/**" = "deny"
+"credentials/**" = "deny"
+"credential/**" = "deny"
 
 # Environment and local-machine configuration.
-".env" = "none"
-".env.*" = "none"
-"**/.env" = "none"
-"**/.env.*" = "none"
-"local.properties" = "none"
-"**/local.properties" = "none"
+".env" = "deny"
+"local.properties" = "deny"
 
 # Android/Firebase/Google Play service credentials.
-"app/google-services.json" = "none"
-"google-services.json" = "none"
-"**/google-services.json" = "none"
-"googleplayprovider.json" = "none"
-"**/googleplayprovider.json" = "none"
-"*service-account*.json" = "none"
-"**/*service-account*.json" = "none"
-"*credentials*.json" = "none"
-"**/*credentials*.json" = "none"
-"*credential*.json" = "none"
-"**/*credential*.json" = "none"
+"app/google-services.json" = "deny"
+"google-services.json" = "deny"
+"googleplayprovider.json" = "deny"
 
 # App endpoint/OAuth config assets.
-"app/src/*/assets/configs/*.json" = "none"
-
-# Common key/certificate formats.
-"*.jks" = "none"
-"**/*.jks" = "none"
-"*.keystore" = "none"
-"**/*.keystore" = "none"
-"*.p12" = "none"
-"**/*.p12" = "none"
-"*.pfx" = "none"
-"**/*.pfx" = "none"
-"*.pem" = "none"
-"**/*.pem" = "none"
-"*.key" = "none"
-"**/*.key" = "none"
+# Removed glob rule "app/src/*/assets/configs/*.json" because Codex rejects file globs.
