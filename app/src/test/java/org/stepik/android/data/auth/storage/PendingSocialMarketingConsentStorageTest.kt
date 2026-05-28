@@ -11,14 +11,14 @@ import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
 
 @RunWith(RobolectricTestRunner::class)
 class PendingSocialMarketingConsentStorageTest {
-    private lateinit var storage: PendingSocialMarketingConsentStorage
+    private lateinit var storage: PendingSocialMarketingConsentStorageImpl
     private lateinit var context: Context
 
     @Before
     fun setUp() {
         context = RuntimeEnvironment.getApplication()
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE).edit().clear().commit()
-        storage = PendingSocialMarketingConsentStorage(context)
+        storage = PendingSocialMarketingConsentStorageImpl(context)
     }
 
     @Test

@@ -53,6 +53,7 @@ import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.resolvers.text.TextResolverImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.data.auth.storage.PendingSocialMarketingConsentStorage
+import org.stepik.android.data.auth.storage.PendingSocialMarketingConsentStorageImpl
 import org.stepik.android.view.injection.billing.PublicLicenseKey
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
@@ -137,7 +138,7 @@ abstract class AppCoreModule {
         @AppSingleton
         @JvmStatic
         internal fun providePendingSocialMarketingConsentStorage(context: Context): PendingSocialMarketingConsentStorage =
-            PendingSocialMarketingConsentStorage(context)
+            PendingSocialMarketingConsentStorageImpl(context)
 
         @Provides
         @AppSingleton

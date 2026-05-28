@@ -4,14 +4,20 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
 
-class PendingSocialMarketingConsentStorage(
+interface PendingSocialMarketingConsentStorage {
+    fun get(): PendingSocialMarketingConsent
+    fun set(pendingSocialMarketingConsent: PendingSocialMarketingConsent)
+    fun clear()
+}
+
+class PendingSocialMarketingConsentStorageImpl(
     private val sharedPreferences: SharedPreferences
-) {
+) : PendingSocialMarketingConsentStorage {
     constructor(context: Context) : this(
         context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE)
     )
 
-    fun set(pendingSocialMarketingConsent: PendingSocialMarketingConsent) {
+    override fun set(pendingSocialMarketingConsent: PendingSocialMarketingConsent) {
         if (pendingSocialMarketingConsent == PendingSocialMarketingConsent.NONE) {
             clear()
             return
@@ -23,13 +29,13 @@ class PendingSocialMarketingConsentStorage(
             .apply()
     }
 
-    fun get(): PendingSocialMarketingConsent =
+    override fun get(): PendingSocialMarketingConsent =
         sharedPreferences
             .getString(KEY_PENDING_SOCIAL_MARKETING_CONSENT, null)
             ?.let(::safeValueOf)
             ?: PendingSocialMarketingConsent.NONE
 
-    fun clear() {
+    override fun clear() {
         sharedPreferences
             .edit()
             .remove(KEY_PENDING_SOCIAL_MARKETING_CONSENT)

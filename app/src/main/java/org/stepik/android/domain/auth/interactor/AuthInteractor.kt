@@ -8,13 +8,18 @@ import org.stepic.droid.model.Credentials
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import org.stepik.android.data.auth.storage.PendingSocialMarketingConsentStorage
+import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
 import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.domain.visited_courses.repository.VisitedCoursesRepository
 import org.stepik.android.domain.wishlist.repository.WishlistRepository
+import org.stepik.android.model.user.Profile
 import org.stepik.android.model.user.RegistrationCredentials
+import java.util.Date
 import javax.inject.Inject
 
 class AuthInteractor
@@ -24,12 +29,17 @@ constructor(
     private val authRepository: AuthRepository,
 
     private val userProfileRepository: UserProfileRepository,
+    private val profileRepository: ProfileRepository,
+    private val pendingSocialMarketingConsentStorage: PendingSocialMarketingConsentStorage,
     private val courseRepository: CourseRepository,
     private val visitedCoursesRepository: VisitedCoursesRepository,
     private val wishlistRepository: WishlistRepository
 ) {
     companion object {
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
+
+        fun isNewSocialRegistration(joinDate: Date?, nowMillis: Long): Boolean =
+            joinDate != null && (nowMillis - joinDate.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE)
     }
 
     fun createAccount(credentials: RegistrationCredentials): Single<Credentials> =
@@ -51,7 +61,7 @@ constructor(
         authRepository
             .authWithNativeCode(code, type, email)
             .flatMapCompletable {
-                reportSocialAuthAnalytics(type)
+                handlePostSocialAuth(type)
             }
             .andThen(clearCache())
 
@@ -59,32 +69,48 @@ constructor(
         authRepository
             .authWithCode(code)
             .flatMapCompletable {
-                reportSocialAuthAnalytics(type)
+                handlePostSocialAuth(type)
             }
             .andThen(clearCache())
 
-    private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
+    private fun handlePostSocialAuth(type: SocialAuthType): Completable =
         userProfileRepository
             .getUserProfile()
-            .map { (user, _) ->
-                user?.joinDate
-                    ?.let {
-                        if (DateTimeHelper.nowUtc() - it.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE) {
-                            AmplitudeAnalytic.Auth.REGISTERED
-                        } else {
-                            AmplitudeAnalytic.Auth.LOGGED_ID
-                        }
-                    }
-                    ?: AmplitudeAnalytic.Auth.LOGGED_ID
+            .map { (user, profile) ->
+                PostAuthContext(
+                    type = type,
+                    isNew = isNewSocialRegistration(user?.joinDate, DateTimeHelper.nowUtc()),
+                    profile = profile
+                )
             }
-            .onErrorReturnItem(AmplitudeAnalytic.Auth.LOGGED_ID)
-            .doOnSuccess { event ->
-                analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to type.identifier))
+            .onErrorReturnItem(PostAuthContext(type, isNew = false, profile = null))
+            .flatMapCompletable { context ->
+                val event = if (context.isNew) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
+                analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to context.type.identifier))
+
+                val pendingConsent = pendingSocialMarketingConsentStorage.get()
+
+                val profileUpdate = if (context.isNew && pendingConsent != PendingSocialMarketingConsent.NONE && context.profile != null) {
+                    val subscribed = pendingConsent == PendingSocialMarketingConsent.SUBSCRIBED
+                    profileRepository.saveProfile(context.profile.copy(subscribedForMarketing = subscribed))
+                        .onErrorReturn { context.profile }
+                        .ignoreElement()
+                } else {
+                    Completable.complete()
+                }
+
+                profileUpdate.andThen(Completable.fromAction { pendingSocialMarketingConsentStorage.clear() })
             }
-            .ignoreElement()
+            .onErrorComplete()
 
     private fun clearCache(): Completable =
         courseRepository.removeCachedCourses()
             .andThen(visitedCoursesRepository.removedVisitedCourses())
             .andThen(wishlistRepository.removeWishlistEntries())
+
+    private data class PostAuthContext(
+        val type: SocialAuthType,
+        val isNew: Boolean,
+        val profile: Profile?
+    )
 }
