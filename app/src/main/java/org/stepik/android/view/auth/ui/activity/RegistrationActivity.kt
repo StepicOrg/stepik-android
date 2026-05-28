@@ -29,6 +29,10 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
+import org.stepik.android.domain.auth.mapper.RegistrationConsentMapper
+import org.stepik.android.domain.auth.mapper.RegistrationConsentResult
+import org.stepik.android.domain.auth.model.RegistrationConsentState
+import org.stepik.android.domain.feature.interactor.FeaturesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.presentation.auth.RegistrationPresenter
@@ -56,17 +60,23 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var featuresInteractor: FeaturesInteractor
+
     private val registrationPresenter: RegistrationPresenter by viewModels { viewModelFactory }
 
     private val passwordTooShortMessage by lazy {
         resources.getString(R.string.password_too_short)
     }
-    private val termsMessageHtml by lazy {
-        resources.getString(R.string.terms_message_register)
+    private val consentRequiredMessage by lazy {
+        resources.getString(R.string.registration_consent_required)
     }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+
+    private val consentMapper = RegistrationConsentMapper()
+    private var consentState: RegistrationConsentState = RegistrationConsentState.fromFeatureSnapshot(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,11 +84,25 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         injectComponent()
 
+        consentState = RegistrationConsentState.fromFeatureSnapshot(
+            featuresInteractor.isAuthMarketingAgreementEnabledCached()
+        )
+
         initTitle()
 
-        termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
-        stripUnderlinesFromLinks(termsPrivacyRegisterTextView)
+        requiredConsentText.movementMethod = LinkMovementMethod.getInstance()
+        requiredConsentText.text = textResolver.fromHtml(consentRequiredMessage)
+        stripUnderlinesFromLinks(requiredConsentText)
+
+        requiredConsentCheckBox.setOnCheckedChangeListener { _, _ ->
+            consentErrorText.isVisible = false
+        }
+
+        if (consentState.isMarketingVisible) {
+            marketingConsentRow.isVisible = true
+            marketingHelperText.isVisible = true
+            marketingConsentCheckBox.isChecked = consentState.isMarketingChecked
+        }
 
         signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
 
@@ -203,12 +227,27 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
         var isOk = true
 
         if (!ValidatorUtil.isPasswordValid(password)) {
-            showError(passwordTooShortMessage) // todo
+            showError(passwordTooShortMessage)
             isOk = false
         }
 
         if (isOk) {
-            registrationPresenter.submit(RegistrationCredentials(firstName, lastName, email, password))
+            val currentState = RegistrationConsentState(
+                isRequiredConsentGranted = requiredConsentCheckBox.isChecked,
+                isMarketingVisible = marketingConsentRow.isVisible,
+                isMarketingChecked = marketingConsentCheckBox.isChecked
+            )
+
+            val consentResult = consentMapper.validate(currentState)
+            if (consentResult is RegistrationConsentResult.RequiredConsentMissing) {
+                consentErrorText.isVisible = true
+                return
+            }
+
+            val subscribedForMarketing = consentMapper.mapSubscribedForMarketing(currentState)
+            registrationPresenter.submit(
+                RegistrationCredentials(firstName, lastName, email, password, subscribedForMarketing)
+            )
         }
     }
 

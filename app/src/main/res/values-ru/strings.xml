@@ -80,6 +80,10 @@
         получить баллы.
     </string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6.</string>
+    <string name="registration_consent_required"><![CDATA[Я прочитал(а) и принимаю <a href="https://stepik.org/page/terms/?from_mobile_app=true">условия использования</a>, <a href="https://stepik.org/page/privacy/?from_mobile_app=true">политику конфиденциальности</a> и даю согласие на обработку персональных данных]]></string>
+    <string name="registration_consent_marketing">Присылайте мне новости, полезные рекомендации и специальные предложения</string>
+    <string name="registration_consent_marketing_helper">Не более 2 писем в неделю. Отписаться можно в любое время</string>
+    <string name="registration_consent_required_error">Пожалуйста, примите условия для продолжения</string>
     <string name="send">Отправить</string>
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
