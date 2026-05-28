@@ -1,7 +1,26 @@
-default_permissions = "workspace"
+sandbox_mode = "workspace-write"
+
+[permissions.filesystem]
+deny_read = [
+    "buildsystem/**",
+    "keystore/**",
+    "keystores/**",
+    "secrets/**",
+    "secret/**",
+    "credentials/**",
+    "credential/**",
+    ".env",
+    "local.properties",
+    "app/google-services.json",
+    "google-services.json",
+    "googleplayprovider.json",
+]
+
+# App endpoint/OAuth config assets.
+# Removed glob rule "app/src/*/assets/configs/*.json" because Codex rejects file globs.
 
 [features]
-codex_hooks = true
+hooks = true
 
 [[hooks.Stop]]
 
@@ -10,30 +29,3 @@ type = "command"
 command = 'python3 "$(git rev-parse --show-toplevel)/.codex/hooks/stop_quality_check.py"'
 timeout = 240
 statusMessage = "Running final quality checks"
-
-[permissions.workspace.filesystem]
-glob_scan_max_depth = 6
-
-[permissions.workspace.filesystem.":project_roots"]
-"." = "write"
-
-# Android signing material and local build secrets.
-"buildsystem/**" = "deny"
-"keystore/**" = "deny"
-"keystores/**" = "deny"
-"secrets/**" = "deny"
-"secret/**" = "deny"
-"credentials/**" = "deny"
-"credential/**" = "deny"
-
-# Environment and local-machine configuration.
-".env" = "deny"
-"local.properties" = "deny"
-
-# Android/Firebase/Google Play service credentials.
-"app/google-services.json" = "deny"
-"google-services.json" = "deny"
-"googleplayprovider.json" = "deny"
-
-# App endpoint/OAuth config assets.
-# Removed glob rule "app/src/*/assets/configs/*.json" because Codex rejects file globs.
