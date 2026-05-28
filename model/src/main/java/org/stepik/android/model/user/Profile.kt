@@ -27,6 +27,9 @@ data class Profile(
     @SerializedName("is_guest")
     val isGuest: Boolean = false,
 
+    @SerializedName("subscribed_for_marketing")
+    val subscribedForMarketing: Boolean? = null,
+
     @SerializedName("email_addresses")
     val emailAddresses: List<Long>? = null
 ) : Parcelable

@@ -82,6 +82,7 @@ import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.email_address.EmailAddressDataModule
 import org.stepik.android.view.injection.fast_continue.FastContinueComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
+import org.stepik.android.view.injection.features.FeaturesDataModule
 import org.stepik.android.view.injection.filter.FilterComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.in_app_web_view.InAppWebViewComponent
@@ -171,6 +172,7 @@ import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundServ
         NotificationDataModule::class,
         EmailAddressDataModule::class,
         SearchResultDataModule::class,
+        FeaturesDataModule::class,
         UserCoursesDataModule::class,
         CourseCollectionDataModule::class,
         SolutionsBusModule::class,
