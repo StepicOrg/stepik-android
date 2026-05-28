@@ -84,6 +84,8 @@
     <string name="registration_consent_marketing">Присылайте мне новости, полезные рекомендации и специальные предложения</string>
     <string name="registration_consent_marketing_helper">Не более 2 писем в неделю. Отписаться можно в любое время</string>
     <string name="registration_consent_required_error">Пожалуйста, примите условия для продолжения</string>
+    <string name="social_auth_consent_title">Ознакомьтесь и примите условия</string>
+    <string name="social_auth_consent_continue">Продолжить</string>
     <string name="send">Отправить</string>
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>

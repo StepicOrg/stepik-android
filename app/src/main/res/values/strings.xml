@@ -96,6 +96,8 @@
     <string name="registration_consent_marketing">Send me news, helpful recommendations, and special offers</string>
     <string name="registration_consent_marketing_helper">Max 2 emails per week. Unsubscribe anytime</string>
     <string name="registration_consent_required_error">Please agree to the terms to continue</string>
+    <string name="social_auth_consent_title">Review and Accept Terms</string>
+    <string name="social_auth_consent_continue">Continue</string>
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>

@@ -28,6 +28,10 @@ import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.data.auth.storage.PendingSocialMarketingConsentStorage
+import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
+import org.stepik.android.domain.feature.interactor.FeaturesInteractor
+import org.stepik.android.view.auth.ui.dialog.SocialAuthConsentBottomSheetDialogFragment
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
@@ -42,9 +46,10 @@ import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.auth.model.SocialNetwork
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
+class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthConsentBottomSheetDialogFragment.Callback {
     companion object {
         private const val REQUEST_CODE_GOOGLE_SIGN_IN = 7007
 
@@ -80,6 +85,12 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
+    @Inject
+    internal lateinit var featuresInteractor: FeaturesInteractor
+
+    @Inject
+    internal lateinit var pendingSocialMarketingConsentStorage: PendingSocialMarketingConsentStorage
+
     private val socialAuthPresenter: SocialAuthPresenter by viewModels { viewModelFactory }
 
     private val progressDialogFragment: DialogFragment =
@@ -88,6 +99,8 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 //    private lateinit var callbackManager: CallbackManager
 
     private var selectedSocialType: SocialNetwork? = null
+
+    private var isMarketingEnabled: Boolean = false
 
     private var course: Course? = null
 
@@ -98,6 +111,8 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         course = intent.getParcelableExtra(EXTRA_COURSE)
 
         injectComponent()
+
+        isMarketingEnabled = featuresInteractor.isAuthMarketingAgreementEnabledCached()
 
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
@@ -222,6 +237,17 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
     private fun onSocialItemClicked(type: SocialNetwork) {
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.identifier)
+        SocialAuthConsentBottomSheetDialogFragment
+            .newInstance(type, isMarketingEnabled)
+            .showIfNotExists(supportFragmentManager, SocialAuthConsentBottomSheetDialogFragment.TAG)
+    }
+
+    override fun onSocialConsentConfirmed(socialNetwork: SocialNetwork, marketingConsent: PendingSocialMarketingConsent) {
+        pendingSocialMarketingConsentStorage.set(marketingConsent)
+        launchSocialAuth(socialNetwork)
+    }
+
+    private fun launchSocialAuth(type: SocialNetwork) {
         when (type) {
             SocialNetwork.GOOGLE -> {
                 if (googleApiClient == null) {
@@ -232,9 +258,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
                     startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
                 }
             }
-
-//            SocialNetwork.FACEBOOK ->
-//                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
 
             SocialNetwork.VK ->
                 VK.login(this, listOf(VKScope.OFFLINE, VKScope.EMAIL))
