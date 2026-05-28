@@ -44,3 +44,9 @@ maka-vlc/
 reports
 
 /docs/
+
+/.agents/
+/specs/
+
+# Ralph local config files
+/ralph*
