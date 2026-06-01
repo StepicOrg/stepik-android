@@ -1,7 +1,7 @@
-default_permissions = "workspace"
+sandbox_mode = "workspace-write"
 
 [features]
-codex_hooks = true
+hooks = true
 
 [[hooks.Stop]]
 
@@ -11,55 +11,52 @@ command = 'python3 "$(git rev-parse --show-toplevel)/.codex/hooks/stop_quality_c
 timeout = 240
 statusMessage = "Running final quality checks"
 
-[permissions.workspace.filesystem]
-glob_scan_max_depth = 6
+[permissions.filesystem]
+allow_read = [
+    ".codex/.env",
+    ".codex/.env.*",
+    ".codex/**/.env",
+    ".codex/**/.env.*",
+    ".codex/**/*.env",
+    ".codex/**/*.env.*",
+]
 
-[permissions.workspace.filesystem.":project_roots"]
-"." = "write"
-
-# Android signing material and local build secrets.
-"buildsystem/**" = "none"
-"keystore/**" = "none"
-"keystores/**" = "none"
-"secrets/**" = "none"
-"secret/**" = "none"
-"credentials/**" = "none"
-"credential/**" = "none"
-
-# Environment and local-machine configuration.
-".env" = "none"
-".env.*" = "none"
-"**/.env" = "none"
-"**/.env.*" = "none"
-"local.properties" = "none"
-"**/local.properties" = "none"
-
-# Android/Firebase/Google Play service credentials.
-"app/google-services.json" = "none"
-"google-services.json" = "none"
-"**/google-services.json" = "none"
-"googleplayprovider.json" = "none"
-"**/googleplayprovider.json" = "none"
-"*service-account*.json" = "none"
-"**/*service-account*.json" = "none"
-"*credentials*.json" = "none"
-"**/*credentials*.json" = "none"
-"*credential*.json" = "none"
-"**/*credential*.json" = "none"
-
-# App endpoint/OAuth config assets.
-"app/src/*/assets/configs/*.json" = "none"
-
-# Common key/certificate formats.
-"*.jks" = "none"
-"**/*.jks" = "none"
-"*.keystore" = "none"
-"**/*.keystore" = "none"
-"*.p12" = "none"
-"**/*.p12" = "none"
-"*.pfx" = "none"
-"**/*.pfx" = "none"
-"*.pem" = "none"
-"**/*.pem" = "none"
-"*.key" = "none"
-"**/*.key" = "none"
+deny_read = [
+    "buildsystem/**",
+    "keystore/**",
+    "keystores/**",
+    "secrets/**",
+    "secret/**",
+    "credentials/**",
+    "credential/**",
+    ".env",
+    ".env.*",
+    "**/.env",
+    "**/.env.*",
+    "local.properties",
+    "**/local.properties",
+    "app/google-services.json",
+    "google-services.json",
+    "**/google-services.json",
+    "googleplayprovider.json",
+    "**/googleplayprovider.json",
+    "*service-account*.json",
+    "**/*service-account*.json",
+    "*credentials*.json",
+    "**/*credentials*.json",
+    "*credential*.json",
+    "**/*credential*.json",
+    "app/src/*/assets/configs/*.json",
+    "*.jks",
+    "**/*.jks",
+    "*.keystore",
+    "**/*.keystore",
+    "*.p12",
+    "**/*.p12",
+    "*.pfx",
+    "**/*.pfx",
+    "*.pem",
+    "**/*.pem",
+    "*.key",
+    "**/*.key",
+]
