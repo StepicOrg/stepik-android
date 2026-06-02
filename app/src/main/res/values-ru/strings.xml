@@ -936,6 +936,8 @@
 
     <string name="profile_external_links_title">Ссылки</string>
     <string name="profile_notifcation_title">Уведомления</string>
+    <string name="profile_marketing_notifications_switch">Получать маркетинговые письма</string>
+    <string name="profile_marketing_notifications_update_error">Не удалось обновить маркетинговые уведомления</string>
     <string name="profile_settings_menu_item">Настройки</string>
 
     <string name="profile_courses_title">Курсы</string>

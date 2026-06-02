@@ -55,6 +55,8 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
 
     private val profileNotificationPresenter: ProfileNotificationPresenter by viewModels { viewModelFactory }
 
+    private var isMarketingNotificationSwitchUpdating = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -71,6 +73,12 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
             val dialog = TimeIntervalPickerDialogFragment.newInstance()
             dialog.setTargetFragment(this@ProfileNotificationFragment, 0)
             dialog.showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+        }
+
+        marketingNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (!isMarketingNotificationSwitchUpdating) {
+                profileNotificationPresenter.switchMarketingNotification(isChecked)
+            }
         }
 
         view.isVisible = false
@@ -99,6 +107,7 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
             view?.isVisible = true
             initTimezone()
             profileNotificationPresenter.tryShowNotificationSetting()
+            profileNotificationPresenter.tryShowMarketingNotificationSetting()
         }
     }
 
@@ -133,6 +142,23 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
 
     override fun setNewTimeInterval(timePresentationString: String) {
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
+    }
+
+    override fun showMarketingNotificationState(subscribedForMarketing: Boolean, isUpdating: Boolean) {
+        marketingNotificationSwitch.isVisible = true
+        marketingNotificationSwitch.isEnabled = !isUpdating
+
+        isMarketingNotificationSwitchUpdating = true
+        marketingNotificationSwitch.isChecked = subscribedForMarketing
+        isMarketingNotificationSwitchUpdating = false
+    }
+
+    override fun hideMarketingNotification() {
+        marketingNotificationSwitch.isVisible = false
+    }
+
+    override fun showMarketingNotificationUpdateFailed() {
+        view?.snackbar(messageRes = R.string.profile_marketing_notifications_update_error)
     }
 
     override fun hideNotificationTime(needHide: Boolean) {

@@ -974,6 +974,8 @@
 
     <string name="profile_external_links_title">External links</string>
     <string name="profile_notifcation_title">Notifications</string>
+    <string name="profile_marketing_notifications_switch">Receive marketing emails</string>
+    <string name="profile_marketing_notifications_update_error">Could not update marketing notifications</string>
     <string name="profile_settings_menu_item">Settings</string>
 
     <string name="profile_courses_title">Courses</string>
