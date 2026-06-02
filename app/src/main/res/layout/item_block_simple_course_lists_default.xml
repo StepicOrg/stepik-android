@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:orientation="vertical"
-    tools:viewBindingIgnore="true">
+    android:orientation="vertical">
 
-    <include layout="@layout/header_catalog_block" />
+    <include
+        android:id="@+id/catalogBlockHeader"
+        layout="@layout/header_catalog_block" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/courseListsRecycler"
