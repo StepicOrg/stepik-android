@@ -2,7 +2,6 @@ package org.stepik.android.view.step_quiz_code.ui.fragment
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
@@ -40,7 +39,7 @@ class CodeStepQuizFragment :
         R.layout.layout_step_quiz_code
 
     override val quizViews: Array<View>
-        get() = arrayOf(stepQuizCodeContainer)
+        get() = arrayOf(requireView().findViewById(R.id.stepQuizCodeContainer))
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
         codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")

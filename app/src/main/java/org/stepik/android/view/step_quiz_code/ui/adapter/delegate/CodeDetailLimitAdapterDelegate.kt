@@ -2,7 +2,7 @@ package org.stepik.android.view.step_quiz_code.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_step_quiz_code_detail_limit.view.*
+import androidx.appcompat.widget.AppCompatTextView
 import org.stepic.droid.R
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -16,8 +16,8 @@ class CodeDetailLimitAdapterDelegate : AdapterDelegate<CodeDetail, DelegateViewH
         data is CodeDetail.Limit
 
     private class ViewHolder(root: View) : DelegateViewHolder<CodeDetail>(root) {
-        private val title = root.stepQuizCodeDetailLimitTitle
-        private val value = root.stepQuizCodeDetailLimitValue
+        private val title = root.findViewById<AppCompatTextView>(R.id.stepQuizCodeDetailLimitTitle)
+        private val value = root.findViewById<AppCompatTextView>(R.id.stepQuizCodeDetailLimitValue)
 
         override fun onBind(data: CodeDetail) {
             data as CodeDetail.Limit

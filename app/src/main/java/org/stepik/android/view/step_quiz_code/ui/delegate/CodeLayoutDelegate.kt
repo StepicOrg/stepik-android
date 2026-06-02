@@ -1,8 +1,9 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
 import android.view.View
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
+import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
+import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepik.android.model.Step
@@ -16,8 +17,8 @@ class CodeLayoutDelegate(
     private val onChangeLanguageClicked: () -> Unit
 ) {
 
-    private val codeLayout = codeContainerView.codeStepLayout
-    private val stepQuizActionChangeLang = codeContainerView.stepQuizActionChangeLang
+    private val codeLayout = codeContainerView.findViewById<CodeEditorLayout>(R.id.codeStepLayout)
+    private val stepQuizActionChangeLang = codeContainerView.findViewById<MaterialButton>(R.id.stepQuizActionChangeLang)
 
     init {
         /**
