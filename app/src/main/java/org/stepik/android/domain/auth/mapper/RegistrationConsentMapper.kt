@@ -7,7 +7,7 @@ sealed class RegistrationConsentResult {
     object RequiredConsentMissing : RegistrationConsentResult()
 }
 
-class RegistrationConsentMapper {
+object RegistrationConsentMapper {
 
     fun validate(state: RegistrationConsentState): RegistrationConsentResult =
         if (state.isRequiredConsentGranted) {

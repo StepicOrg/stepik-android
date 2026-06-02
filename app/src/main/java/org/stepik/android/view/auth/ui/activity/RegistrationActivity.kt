@@ -2,6 +2,7 @@ package org.stepik.android.view.auth.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -14,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_registration.*
@@ -27,6 +29,7 @@ import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
 import org.stepik.android.domain.auth.mapper.RegistrationConsentMapper
@@ -41,6 +44,7 @@ import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
+import kotlin.getValue
 
 class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     companion object {
@@ -74,9 +78,19 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
-
-    private val consentMapper = RegistrationConsentMapper()
     private var consentState: RegistrationConsentState = RegistrationConsentState.fromFeatureSnapshot(false)
+    private val requiredConsentDefaultTint by lazy {
+        createRequiredConsentTint(
+            checkedColor = resolveColorAttribute(R.attr.colorSecondary),
+            uncheckedColor = resolveColorAttribute(R.attr.colorOnSurface)
+        )
+    }
+    private val requiredConsentErrorTint by lazy {
+        createRequiredConsentTint(
+            checkedColor = resolveColorAttribute(R.attr.colorSecondary),
+            uncheckedColor = resolveColorAttribute(R.attr.colorError)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,8 +109,9 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
         stripUnderlinesFromLinks(requiredConsentText)
 
         requiredConsentCheckBox.setOnCheckedChangeListener { _, _ ->
-            consentErrorText.isVisible = false
+            clearRequiredConsentError()
         }
+        clearRequiredConsentError()
 
         if (consentState.isMarketingVisible) {
             marketingConsentRow.isVisible = true
@@ -128,6 +143,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
             override fun afterTextChanged(s: Editable?) {
                 registrationPresenter.onFormChanged()
                 setSignUpButtonState()
+                clearRequiredConsentError()
             }
         }
 
@@ -231,25 +247,63 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
             isOk = false
         }
 
+        val currentState = getCurrentConsentState()
+
+        val consentResult = RegistrationConsentMapper.validate(currentState)
+        if (consentResult is RegistrationConsentResult.RequiredConsentMissing) {
+            showRequiredConsentError(showErrorText = isOk)
+            isOk = false
+        }
+
         if (isOk) {
-            val currentState = RegistrationConsentState(
-                isRequiredConsentGranted = requiredConsentCheckBox.isChecked,
-                isMarketingVisible = marketingConsentRow.isVisible,
-                isMarketingChecked = marketingConsentCheckBox.isChecked
-            )
-
-            val consentResult = consentMapper.validate(currentState)
-            if (consentResult is RegistrationConsentResult.RequiredConsentMissing) {
-                consentErrorText.isVisible = true
-                return
-            }
-
-            val subscribedForMarketing = consentMapper.mapSubscribedForMarketing(currentState)
+            val subscribedForMarketing =
+                RegistrationConsentMapper.mapSubscribedForMarketing(currentState)
             registrationPresenter.submit(
-                RegistrationCredentials(firstName, lastName, email, password, subscribedForMarketing)
+                RegistrationCredentials(
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    subscribedForMarketing
+                )
             )
         }
     }
+
+    private fun getCurrentConsentState(): RegistrationConsentState =
+        RegistrationConsentState(
+            isRequiredConsentGranted = requiredConsentCheckBox.isChecked,
+            isMarketingVisible = marketingConsentRow.isVisible,
+            isMarketingChecked = marketingConsentCheckBox.isChecked
+        )
+
+    private fun showRequiredConsentError(showErrorText: Boolean = false) {
+        consentErrorText.isVisible = showErrorText
+        CompoundButtonCompat.setButtonTintList(
+            requiredConsentCheckBox,
+            requiredConsentErrorTint
+        )
+    }
+
+    private fun clearRequiredConsentError() {
+        consentErrorText.isVisible = false
+        CompoundButtonCompat.setButtonTintList(
+            requiredConsentCheckBox,
+            requiredConsentDefaultTint
+        )
+    }
+
+    private fun createRequiredConsentTint(checkedColor: Int, uncheckedColor: Int): ColorStateList =
+        ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                checkedColor,
+                uncheckedColor
+            )
+        )
 
     override fun setState(state: RegistrationView.State) {
         if (state is RegistrationView.State.Loading) {
