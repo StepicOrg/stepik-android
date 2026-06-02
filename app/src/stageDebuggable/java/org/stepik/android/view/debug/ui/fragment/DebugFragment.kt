@@ -23,6 +23,7 @@ import androidx.core.view.isVisible
 import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
 import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
+import org.stepik.android.view.debug.ui.dialog.BackendFeaturesDialogFragment
 import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
@@ -79,6 +80,12 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
             SplitTestsDialogFragment
                 .newInstance()
                 .showIfNotExists(childFragmentManager, SplitTestsDialogFragment.TAG)
+        }
+
+        debugBinding.debugBackendFeatures.setOnClickListener {
+            BackendFeaturesDialogFragment
+                .newInstance()
+                .showIfNotExists(childFragmentManager, BackendFeaturesDialogFragment.TAG)
         }
 
         debugBinding.debugPurchases.setOnClickListener {

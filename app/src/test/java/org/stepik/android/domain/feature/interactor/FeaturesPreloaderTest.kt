@@ -22,6 +22,8 @@ class FeaturesPreloaderTest {
 
             override fun getCachedFeatures(): List<Feature>? =
                 null
+
+            override fun replaceCachedFeatures(features: List<Feature>) {}
         }
         val preloader = FeaturesPreloader(FeaturesInteractor(repository), scheduler)
 
@@ -43,6 +45,8 @@ class FeaturesPreloaderTest {
 
             override fun getCachedFeatures(): List<Feature>? =
                 null
+
+            override fun replaceCachedFeatures(features: List<Feature>) {}
         }
         val preloader = FeaturesPreloader(FeaturesInteractor(repository), scheduler)
 

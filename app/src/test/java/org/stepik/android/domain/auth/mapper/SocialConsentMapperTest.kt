@@ -10,7 +10,7 @@ import org.stepik.android.view.auth.model.SocialNetwork
 
 class SocialConsentMapperTest {
 
-    private val mapper = SocialConsentMapper()
+    private val mapper = SocialConsentMapper
 
     // AC1: Required Consent Blocks Provider Launch
 

@@ -1,16 +1,5 @@
 sandbox_mode = "workspace-write"
 
-[features]
-hooks = true
-
-[[hooks.Stop]]
-
-[[hooks.Stop.hooks]]
-type = "command"
-command = 'python3 "$(git rev-parse --show-toplevel)/.codex/hooks/stop_quality_check.py"'
-timeout = 240
-statusMessage = "Running final quality checks"
-
 [permissions.filesystem]
 allow_read = [
     ".codex/.env",

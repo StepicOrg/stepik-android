@@ -11,7 +11,7 @@ import org.stepik.android.model.user.RegistrationCredentials
 
 class RegistrationConsentMapperTest {
 
-    private val mapper = RegistrationConsentMapper()
+    private val mapper = RegistrationConsentMapper
 
     // AC1: Required Consent Blocks Registration
 

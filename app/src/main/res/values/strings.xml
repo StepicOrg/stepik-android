@@ -1241,6 +1241,24 @@
 
     <string name="debug_remote_and_local_flags_title" translatable="false">Remote and Local Flags</string>
     <string name="debug_ab_group_subtitle" translatable="false">A/B Groups</string>
+    <string name="debug_backend_features_subtitle" translatable="false">Backend features</string>
+    <string name="debug_backend_features_hint" translatable="false">Changes affect newly opened screens. Reopen auth after applying.</string>
+    <string name="debug_backend_features_refresh" translatable="false">Refresh from server</string>
+    <string name="debug_backend_features_clear" translatable="false">Clear overrides</string>
+    <string name="debug_backend_features_choose_auth" translatable="false">AuthMarketingAgreement override</string>
+    <string name="debug_backend_features_auth_server" translatable="false">Server</string>
+    <string name="debug_backend_features_auth_force_enabled" translatable="false">Force enabled</string>
+    <string name="debug_backend_features_auth_force_disabled" translatable="false">Force disabled</string>
+    <string name="debug_backend_features_rubricator_title" translatable="false">Rubricator</string>
+    <string name="debug_backend_features_auth_title" translatable="false">AuthMarketingAgreement</string>
+    <string name="debug_backend_features_override" translatable="false">Override: %s</string>
+    <string name="debug_backend_features_server_value" translatable="false">Server: %s</string>
+    <string name="debug_backend_features_active_value" translatable="false">Active cache: %s</string>
+    <string name="debug_backend_features_error" translatable="false">Feature fetch error: %s</string>
+    <string name="debug_backend_features_choose_rubricator" translatable="false">Rubricator override</string>
+    <string name="debug_backend_features_rubricator_server" translatable="false">Server cacheFile</string>
+    <string name="debug_backend_features_rubricator_custom" translatable="false">Custom cacheFile</string>
+    <string name="debug_backend_features_rubricator_custom_hint" translatable="false">cacheFile</string>
     <string name="debug_iap_purchase_title" translatable="false">In App Purchases</string>
     <string name="debug_purchases_subtitle" translatable="false">Purchases</string>
 

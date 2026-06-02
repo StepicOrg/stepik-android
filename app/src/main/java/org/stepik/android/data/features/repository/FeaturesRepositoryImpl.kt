@@ -21,7 +21,7 @@ class FeaturesRepositoryImpl @Inject constructor(
         var request: Single<List<Feature>>? = null
         request = featuresRemoteDataSource
             .getFeatures()
-            .doOnSuccess(::setCachedFeatures)
+            .doOnSuccess { setCachedFeaturesFromRequest(it, checkNotNull(request)) }
             .doFinally { clearInFlightRequest(checkNotNull(request)) }
             .cache()
 
@@ -32,6 +32,12 @@ class FeaturesRepositoryImpl @Inject constructor(
         synchronized(this) {
             featuresCache
         }
+
+    @Synchronized
+    override fun replaceCachedFeatures(features: List<Feature>) {
+        featuresCache = features
+        inFlightRequest = null
+    }
 
     @Synchronized
     private fun getInFlightRequest(): Single<List<Feature>>? =
@@ -48,8 +54,10 @@ class FeaturesRepositoryImpl @Inject constructor(
     }
 
     @Synchronized
-    private fun setCachedFeatures(features: List<Feature>) {
-        featuresCache = features
+    private fun setCachedFeaturesFromRequest(features: List<Feature>, expected: Single<List<Feature>>) {
+        if (inFlightRequest === expected) {
+            featuresCache = features
+        }
     }
 
     @Synchronized

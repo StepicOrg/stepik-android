@@ -81,6 +81,27 @@ class FeaturesRepositoryImplTest {
         assertEquals(features, repository.getCachedFeatures())
     }
 
+    @Test
+    fun `replaceCachedFeatures updates cache and ignores stale in flight response`() {
+        val remoteFeatures = listOf(createFeature(name = "AuthMarketingAgreement", isEnabled = false))
+        val replacementFeatures = listOf(createFeature(name = "AuthMarketingAgreement", isEnabled = true))
+        val subject = SingleSubject.create<List<Feature>>()
+        val remoteDataSource = FakeFeaturesRemoteDataSource(subject)
+        val repository = FeaturesRepositoryImpl(remoteDataSource)
+
+        val observer = repository.getFeatures().test()
+
+        repository.replaceCachedFeatures(replacementFeatures)
+
+        assertEquals(replacementFeatures, repository.getCachedFeatures())
+        assertNull(repository.readInFlightRequestForTest())
+
+        subject.onSuccess(remoteFeatures)
+
+        observer.assertComplete().assertResult(remoteFeatures)
+        assertEquals(replacementFeatures, repository.getCachedFeatures())
+    }
+
     private fun createFeature(
         id: Long = 1,
         name: String,
