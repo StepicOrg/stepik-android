@@ -6,13 +6,14 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.vk.api.sdk.VK
-import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentSettingsBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
@@ -42,6 +43,8 @@ class SettingsFragment :
         fun newInstance(): SettingsFragment =
             SettingsFragment()
     }
+
+    private val binding: FragmentSettingsBinding by viewBinding(FragmentSettingsBinding::bind)
 
     private val presenter: SettingsPresenter by viewModels { viewModelFactory }
 
@@ -74,41 +77,41 @@ class SettingsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        notificationActionButton.setOnClickListener {
+        binding.notificationActionButton.setOnClickListener {
             screenManager.showNotificationSettings(activity)
         }
 
-        fragmentSettingsWifiEnableSwitch.isChecked = !sharedPreferenceHelper.isMobileInternetAlsoAllowed // if first time it is true
+        binding.fragmentSettingsWifiEnableSwitch.isChecked = !sharedPreferenceHelper.isMobileInternetAlsoAllowed // if first time it is true
 
-        fragmentSettingsExternalPlayerSwitch.isChecked = userPreferences.isOpenInExternal
+        binding.fragmentSettingsExternalPlayerSwitch.isChecked = userPreferences.isOpenInExternal
 
-        fragmentSettingsExternalPlayerSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isOpenInExternal = isChecked }
+        binding.fragmentSettingsExternalPlayerSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isOpenInExternal = isChecked }
 
-        fragmentSettingsCalendarWidgetSwitch.isChecked = userPreferences.isNeedToShowCalendarWidget
+        binding.fragmentSettingsCalendarWidgetSwitch.isChecked = userPreferences.isNeedToShowCalendarWidget
 
-        fragmentSettingsCalendarWidgetSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isNeedToShowCalendarWidget = isChecked }
+        binding.fragmentSettingsCalendarWidgetSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isNeedToShowCalendarWidget = isChecked }
 
-        fragmentSettingsKeepScreenOnSwitch.isChecked = userPreferences.isKeepScreenOnSteps
-        fragmentSettingsKeepScreenOnSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isKeepScreenOnSteps = isChecked }
+        binding.fragmentSettingsKeepScreenOnSwitch.isChecked = userPreferences.isKeepScreenOnSteps
+        binding.fragmentSettingsKeepScreenOnSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isKeepScreenOnSteps = isChecked }
 
-        fragmentSettingsAdaptiveMode.isChecked = userPreferences.isAdaptiveModeEnabled
-        fragmentSettingsAdaptiveMode.setOnCheckedChangeListener { _, isChecked -> userPreferences.isAdaptiveModeEnabled = isChecked }
+        binding.fragmentSettingsAdaptiveMode.isChecked = userPreferences.isAdaptiveModeEnabled
+        binding.fragmentSettingsAdaptiveMode.setOnCheckedChangeListener { _, isChecked -> userPreferences.isAdaptiveModeEnabled = isChecked }
 
-        fragmentSettingsDiscountingPolicySwitch.isChecked = userPreferences.isShowDiscountingPolicyWarning
+        binding.fragmentSettingsDiscountingPolicySwitch.isChecked = userPreferences.isShowDiscountingPolicyWarning
 
-        fragmentSettingsDiscountingPolicySwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isShowDiscountingPolicyWarning = isChecked }
+        binding.fragmentSettingsDiscountingPolicySwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isShowDiscountingPolicyWarning = isChecked }
 
-        fragmentSettingsAutoplay.isChecked = userPreferences.isAutoplayEnabled
-        fragmentSettingsAutoplay.setOnCheckedChangeListener { _, isChecked -> userPreferences.isAutoplayEnabled = isChecked }
+        binding.fragmentSettingsAutoplay.isChecked = userPreferences.isAutoplayEnabled
+        binding.fragmentSettingsAutoplay.setOnCheckedChangeListener { _, isChecked -> userPreferences.isAutoplayEnabled = isChecked }
 
-        fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener { _, newCheckedState ->
-            if (fragmentSettingsWifiEnableSwitch.isUserTriggered) {
+        binding.fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener { _, newCheckedState ->
+            if (binding.fragmentSettingsWifiEnableSwitch.isUserTriggered) {
                 if (newCheckedState) {
                     // wifi only
                     onMobileDataStateChanged(false)
                 } else {
                     // wifi and mobile internet
-                    fragmentSettingsWifiEnableSwitch.isChecked = true
+                    binding.fragmentSettingsWifiEnableSwitch.isChecked = true
                     val dialogFragment = AllowMobileDataDialogFragment.newInstance()
                     dialogFragment.setTargetFragment(this@SettingsFragment, 0)
                     dialogFragment.showIfNotExists(parentFragmentManager, AllowMobileDataDialogFragment.TAG)
@@ -116,67 +119,67 @@ class SettingsFragment :
             }
         }
 
-        videoQualityView.setOnClickListener {
+        binding.videoQualityView.setOnClickListener {
             VideoQualityDialog
                 .newInstance(forPlaying = false)
                 .showIfNotExists(childFragmentManager, VideoQualityDialog.TAG)
         }
 
-        videoPlayingQualityView.setOnClickListener {
+        binding.videoPlayingQualityView.setOnClickListener {
             VideoQualityDialog
                 .newInstance(forPlaying = true)
                 .showIfNotExists(childFragmentManager, VideoQualityDialog.TAG)
         }
 
-        storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
+        binding.storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
 
-        langWidgetActionButton.setOnClickListener {
+        binding.langWidgetActionButton.setOnClickListener {
             CoursesLangDialogFragment
                 .newInstance()
                 .showIfNotExists(childFragmentManager, CoursesLangDialogFragment.TAG)
         }
 
-        nightModeSettingsButton.setOnClickListener {
+        binding.nightModeSettingsButton.setOnClickListener {
             NightModeSettingDialogFragment
                 .newInstance()
                 .showIfNotExists(childFragmentManager, NightModeSettingDialogFragment.TAG)
         }
 
-        fontSizeSettingsButton.setOnClickListener {
+        binding.fontSizeSettingsButton.setOnClickListener {
             ChooseFontSizeDialogFragment
                 .newInstance()
                 .showIfNotExists(childFragmentManager, ChooseFontSizeDialogFragment.TAG)
         }
 
-        downloadsSettingsButton.setOnClickListener {
+        binding.downloadsSettingsButton.setOnClickListener {
             analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS)
             screenManager.showDownloads(requireContext())
         }
 
-        contactSupportButton.setOnClickListener {
+        binding.contactSupportButton.setOnClickListener {
             presenter.contactSupport(
                 getString(R.string.feedback_subject),
                 DeviceInfoUtil.getInfosAboutDevice(context, "\n")
             )
         }
 
-        helpCenterButton.setOnClickListener {
+        binding.helpCenterButton.setOnClickListener {
             InAppWebViewDialogFragment
                 .newInstance(getString(R.string.settings_help_center), getString(R.string.settings_help_center_url))
                 .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
         }
 
-        feedbackSettingsButton.setOnClickListener {
+        binding.feedbackSettingsButton.setOnClickListener {
             analytic.reportEvent(Analytic.Screens.USER_OPEN_FEEDBACK)
             screenManager.openFeedbackActivity(requireActivity())
         }
 
-        aboutSettingsButton.setOnClickListener {
+        binding.aboutSettingsButton.setOnClickListener {
             analytic.reportEvent(Analytic.Screens.USER_OPEN_ABOUT_APP)
             screenManager.openAboutActivity(requireActivity())
         }
 
-        deleteAccountButton.setOnClickListener {
+        binding.deleteAccountButton.setOnClickListener {
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Settings.DELETE_ACCOUNT_CLICKED)
             InAppWebViewDialogFragment
                 .newInstance(
@@ -187,7 +190,7 @@ class SettingsFragment :
                 .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
         }
 
-        logoutSettingsButton.setOnClickListener {
+        binding.logoutSettingsButton.setOnClickListener {
             val supportFragmentManager = activity
                 ?.supportFragmentManager
                 ?: return@setOnClickListener
@@ -217,13 +220,13 @@ class SettingsFragment :
     }
 
     override fun onDestroyView() {
-        fragmentSettingsKeepScreenOnSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsDiscountingPolicySwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsCalendarWidgetSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsExternalPlayerSwitch.setOnCheckedChangeListener(null)
-        storageManagementButton.setOnClickListener(null)
-        notificationActionButton.setOnClickListener(null)
+        binding.fragmentSettingsKeepScreenOnSwitch.setOnCheckedChangeListener(null)
+        binding.fragmentSettingsDiscountingPolicySwitch.setOnCheckedChangeListener(null)
+        binding.fragmentSettingsCalendarWidgetSwitch.setOnCheckedChangeListener(null)
+        binding.fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener(null)
+        binding.fragmentSettingsExternalPlayerSwitch.setOnCheckedChangeListener(null)
+        binding.storageManagementButton.setOnClickListener(null)
+        binding.notificationActionButton.setOnClickListener(null)
         super.onDestroyView()
     }
 
@@ -232,7 +235,7 @@ class SettingsFragment :
     }
 
     override fun onMobileDataStateChanged(isMobileAllowed: Boolean) {
-        fragmentSettingsWifiEnableSwitch.isChecked = !isMobileAllowed
+        binding.fragmentSettingsWifiEnableSwitch.isChecked = !isMobileAllowed
         storeMobileState(isMobileAllowed)
     }
 

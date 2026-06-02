@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.util
 
+import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -7,10 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepik.android.view.base.ui.extension.setTintList
 
+
+private val Fragment.centeredToolbarTitle: TextView
+    get() = requireActivity().findViewById(R.id.centeredToolbarTitle)
+
+private val AppCompatActivity.centeredToolbar: Toolbar
+    get() = findViewById(R.id.centeredToolbar)
+
+private val AppCompatActivity.centeredToolbarTitle: TextView
+    get() = findViewById(R.id.centeredToolbarTitle)
 
 //Fragment's functions:
 

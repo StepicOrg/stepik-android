@@ -24,16 +24,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.dialog_in_app_web_view.*
-import kotlinx.android.synthetic.main.dialog_in_app_web_view.view.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.DialogInAppWebViewBinding
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewPresenter
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewView
@@ -75,6 +72,8 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
 
     @Inject
     internal lateinit var endpointResolver: EndpointResolver
+
+    private val binding: DialogInAppWebViewBinding by viewBinding(DialogInAppWebViewBinding::bind)
 
     private val inAppWebViewPresenter: InAppWebViewPresenter by viewModels { viewModelFactory }
 
@@ -162,40 +161,42 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
                         }
                     }
                 }
-                webView?.let { root.containerView.addView(it) }
+                webView?.let { root.findViewById<ViewGroup>(R.id.containerView).addView(it) }
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<InAppWebViewView.State.Idle>()
-        viewStateDelegate.addState<InAppWebViewView.State.WebLoading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<InAppWebViewView.State.LinkLoading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<InAppWebViewView.State.Error>(error)
+        viewStateDelegate.addState<InAppWebViewView.State.WebLoading>(binding.progressBarOnEmptyScreen.root)
+        viewStateDelegate.addState<InAppWebViewView.State.LinkLoading>(binding.progressBarOnEmptyScreen.root)
+        viewStateDelegate.addState<InAppWebViewView.State.Error>(binding.errorNoConnection.error)
         viewStateDelegate.addState<InAppWebViewView.State.Success>(webView as View)
 
-        centeredToolbarTitle.text = title
-        centeredToolbar.setNavigationOnClickListener {
-            if (showsDialog) {
-                dismiss()
-            } else {
-                activity?.finish()
-            }
-        }
-        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
-        centeredToolbar.inflateMenu(R.menu.in_app_web_view_menu)
-        centeredToolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.menu_item_external -> {
-                    val externalUrl = webView?.url ?: url
-                    screenManager.openLinkInWebBrowser(requireContext(), Uri.parse(externalUrl))
-                    true
+        with(binding.centeredAppbar.centeredToolbarContainer) {
+            centeredToolbarTitle.text = title
+            centeredToolbar.setNavigationOnClickListener {
+                if (showsDialog) {
+                    dismiss()
+                } else {
+                    activity?.finish()
                 }
-                else ->
-                    super.onOptionsItemSelected(menuItem)
+            }
+            centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
+            centeredToolbar.inflateMenu(R.menu.in_app_web_view_menu)
+            centeredToolbar.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.menu_item_external -> {
+                        val externalUrl = webView?.url ?: url
+                        screenManager.openLinkInWebBrowser(requireContext(), Uri.parse(externalUrl))
+                        true
+                    }
+                    else ->
+                        super.onOptionsItemSelected(menuItem)
+                }
             }
         }
 
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        binding.errorNoConnection.tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
         setDataToPresenter()
     }
@@ -229,7 +230,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     }
 
     override fun onDestroyView() {
-        containerView.removeView(webView)
+        binding.containerView.removeView(webView)
         super.onDestroyView()
     }
 
