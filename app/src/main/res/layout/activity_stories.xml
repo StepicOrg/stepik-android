@@ -6,7 +6,7 @@
     android:layout_alignParentTop="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+>
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/storiesPager"
         android:layout_width="match_parent"

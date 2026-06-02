@@ -8,8 +8,8 @@ import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
-import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewStoryItemBinding
 import ru.nobird.android.stories.model.Story
 import kotlin.properties.Delegates
 
@@ -66,9 +66,10 @@ class StoriesAdapter(
     }
 
     inner class StoryViewHolder(root: View) : RecyclerView.ViewHolder(root) {
-        val cover: ShapeableImageView = root.storyCover
-        private val title = root.storyTitle
-        private val activeStoryMarker = root.activeStoryMarker
+        private val binding = ViewStoryItemBinding.bind(root)
+        val cover: ShapeableImageView = binding.storyCover
+        private val title = binding.storyTitle
+        private val activeStoryMarker = binding.activeStoryMarker
 
         init {
             root.setOnClickListener {
