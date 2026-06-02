@@ -16,11 +16,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_registration.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ActivityRegistrationBinding
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
@@ -39,6 +40,8 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
+    private val binding: ActivityRegistrationBinding by viewBinding(ActivityRegistrationBinding::bind)
+
     companion object {
         private const val ERROR_DELIMITER = " "
 
@@ -76,13 +79,13 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         initTitle()
 
-        termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
-        stripUnderlinesFromLinks(termsPrivacyRegisterTextView)
+        binding.termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
+        binding.termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
+        stripUnderlinesFromLinks(binding.termsPrivacyRegisterTextView)
 
-        signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
+        binding.signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
 
-        passwordField.setOnEditorActionListener { _, actionId, _ ->
+        binding.passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Registration.CLICK_SEND_IME)
@@ -107,49 +110,49 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
             }
         }
 
-        firstNameField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        binding.firstNameField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        binding.emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        binding.passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
         val onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 analytic.reportEvent(Analytic.Registration.TAP_ON_FIELDS)
             }
         }
-        firstNameField.onFocusChangeListener = onFocusChangeListener
-        emailField.onFocusChangeListener = onFocusChangeListener
-        passwordField.onFocusChangeListener = onFocusChangeListener
+        binding.firstNameField.onFocusChangeListener = onFocusChangeListener
+        binding.emailField.onFocusChangeListener = onFocusChangeListener
+        binding.passwordField.onFocusChangeListener = onFocusChangeListener
 
-        firstNameField.setOnEditorActionListener { _, actionId, _ ->
+        binding.firstNameField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                emailField.requestFocus()
+                binding.emailField.requestFocus()
                 true
             } else {
                 false
             }
         }
 
-        emailField.setOnEditorActionListener { _, actionId, _ ->
+        binding.emailField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                passwordField.requestFocus()
+                binding.passwordField.requestFocus()
                 true
             } else {
                 false
             }
         }
 
-        registerRootView.requestFocus()
+        binding.registerRootView.requestFocus()
 
         initGoogleApiClient()
 
         setSignUpButtonState()
 
-        setOnKeyboardOpenListener(root_view, {
-            stepikLogo.isVisible = false
-            signUpText.isVisible = false
+        setOnKeyboardOpenListener(binding.rootView, {
+            binding.stepikLogo.isVisible = false
+            binding.signUpText.isVisible = false
         }, {
-            stepikLogo.isVisible = true
-            signUpText.isVisible = true
+            binding.stepikLogo.isVisible = true
+            binding.signUpText.isVisible = true
         })
     }
 
@@ -171,10 +174,10 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     }
 
     private fun setSignUpButtonState() {
-        signUpButton.isEnabled =
-            emailField.text.isNullOrBlank() == false &&
-            firstNameField.text.isNullOrBlank() == false &&
-            passwordField.text.isNullOrBlank() == false
+        binding.signUpButton.isEnabled =
+            binding.emailField.text.isNullOrBlank() == false &&
+            binding.firstNameField.text.isNullOrBlank() == false &&
+            binding.passwordField.text.isNullOrBlank() == false
     }
 
     private fun initTitle() {
@@ -186,17 +189,17 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signUpString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        signUpText.text = spannableSignIn
+        binding.signUpText.text = spannableSignIn
     }
 
     private fun submit(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
         currentFocus?.hideKeyboard()
 
-        val firstName = firstNameField.text.toString().trim()
+        val firstName = binding.firstNameField.text.toString().trim()
         val lastName = " " // registrationSecondName.text.toString().trim()
-        val email = emailField.text.toString().trim()
-        val password = passwordField.text.toString()
+        val email = binding.emailField.text.toString().trim()
+        val password = binding.passwordField.text.toString()
 
         analytic.reportEvent(Analytic.Interaction.CLICK_REGISTER_BUTTON)
 
@@ -221,9 +224,9 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         when (state) {
             is RegistrationView.State.Idle -> {
-                signUpButton.isEnabled = true
-                registerForm.isEnabled = true
-                registerErrorMessage.isVisible = false
+                binding.signUpButton.isEnabled = true
+                binding.registerForm.isEnabled = true
+                binding.registerErrorMessage.isVisible = false
             }
 
             is RegistrationView.State.Error -> {
@@ -249,7 +252,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     }
 
     override fun showNetworkError() {
-        registerRootView.snackbar(messageRes = R.string.connectionProblems)
+        binding.registerRootView.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun applyTransitionPrev() {} // we need default system animation
@@ -257,11 +260,11 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     private fun showError(errorText: String?) {
         errorText?.let {
             analytic.reportEventWithName(Analytic.Registration.ERROR, errorText)
-            if (registerErrorMessage.visibility == View.GONE) {
-                signUpButton.isEnabled = false
-                registerForm.isEnabled = false
-                registerErrorMessage.text = it
-                registerErrorMessage.isVisible = true
+            if (binding.registerErrorMessage.visibility == View.GONE) {
+                binding.signUpButton.isEnabled = false
+                binding.registerForm.isEnabled = false
+                binding.registerErrorMessage.text = it
+                binding.registerErrorMessage.isVisible = true
             }
         }
     }
