@@ -27,9 +27,6 @@ class SocialAuthConsentBottomSheetDialogFragment :
     companion object {
         const val TAG = "SocialAuthConsentBottomSheetDialogFragment"
 
-        private const val ARG_SOCIAL_NETWORK = "social_network"
-        private const val ARG_IS_MARKETING_ENABLED = "is_marketing_enabled"
-
         fun newInstance(socialNetwork: SocialNetwork, isMarketingEnabled: Boolean): DialogFragment =
             SocialAuthConsentBottomSheetDialogFragment().apply {
                 this.socialNetwork = socialNetwork
@@ -39,8 +36,6 @@ class SocialAuthConsentBottomSheetDialogFragment :
 
     private var socialNetwork: SocialNetwork by argument()
     private var isMarketingEnabled: Boolean by argument()
-
-    private val consentMapper = SocialConsentMapper()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,7 +75,7 @@ class SocialAuthConsentBottomSheetDialogFragment :
                 isMarketingChecked = marketingConsentCheckBox.isChecked
             )
 
-            val result = consentMapper.mapConsent(currentState, socialNetwork)
+            val result = SocialConsentMapper.mapConsent(currentState, socialNetwork)
             if (result is SocialConsentResult.Valid) {
                 (activity as? Callback)?.onSocialConsentConfirmed(
                     result.provider,

@@ -4,7 +4,7 @@ import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
 import org.stepik.android.domain.auth.model.RegistrationConsentState
 import org.stepik.android.view.auth.model.SocialNetwork
 
-class SocialConsentMapper {
+object SocialConsentMapper {
 
     fun mapConsent(state: RegistrationConsentState, provider: SocialNetwork): SocialConsentResult =
         if (state.isRequiredConsentGranted) {
