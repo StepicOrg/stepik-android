@@ -28,7 +28,6 @@ import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.data.auth.storage.PendingSocialMarketingConsentStorage
 import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
 import org.stepik.android.domain.feature.interactor.FeaturesInteractor
 import org.stepik.android.view.auth.ui.dialog.SocialAuthConsentBottomSheetDialogFragment
@@ -88,8 +87,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
     @Inject
     internal lateinit var featuresInteractor: FeaturesInteractor
 
-    @Inject
-    internal lateinit var pendingSocialMarketingConsentStorage: PendingSocialMarketingConsentStorage
 
     private val socialAuthPresenter: SocialAuthPresenter by viewModels { viewModelFactory }
 
@@ -243,7 +240,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
     }
 
     override fun onSocialConsentConfirmed(socialNetwork: SocialNetwork, marketingConsent: PendingSocialMarketingConsent) {
-        pendingSocialMarketingConsentStorage.set(marketingConsent)
+        sharedPreferenceHelper.putPendingSocialMarketingConsent(marketingConsent)
         launchSocialAuth(socialNetwork)
     }
 

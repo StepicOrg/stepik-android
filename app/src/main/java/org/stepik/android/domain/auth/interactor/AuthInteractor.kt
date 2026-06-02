@@ -8,7 +8,7 @@ import org.stepic.droid.model.Credentials
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
-import org.stepik.android.data.auth.storage.PendingSocialMarketingConsentStorage
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
 import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.domain.auth.repository.AuthRepository
@@ -30,7 +30,7 @@ constructor(
 
     private val userProfileRepository: UserProfileRepository,
     private val profileRepository: ProfileRepository,
-    private val pendingSocialMarketingConsentStorage: PendingSocialMarketingConsentStorage,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val courseRepository: CourseRepository,
     private val visitedCoursesRepository: VisitedCoursesRepository,
     private val wishlistRepository: WishlistRepository
@@ -88,7 +88,7 @@ constructor(
                 val event = if (context.isNew) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to context.type.identifier))
 
-                val pendingConsent = pendingSocialMarketingConsentStorage.get()
+                val pendingConsent = sharedPreferenceHelper.getPendingSocialMarketingConsent()
 
                 val profileUpdate = if (context.isNew && pendingConsent != PendingSocialMarketingConsent.NONE && context.profile != null) {
                     val subscribed = pendingConsent == PendingSocialMarketingConsent.SUBSCRIBED
@@ -99,7 +99,11 @@ constructor(
                     Completable.complete()
                 }
 
-                profileUpdate.andThen(Completable.fromAction { pendingSocialMarketingConsentStorage.clear() })
+                profileUpdate.andThen(
+                    Completable.fromAction {
+                        sharedPreferenceHelper.putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+                    }
+                )
             }
             .onErrorComplete()
 

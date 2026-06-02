@@ -20,6 +20,7 @@ import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
+import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
 import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
@@ -113,6 +114,8 @@ public class SharedPreferenceHelper {
     private final static String ENDPOINT_CONFIG = "endpoint_config";
 
     private final static String WAS_STREAK_DIALOG_SEEN_HOME_SCREEN = "was_streak_dialog_seen_home_screen";
+
+    private final static String PENDING_SOCIAL_MARKETING_CONSENT = "pending_social_merketing_consent";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -885,6 +888,22 @@ public class SharedPreferenceHelper {
     @Nullable
     public String getCookiesHeader() {
         return getString(PreferenceType.LOGIN, COOKIES_HEADER);
+    }
+
+    public void putPendingSocialMarketingConsent(PendingSocialMarketingConsent pendingSocialMarketingConsent) {
+        put(PreferenceType.LOGIN, PENDING_SOCIAL_MARKETING_CONSENT, pendingSocialMarketingConsent.name());
+    }
+
+    public PendingSocialMarketingConsent getPendingSocialMarketingConsent() {
+        String value = getString(PreferenceType.LOGIN, PENDING_SOCIAL_MARKETING_CONSENT);
+        if (value == null) {
+            return PendingSocialMarketingConsent.NONE;
+        }
+        try {
+            return PendingSocialMarketingConsent.valueOf(value);
+        } catch (IllegalArgumentException e) {
+            return PendingSocialMarketingConsent.NONE;
+        }
     }
 
     private void put(PreferenceType type, String key, String value) {
