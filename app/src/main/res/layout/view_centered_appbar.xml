@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:elevation="?appBarElevation">
 
-    <include layout="@layout/view_centered_toolbar"/>
+    <include
+        android:id="@+id/centeredToolbarContainer"
+        layout="@layout/view_centered_toolbar"/>
 
 </com.google.android.material.appbar.AppBarLayout>

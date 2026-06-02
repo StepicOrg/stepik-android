@@ -8,10 +8,8 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.home_streak_view.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
@@ -19,6 +17,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
+import org.stepic.droid.databinding.FragmentHomeBinding
 import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.banner.analytic.PromoBannerClickedAnalyticEvent
@@ -49,6 +48,8 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
         fun newInstance(): HomeFragment = HomeFragment()
         private const val fastContinueTag = "fastContinueTag"
     }
+
+    private val homeBinding: FragmentHomeBinding by viewBinding(FragmentHomeBinding::bind)
 
     @Inject
     lateinit var homeStreakPresenter: HomeStreakPresenter
@@ -83,18 +84,18 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
-        centeredToolbarTitle.setText(R.string.home_title)
+        homeBinding.appBarLayout.centeredToolbarContainer.centeredToolbarTitle.setText(R.string.home_title)
 
         if (savedInstanceState == null) {
             setupFragments(remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED))
         }
 
-        appBarLayout.isVisible = !remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)
+        homeBinding.appBarLayout.root.isVisible = !remoteConfig.getBoolean(RemoteConfig.IS_NEW_HOME_SCREEN_ENABLED)
 
         homeStreakPresenter.attachView(this)
         homeStreakPresenter.onNeedShowStreak()
 
-        homeMainContainer.post { setupBanners() }
+        homeBinding.homeMainContainer.post { setupBanners() }
     }
 
     override fun onStart() {
@@ -103,7 +104,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             SharedTransitionsManager.registerTransitionDelegate(HOME_DEEPLINK_STORY_KEY, object :
                 SharedTransitionContainerDelegate {
                 override fun getSharedView(position: Int): View? =
-                    storyDeepLinkMockView
+                    homeBinding.storyDeepLinkMockView
 
                 override fun onPositionChanged(position: Int) {}
             })
@@ -123,17 +124,17 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
     }
 
     override fun showStreak(streak: Int) {
-        streakCounter.text = streak.toString()
+        homeBinding.homeStreak.streakCounter.text = streak.toString()
 
         val daysPlural = resources.getQuantityString(R.plurals.day_number, streak)
         val days = "$streak $daysPlural"
 
-        streakText.text = textResolver.fromHtml(getString(R.string.home_streak_counter_text, days))
-        homeStreak.isVisible = true
+        homeBinding.homeStreak.streakText.text = textResolver.fromHtml(getString(R.string.home_streak_counter_text, days))
+        homeBinding.homeStreak.root.isVisible = true
     }
 
     override fun onEmptyStreak() {
-        homeStreak.isVisible = false
+        homeBinding.homeStreak.root.isVisible = false
     }
 
     private fun setupFragments(isNewHomeScreenEnabled: Boolean) {
@@ -174,7 +175,7 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
             }
 
         banners.forEach { banner ->
-            val binding = ItemBannerBinding.inflate(layoutInflater, homeMainContainer, false)
+            val binding = ItemBannerBinding.inflate(layoutInflater, homeBinding.homeMainContainer, false)
 
             binding.root.setOnClickListener {
                 // TODO // Probably better to move into ViewTreeObserver
@@ -186,10 +187,10 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
 
             binding.bind(banner, bannerResourcesMapper)
 
-            val insertionIndex = min(banner.position + offset, homeMainContainer.childCount)
-            val previousFragment = homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()
+            val insertionIndex = min(banner.position + offset, homeBinding.homeMainContainer.childCount)
+            val previousFragment = homeBinding.homeMainContainer.getChildAt(insertionIndex - 1).findFragment<Fragment>()
 
-            homeMainContainer.addView(binding.root, insertionIndex)
+            homeBinding.homeMainContainer.addView(binding.root, insertionIndex)
             binding.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 val margin =
                     if (previousFragment is LearningActionsFragment) {
@@ -208,6 +209,6 @@ class HomeFragment : FragmentBase(), HomeStreakView, FastContinueNewHomeFragment
         } else {
             0
         }
-        homeNestedScrollView.setPadding(0, 0, 0, padding)
+        homeBinding.homeNestedScrollView.setPadding(0, 0, 0, padding)
     }
 }
