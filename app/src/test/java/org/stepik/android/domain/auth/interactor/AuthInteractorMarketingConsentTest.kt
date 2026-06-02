@@ -9,6 +9,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,8 +48,7 @@ class AuthInteractorMarketingConsentTest {
     @Mock
     private lateinit var profileRepository: ProfileRepository
 
-    @Mock
-    private lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+    private lateinit var sharedPreferenceHelper: TestSharedPreferenceHelper
 
     @Mock
     private lateinit var courseRepository: CourseRepository
@@ -62,6 +63,7 @@ class AuthInteractorMarketingConsentTest {
 
     @Before
     fun setUp() {
+        sharedPreferenceHelper = TestSharedPreferenceHelper()
         interactor = AuthInteractor(
             analytic, authRepository, userProfileRepository, profileRepository,
             sharedPreferenceHelper, courseRepository, visitedCoursesRepository, wishlistRepository
@@ -116,13 +118,13 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(newUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.SUBSCRIBED
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.SUBSCRIBED
         whenever(profileRepository.saveProfile(any())) doReturn Single.just(profile)
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
         verify(profileRepository).saveProfile(argThat { subscribedForMarketing == true })
-        verify(sharedPreferenceHelper).putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+        sharedPreferenceHelper.assertPendingCleared()
     }
 
     // AC3: NOT_SUBSCRIBED updates profile with false + clears
@@ -135,13 +137,13 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(newUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.NOT_SUBSCRIBED
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.NOT_SUBSCRIBED
         whenever(profileRepository.saveProfile(any())) doReturn Single.just(profile)
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
         verify(profileRepository).saveProfile(argThat { subscribedForMarketing == false })
-        verify(sharedPreferenceHelper).putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+        sharedPreferenceHelper.assertPendingCleared()
     }
 
     // AC4: NONE skips update + clears
@@ -154,12 +156,12 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(newUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.NONE
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.NONE
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
         verify(profileRepository, never()).saveProfile(any())
-        verify(sharedPreferenceHelper).putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+        sharedPreferenceHelper.assertPendingCleared()
     }
 
     // AC5: Existing login never updates + clears
@@ -172,12 +174,12 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(existingUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.SUBSCRIBED
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.SUBSCRIBED
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
         verify(profileRepository, never()).saveProfile(any())
-        verify(sharedPreferenceHelper).putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+        sharedPreferenceHelper.assertPendingCleared()
     }
 
     @Test
@@ -188,12 +190,12 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(existingUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.NOT_SUBSCRIBED
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.NOT_SUBSCRIBED
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
         verify(profileRepository, never()).saveProfile(any())
-        verify(sharedPreferenceHelper).putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+        sharedPreferenceHelper.assertPendingCleared()
     }
 
     // AC6: Profile update failure is best-effort
@@ -206,13 +208,13 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(newUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.SUBSCRIBED
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.SUBSCRIBED
         whenever(profileRepository.saveProfile(any())) doReturn Single.error(RuntimeException("save failed"))
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
         verify(profileRepository).saveProfile(any())
-        verify(sharedPreferenceHelper).putPendingSocialMarketingConsent(PendingSocialMarketingConsent.NONE)
+        sharedPreferenceHelper.assertPendingCleared()
     }
 
     // AC7: Endpoint failure leaves pending untouched
@@ -223,8 +225,7 @@ class AuthInteractorMarketingConsentTest {
 
         interactor.authWithCode("code", testAuthType).test().assertError(RuntimeException::class.java)
 
-        verify(sharedPreferenceHelper, never()).getPendingSocialMarketingConsent()
-        verify(sharedPreferenceHelper, never()).putPendingSocialMarketingConsent(any())
+        sharedPreferenceHelper.assertPendingUntouched()
         verify(profileRepository, never()).saveProfile(any())
         verify(analytic, never()).reportAmplitudeEvent(any(), any())
     }
@@ -239,7 +240,7 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(newUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.NONE
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.NONE
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
@@ -257,7 +258,7 @@ class AuthInteractorMarketingConsentTest {
 
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.just(existingUser to profile)
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.NONE
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.NONE
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
@@ -271,7 +272,7 @@ class AuthInteractorMarketingConsentTest {
     fun `AC8 profile load failure falls back to LOGGED_ID analytics event`() {
         whenever(authRepository.authWithCode(any())) doReturn Single.just(oAuthResponse())
         whenever(userProfileRepository.getUserProfile()) doReturn Single.error(RuntimeException("profile load failed"))
-        whenever(sharedPreferenceHelper.getPendingSocialMarketingConsent()) doReturn PendingSocialMarketingConsent.NONE
+        sharedPreferenceHelper.pendingConsent = PendingSocialMarketingConsent.NONE
 
         interactor.authWithCode("code", testAuthType).test().assertComplete()
 
@@ -293,5 +294,30 @@ class AuthInteractorMarketingConsentTest {
             accessToken = "access",
             tokenType = "bearer"
         )
+    }
+
+    private class TestSharedPreferenceHelper : SharedPreferenceHelper(null, null, null, null) {
+        var pendingConsent: PendingSocialMarketingConsent = PendingSocialMarketingConsent.NONE
+        private var getCalls: Int = 0
+        private val putValues: MutableList<PendingSocialMarketingConsent> = mutableListOf()
+
+        override fun getPendingSocialMarketingConsent(): PendingSocialMarketingConsent {
+            getCalls++
+            return pendingConsent
+        }
+
+        override fun putPendingSocialMarketingConsent(pendingSocialMarketingConsent: PendingSocialMarketingConsent) {
+            putValues += pendingSocialMarketingConsent
+            pendingConsent = pendingSocialMarketingConsent
+        }
+
+        fun assertPendingCleared() {
+            assertEquals(listOf(PendingSocialMarketingConsent.NONE), putValues)
+        }
+
+        fun assertPendingUntouched() {
+            assertEquals(0, getCalls)
+            assertTrue(putValues.isEmpty())
+        }
     }
 }

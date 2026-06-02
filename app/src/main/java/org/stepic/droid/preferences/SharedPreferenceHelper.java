@@ -115,7 +115,7 @@ public class SharedPreferenceHelper {
 
     private final static String WAS_STREAK_DIALOG_SEEN_HOME_SCREEN = "was_streak_dialog_seen_home_screen";
 
-    private final static String PENDING_SOCIAL_MARKETING_CONSENT = "pending_social_merketing_consent";
+    private final static String PENDING_SOCIAL_MARKETING_CONSENT = "pending_social_marketing_consent";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -891,7 +891,11 @@ public class SharedPreferenceHelper {
     }
 
     public void putPendingSocialMarketingConsent(PendingSocialMarketingConsent pendingSocialMarketingConsent) {
-        put(PreferenceType.LOGIN, PENDING_SOCIAL_MARKETING_CONSENT, pendingSocialMarketingConsent.name());
+        if (pendingSocialMarketingConsent == PendingSocialMarketingConsent.NONE) {
+            remove(PreferenceType.LOGIN, PENDING_SOCIAL_MARKETING_CONSENT);
+        } else {
+            put(PreferenceType.LOGIN, PENDING_SOCIAL_MARKETING_CONSENT, pendingSocialMarketingConsent.name());
+        }
     }
 
     public PendingSocialMarketingConsent getPendingSocialMarketingConsent() {
@@ -934,6 +938,11 @@ public class SharedPreferenceHelper {
     private void clear(PreferenceType type) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.clear().apply();
+    }
+
+    private void remove(PreferenceType type, String key) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.remove(key).apply();
     }
 
     private int getInt(PreferenceType preferenceType, String key, int defaultValue) {
