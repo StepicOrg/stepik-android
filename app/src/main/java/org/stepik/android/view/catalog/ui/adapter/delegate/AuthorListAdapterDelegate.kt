@@ -1,13 +1,11 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.header_catalog_block.*
-import kotlinx.android.synthetic.main.item_author_list.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemAuthorListBinding
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -31,12 +29,11 @@ class AuthorListAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         AuthorListViewHolder(createView(parent, R.layout.item_author_list))
 
-    private inner class AuthorListViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogItem>(containerView), LayoutContainer {
+    private inner class AuthorListViewHolder(root: android.view.View) : DelegateViewHolder<CatalogItem>(root) {
+        private val viewBinding: ItemAuthorListBinding by viewBinding { ItemAuthorListBinding.bind(root) }
 
         private val catalogBlockTitleDelegate =
-            CatalogBlockHeaderDelegate(catalogBlockContainer, null)
+            CatalogBlockHeaderDelegate(viewBinding.catalogBlockHeader.root, null)
 
         private val adapter = DefaultDelegateAdapter<CatalogAuthor>()
             .also {
@@ -45,7 +42,7 @@ class AuthorListAdapterDelegate(
 
         init {
             val rowCount = context.resources.getInteger(R.integer.author_lists_default_rows)
-            authorListRecycler.layoutManager =
+            viewBinding.authorListRecycler.layoutManager =
                 TableLayoutManager(
                     context,
                     horizontalSpanCount = context.resources.getInteger(R.integer.author_lists_default_columns),
@@ -53,12 +50,12 @@ class AuthorListAdapterDelegate(
                     orientation = RecyclerView.HORIZONTAL,
                     reverseLayout = false
                 )
-            authorListRecycler.setRecycledViewPool(sharedViewPool)
-            authorListRecycler.setHasFixedSize(true)
-            authorListRecycler.adapter = adapter
+            viewBinding.authorListRecycler.setRecycledViewPool(sharedViewPool)
+            viewBinding.authorListRecycler.setHasFixedSize(true)
+            viewBinding.authorListRecycler.adapter = adapter
 
             val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(authorListRecycler)
+            snapHelper.attachToRecyclerView(viewBinding.authorListRecycler)
         }
 
         override fun onBind(data: CatalogItem) {
