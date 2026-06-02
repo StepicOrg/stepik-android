@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.viewpager2.widget.ViewPager2
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.activity_adaptive_stats.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.AdaptiveStatsTabs
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveStatsViewPagerAdapter
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.databinding.ActivityAdaptiveStatsBinding
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 
@@ -21,6 +22,7 @@ class AdaptiveStatsActivity : FragmentActivityBase() {
         }
     }
 
+    private val adaptiveStatsBinding: ActivityAdaptiveStatsBinding by viewBinding(ActivityAdaptiveStatsBinding::bind)
     private var courseId: Long = 0
     private var hasSavedInstanceState: Boolean = false
     private lateinit var adapter: AdaptiveStatsViewPagerAdapter
@@ -46,24 +48,24 @@ class AdaptiveStatsActivity : FragmentActivityBase() {
 
         adapter = AdaptiveStatsViewPagerAdapter(this, courseId)
 
-        pager.adapter = adapter
-        pager.offscreenPageLimit = adapter.itemCount
+        adaptiveStatsBinding.pager.adapter = adapter
+        adaptiveStatsBinding.pager.offscreenPageLimit = adapter.itemCount
 
-        TabLayoutMediator(tabLayout, pager) { tab, position ->
+        TabLayoutMediator(adaptiveStatsBinding.tabLayout, adaptiveStatsBinding.pager) { tab, position ->
             tab.setText(AdaptiveStatsTabs.values()[position].fragmentTitleRes)
         }.attach()
     }
 
     override fun onResume() {
         super.onResume()
-        pager.registerOnPageChangeCallback(onPageChangeListener)
-        if (!hasSavedInstanceState && pager.currentItem == 0) {
+        adaptiveStatsBinding.pager.registerOnPageChangeCallback(onPageChangeListener)
+        if (!hasSavedInstanceState && adaptiveStatsBinding.pager.currentItem == 0) {
             onPageChangeListener.onPageSelected(0)
         }
     }
 
     override fun onPause() {
-        pager.unregisterOnPageChangeCallback(onPageChangeListener)
+        adaptiveStatsBinding.pager.unregisterOnPageChangeCallback(onPageChangeListener)
         super.onPause()
     }
 

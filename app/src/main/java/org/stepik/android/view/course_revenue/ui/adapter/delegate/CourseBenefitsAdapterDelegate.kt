@@ -32,9 +32,9 @@ class CourseBenefitsAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_course_benefit))
 
     private inner class ViewHolder(
-        override val containerView: View
+        containerView: View
     ) : DelegateViewHolder<CourseBenefitListItem>(containerView) {
-        private val viewBinding: ItemCourseBenefitBinding by viewBinding { ItemCourseBenefitBinding.bind(root) }
+        private val viewBinding: ItemCourseBenefitBinding by viewBinding { ItemCourseBenefitBinding.bind(itemView) }
 
         init {
             itemView.setOnClickListener { (itemData as? CourseBenefitListItem.Data)?.let { onItemClick(it) } }

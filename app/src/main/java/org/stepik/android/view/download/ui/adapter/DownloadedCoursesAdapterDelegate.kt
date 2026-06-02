@@ -25,7 +25,7 @@ class DownloadedCoursesAdapterDelegate(
         ViewHolder(createView(parent, R.layout.downloaded_course_item))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<DownloadItem>(root) {
-        private val viewBinding: DownloadedCourseItemBinding by viewBinding { DownloadedCourseItemBinding.bind(root) }
+        private val viewBinding: DownloadedCourseItemBinding by viewBinding { DownloadedCourseItemBinding.bind(itemView) }
 
         init {
             root.setOnClickListener { itemData?.let(onItemClick) }
@@ -37,7 +37,7 @@ class DownloadedCoursesAdapterDelegate(
         }
 
         override fun onBind(data: DownloadItem) {
-            viewBinding.downloadedCourseTitle.text = data.course.title
+            viewBinding.downloadedCourseName.text = data.course.title
             viewBinding.downloadedCourseStatus.status = data.status
 
             Glide.with(context)
