@@ -10,10 +10,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.search_query_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.SearchQueryItemBinding
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
@@ -58,8 +58,8 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
     override fun onBindViewHolder(holder: SearchQueryViewHolder, p: Int) {
         val (query, source) = items[p]
 
-        holder.searchIcon.setImageResource(source.iconRes)
-        holder.searchQuery.text = query
+        holder.binding.searchIcon.setImageResource(source.iconRes)
+        holder.binding.searchQuery.text = query
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchQueryViewHolder =
@@ -93,8 +93,9 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
     }
 
     class SearchQueryViewHolder(view: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(view) {
-        val searchQuery: TextView = view.searchQuery
-        val searchIcon: ImageView = view.searchIcon
+        val binding = SearchQueryItemBinding.bind(view)
+        val searchQuery: TextView = binding.searchQuery
+        val searchIcon: ImageView = binding.searchIcon
 
         init {
             itemView.setOnClickListener {

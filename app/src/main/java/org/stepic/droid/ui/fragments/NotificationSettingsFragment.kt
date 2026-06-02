@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_notification_settings.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.databinding.FragmentNotificationSettingsBinding
 import org.stepic.droid.notifications.model.NotificationType
 
 class NotificationSettingsFragment : FragmentBase() {
+    private val notificationSettingsBinding: FragmentNotificationSettingsBinding by viewBinding(FragmentNotificationSettingsBinding::bind)
+
     companion object {
         fun newInstance(): NotificationSettingsFragment = NotificationSettingsFragment()
     }
@@ -28,41 +31,41 @@ class NotificationSettingsFragment : FragmentBase() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        fragmentSettingsNotificationLearnSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationCommentSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationTeachingSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationOtherSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationReviewSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationVibrationSwitch.setOnCheckedChangeListener(null)
-        fragmentSettingsNotificationSoundSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationLearnSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationCommentSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationTeachingSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationOtherSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationReviewSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationVibrationSwitch.setOnCheckedChangeListener(null)
+        notificationSettingsBinding.fragmentSettingsNotificationSoundSwitch.setOnCheckedChangeListener(null)
     }
 
 
     private fun setUpNotificationVibration() {
-        fragmentSettingsNotificationVibrationSwitch.isChecked = userPreferences.isVibrateNotificationEnabled
-        fragmentSettingsNotificationVibrationSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isVibrateNotificationEnabled = isChecked }
+        notificationSettingsBinding.fragmentSettingsNotificationVibrationSwitch.isChecked = userPreferences.isVibrateNotificationEnabled
+        notificationSettingsBinding.fragmentSettingsNotificationVibrationSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isVibrateNotificationEnabled = isChecked }
     }
 
     private fun setUpSound() {
-        fragmentSettingsNotificationSoundSwitch.isChecked = userPreferences.isSoundNotificationEnabled
-        fragmentSettingsNotificationSoundSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationSoundEnabled(isChecked) }
+        notificationSettingsBinding.fragmentSettingsNotificationSoundSwitch.isChecked = userPreferences.isSoundNotificationEnabled
+        notificationSettingsBinding.fragmentSettingsNotificationSoundSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationSoundEnabled(isChecked) }
     }
 
     private fun setUpNotifications() {
-        fragmentSettingsNotificationLearnSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.learn)
-        fragmentSettingsNotificationLearnSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.learn, isChecked) }
+        notificationSettingsBinding.fragmentSettingsNotificationLearnSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.learn)
+        notificationSettingsBinding.fragmentSettingsNotificationLearnSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.learn, isChecked) }
 
-        fragmentSettingsNotificationCommentSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.comments)
-        fragmentSettingsNotificationCommentSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.comments, isChecked) }
+        notificationSettingsBinding.fragmentSettingsNotificationCommentSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.comments)
+        notificationSettingsBinding.fragmentSettingsNotificationCommentSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.comments, isChecked) }
 
-        fragmentSettingsNotificationReviewSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.review)
-        fragmentSettingsNotificationReviewSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.review, isChecked) }
+        notificationSettingsBinding.fragmentSettingsNotificationReviewSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.review)
+        notificationSettingsBinding.fragmentSettingsNotificationReviewSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.review, isChecked) }
 
-        fragmentSettingsNotificationTeachingSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.teach)
-        fragmentSettingsNotificationTeachingSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.teach, isChecked) }
+        notificationSettingsBinding.fragmentSettingsNotificationTeachingSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.teach)
+        notificationSettingsBinding.fragmentSettingsNotificationTeachingSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.teach, isChecked) }
 
-        fragmentSettingsNotificationOtherSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.other)
-        fragmentSettingsNotificationOtherSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.other, isChecked) }
+        notificationSettingsBinding.fragmentSettingsNotificationOtherSwitch.isChecked = userPreferences.isNotificationEnabled(NotificationType.other)
+        notificationSettingsBinding.fragmentSettingsNotificationOtherSwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.setNotificationEnabled(NotificationType.other, isChecked) }
 
     }
 

@@ -7,12 +7,13 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_space_management.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.StoreManagementPresenter
 import org.stepic.droid.core.presenters.contracts.StoreManagementView
+import org.stepic.droid.databinding.FragmentSpaceManagementBinding
 import org.stepic.droid.persistence.model.StorageLocation
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
@@ -31,6 +32,8 @@ class StoreManagementFragment : Fragment(R.layout.fragment_space_management), St
         fun newInstance(): Fragment =
             StoreManagementFragment()
     }
+
+    private val storeManagementBinding: FragmentSpaceManagementBinding by viewBinding(FragmentSpaceManagementBinding::bind)
 
     private var mClearCacheDialogFragment: DialogFragment? = null
     private var loadingProgressDialogFragment: DialogFragment? = null
@@ -70,42 +73,42 @@ class StoreManagementFragment : Fragment(R.layout.fragment_space_management), St
     }
 
     override fun onDestroyView() {
-        clearCacheButton.setOnClickListener(null)
-        chooseStorageButton.setOnClickListener(null)
+        storeManagementBinding.clearCacheButton.setOnClickListener(null)
+        storeManagementBinding.chooseStorageButton.setOnClickListener(null)
         super.onDestroyView()
     }
 
     private fun hideAllStorageInfo() {
-        notMountExplanation.visibility = View.GONE
-        mountExplanation.visibility = View.GONE
-        chooseStorageButton.visibility = View.GONE
+        storeManagementBinding.notMountExplanation.visibility = View.GONE
+        storeManagementBinding.mountExplanation.visibility = View.GONE
+        storeManagementBinding.chooseStorageButton.visibility = View.GONE
     }
 
     override fun setStorageOptions(options: List<StorageLocation>, selectedOption: StorageLocation?) {
         when {
             options.size > 1 -> {
-                notMountExplanation.visibility = View.GONE
-                mountExplanation.visibility = View.VISIBLE
-                chooseStorageButton.visibility = View.VISIBLE
+                storeManagementBinding.notMountExplanation.visibility = View.GONE
+                storeManagementBinding.mountExplanation.visibility = View.VISIBLE
+                storeManagementBinding.chooseStorageButton.visibility = View.VISIBLE
                 val chooseStorageDialog = ChooseStorageDialog.newInstance()
                 chooseStorageDialog.setTargetFragment(this, 0)
-                chooseStorageButton.setOnClickListener {
+                storeManagementBinding.chooseStorageButton.setOnClickListener {
                     if (!chooseStorageDialog.isAdded) {
                         chooseStorageDialog.show(requireFragmentManager(), null)
                     }
                 }
 
-                userStorageInfo.isVisible = selectedOption != null
+                storeManagementBinding.userStorageInfo.isVisible = selectedOption != null
                 if (selectedOption != null) {
-                    userStorageInfo.text =
+                    storeManagementBinding.userStorageInfo.text =
                         storageLocationDescriptionMapper.mapToDescription(options.indexOf(selectedOption), selectedOption)
                 }
             }
 
             options.size == 1 -> {
-                notMountExplanation.visibility = View.VISIBLE
-                mountExplanation.visibility = View.GONE
-                chooseStorageButton.visibility = View.GONE
+                storeManagementBinding.notMountExplanation.visibility = View.VISIBLE
+                storeManagementBinding.mountExplanation.visibility = View.GONE
+                storeManagementBinding.chooseStorageButton.visibility = View.GONE
             }
 
             else ->
@@ -117,23 +120,23 @@ class StoreManagementFragment : Fragment(R.layout.fragment_space_management), St
         mClearCacheDialogFragment = ClearVideosDialog.newInstance()
         mClearCacheDialogFragment?.setTargetFragment(this, ClearVideosDialog.REQUEST_CODE)
 
-        clearCacheButton.setOnClickListener {
+        storeManagementBinding.clearCacheButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_CLEAR_CACHE)
 
             if (mClearCacheDialogFragment?.isAdded != true) {
                 mClearCacheDialogFragment?.show(requireFragmentManager(), ClearVideosDialog.TAG)
             }
         }
-        clearCacheButton.isEnabled = false
+        storeManagementBinding.clearCacheButton.isEnabled = false
     }
 
     override fun setUpClearCacheButton(cacheSize: Long) {
         if (cacheSize > 0) {
-            clearCacheButton.isEnabled = true
-            clearCacheLabel.text = TextUtil.formatBytes(cacheSize)
+            storeManagementBinding.clearCacheButton.isEnabled = true
+            storeManagementBinding.clearCacheLabel.text = TextUtil.formatBytes(cacheSize)
         } else {
-            clearCacheButton.isEnabled = false
-            clearCacheLabel.setText(R.string.empty)
+            storeManagementBinding.clearCacheButton.isEnabled = false
+            storeManagementBinding.clearCacheLabel.setText(R.string.empty)
         }
 
     }
