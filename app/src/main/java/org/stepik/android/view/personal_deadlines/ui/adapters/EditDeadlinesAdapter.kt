@@ -2,11 +2,11 @@ package org.stepik.android.view.personal_deadlines.ui.adapters
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.view_edit_deadlines_item.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewEditDeadlinesItemBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.model.Section
@@ -27,16 +27,16 @@ class EditDeadlinesAdapter(
         EditDeadlinesViewHolder(parent.inflate(R.layout.view_edit_deadlines_item))
 
     override fun onBindViewHolder(holder: EditDeadlinesViewHolder, position: Int) {
-        holder.sectionTitle.text = holder.itemView.context.getString(R.string.section_title_with_number,
+        holder.viewBinding.sectionTitle.text = holder.itemView.context.getString(R.string.section_title_with_number,
                 position + 1, sections[position].title)
 
         val deadline = getDeadlineForPositionOrNull(position)
         if (deadline != null) {
-            holder.deadline.text = holder.itemView.context.getString(R.string.deadlines_section,
+            holder.viewBinding.deadline.text = holder.itemView.context.getString(R.string.deadlines_section,
                     DateTimeHelper.getPrintableDate(deadline.deadline, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()))
-            holder.deadline.isVisible = true
+            holder.viewBinding.deadline.isVisible = true
         } else {
-            holder.deadline.isVisible = false
+            holder.viewBinding.deadline.isVisible = false
         }
     }
 
@@ -66,8 +66,7 @@ class EditDeadlinesAdapter(
     }
 
     inner class EditDeadlinesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        internal val sectionTitle: TextView = view.sectionTitle
-        internal val deadline: TextView = view.deadline
+        val viewBinding: ViewEditDeadlinesItemBinding by viewBinding { ViewEditDeadlinesItemBinding.bind(view) }
 
         init {
             view.setOnClickListener { onItemClicked(adapterPosition) }

@@ -5,8 +5,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizCodeBinding
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
@@ -22,9 +22,7 @@ class CodeQuizInstructionDelegate(
     isCollapseable: Boolean
 ) {
 
-    private val stepQuizCodeDetails = detailsContainerView.stepQuizCodeDetails
-    private val stepQuizCodeDetailsArrow = detailsContainerView.stepQuizCodeDetailsArrow
-    private val stepQuizCodeDetailsContent = detailsContainerView.stepQuizCodeDetailsContent
+    private val binding = LayoutStepQuizCodeBinding.bind(detailsContainerView)
 
     private val stepQuizCodeDetailsAdapter = DefaultDelegateAdapter<CodeDetail>()
     private val codeStepQuizDetailsMapper = CodeStepQuizDetailsMapper()
@@ -33,7 +31,7 @@ class CodeQuizInstructionDelegate(
         stepQuizCodeDetailsAdapter += CodeDetailSampleAdapterDelegate()
         stepQuizCodeDetailsAdapter += CodeDetailLimitAdapterDelegate()
 
-        with(stepQuizCodeDetailsContent) {
+        with(binding.stepQuizCodeDetailsContent) {
             layoutManager = LinearLayoutManager(context)
             adapter = stepQuizCodeDetailsAdapter
             isNestedScrollingEnabled = false
@@ -44,25 +42,25 @@ class CodeQuizInstructionDelegate(
         }
 
         if (isCollapseable) {
-            stepQuizCodeDetails.setOnClickListener {
-                stepQuizCodeDetailsArrow.changeState()
-                if (stepQuizCodeDetailsArrow.isExpanded()) {
-                    stepQuizCodeDetailsContent.expand()
+            binding.stepQuizCodeDetails.setOnClickListener {
+                binding.stepQuizCodeDetailsArrow.changeState()
+                if (binding.stepQuizCodeDetailsArrow.isExpanded()) {
+                    binding.stepQuizCodeDetailsContent.expand()
                 } else {
-                    stepQuizCodeDetailsContent.collapse()
+                    binding.stepQuizCodeDetailsContent.collapse()
                 }
             }
         } else {
-            stepQuizCodeDetailsContent.isVisible = true
+            binding.stepQuizCodeDetailsContent.isVisible = true
         }
     }
 
     fun setCodeDetailsData(step: Step, lang: String?) {
         if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
-            stepQuizCodeDetails.isVisible = false
+            binding.stepQuizCodeDetails.isVisible = false
         } else {
             stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-            stepQuizCodeDetails.isVisible = stepQuizCodeDetailsAdapter.items.isNotEmpty()
+            binding.stepQuizCodeDetails.isVisible = stepQuizCodeDetailsAdapter.items.isNotEmpty()
         }
     }
 }
