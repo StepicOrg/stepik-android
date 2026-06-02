@@ -3,8 +3,8 @@ package org.stepik.android.view.achievement.ui.delegate
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isGone
-import kotlinx.android.synthetic.main.view_achievement_tile.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewAchievementTileBinding
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
@@ -15,9 +15,11 @@ class AchievementTileDelegate(
     root: View,
     private val achievementResourceResolver: AchievementResourceResolver
 ) {
-    private val achievementLevels: VectorRatingBar = root.achievementLevels
-    private val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
-    private val achievementIcon = root.achievementIcon.wrapWithGlide()
+    private val binding = ViewAchievementTileBinding.bind(root)
+
+    private val achievementLevels: VectorRatingBar = binding.achievementLevels
+    private val achievementLevelProgress: AchievementCircleProgressView = binding.achievementLevelProgress
+    private val achievementIcon = binding.achievementIcon.wrapWithGlide()
 
     private val achievementIconSize = root.resources.getDimensionPixelSize(R.dimen.achievement_tile_width)
     private val achievementIconPlaceholder =
