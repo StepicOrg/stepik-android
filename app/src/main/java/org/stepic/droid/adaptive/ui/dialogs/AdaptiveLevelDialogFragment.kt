@@ -2,16 +2,15 @@ package org.stepic.droid.adaptive.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.github.jinatonic.confetti.CommonConfetti
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.Completable
 import io.reactivex.Scheduler
-import kotlinx.android.synthetic.main.dialog_adaptive_level.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.DialogAdaptiveLevelBinding
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.resolveFloatAttribute
@@ -41,14 +40,14 @@ class AdaptiveLevelDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-        val root = View.inflate(context, R.layout.dialog_adaptive_level, null)
-        root.adaptiveLevelDialogTitle.text = level.toString()
+        val binding = DialogAdaptiveLevelBinding.inflate(layoutInflater)
+        binding.adaptiveLevelDialogTitle.text = level.toString()
 
-        root.continueButton.setOnClickListener { dismiss() }
+        binding.continueButton.setOnClickListener { dismiss() }
 
-        expLevelDialogConfetti = root.adaptiveLevelDialogConfetti
+        expLevelDialogConfetti = binding.adaptiveLevelDialogConfetti
 
-        alertDialogBuilder.setView(root)
+        alertDialogBuilder.setView(binding.root)
         return alertDialogBuilder.create()
     }
 
