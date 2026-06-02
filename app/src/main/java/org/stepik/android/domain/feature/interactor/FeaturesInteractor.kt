@@ -17,13 +17,13 @@ class FeaturesInteractor @Inject constructor(
     fun isAuthMarketingAgreementEnabled(): Single<Boolean> =
         featuresRepository
             .getFeatures()
-            .map(::isFeatureEnabled)
+            .map(::isAuthMarketingAgreementFeatureEnabled)
             .onErrorReturnItem(false)
 
     fun isAuthMarketingAgreementEnabledCached(): Boolean =
         featuresRepository
             .getCachedFeatures()
-            ?.let(::isFeatureEnabled)
+            ?.let(::isAuthMarketingAgreementFeatureEnabled)
             ?: false
 
     fun fetchRubricatorUrl(): Single<String> =
@@ -37,14 +37,14 @@ class FeaturesInteractor @Inject constructor(
                     ?: ""
             }
 
-    private companion object {
-        const val RUBRICATOR_NAME = "Rubricator"
-        const val AUTH_MARKETING_AGREEMENT_NAME = "AuthMarketingAgreement"
-    }
-
-    private fun isFeatureEnabled(features: List<Feature>): Boolean =
+    private fun isAuthMarketingAgreementFeatureEnabled(features: List<Feature>): Boolean =
         features
             .firstOrNull { it.name == AUTH_MARKETING_AGREEMENT_NAME }
             ?.parameters
             ?.isEnabled == true
+
+    private companion object {
+        const val RUBRICATOR_NAME = "Rubricator"
+        const val AUTH_MARKETING_AGREEMENT_NAME = "AuthMarketingAgreement"
+    }
 }
