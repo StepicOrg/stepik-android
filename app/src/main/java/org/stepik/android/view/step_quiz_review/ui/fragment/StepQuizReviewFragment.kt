@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.button.MaterialButton
 import com.jakewharton.rxrelay2.BehaviorRelay
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -133,13 +130,17 @@ class StepQuizReviewFragment :
 
         inflater.inflate(layoutId, view)
             .also {
-                it.reviewStep1Container.addView(quizView)
+                it.findViewById<ViewGroup>(R.id.reviewStep1Container).addView(quizView)
             }
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val stepQuizReviewLoading = view.findViewById<View>(R.id.stepQuizReviewLoading)
+        val stepQuizReviewNetworkError = view.findViewById<View>(R.id.stepQuizReviewNetworkError)
+        val stepQuizReviewContainer = view.findViewById<View>(R.id.stepQuizReviewContainer)
+
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizReviewFeature.State.Idle>(stepQuizReviewLoading)
         viewStateDelegate.addState<StepQuizReviewFeature.State.Loading>(stepQuizReviewLoading)
@@ -149,7 +150,7 @@ class StepQuizReviewFragment :
         viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionSelected>(stepQuizReviewContainer)
         viewStateDelegate.addState<StepQuizReviewFeature.State.Completed>(stepQuizReviewContainer)
 
-        stepQuizReviewNetworkError.tryAgain
+        stepQuizReviewNetworkError.findViewById<View>(R.id.tryAgain)
             .setOnClickListener { stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
 
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
@@ -190,7 +191,12 @@ class StepQuizReviewFragment :
         }
 
         val blockName = stepWrapper.step.block?.name
+        val quizFeedbackView = view.findViewById<View>(R.id.quizFeedbackView)
         val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(quizFeedbackView, isTeacher = false, hasReview = false) {}
+        val reviewStep1ActionButton = view.findViewById<MaterialButton>(R.id.reviewStep1ActionButton)
+        val reviewStep1ActionRetry = view.findViewById<MaterialButton>(R.id.reviewStep1ActionRetry)
+        val reviewStep1Discounting = view.findViewById<TextView>(R.id.reviewStep1Discounting)
+
         val quizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,

@@ -3,10 +3,8 @@ package org.stepik.android.view.step_quiz_code.ui.delegate
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.codeStepLayout
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.stepQuizActions
 import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizCodeBinding
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.model.Reply
 import org.stepik.android.model.code.CodeOptions
@@ -28,6 +26,8 @@ class CodeStepQuizFormDelegate(
     private val syncCodePreference: (String) -> Unit,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
+    private val binding = LayoutStepQuizCodeBinding.bind(containerView)
+
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
             field = value
@@ -44,11 +44,11 @@ class CodeStepQuizFormDelegate(
 
     private val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
 
-    private val codeLayout = containerView.codeStepLayout
-    private val stepQuizActions = containerView.stepQuizActions
+    private val codeLayout = binding.codeStepLayout
+    private val stepQuizActions = binding.stepQuizActions
 
-    private val stepQuizCodeLangChooserTitle = containerView.stepQuizCodeLangChooserTitle
-    private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
+    private val stepQuizCodeLangChooserTitle = binding.stepQuizCodeLangChooserTitle
+    private val stepQuizCodeLangChooser = binding.stepQuizCodeLangChooser
     private val stepQuizCodeLangChooserAdapter = DefaultDelegateAdapter<String>()
 
     private val codeStepQuizFormStateMapper = CodeStepQuizFormStateMapper()
@@ -56,7 +56,7 @@ class CodeStepQuizFormDelegate(
     init {
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
         viewStateDelegate.addState<CodeStepQuizFormState.NoLang>(stepQuizCodeLangChooserTitle, stepQuizCodeLangChooser,
-            containerView.stepQuizCodeLangChooserDividerTop, containerView.stepQuizCodeLangChooserDividerBottom)
+            binding.stepQuizCodeLangChooserDividerTop.root, binding.stepQuizCodeLangChooserDividerBottom.root)
         viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout, stepQuizActions)
 
         /**

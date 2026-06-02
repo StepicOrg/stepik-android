@@ -2,14 +2,11 @@ package org.stepik.android.view.step_quiz_review.ui.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_footer.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import org.stepic.droid.R
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
@@ -24,7 +21,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.app.core.model.safeCast
 
 class StepQuizReviewDelegate(
-    override val containerView: View,
+    containerView: View,
     private val instructionType: ReviewStrategyType,
     private val actionListener: ActionListener,
 
@@ -32,9 +29,51 @@ class StepQuizReviewDelegate(
     private val quizView: View,
     private val quizDelegate: StepQuizDelegate,
     private val quizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate
-) : LayoutContainer {
-    private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
+) {
     private val resources = containerView.resources
+
+    private val stepQuizNetworkError = containerView.findViewById<View>(R.id.stepQuizNetworkError)
+    private val stepQuizProgress = containerView.findViewById<View>(R.id.stepQuizProgress)
+    private val stepQuizDescription = containerView.findViewById<TextView>(R.id.stepQuizDescription)
+    private val quizFeedbackView = containerView.findViewById<View>(R.id.quizFeedbackView)
+
+    private val reviewStep1DividerBottom = containerView.findViewById<View>(R.id.reviewStep1DividerBottom)
+    private val reviewStep1Container = containerView.findViewById<ViewGroup>(R.id.reviewStep1Container)
+    private val reviewStep1Discounting = containerView.findViewById<View>(R.id.reviewStep1Discounting)
+    private val reviewStep1QuizContainer = containerView.findViewById<ViewGroup>(R.id.reviewStep1QuizContainer)
+    private val reviewStep1ActionButton = containerView.findViewById<View>(R.id.reviewStep1ActionButton)
+    private val reviewStep1ActionRetry = containerView.findViewById<View>(R.id.reviewStep1ActionRetry)
+    private val reviewStep1Status = containerView.findViewById<ReviewStatusView>(R.id.reviewStep1Status)
+
+    private val reviewStep2DividerBottom = containerView.findViewById<View>(R.id.reviewStep2DividerBottom)
+    private val reviewStep2Container = containerView.findViewById<ViewGroup>(R.id.reviewStep2Container)
+    private val reviewStep2Loading = containerView.findViewById<View>(R.id.reviewStep2Loading)
+    private val reviewStep2CreateSession = containerView.findViewById<View>(R.id.reviewStep2CreateSession)
+    private val reviewStep2SelectSubmission = containerView.findViewById<View>(R.id.reviewStep2SelectSubmission)
+    private val reviewStep2Retry = containerView.findViewById<View>(R.id.reviewStep2Retry)
+    private val reviewStep2Title = containerView.findViewById<TextView>(R.id.reviewStep2Title)
+    private val reviewStep2Link = containerView.findViewById<View>(R.id.reviewStep2Link)
+    private val reviewStep2Status = containerView.findViewById<ReviewStatusView>(R.id.reviewStep2Status)
+
+    private val reviewStep3Title = containerView.findViewById<TextView>(R.id.reviewStep3Title)
+    private val reviewStep3Link = containerView.findViewById<View>(R.id.reviewStep3Link)
+    private val reviewStep3Status = containerView.findViewById<ReviewStatusView>(R.id.reviewStep3Status)
+    private val reviewStep3Container = containerView.findViewById<Button>(R.id.reviewStep3Container)
+    private val reviewStep3Loading = containerView.findViewById<View>(R.id.reviewStep3Loading)
+
+    private val reviewStep4Title = containerView.findViewById<TextView>(R.id.reviewStep4Title)
+    private val reviewStep4Link = containerView.findViewById<View>(R.id.reviewStep4Link)
+    private val reviewStep4Status = containerView.findViewById<ReviewStatusView>(R.id.reviewStep4Status)
+    private val reviewStep4Container = containerView.findViewById<Button>(R.id.reviewStep4Container)
+    private val reviewStep4Hint = containerView.findViewById<View>(R.id.reviewStep4Hint)
+
+    private val reviewStep5Title = containerView.findViewById<TextView>(R.id.reviewStep5Title)
+    private val reviewStep5Link = containerView.findViewById<View>(R.id.reviewStep5Link)
+    private val reviewStep5Status = containerView.findViewById<ReviewStatusView>(R.id.reviewStep5Status)
+    private val reviewStep5Container = containerView.findViewById<Button>(R.id.reviewStep5Container)
+    private val reviewStep5Hint = containerView.findViewById<View>(R.id.reviewStep5Hint)
+
+    private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
 
     private val step1viewStateDelegate = ViewStateDelegate<StepQuizReviewFeature.State>()
         .apply {
@@ -63,7 +102,7 @@ class StepQuizReviewDelegate(
         }
 
     init {
-        stepQuizNetworkError.tryAgain.setOnClickListener { actionListener.onQuizTryAgainClicked() }
+        stepQuizNetworkError.findViewById<View>(R.id.tryAgain).setOnClickListener { actionListener.onQuizTryAgainClicked() }
 
         reviewStep2SelectSubmission.setOnClickListener { actionListener.onSelectDifferentSubmissionClicked() }
         reviewStep2CreateSession.setOnClickListener { actionListener.onCreateSessionClicked() }
@@ -305,7 +344,7 @@ class StepQuizReviewDelegate(
 
                 reviewStep5Title.text = ProgressTextMapper
                     .mapProgressToText(
-                        containerView.context,
+                        reviewStep5Title.context,
                         receivedPoints,
                         state.progress?.cost ?: 0,
                         R.string.step_quiz_review_peer_completed,
