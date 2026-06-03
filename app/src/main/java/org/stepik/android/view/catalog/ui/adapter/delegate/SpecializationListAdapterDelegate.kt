@@ -1,13 +1,12 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_specialization_list.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemSpecializationListBinding
 import org.stepik.android.domain.catalog.model.CatalogSpecialization
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -29,8 +28,9 @@ class SpecializationListAdapterDelegate(
         SpecializationListViewHolder(createView(parent, R.layout.item_specialization_list))
 
     private inner class SpecializationListViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogItem>(containerView), LayoutContainer {
+        containerView: android.view.View
+    ) : DelegateViewHolder<CatalogItem>(containerView) {
+        private val viewBinding: ItemSpecializationListBinding by viewBinding { ItemSpecializationListBinding.bind(itemView) }
 
         private val adapter = DefaultDelegateAdapter<CatalogSpecialization>()
             .also {
@@ -39,7 +39,7 @@ class SpecializationListAdapterDelegate(
 
         init {
             val rowCount = context.resources.getInteger(R.integer.specializations_default_rows)
-            specializationListRecycler.layoutManager =
+            viewBinding.specializationListRecycler.layoutManager =
                 TableLayoutManager(
                     context,
                     horizontalSpanCount = context.resources.getInteger(R.integer.specializations_default_columns),
@@ -47,14 +47,14 @@ class SpecializationListAdapterDelegate(
                     orientation = LinearLayoutManager.HORIZONTAL,
                     reverseLayout = false
                 )
-            specializationListRecycler.setRecycledViewPool(sharedViewPool)
-            specializationListRecycler.setHasFixedSize(true)
-            specializationListRecycler.adapter = adapter
+            viewBinding.specializationListRecycler.setRecycledViewPool(sharedViewPool)
+            viewBinding.specializationListRecycler.setHasFixedSize(true)
+            viewBinding.specializationListRecycler.adapter = adapter
 
             val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(specializationListRecycler)
+            snapHelper.attachToRecyclerView(viewBinding.specializationListRecycler)
 
-            specializationInfoAction.setOnClickListener {
+            viewBinding.specializationInfoAction.setOnClickListener {
                 onOpenLinkInWeb(context.getString(R.string.specialization_url))
             }
         }
