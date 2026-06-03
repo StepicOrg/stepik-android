@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:visibility="gone"
     tools:visibility="visible"
-    tools:viewBindingIgnore="true">
+    >
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/placeholderIcon"
