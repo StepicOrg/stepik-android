@@ -12,10 +12,10 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.dialog_step_source_edit.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.DialogStepSourceEditBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -47,6 +47,8 @@ class EditStepSourceDialogFragment :
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val binding: DialogStepSourceEditBinding by viewBinding(DialogStepSourceEditBinding::bind)
 
     private val editStepContentPresenter: EditStepSourcePresenter by viewModels { viewModelFactory }
 
@@ -86,6 +88,9 @@ class EditStepSourceDialogFragment :
         inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val centeredToolbar = view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.centeredToolbar)
+        val centeredToolbarTitle = view.findViewById<android.widget.TextView>(R.id.centeredToolbarTitle)
+
         centeredToolbarTitle.text = "$lessonTitle - ${stepWrapper.originalStep.position}"
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
@@ -102,20 +107,20 @@ class EditStepSourceDialogFragment :
         if (savedInstanceState == null) {
             editStepContentPresenter.fetchStepContent(stepWrapper)
         }
-        invalidateMenuState()
+        invalidateMenuState(centeredToolbar)
 
-        stepContentEditText.addTextChangedListener(object : TextWatcher {
+        binding.stepContentEditText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                invalidateMenuState()
+                invalidateMenuState(centeredToolbar)
             }
         })
     }
 
-    private fun invalidateMenuState() {
+    private fun invalidateMenuState(centeredToolbar: com.google.android.material.appbar.MaterialToolbar = view!!.findViewById(R.id.centeredToolbar)) {
         centeredToolbar.menu.findItem(R.id.comment_submit)?.isEnabled =
-            stepContentEditText.text?.toString() != stepWrapper.originalStep.block?.text
+            binding.stepContentEditText.text?.toString() != stepWrapper.originalStep.block?.text
     }
 
     override fun onStart() {
@@ -137,8 +142,8 @@ class EditStepSourceDialogFragment :
     }
 
     private fun submit() {
-        stepContentEditText.hideKeyboard()
-        editStepContentPresenter.changeStepBlockText(stepWrapper, stepContentEditText.text.toString())
+        binding.stepContentEditText.hideKeyboard()
+        editStepContentPresenter.changeStepBlockText(stepWrapper, binding.stepContentEditText.text.toString())
     }
 
     override fun setState(state: EditStepSourceView.State) {
@@ -173,7 +178,7 @@ class EditStepSourceDialogFragment :
     }
 
     private fun onClose() {
-        if (stepContentEditText.text?.toString() == stepWrapper.originalStep.block?.text) {
+        if (binding.stepContentEditText.text?.toString() == stepWrapper.originalStep.block?.text) {
             super.dismiss()
         } else {
             DiscardTextDialogFragment
@@ -193,7 +198,7 @@ class EditStepSourceDialogFragment :
             ?.onStepContentChanged(stepWrapper)
 
         this.stepWrapper = stepWrapper
-        stepContentEditText.setText(stepWrapper.originalStep.block?.text)
+        binding.stepContentEditText.setText(stepWrapper.originalStep.block?.text)
     }
 
     interface Callback {

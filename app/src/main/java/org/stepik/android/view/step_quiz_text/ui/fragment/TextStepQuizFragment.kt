@@ -2,7 +2,6 @@ package org.stepik.android.view.step_quiz_text.ui.fragment
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_text.*
 import org.stepic.droid.R
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -25,7 +24,7 @@ class TextStepQuizFragment :
         R.layout.layout_step_quiz_text
 
     override val quizViews: Array<View>
-        get() = arrayOf(stringStepQuizField)
+        get() = arrayOf(view!!.findViewById(R.id.stringStepQuizField))
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
         TextStepQuizFormDelegate(view, stepWrapper.step.block?.name, onQuizChanged = ::syncReplyState)
