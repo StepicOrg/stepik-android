@@ -439,7 +439,32 @@ binding.includedLayout.toolbarTitle.text = "Hello"
 
 **IMPORTANT — `viewBindingIgnore` on included layouts:** Each included layout may also have `tools:viewBindingIgnore="true"`. Check and remove it from every included layout that the migrated code references. See step 2.3b in the main skill for details.
 
-**IMPORTANT — Passing included layouts to delegates:** When a delegate/helper class takes a `View` parameter representing an included layout's root, use `.root` on the included binding:
+**IMPORTANT — Accessing views from included layouts (PREFERRED):** The proper way to access views from an `<include>`d layout is through the **binding chain** — NOT via `findViewById` or `.root`. This requires:
+
+1. The `<include>` tag in the parent layout has an `android:id` attribute
+2. The included layout's `tools:viewBindingIgnore="true"` is removed
+3. Access views via `parentBinding.includeId.viewId`
+
+```xml
+<!-- fragment_catalog.xml -->
+<include
+    layout="@layout/view_catalog_search_toolbar"
+    android:id="@+id/catalogSearchToolbar" />
+```
+
+```kotlin
+// ❌ WRONG — using findViewById (defeats the purpose of ViewBinding)
+searchViewToolbar = view.findViewById(R.id.searchViewToolbar)
+backIcon = view.findViewById(R.id.backIcon)
+
+// ✅ CORRECT — binding chain through the include id
+searchViewToolbar = catalogBinding.catalogSearchToolbar.searchViewToolbar
+backIcon = catalogBinding.catalogSearchToolbar.backIcon
+```
+
+This works because the parent binding exposes the included layout as a property of the included layout's binding class type. You can then drill into any view in the included layout.
+
+**IMPORTANT — Passing included layouts to delegates that take a `View` parameter:** When a delegate/helper class takes a `View` parameter (e.g., `AchievementTileDelegate(root: View, ...)`), use `.root` on the included binding to get the root `View`:
 
 ```kotlin
 // Synthetic: root.achievementTile was a View
@@ -449,3 +474,11 @@ val delegate = SomeDelegate(root.achievementTile, resolver)
 // Use .root to get the View (equivalent to the synthetic behavior)
 val delegate = SomeDelegate(binding.achievementTile.root, resolver)
 ```
+
+**Summary — when to use each pattern:**
+
+| Scenario | Approach |
+|----------|----------|
+| Access a view from an included layout | `parentBinding.includeId.viewId` |
+| Pass included layout's root to a delegate taking `View` | `parentBinding.includeId.root` |
+| Included layout has no `android:id` on `<include>` tag | Add `android:id` to the `<include>` tag in the parent layout XML |
