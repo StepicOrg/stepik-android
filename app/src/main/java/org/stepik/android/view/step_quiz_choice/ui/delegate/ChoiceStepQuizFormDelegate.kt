@@ -3,9 +3,9 @@ package org.stepik.android.view.step_quiz_choice.ui.delegate
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -24,14 +24,16 @@ class ChoiceStepQuizFormDelegate(
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     private val context = containerView.context
+    private val stepQuizBinding = FragmentStepQuizBinding.bind(containerView)
 
-    private val quizDescription = containerView.stepQuizDescription
+    private val quizDescription = stepQuizBinding.stepQuizDescription
+    private val choicesRecycler = containerView.findViewById<RecyclerView>(R.id.choicesRecycler)
     private val choiceStepQuizOptionsMapper = ChoiceStepQuizOptionsMapper()
     private var choicesAdapter: DefaultDelegateAdapter<Choice> = DefaultDelegateAdapter()
     private lateinit var selectionHelper: SelectionHelper
 
     init {
-        containerView.choicesRecycler.apply {
+        choicesRecycler.apply {
             itemAnimator = null
             adapter = choicesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
