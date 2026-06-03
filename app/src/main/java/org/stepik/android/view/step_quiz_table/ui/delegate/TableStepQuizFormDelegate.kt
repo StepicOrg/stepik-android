@@ -5,9 +5,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_table.view.*
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
 import org.stepik.android.model.Cell
 import org.stepik.android.model.Reply
 import org.stepik.android.model.TableChoiceAnswer
@@ -28,7 +28,8 @@ class TableStepQuizFormDelegate(
     private val fragmentManager: FragmentManager,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = containerView.stepQuizDescription
+    private val quizDescription = FragmentStepQuizBinding.bind(containerView).stepQuizDescription
+    private val tableRecycler = containerView.findViewById<RecyclerView>(R.id.tableRecycler)
 
     private val tableAdapter = DefaultDelegateAdapter<TableSelectionItem>()
 
@@ -44,7 +45,7 @@ class TableStepQuizFormDelegate(
                 .newInstance(index, rowTitle, chosenColumns, isCheckBox)
                 .showIfNotExists(fragmentManager, TableColumnSelectionBottomSheetDialogFragment.TAG)
         }
-        with(containerView.tableRecycler) {
+        with(tableRecycler) {
             itemAnimator = null
             adapter = tableAdapter
             isNestedScrollingEnabled = false

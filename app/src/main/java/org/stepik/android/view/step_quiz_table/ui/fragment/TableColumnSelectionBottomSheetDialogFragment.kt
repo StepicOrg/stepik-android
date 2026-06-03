@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_table_columns_selection.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.BottomSheetDialogTableColumnsSelectionBinding
 import org.stepik.android.model.Cell
 import org.stepik.android.view.step_quiz_table.ui.adapter.delegate.TableColumnMultipleSelectionItemAdapterDelegate
 import org.stepik.android.view.step_quiz_table.ui.adapter.delegate.TableColumnSingleSelectionItemAdapterDelegate
@@ -36,6 +37,8 @@ class TableColumnSelectionBottomSheetDialogFragment : BottomSheetDialogFragment(
                     this.isCheckBox = isCheckBox
                 }
     }
+
+    private val binding: BottomSheetDialogTableColumnsSelectionBinding by viewBinding(BottomSheetDialogTableColumnsSelectionBinding::bind)
 
     private lateinit var selectionHelper: SelectionHelper
 
@@ -68,8 +71,8 @@ class TableColumnSelectionBottomSheetDialogFragment : BottomSheetDialogFragment(
             chosenColumns.map { it.answer }.toBooleanArray()
         }
 
-        tableColumnSelectionRowTitle.setText(rowTitle)
-        with(tableColumnsRecycler) {
+        binding.tableColumnSelectionRowTitle.setText(rowTitle)
+        with(binding.tableColumnsRecycler) {
             adapter = columnsAdapter
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
@@ -86,13 +89,13 @@ class TableColumnSelectionBottomSheetDialogFragment : BottomSheetDialogFragment(
         } else {
             R.string.step_quiz_table_single_choice to TableColumnSingleSelectionItemAdapterDelegate(selectionHelper, ::handleColumnSelectionClick)
         }
-        tableColumnSelectionInformation.setText(description)
+        binding.tableColumnSelectionInformation.setText(description)
         columnsAdapter += delegate
         columnsAdapter.items = chosenColumns
         mapSelection(selected)
         // This is necessary to avoid java.lang.IllegalArgumentException: parameter must be a descendant of this view
-        tableNested.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-        confirmColumnsAction.setOnClickListener { dismiss() }
+        binding.tableNested.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+        binding.confirmColumnsAction.setOnClickListener { dismiss() }
     }
 
     override fun onPause() {

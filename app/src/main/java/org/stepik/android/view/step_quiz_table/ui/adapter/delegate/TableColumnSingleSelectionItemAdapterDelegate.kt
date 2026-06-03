@@ -2,10 +2,9 @@ package org.stepik.android.view.step_quiz_table.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.*
-import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.tableColumnSelectionText
-import kotlinx.android.synthetic.main.item_table_column_selection_radiobutton.view.tableColumnSelectionTextProgress
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemTableColumnSelectionRadiobuttonBinding
 import org.stepik.android.model.Cell
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -23,21 +22,19 @@ class TableColumnSingleSelectionItemAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_table_column_selection_radiobutton))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<Cell>(root) {
-        private val tableColumnRadioButton = root.tableColumnSelectionRadioButton
-        private val tableColumnText = root.tableColumnSelectionText
-        private val tableColumnTextProgress = root.tableColumnSelectionTextProgress
+        private val viewBinding: ItemTableColumnSelectionRadiobuttonBinding by viewBinding { ItemTableColumnSelectionRadiobuttonBinding.bind(root) }
 
         init {
             root.setOnClickListener {
                 onClick(itemData as Cell)
             }
-            tableColumnText.webViewClient = ProgressableWebViewClient(tableColumnTextProgress, tableColumnText.webView)
+            viewBinding.tableColumnSelectionText.webViewClient = ProgressableWebViewClient(viewBinding.tableColumnSelectionTextProgress, viewBinding.tableColumnSelectionText.webView)
         }
 
         override fun onBind(data: Cell) {
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            tableColumnRadioButton.isChecked = selectionHelper.isSelected(adapterPosition)
-            tableColumnText.setText(data.name)
+            viewBinding.tableColumnSelectionRadioButton.isChecked = selectionHelper.isSelected(adapterPosition)
+            viewBinding.tableColumnSelectionText.setText(data.name)
         }
     }
 }
