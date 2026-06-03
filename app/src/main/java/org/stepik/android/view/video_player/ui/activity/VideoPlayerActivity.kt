@@ -24,7 +24,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.MotionEvent
+import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
@@ -34,16 +36,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
-import kotlinx.android.synthetic.main.activity_video_player.*
-import kotlinx.android.synthetic.main.exo_player_control_view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ActivityVideoPlayerBinding
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
@@ -111,6 +113,19 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val binding: ActivityVideoPlayerBinding by viewBinding(ActivityVideoPlayerBinding::bind)
+
+    // Controller views inside PlayerView's internal layout
+    private val videoRateChooser by lazy { binding.playerView.findViewById<ImageView>(R.id.videoRateChooser) }
+    private val qualityView by lazy { binding.playerView.findViewById<TextView>(R.id.qualityView) }
+    private val autoplayProgress by lazy { binding.playerView.findViewById<me.zhanghai.android.materialprogressbar.MaterialProgressBar>(R.id.autoplayProgress) }
+    private val autoplaySwitch by lazy { binding.playerView.findViewById<org.stepic.droid.ui.custom.BetterSwitch>(R.id.autoplaySwitch) }
+    private val rewind by lazy { binding.playerView.findViewById<ImageView>(R.id.rewind) }
+    private val forward by lazy { binding.playerView.findViewById<ImageView>(R.id.forward) }
+    private val skipPrev by lazy { binding.playerView.findViewById<ImageView>(R.id.skip_prev) }
+    private val skipNext by lazy { binding.playerView.findViewById<ImageView>(R.id.skip_next) }
+    private val exoFullscreenIcon by lazy { binding.playerView.findViewById<ImageView>(R.id.exo_fullscreen_icon) }
 
     private var isPlaying: Boolean = false
         set(value) {
@@ -235,7 +250,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 videoPlayerPresenter.onPlayerStateChanged(value.playbackState, isAutoplayEnabled)
             }
 
-            playerView?.player = value
+            binding.playerView.player = value
         }
     private var isLandscapeVideo = false
     private var isPIPModeActive = false
@@ -267,6 +282,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
 
+        val closeButton = binding.playerView.findViewById<ImageView>(R.id.closeButton)
+        val exoPipIconContainer = binding.playerView.findViewById<View>(R.id.exo_pip_icon_container)
+        val exoFullscreenIconContainer = binding.playerView.findViewById<View>(R.id.exo_fullscreen_icon_container)
+        val centerControllerPanel = binding.playerView.findViewById<View>(R.id.center_controller_panel)
+        val autoplayControllerPanel = binding.playerView.findViewById<View>(R.id.autoplay_controller_panel)
+        val autoplayCancel = binding.playerView.findViewById<com.google.android.material.button.MaterialButton>(R.id.autoplayCancel)
+
         closeButton.setOnClickListener {
             finish()
         }
@@ -274,7 +296,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         videoRateChooser.setOnClickListener {
             showChooseRateMenu(it)
         }
-        playerView.setOnTouchListener { v, event ->
+        binding.playerView.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 v.performClick()
             }
@@ -283,18 +305,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
         qualityView.isVisible = false
-        playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
+        binding.playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
 
-        exo_pip_icon_container.isVisible = isSupportPIP()
-        exo_pip_icon_container.setOnClickListener {
+        exoPipIconContainer.isVisible = isSupportPIP()
+        exoPipIconContainer.setOnClickListener {
             analytic.report(PIPActivated())
             enterPipMode()
         }
-        exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
+        exoFullscreenIconContainer.setOnClickListener { changeVideoRotation() }
 
-        playerView.setControllerVisibilityListener { visibility ->
+        binding.playerView.setControllerVisibilityListener { visibility ->
             if (isSupportPIP() && isInPictureInPictureMode) {
-                playerView.hideController()
+                binding.playerView.hideController()
                 return@setControllerVisibilityListener
             }
             if (visibility == View.VISIBLE) {
@@ -304,7 +326,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
         }
 
-        autoplay_controller_panel.setOnClickListener {
+        autoplayControllerPanel.setOnClickListener {
             move(StepNavigationDirection.NEXT)
         }
         autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
@@ -323,20 +345,20 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             exoPlayer?.let { player -> player.seekTo(player.currentPosition + JUMP_TIME_MILLIS) }
         }
 
-        skip_prev.setOnClickListener {
+        skipPrev.setOnClickListener {
             analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PREVIOS))
             move(StepNavigationDirection.PREV)
         }
 
-        skip_next.setOnClickListener {
+        skipNext.setOnClickListener {
             analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_NEXT))
             move(StepNavigationDirection.NEXT)
         }
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<VideoPlayerView.State.Idle>(center_controller_panel)
-        viewStateDelegate.addState<VideoPlayerView.State.AutoplayPending>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
-        viewStateDelegate.addState<VideoPlayerView.State.AutoplayCancelled>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.Idle>(centerControllerPanel)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayPending>(autoplayControllerPanel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayCancelled>(autoplayControllerPanel, autoplayCancel, autoplaySwitch)
     }
 
     private fun injectComponent() {
@@ -447,7 +469,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     override fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {
         Util.startForegroundService(this, VideoPlayerForegroundService.createIntent(this, videoPlayerData))
 
-        videoRateChooser?.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
+        videoRateChooser.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
 
         qualityView.isVisible = true
         qualityView.text = getString(R.string.video_player_quality_icon, videoPlayerData.videoQuality)
@@ -472,10 +494,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             true
         }
         popupMenu.setOnDismissListener {
-            playerView.hideController()
+            binding.playerView.hideController()
         }
         popupMenu.show()
-        playerView.showController()
+        binding.playerView.showController()
     }
 
     override fun setIsLandscapeVideo(isLandScapeVideo: Boolean) {
@@ -489,21 +511,21 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 R.drawable.ic_fullscreen
             }
 
-        exo_fullscreen_icon.setImageResource(fullScreenIconRes)
+        exoFullscreenIcon.setImageResource(fullScreenIconRes)
     }
 
     override fun showPlayInBackgroundPopup() {
         playerInBackroundPopup = PopupHelper
             .showPopupAnchoredToView(
                 context    = this,
-                anchorView = playerView,
+                anchorView = binding.playerView,
                 popupText  = getString(R.string.video_player_in_background_popup),
                 theme      = PopupHelper.PopupTheme.LIGHT,
                 cancelableOnTouchOutside = true,
                 gravity    = Gravity.CENTER,
                 withArrow  = false
             )
-        playerView.postDelayed({ playerInBackroundPopup?.dismiss() }, IN_BACKGROUND_POPUP_TIMEOUT_MS)
+        binding.playerView.postDelayed({ playerInBackroundPopup?.dismiss() }, IN_BACKGROUND_POPUP_TIMEOUT_MS)
     }
 
     override fun onQualityChanged(newUrlQuality: VideoUrl?) {
@@ -531,7 +553,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         } else {
             unregisterReceiver(pipReceiver)
             if (exoPlayer?.isPlaying == false) {
-                playerView.showController()
+                binding.playerView.showController()
             }
         }
     }
@@ -600,7 +622,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private fun enterPipMode() {
         if (isSupportPIP()) {
-            playerView.hideController()
+            binding.playerView.hideController()
             val params = PictureInPictureParams.Builder()
             this.enterPictureInPictureMode(params.build())
         }
@@ -632,7 +654,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         val (rewindMargin, skipMargin) =
             resources.getDimensionPixelOffset(R.dimen.video_player_rewind_margin) to resources.getDimensionPixelOffset(R.dimen.video_player_skip_margin)
 
-        skip_prev.layoutParams = (skip_prev.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        skipPrev.layoutParams = (skipPrev.layoutParams as ViewGroup.MarginLayoutParams).apply {
             rightMargin = skipMargin
         }
         rewind.layoutParams = (rewind.layoutParams as ViewGroup.MarginLayoutParams).apply {
@@ -641,7 +663,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         forward.layoutParams = (forward.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = rewindMargin
         }
-        skip_next.layoutParams = (skip_next.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        skipNext.layoutParams = (skipNext.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = skipMargin
         }
     }
