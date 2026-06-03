@@ -6,14 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.empty_search.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_course_list.*
-import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentCourseListBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -57,6 +55,8 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
 
+    private val courseListBinding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListWishPresenter: CourseListWishPresenter by viewModels { viewModelFactory }
 
@@ -71,7 +71,7 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
         initCenteredToolbar(R.string.wishlist_title, true)
 
-        with(courseListCoursesRecycler) {
+        with(courseListBinding.courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             itemAnimator = null
             setOnPaginationListener { pageDirection ->
@@ -81,16 +81,16 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
             }
         }
 
-        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListWishPresenter.fetchCourses(forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListWishPresenter.fetchCourses(forceUpdate = true) }
+        courseListBinding.courseListCoursesEmpty.goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListBinding.courseListSwipeRefresh.setOnRefreshListener { courseListWishPresenter.fetchCourses(forceUpdate = true) }
+        courseListBinding.courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener { courseListWishPresenter.fetchCourses(forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListBinding.courseListCoursesEmpty.root)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListBinding.courseListCoursesLoadingErrorVertical.root)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -99,8 +99,8 @@ class CourseListWishFragment : Fragment(R.layout.fragment_course_list), CourseLi
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListSwipeRefresh = courseListSwipeRefresh,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListSwipeRefresh = courseListBinding.courseListSwipeRefresh,
+            courseItemsRecyclerView = courseListBinding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListWishPresenter
