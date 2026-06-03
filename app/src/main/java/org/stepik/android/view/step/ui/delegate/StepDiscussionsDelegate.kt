@@ -2,8 +2,8 @@ package org.stepik.android.view.step.ui.delegate
 
 import android.view.View
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.fragment_step.view.*
-import kotlinx.android.synthetic.main.view_step_discussion.view.*
+import org.stepic.droid.databinding.FragmentStepBinding
+import org.stepic.droid.databinding.ViewStepDiscussionBinding
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.view.comment.model.DiscussionThreadContainer
 
@@ -11,10 +11,12 @@ class StepDiscussionsDelegate(
     containerView: View,
     onDiscussionThreadClicked: (discussionThread: DiscussionThread) -> Unit
 ) {
+    private val stepBinding = FragmentStepBinding.bind(containerView)
+
     private val delegates =
         mapOf(
-            DiscussionThread.THREAD_DEFAULT to Delegate(containerView.stepDiscussions, onDiscussionThreadClicked),
-            DiscussionThread.THREAD_SOLUTIONS to Delegate(containerView.stepSolutions, onDiscussionThreadClicked)
+            DiscussionThread.THREAD_DEFAULT to Delegate(stepBinding.stepDiscussions, onDiscussionThreadClicked),
+            DiscussionThread.THREAD_SOLUTIONS to Delegate(stepBinding.stepSolutions, onDiscussionThreadClicked)
         )
 
     fun setDiscussionThreads(discussionThreads: List<DiscussionThread>) {
@@ -24,14 +26,14 @@ class StepDiscussionsDelegate(
     }
 
     private class Delegate(
-        private val containerView: View,
+        private val discussionBinding: ViewStepDiscussionBinding,
         onDiscussionThreadClicked: (discussionThread: DiscussionThread) -> Unit
     ) {
-        private val stepDiscussions = containerView.stepDiscussionsCount
+        private val stepDiscussions = discussionBinding.stepDiscussionsCount
         private var discussionThread: DiscussionThread? = null
 
         init {
-            containerView.isVisible = false
+            discussionBinding.root.isVisible = false
             stepDiscussions.setOnClickListener { discussionThread?.let(onDiscussionThreadClicked) }
         }
 
@@ -49,7 +51,7 @@ class StepDiscussionsDelegate(
                     setDiscussionThreadData(discussionProxy, discussionsCount, DiscussionThreadContainer.SOLUTIONS)
 
                 else ->
-                    containerView.isVisible = false
+                    discussionBinding.root.isVisible = false
             }
         }
 
@@ -57,17 +59,17 @@ class StepDiscussionsDelegate(
             stepDiscussions.text =
                 when {
                     discussionProxy == null ->
-                        containerView.context.getString(discussionThreadContainer.disabledStringRes)
+                        discussionBinding.root.context.getString(discussionThreadContainer.disabledStringRes)
 
                     discussionsCount > 0 ->
-                        containerView.context.getString(discussionThreadContainer.showStringRes, discussionsCount)
+                        discussionBinding.root.context.getString(discussionThreadContainer.showStringRes, discussionsCount)
 
                     else ->
-                        containerView.context.getString(discussionThreadContainer.writeFirstStringRes)
+                        discussionBinding.root.context.getString(discussionThreadContainer.writeFirstStringRes)
                 }
             stepDiscussions.setIconResource(if (discussionProxy != null) discussionThreadContainer.containerDrawable else -1)
             stepDiscussions.isEnabled = discussionProxy != null
-            containerView.isVisible = true
+            discussionBinding.root.isVisible = true
         }
     }
 }

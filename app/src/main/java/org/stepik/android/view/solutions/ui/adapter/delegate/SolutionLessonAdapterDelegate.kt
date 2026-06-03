@@ -2,8 +2,9 @@ package org.stepik.android.view.solutions.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_solution_lesson.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemSolutionLessonBinding
 import org.stepik.android.domain.solutions.model.SolutionItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -20,22 +21,20 @@ class SolutionLessonAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_solution_lesson))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<SolutionItem>(root) {
-
-        private val lessonTitle = root.lessonTitle
-        private val lessonCheckBox = root.lessonCheckBox
+        private val viewBinding: ItemSolutionLessonBinding by viewBinding { ItemSolutionLessonBinding.bind(root) }
 
         init {
-            lessonCheckBox.setOnClickListener { (itemData as? SolutionItem.LessonItem)?.let(onClick) }
+            viewBinding.lessonCheckBox.setOnClickListener { (itemData as? SolutionItem.LessonItem)?.let(onClick) }
         }
 
         override fun onBind(data: SolutionItem) {
             data as SolutionItem.LessonItem
             selectionHelper.isSelected(adapterPosition).let { isSelected ->
                 itemView.isSelected = isSelected
-                lessonCheckBox.isChecked = isSelected
+                viewBinding.lessonCheckBox.isChecked = isSelected
             }
-            lessonCheckBox.isEnabled = data.isEnabled
-            lessonTitle.text = context.getString(
+            viewBinding.lessonCheckBox.isEnabled = data.isEnabled
+            viewBinding.lessonTitle.text = context.getString(
                 R.string.solutions_lesson_placeholder,
                 data.section.position,
                 data.unit.position,
