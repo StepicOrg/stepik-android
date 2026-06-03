@@ -2,7 +2,6 @@ package org.stepik.android.view.step_quiz_sql.ui.fragment
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_code.stepQuizCodeContainer
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -31,7 +30,7 @@ class SqlStepQuizFragment :
         R.layout.layout_step_quiz_sql
 
     override val quizViews: Array<View>
-        get() = arrayOf(stepQuizCodeContainer)
+        get() = arrayOf(view!!.findViewById(R.id.stepQuizCodeContainer))
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
         sqlStepQuizFormDelegate = SqlStepQuizFormDelegate(

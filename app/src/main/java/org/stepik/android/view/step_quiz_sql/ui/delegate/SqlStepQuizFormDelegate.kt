@@ -2,9 +2,9 @@ package org.stepik.android.view.step_quiz_sql.ui.delegate
 
 import android.view.View
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizSqlBinding
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -18,9 +18,8 @@ class SqlStepQuizFormDelegate(
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
 
-    private val quizDescription = containerView.stepQuizDescription
-
-    private val codeLayout = containerView.codeStepLayout
+    private val quizDescription = FragmentStepQuizBinding.bind(containerView).stepQuizDescription
+    private val codeLayout = LayoutStepQuizSqlBinding.bind(containerView).codeStepLayout
 
     init {
         quizDescription.setText(R.string.step_quiz_sql_description)
