@@ -18,15 +18,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.dialog_submissions.*
-import kotlinx.android.synthetic.main.empty_default.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.view_submissions_search_toolbar.*
-import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.UserPreferences
+import org.stepic.droid.databinding.DialogSubmissionsBinding
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
@@ -116,6 +113,9 @@ class SubmissionsDialogFragment :
 
     private val placeholders = List(10) { SubmissionItem.Placeholder }
 
+    private val submissionsBinding: DialogSubmissionsBinding by viewBinding(DialogSubmissionsBinding::bind)
+    private val searchToolbar get() = submissionsBinding.submissionsSearchToolbar
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setCanceledOnTouchOutside(false)
@@ -147,25 +147,27 @@ class SubmissionsDialogFragment :
         inflater.inflate(R.layout.dialog_submissions, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbar.isVisible = !isTeacher
-        searchViewContainer.isVisible = isTeacher
+        val centeredToolbar = searchToolbar.viewCenteredToolbar.centeredToolbar
 
-        centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
+        centeredToolbar.isVisible = !isTeacher
+        searchToolbar.searchViewContainer.isVisible = isTeacher
+
+        searchToolbar.viewCenteredToolbar.centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         AppCompatResources
             .getDrawable(requireContext(), R.drawable.ic_close_dark)
             ?.setTintList(requireContext(), R.attr.colorControlNormal)
-            ?.let { backIcon.setImageDrawable(it) }
-        backIcon.setOnClickListener { dismiss() }
-        clearSearchButton.setOnClickListener {
-            searchSubmissionsEditText.text?.clear()
+            ?.let { searchToolbar.backIcon.setImageDrawable(it) }
+        searchToolbar.backIcon.setOnClickListener { dismiss() }
+        searchToolbar.clearSearchButton.setOnClickListener {
+            searchToolbar.searchSubmissionsEditText.text?.clear()
             fetchSearchQuery()
         }
-        filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
+        searchToolbar.filterIcon.setOnClickListener { submissionsPresenter.onFilterMenuItemClicked() }
 
-        searchSubmissionsEditText.background = AppCompatResources
+        searchToolbar.searchSubmissionsEditText.background = AppCompatResources
             .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
             ?.mutate()
             ?.let { DrawableCompat.wrap(it) }
@@ -176,11 +178,11 @@ class SubmissionsDialogFragment :
 
         viewContentStateDelegate = ViewStateDelegate()
         viewContentStateDelegate.addState<SubmissionsView.ContentState.Idle>()
-        viewContentStateDelegate.addState<SubmissionsView.ContentState.Loading>(swipeRefresh)
-        viewContentStateDelegate.addState<SubmissionsView.ContentState.NetworkError>(error)
-        viewContentStateDelegate.addState<SubmissionsView.ContentState.Content>(swipeRefresh)
-        viewContentStateDelegate.addState<SubmissionsView.ContentState.ContentLoading>(swipeRefresh)
-        viewContentStateDelegate.addState<SubmissionsView.ContentState.ContentEmpty>(report_empty)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.Loading>(submissionsBinding.swipeRefresh)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.NetworkError>(submissionsBinding.submissionsLoadingError.root)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.Content>(submissionsBinding.swipeRefresh)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.ContentLoading>(submissionsBinding.swipeRefresh)
+        viewContentStateDelegate.addState<SubmissionsView.ContentState.ContentEmpty>(submissionsBinding.submissionsEmpty.root)
 
         submissionItemAdapter = DefaultDelegateAdapter()
         submissionItemAdapter += SubmissionDataAdapterDelegate(
@@ -207,7 +209,7 @@ class SubmissionsDialogFragment :
 
                 override fun onViewSubmissionsClicked(submissionDataItem: SubmissionItem.Data) {
                     val userIdQuery = resources.getString(R.string.submissions_user_filter, submissionDataItem.user.id)
-                    searchSubmissionsEditText.setText(userIdQuery)
+                    searchToolbar.searchSubmissionsEditText.setText(userIdQuery)
                     fetchSearchQuery()
                 }
 
@@ -227,7 +229,7 @@ class SubmissionsDialogFragment :
         submissionItemAdapter +=
             adapterDelegate<SubmissionItem, SubmissionItem.Placeholder>(R.layout.item_submission_placeholder)
 
-        with(recycler) {
+        with(submissionsBinding.recycler) {
             adapter = submissionItemAdapter
             layoutManager = LinearLayoutManager(context)
 
@@ -242,10 +244,10 @@ class SubmissionsDialogFragment :
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true) }
+        submissionsBinding.swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true) }
+        submissionsBinding.submissionsLoadingError.tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, isTeacher, submissionsFilterQuery, reviewInstructionData?.reviewInstruction, forceUpdate = true) }
 
-        searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
+        searchToolbar.searchSubmissionsEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 fetchSearchQuery()
                 return@setOnEditorActionListener true
@@ -253,17 +255,17 @@ class SubmissionsDialogFragment :
             return@setOnEditorActionListener false
         }
 
-        searchSubmissionsEditText.addTextChangedListener {
+        searchToolbar.searchSubmissionsEditText.addTextChangedListener {
             if (it.isNullOrEmpty()) {
-                clearSearchButton.isVisible = false
-                searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_without_text), 0)
+                searchToolbar.clearSearchButton.isVisible = false
+                searchToolbar.searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_without_text), 0)
             } else {
-                clearSearchButton.isVisible = true
-                searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_with_text), 0)
+                searchToolbar.clearSearchButton.isVisible = true
+                searchToolbar.searchSubmissionsEditText.setPadding(resources.getDimensionPixelSize(R.dimen.submissions_search_padding_left), 0, resources.getDimensionPixelSize(R.dimen.submissions_search_padding_with_text), 0)
             }
         }
         val userIdQuery = if (userId == -1L) null else resources.getString(R.string.submissions_user_filter, userId)
-        userIdQuery?.let { searchSubmissionsEditText.setText(it) }
+        userIdQuery?.let { searchToolbar.searchSubmissionsEditText.setText(it) }
     }
 
     private fun injectComponent() {
@@ -291,10 +293,10 @@ class SubmissionsDialogFragment :
     }
 
     override fun setState(state: SubmissionsView.State) {
-        swipeRefresh.isRefreshing = false
+        submissionsBinding.swipeRefresh.isRefreshing = false
         if (state is SubmissionsView.State.Data) {
             viewContentStateDelegate.switchState(state.contentState)
-            filterIcon.setImageResource(getFilterIcon(state.submissionsFilterQuery))
+            searchToolbar.filterIcon.setImageResource(getFilterIcon(state.submissionsFilterQuery))
             submissionsFilterQuery = state.submissionsFilterQuery
             submissionItemAdapter.items =
                 when (state.contentState) {
@@ -345,12 +347,12 @@ class SubmissionsDialogFragment :
         }
 
     private fun fetchSearchQuery() {
-        searchSubmissionsEditText.hideKeyboard()
-        searchSubmissionsEditText.clearFocus()
+        searchToolbar.searchSubmissionsEditText.hideKeyboard()
+        searchToolbar.searchSubmissionsEditText.clearFocus()
         submissionsPresenter.fetchSubmissions(
             step.id,
             isTeacher,
-            submissionsFilterQuery.copy(search = searchSubmissionsEditText.text?.toString()),
+            submissionsFilterQuery.copy(search = searchToolbar.searchSubmissionsEditText.text?.toString()),
             reviewInstructionData?.reviewInstruction,
             forceUpdate = true
         )
