@@ -69,7 +69,7 @@
     <string name="correct">Дакладна!</string>
     <string name="try_again">Паспрабаваць зноў</string>
     <string name="correct_free_response">Ваша рашэнне захавана.</string>
-    <string name="terms_message_register"><![CDATA[Рэгіструючыся, вы пагаджаецеся з <a href="https://stepik.org/page/terms/?from_mobile_app=true">Умовамі карыстання</a> і <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Палітыкай канфедыцыйнасці</a>]]></string>
+    <string name="terms_message_register"><![CDATA[Рэгіструючыся, вы пагаджаецеся з <a href="https://welcome.stepik.org/ru/terms/?from_mobile_app=true">Умовамі карыстання</a> і <a href="https://welcome.stepik.org/ru/privacy/?from_mobile_app=true">Палітыкай канфедыцыйнасці</a>]]></string>
     <string name="review_warning">Гэта заданне з рэцэнзіяй. Націсніце, каб скончыць заданне ў web і
         атрымаць балы.
     </string>
