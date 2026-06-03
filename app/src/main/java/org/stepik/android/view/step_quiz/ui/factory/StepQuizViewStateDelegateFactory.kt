@@ -21,7 +21,7 @@ constructor() {
                     binding.stepQuizDiscountingPolicy,
                     binding.stepQuizFeedbackBlocks.root,
                     binding.stepQuizDescription,
-                    binding.stepQuizActionContainer,
+                    binding.stepQuizActionContainer.root,
                     *quizViews
                 )
                 addState<StepQuizFeature.State.NetworkError>(binding.stepQuizNetworkError.root)

@@ -2,10 +2,10 @@ package org.stepik.android.view.step_quiz_matching.ui.delegate
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -22,7 +22,8 @@ class MatchingStepQuizFormDelegate(
     containerView: View,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = containerView.stepQuizDescription
+    private val quizDescription = FragmentStepQuizBinding.bind(containerView).stepQuizDescription
+    private val sortingRecycler = containerView.findViewById<RecyclerView>(R.id.sortingRecycler)
     private val optionsAdapter = DefaultDelegateAdapter<MatchingItem>()
     private val matchingItemMapper = MatchingItemMapper()
 
@@ -32,7 +33,7 @@ class MatchingStepQuizFormDelegate(
         optionsAdapter += MatchingItemTitleAdapterDelegate()
         optionsAdapter += MatchingItemOptionAdapterDelegate(optionsAdapter, ::moveOption)
 
-        with(containerView.sortingRecycler) {
+        with(sortingRecycler) {
             adapter = optionsAdapter
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
