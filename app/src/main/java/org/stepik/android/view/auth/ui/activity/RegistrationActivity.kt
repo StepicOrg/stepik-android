@@ -2,6 +2,7 @@ package org.stepik.android.view.auth.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -14,22 +15,27 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import by.kirich1409.viewbindingdelegate.viewBinding
+import kotlinx.android.synthetic.main.activity_registration.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepic.droid.databinding.ActivityRegistrationBinding
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
+import org.stepik.android.domain.auth.mapper.RegistrationConsentMapper
+import org.stepik.android.domain.auth.mapper.RegistrationConsentResult
+import org.stepik.android.domain.auth.model.RegistrationConsentState
+import org.stepik.android.domain.feature.interactor.FeaturesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.presentation.auth.RegistrationPresenter
@@ -38,10 +44,9 @@ import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
+import kotlin.getValue
 
 class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
-    private val binding: ActivityRegistrationBinding by viewBinding(ActivityRegistrationBinding::bind)
-
     companion object {
         private const val ERROR_DELIMITER = " "
 
@@ -59,17 +64,33 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var featuresInteractor: FeaturesInteractor
+
     private val registrationPresenter: RegistrationPresenter by viewModels { viewModelFactory }
 
     private val passwordTooShortMessage by lazy {
         resources.getString(R.string.password_too_short)
     }
-    private val termsMessageHtml by lazy {
-        resources.getString(R.string.terms_message_register)
+    private val consentRequiredMessage by lazy {
+        resources.getString(R.string.registration_consent_required)
     }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+    private var consentState: RegistrationConsentState = RegistrationConsentState.fromFeatureSnapshot(false)
+    private val requiredConsentDefaultTint by lazy {
+        createRequiredConsentTint(
+            checkedColor = resolveColorAttribute(R.attr.colorSecondary),
+            uncheckedColor = resolveColorAttribute(R.attr.colorOnSurface)
+        )
+    }
+    private val requiredConsentErrorTint by lazy {
+        createRequiredConsentTint(
+            checkedColor = resolveColorAttribute(R.attr.colorSecondary),
+            uncheckedColor = resolveColorAttribute(R.attr.colorError)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,15 +98,30 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         injectComponent()
 
+        consentState = RegistrationConsentState.fromFeatureSnapshot(
+            featuresInteractor.isAuthMarketingAgreementEnabledCached()
+        )
+
         initTitle()
 
-        binding.termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
-        binding.termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
-        stripUnderlinesFromLinks(binding.termsPrivacyRegisterTextView)
+        requiredConsentText.movementMethod = LinkMovementMethod.getInstance()
+        requiredConsentText.text = textResolver.fromHtml(consentRequiredMessage)
+        stripUnderlinesFromLinks(requiredConsentText)
 
-        binding.signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
+        requiredConsentCheckBox.setOnCheckedChangeListener { _, _ ->
+            clearRequiredConsentError()
+        }
+        clearRequiredConsentError()
 
-        binding.passwordField.setOnEditorActionListener { _, actionId, _ ->
+        if (consentState.isMarketingVisible) {
+            marketingConsentRow.isVisible = true
+            marketingHelperText.isVisible = true
+            marketingConsentCheckBox.isChecked = consentState.isMarketingChecked
+        }
+
+        signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
+
+        passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Registration.CLICK_SEND_IME)
@@ -107,52 +143,53 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
             override fun afterTextChanged(s: Editable?) {
                 registrationPresenter.onFormChanged()
                 setSignUpButtonState()
+                clearRequiredConsentError()
             }
         }
 
-        binding.firstNameField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        binding.emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        binding.passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        firstNameField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        emailField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
         val onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 analytic.reportEvent(Analytic.Registration.TAP_ON_FIELDS)
             }
         }
-        binding.firstNameField.onFocusChangeListener = onFocusChangeListener
-        binding.emailField.onFocusChangeListener = onFocusChangeListener
-        binding.passwordField.onFocusChangeListener = onFocusChangeListener
+        firstNameField.onFocusChangeListener = onFocusChangeListener
+        emailField.onFocusChangeListener = onFocusChangeListener
+        passwordField.onFocusChangeListener = onFocusChangeListener
 
-        binding.firstNameField.setOnEditorActionListener { _, actionId, _ ->
+        firstNameField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                binding.emailField.requestFocus()
+                emailField.requestFocus()
                 true
             } else {
                 false
             }
         }
 
-        binding.emailField.setOnEditorActionListener { _, actionId, _ ->
+        emailField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                binding.passwordField.requestFocus()
+                passwordField.requestFocus()
                 true
             } else {
                 false
             }
         }
 
-        binding.registerRootView.requestFocus()
+        registerRootView.requestFocus()
 
         initGoogleApiClient()
 
         setSignUpButtonState()
 
-        setOnKeyboardOpenListener(binding.rootView, {
-            binding.stepikLogo.isVisible = false
-            binding.signUpText.isVisible = false
+        setOnKeyboardOpenListener(root_view, {
+            stepikLogo.isVisible = false
+            signUpText.isVisible = false
         }, {
-            binding.stepikLogo.isVisible = true
-            binding.signUpText.isVisible = true
+            stepikLogo.isVisible = true
+            signUpText.isVisible = true
         })
     }
 
@@ -174,10 +211,10 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     }
 
     private fun setSignUpButtonState() {
-        binding.signUpButton.isEnabled =
-            binding.emailField.text.isNullOrBlank() == false &&
-            binding.firstNameField.text.isNullOrBlank() == false &&
-            binding.passwordField.text.isNullOrBlank() == false
+        signUpButton.isEnabled =
+            emailField.text.isNullOrBlank() == false &&
+            firstNameField.text.isNullOrBlank() == false &&
+            passwordField.text.isNullOrBlank() == false
     }
 
     private fun initTitle() {
@@ -189,31 +226,84 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signUpString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        binding.signUpText.text = spannableSignIn
+        signUpText.text = spannableSignIn
     }
 
     private fun submit(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
         currentFocus?.hideKeyboard()
 
-        val firstName = binding.firstNameField.text.toString().trim()
+        val firstName = firstNameField.text.toString().trim()
         val lastName = " " // registrationSecondName.text.toString().trim()
-        val email = binding.emailField.text.toString().trim()
-        val password = binding.passwordField.text.toString()
+        val email = emailField.text.toString().trim()
+        val password = passwordField.text.toString()
 
         analytic.reportEvent(Analytic.Interaction.CLICK_REGISTER_BUTTON)
 
         var isOk = true
 
         if (!ValidatorUtil.isPasswordValid(password)) {
-            showError(passwordTooShortMessage) // todo
+            showError(passwordTooShortMessage)
+            isOk = false
+        }
+
+        val currentState = getCurrentConsentState()
+
+        val consentResult = RegistrationConsentMapper.validate(currentState)
+        if (consentResult is RegistrationConsentResult.RequiredConsentMissing) {
+            showRequiredConsentError(showErrorText = isOk)
             isOk = false
         }
 
         if (isOk) {
-            registrationPresenter.submit(RegistrationCredentials(firstName, lastName, email, password))
+            val subscribedForMarketing =
+                RegistrationConsentMapper.mapSubscribedForMarketing(currentState)
+            registrationPresenter.submit(
+                RegistrationCredentials(
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    subscribedForMarketing
+                )
+            )
         }
     }
+
+    private fun getCurrentConsentState(): RegistrationConsentState =
+        RegistrationConsentState(
+            isRequiredConsentGranted = requiredConsentCheckBox.isChecked,
+            isMarketingVisible = marketingConsentRow.isVisible,
+            isMarketingChecked = marketingConsentCheckBox.isChecked
+        )
+
+    private fun showRequiredConsentError(showErrorText: Boolean = false) {
+        consentErrorText.isVisible = showErrorText
+        CompoundButtonCompat.setButtonTintList(
+            requiredConsentCheckBox,
+            requiredConsentErrorTint
+        )
+    }
+
+    private fun clearRequiredConsentError() {
+        consentErrorText.isVisible = false
+        CompoundButtonCompat.setButtonTintList(
+            requiredConsentCheckBox,
+            requiredConsentDefaultTint
+        )
+    }
+
+    private fun createRequiredConsentTint(checkedColor: Int, uncheckedColor: Int): ColorStateList =
+        ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                checkedColor,
+                uncheckedColor
+            )
+        )
 
     override fun setState(state: RegistrationView.State) {
         if (state is RegistrationView.State.Loading) {
@@ -224,9 +314,9 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         when (state) {
             is RegistrationView.State.Idle -> {
-                binding.signUpButton.isEnabled = true
-                binding.registerForm.isEnabled = true
-                binding.registerErrorMessage.isVisible = false
+                signUpButton.isEnabled = true
+                registerForm.isEnabled = true
+                registerErrorMessage.isVisible = false
             }
 
             is RegistrationView.State.Error -> {
@@ -252,7 +342,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     }
 
     override fun showNetworkError() {
-        binding.registerRootView.snackbar(messageRes = R.string.connectionProblems)
+        registerRootView.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun applyTransitionPrev() {} // we need default system animation
@@ -260,11 +350,11 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     private fun showError(errorText: String?) {
         errorText?.let {
             analytic.reportEventWithName(Analytic.Registration.ERROR, errorText)
-            if (binding.registerErrorMessage.visibility == View.GONE) {
-                binding.signUpButton.isEnabled = false
-                binding.registerForm.isEnabled = false
-                binding.registerErrorMessage.text = it
-                binding.registerErrorMessage.isVisible = true
+            if (registerErrorMessage.visibility == View.GONE) {
+                signUpButton.isEnabled = false
+                registerForm.isEnabled = false
+                registerErrorMessage.text = it
+                registerErrorMessage.isVisible = true
             }
         }
     }

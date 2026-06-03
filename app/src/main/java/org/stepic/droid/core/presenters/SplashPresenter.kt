@@ -27,6 +27,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.defaultLocale
 import ru.nobird.android.domain.rx.emptyOnErrorStub
+import org.stepik.android.domain.feature.interactor.FeaturesPreloader
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
@@ -49,6 +50,7 @@ constructor(
     private val databaseFacade: DatabaseFacade,
     private val remindRegistrationNotificationDelegate: RemindRegistrationNotificationDelegate,
     private val retentionNotificationDelegate: RetentionNotificationDelegate,
+    private val featuresPreloader: FeaturesPreloader,
 
     private val deferredAuthSplitTest: DeferredAuthSplitTest,
     private val onboardingSplitTestVersion2: OnboardingSplitTestVersion2,
@@ -73,6 +75,7 @@ constructor(
     fun onSplashCreated(referringParams: JSONObject? = null) {
         disposable = Completable
             .fromCallable {
+                featuresPreloader.preload()
                 countNumberOfLaunches()
                 checkRemoteConfigs()
                 registerDeviceToPushes()

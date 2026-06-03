@@ -75,11 +75,17 @@
     <string name="try_again">Попробовать снова</string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="terms_message_register">
-        <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
+        <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://welcome.stepik.org/ru/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://welcome.stepik.org/ru/privacy">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и
         получить баллы.
     </string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6.</string>
+    <string name="registration_consent_required"><![CDATA[Я соглашаюсь с <a href="https://welcome.stepik.org/ru/terms/?from_mobile_app=true">условиями использования</a>, <a href="https://welcome.stepik.org/ru/privacy/?from_mobile_app=true">политикой конфиденциальности</a> и разрешаю обрабатывать мои персональные данные]]></string>
+    <string name="registration_consent_marketing">Хочу получать новости, полезные подборки и специальные предложения</string>
+    <string name="registration_consent_marketing_helper">Не чаще 2 раз в неделю. Отписаться можно в любой момент</string>
+    <string name="registration_consent_required_error">Нам нужно ваше согласие, чтобы создать аккаунт</string>
+    <string name="social_auth_consent_title">Ознакомьтесь и примите условия</string>
+    <string name="social_auth_consent_continue">Продолжить</string>
     <string name="send">Отправить</string>
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
@@ -930,6 +936,8 @@
 
     <string name="profile_external_links_title">Ссылки</string>
     <string name="profile_notifcation_title">Уведомления</string>
+    <string name="profile_marketing_notifications_switch">Получать маркетинговые письма</string>
+    <string name="profile_marketing_notifications_update_error">Не удалось обновить маркетинговые уведомления</string>
     <string name="profile_settings_menu_item">Настройки</string>
 
     <string name="profile_courses_title">Курсы</string>
