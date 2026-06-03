@@ -1,0 +1,13 @@
+# Ralph Configuration — Kotlin Synthetic → ViewBinding Migration
+# Usage: ralph run -c ralph.yml -H builtin:code-assist
+
+core:
+  backend: claude
+  # Each loop iteration = 1 task (5 files). Auto-creates fresh session per loop.
+  loop:
+    max_iterations: 22
+    # Read the PROMPT.md to know what to do each iteration
+    prompt_file: docs/migrate-to-viewbinding/PROMPT.md
+    # Commit between loops so state is preserved
+    auto_commit: true
+    commit_message: "chore: auto-commit before merge (loop primary)"
