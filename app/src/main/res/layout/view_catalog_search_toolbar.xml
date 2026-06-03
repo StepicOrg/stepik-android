@@ -9,7 +9,9 @@
     android:elevation="?appBarElevation"
 >
 
-    <include layout="@layout/view_centered_toolbar"/>
+    <include
+        layout="@layout/view_centered_toolbar"
+        android:id="@+id/centeredToolbar"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchViewContainer"

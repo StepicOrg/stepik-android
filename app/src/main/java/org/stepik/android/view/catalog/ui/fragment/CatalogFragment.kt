@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -143,12 +144,6 @@ class CatalogFragment :
 
     private lateinit var searchIcon: ImageView
 
-    // Views from included layout (view_catalog_search_toolbar) — not in FragmentCatalogBinding
-    private lateinit var searchViewToolbar: AutoCompleteSearchView
-    private lateinit var backIcon: ImageView
-    private lateinit var filterIcon: ImageView
-    private lateinit var centeredToolbar: View
-
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
 
@@ -160,6 +155,18 @@ class CatalogFragment :
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+
+    private val searchViewToolbar: AutoCompleteSearchView
+        inline get() = catalogBinding.catalogSearchToolbar.searchViewToolbar
+
+    private val backIcon: ImageView
+        inline get() = catalogBinding.catalogSearchToolbar.backIcon
+
+    private val filterIcon: ImageView
+        inline get() = catalogBinding.catalogSearchToolbar.filterIcon
+
+    private val centeredToolbar: MaterialToolbar
+        inline get() = catalogBinding.catalogSearchToolbar.centeredToolbar.centeredToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -199,10 +206,6 @@ class CatalogFragment :
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
 
         // Views from included layouts are not in FragmentCatalogBinding — use findViewById
-        searchViewToolbar = view.findViewById(R.id.searchViewToolbar)
-        backIcon = view.findViewById(R.id.backIcon)
-        filterIcon = view.findViewById(R.id.filterIcon)
-        centeredToolbar = view.findViewById(R.id.centeredToolbar)
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
 
         setupSearchBar()
@@ -463,7 +466,7 @@ class CatalogFragment :
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
-        val query = searchViewToolbar.query.toString()
+        val query =  catalogBinding.catalogSearchToolbar.searchViewToolbar.query.toString()
         val intent = createSearchViewIntent(query, filterQuery)
         searchSuggestionsPresenter.onQueryTextSubmit(query)
         collapseSearchView()
@@ -471,7 +474,7 @@ class CatalogFragment :
     }
 
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
-        searchViewToolbar.setSuggestions(suggestions, source)
+        catalogBinding.catalogSearchToolbar.searchViewToolbar.setSuggestions(suggestions, source)
     }
 
     private fun logStoryEvent(story: Story) {
@@ -491,13 +494,15 @@ class CatalogFragment :
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
         filterIcon.isVisible = true
-        searchViewToolbar.isVisible = true
-        searchViewToolbar.onActionViewExpanded()
-        searchViewToolbar.clearFocus()
-        searchViewToolbar.setIconifiedByDefault(false)
-        setupSearchView(searchViewToolbar)
-        searchViewToolbar.setFocusCallback(this)
-        searchViewToolbar.setSuggestionClickCallback(this)
+        catalogBinding.catalogSearchToolbar.searchViewToolbar.let { searchViewToolbar ->
+            searchViewToolbar.isVisible = true
+            searchViewToolbar.onActionViewExpanded()
+            searchViewToolbar.clearFocus()
+            searchViewToolbar.setIconifiedByDefault(false)
+            setupSearchView(searchViewToolbar)
+            searchViewToolbar.setFocusCallback(this)
+            searchViewToolbar.setSuggestionClickCallback(this)
+        }
         backIcon.setOnClickListener {
             collapseSearchView()
         }
