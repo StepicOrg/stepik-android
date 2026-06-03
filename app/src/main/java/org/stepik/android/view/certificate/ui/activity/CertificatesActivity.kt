@@ -66,13 +66,6 @@ class CertificatesActivity :
 
     private val binding: ActivityCertificatesBinding by viewBinding(ActivityCertificatesBinding::bind)
 
-    // Views from included layouts — not in ActivityCertificatesBinding
-    private lateinit var tryAgainView: View
-    private lateinit var goToCatalogView: View
-    private lateinit var reportEmptyCertificatesView: View
-    private lateinit var loadProgressbarOnEmptyScreenView: View
-    private lateinit var errorView: View
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_certificates)
@@ -82,13 +75,6 @@ class CertificatesActivity :
         initCenteredToolbar(R.string.certificates_title, showHomeButton = true)
         userId = intent.getLongExtra(EXTRA_USER_ID, -1)
         isCurrentUser = intent.getBooleanExtra(EXTRA_IS_CURRENT_USER, false)
-
-        // Views from included layouts — not in ActivityCertificatesBinding
-        tryAgainView = findViewById(R.id.tryAgain)
-        goToCatalogView = findViewById(R.id.goToCatalog)
-        reportEmptyCertificatesView = findViewById(R.id.reportEmptyCertificates)
-        loadProgressbarOnEmptyScreenView = findViewById(R.id.loadProgressbarOnEmptyScreen)
-        errorView = findViewById(R.id.error)
 
         certificatesAdapter += CertificatesAdapterDelegate(
             onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
@@ -111,8 +97,12 @@ class CertificatesActivity :
         initViewStateDelegate()
 
         binding.certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.forceUpdate(userId) }
-        tryAgainView.setOnClickListener { certificatesPresenter.forceUpdate(userId) }
-        goToCatalogView.setOnClickListener { screenManager.showCatalog(this) }
+        binding.certificateErrorNoConnection.tryAgain.setOnClickListener {
+            certificatesPresenter.forceUpdate(userId)
+        }
+        binding.certificateEmptyView.goToCatalog.setOnClickListener {
+            screenManager.showCatalog(this)
+        }
 
         certificatesPresenter.fetchCertificates(userId)
     }
@@ -145,12 +135,16 @@ class CertificatesActivity :
         }
 
     private fun initViewStateDelegate() {
-        viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(reportEmptyCertificatesView)
-        viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreenView)
-        viewStateDelegate.addState<CertificatesView.State.NetworkError>(errorView)
+        viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(binding.certificateEmptyView.reportEmptyCertificates)
+        viewStateDelegate.addState<CertificatesView.State.Loading>(binding.certificateProgressBar.loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<CertificatesView.State.NetworkError>(binding.certificateErrorNoConnection.error)
         viewStateDelegate.addState<CertificatesView.State.CertificatesCache>(binding.certificateSwipeRefresh, binding.certificateRecyclerView)
         viewStateDelegate.addState<CertificatesView.State.CertificatesRemote>(binding.certificateSwipeRefresh, binding.certificateRecyclerView)
-        viewStateDelegate.addState<CertificatesView.State.CertificatesRemoteLoading>(binding.certificateSwipeRefresh, binding.certificateRecyclerView, loadProgressbarOnEmptyScreenView)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesRemoteLoading>(
+            binding.certificateSwipeRefresh,
+            binding.certificateRecyclerView,
+            binding.certificateProgressBar.loadProgressbarOnEmptyScreen
+        )
     }
 
     override fun setState(state: CertificatesView.State) {
