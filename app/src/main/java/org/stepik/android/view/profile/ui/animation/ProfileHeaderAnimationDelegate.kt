@@ -2,16 +2,14 @@ package org.stepik.android.view.profile.ui.animation
 
 import android.animation.ArgbEvaluator
 import android.content.res.ColorStateList
-import android.view.View
 import androidx.annotation.ColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.fragment_profile.view.*
-import kotlinx.android.synthetic.main.header_profile.view.*
+import org.stepic.droid.databinding.FragmentProfileBinding
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 class ProfileHeaderAnimationDelegate(
-    view: View,
+    profileBinding: FragmentProfileBinding,
     @ColorInt
     private val menuColorStart: Int,
     @ColorInt
@@ -21,14 +19,14 @@ class ProfileHeaderAnimationDelegate(
 
     private val onMenuColorChanged: (ColorStateList) -> Unit
 ) {
-    private val profileCover = view.profileCover
-    private val profileImage = view.profileImage
+    private val profileCover = profileBinding.header.profileCover
+    private val profileImage = profileBinding.header.profileImage
 
-    private val toolbarTitle = view.toolbarTitle
-    private val toolbarSeparator = view.toolbarSeparator
+    private val toolbarTitle = profileBinding.toolbarTitle
+    private val toolbarSeparator = profileBinding.toolbarSeparator.root
 
-    private val appbar = view.appbar
-    private val header = view.header
+    private val appbar = profileBinding.appbar
+    private val header = profileBinding.header.root
 
     private val argbEvaluator = ArgbEvaluator()
 

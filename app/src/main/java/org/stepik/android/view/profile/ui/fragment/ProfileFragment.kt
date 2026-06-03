@@ -16,17 +16,15 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.empty_login.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_profile.*
-import kotlinx.android.synthetic.main.header_profile.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
+import org.stepic.droid.databinding.FragmentProfileBinding
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.util.snackbar
@@ -85,6 +83,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     private lateinit var profileComponent: ProfileComponent
     private val profilePresenter: ProfilePresenter by viewModels { viewModelFactory }
 
+    private val profileBinding: FragmentProfileBinding by viewBinding(FragmentProfileBinding::bind)
+
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileView.State>
 
     private lateinit var profileStatsDelegate: ProfileStatsDelegate
@@ -117,7 +117,9 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         set(value) {
             field = value
 
-            toolbar?.navigationIcon?.let { DrawableCompat.setTintList(it, value) }
+            view?.let {
+                profileBinding.toolbar.navigationIcon?.let { icon -> DrawableCompat.setTintList(icon, value) }
+            }
             editMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
             shareMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
             settingsMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
@@ -140,46 +142,46 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileView.State.Idle>()
-        viewStateDelegate.addState<ProfileView.State.Loading>(profileLoading)
-        viewStateDelegate.addState<ProfileView.State.Content>(scrollContainer)
-        viewStateDelegate.addState<ProfileView.State.Empty>(profileEmpty)
-        viewStateDelegate.addState<ProfileView.State.EmptyLogin>(profileEmptyLogin)
-        viewStateDelegate.addState<ProfileView.State.NetworkError>(profileNetworkError)
+        viewStateDelegate.addState<ProfileView.State.Loading>(profileBinding.profileLoading)
+        viewStateDelegate.addState<ProfileView.State.Content>(profileBinding.scrollContainer)
+        viewStateDelegate.addState<ProfileView.State.Empty>(profileBinding.profileEmpty)
+        viewStateDelegate.addState<ProfileView.State.EmptyLogin>(profileBinding.profileEmptyLogin.root)
+        viewStateDelegate.addState<ProfileView.State.NetworkError>(profileBinding.profileNetworkError.root)
 
-        profileStatsDelegate = ProfileStatsDelegate(view, analytic)
+        profileStatsDelegate = ProfileStatsDelegate(profileBinding.header, analytic)
 
         if (activity is CloseButtonInToolbar) {
-            toolbar.setNavigationIcon(com.google.android.material.R.drawable.abc_ic_ab_back_material)
-            toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
-            toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
+            profileBinding.toolbar.setNavigationIcon(com.google.android.material.R.drawable.abc_ic_ab_back_material)
+            profileBinding.toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
+            profileBinding.toolbar.setNavigationOnClickListener { activity?.onBackPressed() }
         }
-        ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
+        ViewCompat.setElevation(profileBinding.header.root, resources.getDimension(R.dimen.profile_header_elevation))
 
-        toolbar.inflateMenu(R.menu.profile_menu)
-        initOptionsMenu(toolbar.menu)
-        toolbar.setOnMenuItemClickListener(::onOptionsItemClicked)
+        profileBinding.toolbar.inflateMenu(R.menu.profile_menu)
+        initOptionsMenu(profileBinding.toolbar.menu)
+        profileBinding.toolbar.setOnMenuItemClickListener(::onOptionsItemClicked)
 
         val colorControlNormal =
             AppCompatResources.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal))
 
         headerAnimationDelegate =
             ProfileHeaderAnimationDelegate(
-                view,
+                profileBinding,
                 menuColorStart = ContextCompat.getColor(requireContext(), R.color.white),
                 menuColorEnd = colorControlNormal?.defaultColor ?: 0x0,
                 toolbarColor = ColorExtensions.colorSurfaceWithElevationOverlay(requireContext(), 4)
             ) { menuTintStateList = it }
 
-        scrollContainer
+        profileBinding.scrollContainer
             .setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, _: Int ->
                 headerAnimationDelegate.onScroll(scrollY)
             }
-        view.doOnNextLayout { headerAnimationDelegate.onScroll(scrollContainer.scrollY) }
+        view.doOnNextLayout { headerAnimationDelegate.onScroll(profileBinding.scrollContainer.scrollY) }
 
-        tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
-        authAction.setOnClickListener { screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX) }
+        profileBinding.profileNetworkError.tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
+        profileBinding.profileEmptyLogin.authAction.setOnClickListener { screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX) }
 
-        profileImageWrapper = profileImage.wrapWithGlide()
+        profileImageWrapper = profileBinding.header.profileImage.wrapWithGlide()
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
@@ -258,12 +260,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
                             AppCompatResources.getDrawable(requireContext(), R.drawable.general_placeholder)
                         )
 
-                    profileName.text = user.fullName
-                    profileBio.text = user.shortBio
-                    profileBio.isVisible = !user.shortBio.isNullOrBlank()
+                    profileBinding.header.profileName.text = user.fullName
+                    profileBinding.header.profileBio.text = user.shortBio
+                    profileBinding.header.profileBio.isVisible = !user.shortBio.isNullOrBlank()
 
-                    toolbarTitle.text = user.fullName
-                    toolbarTitle.translationY = 1000f
+                    profileBinding.toolbarTitle.text = user.fullName
+                    profileBinding.toolbarTitle.translationY = 1000f
 
                     isEditMenuItemVisible = isCurrentUser
                     isShareMenuItemVisible = true
@@ -271,21 +273,21 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
 
                     profileStatsDelegate.setProfileStats(user)
 
-                    profileCover.isVisible = !user.cover.isNullOrEmpty()
+                    profileBinding.header.profileCover.isVisible = !user.cover.isNullOrEmpty()
                     Glide
                         .with(requireContext())
                         .asBitmap()
                         .centerCrop()
                         .load(user.cover)
-                        .into(profileCover)
+                        .into(profileBinding.header.profileCover)
 
-                    view?.doOnNextLayout { headerAnimationDelegate.onScroll(scrollContainer.scrollY) }
+                    view?.doOnNextLayout { headerAnimationDelegate.onScroll(profileBinding.scrollContainer.scrollY) }
                 }
             }
 
             else -> {
-                toolbarTitle.setText(R.string.profile_title)
-                toolbarTitle.translationY = 0f
+                profileBinding.toolbarTitle.setText(R.string.profile_title)
+                profileBinding.toolbarTitle.translationY = 0f
 
                 isEditMenuItemVisible = false
                 isShareMenuItemVisible = false

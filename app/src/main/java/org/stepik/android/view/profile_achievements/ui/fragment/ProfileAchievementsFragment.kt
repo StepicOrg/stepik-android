@@ -7,13 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.fragment_profile_achievements.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentProfileAchievementsBinding
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
@@ -51,6 +51,7 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
 
     private var userId: Long by argument()
 
+    private val profileAchievementsBinding: FragmentProfileAchievementsBinding by viewBinding(FragmentProfileAchievementsBinding::bind)
     private val achievementsPresenter: ProfileAchievementsPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
     private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementItem>
@@ -82,17 +83,17 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<AchievementsView.State.Idle>()
         viewStateDelegate.addState<AchievementsView.State.SilentLoading>()
-        viewStateDelegate.addState<AchievementsView.State.Loading>(view, achievementsLoadingPlaceholder)
-        viewStateDelegate.addState<AchievementsView.State.Error>(view, achievementsLoadingError)
-        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(view, achievementsTilesContainer)
+        viewStateDelegate.addState<AchievementsView.State.Loading>(view, profileAchievementsBinding.achievementsLoadingPlaceholder)
+        viewStateDelegate.addState<AchievementsView.State.Error>(view, profileAchievementsBinding.achievementsLoadingError.root)
+        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(view, profileAchievementsBinding.achievementsTilesContainer)
         viewStateDelegate.addState<AchievementsView.State.NoAchievements>()
 
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        achievementsTitle.setOnClickListener { screenManager.showAchievementsList(requireContext(), profileId, isMyProfile) }
+        profileAchievementsBinding.achievementsLoadingError.tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        profileAchievementsBinding.achievementsTitle.setOnClickListener { screenManager.showAchievementsList(requireContext(), profileId, isMyProfile) }
 
-        achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
-        achievementsTilesContainer.isNestedScrollingEnabled = false
-        achievementsTilesContainer.adapter = achievementsAdapter
+        profileAchievementsBinding.achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
+        profileAchievementsBinding.achievementsTilesContainer.isNestedScrollingEnabled = false
+        profileAchievementsBinding.achievementsTilesContainer.adapter = achievementsAdapter
         initAchievementsPlaceholders()
 
         setDataToPresenter()
@@ -104,12 +105,12 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
 
     private fun initAchievementsPlaceholders() {
         for (i in 0 until achievementsToDisplay) {
-            val view = layoutInflater.inflate(R.layout.view_achievement_tile_placeholder, achievementsLoadingPlaceholder, false)
+            val view = layoutInflater.inflate(R.layout.view_achievement_tile_placeholder, profileAchievementsBinding.achievementsLoadingPlaceholder, false)
             view.layoutParams = (view.layoutParams as LinearLayout.LayoutParams).apply {
                 weight = 1f
                 width = 0
             }
-            achievementsLoadingPlaceholder.addView(view)
+            profileAchievementsBinding.achievementsLoadingPlaceholder.addView(view)
         }
     }
 
