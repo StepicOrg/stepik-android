@@ -6,12 +6,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_onboarding_course_lists.*
-import kotlinx.android.synthetic.main.item_onboarding.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.ActivityOnboardingCourseListsBinding
+import org.stepic.droid.databinding.ItemOnboardingBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.domain.onboarding.analytic.OnboardingOpenedAnalyticEvent
@@ -48,6 +49,8 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
     @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
+    private val binding: ActivityOnboardingCourseListsBinding by viewBinding(ActivityOnboardingCourseListsBinding::bind)
+
     private val courseListsAdapter: DefaultDelegateAdapter<OnboardingCourseList> = DefaultDelegateAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,7 +58,7 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
         App.component().inject(this)
         analytic.report(OnboardingOpenedAnalyticEvent(screen = 2))
 
-        courseListsHeader.text = onboardingGoal.title
+        binding.courseListsHeader.text = onboardingGoal.title
 
         courseListsAdapter += createCourseListsAdapterDelegate { onboardingCourseList ->
             sharedPreferenceHelper.personalizedCourseList = onboardingCourseList.id
@@ -64,14 +67,14 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
             closeOnboarding()
         }
         courseListsAdapter.items = onboardingGoal.courseLists
-        courseListsRecycler.layoutManager = LinearLayoutManager(this)
-        courseListsRecycler.adapter = courseListsAdapter
+        binding.courseListsRecycler.layoutManager = LinearLayoutManager(this)
+        binding.courseListsRecycler.adapter = courseListsAdapter
 
-        backAction.setOnClickListener {
+        binding.backAction.setOnClickListener {
             onBackPressed()
         }
 
-        dismissButton.setOnClickListener {
+        binding.dismissButton.setOnClickListener {
             analytic.report(OnboardingClosedAnalyticEvent(screen = 2))
             closeOnboarding()
         }
@@ -84,9 +87,10 @@ class OnboardingCourseListsActivity : AppCompatActivity(R.layout.activity_onboar
 
     private fun createCourseListsAdapterDelegate(onItemClicked: (OnboardingCourseList) -> Unit) =
         adapterDelegate<OnboardingCourseList, OnboardingCourseList>(layoutResId = R.layout.item_onboarding) {
-            val itemContainer = itemView.itemContainer
-            val itemIcon = itemView.itemIcon
-            val itemTitle = itemView.itemTitle
+            val itemBinding = ItemOnboardingBinding.bind(itemView)
+            val itemContainer = itemBinding.itemContainer
+            val itemIcon = itemBinding.itemIcon
+            val itemTitle = itemBinding.itemTitle
 
             itemView.setOnClickListener { item?.let(onItemClicked) }
 
