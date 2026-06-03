@@ -1,12 +1,11 @@
 package org.stepik.android.view.course_revenue.ui.adapter.delegate
 
 import android.text.SpannedString
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_course_benefit_by_month.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCourseBenefitByMonthBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.domain.course_revenue.model.CourseBenefitByMonthListItem
@@ -28,8 +27,10 @@ class CourseBenefitsMonthlyAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_course_benefit_by_month))
 
     private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseBenefitByMonthListItem>(containerView), LayoutContainer {
+        view: android.view.View
+    ) : DelegateViewHolder<CourseBenefitByMonthListItem>(view) {
+
+        private val viewBinding: ItemCourseBenefitByMonthBinding by viewBinding(ItemCourseBenefitByMonthBinding::bind)
 
         override fun onBind(data: CourseBenefitByMonthListItem) {
             data as CourseBenefitByMonthListItem.Data
@@ -38,21 +39,21 @@ class CourseBenefitsMonthlyAdapterDelegate(
             val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
             decimalFormat.minimumFractionDigits = 2
 
-            courseBenefitByMonthCurrentMonth.text = DateTimeHelper.getPrintableDate(
+            viewBinding.courseBenefitByMonthCurrentMonth.text = DateTimeHelper.getPrintableDate(
                 data.courseBenefitByMonth.date,
                 DateTimeHelper.DISPLAY_MONTH_YEAR_NOMINAL_PATTERN,
                 TimeZone.getDefault()
             ).capitalize(Locale.ROOT)
 
             val (incomeString, incomeStringColor) = resolveIncomeString(data.courseBenefitByMonth.totalUserIncome, data.courseBenefitByMonth.currencyCode, decimalFormat)
-            courseBenefitByMonthIncome.text = incomeString
-            courseBenefitByMonthIncome.setTextColor(incomeStringColor)
-            courseBenefitByMonthSalesValue.text = revenuePriceMapper.mapToDisplayPrice(data.courseBenefitByMonth.currencyCode, decimalFormat.format(data.courseBenefitByMonth.totalTurnover.toDoubleOrNull() ?: 0.0))
-            courseBenefitByMonthRefundsValue.text = revenuePriceMapper.mapToDisplayPrice(data.courseBenefitByMonth.currencyCode, decimalFormat.format(data.courseBenefitByMonth.totalRefunds.toDoubleOrNull() ?: 0.0))
-            courseBenefitByMonthCountPaymentsCountValue.text = data.courseBenefitByMonth.countPayments.toString()
-            courseBenefitByMonthStepikPaymentsValue.text = data.courseBenefitByMonth.countNonZPayments.toString()
-            courseBenefitByMonthZLinkPaymentsValue.text = data.courseBenefitByMonth.countZPayments.toString()
-            courseBenefitByMonthInvoicePaymentsValue.text = data.courseBenefitByMonth.countInvoicePayments.toString()
+            viewBinding.courseBenefitByMonthIncome.text = incomeString
+            viewBinding.courseBenefitByMonthIncome.setTextColor(incomeStringColor)
+            viewBinding.courseBenefitByMonthSalesValue.text = revenuePriceMapper.mapToDisplayPrice(data.courseBenefitByMonth.currencyCode, decimalFormat.format(data.courseBenefitByMonth.totalTurnover.toDoubleOrNull() ?: 0.0))
+            viewBinding.courseBenefitByMonthRefundsValue.text = revenuePriceMapper.mapToDisplayPrice(data.courseBenefitByMonth.currencyCode, decimalFormat.format(data.courseBenefitByMonth.totalRefunds.toDoubleOrNull() ?: 0.0))
+            viewBinding.courseBenefitByMonthCountPaymentsCountValue.text = data.courseBenefitByMonth.countPayments.toString()
+            viewBinding.courseBenefitByMonthStepikPaymentsValue.text = data.courseBenefitByMonth.countNonZPayments.toString()
+            viewBinding.courseBenefitByMonthZLinkPaymentsValue.text = data.courseBenefitByMonth.countZPayments.toString()
+            viewBinding.courseBenefitByMonthInvoicePaymentsValue.text = data.courseBenefitByMonth.countInvoicePayments.toString()
         }
 
         private fun resolveIncomeString(totalUserIncome: String, currencyCode: String, decimalFormat: DecimalFormat): Pair<SpannedString, Int> {
