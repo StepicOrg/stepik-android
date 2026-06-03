@@ -1,8 +1,10 @@
 package org.stepik.android.view.step_quiz_code.ui.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizCodeBinding
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepik.android.domain.code_preference.model.InitCodePreference
@@ -35,23 +37,29 @@ class CodeStepQuizFragment :
 
     private lateinit var codeStepQuizFormDelegate: CodeStepQuizFormDelegate
 
-    override val quizLayoutRes: Int =
-        R.layout.layout_step_quiz_code
+    private var _binding: LayoutStepQuizCodeBinding? = null
+    private val binding get() = _binding!!
 
     override val quizViews: Array<View>
-        get() = arrayOf(requireView().findViewById(R.id.stepQuizCodeContainer))
+        get() = arrayOf(binding.root)
 
-    override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
+    override fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
+        return LayoutStepQuizCodeBinding.inflate(layoutInflater, parent, false).also {
+            _binding = it
+        }.root
+    }
+
+    override fun createStepQuizFormDelegate(): StepQuizFormDelegate {
         codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
 
         codeStepQuizFormDelegate = CodeStepQuizFormDelegate(
-            containerView = view,
+            codeStepQuizBinding = binding,
             codeOptions = codeOptions,
             codeLayoutDelegate = CodeLayoutDelegate(
-                codeContainerView = view,
+                codeLayoutBinding = binding,
                 step = stepWrapper.step,
                 codeTemplates = codeOptions.codeTemplates,
-                codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, true),
+                codeQuizInstructionDelegate = CodeQuizInstructionDelegate(binding, true),
                 codeToolbarAdapter = null,
                 onChangeLanguageClicked = ::onChangeLanguageClicked
             ),

@@ -1,8 +1,10 @@
 package org.stepik.android.view.step_quiz_choice.ui.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizChoiceBinding
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
@@ -20,12 +22,22 @@ class ChoiceStepQuizFragment :
                 }
     }
 
-    override val quizLayoutRes: Int =
-        R.layout.layout_step_quiz_choice
+    private var _binding: LayoutStepQuizChoiceBinding? = null
+    private val binding get() = _binding!!
 
     override val quizViews: Array<View>
-        get() = arrayOf(view!!.findViewById(R.id.choicesRecycler))
+        get() = arrayOf(binding.root)
 
-    override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        ChoiceStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
+    override fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
+        return LayoutStepQuizChoiceBinding.inflate(layoutInflater, parent, false).also {
+            _binding = it
+        }.root
+    }
+
+    override fun createStepQuizFormDelegate(): StepQuizFormDelegate =
+        ChoiceStepQuizFormDelegate(
+            stepQuizBinding = stepQuizBinding,
+            choiceStepQuizBinding = binding,
+            onQuizChanged = ::syncReplyState
+        )
 }

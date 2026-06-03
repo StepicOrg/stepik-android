@@ -23,7 +23,8 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import ru.nobird.android.view.base.ui.extension.setTextIfChanged
 
 class TextStepQuizFormDelegate(
-    containerView: View,
+    private val quizTextField: TextView,
+    private val quizDescription: TextView,
     private val stepBlockName: String?,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
@@ -36,10 +37,30 @@ class TextStepQuizFormDelegate(
         private const val NUMBER_VALIDATION_REGEX = "^[$MINUS$PLUS]?[0-9]*[$POINT]?[0-9]+([$EXP][$MINUS$PLUS]?[0-9]+)?$"
     }
 
-    private val context = containerView.context
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        textStepQuizBinding: LayoutStepQuizTextBinding,
+        stepBlockName: String?,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        textStepQuizBinding.root as TextView,
+        stepQuizBinding.stepQuizDescription,
+        stepBlockName,
+        onQuizChanged
+    )
 
-    private val quizTextField = LayoutStepQuizTextBinding.bind(containerView).root as TextView
-    private val quizDescription = FragmentStepQuizBinding.bind(containerView).stepQuizDescription
+    constructor(
+        containerView: View,
+        stepBlockName: String?,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stringStepQuizField),
+        containerView.findViewById(R.id.stepQuizDescription),
+        stepBlockName,
+        onQuizChanged
+    )
+
+    private val context = quizTextField.context
 
     init {
         val (inputType, @StringRes descriptionTextRes) =

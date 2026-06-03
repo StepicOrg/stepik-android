@@ -19,14 +19,30 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
-    containerView: View,
+    codeStepQuizBinding: LayoutStepQuizCodeBinding,
     private val codeOptions: CodeOptions,
     private val codeLayoutDelegate: CodeLayoutDelegate,
     private val onFullscreenClicked: (lang: String, code: String) -> Unit,
     private val syncCodePreference: (String) -> Unit,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val binding = LayoutStepQuizCodeBinding.bind(containerView)
+    constructor(
+        containerView: View,
+        codeOptions: CodeOptions,
+        codeLayoutDelegate: CodeLayoutDelegate,
+        onFullscreenClicked: (lang: String, code: String) -> Unit,
+        syncCodePreference: (String) -> Unit,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        LayoutStepQuizCodeBinding.bind(containerView.findViewById(R.id.stepQuizCodeContainer)),
+        codeOptions,
+        codeLayoutDelegate,
+        onFullscreenClicked,
+        syncCodePreference,
+        onQuizChanged
+    )
+
+    private val binding = codeStepQuizBinding
 
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {

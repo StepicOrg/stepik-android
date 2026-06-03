@@ -1,11 +1,13 @@
 package org.stepik.android.view.step_quiz_matching.ui.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import org.stepic.droid.R
 import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizSortingBinding
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -15,15 +17,33 @@ import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingIt
 import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingItemTitleAdapterDelegate
 import org.stepik.android.view.step_quiz_matching.ui.mapper.MatchingItemMapper
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
-import ru.nobird.app.core.model.swap
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.app.core.model.swap
 
 class MatchingStepQuizFormDelegate(
-    containerView: View,
+    private val quizDescription: TextView,
+    private val sortingRecycler: RecyclerView,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = FragmentStepQuizBinding.bind(containerView).stepQuizDescription
-    private val sortingRecycler = containerView.findViewById<RecyclerView>(R.id.sortingRecycler)
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        matchingStepQuizBinding: LayoutStepQuizSortingBinding,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        stepQuizBinding.stepQuizDescription,
+        matchingStepQuizBinding.root,
+        onQuizChanged
+    )
+
+    constructor(
+        containerView: View,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stepQuizDescription),
+        containerView.findViewById(R.id.sortingRecycler),
+        onQuizChanged
+    )
+
     private val optionsAdapter = DefaultDelegateAdapter<MatchingItem>()
     private val matchingItemMapper = MatchingItemMapper()
 

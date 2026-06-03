@@ -1,8 +1,10 @@
 package org.stepik.android.view.step_quiz_fill_blanks.ui.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizFillBlanksBinding
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
@@ -23,14 +25,26 @@ class FillBlanksStepQuizFragment :
 
     private lateinit var fillBlanksStepQuizFormDelegate: FillBlanksStepQuizFormDelegate
 
-    override val quizLayoutRes: Int =
-        R.layout.layout_step_quiz_fill_blanks
+    private var _binding: LayoutStepQuizFillBlanksBinding? = null
+    private val binding: LayoutStepQuizFillBlanksBinding
+        get() = requireNotNull(_binding)
 
     override val quizViews: Array<View>
-        get() = arrayOf(view!!.findViewById<View>(R.id.fillBlanksRecycler))
+        get() = arrayOf(binding.root)
 
-    override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
-        fillBlanksStepQuizFormDelegate = FillBlanksStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)
+    override fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
+        return LayoutStepQuizFillBlanksBinding.inflate(layoutInflater, parent, false).also {
+            _binding = it
+        }.root
+    }
+
+    override fun createStepQuizFormDelegate(): StepQuizFormDelegate {
+        fillBlanksStepQuizFormDelegate = FillBlanksStepQuizFormDelegate(
+            stepQuizBinding = stepQuizBinding,
+            fillBlanksBinding = binding,
+            fragmentManager = childFragmentManager,
+            onQuizChanged = ::syncReplyState,
+        )
         return fillBlanksStepQuizFormDelegate
     }
 

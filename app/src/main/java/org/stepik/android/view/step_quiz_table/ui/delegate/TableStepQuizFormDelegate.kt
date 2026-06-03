@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_table.ui.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizTableBinding
 import org.stepik.android.model.Cell
 import org.stepik.android.model.Reply
 import org.stepik.android.model.TableChoiceAnswer
@@ -24,12 +26,33 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class TableStepQuizFormDelegate(
-    containerView: View,
+    private val quizDescription: TextView,
+    private val tableRecycler: RecyclerView,
     private val fragmentManager: FragmentManager,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = FragmentStepQuizBinding.bind(containerView).stepQuizDescription
-    private val tableRecycler = containerView.findViewById<RecyclerView>(R.id.tableRecycler)
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        tableStepQuizBinding: LayoutStepQuizTableBinding,
+        fragmentManager: FragmentManager,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        stepQuizBinding.stepQuizDescription,
+        tableStepQuizBinding.root,
+        fragmentManager,
+        onQuizChanged
+    )
+
+    constructor(
+        containerView: View,
+        fragmentManager: FragmentManager,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stepQuizDescription),
+        containerView.findViewById(R.id.tableRecycler),
+        fragmentManager,
+        onQuizChanged
+    )
 
     private val tableAdapter = DefaultDelegateAdapter<TableSelectionItem>()
 

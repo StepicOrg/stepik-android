@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.jakewharton.rxrelay2.BehaviorRelay
-import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -37,7 +36,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.State, StepQuizFeature.Action.ViewAction> {
-    private val stepQuizBinding: FragmentStepQuizBinding by viewBinding(FragmentStepQuizBinding::bind)
+    protected val stepQuizBinding: FragmentStepQuizBinding by viewBinding(FragmentStepQuizBinding::bind)
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -65,9 +64,6 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
 
-    protected abstract val quizLayoutRes: Int
-        @LayoutRes get
-
     protected abstract val quizViews: Array<View>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,7 +84,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         (inflater.inflate(R.layout.fragment_step_quiz, container, false) as ViewGroup)
             .apply {
-                addView(inflater.inflate(quizLayoutRes, this, false))
+                addView(createStepView(inflater, this))
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,7 +100,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
-                stepQuizFormDelegate = createStepQuizFormDelegate(view),
+                stepQuizFormDelegate = createStepQuizFormDelegate(),
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizBinding.stepQuizFeedbackBlocks.root,
@@ -121,7 +117,9 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
             }
     }
 
-    protected abstract fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate
+    protected abstract fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View
+
+    protected abstract fun createStepQuizFormDelegate(): StepQuizFormDelegate
 
     protected fun onActionButtonClicked() {
         stepQuizDelegate.onActionButtonClicked()
