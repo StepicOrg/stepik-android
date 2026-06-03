@@ -5,21 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.activity_comments.*
-import kotlinx.android.synthetic.main.empty_comments.*
-import kotlinx.android.synthetic.main.empty_comments.view.*
-import kotlinx.android.synthetic.main.error_no_connection.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.databinding.ActivityCommentsBinding
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
@@ -84,6 +82,8 @@ class CommentsActivity :
 
     private val commentsPresenter: CommentsPresenter by viewModels { viewModelFactory }
 
+    private val commentsBinding: ActivityCommentsBinding by viewBinding(ActivityCommentsBinding::bind)
+
     private lateinit var viewStateDelegate: ViewStateDelegate<CommentsView.State>
     private lateinit var commentsViewStateDelegate: ViewStateDelegate<CommentsView.CommentsState>
     private lateinit var commentsAdapter: DefaultDelegateAdapter<CommentItem>
@@ -113,9 +113,12 @@ class CommentsActivity :
                 },
             showHomeButton = true
         )
-        centeredToolbar.overflowIcon = AppCompatResources
+        commentsBinding.appBarLayout.centeredToolbarContainer.centeredToolbar.overflowIcon = AppCompatResources
             .getDrawable(this, R.drawable.ic_comments_ordering)
             ?.setTintList(this, R.attr.colorControlNormal)
+
+        val emptyComments = findViewById<android.view.View>(R.id.emptyComments)
+        val reportProblem = findViewById<android.view.View>(R.id.reportProblem)
 
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
@@ -155,7 +158,7 @@ class CommentsActivity :
         )
         commentsAdapter += CommentLoadMoreRepliesAdapterDelegate(commentsPresenter::onLoadMoreReplies)
 
-        with(commentsRecycler) {
+        with(commentsBinding.commentsRecycler) {
             adapter = commentsAdapter
             layoutManager = LinearLayoutManager(context)
 
@@ -181,23 +184,23 @@ class CommentsActivity :
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CommentsView.State.Idle>()
-        viewStateDelegate.addState<CommentsView.State.Loading>(commentsRecycler)
+        viewStateDelegate.addState<CommentsView.State.Loading>(commentsBinding.commentsRecycler)
         viewStateDelegate.addState<CommentsView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler, emptyComments, composeCommentButton)
+        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsBinding.commentsRecycler, emptyComments, commentsBinding.composeCommentButton)
 
         commentsViewStateDelegate = ViewStateDelegate()
-        commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsRecycler)
-        commentsViewStateDelegate.addState<CommentsView.CommentsState.Loading>(commentsRecycler)
+        commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsBinding.commentsRecycler)
+        commentsViewStateDelegate.addState<CommentsView.CommentsState.Loading>(commentsBinding.commentsRecycler)
         commentsViewStateDelegate.addState<CommentsView.CommentsState.EmptyComments>(emptyComments)
 
         setDataToPresenter()
 
         if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) {
-            emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
+            emptyComments.findViewById<TextView>(R.id.placeholderMessage).setText(R.string.step_solutions_empty)
         }
 
-        composeCommentButton.setOnClickListener { commentsPresenter.onComposeCommentClicked(step) }
-        commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
+        commentsBinding.composeCommentButton.setOnClickListener { commentsPresenter.onComposeCommentClicked(step) }
+        commentsBinding.commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
     private fun injectComponent() {
@@ -258,8 +261,8 @@ class CommentsActivity :
         }
 
     override fun setState(state: CommentsView.State) {
-        commentsSwipeRefresh.isRefreshing = false
-        commentsSwipeRefresh.isEnabled =
+        commentsBinding.commentsSwipeRefresh.isRefreshing = false
+        commentsBinding.commentsSwipeRefresh.isEnabled =
             state is CommentsView.State.NetworkError ||
             state is CommentsView.State.DiscussionLoaded
 
@@ -320,24 +323,24 @@ class CommentsActivity :
     }
 
     override fun focusDiscussion(discussionId: Long) {
-        commentsRecycler.post {
+        commentsBinding.commentsRecycler.post {
             val itemIndex = commentsAdapter
                 .items
                 .indexOfFirst { it is CommentItem.Data && it.id == discussionId }
 
             if (itemIndex > 0) {
-                commentsRecycler.layoutManager
+                commentsBinding.commentsRecycler.layoutManager
                     ?.scrollToPosition(itemIndex)
             }
         }
     }
 
     override fun showNetworkError() {
-        root.snackbar(messageRes = R.string.no_connection)
+        commentsBinding.root.snackbar(messageRes = R.string.no_connection)
     }
 
     override fun showAuthRequired() {
-        root.snackbar(messageRes = R.string.comment_auth_required)
+        commentsBinding.root.snackbar(messageRes = R.string.comment_auth_required)
     }
 
     override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {

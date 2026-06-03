@@ -11,9 +11,9 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
-import kotlinx.android.synthetic.main.item_submission_data.view.*
-import kotlinx.android.synthetic.main.view_submission_review.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemSubmissionDataBinding
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveFloatAttribute
@@ -41,44 +41,32 @@ class SubmissionDataAdapterDelegate(
         data is SubmissionItem.Data
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<SubmissionItem>(root), View.OnClickListener {
-        private val submissionContainer = root.submissionContainer
-        private val submissionUserIcon = root.submissionUserIcon
-        private val submissionUserIconWrapper = submissionUserIcon.wrapWithGlide()
-        private val submissionUserName = root.submissionUserName
+        private val viewBinding: ItemSubmissionDataBinding by viewBinding { ItemSubmissionDataBinding.bind(root) }
 
-        private val submissionTime = root.submissionTime
-        private val submissionSolution = root.submissionSolution
-        private val submissionMoreIcon = root.submissionMoreIcon
-        private val submissionSelect = root.submissionSelect
-        private val submissionStatus = root.submissionStatus
-        private val submissionScoreValue = root.submissionScoreValue
-        private val submissionScoreText = root.submissionScoreText
-        private val reviewSelect = root.reviewSelect
-        private val reviewSelectText = root.reviewSelectText
-        private val reviewSelectArrow = root.reviewSelectArrow
+        private val submissionUserIconWrapper = viewBinding.submissionUserIcon.wrapWithGlide()
 
         init {
-            submissionContainer.setOnClickListener(this)
-            submissionUserIcon.setOnClickListener(this)
-            submissionUserName.setOnClickListener(this)
-            submissionMoreIcon.setOnClickListener(this)
-            reviewSelect.setOnClickListener(this)
+            viewBinding.submissionContainer.setOnClickListener(this)
+            viewBinding.submissionUserIcon.setOnClickListener(this)
+            viewBinding.submissionUserName.setOnClickListener(this)
+            viewBinding.submissionMoreIcon.setOnClickListener(this)
+            viewBinding.reviewSelect.root.setOnClickListener(this)
 
             if (isSelectionEnabled) {
-                submissionSelect.setOnClickListener(this)
+                viewBinding.submissionSelect.root.setOnClickListener(this)
             }
 
-            root.submissionDivider.isVisible = isSelectionEnabled || reviewInstructionData != null
-            reviewSelect.isVisible = reviewInstructionData != null
-            submissionSelect.isVisible = isSelectionEnabled
-            submissionMoreIcon.isVisible = isTeacher
+            viewBinding.submissionDivider.root.isVisible = isSelectionEnabled || reviewInstructionData != null
+            viewBinding.reviewSelect.root.isVisible = reviewInstructionData != null
+            viewBinding.submissionSelect.root.isVisible = isSelectionEnabled
+            viewBinding.submissionMoreIcon.isVisible = isTeacher
         }
         override fun onBind(data: SubmissionItem) {
             data as SubmissionItem.Data
 
-            submissionUserName.text = data.user.fullName
+            viewBinding.submissionUserName.text = data.user.fullName
             submissionUserIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
-            submissionTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: 0)
+            viewBinding.submissionTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: 0)
 
             setupSubmission(data)
             setupReviewView(data, getSubmissionReviewState(data))
@@ -153,15 +141,15 @@ class SubmissionDataAdapterDelegate(
 
             val formattedScore = getFormattedScore(itemData)
 
-            submissionStatus.setTextColor(tintColor)
-            submissionStatus.text = statusText
-            submissionScoreValue.text = formattedScore
-            submissionSolution.text = context.getString(R.string.comment_solution_number, itemData.submission.id)
-            TextViewCompat.setCompoundDrawableTintList(submissionSolution, ColorStateList.valueOf(tintColor))
+            viewBinding.submissionStatus.setTextColor(tintColor)
+            viewBinding.submissionStatus.text = statusText
+            viewBinding.submissionScoreValue.text = formattedScore
+            viewBinding.submissionSolution.text = context.getString(R.string.comment_solution_number, itemData.submission.id)
+            TextViewCompat.setCompoundDrawableTintList(viewBinding.submissionSolution, ColorStateList.valueOf(tintColor))
 
             val needShowScore = formattedScore != null
-            submissionScoreValue.isVisible = needShowScore
-            submissionScoreText.isVisible = needShowScore
+            viewBinding.submissionScoreValue.isVisible = needShowScore
+            viewBinding.submissionScoreText.isVisible = needShowScore
         }
 
         private fun getSubmissionValue(submission: Submission): String {
@@ -223,17 +211,17 @@ class SubmissionDataAdapterDelegate(
                 context.getString(R.string.submission_review_action_see_reviews_title)
             }
 
-            reviewSelectText.text = buildSpannedString {
+            viewBinding.reviewSelect.reviewSelectText.text = buildSpannedString {
                 append("$title\n")
                 if (message.isNotEmpty()) append("$message\n") else append("")
                 color(ContextCompat.getColor(context, R.color.color_overlay_violet)) {
                     append(actionTitle)
                 }
             }
-            reviewSelect.isEnabled = isEnabled
+            viewBinding.reviewSelect.root.isEnabled = isEnabled
             val alpha = if (isEnabled) 1f else context.resolveFloatAttribute(R.attr.alphaEmphasisDisabled)
-            reviewSelectText.alpha = alpha
-            reviewSelectArrow.alpha = alpha
+            viewBinding.reviewSelect.reviewSelectText.alpha = alpha
+            viewBinding.reviewSelect.reviewSelectArrow.alpha = alpha
         }
 
         private fun getSubmissionReviewState(itemData: SubmissionItem.Data): ReviewState? {

@@ -9,7 +9,9 @@
     android:orientation="vertical"
 >
 
-    <include layout="@layout/view_catalog_search_toolbar" />
+    <include
+        layout="@layout/view_catalog_search_toolbar"
+        android:id="@+id/catalogSearchToolbar"/>
 
     <FrameLayout
         android:id="@+id/catalogContainer"
