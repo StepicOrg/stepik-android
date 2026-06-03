@@ -4,8 +4,8 @@ import android.view.View
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.view_step_solution_stats.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewStepSolutionStatsBinding
 import org.stepik.android.model.Step
 
 class StepSolutionStatsDelegate(
@@ -13,15 +13,16 @@ class StepSolutionStatsDelegate(
     step: Step,
     isHasQuiz: Boolean
 ) {
-    private val context = containerView.context
-    private val solvedAmount     = containerView.stepAmountPassed
-    private val solvedPercentage = containerView.stepSolvedPercentage
+    private val binding = ViewStepSolutionStatsBinding.bind(containerView)
+    private val context = binding.root.context
+    private val solvedAmount     = binding.stepAmountPassed
+    private val solvedPercentage = binding.stepSolvedPercentage
 
     init {
         val correctPercentage = step.correctRatio?.let { (it * 100).toInt() } ?: 0
 
         if (isHasQuiz && correctPercentage > 0) {
-            containerView.isVisible = true
+            binding.root.isVisible = true
 
             solvedAmount.text = buildSpannedString {
                 append(context.resources.getString(R.string.step_amount_passed))
@@ -35,7 +36,7 @@ class StepSolutionStatsDelegate(
                 }
             }
         } else {
-            containerView.isVisible = false
+            binding.root.isVisible = false
         }
     }
 }

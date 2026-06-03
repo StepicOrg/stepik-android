@@ -19,17 +19,16 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import kotlinx.android.synthetic.main.fragment_step.*
-import kotlinx.android.synthetic.main.view_step_disabled.view.*
-import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.EndpointResolver
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentStepBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
@@ -122,6 +121,8 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
+    private val stepBinding: FragmentStepBinding by viewBinding(FragmentStepBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         injectComponent()
 
@@ -140,12 +141,12 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stepSolutionStatsDelegate = StepSolutionStatsDelegate(
-            stepSolutionStats,
+            stepBinding.stepSolutionStats.root,
             stepWrapper.step,
             stepWrapper.isStepCanHaveQuiz
         )
 
-        stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
+        stepNavigationDelegate = StepNavigationDelegate(stepBinding.stepNavigation.root) { stepPresenter.onStepDirectionClicked(it) }
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->
             analytic.reportAmplitudeEvent(
@@ -163,9 +164,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 )
         }
 
-        stepContentNext.isVisible = isStepContentNextVisible(stepWrapper, lessonData)
-        stepContentNext.setOnClickListener { move() }
-        stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
+        stepBinding.stepContentNext.isVisible = isStepContentNextVisible(stepWrapper, lessonData)
+        stepBinding.stepContentNext.setOnClickListener { move() }
+        stepBinding.stepQuizError.stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
 
         initDisabledStep()
         initDisabledStepTeacher()
@@ -187,7 +188,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                     .copyTextToClipboard(textToCopy = stepUri, toastMessage = getString(R.string.link_copied_title))
             }
         }
-        val placeholderMessage = stepDisabled.placeholderMessage
+        val placeholderMessage = stepBinding.stepDisabled.placeholderMessage
         placeholderMessage.text =
             buildSpannedString {
                 append(getString(R.string.step_disabled_student_description_part_1))
@@ -246,7 +247,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                 ""
         }
 
-        val placeholderMessage = stepDisabledTeacher.placeholderMessage
+        val placeholderMessage = stepBinding.stepDisabledTeacher.placeholderMessage
         placeholderMessage.text =
             buildSpannedString {
                 append(planDescription1)
@@ -261,7 +262,7 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
     }
 
     private fun initStepContentFragment() {
-        stepContentContainer.layoutParams = (stepContentContainer.layoutParams as LinearLayoutCompat.LayoutParams)
+        stepBinding.stepContentContainer.layoutParams = (stepBinding.stepContentContainer.layoutParams as LinearLayoutCompat.LayoutParams)
             .apply {
                 if (stepWrapper.isStepCanHaveQuiz) {
                     height = LinearLayout.LayoutParams.WRAP_CONTENT
@@ -285,9 +286,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     private fun setStepQuizFragment(isNeedReload: Boolean) {
         val isStepHasQuiz = stepWrapper.isStepCanHaveQuiz
-        stepContentSeparator.isVisible = isStepHasQuiz
-        stepQuizContainer.isVisible = isStepHasQuiz
-        stepQuizError.isVisible = false
+        stepBinding.stepContentSeparator.root.isVisible = isStepHasQuiz
+        stepBinding.stepQuizContainer.isVisible = isStepHasQuiz
+        stepBinding.stepQuizError.root.isVisible = false
         if (isStepHasQuiz) {
             val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
 
@@ -379,15 +380,15 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
             val isStepUnavailable = isStepDisabled && !lessonData.lesson.isTeacher
 
-            stepContentContainer.isGone = isStepUnavailable
-            stepContentSeparator.isGone = isStepUnavailable
-            stepQuizError.isGone = isStepUnavailable
-            stepQuizContainer.isGone = isStepUnavailable
-            stepFooter.isGone = isStepUnavailable
+            stepBinding.stepContentContainer.isGone = isStepUnavailable
+            stepBinding.stepContentSeparator.root.isGone = isStepUnavailable
+            stepBinding.stepQuizError.root.isGone = isStepUnavailable
+            stepBinding.stepQuizContainer.isGone = isStepUnavailable
+            stepBinding.stepFooter.isGone = isStepUnavailable
 
-            stepDisabled.isVisible = isStepUnavailable
-            stepDisabledTeacher.isVisible = isStepDisabled && lessonData.lesson.isTeacher
-            stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper, lessonData)
+            stepBinding.stepDisabled.root.isVisible = isStepUnavailable
+            stepBinding.stepDisabledTeacher.root.isVisible = isStepDisabled && lessonData.lesson.isTeacher
+            stepBinding.stepContentNext.isVisible = isStepContentNextVisible(state.stepWrapper, lessonData)
 
             stepWrapper = state.stepWrapper
 
@@ -398,9 +399,9 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
                         setStepQuizFragment(isNeedReloadQuiz)
                     Step.Status.PREPARING,
                     Step.Status.ERROR -> {
-                        stepContentSeparator.isVisible = true
-                        stepQuizContainer.isVisible = false
-                        stepQuizError.isVisible = true
+                        stepBinding.stepContentSeparator.root.isVisible = true
+                        stepBinding.stepQuizContainer.isVisible = false
+                        stepBinding.stepQuizError.root.isVisible = true
                     }
                     else -> Unit
                 }
@@ -426,15 +427,15 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {
         stepNavigationDelegate.setState(directions)
-        val actionBottomMargin =  if (stepNavigation.visibility == View.VISIBLE) {
+        val actionBottomMargin =  if (stepBinding.stepNavigation.root.visibility == View.VISIBLE) {
             0
         } else {
             resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
         }
-        stepQuizContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        stepBinding.stepQuizContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = actionBottomMargin
         }
-        stepContentNext.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        stepBinding.stepContentNext.updateLayoutParams<ViewGroup.MarginLayoutParams> {
             bottomMargin = actionBottomMargin
         }
     }

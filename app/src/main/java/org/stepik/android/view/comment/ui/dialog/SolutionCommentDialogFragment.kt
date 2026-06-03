@@ -165,7 +165,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
         if (stepQuizFormDelegate != null) {
             stepQuizFormDelegate.setState(state)
 
-            StepQuizFeedbackBlocksDelegate(solutionBinding.stepQuizFeedbackBlocks, isTeacher = false, hasReview = false, onReviewClicked = {})
+            StepQuizFeedbackBlocksDelegate(solutionBinding.stepQuizFeedbackBlocks.root, isTeacher = false, hasReview = false, onReviewClicked = {})
                 .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))
 
             view.findViewById<View?>(R.id.stepQuizCodeContainer)?.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = 0 }
@@ -193,7 +193,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
             val stepQuizFeedback = view.findViewById<android.widget.TextView>(R.id.stepQuizFeedback)
             stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
-            solutionBinding.stepQuizFeedbackBlocks.isVisible = false
+            solutionBinding.stepQuizFeedbackBlocks.root.isVisible = false
         }
     }
 

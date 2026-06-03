@@ -154,7 +154,7 @@ class StepQuizReviewTeacherFragment :
             binding.stepQuizReviewTeacherSubmissions
         )
 
-        val stepQuizView = binding.stepQuizReviewTeacherQuiz
+        val stepQuizView = binding.stepQuizReviewTeacherQuiz.root
         quizViewStateDelegate = stepQuizViewStateDelegateFactory
             .create(stepQuizView, quizLayout)
 
@@ -224,7 +224,7 @@ class StepQuizReviewTeacherFragment :
                 binding.stepQuizReviewTeacherArrow.isExpanded()
 
             quizViewStateDelegate.switchState(state.quizState)
-            val stepQuizReviewTeacherMessage = binding.stepQuizReviewTeacherQuiz.findViewById<View>(R.id.stepQuizReviewTeacherMessage)
+            val stepQuizReviewTeacherMessage = binding.stepQuizReviewTeacherQuiz.stepQuizReviewTeacherMessage
             stepQuizReviewTeacherMessage.isVisible = false
             if (state.quizState is StepQuizFeature.State.AttemptLoaded) {
                 quizDelegate.setState(state.quizState)
