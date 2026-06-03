@@ -6,8 +6,7 @@
     android:background="?selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:visibility="visible"
-    tools:viewBindingIgnore="true">
+    tools:visibility="visible">
 
     <RelativeLayout
         android:layout_width="match_parent"

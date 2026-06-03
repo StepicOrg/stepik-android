@@ -14,11 +14,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.fragment_profile_notification.*
-import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentProfileNotificationBinding
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
@@ -37,6 +37,8 @@ import java.util.TimeZone
 import javax.inject.Inject
 
 class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notification), ProfileNotificationView, TimeIntervalPickerDialogFragment.Companion.Callback {
+    private val binding: FragmentProfileNotificationBinding by viewBinding(FragmentProfileNotificationBinding::bind)
+
     companion object {
         fun newInstance(userId: Long): Fragment =
             ProfileNotificationFragment()
@@ -65,7 +67,7 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        notificationIntervalChooserContainer.setOnClickListener {
+        binding.notificationIntervalChooser.root.setOnClickListener {
             val supportFragmentManager = fragmentManager
                 ?: return@setOnClickListener
 
@@ -75,7 +77,7 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
             dialog.showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
         }
 
-        marketingNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.marketingNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (!isMarketingNotificationSwitchUpdating) {
                 profileNotificationPresenter.switchMarketingNotification(isChecked)
             }
@@ -115,9 +117,9 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
     override fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String) {
         val notificationEnabledWithPermission = notificationEnabled && requireContext().isNotificationPermissionGranted()
 
-        notificationStreakSwitch.isChecked = notificationEnabledWithPermission
-        if (notificationStreakSwitch.visibility != View.VISIBLE) {
-            notificationStreakSwitch.visibility = View.VISIBLE
+        binding.notificationStreakSwitch.isChecked = notificationEnabledWithPermission
+        if (binding.notificationStreakSwitch.visibility != View.VISIBLE) {
+            binding.notificationStreakSwitch.visibility = View.VISIBLE
         }
         if (notificationEnabledWithPermission) {
             hideNotificationTime(false)
@@ -125,7 +127,7 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
             hideNotificationTime(true)
         }
 
-        notificationStreakSwitch.setOnCheckedChangeListener { _, isChecked ->
+        binding.notificationStreakSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (!requireContext().isNotificationPermissionGranted()) {
                 requestNotificationPermission()
                 profileNotificationPresenter.tryShowNotificationSetting()
@@ -136,25 +138,25 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
         }
 
         // need to set for show default value, when user enable it
-        notificationIntervalTitle.text =
+        binding.notificationIntervalChooser.notificationIntervalTitle.text =
             resources.getString(R.string.notification_time, notificationTimeValue)
     }
 
     override fun setNewTimeInterval(timePresentationString: String) {
-        notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
+        binding.notificationIntervalChooser.notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
     }
 
     override fun showMarketingNotificationState(subscribedForMarketing: Boolean, isUpdating: Boolean) {
-        marketingNotificationSwitch.isVisible = true
-        marketingNotificationSwitch.isEnabled = !isUpdating
+        binding.marketingNotificationSwitch.isVisible = true
+        binding.marketingNotificationSwitch.isEnabled = !isUpdating
 
         isMarketingNotificationSwitchUpdating = true
-        marketingNotificationSwitch.isChecked = subscribedForMarketing
+        binding.marketingNotificationSwitch.isChecked = subscribedForMarketing
         isMarketingNotificationSwitchUpdating = false
     }
 
     override fun hideMarketingNotification() {
-        marketingNotificationSwitch.isVisible = false
+        binding.marketingNotificationSwitch.isVisible = false
     }
 
     override fun showMarketingNotificationUpdateFailed() {
@@ -163,10 +165,10 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            notificationIntervalChooserContainer.collapse(object : Animation.AnimationListener {
+            binding.notificationIntervalChooser.root.collapse(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
-                    (notificationStreakSwitch.layoutParams as LinearLayoutCompat.LayoutParams).apply {
+                    (binding.notificationStreakSwitch.layoutParams as LinearLayoutCompat.LayoutParams).apply {
                         setMargins(
                             resources.getDimension(R.dimen.profile_block_margin).toInt(),
                             0,
@@ -178,10 +180,10 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
                 override fun onAnimationStart(animation: Animation?) {}
             })
         } else {
-            notificationIntervalChooserContainer.expand(object : Animation.AnimationListener {
+            binding.notificationIntervalChooser.root.expand(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
-                    notificationTimeZoneInfo.setPadding(
+                    binding.notificationIntervalChooser.notificationTimeZoneInfo.setPadding(
                         resources.getDimension(R.dimen.profile_block_margin).toInt(),
                         0,
                         resources.getDimension(R.dimen.profile_block_margin).toInt(),
@@ -228,6 +230,6 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
         val print = String.format("%s\n%s",
             DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(timezone, nowDate),
             timezone.getDisplayName(isDaylight, TimeZone.LONG))
-        notificationTimeZoneInfo.text = getString(R.string.streak_updated_timezone, print)
+        binding.notificationIntervalChooser.notificationTimeZoneInfo.text = getString(R.string.streak_updated_timezone, print)
     }
 }
