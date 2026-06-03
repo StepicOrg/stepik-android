@@ -162,35 +162,48 @@ For each layout file referenced by the Kotlin file being migrated:
 
 > **Important:** If the Kotlin file imports from multiple layouts (e.g., `import kotlinx.android.synthetic.main.fragment_lesson.*` and `import kotlinx.android.synthetic.main.layout_video_controls.*`), check and fix **each** layout file.
 
-### 2.3b: Check `<include>` layouts for `viewBindingIgnore` and handle `.root` access
+### 2.3b: Check `<include>` layouts — remove `viewBindingIgnore`, ensure `android:id`, use binding chain
 
-**CRITICAL STEP:** When a layout uses `<include layout="@layout/xxx">`, the included layout may also have `tools:viewBindingIgnore="true"`. If the code accesses views from the included layout (either directly or via a delegate/helper class that takes the include's root `View`), you must:
+**CRITICAL STEP:** When a layout uses `<include layout="@layout/xxx">`, the included layout may also have `tools:viewBindingIgnore="true"`. If the code accesses views from the included layout, you must:
 
-1. **Check all `<include>`d layouts** in the parent layout XML for `tools:viewBindingIgnore="true"`
-2. **Remove it** from each included layout that is referenced by the migrated code
-3. **Use `.root` when passing an included layout to a delegate** that expects a `View` parameter
+1. **Check all `<include>`d layouts** in the parent layout XML for `tools:viewBindingIgnore="true"` and **remove it**
+2. **Ensure the `<include>` tag has an `android:id`** — this is required for ViewBinding to expose the included layout as a property on the parent binding. If the `<include>` tag lacks an `android:id`, add one.
+3. **Remove `viewBindingIgnore` from the included layout** so its binding class is generated
+4. **Use the binding chain** to access views from the included layout: `parentBinding.includeId.viewId`
+5. **Use `.root` only when passing to a delegate** that expects a `View` parameter
 
 **How `<include>` works with ViewBinding:**
 
 When a parent layout includes another layout:
 ```xml
-<!-- view_achievement_item.xml -->
-<RelativeLayout ...>
+<!-- fragment_catalog.xml -->
+<FrameLayout ...>
     <include
-        layout="@layout/view_achievement_tile"
-        android:id="@+id/achievementTile"
-        android:layout_width="64dp"
+        layout="@layout/view_catalog_search_toolbar"
+        android:id="@+id/catalogSearchToolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/achievementTitle" ... />
-</RelativeLayout>
+    ...
+</FrameLayout>
 ```
 
 The parent binding exposes the included layout via its own binding class:
-- `binding.achievementTile` → type is `ViewAchievementTileBinding` (the included layout's binding)
-- `binding.achievementTile.root` → type is `View` (the root view of the included layout)
-- `binding.achievementTitle` → direct child views are accessible normally
+- `binding.catalogSearchToolbar` → type is `ViewCatalogSearchToolbarBinding` (the included layout's binding)
+- `binding.catalogSearchToolbar.searchViewToolbar` → access a view inside the included layout
+- `binding.catalogSearchToolbar.root` → type is `View` (the root view of the included layout)
+
+**PREFERRED — Access views through the binding chain:**
+```kotlin
+// ❌ WRONG — using findViewById (defeats the purpose of ViewBinding)
+searchViewToolbar = view.findViewById(R.id.searchViewToolbar)
+backIcon = view.findViewById(R.id.backIcon)
+filterIcon = view.findViewById(R.id.filterIcon)
+
+// ✅ CORRECT — binding chain through the include id
+searchViewToolbar = catalogBinding.catalogSearchToolbar.searchViewToolbar
+backIcon = catalogBinding.catalogSearchToolbar.backIcon
+filterIcon = catalogBinding.catalogSearchToolbar.filterIcon
+```
 
 **When to use `.root`:**
 - When passing the included layout to a delegate/helper that takes a `View` parameter:
@@ -198,33 +211,32 @@ The parent binding exposes the included layout via its own binding class:
   // Delegate expects a View (the include's root)
   private val tileDelegate = AchievementTileDelegate(binding.achievementTile.root, resolver)
   ```
-- When a helper class uses synthetic imports on the included layout (e.g., `root.achievementLevels`), pass `.root` not the binding itself
 
 **When NOT to use `.root`:**
 - When accessing specific views within the included layout directly through its binding:
   ```kotlin
+  // ✅ Access views directly through binding chain
   binding.achievementTile.achievementLevels.progress = 5
   ```
 
-**Before migration (synthetic):**
-```kotlin
-import kotlinx.android.synthetic.main.view_achievement_item.view.*
-import kotlinx.android.synthetic.main.view_achievement_tile.view.*
+**If `<include>` lacks `android:id`:**
+The `<include>` tag MUST have an `android:id` for ViewBinding to generate a property for it. If the include has no id:
+```xml
+<!-- ❌ WRONG — no id on include, views not accessible via binding -->
+<include layout="@layout/view_achievement_tile" />
 
-// root.achievementTile is the include's root View (synthetic generates it as a View)
-// root.achievementTitle is a direct child
-val tileDelegate = AchievementTileDelegate(root.achievementTile, resolver)
+<!-- ✅ CORRECT — add android:id to the include -->
+<include
+    layout="@layout/view_achievement_tile"
+    android:id="@+id/achievementTile"
+    android:layout_width="64dp"
+    android:layout_height="wrap_content" />
 ```
 
-**After migration (viewBinding):**
-```kotlin
-// binding.achievementTile is ViewAchievementTileBinding (not View)
-// binding.achievementTile.root is the include's root View (equivalent to synthetic root.achievementTile)
-// binding.achievementTitle is a direct child (same as before)
-val tileDelegate = AchievementTileDelegate(binding.achievementTile.root, resolver)
-```
-
-> **Important:** Scan the entire layout XML for all `<include>` tags. For each included layout, check if `tools:viewBindingIgnore="true"` exists and remove it if the migrated code (or any delegate/helper it uses) references views from that included layout.
+> **Important:** Scan the entire layout XML for all `<include>` tags. For each included layout:
+> 1. Ensure `android:id` is present on the `<include>` tag
+> 2. Check if `tools:viewBindingIgnore="true"` exists in the included layout and remove it
+> 3. Replace any `findViewById` calls with the binding chain pattern
 
 ### 2.4: Apply the migration pattern
 
