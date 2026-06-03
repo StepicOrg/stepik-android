@@ -2,7 +2,6 @@ package org.stepik.android.view.step_quiz_fill_blanks.ui.fragment
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_fill_blanks.*
 import org.stepic.droid.R
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -28,7 +27,7 @@ class FillBlanksStepQuizFragment :
         R.layout.layout_step_quiz_fill_blanks
 
     override val quizViews: Array<View>
-        get() = arrayOf(fillBlanksRecycler)
+        get() = arrayOf(view!!.findViewById<View>(R.id.fillBlanksRecycler))
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
         fillBlanksStepQuizFormDelegate = FillBlanksStepQuizFormDelegate(view, childFragmentManager, onQuizChanged = ::syncReplyState)

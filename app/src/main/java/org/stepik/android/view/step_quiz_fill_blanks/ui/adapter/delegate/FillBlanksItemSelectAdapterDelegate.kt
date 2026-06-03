@@ -14,8 +14,9 @@ import androidx.annotation.IdRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.graphics.drawable.DrawableCompat
-import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_select.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemStepQuizFillBlanksSelectBinding
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -31,7 +32,8 @@ class FillBlanksItemSelectAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_step_quiz_fill_blanks_select))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<FillBlanksItem>(root) {
-        private val stepQuizFillBlanksText = root.stepQuizFillBlanksText
+        private val viewBinding: ItemStepQuizFillBlanksSelectBinding by viewBinding { ItemStepQuizFillBlanksSelectBinding.bind(root) }
+        private val stepQuizFillBlanksText = viewBinding.stepQuizFillBlanksText
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {

@@ -2,10 +2,10 @@ package org.stepik.android.view.step_quiz_fill_blanks.ui.delegate
 
 import android.view.View
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_fill_blanks.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
 import ru.nobird.app.core.model.mutate
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -26,7 +26,9 @@ class FillBlanksStepQuizFormDelegate(
     private val fragmentManager: FragmentManager,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = containerView.stepQuizDescription
+    private val binding = FragmentStepQuizBinding.bind(containerView)
+    private val fillBlanksRecycler = containerView.findViewById<RecyclerView>(R.id.fillBlanksRecycler)
+    private val quizDescription = binding.stepQuizDescription
     private val itemsAdapter = DefaultDelegateAdapter<FillBlanksItem>()
     private val fillBlanksItemMapper = FillBlanksItemMapper()
 
@@ -37,7 +39,7 @@ class FillBlanksStepQuizFormDelegate(
         itemsAdapter += FillBlanksItemInputAdapterDelegate(onItemClicked = ::inputItemAction)
         itemsAdapter += FillBlanksItemSelectAdapterDelegate(onItemClicked = ::selectItemAction)
 
-        with(containerView.fillBlanksRecycler) {
+        with(fillBlanksRecycler) {
             itemAnimator = null
             adapter = itemsAdapter
             isNestedScrollingEnabled = false
@@ -73,7 +75,7 @@ class FillBlanksStepQuizFormDelegate(
             ?.submission
 
         itemsAdapter.items = fillBlanksItemMapper.mapToFillBlanksItems(state.attempt, submission, StepQuizFormResolver.isQuizEnabled(state))
-        containerView.post { containerView.fillBlanksRecycler.requestLayout() }
+        containerView.post { fillBlanksRecycler.requestLayout() }
     }
 
     override fun createReply(): ReplyResult =
