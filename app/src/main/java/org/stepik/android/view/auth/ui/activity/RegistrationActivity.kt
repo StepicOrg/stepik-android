@@ -2,6 +2,7 @@ package org.stepik.android.view.auth.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -14,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_registration.*
@@ -27,8 +29,13 @@ import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
+import org.stepik.android.domain.auth.mapper.RegistrationConsentMapper
+import org.stepik.android.domain.auth.mapper.RegistrationConsentResult
+import org.stepik.android.domain.auth.model.RegistrationConsentState
+import org.stepik.android.domain.feature.interactor.FeaturesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.presentation.auth.RegistrationPresenter
@@ -37,6 +44,7 @@ import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
+import kotlin.getValue
 
 class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     companion object {
@@ -56,17 +64,33 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var featuresInteractor: FeaturesInteractor
+
     private val registrationPresenter: RegistrationPresenter by viewModels { viewModelFactory }
 
     private val passwordTooShortMessage by lazy {
         resources.getString(R.string.password_too_short)
     }
-    private val termsMessageHtml by lazy {
-        resources.getString(R.string.terms_message_register)
+    private val consentRequiredMessage by lazy {
+        resources.getString(R.string.registration_consent_required)
     }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+    private var consentState: RegistrationConsentState = RegistrationConsentState.fromFeatureSnapshot(false)
+    private val requiredConsentDefaultTint by lazy {
+        createRequiredConsentTint(
+            checkedColor = resolveColorAttribute(R.attr.colorSecondary),
+            uncheckedColor = resolveColorAttribute(R.attr.colorOnSurface)
+        )
+    }
+    private val requiredConsentErrorTint by lazy {
+        createRequiredConsentTint(
+            checkedColor = resolveColorAttribute(R.attr.colorSecondary),
+            uncheckedColor = resolveColorAttribute(R.attr.colorError)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,11 +98,26 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         injectComponent()
 
+        consentState = RegistrationConsentState.fromFeatureSnapshot(
+            featuresInteractor.isAuthMarketingAgreementEnabledCached()
+        )
+
         initTitle()
 
-        termsPrivacyRegisterTextView.movementMethod = LinkMovementMethod.getInstance()
-        termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
-        stripUnderlinesFromLinks(termsPrivacyRegisterTextView)
+        requiredConsentText.movementMethod = LinkMovementMethod.getInstance()
+        requiredConsentText.text = textResolver.fromHtml(consentRequiredMessage)
+        stripUnderlinesFromLinks(requiredConsentText)
+
+        requiredConsentCheckBox.setOnCheckedChangeListener { _, _ ->
+            clearRequiredConsentError()
+        }
+        clearRequiredConsentError()
+
+        if (consentState.isMarketingVisible) {
+            marketingConsentRow.isVisible = true
+            marketingHelperText.isVisible = true
+            marketingConsentCheckBox.isChecked = consentState.isMarketingChecked
+        }
 
         signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
 
@@ -104,6 +143,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
             override fun afterTextChanged(s: Editable?) {
                 registrationPresenter.onFormChanged()
                 setSignUpButtonState()
+                clearRequiredConsentError()
             }
         }
 
@@ -203,14 +243,67 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
         var isOk = true
 
         if (!ValidatorUtil.isPasswordValid(password)) {
-            showError(passwordTooShortMessage) // todo
+            showError(passwordTooShortMessage)
+            isOk = false
+        }
+
+        val currentState = getCurrentConsentState()
+
+        val consentResult = RegistrationConsentMapper.validate(currentState)
+        if (consentResult is RegistrationConsentResult.RequiredConsentMissing) {
+            showRequiredConsentError(showErrorText = isOk)
             isOk = false
         }
 
         if (isOk) {
-            registrationPresenter.submit(RegistrationCredentials(firstName, lastName, email, password))
+            val subscribedForMarketing =
+                RegistrationConsentMapper.mapSubscribedForMarketing(currentState)
+            registrationPresenter.submit(
+                RegistrationCredentials(
+                    firstName,
+                    lastName,
+                    email,
+                    password,
+                    subscribedForMarketing
+                )
+            )
         }
     }
+
+    private fun getCurrentConsentState(): RegistrationConsentState =
+        RegistrationConsentState(
+            isRequiredConsentGranted = requiredConsentCheckBox.isChecked,
+            isMarketingVisible = marketingConsentRow.isVisible,
+            isMarketingChecked = marketingConsentCheckBox.isChecked
+        )
+
+    private fun showRequiredConsentError(showErrorText: Boolean = false) {
+        consentErrorText.isVisible = showErrorText
+        CompoundButtonCompat.setButtonTintList(
+            requiredConsentCheckBox,
+            requiredConsentErrorTint
+        )
+    }
+
+    private fun clearRequiredConsentError() {
+        consentErrorText.isVisible = false
+        CompoundButtonCompat.setButtonTintList(
+            requiredConsentCheckBox,
+            requiredConsentDefaultTint
+        )
+    }
+
+    private fun createRequiredConsentTint(checkedColor: Int, uncheckedColor: Int): ColorStateList =
+        ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked),
+                intArrayOf(-android.R.attr.state_checked)
+            ),
+            intArrayOf(
+                checkedColor,
+                uncheckedColor
+            )
+        )
 
     override fun setState(state: RegistrationView.State) {
         if (state is RegistrationView.State.Loading) {

@@ -92,6 +92,12 @@
         the points.
     </string>
     <string name="password_too_short">Password must be a minimum of 6 characters.</string>
+    <string name="registration_consent_required"><![CDATA[I have read and I agree to the <a href="https://welcome.stepik.org/ru/terms">terms of use</a>, the <a href="https://welcome.stepik.org/ru/privacy">privacy policy</a> and authorize the processing of my personal data]]></string>
+    <string name="registration_consent_marketing">Send me news, helpful recommendations, and special offers</string>
+    <string name="registration_consent_marketing_helper">Max 2 emails per week. Unsubscribe anytime</string>
+    <string name="registration_consent_required_error">Please agree to the terms to continue</string>
+    <string name="social_auth_consent_title">Review and Accept Terms</string>
+    <string name="social_auth_consent_continue">Continue</string>
     <string name="send">Send</string>
     <string name="email_sent">We have sent you an e-mail.</string>
     <string name="email_wrong">The e-mail address is not assigned to any user account.</string>
@@ -325,7 +331,7 @@
     </string>
     <string name="streak_updated_timezone">Streaks are updated at %s</string>
     <string name="terms_message_register">
-        <![CDATA[By signing up, you agree to our <a href="https://stepik.org/page/terms/?from_mobile_app=true">Terms</a> and <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
+        <![CDATA[By signing up, you agree to our <a href="https://welcome.stepik.org/ru/terms/?from_mobile_app=true">Terms</a> and <a href="https://welcome.stepik.org/ru/privacy/?from_mobile_app=true">Privacy Policy</a>]]></string>
     <string name="about_app_title">About</string>
     <string name="terms_of_service_title">Terms of Service</string>
     <string name="privacy_policy_title">Privacy Policy</string>
@@ -968,6 +974,8 @@
 
     <string name="profile_external_links_title">External links</string>
     <string name="profile_notifcation_title">Notifications</string>
+    <string name="profile_marketing_notifications_switch">Receive marketing emails</string>
+    <string name="profile_marketing_notifications_update_error">Could not update marketing notifications</string>
     <string name="profile_settings_menu_item">Settings</string>
 
     <string name="profile_courses_title">Courses</string>
@@ -1235,6 +1243,24 @@
 
     <string name="debug_remote_and_local_flags_title" translatable="false">Remote and Local Flags</string>
     <string name="debug_ab_group_subtitle" translatable="false">A/B Groups</string>
+    <string name="debug_backend_features_subtitle" translatable="false">Backend features</string>
+    <string name="debug_backend_features_hint" translatable="false">Changes affect newly opened screens. Reopen auth after applying.</string>
+    <string name="debug_backend_features_refresh" translatable="false">Refresh from server</string>
+    <string name="debug_backend_features_clear" translatable="false">Clear overrides</string>
+    <string name="debug_backend_features_choose_auth" translatable="false">AuthMarketingAgreement override</string>
+    <string name="debug_backend_features_auth_server" translatable="false">Server</string>
+    <string name="debug_backend_features_auth_force_enabled" translatable="false">Force enabled</string>
+    <string name="debug_backend_features_auth_force_disabled" translatable="false">Force disabled</string>
+    <string name="debug_backend_features_rubricator_title" translatable="false">Rubricator</string>
+    <string name="debug_backend_features_auth_title" translatable="false">AuthMarketingAgreement</string>
+    <string name="debug_backend_features_override" translatable="false">Override: %s</string>
+    <string name="debug_backend_features_server_value" translatable="false">Server: %s</string>
+    <string name="debug_backend_features_active_value" translatable="false">Active cache: %s</string>
+    <string name="debug_backend_features_error" translatable="false">Feature fetch error: %s</string>
+    <string name="debug_backend_features_choose_rubricator" translatable="false">Rubricator override</string>
+    <string name="debug_backend_features_rubricator_server" translatable="false">Server cacheFile</string>
+    <string name="debug_backend_features_rubricator_custom" translatable="false">Custom cacheFile</string>
+    <string name="debug_backend_features_rubricator_custom_hint" translatable="false">cacheFile</string>
     <string name="debug_iap_purchase_title" translatable="false">In App Purchases</string>
     <string name="debug_purchases_subtitle" translatable="false">Purchases</string>
 

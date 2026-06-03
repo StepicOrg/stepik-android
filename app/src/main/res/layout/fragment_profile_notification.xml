@@ -28,6 +28,18 @@
 
     <include layout="@layout/view_notification_interval_chooser"/>
 
+    <org.stepic.droid.ui.custom.BetterSwitch
+        android:id="@+id/marketingNotificationSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceBody1"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:switchPadding="@dimen/profile_block_vertical_margin"
+        android:text="@string/profile_marketing_notifications_switch"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

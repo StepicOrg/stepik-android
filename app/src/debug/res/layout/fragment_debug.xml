@@ -126,6 +126,17 @@
                     android:paddingBottom="8dp"
                     android:text="@string/debug_ab_group_subtitle" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/debugBackendFeatures"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/debug_backend_features_subtitle" />
+
                 <include layout="@layout/view_divider_vertical" />
 
                 <androidx.appcompat.widget.AppCompatTextView
