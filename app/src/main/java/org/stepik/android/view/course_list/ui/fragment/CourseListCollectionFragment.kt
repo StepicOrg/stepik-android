@@ -6,16 +6,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.empty_search.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_course_list.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentCourseListBinding
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.setTitleToCenteredToolbar
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
 import org.stepik.android.domain.last_step.model.LastStep
@@ -64,6 +63,8 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
 
+    private val courseListBinding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListCollectionPresenter by viewModels { viewModelFactory }
 
@@ -80,7 +81,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
         initCenteredToolbar(R.string.catalog_title, true)
 
         courseListCollectionHeaderDecoration = CourseListCollectionHeaderDecoration()
-        with(courseListCoursesRecycler) {
+        with(courseListBinding.courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             itemAnimator = null
             addItemDecoration(courseListCollectionHeaderDecoration)
@@ -92,16 +93,16 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             enforceSingleScrollDirection()
         }
 
-        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
+        courseListBinding.courseListCoursesEmpty.goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListBinding.courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
+        courseListBinding.courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener { courseListPresenter.fetchCourses(courseCollectionId = courseCollectionId, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListBinding.courseListCoursesEmpty.root)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListBinding.courseListCoursesLoadingErrorVertical.root)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -110,8 +111,8 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListSwipeRefresh = courseListSwipeRefresh,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListSwipeRefresh = courseListBinding.courseListSwipeRefresh,
+            courseItemsRecyclerView = courseListBinding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter
@@ -128,7 +129,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             courseCountMapper = courseCountMapper,
             isVerticalCourseCollection = true
         )
-        courseListCoursesRecycler.setPadding(0,
+        courseListBinding.courseListCoursesRecycler.setPadding(0,
             resources.getDimensionPixelOffset(R.dimen.vertical_course_collection_padding),
             0,
             resources.getDimensionPixelOffset(R.dimen.vertical_course_collection_padding)
@@ -153,7 +154,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
                 courseListCollectionHeaderDecoration.collectionDescriptionColors = CollectionDescriptionColors.ofCollection(state.courseCollection)
                 courseListCollectionHeaderDecoration.headerText = state.courseCollection.description.takeIf { it.isNotEmpty() }
 
-                centeredToolbarTitle.text = state.courseCollection.title
+                setTitleToCenteredToolbar(state.courseCollection.title)
                 courseListViewDelegate.setState(state.courseListViewState)
             }
             is CourseListCollectionView.State.NetworkError -> {

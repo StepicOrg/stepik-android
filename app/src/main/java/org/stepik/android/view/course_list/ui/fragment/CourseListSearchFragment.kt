@@ -12,19 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.empty_search.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_course_list.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
-import kotlinx.android.synthetic.main.view_search_toolbar.backIcon
-import kotlinx.android.synthetic.main.view_search_toolbar.filterIcon
-import kotlinx.android.synthetic.main.view_search_toolbar.searchViewToolbar
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.appbar.MaterialToolbar
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
+import org.stepic.droid.databinding.FragmentCourseListBinding
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -74,6 +70,10 @@ class CourseListSearchFragment :
 
     private var menuDrawableRes: Int = R.drawable.ic_filter
     private lateinit var searchIcon: ImageView
+    private lateinit var centeredToolbar: MaterialToolbar
+    private lateinit var searchViewToolbar: AutoCompleteSearchView
+    private lateinit var backIcon: ImageView
+    private lateinit var filterIcon: ImageView
 
     private var query by argument<String>()
     private var filterQuery by argument<CourseListFilterQuery>()
@@ -102,6 +102,8 @@ class CourseListSearchFragment :
     @Inject
     lateinit var searchSuggestionsPresenter: SearchSuggestionsPresenter
 
+    private val courseListBinding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
 
@@ -113,12 +115,17 @@ class CourseListSearchFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        centeredToolbar = view.findViewById(R.id.centeredToolbar)
+        searchViewToolbar = view.findViewById(R.id.searchViewToolbar)
+        backIcon = view.findViewById(R.id.backIcon)
+        filterIcon = view.findViewById(R.id.filterIcon)
+
         initCenteredToolbar(query, true)
 
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
 
-        with(courseListCoursesRecycler) {
+        with(courseListBinding.courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
@@ -127,7 +134,7 @@ class CourseListSearchFragment :
             }
         }
 
-        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListBinding.courseListCoursesEmpty.goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
 
         val searchResultQuery = SearchResultQuery(
             page = 1,
@@ -136,13 +143,13 @@ class CourseListSearchFragment :
             filterQuery = filterQuery,
             remoteQueryParams = searchResultRemoteQueryParamsMapper.buildRemoteQueryParams()
         )
-        courseListSwipeRefresh.setOnRefreshListener {
+        courseListBinding.courseListSwipeRefresh.setOnRefreshListener {
             courseListPresenter.fetchCourses(
                 searchResultQuery,
                 forceUpdate = true
             )
         }
-        tryAgain.setOnClickListener {
+        courseListBinding.courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(
                 searchResultQuery,
                 forceUpdate = true
@@ -151,10 +158,10 @@ class CourseListSearchFragment :
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListBinding.courseListCoursesEmpty.root)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListBinding.courseListCoursesLoadingErrorVertical.root)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -163,8 +170,8 @@ class CourseListSearchFragment :
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListSwipeRefresh = courseListSwipeRefresh,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListSwipeRefresh = courseListBinding.courseListSwipeRefresh,
+            courseItemsRecyclerView = courseListBinding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter
@@ -208,7 +215,7 @@ class CourseListSearchFragment :
 
     private fun setupSearchView(searchView: AutoCompleteSearchView) {
         searchView.setSearchable(requireActivity())
-        searchView.initSuggestions(rootView)
+        searchView.initSuggestions(courseListBinding.rootView)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
