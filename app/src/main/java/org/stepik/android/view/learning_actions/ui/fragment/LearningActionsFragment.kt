@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_learning_actions.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentLearningActionsBinding
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.presentation.user_reviews.UserReviewsFeature
 import org.stepik.android.presentation.user_reviews.UserReviewsViewModel
@@ -26,6 +27,7 @@ import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class LearningActionsFragment : Fragment() {
+    private val learningActionsBinding: FragmentLearningActionsBinding by viewBinding(FragmentLearningActionsBinding::bind)
 
     companion object {
         private const val INDEX_USER_REVIEWS = 0
@@ -100,7 +102,7 @@ class LearningActionsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         learningActionsItemAdapter += WishlistActionAdapterDelegate { screenManager.showWishlist(requireContext()) }
         learningActionsItemAdapter += UserReviewsActionAdapterDelegate { screenManager.showUserReviews(requireContext()) }
-        with(learningActionsRecycler) {
+        with(learningActionsBinding.learningActionsRecycler) {
             adapter = learningActionsItemAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             itemAnimator = null
