@@ -107,8 +107,8 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
                         lessonData.lesson.isTeacher,
                         stepWrapper.step.actions?.doReview != null
                     ) { openStepInWeb(stepWrapper.step) },
-                stepQuizActionButton = view.findViewById(R.id.stepQuizAction),
-                stepRetryButton = view.findViewById(R.id.stepQuizRetry),
+                stepQuizActionButton = stepQuizBinding.stepQuizActionContainer.stepQuizAction,
+                stepRetryButton = stepQuizBinding.stepQuizActionContainer.stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizBinding.stepQuizDiscountingPolicy,
                 stepQuizReviewTeacherMessage = stepQuizBinding.stepQuizReviewTeacherMessage,
                 onNewMessage = viewModel::onNewMessage
