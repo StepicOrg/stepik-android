@@ -1,9 +1,9 @@
 package org.stepik.android.view.course_list.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
-import org.stepic.droid.databinding.ItemCourseListBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
@@ -38,7 +38,7 @@ class CourseListViewDelegate(
     itemAdapterDelegateType: ItemAdapterDelegateType = ItemAdapterDelegateType.STANDARD // TODO Hacky way
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
-    private val courseListCounter = courseListTitleContainer?.let { ItemCourseListBinding.bind(it).containerCarouselCount }
+    private val courseListCounter = courseListTitleContainer?.findViewById<TextView>(R.id.containerCarouselCount)
     private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
     private val courseItemsSkeleton: List<CourseListItem>
