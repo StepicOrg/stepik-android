@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -16,11 +15,12 @@ import com.jakewharton.rxrelay2.BehaviorRelay
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.FragmentStepQuizReviewTeacherBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.databinding.FragmentStepQuizReviewTeacherBinding
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
@@ -104,31 +104,30 @@ class StepQuizReviewTeacherFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_step_quiz_review_teacher, container, false)
-        val quizContainer = view.findViewById<ConstraintLayout>(R.id.stepQuizReviewTeacherQuiz)
+        val viewBinding = FragmentStepQuizReviewTeacherBinding.inflate(inflater, container, false)
+        val stepQuizBinding = viewBinding.stepQuizReviewTeacherQuiz
+        val quizContainer = stepQuizBinding.root
         val quizLayoutRes = stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name)
         quizLayout = inflater.inflate(quizLayoutRes, quizContainer, false)
         quizContainer.addView(quizLayout)
-        realignQuizLayout(quizContainer, quizLayout)
-        return view
+        realignQuizLayout(stepQuizBinding, quizLayout)
+        return viewBinding.root
     }
 
     /**
      * Align quiz container as vertical linear layout for smooth collapsing animation
      */
-    private fun realignQuizLayout(quizContainer: ConstraintLayout, quizLayout: View) {
-        val feedbackBlocks = quizContainer.findViewById<View>(R.id.stepQuizFeedbackBlocks)
-
+    private fun realignQuizLayout(stepQuizBinding: FragmentStepQuizBinding, quizLayout: View) {
         quizLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToTop = ConstraintLayout.LayoutParams.UNSET
         }
-        feedbackBlocks.updateLayoutParams<ConstraintLayout.LayoutParams> {
+        stepQuizBinding.stepQuizFeedbackBlocks.root.updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToTop = ConstraintLayout.LayoutParams.UNSET
             topToBottom = quizLayout.id
             topMargin = 16.toPx()
         }
-        quizContainer.findViewById<View>(R.id.stepQuizActionContainer).updateLayoutParams<ConstraintLayout.LayoutParams> {
-            topToBottom = feedbackBlocks.id
+        stepQuizBinding.stepQuizActionContainer.root.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            topToBottom = stepQuizBinding.stepQuizFeedbackBlocks.root.id
             topMargin = 16.toPx()
             bottomMargin = 16.toPx()
         }
@@ -154,9 +153,9 @@ class StepQuizReviewTeacherFragment :
             binding.stepQuizReviewTeacherSubmissions
         )
 
-        val stepQuizView = binding.stepQuizReviewTeacherQuiz.root
+        val stepQuizBinding = binding.stepQuizReviewTeacherQuiz
         quizViewStateDelegate = stepQuizViewStateDelegateFactory
-            .create(stepQuizView, quizLayout)
+            .create(stepQuizBinding.root, quizLayout)
 
         val blockName = stepWrapper.step.block?.name
 
@@ -169,27 +168,27 @@ class StepQuizReviewTeacherFragment :
             }
         }
 
-        val stepQuizReviewTeacherMessage = stepQuizView.findViewById<View>(R.id.stepQuizReviewTeacherMessage)
-        stepQuizReviewTeacherMessage.isVisible = false
+        stepQuizBinding.stepQuizReviewTeacherMessage.isVisible = false
 
-        val stepQuizFeedbackBlocks = stepQuizView.findViewById<View>(R.id.stepQuizFeedbackBlocks)
         val stepQuizBlockDelegate =
-            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, isTeacher = false, hasReview = false) {}
-
-        val stepQuizActionContainer = stepQuizView.findViewById<View>(R.id.stepQuizActionContainer)
-        val stepQuizDiscountingPolicy = stepQuizView.findViewById<TextView>(R.id.stepQuizDiscountingPolicy)
+            StepQuizFeedbackBlocksDelegate(stepQuizBinding.stepQuizFeedbackBlocks.root, isTeacher = false, hasReview = false) {}
 
         quizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
-                stepQuizFormDelegate = stepQuizFormFactory.getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz"),
+                stepQuizFormDelegate =
+                    stepQuizFormFactory.getDelegateForStep(
+                        blockName,
+                        stepQuizBinding,
+                        quizLayout
+                    ) ?: throw IllegalStateException("Unsupported quiz"),
                 stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
 
-                stepQuizActionButton = stepQuizActionContainer.findViewById(R.id.stepQuizAction),
-                stepRetryButton = stepQuizActionContainer.findViewById(R.id.stepQuizRetry),
+                stepQuizActionButton = stepQuizBinding.stepQuizActionContainer.stepQuizAction,
+                stepRetryButton = stepQuizBinding.stepQuizActionContainer.stepQuizRetry,
 
-                stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
+                stepQuizDiscountingPolicy = stepQuizBinding.stepQuizDiscountingPolicy,
                 stepQuizReviewTeacherMessage = null,
                 onNewMessage = {
                     stepQuizReviewTeacherViewModel.onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(it))
@@ -204,8 +203,7 @@ class StepQuizReviewTeacherFragment :
                 .onNewMessage(StepQuizReviewTeacherFeature.Message.InitWithStep(stepWrapper, lessonData, instructionType, forceUpdate = true))
         }
 
-        val stepQuizNetworkError = stepQuizView.findViewById<View>(R.id.stepQuizNetworkError)
-        stepQuizNetworkError.findViewById<View>(R.id.tryAgain).setOnClickListener {
+        stepQuizBinding.stepQuizNetworkError.tryAgain.setOnClickListener {
             val quizMessage = StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)
             stepQuizReviewTeacherViewModel
                 .onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(quizMessage))
