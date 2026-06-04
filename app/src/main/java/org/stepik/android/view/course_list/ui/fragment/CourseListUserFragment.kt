@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.appbar.AppBarLayout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -60,7 +59,8 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
     private val courseListBinding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
 
-    private lateinit var appBarLayout: AppBarLayout
+    private val searchToolbar
+        inline get() = courseListBinding.courseListSearchToolbar
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
@@ -74,8 +74,7 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        appBarLayout = view.findViewById(R.id.appBarLayout)
-        appBarLayout.isVisible = false
+        searchToolbar.root.isVisible = false
         courseListBinding.courseListUserSkeleton.isVisible = true
 
         with(courseListBinding.courseListCoursesRecycler) {

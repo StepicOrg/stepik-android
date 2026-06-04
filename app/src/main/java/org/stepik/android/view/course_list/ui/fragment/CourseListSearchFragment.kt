@@ -13,7 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.appbar.MaterialToolbar
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -70,10 +69,6 @@ class CourseListSearchFragment :
 
     private var menuDrawableRes: Int = R.drawable.ic_filter
     private lateinit var searchIcon: ImageView
-    private lateinit var centeredToolbar: MaterialToolbar
-    private lateinit var searchViewToolbar: AutoCompleteSearchView
-    private lateinit var backIcon: ImageView
-    private lateinit var filterIcon: ImageView
 
     private var query by argument<String>()
     private var filterQuery by argument<CourseListFilterQuery>()
@@ -104,6 +99,21 @@ class CourseListSearchFragment :
 
     private val courseListBinding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
 
+    private val searchToolbar
+        inline get() = courseListBinding.courseListSearchToolbar
+
+    private val centeredToolbar
+        inline get() = searchToolbar.viewCenteredToolbar.centeredToolbar
+
+    private val searchViewToolbar
+        inline get() = searchToolbar.searchViewToolbar
+
+    private val backIcon
+        inline get() = searchToolbar.backIcon
+
+    private val filterIcon
+        inline get() = searchToolbar.filterIcon
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
 
@@ -114,11 +124,6 @@ class CourseListSearchFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        centeredToolbar = view.findViewById(R.id.centeredToolbar)
-        searchViewToolbar = view.findViewById(R.id.searchViewToolbar)
-        backIcon = view.findViewById(R.id.backIcon)
-        filterIcon = view.findViewById(R.id.filterIcon)
 
         initCenteredToolbar(query, true)
 
