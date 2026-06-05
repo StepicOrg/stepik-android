@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -88,8 +90,8 @@ class EditStepSourceDialogFragment :
         inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val centeredToolbar = view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.centeredToolbar)
-        val centeredToolbarTitle = view.findViewById<android.widget.TextView>(R.id.centeredToolbarTitle)
+        val centeredToolbar = view.findCenteredToolbar()
+        val centeredToolbarTitle = view.findCenteredToolbarTitle()
 
         centeredToolbarTitle.text = "$lessonTitle - ${stepWrapper.originalStep.position}"
         centeredToolbar.setNavigationOnClickListener { dismiss() }
@@ -118,7 +120,7 @@ class EditStepSourceDialogFragment :
         })
     }
 
-    private fun invalidateMenuState(centeredToolbar: com.google.android.material.appbar.MaterialToolbar = view!!.findViewById(R.id.centeredToolbar)) {
+    private fun invalidateMenuState(centeredToolbar: Toolbar = requireView().findCenteredToolbar()) {
         centeredToolbar.menu.findItem(R.id.comment_submit)?.isEnabled =
             binding.stepContentEditText.text?.toString() != stepWrapper.originalStep.block?.text
     }
@@ -199,6 +201,28 @@ class EditStepSourceDialogFragment :
 
         this.stepWrapper = stepWrapper
         binding.stepContentEditText.setText(stepWrapper.originalStep.block?.text)
+    }
+
+    private fun View.findCenteredToolbar(): Toolbar =
+        findViewById(R.id.centeredToolbar)
+            ?: findCenteredToolbarTitle().findParentToolbar()
+            ?: throw IllegalStateException("View with R.id.centeredToolbarTitle must be inside a Toolbar")
+
+    private fun View.findCenteredToolbarTitle(): TextView =
+        findViewById(R.id.centeredToolbarTitle)
+            ?: throw IllegalStateException("View with R.id.centeredToolbarTitle was not found")
+
+    // An <include android:id="..."> overrides the included toolbar root id at runtime,
+    // so centeredToolbarTitle can be the only stable id. Walk up from it to recover the Toolbar.
+    private fun View.findParentToolbar(): Toolbar? {
+        var currentParent = parent
+        while (currentParent is View) {
+            if (currentParent is Toolbar) {
+                return currentParent
+            }
+            currentParent = (currentParent as View).parent
+        }
+        return null
     }
 
     interface Callback {
