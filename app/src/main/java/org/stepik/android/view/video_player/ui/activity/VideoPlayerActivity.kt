@@ -24,9 +24,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.MotionEvent
-import android.widget.ImageView
 import android.widget.PopupWindow
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
@@ -46,6 +44,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.databinding.ActivityVideoPlayerBinding
+import org.stepic.droid.databinding.ExoPlayerControlViewBinding
 import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
@@ -116,16 +115,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private val binding: ActivityVideoPlayerBinding by viewBinding(ActivityVideoPlayerBinding::bind)
 
-    // Controller views inside PlayerView's internal layout
-    private val videoRateChooser by lazy { binding.playerView.findViewById<ImageView>(R.id.videoRateChooser) }
-    private val qualityView by lazy { binding.playerView.findViewById<TextView>(R.id.qualityView) }
-    private val autoplayProgress by lazy { binding.playerView.findViewById<me.zhanghai.android.materialprogressbar.MaterialProgressBar>(R.id.autoplayProgress) }
-    private val autoplaySwitch by lazy { binding.playerView.findViewById<org.stepic.droid.ui.custom.BetterSwitch>(R.id.autoplaySwitch) }
-    private val rewind by lazy { binding.playerView.findViewById<ImageView>(R.id.rewind) }
-    private val forward by lazy { binding.playerView.findViewById<ImageView>(R.id.forward) }
-    private val skipPrev by lazy { binding.playerView.findViewById<ImageView>(R.id.skip_prev) }
-    private val skipNext by lazy { binding.playerView.findViewById<ImageView>(R.id.skip_next) }
-    private val exoFullscreenIcon by lazy { binding.playerView.findViewById<ImageView>(R.id.exo_fullscreen_icon) }
+    private val controlsBinding: ExoPlayerControlViewBinding by viewBinding(
+        vbFactory = ExoPlayerControlViewBinding::bind,
+        viewBindingRootId = R.id.exo_player_controls_root
+    )
 
     private var isPlaying: Boolean = false
         set(value) {
@@ -282,18 +275,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
 
-        val closeButton = binding.playerView.findViewById<ImageView>(R.id.closeButton)
-        val exoPipIconContainer = binding.playerView.findViewById<View>(R.id.exo_pip_icon_container)
-        val exoFullscreenIconContainer = binding.playerView.findViewById<View>(R.id.exo_fullscreen_icon_container)
-        val centerControllerPanel = binding.playerView.findViewById<View>(R.id.center_controller_panel)
-        val autoplayControllerPanel = binding.playerView.findViewById<View>(R.id.autoplay_controller_panel)
-        val autoplayCancel = binding.playerView.findViewById<com.google.android.material.button.MaterialButton>(R.id.autoplayCancel)
-
-        closeButton.setOnClickListener {
+        controlsBinding.closeButton.setOnClickListener {
             finish()
         }
 
-        videoRateChooser.setOnClickListener {
+        controlsBinding.videoRateChooser.setOnClickListener {
             showChooseRateMenu(it)
         }
         binding.playerView.setOnTouchListener { v, event ->
@@ -304,15 +290,15 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             true
         }
 
-        qualityView.isVisible = false
+        controlsBinding.qualityView.isVisible = false
         binding.playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
 
-        exoPipIconContainer.isVisible = isSupportPIP()
-        exoPipIconContainer.setOnClickListener {
+        controlsBinding.exoPipIconContainer.isVisible = isSupportPIP()
+        controlsBinding.exoPipIconContainer.setOnClickListener {
             analytic.report(PIPActivated())
             enterPipMode()
         }
-        exoFullscreenIconContainer.setOnClickListener { changeVideoRotation() }
+        controlsBinding.exoFullscreenIconContainer.setOnClickListener { changeVideoRotation() }
 
         binding.playerView.setControllerVisibilityListener { visibility ->
             if (isSupportPIP() && isInPictureInPictureMode) {
@@ -326,39 +312,47 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
         }
 
-        autoplayControllerPanel.setOnClickListener {
+        controlsBinding.autoplayControllerPanel.setOnClickListener {
             move(StepNavigationDirection.NEXT)
         }
-        autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
-        autoplayCancel.setOnClickListener { videoPlayerPresenter.stayOnThisStep() }
-        autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
-            if (autoplaySwitch.isUserTriggered) {
+        controlsBinding.autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
+        controlsBinding.autoplayCancel.setOnClickListener { videoPlayerPresenter.stayOnThisStep() }
+        controlsBinding.autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (controlsBinding.autoplaySwitch.isUserTriggered) {
                 videoPlayerPresenter.setAutoplayEnabled(isChecked)
             }
         }
 
-        rewind.setOnClickListener {
+        controlsBinding.rewind.setOnClickListener {
             exoPlayer?.let { player -> player.seekTo(player.currentPosition - JUMP_TIME_MILLIS) }
         }
 
-        forward.setOnClickListener {
+        controlsBinding.forward.setOnClickListener {
             exoPlayer?.let { player -> player.seekTo(player.currentPosition + JUMP_TIME_MILLIS) }
         }
 
-        skipPrev.setOnClickListener {
+        controlsBinding.skipPrev.setOnClickListener {
             analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_PREVIOS))
             move(StepNavigationDirection.PREV)
         }
 
-        skipNext.setOnClickListener {
+        controlsBinding.skipNext.setOnClickListener {
             analytic.report(VideoPlayerControlClickedEvent(VideoPlayerControlClickedEvent.ACTION_NEXT))
             move(StepNavigationDirection.NEXT)
         }
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<VideoPlayerView.State.Idle>(centerControllerPanel)
-        viewStateDelegate.addState<VideoPlayerView.State.AutoplayPending>(autoplayControllerPanel, autoplayCancel, autoplaySwitch)
-        viewStateDelegate.addState<VideoPlayerView.State.AutoplayCancelled>(autoplayControllerPanel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.Idle>(controlsBinding.centerControllerPanel)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayPending>(
+            controlsBinding.autoplayControllerPanel,
+            controlsBinding.autoplayCancel,
+            controlsBinding.autoplaySwitch
+        )
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayCancelled>(
+            controlsBinding.autoplayControllerPanel,
+            controlsBinding.autoplayCancel,
+            controlsBinding.autoplaySwitch
+        )
     }
 
     private fun injectComponent() {
@@ -443,11 +437,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                             start()
                         }
                 }
-                autoplayProgress.progress = state.progress
+                controlsBinding.autoplayProgress.progress = state.progress
 
                 // without if switch will stuck in one position
-                if (!autoplaySwitch.isChecked) {
-                    autoplaySwitch.isChecked = true
+                if (!controlsBinding.autoplaySwitch.isChecked) {
+                    controlsBinding.autoplaySwitch.isChecked = true
                 }
             }
 
@@ -455,9 +449,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 animator?.cancel()
                 animator = null
 
-                autoplayProgress.progress = AUTOPLAY_PROGRESS_MAX
-                if (autoplaySwitch.isChecked) {
-                    autoplaySwitch.isChecked = false
+                controlsBinding.autoplayProgress.progress = AUTOPLAY_PROGRESS_MAX
+                if (controlsBinding.autoplaySwitch.isChecked) {
+                    controlsBinding.autoplaySwitch.isChecked = false
                 }
             }
 
@@ -469,11 +463,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     override fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {
         Util.startForegroundService(this, VideoPlayerForegroundService.createIntent(this, videoPlayerData))
 
-        videoRateChooser.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
+        controlsBinding.videoRateChooser.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
 
-        qualityView.isVisible = true
-        qualityView.text = getString(R.string.video_player_quality_icon, videoPlayerData.videoQuality)
-        qualityView.setOnClickListener {
+        controlsBinding.qualityView.isVisible = true
+        controlsBinding.qualityView.text = getString(R.string.video_player_quality_icon, videoPlayerData.videoQuality)
+        controlsBinding.qualityView.setOnClickListener {
             val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
             val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
             val nowPlaying = videoPlayerData.videoUrl
@@ -511,7 +505,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 R.drawable.ic_fullscreen
             }
 
-        exoFullscreenIcon.setImageResource(fullScreenIconRes)
+        controlsBinding.exoFullscreenIcon.setImageResource(fullScreenIconRes)
     }
 
     override fun showPlayInBackgroundPopup() {
@@ -654,16 +648,16 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         val (rewindMargin, skipMargin) =
             resources.getDimensionPixelOffset(R.dimen.video_player_rewind_margin) to resources.getDimensionPixelOffset(R.dimen.video_player_skip_margin)
 
-        skipPrev.layoutParams = (skipPrev.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        controlsBinding.skipPrev.layoutParams = (controlsBinding.skipPrev.layoutParams as ViewGroup.MarginLayoutParams).apply {
             rightMargin = skipMargin
         }
-        rewind.layoutParams = (rewind.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        controlsBinding.rewind.layoutParams = (controlsBinding.rewind.layoutParams as ViewGroup.MarginLayoutParams).apply {
             rightMargin = rewindMargin
         }
-        forward.layoutParams = (forward.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        controlsBinding.forward.layoutParams = (controlsBinding.forward.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = rewindMargin
         }
-        skipNext.layoutParams = (skipNext.layoutParams as ViewGroup.MarginLayoutParams).apply {
+        controlsBinding.skipNext.layoutParams = (controlsBinding.skipNext.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = skipMargin
         }
     }
