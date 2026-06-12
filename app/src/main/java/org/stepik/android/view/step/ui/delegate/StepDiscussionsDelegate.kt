@@ -1,22 +1,20 @@
 package org.stepik.android.view.step.ui.delegate
 
-import android.view.View
 import androidx.core.view.isVisible
-import org.stepic.droid.databinding.FragmentStepBinding
 import org.stepic.droid.databinding.ViewStepDiscussionBinding
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.view.comment.model.DiscussionThreadContainer
 
 class StepDiscussionsDelegate(
-    containerView: View,
+    discussionBinding: ViewStepDiscussionBinding,
+    stepSolutionsBinding: ViewStepDiscussionBinding,
     onDiscussionThreadClicked: (discussionThread: DiscussionThread) -> Unit
 ) {
-    private val stepBinding = FragmentStepBinding.bind(containerView)
 
     private val delegates =
         mapOf(
-            DiscussionThread.THREAD_DEFAULT to Delegate(stepBinding.stepDiscussions, onDiscussionThreadClicked),
-            DiscussionThread.THREAD_SOLUTIONS to Delegate(stepBinding.stepSolutions, onDiscussionThreadClicked)
+            DiscussionThread.THREAD_DEFAULT to Delegate(discussionBinding, onDiscussionThreadClicked),
+            DiscussionThread.THREAD_SOLUTIONS to Delegate(stepSolutionsBinding, onDiscussionThreadClicked)
         )
 
     fun setDiscussionThreads(discussionThreads: List<DiscussionThread>) {

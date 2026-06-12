@@ -141,14 +141,19 @@ class StepFragment : Fragment(R.layout.fragment_step), StepView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stepSolutionStatsDelegate = StepSolutionStatsDelegate(
-            stepBinding.stepSolutionStats.root,
+            stepBinding.stepSolutionStats,
             stepWrapper.step,
             stepWrapper.isStepCanHaveQuiz
         )
 
-        stepNavigationDelegate = StepNavigationDelegate(stepBinding.stepNavigation.root) { stepPresenter.onStepDirectionClicked(it) }
+        stepNavigationDelegate = StepNavigationDelegate(stepBinding.stepNavigation) {
+            stepPresenter.onStepDirectionClicked(it)
+        }
 
-        stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->
+        stepDiscussionsDelegate = StepDiscussionsDelegate(
+            stepBinding.stepDiscussions,
+            stepSolutionsBinding = stepBinding.stepSolutions
+        ) { discussionThread ->
             analytic.reportAmplitudeEvent(
                 AmplitudeAnalytic.Discussions.SCREEN_OPENED,
                 mapOf(AmplitudeAnalytic.Discussions.Params.SOURCE to AmplitudeAnalytic.Discussions.Values.DEFAULT)
