@@ -166,7 +166,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
 
         headerAnimationDelegate =
             ProfileHeaderAnimationDelegate(
-                profileBinding,
+                headerBinding = profileBinding.header,
+                appbar = profileBinding.appbar,
+                toolbarTitle = profileBinding.toolbarTitle,
+                toolbarSeparator = profileBinding.toolbarSeparator.root,
                 menuColorStart = ContextCompat.getColor(requireContext(), R.color.white),
                 menuColorEnd = colorControlNormal?.defaultColor ?: 0x0,
                 toolbarColor = ColorExtensions.colorSurfaceWithElevationOverlay(requireContext(), 4)
