@@ -44,12 +44,10 @@ maka-vlc/
 reports
 
 /docs/
-/docs/migrate-to-viewbinding/MIGRATION_TRACKER.md
 /.agents/
 /specs/
 
 # Ralph local config files
 /ralph*
-/.ralph/
 
 /.worktrees/
