@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../code_quality_tools/jacoco.gradle'
 //apply from: '../code_quality_tools/findbugs.gradle'
@@ -154,10 +154,6 @@ android {
         viewBinding true
     }
     namespace 'org.stepic.droid'
-}
-
-androidExtensions {
-    experimental = true
 }
 
 configurations {

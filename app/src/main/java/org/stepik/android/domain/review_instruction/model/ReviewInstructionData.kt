@@ -1,7 +1,7 @@
 package org.stepik.android.domain.review_instruction.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.domain.rubric.model.Rubric
 import ru.nobird.app.core.model.Identifiable
 

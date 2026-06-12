@@ -1,7 +1,7 @@
 package org.stepik.android.domain.step_quiz.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.DiscountingPolicyType
 

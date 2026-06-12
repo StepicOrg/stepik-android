@@ -1,8 +1,8 @@
 package org.stepik.android.domain.achievement.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.model.achievements.Achievement
 import org.stepik.android.model.achievements.AchievementProgress
 import ru.nobird.app.core.model.Identifiable

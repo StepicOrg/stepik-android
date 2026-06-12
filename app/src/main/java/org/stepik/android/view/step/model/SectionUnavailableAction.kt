@@ -1,7 +1,7 @@
 package org.stepik.android.view.step.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.view.course_content.model.RequiredSection

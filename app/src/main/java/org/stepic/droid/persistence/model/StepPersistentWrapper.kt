@@ -1,8 +1,8 @@
 package org.stepic.droid.persistence.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Progressable
 import org.stepik.android.model.Step
