@@ -10,16 +10,13 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.jakewharton.rxrelay2.BehaviorRelay
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz.*
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review_teacher.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review_teacher.view.*
-import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.FragmentStepQuizReviewTeacherBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
@@ -90,6 +87,8 @@ class StepQuizReviewTeacherFragment :
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewTeacherFeature.State>
     private lateinit var quizViewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
 
+    private val binding: FragmentStepQuizReviewTeacherBinding by viewBinding(FragmentStepQuizReviewTeacherBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -105,31 +104,30 @@ class StepQuizReviewTeacherFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val view = inflater.inflate(R.layout.fragment_step_quiz_review_teacher, container, false)
-        val quizContainer = view.stepQuizReviewTeacherQuiz as ConstraintLayout
+        val viewBinding = FragmentStepQuizReviewTeacherBinding.inflate(inflater, container, false)
+        val stepQuizBinding = viewBinding.stepQuizReviewTeacherQuiz
+        val quizContainer = stepQuizBinding.root
         val quizLayoutRes = stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name)
         quizLayout = inflater.inflate(quizLayoutRes, quizContainer, false)
         quizContainer.addView(quizLayout)
-        realignQuizLayout(quizContainer, quizLayout)
-        return view
+        realignQuizLayout(stepQuizBinding, quizLayout)
+        return viewBinding.root
     }
 
     /**
      * Align quiz container as vertical linear layout for smooth collapsing animation
      */
-    private fun realignQuizLayout(quizContainer: ConstraintLayout, quizLayout: View) {
-        val feedbackBlocks = quizContainer.stepQuizFeedbackBlocks
-
+    private fun realignQuizLayout(stepQuizBinding: FragmentStepQuizBinding, quizLayout: View) {
         quizLayout.updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToTop = ConstraintLayout.LayoutParams.UNSET
         }
-        feedbackBlocks.updateLayoutParams<ConstraintLayout.LayoutParams> {
+        stepQuizBinding.stepQuizFeedbackBlocks.root.updateLayoutParams<ConstraintLayout.LayoutParams> {
             bottomToTop = ConstraintLayout.LayoutParams.UNSET
             topToBottom = quizLayout.id
             topMargin = 16.toPx()
         }
-        quizContainer.stepQuizActionContainer.updateLayoutParams<ConstraintLayout.LayoutParams> {
-            topToBottom = feedbackBlocks.id
+        stepQuizBinding.stepQuizActionContainer.root.updateLayoutParams<ConstraintLayout.LayoutParams> {
+            topToBottom = stepQuizBinding.stepQuizFeedbackBlocks.root.id
             topMargin = 16.toPx()
             bottomMargin = 16.toPx()
         }
@@ -138,53 +136,59 @@ class StepQuizReviewTeacherFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizReviewTeacherFeature.State.Idle>(
-            stepQuizReviewTeacherQuizSkeleton,
-            stepQuizReviewTeacherButtonSkeleton
+            binding.stepQuizReviewTeacherQuizSkeleton,
+            binding.stepQuizReviewTeacherButtonSkeleton
         )
         viewStateDelegate.addState<StepQuizReviewTeacherFeature.State.Loading>(
-            stepQuizReviewTeacherQuizSkeleton,
-            stepQuizReviewTeacherButtonSkeleton
+            binding.stepQuizReviewTeacherQuizSkeleton,
+            binding.stepQuizReviewTeacherButtonSkeleton
         )
         viewStateDelegate.addState<StepQuizReviewTeacherFeature.State.Error>(
-            stepQuizReviewTeacherNetworkError
+            binding.stepQuizReviewTeacherNetworkError.root
         )
         viewStateDelegate.addState<StepQuizReviewTeacherFeature.State.Data>(
-            stepQuizReviewTeacherSpoiler,
-            stepQuizReviewTeacherContainer,
-            stepQuizReviewTeacherDescription,
-            stepQuizReviewTeacherSubmissions
+            binding.stepQuizReviewTeacherSpoiler,
+            binding.stepQuizReviewTeacherContainer,
+            binding.stepQuizReviewTeacherDescription,
+            binding.stepQuizReviewTeacherSubmissions
         )
 
+        val stepQuizBinding = binding.stepQuizReviewTeacherQuiz
         quizViewStateDelegate = stepQuizViewStateDelegateFactory
-            .create(stepQuizReviewTeacherQuiz, quizLayout)
+            .create(stepQuizBinding.root, quizLayout)
 
         val blockName = stepWrapper.step.block?.name
 
-        stepQuizReviewTeacherSpoiler.setOnClickListener {
-            stepQuizReviewTeacherArrow.changeState()
-            if (stepQuizReviewTeacherArrow.isExpanded()) {
-                stepQuizReviewTeacherContainer.expand()
+        binding.stepQuizReviewTeacherSpoiler.setOnClickListener {
+            binding.stepQuizReviewTeacherArrow.changeState()
+            if (binding.stepQuizReviewTeacherArrow.isExpanded()) {
+                binding.stepQuizReviewTeacherContainer.expand()
             } else {
-                stepQuizReviewTeacherContainer.collapse()
+                binding.stepQuizReviewTeacherContainer.collapse()
             }
         }
 
-        stepQuizReviewTeacherMessage.isVisible = false
+        stepQuizBinding.stepQuizReviewTeacherMessage.isVisible = false
 
         val stepQuizBlockDelegate =
-            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, isTeacher = false, hasReview = false) {}
+            StepQuizFeedbackBlocksDelegate(stepQuizBinding.stepQuizFeedbackBlocks.root, isTeacher = false, hasReview = false) {}
 
         quizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
-                stepQuizFormDelegate = stepQuizFormFactory.getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz"),
+                stepQuizFormDelegate =
+                    stepQuizFormFactory.getDelegateForStep(
+                        blockName,
+                        stepQuizBinding,
+                        quizLayout
+                    ) ?: throw IllegalStateException("Unsupported quiz"),
                 stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
 
-                stepQuizActionButton = stepQuizAction,
-                stepRetryButton = stepQuizRetry,
+                stepQuizActionButton = stepQuizBinding.stepQuizActionContainer.stepQuizAction,
+                stepRetryButton = stepQuizBinding.stepQuizActionContainer.stepQuizRetry,
 
-                stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
+                stepQuizDiscountingPolicy = stepQuizBinding.stepQuizDiscountingPolicy,
                 stepQuizReviewTeacherMessage = null,
                 onNewMessage = {
                     stepQuizReviewTeacherViewModel.onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(it))
@@ -194,18 +198,18 @@ class StepQuizReviewTeacherFragment :
                 }
             )
 
-        stepQuizReviewTeacherNetworkError.tryAgain.setOnClickListener {
+        binding.stepQuizReviewTeacherNetworkError.tryAgain.setOnClickListener {
             stepQuizReviewTeacherViewModel
                 .onNewMessage(StepQuizReviewTeacherFeature.Message.InitWithStep(stepWrapper, lessonData, instructionType, forceUpdate = true))
         }
 
-        stepQuizNetworkError.tryAgain.setOnClickListener {
+        stepQuizBinding.stepQuizNetworkError.tryAgain.setOnClickListener {
             val quizMessage = StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)
             stepQuizReviewTeacherViewModel
                 .onNewMessage(StepQuizReviewTeacherFeature.Message.StepQuizMessage(quizMessage))
         }
 
-        stepQuizReviewTeacherSubmissions.setOnClickListener {
+        binding.stepQuizReviewTeacherSubmissions.setOnClickListener {
             parentFragment.safeCast<StepMenuNavigator>()
                 ?.showSubmissions()
         }
@@ -214,16 +218,17 @@ class StepQuizReviewTeacherFragment :
     override fun render(state: StepQuizReviewTeacherFeature.State) {
         viewStateDelegate.switchState(state)
         if (state is StepQuizReviewTeacherFeature.State.Data) {
-            stepQuizReviewTeacherContainer.isVisible =
-                stepQuizReviewTeacherArrow.isExpanded()
+            binding.stepQuizReviewTeacherContainer.isVisible =
+                binding.stepQuizReviewTeacherArrow.isExpanded()
 
             quizViewStateDelegate.switchState(state.quizState)
+            val stepQuizReviewTeacherMessage = binding.stepQuizReviewTeacherQuiz.stepQuizReviewTeacherMessage
             stepQuizReviewTeacherMessage.isVisible = false
             if (state.quizState is StepQuizFeature.State.AttemptLoaded) {
                 quizDelegate.setState(state.quizState)
             }
 
-            stepQuizReviewTeacherDescription.text =
+            binding.stepQuizReviewTeacherDescription.text =
                 when (state.instructionType) {
                     ReviewStrategyType.INSTRUCTOR ->
                         if (state.availableReviewCount > 0) {

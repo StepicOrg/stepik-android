@@ -2,19 +2,21 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/error_no_connection_with_button" />
+        <include
+            android:id="@+id/submissionsLoadingError"
+            layout="@layout/error_no_connection_with_button" />
 
-        <include layout="@layout/empty_default" />
+        <include
+            android:id="@+id/submissionsEmpty"
+            layout="@layout/empty_default" />
 
         <!--Remove this old cover, when redesign will be finished-->
         <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
@@ -31,5 +33,7 @@
         </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
     </FrameLayout>
 
-    <include layout="@layout/view_submissions_search_toolbar"/>
+    <include
+        android:id="@+id/submissionsSearchToolbar"
+        layout="@layout/view_submissions_search_toolbar"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

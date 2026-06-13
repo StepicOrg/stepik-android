@@ -2,9 +2,9 @@ package org.stepik.android.view.debug.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_split_test_data.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemSplitTestDataBinding
 import org.stepik.android.domain.debug.model.SplitTestData
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -18,13 +18,15 @@ class SplitTestDataAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SplitTestData> =
         ViewHolder(createView(parent, R.layout.item_split_test_data))
 
-    private inner class ViewHolder(override val containerView: View) : DelegateViewHolder<SplitTestData>(containerView), LayoutContainer {
+    private inner class ViewHolder(containerView: View) : DelegateViewHolder<SplitTestData>(containerView) {
+        private val viewBinding: ItemSplitTestDataBinding by viewBinding { ItemSplitTestDataBinding.bind(itemView) }
+
         init {
             containerView.setOnClickListener { itemData?.let { onItemClick(it.splitTestName, it.splitTestValue, it.splitTestGroups) } }
         }
         override fun onBind(data: SplitTestData) {
-            splitTestGroupTitle.text = data.splitTestName
-            splitTestGroupValue.text = data.splitTestValue
+            viewBinding.splitTestGroupTitle.text = data.splitTestName
+            viewBinding.splitTestGroupValue.text = data.splitTestValue
         }
     }
 }

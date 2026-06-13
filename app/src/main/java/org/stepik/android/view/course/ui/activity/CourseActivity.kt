@@ -11,13 +11,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
-import kotlinx.android.synthetic.main.activity_course.*
-import kotlinx.android.synthetic.main.error_course_not_found.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.header_course.*
-import kotlinx.android.synthetic.main.header_course_placeholder.*
+import org.stepic.droid.databinding.ActivityCourseBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -150,6 +147,8 @@ class CourseActivity :
     private var viewPagerScrollState: Int =
         ViewPager.SCROLL_STATE_IDLE
 
+    private val courseBinding: ActivityCourseBinding by viewBinding(ActivityCourseBinding::bind)
+
     private var isInSwipeableViewState = false
 
     private var hasSavedInstanceState: Boolean = false
@@ -173,7 +172,7 @@ class CourseActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_course)
 
-        setSupportActionBar(courseToolbar)
+        setSupportActionBar(courseBinding.courseToolbar)
         val actionBar = this.supportActionBar
             ?: throw IllegalStateException("support action bar should be set")
 
@@ -195,7 +194,7 @@ class CourseActivity :
 
         if (course != null) {
             courseTitle = course.title.orEmpty()
-            courseToolbarTitle.text = course.title
+            courseBinding.courseToolbarTitle.text = course.title
         }
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
@@ -224,6 +223,7 @@ class CourseActivity :
             courseHeaderDelegateFactory
                 .create(
                     courseActivity = this,
+                    courseBinding = courseBinding,
                     coursePresenter = coursePresenter,
                     courseViewSource = courseViewSource,
                     isAuthorized = sharedPreferenceHelper.authResponseFromStore != null,
@@ -250,11 +250,11 @@ class CourseActivity :
 
         setDataToPresenter(courseViewSource)
 
-        courseSwipeRefresh.setOnRefreshListener {
+        courseBinding.courseSwipeRefresh.setOnRefreshListener {
             setDataToPresenter(courseViewSource, forceUpdate = true)
         }
-        tryAgain.setOnClickListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
-        goToCatalog.setOnClickListener {
+        courseBinding.errorNoConnection.tryAgain.setOnClickListener { setDataToPresenter(courseViewSource, forceUpdate = true) }
+        courseBinding.courseEmpty.goToCatalog.setOnClickListener {
             screenManager.showCatalog(this)
             finish()
         }
@@ -296,14 +296,14 @@ class CourseActivity :
         if (coursePurchaseWebviewSplitTest.currentGroup != CoursePurchaseWebviewSplitTest.Group.InAppWebview) {
             coursePresenter.handleCoursePurchasePressed()
         }
-        coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
+        courseBinding.coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
         if (!hasSavedInstanceState) {
             setCurrentTab()
         }
     }
 
     override fun onPause() {
-        coursePager.removeOnPageChangeListener(analyticsOnPageChangeListener)
+        courseBinding.coursePager.removeOnPageChangeListener(analyticsOnPageChangeListener)
         super.onPause()
     }
 
@@ -318,40 +318,40 @@ class CourseActivity :
             .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
             ?: intent.getCourseTabFromDeepLink()
 
-        coursePager.currentItem =
+        courseBinding.coursePager.currentItem =
             when (tab) {
                 CourseScreenTab.REVIEWS -> 1
                 CourseScreenTab.NEWS -> 2
                 CourseScreenTab.SYLLABUS -> 3
                 else -> 0
             }
-        if (coursePager.currentItem == 0) {
+        if (courseBinding.coursePager.currentItem == 0) {
             analyticsOnPageChangeListener.onPageSelected(0)
         }
     }
 
     private fun initViewPager(courseId: Long, courseTitle: String) {
         coursePagerAdapter = CoursePagerAdapter(courseId, courseTitle, this, supportFragmentManager)
-        coursePager.adapter = coursePagerAdapter
+        courseBinding.coursePager.adapter = coursePagerAdapter
         val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(scrollState: Int) {
                 viewPagerScrollState = scrollState
                 resolveSwipeRefreshState()
             }
         }
-        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
-        coursePager.addOnPageChangeListener(onPageChangeListener)
+        courseBinding.coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(courseBinding.coursePager, coursePagerAdapter))
+        courseBinding.coursePager.addOnPageChangeListener(onPageChangeListener)
 
-        courseTabs.setupWithViewPager(coursePager)
+        courseBinding.courseTabs.setupWithViewPager(courseBinding.coursePager)
     }
 
     private fun initViewStateDelegate() {
-        viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
-        viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
-        viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseBinding.courseEmpty.root)
+        viewStateDelegate.addState<CourseView.State.NetworkError>(courseBinding.errorNoConnection.root)
+        viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseBinding.headerCourse.root, courseBinding.courseTabs, courseBinding.coursePager)
+        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseBinding.headerCourse.root, courseBinding.courseTabs, courseBinding.coursePager)
+        viewStateDelegate.addState<CourseView.State.Loading>(courseBinding.headerCoursePlaceholder.root, courseBinding.courseTabs, courseBinding.coursePager)
+        viewStateDelegate.addState<CourseView.State.Idle>(courseBinding.headerCoursePlaceholder.root, courseBinding.courseTabs, courseBinding.coursePager)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -373,13 +373,13 @@ class CourseActivity :
     }
 
     private fun resolveSwipeRefreshState() {
-        courseSwipeRefresh.isEnabled =
+        courseBinding.courseSwipeRefresh.isEnabled =
             viewPagerScrollState == ViewPager.SCROLL_STATE_IDLE &&
                     isInSwipeableViewState
     }
 
     override fun setState(state: CourseView.State) {
-        courseSwipeRefresh.isRefreshing = false
+        courseBinding.courseSwipeRefresh.isRefreshing = false
         isInSwipeableViewState = (state is CourseView.State.CourseLoaded || state is CourseView.State.NetworkError)
         resolveSwipeRefreshState()
 
@@ -469,7 +469,7 @@ class CourseActivity :
                     R.string.course_purchase_billing_no_purchases_to_restore
             }
 
-        coursePager.snackbar(messageRes = errorMessage)
+        courseBinding.coursePager.snackbar(messageRes = errorMessage)
     }
 
     override fun shareCourse(course: Course) {
@@ -496,7 +496,7 @@ class CourseActivity :
                 UserCourseAction.REMOVE_ARCHIVE ->
                     R.string.course_action_archive_remove_success
             }
-        coursePager.snackbar(messageRes = successMessage)
+        courseBinding.coursePager.snackbar(messageRes = successMessage)
     }
 
     override fun showSaveUserCourseError(userCourseAction: UserCourseAction) {
@@ -515,7 +515,7 @@ class CourseActivity :
                 UserCourseAction.REMOVE_ARCHIVE ->
                     R.string.course_action_archive_remove_failure
             }
-        coursePager.snackbar(messageRes = errorMessage)
+        courseBinding.coursePager.snackbar(messageRes = errorMessage)
     }
 
     override fun showWishlistActionSuccess(wishlistAction: WishlistAction) {
@@ -526,7 +526,7 @@ class CourseActivity :
             } else {
                 R.string.wishlist_action_remove_success
             }
-        coursePager.snackbar(messageRes = successMessage)
+        courseBinding.coursePager.snackbar(messageRes = successMessage)
     }
 
     override fun showWishlistActionFailure(wishlistAction: WishlistAction) {
@@ -537,7 +537,7 @@ class CourseActivity :
             } else {
                 R.string.wishlist_action_remove_failure
             }
-        coursePager.snackbar(messageRes = errorMessage)
+        courseBinding.coursePager.snackbar(messageRes = errorMessage)
     }
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
@@ -560,7 +560,7 @@ class CourseActivity :
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(this, course)
         } else {
-            coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
+            courseBinding.coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
         }
     }
 

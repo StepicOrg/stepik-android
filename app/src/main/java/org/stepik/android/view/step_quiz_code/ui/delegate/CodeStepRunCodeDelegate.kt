@@ -11,8 +11,8 @@ import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isGone
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizCodeFullscreenRunCodeBinding
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -39,16 +39,18 @@ class CodeStepRunCodeDelegate(
         private const val RUN_CODE_TAB = 2
     }
 
-    private val runCodeScrollView = runCodeLayout.dataScrollView
-    private val runCodeInputDataTitle = runCodeLayout.inputDataTitle
-    private val runCodeInputSamplePicker = runCodeLayout.inputDataSamplePicker
-    private val runCodeInputDataSample = runCodeLayout.inputDataSample
-    private val runCodeOutputDataSeparator = runCodeLayout.outputSeparator
-    private val runCodeOutputDataTitle = runCodeLayout.outputDataTitle
-    private val runCodeOutputDataSample = runCodeLayout.outputDataSample
-    private val runCodeFeedback = runCodeLayout.runCodeFeedback
-    private val runCodeFab = runCodeLayout.runCodeFab
-    private val runCodeAction = runCodeLayout.runCodeAction
+    private val binding = LayoutStepQuizCodeFullscreenRunCodeBinding.bind(runCodeLayout)
+
+    private val runCodeScrollView = binding.dataScrollView
+    private val runCodeInputDataTitle = binding.inputDataTitle
+    private val runCodeInputSamplePicker = binding.inputDataSamplePicker
+    private val runCodeInputDataSample = binding.inputDataSample
+    private val runCodeOutputDataSeparator = binding.outputSeparator.root
+    private val runCodeOutputDataTitle = binding.outputDataTitle
+    private val runCodeOutputDataSample = binding.outputDataSample
+    private val runCodeFeedback = binding.runCodeFeedback
+    private val runCodeFab = binding.runCodeFab
+    private val runCodeAction = binding.runCodeAction
 
     var lang: String  = ""
         set(value) {

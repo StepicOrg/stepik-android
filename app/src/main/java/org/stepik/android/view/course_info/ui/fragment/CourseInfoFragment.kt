@@ -9,8 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_info.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentCourseInfoBinding
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.model.user.User
@@ -32,6 +33,7 @@ import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class CourseInfoFragment : Fragment(), CourseInfoView {
+    private val courseInfoBinding: FragmentCourseInfoBinding by viewBinding(FragmentCourseInfoBinding::bind)
     companion object {
         fun newInstance(courseId: Long): Fragment =
             CourseInfoFragment().apply {
@@ -87,10 +89,10 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         inflater.inflate(R.layout.fragment_course_info, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        courseInfoRecycler.layoutManager = LinearLayoutManager(context)
-        courseInfoRecycler.adapter = courseInfoAdapter
+        courseInfoBinding.courseInfoRecycler.layoutManager = LinearLayoutManager(context)
+        courseInfoBinding.courseInfoRecycler.adapter = courseInfoAdapter
 
-        courseInfoRecycler.addItemDecoration(
+        courseInfoBinding.courseInfoRecycler.addItemDecoration(
             CourseInfoDividerDecorator(
                 ContextCompat.getColor(requireContext(), R.color.color_divider),
                 CourseInfoDividerDecorator.SeparatorSize(resources.getDimensionPixelSize(R.dimen.comment_item_separator_small))
@@ -98,8 +100,8 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         )
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<CourseInfoView.State.Loading>(courseInfoLoadingPlaceholder)
-        viewStateDelegate.addState<CourseInfoView.State.CourseInfoLoaded>(courseInfoRecycler)
+        viewStateDelegate.addState<CourseInfoView.State.Loading>(courseInfoBinding.courseInfoLoadingPlaceholder)
+        viewStateDelegate.addState<CourseInfoView.State.CourseInfoLoaded>(courseInfoBinding.courseInfoRecycler)
     }
 
     override fun onStart() {

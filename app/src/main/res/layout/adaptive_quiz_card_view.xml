@@ -10,7 +10,7 @@
     android:layout_margin="8dp"
     android:layerType="hardware"
     android:id="@+id/container"
-    tools:viewBindingIgnore="true">
+>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

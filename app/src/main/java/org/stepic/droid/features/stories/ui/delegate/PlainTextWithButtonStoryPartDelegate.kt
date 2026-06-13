@@ -3,6 +3,7 @@ package org.stepic.droid.features.stories.ui.delegate
 import android.content.Context
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
@@ -11,10 +12,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.view_story_plain_text_with_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ViewStoryPlainTextWithButtonBinding
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepik.android.domain.story.model.StoryReaction
 import org.stepik.android.model.StoryTemplate
@@ -23,7 +24,6 @@ import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
-import ru.nobird.android.view.base.ui.extension.inflate
 
 class PlainTextWithButtonStoryPartDelegate(
     private val analytic: Analytic,
@@ -47,47 +47,45 @@ class PlainTextWithButtonStoryPartDelegate(
     override fun isForViewType(part: StoryPart): Boolean =
         part is PlainTextWithButtonStoryPart
 
-    override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
-        container.inflate(R.layout.view_story_plain_text_with_button, false).apply {
-            part as PlainTextWithButtonStoryPart
-            (context as? AppCompatActivity)?.currentFocus?.clearFocus()
+    override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View {
+        val binding = ViewStoryPlainTextWithButtonBinding.inflate(LayoutInflater.from(context), container, false)
+        part as PlainTextWithButtonStoryPart
+        (context as? AppCompatActivity)?.currentFocus?.clearFocus()
 
-            Glide.with(context)
-                .load(part.cover)
-                .placeholder(progressDrawable)
-                .into(this.storyCover)
+        Glide.with(context)
+            .load(part.cover)
+            .placeholder(progressDrawable)
+            .into(binding.storyCover)
 
-            val story = storyView.adapter?.story
-            if (story != null) {
-                analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
-                    AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                    AmplitudeAnalytic.Stories.Values.POSITION to position
-                ))
-            }
-
-            setUpText(this, part.text)
-            setUpButton(story, this, part.button, position)
-            setUpReactions(story, this, position)
+        val story = storyView.adapter?.story
+        if (story != null) {
+            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
+                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                AmplitudeAnalytic.Stories.Values.POSITION to position
+            ))
         }
 
-    private fun setUpText(view: View, text: StoryTemplate.Text?) {
-        if (text != null) {
-            val storyTitle = view.storyTitle
-            val storyText = view.storyText
+        setUpText(binding, part.text)
+        setUpButton(story, binding, part.button, position)
+        setUpReactions(story, binding, position)
+        return binding.root
+    }
 
+    private fun setUpText(binding: ViewStoryPlainTextWithButtonBinding, text: StoryTemplate.Text?) {
+        if (text != null) {
             @ColorInt val textColor = COLOR_MASK or text.textColor.toInt(16)
 
-            storyTitle.setTextColor(textColor)
-            storyText.setTextColor(textColor)
+            binding.storyTitle.setTextColor(textColor)
+            binding.storyText.setTextColor(textColor)
 
-            storyTitle.text = text.title
-            storyText.text = text.text
-            storyText.isVisible = text.text?.isNotBlank() ?: false
+            binding.storyTitle.text = text.title
+            binding.storyText.text = text.text
+            binding.storyText.isVisible = text.text?.isNotBlank() ?: false
         }
     }
 
-    private fun setUpButton(story: Story?, view: View, button: StoryTemplate.Button?, position: Int) {
-        val storyButton = view.storyButton
+    private fun setUpButton(story: Story?, binding: ViewStoryPlainTextWithButtonBinding, button: StoryTemplate.Button?, position: Int) {
+        val storyButton = binding.storyButton
         if (button != null) {
             ViewCompat.setBackgroundTintList(storyButton, ColorStateList.valueOf(COLOR_MASK or button.backgroundColor.toInt(16)))
             storyButton.setTextColor(COLOR_MASK or button.textColor.toInt(16))
@@ -111,18 +109,18 @@ class PlainTextWithButtonStoryPartDelegate(
         }
     }
 
-    fun setUpReactions(story: Story?, view: View, position: Int) {
+    fun setUpReactions(story: Story?, binding: ViewStoryPlainTextWithButtonBinding, position: Int) {
         val storyId = story?.id ?: 0
         val vote = storyReactions[storyId]
 
-        with(view.storyReactionLike) {
+        with(binding.storyReactionLike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
                 storyReactionListener.invoke(id, position, StoryReaction.LIKE)
             }
             isActivated = vote == StoryReaction.LIKE
         }
-        with(view.storyReactionDislike) {
+        with(binding.storyReactionDislike) {
             setOnClickListener {
                 val id = story?.id ?: return@setOnClickListener
                 storyReactionListener.invoke(id, position, StoryReaction.DISLIKE)

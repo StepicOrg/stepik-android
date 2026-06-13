@@ -1,9 +1,10 @@
 package org.stepik.android.view.step_quiz_sql.ui.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_code.stepQuizCodeContainer
-import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizSqlBinding
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -27,15 +28,23 @@ class SqlStepQuizFragment :
 
     private lateinit var sqlStepQuizFormDelegate: SqlStepQuizFormDelegate
 
-    override val quizLayoutRes: Int =
-        R.layout.layout_step_quiz_sql
+    private var _binding: LayoutStepQuizSqlBinding? = null
+    private val binding: LayoutStepQuizSqlBinding
+        get() = requireNotNull(_binding)
 
     override val quizViews: Array<View>
-        get() = arrayOf(stepQuizCodeContainer)
+        get() = arrayOf(binding.root)
 
-    override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
+    override fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
+        return LayoutStepQuizSqlBinding.inflate(layoutInflater, parent, false).also {
+            _binding = it
+        }.root
+    }
+
+    override fun createStepQuizFormDelegate(): StepQuizFormDelegate {
         sqlStepQuizFormDelegate = SqlStepQuizFormDelegate(
-            containerView = view,
+            stepQuizBinding = stepQuizBinding,
+            sqlStepQuizBinding = binding,
             onFullscreenClicked = ::onFullScreenClicked,
             onQuizChanged = ::syncReplyState
         )

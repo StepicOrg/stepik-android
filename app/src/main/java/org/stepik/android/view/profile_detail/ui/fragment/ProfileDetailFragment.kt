@@ -7,9 +7,10 @@ import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.fragment_profile_detail.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentProfileDetailBinding
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
 import org.stepik.android.domain.profile.model.ProfileData
@@ -31,6 +32,7 @@ class ProfileDetailFragment : Fragment(R.layout.fragment_profile_detail), Profil
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var userId by argument<Long>()
+    private val binding: FragmentProfileDetailBinding by viewBinding(FragmentProfileDetailBinding::bind)
 
     private val profileDetailPresenter: ProfileDetailPresenter by viewModels { viewModelFactory }
 
@@ -40,16 +42,16 @@ class ProfileDetailFragment : Fragment(R.layout.fragment_profile_detail), Profil
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        TextViewCompat.setLineHeight(profileDetails.textView, resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
+        TextViewCompat.setLineHeight(binding.profileDetails.textView, resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
 
-        profileDetailsTitleArrow.changeState()
-        profileDetailsTitle.setOnClickListener {
-            profileDetailsTitleArrow.changeState()
-            val isExpanded = profileDetailsTitleArrow.isExpanded()
+        binding.profileDetailsTitleArrow.changeState()
+        binding.profileDetailsTitle.setOnClickListener {
+            binding.profileDetailsTitleArrow.changeState()
+            val isExpanded = binding.profileDetailsTitleArrow.isExpanded()
             if (isExpanded) {
-                profileDetails.expand()
+                binding.profileDetails.expand()
             } else {
-                profileDetails.collapse()
+                binding.profileDetails.collapse()
             }
         }
 
@@ -78,7 +80,7 @@ class ProfileDetailFragment : Fragment(R.layout.fragment_profile_detail), Profil
         if (details.isNullOrBlank()) {
             view?.isVisible = false
         } else {
-            profileDetails.setText(details)
+            binding.profileDetails.setText(details)
             view?.isVisible = true
         }
     }

@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/exo_player_controls_root"
     android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true"
-    tools:viewBindingIgnore="true">
+    android:fitsSystemWindows="true">
 
     <View
         android:layout_width="match_parent"
@@ -312,4 +312,3 @@
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </RelativeLayout>
-

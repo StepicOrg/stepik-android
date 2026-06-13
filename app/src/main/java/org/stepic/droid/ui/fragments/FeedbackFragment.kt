@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.fragment_feedback.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.databinding.FragmentFeedbackBinding
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.presentation.feedback.FeedbackPresenter
@@ -27,6 +28,7 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         }
     }
 
+    private val feedbackBinding: FragmentFeedbackBinding by viewBinding(FragmentFeedbackBinding::bind)
     private val feedbackPresenter: FeedbackPresenter by viewModels { viewModelFactory }
 
     @Inject
@@ -67,14 +69,14 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
     }
 
     private fun initButtons() {
-        feedbackGoodButton.setOnClickListener {
+        feedbackBinding.feedbackGoodButton.setOnClickListener {
             if (config.isAppInStore) {
                 screenManager.showStoreWithApp(activity)
             } else {
                 setupTextFeedback()
             }
         }
-        feedbackBadButton.setOnClickListener { setupTextFeedback() }
+        feedbackBinding.feedbackBadButton.setOnClickListener { setupTextFeedback() }
     }
 
     private fun setupTextFeedback() {
@@ -85,8 +87,8 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
     }
 
     private fun destroyButtons() {
-        feedbackGoodButton.setOnClickListener(null)
-        feedbackBadButton.setOnClickListener(null)
+        feedbackBinding.feedbackGoodButton.setOnClickListener(null)
+        feedbackBinding.feedbackBadButton.setOnClickListener(null)
     }
 
 }

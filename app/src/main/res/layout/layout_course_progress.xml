@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:viewBindingIgnore="true">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/courseProgressTitle"

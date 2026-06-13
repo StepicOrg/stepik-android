@@ -8,11 +8,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_course_list.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.ItemCourseListBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -61,6 +62,8 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
     @Inject
     internal lateinit var tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
 
+    private val courseListBinding: ItemCourseListBinding by viewBinding(ItemCourseListBinding::bind)
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListQueryPresenter: CourseListQueryPresenter by viewModels { viewModelFactory }
     private lateinit var tableLayoutManager: TableLayoutManager
@@ -73,14 +76,14 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        containerCarouselCount.isVisible = false
-        containerTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
+        courseListBinding.containerCarouselCount.isVisible = false
+        courseListBinding.containerTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
 
         val rowCount = resources.getInteger(R.integer.course_list_rows)
         val columnsCount = resources.getInteger(R.integer.course_list_columns)
         tableLayoutManager = TableLayoutManager(requireContext(), columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
 
-        with(courseListCoursesRecycler) {
+        with(courseListBinding.courseListCoursesRecycler) {
             layoutManager = tableLayoutManager
             itemAnimator?.changeDuration = 0
             val snapHelper = LinearSnapHelper()
@@ -99,7 +102,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             filterQuery = CourseListFilterQuery()
         )
 
-        catalogBlockContainer.setOnClickListener {
+        courseListBinding.catalogBlockContainer.setOnClickListener {
             screenManager.showCoursesByQuery(
                 requireContext(),
                 resources.getString(R.string.course_list_popular_toolbar_title),
@@ -107,18 +110,18 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             )
         }
 
-        courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
-        courseListPlaceholderNoConnection.setOnClickListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
-        courseListPlaceholderNoConnection.setText(R.string.internet_problem)
+        courseListBinding.courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListBinding.courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
+        courseListBinding.courseListPlaceholderNoConnection.setOnClickListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
+        courseListBinding.courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
-        viewStateDelegate.addState<CourseListView.State.Idle>(catalogBlockContainer)
-        viewStateDelegate.addState<CourseListView.State.Loading>(catalogBlockContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(catalogBlockContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
+        viewStateDelegate.addState<CourseListView.State.Idle>(courseListBinding.catalogBlockContainer)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListBinding.catalogBlockContainer, courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListBinding.catalogBlockContainer, courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListBinding.courseListPlaceholderEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListBinding.courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -127,8 +130,8 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListTitleContainer = catalogBlockContainer,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListTitleContainer = courseListBinding.catalogBlockContainer,
+            courseItemsRecyclerView = courseListBinding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListQueryPresenter

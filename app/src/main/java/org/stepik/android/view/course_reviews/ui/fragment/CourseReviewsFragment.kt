@@ -13,11 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.empty_default.*
-import kotlinx.android.synthetic.main.empty_default.view.*
-import kotlinx.android.synthetic.main.error_no_connection.*
-import kotlinx.android.synthetic.main.fragment_course_reviews.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentCourseReviewsBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -41,6 +39,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {
+    private val courseReviewsBinding: FragmentCourseReviewsBinding by viewBinding(FragmentCourseReviewsBinding::bind)
     companion object {
         fun newInstance(courseId: Long, courseTitle: String): Fragment =
             CourseReviewsFragment().apply {
@@ -104,7 +103,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        with(courseReviewsRecycler) {
+        with(courseReviewsBinding.courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)
             adapter = courseReviewsAdapter
 
@@ -132,17 +131,17 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             })
         }
 
-        report_empty
+        courseReviewsBinding.reportEmpty
             .placeholderMessage
             .setText(R.string.course_reviews_empty)
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<CourseReviewsView.State.Idle>(courseReviewsPlaceholder)
-        viewStateDelegate.addState<CourseReviewsView.State.Loading>(courseReviewsPlaceholder)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviews>(courseReviewsRecycler)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsLoading>(courseReviewsRecycler)
-        viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
+        viewStateDelegate.addState<CourseReviewsView.State.Idle>(courseReviewsBinding.courseReviewsPlaceholder)
+        viewStateDelegate.addState<CourseReviewsView.State.Loading>(courseReviewsBinding.courseReviewsPlaceholder)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviews>(courseReviewsBinding.courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsLoading>(courseReviewsBinding.courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(courseReviewsBinding.reportProblem.root)
+        viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(courseReviewsBinding.reportEmpty.root)
     }
 
     override fun onStart() {

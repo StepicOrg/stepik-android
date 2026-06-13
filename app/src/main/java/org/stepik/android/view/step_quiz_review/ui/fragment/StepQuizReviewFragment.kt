@@ -8,16 +8,17 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.jakewharton.rxrelay2.BehaviorRelay
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentStepQuizReviewBinding
+import org.stepic.droid.databinding.FragmentStepQuizReviewInstructorBinding
+import org.stepic.droid.databinding.FragmentStepQuizReviewPeerBinding
+import org.stepic.droid.databinding.LayoutStepQuizReviewFooterBinding
+import org.stepic.droid.databinding.LayoutStepQuizReviewHeaderBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
@@ -34,7 +35,6 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewViewModel
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
-import org.stepik.android.view.step_quiz.ui.factory.StepQuizFormFactory
 import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
 import org.stepik.android.view.step_quiz_review.ui.factory.StepQuizFormReviewFactory
@@ -98,8 +98,14 @@ class StepQuizReviewFragment :
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewFeature.State>
 
     private lateinit var quizView: View
+    private lateinit var reviewContainerView: View
+    private lateinit var reviewHeaderBinding: LayoutStepQuizReviewHeaderBinding
+    private lateinit var reviewFooterBinding: LayoutStepQuizReviewFooterBinding
+    private lateinit var reviewStep5Link: View
+    private var reviewPeerBinding: FragmentStepQuizReviewPeerBinding? = null
 
-    private lateinit var stepQuizFormFactory: StepQuizFormFactory
+    private lateinit var stepQuizFormFactory: StepQuizFormReviewFactory
+    private val binding: FragmentStepQuizReviewBinding by viewBinding(FragmentStepQuizReviewBinding::bind)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,26 +137,44 @@ class StepQuizReviewFragment :
         // we don't pass [root] in order to clear margins
         quizView = inflater.inflate(stepQuizFormFactory.getLayoutResForStep(stepWrapper.step.block?.name), null)
 
-        inflater.inflate(layoutId, view)
-            .also {
-                it.reviewStep1Container.addView(quizView)
+        reviewContainerView = inflater.inflate(layoutId, view, false)
+        view.addView(reviewContainerView)
+
+        reviewHeaderBinding = LayoutStepQuizReviewHeaderBinding.bind(reviewContainerView)
+        reviewFooterBinding = LayoutStepQuizReviewFooterBinding.bind(reviewContainerView)
+        reviewPeerBinding = null
+        reviewStep5Link =
+            when (instructionType) {
+                ReviewStrategyType.PEER ->
+                    FragmentStepQuizReviewPeerBinding
+                        .bind(reviewContainerView)
+                        .also { reviewPeerBinding = it }
+                        .reviewStep5Link
+
+                ReviewStrategyType.INSTRUCTOR ->
+                    FragmentStepQuizReviewInstructorBinding
+                        .bind(reviewContainerView)
+                        .reviewStep5Link
             }
+
+        reviewHeaderBinding.reviewStep1Container.addView(quizView)
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<StepQuizReviewFeature.State.Idle>(stepQuizReviewLoading)
-        viewStateDelegate.addState<StepQuizReviewFeature.State.Loading>(stepQuizReviewLoading)
-        viewStateDelegate.addState<StepQuizReviewFeature.State.Error>(stepQuizReviewNetworkError)
-        viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionNotMade>(stepQuizReviewContainer)
-        viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionNotSelected>(stepQuizReviewContainer)
-        viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionSelected>(stepQuizReviewContainer)
-        viewStateDelegate.addState<StepQuizReviewFeature.State.Completed>(stepQuizReviewContainer)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.Idle>(binding.stepQuizReviewLoading)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.Loading>(binding.stepQuizReviewLoading)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.Error>(binding.stepQuizReviewNetworkError.root)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionNotMade>(reviewContainerView)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionNotSelected>(reviewContainerView)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.SubmissionSelected>(reviewContainerView)
+        viewStateDelegate.addState<StepQuizReviewFeature.State.Completed>(reviewContainerView)
 
-        stepQuizReviewNetworkError.tryAgain
-            .setOnClickListener { stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
+        binding.stepQuizReviewNetworkError.tryAgain.setOnClickListener {
+            stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
+        }
 
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
             override fun onSelectDifferentSubmissionClicked() {
@@ -190,25 +214,36 @@ class StepQuizReviewFragment :
         }
 
         val blockName = stepWrapper.step.block?.name
-        val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(quizFeedbackView, isTeacher = false, hasReview = false) {}
+        val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(reviewHeaderBinding.quizFeedbackView.root, isTeacher = false, hasReview = false) {}
+
         val quizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
-                stepQuizFormDelegate = stepQuizFormFactory.getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz"),
+                stepQuizFormDelegate =
+                    stepQuizFormFactory.getDelegateForStep(
+                        blockName,
+                        reviewHeaderBinding,
+                        quizView
+                    ) ?: throw IllegalStateException("Unsupported quiz"),
                 stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
 
-                stepQuizActionButton = reviewStep1ActionButton,
-                stepRetryButton = reviewStep1ActionRetry,
+                stepQuizActionButton = reviewHeaderBinding.reviewStep1ActionButton,
+                stepRetryButton = reviewHeaderBinding.reviewStep1ActionRetry,
 
-                stepQuizDiscountingPolicy = reviewStep1Discounting,
+                stepQuizDiscountingPolicy = reviewHeaderBinding.reviewStep1Discounting,
                 stepQuizReviewTeacherMessage = null,
                 onNewMessage = { stepQuizReviewViewModel.onNewMessage(StepQuizReviewFeature.Message.StepQuizMessage(it)) }
             )
 
         delegate =
             StepQuizReviewDelegate(
-                view, instructionType, actionListener,
+                reviewHeaderBinding,
+                reviewFooterBinding,
+                reviewStep5Link,
+                reviewPeerBinding,
+                instructionType,
+                actionListener,
                 blockName,
                 quizView,
                 quizDelegate,

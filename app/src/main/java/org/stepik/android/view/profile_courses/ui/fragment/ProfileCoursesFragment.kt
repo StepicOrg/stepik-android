@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.fragment_profile_courses.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentProfileCoursesBinding
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -62,6 +62,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
     internal lateinit var tableLayoutHorizontalSpanCountResolver: TableLayoutHorizontalSpanCountResolver
 
     private var userId by argument<Long>()
+    private val binding: FragmentProfileCoursesBinding by viewBinding(FragmentProfileCoursesBinding::bind)
 
     private val profileCoursesPresenter: ProfileCoursesPresenter by viewModels { viewModelFactory }
     private lateinit var courseContinueViewDelegate: CourseContinueViewDelegate
@@ -112,19 +113,19 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileCoursesView.State.Idle>()
-        viewStateDelegate.addState<ProfileCoursesView.State.Loading>(view, profileCoursesPlaceholder)
+        viewStateDelegate.addState<ProfileCoursesView.State.Loading>(view, binding.profileCoursesPlaceholder)
         viewStateDelegate.addState<ProfileCoursesView.State.Empty>()
-        viewStateDelegate.addState<ProfileCoursesView.State.Error>(view, profileCoursesLoadingError)
-        viewStateDelegate.addState<ProfileCoursesView.State.Content>(view, profileCoursesRecycler)
+        viewStateDelegate.addState<ProfileCoursesView.State.Error>(view, binding.profileCoursesLoadingError.root)
+        viewStateDelegate.addState<ProfileCoursesView.State.Content>(view, binding.profileCoursesRecycler)
 
         setDataToPresenter()
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        binding.profileCoursesLoadingError.tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
         val rowCount = resources.getInteger(R.integer.course_list_rows)
         val columnsCount = resources.getInteger(R.integer.course_list_columns)
         tableLayoutManager = TableLayoutManager(requireContext(), columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
 
-        with(profileCoursesRecycler) {
+        with(binding.profileCoursesRecycler) {
             layoutManager = tableLayoutManager
 
             adapter = coursesAdapter
@@ -155,7 +156,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         when (state) {
             is ProfileCoursesView.State.Content -> {
                 coursesAdapter.items = state.courseListDataItems
-                (profileCoursesRecycler.layoutManager as? GridLayoutManager)
+                (binding.profileCoursesRecycler.layoutManager as? GridLayoutManager)
                     ?.spanCount = min(resources.getInteger(R.integer.course_list_rows), state.courseListDataItems.size)
             }
             else -> Unit

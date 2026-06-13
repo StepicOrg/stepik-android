@@ -36,9 +36,11 @@ open class SettingsActivity : SmartLockActivityBase(), SettingsFragment.SignOutL
     }
 
     protected open fun setUpToolbar() {
-        initCenteredToolbar(R.string.settings_title,
+        initCenteredToolbar(
+            R.string.settings_title,
                 showHomeButton = true,
-                homeIndicator = closeIconDrawableRes)
+                homeIndicator = closeIconDrawableRes
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

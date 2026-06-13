@@ -2,13 +2,13 @@ package org.stepik.android.view.streak.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.View
+import android.view.LayoutInflater
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.header_streak_suggestion_dialog.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.HeaderStreakSuggestionDialogBinding
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -35,14 +35,14 @@ class StreakNotificationDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         App.component().inject(this)
 
-        val titleView =
-            View.inflate(context, R.layout.header_streak_suggestion_dialog, null)
-                .apply {
-                    headerTitle.text = title
-                }
+        val titleBinding = HeaderStreakSuggestionDialogBinding
+            .inflate(LayoutInflater.from(context))
+            .apply {
+                headerTitle.text = title
+            }
 
         return MaterialAlertDialogBuilder(requireContext())
-            .setCustomTitle(titleView)
+            .setCustomTitle(titleBinding.root)
             .setMessage(message)
             .setPositiveButton(R.string.ok) { _, _ ->
                 analytic.reportEvent(positiveEvent)

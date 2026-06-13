@@ -9,8 +9,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:gravity="center_vertical"
-    tools:background="@color/new_accent_color"
-    tools:viewBindingIgnore="true">
+    tools:background="@color/new_accent_color">
 
     <org.stepik.android.view.achievement.ui.view.VectorRatingBar
         android:id="@+id/courseRating"

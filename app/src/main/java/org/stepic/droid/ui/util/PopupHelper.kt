@@ -10,8 +10,8 @@ import android.widget.PopupWindow
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.core.widget.PopupWindowCompat
-import kotlinx.android.synthetic.main.popup_window.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.PopupWindowBinding
 
 object PopupHelper {
     enum class PopupTheme(
@@ -44,10 +44,11 @@ object PopupHelper {
         anchorView ?: return null
 
         val inflater = context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val popupView = inflater.inflate(R.layout.popup_window, null)
+        val binding = PopupWindowBinding.inflate(inflater)
+        val popupView = binding.root
 
-        val popupTextView = popupView.popupText
-        val popupArrowView = popupView.arrowView
+        val popupTextView = binding.popupText
+        val popupArrowView = binding.arrowView
 
         popupTextView.text = popupText
         popupTextView.setBackgroundResource(theme.backgroundRes)
@@ -57,7 +58,7 @@ object PopupHelper {
 
         if (withArrow) {
             popupView.viewTreeObserver.addOnGlobalLayoutListener {
-                popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
+                popupArrowView.x = calcArrowHorizontalOffset(anchorView, popupView, popupArrowView)
             }
         }
 

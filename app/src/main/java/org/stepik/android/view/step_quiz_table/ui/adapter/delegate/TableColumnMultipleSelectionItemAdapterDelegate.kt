@@ -2,8 +2,9 @@ package org.stepik.android.view.step_quiz_table.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_table_column_selection_checkbox.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemTableColumnSelectionCheckboxBinding
 import org.stepik.android.model.Cell
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -21,21 +22,19 @@ class TableColumnMultipleSelectionItemAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_table_column_selection_checkbox))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<Cell>(root) {
-        private val tableColumnCheckBox = root.tableColumnSelectionCheckBox
-        private val tableColumnText = root.tableColumnSelectionText
-        private val tableColumnTextProgress = root.tableColumnSelectionTextProgress
+        private val viewBinding: ItemTableColumnSelectionCheckboxBinding by viewBinding { ItemTableColumnSelectionCheckboxBinding.bind(root) }
 
         init {
             root.setOnClickListener {
                 onClick(itemData as Cell)
             }
-            tableColumnText.webViewClient = ProgressableWebViewClient(tableColumnTextProgress, tableColumnText.webView)
+            viewBinding.tableColumnSelectionText.webViewClient = ProgressableWebViewClient(viewBinding.tableColumnSelectionTextProgress, viewBinding.tableColumnSelectionText.webView)
         }
 
         override fun onBind(data: Cell) {
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            tableColumnCheckBox.isChecked = selectionHelper.isSelected(adapterPosition)
-            tableColumnText.setText(data.name)
+            viewBinding.tableColumnSelectionCheckBox.isChecked = selectionHelper.isSelected(adapterPosition)
+            viewBinding.tableColumnSelectionText.setText(data.name)
         }
     }
 }

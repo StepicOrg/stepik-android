@@ -18,9 +18,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.button.MaterialButton
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_course_complete.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
+import org.stepic.droid.databinding.BottomSheetDialogCourseCompleteBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -76,6 +76,8 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseCompleteFeature.State>
 
+    private val courseCompleteBinding: BottomSheetDialogCourseCompleteBinding by viewBinding(BottomSheetDialogCourseCompleteBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -96,7 +98,7 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         super.onViewCreated(view, savedInstanceState)
 
         analytic.report(FinishedStepsScreenOpenedAnalyticEvent(course))
-        courseCompleteFeedback.background = AppCompatResources
+        courseCompleteBinding.courseCompleteFeedback.background = AppCompatResources
             .getDrawable(requireContext(), R.drawable.bg_shape_rounded)
             ?.mutate()
             ?.let { DrawableCompat.wrap(it) }
@@ -106,22 +108,22 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
             }
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseCompleteFeature.State.Idle>()
-        viewStateDelegate.addState<CourseCompleteFeature.State.Loading>(courseCompleteProgressbar)
+        viewStateDelegate.addState<CourseCompleteFeature.State.Loading>(courseCompleteBinding.courseCompleteProgressbar)
         viewStateDelegate.addState<CourseCompleteFeature.State.Content>(
-            courseCompleteHeader,
-            courseCompleteTitle,
-            courseCompleteFeedback,
-            courseCompleteSubtitle,
-            viewCertificateAction,
-            shareResultAction,
-            courseCompleteDivider,
-            primaryAction,
-            secondaryAction
+            courseCompleteBinding.courseCompleteHeader,
+            courseCompleteBinding.courseCompleteTitle,
+            courseCompleteBinding.courseCompleteFeedback,
+            courseCompleteBinding.courseCompleteSubtitle,
+            courseCompleteBinding.viewCertificateAction,
+            courseCompleteBinding.shareResultAction,
+            courseCompleteBinding.courseCompleteDivider.root,
+            courseCompleteBinding.primaryAction,
+            courseCompleteBinding.secondaryAction
         )
-        viewStateDelegate.addState<CourseCompleteFeature.State.NetworkError>(courseCompleteNetworkError)
+        viewStateDelegate.addState<CourseCompleteFeature.State.NetworkError>(courseCompleteBinding.courseCompleteNetworkError.root)
         viewModel.onNewMessage(CourseCompleteFeature.Message.Init(course))
 
-        tryAgain.setOnClickListener { viewModel.onNewMessage(CourseCompleteFeature.Message.Init(course, forceUpdate = true)) }
+        courseCompleteBinding.courseCompleteNetworkError.tryAgain.setOnClickListener { viewModel.onNewMessage(CourseCompleteFeature.Message.Init(course, forceUpdate = true)) }
     }
 
     override fun onStart() {
@@ -548,15 +550,15 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
      * Setup functions for dialog view
      */
     private fun setupDialogView(courseCompleteInfo: CourseCompleteInfo, courseCompleteDialogViewInfo: CourseCompleteDialogViewInfo) {
-        courseCompleteLogo.setImageResource(courseCompleteDialogViewInfo.headerImage)
-        courseCompleteHeader.setBackgroundResource(courseCompleteDialogViewInfo.gradientRes)
-        courseCompleteTitle.text = courseCompleteDialogViewInfo.title
-        courseCompleteFeedback.text = courseCompleteDialogViewInfo.feedbackText
-        courseCompleteFeedback.isVisible = courseCompleteDialogViewInfo.feedbackText.isNotEmpty()
-        courseCompleteSubtitle.text = courseCompleteDialogViewInfo.subtitle
+        courseCompleteBinding.courseCompleteLogo.setImageResource(courseCompleteDialogViewInfo.headerImage)
+        courseCompleteBinding.courseCompleteHeader.setBackgroundResource(courseCompleteDialogViewInfo.gradientRes)
+        courseCompleteBinding.courseCompleteTitle.text = courseCompleteDialogViewInfo.title
+        courseCompleteBinding.courseCompleteFeedback.text = courseCompleteDialogViewInfo.feedbackText
+        courseCompleteBinding.courseCompleteFeedback.isVisible = courseCompleteDialogViewInfo.feedbackText.isNotEmpty()
+        courseCompleteBinding.courseCompleteSubtitle.text = courseCompleteDialogViewInfo.subtitle
 
-        viewCertificateAction.isVisible = courseCompleteDialogViewInfo.isViewCertificateVisible
-        shareResultAction.isVisible = courseCompleteDialogViewInfo.isShareVisible
+        courseCompleteBinding.viewCertificateAction.isVisible = courseCompleteDialogViewInfo.isViewCertificateVisible
+        courseCompleteBinding.shareResultAction.isVisible = courseCompleteDialogViewInfo.isShareVisible
 
         val score = courseCompleteInfo
             .courseProgress
@@ -567,13 +569,13 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         val cost = courseCompleteInfo.courseProgress.cost
         val completeRate = (score * 100 / cost) / 100f
 
-        viewCertificateAction.setOnClickListener {
+        courseCompleteBinding.viewCertificateAction.setOnClickListener {
             if (courseCompleteInfo.certificate == null) return@setOnClickListener
             analytic.report(FinishedStepsViewCertificatePressedAnalyticEvent(courseCompleteInfo.course, completeRate))
             screenManager.showPdfInBrowserByGoogleDocs(requireActivity(), courseCompleteInfo.certificate.url)
         }
 
-        shareResultAction.setOnClickListener {
+        courseCompleteBinding.shareResultAction.setOnClickListener {
             analytic.report(FinishedStepsSharePressedAnalyticEvent(courseCompleteInfo.course, completeRate))
             if (courseCompleteInfo.certificate != null) {
                 val message = getString(R.string.course_complete_share_result_with_certificate, courseCompleteInfo.course.title.toString())
@@ -585,32 +587,32 @@ class CourseCompleteBottomSheetDialogFragment : BottomSheetDialogFragment(),
         }
 
         if (courseCompleteDialogViewInfo.primaryActionStringRes != -1) {
-            primaryAction.isVisible = true
-            primaryAction.setText(courseCompleteDialogViewInfo.primaryActionStringRes)
+            courseCompleteBinding.primaryAction.isVisible = true
+            courseCompleteBinding.primaryAction.setText(courseCompleteDialogViewInfo.primaryActionStringRes)
             setupOnActionClickListener(
                 courseCompleteDialogViewInfo.primaryActionStringRes,
                 courseCompleteInfo.course,
                 completeRate,
-                primaryAction
+                courseCompleteBinding.primaryAction
             )
         } else {
-            primaryAction.isVisible = false
+            courseCompleteBinding.primaryAction.isVisible = false
         }
 
         if (courseCompleteDialogViewInfo.secondaryActionStringRes != -1) {
-            secondaryAction.isVisible = true
-            secondaryAction.setText(courseCompleteDialogViewInfo.secondaryActionStringRes)
+            courseCompleteBinding.secondaryAction.isVisible = true
+            courseCompleteBinding.secondaryAction.setText(courseCompleteDialogViewInfo.secondaryActionStringRes)
             setupOnActionClickListener(
                 courseCompleteDialogViewInfo.secondaryActionStringRes,
                 courseCompleteInfo.course,
                 completeRate,
-                secondaryAction
+                courseCompleteBinding.secondaryAction
             )
         } else {
-            secondaryAction.isVisible = false
+            courseCompleteBinding.secondaryAction.isVisible = false
         }
 
-        courseCompleteDivider.isVisible = primaryAction.isVisible || secondaryAction.isVisible
+        courseCompleteBinding.courseCompleteDivider.root.isVisible = courseCompleteBinding.primaryAction.isVisible || courseCompleteBinding.secondaryAction.isVisible
     }
 
     private fun setupOnActionClickListener(actionStringRes: Int, course: Course, completeRate: Float, actionButton: MaterialButton) {

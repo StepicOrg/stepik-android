@@ -3,8 +3,8 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.button.MaterialButtonToggleGroup
-import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewCourseLanguagesBinding
 import org.stepic.droid.model.StepikFilter
 import org.stepik.android.presentation.filter.FiltersFeature
 import org.stepik.android.view.catalog.model.CatalogItem
@@ -24,7 +24,7 @@ class FiltersAdapterDelegate(
 
     private inner class FiltersViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
         private val viewStateDelegate = ViewStateDelegate<FiltersFeature.State>()
-        private val languages = itemView.languages
+        private val languages = ViewCourseLanguagesBinding.bind(itemView).languages
 
         init {
             val toggleListener =

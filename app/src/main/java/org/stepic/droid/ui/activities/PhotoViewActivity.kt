@@ -6,12 +6,13 @@ import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.view.isVisible
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.chrisbanes.photoview.PhotoViewAttacher
-import kotlinx.android.synthetic.main.fragment_photo_view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.databinding.FragmentPhotoViewBinding
 import org.stepik.android.view.glide.model.GlideRequestFactory
 import kotlin.math.abs
 import kotlin.math.min
@@ -21,14 +22,15 @@ class PhotoViewActivity : FragmentActivityBase() {
         const val EXTRA_PATH = "extra_path"
     }
 
+    private val photoViewBinding: FragmentPhotoViewBinding by viewBinding(FragmentPhotoViewBinding::bind)
     private lateinit var photoViewAttacher: PhotoViewAttacher
     private var screenHeight: Int = 0
     private var dismissPathLength: Int = 0
 
     private val target = object : CustomTarget<PictureDrawable>() {
         override fun onResourceReady(resource: PictureDrawable, transition: Transition<in PictureDrawable>?) {
-            internetProblemRootView.isVisible = false
-            zoomableImageView.setImageDrawable(resource)
+            photoViewBinding.internetProblemRootView.isVisible = false
+            photoViewBinding.zoomableImageView.setImageDrawable(resource)
             photoViewAttacher.update()
 //            Timber.d("resource ready")
         }
@@ -38,7 +40,7 @@ class PhotoViewActivity : FragmentActivityBase() {
         }
 
         override fun onLoadFailed(errorDrawable: Drawable?) {
-            internetProblemRootView.isVisible = true
+            photoViewBinding.internetProblemRootView.isVisible = true
         }
     }
 
@@ -46,34 +48,34 @@ class PhotoViewActivity : FragmentActivityBase() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_photo_view)
         setUpToolbar()
-        photoViewAttacher = PhotoViewAttacher(zoomableImageView)
+        photoViewAttacher = PhotoViewAttacher(photoViewBinding.zoomableImageView)
         screenHeight = Resources.getSystem().displayMetrics.heightPixels
         dismissPathLength = resources.getDimensionPixelSize(R.dimen.dismiss_path_length)
 
-        verticalDragLayout.setOnDragListener { dy ->
+        photoViewBinding.verticalDragLayout.setOnDragListener { dy ->
             if (photoViewAttacher.scale > 1f) return@setOnDragListener
             val alpha = 1 - min(abs(dy / (3 * dismissPathLength)), 1f)
-            backgroundColorView.alpha = alpha
-            toolbar.alpha = alpha
-            zoomableImageView.translationY = -dy
+            photoViewBinding.backgroundColorView.alpha = alpha
+            photoViewBinding.toolbar.alpha = alpha
+            photoViewBinding.zoomableImageView.translationY = -dy
         }
 
-        verticalDragLayout.setOnReleaseDragListener { dy ->
+        photoViewBinding.verticalDragLayout.setOnReleaseDragListener { dy ->
             if (photoViewAttacher.scale > 1f) return@setOnReleaseDragListener
             if (abs(dy) > dismissPathLength) {
-                zoomableImageView.isVisible = false
+                photoViewBinding.zoomableImageView.isVisible = false
                 finish()
             } else {
-                backgroundColorView.alpha = 1f
-                toolbar.alpha = 1f
-                zoomableImageView.translationY = 0f
+                photoViewBinding.backgroundColorView.alpha = 1f
+                photoViewBinding.toolbar.alpha = 1f
+                photoViewBinding.zoomableImageView.translationY = 0f
             }
         }
 
         val url = requireNotNull(intent.getStringExtra(EXTRA_PATH))
 
-        retryButton.setOnClickListener {
-            internetProblemRootView.isVisible = false
+        photoViewBinding.retryButton.setOnClickListener {
+            photoViewBinding.internetProblemRootView.isVisible = false
             loadImage(url)
         }
         loadImage(url)
@@ -103,7 +105,7 @@ class PhotoViewActivity : FragmentActivityBase() {
     }
 
     private fun setUpToolbar() {
-        setSupportActionBar(toolbar)
+        setSupportActionBar(photoViewBinding.toolbar)
         val supportActionBar = supportActionBar
 
         if (supportActionBar != null) {

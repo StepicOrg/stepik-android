@@ -1,12 +1,10 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_author.*
-import kotlinx.android.synthetic.main.layout_author_properties.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemAuthorBinding
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -21,14 +19,14 @@ class AuthorAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogAuthor> =
         ViewHolder(createView(parent, R.layout.item_author))
 
-    private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogAuthor>(containerView), LayoutContainer {
-        private val authorCourseCount = authorListPropertiesContainer.coursesCountText
-        private val authorSubscriberCount = authorListPropertiesContainer.subscribersCountText
+    private inner class ViewHolder(root: android.view.View) : DelegateViewHolder<CatalogAuthor>(root) {
+        private val viewBinding: ItemAuthorBinding by viewBinding { ItemAuthorBinding.bind(root) }
+
+        private val authorCourseCount = viewBinding.authorListPropertiesContainer.coursesCountText
+        private val authorSubscriberCount = viewBinding.authorListPropertiesContainer.subscribersCountText
 
         init {
-            containerView.setOnClickListener { itemData?.id?.let(onItemClick) }
+            root.setOnClickListener { itemData?.id?.let(onItemClick) }
         }
 
         override fun onBind(data: CatalogAuthor) {
@@ -38,9 +36,9 @@ class AuthorAdapterDelegate(
                 .load(data.avatar)
                 .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(authorListImage)
+                .into(viewBinding.authorListImage)
 
-            authorListTitle.text = data.fullName
+            viewBinding.authorListTitle.text = data.fullName
             authorCourseCount.text = context.resources.getQuantityString(R.plurals.course_count, data.createdCoursesCount, data.createdCoursesCount)
             authorSubscriberCount.text = context.resources.getString(R.string.author_subscribers, TextUtil.formatNumbers(data.followersCount.toLong()))
         }

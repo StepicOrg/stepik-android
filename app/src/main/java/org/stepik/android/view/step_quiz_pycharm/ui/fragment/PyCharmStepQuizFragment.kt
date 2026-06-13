@@ -6,8 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_step_quiz_pycharm.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizPycharmBinding
 
 class PyCharmStepQuizFragment : Fragment() {
     companion object {
@@ -15,12 +16,14 @@ class PyCharmStepQuizFragment : Fragment() {
             PyCharmStepQuizFragment()
     }
 
+    private val binding: FragmentStepQuizPycharmBinding by viewBinding(FragmentStepQuizPycharmBinding::bind)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_step_quiz_pycharm, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stepQuizFeedback.movementMethod = LinkMovementMethod.getInstance()
+        binding.stepQuizFeedback.movementMethod = LinkMovementMethod.getInstance()
     }
 }

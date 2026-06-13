@@ -5,12 +5,10 @@ import android.view.ViewGroup
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_footer.*
-import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizReviewPeerBinding
+import org.stepic.droid.databinding.LayoutStepQuizReviewFooterBinding
+import org.stepic.droid.databinding.LayoutStepQuizReviewHeaderBinding
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -24,7 +22,10 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.app.core.model.safeCast
 
 class StepQuizReviewDelegate(
-    override val containerView: View,
+    private val headerBinding: LayoutStepQuizReviewHeaderBinding,
+    private val footerBinding: LayoutStepQuizReviewFooterBinding,
+    private val reviewStep5Link: View,
+    private val peerBinding: FragmentStepQuizReviewPeerBinding?,
     private val instructionType: ReviewStrategyType,
     private val actionListener: ActionListener,
 
@@ -32,45 +33,64 @@ class StepQuizReviewDelegate(
     private val quizView: View,
     private val quizDelegate: StepQuizDelegate,
     private val quizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate
-) : LayoutContainer {
+) {
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
-    private val resources = containerView.resources
 
     private val step1viewStateDelegate = ViewStateDelegate<StepQuizReviewFeature.State>()
         .apply {
             addState<StepQuizReviewFeature.State.SubmissionNotMade>(
-                reviewStep1DividerBottom, reviewStep1Container, reviewStep1Discounting,
-                reviewStep1ActionButton, reviewStep1ActionRetry
+                headerBinding.reviewStep1DividerBottom.root,
+                headerBinding.reviewStep1Container,
+                headerBinding.reviewStep1Discounting,
+                headerBinding.reviewStep1ActionButton,
+                headerBinding.reviewStep1ActionRetry
             )
         }
 
     private val step1QuizViewStateDelegate = ViewStateDelegate<StepQuizFeature.State>()
         .apply {
-            addState<StepQuizFeature.State.Loading>(stepQuizProgress)
-            addState<StepQuizFeature.State.AttemptLoading>(stepQuizProgress)
-            addState<StepQuizFeature.State.AttemptLoaded>(reviewStep1Discounting, reviewStep1QuizContainer, reviewStep1ActionButton, reviewStep1ActionRetry)
-            addState<StepQuizFeature.State.NetworkError>(stepQuizNetworkError)
+            addState<StepQuizFeature.State.Loading>(headerBinding.stepQuizProgress)
+            addState<StepQuizFeature.State.AttemptLoading>(headerBinding.stepQuizProgress)
+            addState<StepQuizFeature.State.AttemptLoaded>(
+                headerBinding.reviewStep1Discounting,
+                headerBinding.reviewStep1QuizContainer,
+                headerBinding.reviewStep1ActionButton,
+                headerBinding.reviewStep1ActionRetry
+            )
+            addState<StepQuizFeature.State.NetworkError>(headerBinding.stepQuizNetworkError.root)
         }
 
     private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewFeature.State>()
         .apply {
             addState<StepQuizReviewFeature.State.SubmissionNotSelected>(
-                reviewStep2DividerBottom, reviewStep2Container, reviewStep2Loading,
-                reviewStep2CreateSession, reviewStep2SelectSubmission, reviewStep2Retry
+                headerBinding.reviewStep2DividerBottom.root,
+                headerBinding.reviewStep2Container,
+                headerBinding.reviewStep2Loading,
+                headerBinding.reviewStep2CreateSession,
+                headerBinding.reviewStep2SelectSubmission,
+                headerBinding.reviewStep2Retry
             )
-            addState<StepQuizReviewFeature.State.SubmissionSelected>(reviewStep2DividerBottom, reviewStep2Container)
-            addState<StepQuizReviewFeature.State.Completed>(reviewStep2DividerBottom, reviewStep2Container)
+            addState<StepQuizReviewFeature.State.SubmissionSelected>(
+                headerBinding.reviewStep2DividerBottom.root,
+                headerBinding.reviewStep2Container
+            )
+            addState<StepQuizReviewFeature.State.Completed>(
+                headerBinding.reviewStep2DividerBottom.root,
+                headerBinding.reviewStep2Container
+            )
         }
 
     init {
-        stepQuizNetworkError.tryAgain.setOnClickListener { actionListener.onQuizTryAgainClicked() }
+        headerBinding.stepQuizNetworkError.tryAgain.setOnClickListener { actionListener.onQuizTryAgainClicked() }
 
-        reviewStep2SelectSubmission.setOnClickListener { actionListener.onSelectDifferentSubmissionClicked() }
-        reviewStep2CreateSession.setOnClickListener { actionListener.onCreateSessionClicked() }
-        reviewStep2Retry.setOnClickListener { actionListener.onSolveAgainClicked() }
+        headerBinding.reviewStep2SelectSubmission.setOnClickListener { actionListener.onSelectDifferentSubmissionClicked() }
+        headerBinding.reviewStep2CreateSession.setOnClickListener { actionListener.onCreateSessionClicked() }
+        headerBinding.reviewStep2Retry.setOnClickListener { actionListener.onSolveAgainClicked() }
 
         if (instructionType == ReviewStrategyType.PEER) {
-            reviewStep3Container.setOnClickListener { actionListener.onStartReviewClicked() }
+            requireNotNull(peerBinding) { "Peer review binding is required for peer review steps" }
+                .reviewStep3Container
+                .setOnClickListener { actionListener.onStartReviewClicked() }
         }
     }
 
@@ -100,27 +120,27 @@ class StepQuizReviewDelegate(
                     ?.submission
                     ?.status
 
-                reviewStep1Status.status =
+                headerBinding.reviewStep1Status.status =
                     if (submissionStatus == Submission.Status.WRONG) {
                         ReviewStatusView.Status.ERROR
                     } else {
                         ReviewStatusView.Status.IN_PROGRESS
                     }
 
-                stepQuizDescription.isEnabled = true
+                headerBinding.stepQuizDescription.isEnabled = true
 
                 step1QuizViewStateDelegate.switchState(state.quizState)
                 if (state.quizState is StepQuizFeature.State.AttemptLoaded) {
                     quizDelegate.setState(state.quizState)
                 }
 
-                setQuizViewParent(quizView, reviewStep1QuizContainer)
-                setQuizViewParent(quizFeedbackView, reviewStep1QuizContainer)
+                setQuizViewParent(quizView, headerBinding.reviewStep1QuizContainer)
+                setQuizViewParent(headerBinding.quizFeedbackView.root, headerBinding.reviewStep1QuizContainer)
             }
 
             else -> {
-                stepQuizDescription.isEnabled = false
-                reviewStep1Status.status = ReviewStatusView.Status.COMPLETED
+                headerBinding.stepQuizDescription.isEnabled = false
+                headerBinding.reviewStep1Status.status = ReviewStatusView.Status.COMPLETED
             }
         }
     }
@@ -129,35 +149,50 @@ class StepQuizReviewDelegate(
         step2viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizReviewFeature.State.SubmissionNotMade -> {
-                reviewStep2Title.setText(R.string.step_quiz_review_send_pending)
-                setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.PENDING)
+                headerBinding.reviewStep2Title.setText(R.string.step_quiz_review_send_pending)
+                setStepStatus(
+                    headerBinding.reviewStep2Title,
+                    headerBinding.reviewStep2Link,
+                    headerBinding.reviewStep2Status,
+                    ReviewStatusView.Status.PENDING
+                )
             }
             is StepQuizReviewFeature.State.SubmissionNotSelected -> {
-                reviewStep2Title.setText(R.string.step_quiz_review_send_in_progress)
-                setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.IN_PROGRESS)
+                headerBinding.reviewStep2Title.setText(R.string.step_quiz_review_send_in_progress)
+                setStepStatus(
+                    headerBinding.reviewStep2Title,
+                    headerBinding.reviewStep2Link,
+                    headerBinding.reviewStep2Status,
+                    ReviewStatusView.Status.IN_PROGRESS
+                )
 
                 quizDelegate.setState(state.quizState)
 
-                reviewStep2Loading.isVisible = state.isSessionCreationInProgress
-                reviewStep2CreateSession.isVisible = !state.isSessionCreationInProgress
-                reviewStep2SelectSubmission.isVisible = !state.isSessionCreationInProgress
-                reviewStep2Retry.isVisible = !state.isSessionCreationInProgress
+                headerBinding.reviewStep2Loading.isVisible = state.isSessionCreationInProgress
+                headerBinding.reviewStep2CreateSession.isVisible = !state.isSessionCreationInProgress
+                headerBinding.reviewStep2SelectSubmission.isVisible = !state.isSessionCreationInProgress
+                headerBinding.reviewStep2Retry.isVisible = !state.isSessionCreationInProgress
 
-                setQuizViewParent(quizView, reviewStep2Container)
-                setQuizViewParent(quizFeedbackView, reviewStep2Container)
+                setQuizViewParent(quizView, headerBinding.reviewStep2Container)
+                setQuizViewParent(headerBinding.quizFeedbackView.root, headerBinding.reviewStep2Container)
             }
             else -> {
-                reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
-                setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.COMPLETED)
+                headerBinding.reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
+                setStepStatus(
+                    headerBinding.reviewStep2Title,
+                    headerBinding.reviewStep2Link,
+                    headerBinding.reviewStep2Status,
+                    ReviewStatusView.Status.COMPLETED
+                )
 
                 state.safeCast<StepQuizReviewFeature.State.WithQuizState>()
                     ?.quizState
                     ?.safeCast<StepQuizFeature.State.AttemptLoaded>()
                     ?.let(quizDelegate::setState)
 
-                setQuizViewParent(quizView, reviewStep2Container)
-                setQuizViewParent(quizFeedbackView, reviewStep2Container)
-                quizFeedbackView.isVisible = false
+                setQuizViewParent(quizView, headerBinding.reviewStep2Container)
+                setQuizViewParent(headerBinding.quizFeedbackView.root, headerBinding.reviewStep2Container)
+                headerBinding.quizFeedbackView.root.isVisible = false
             }
         }
     }
@@ -171,15 +206,21 @@ class StepQuizReviewDelegate(
     }
 
     private fun renderStep3(state: StepQuizReviewFeature.State) {
+        val requiredPeerBinding = requireNotNull(peerBinding) { "Peer review binding is required for peer review steps" }
         val reviewCount = state.safeCast<StepQuizReviewFeature.State.WithInstruction>()?.instruction?.minReviews ?: 0
 
         when (state) {
             is StepQuizReviewFeature.State.SubmissionNotMade,
             is StepQuizReviewFeature.State.SubmissionNotSelected -> {
-                reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
-                setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.PENDING)
-                reviewStep3Container.isVisible = false
-                reviewStep3Loading.isVisible = false
+                requiredPeerBinding.reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
+                setStepStatus(
+                    requiredPeerBinding.reviewStep3Title,
+                    requiredPeerBinding.reviewStep3Link,
+                    requiredPeerBinding.reviewStep3Status,
+                    ReviewStatusView.Status.PENDING
+                )
+                requiredPeerBinding.reviewStep3Container.isVisible = false
+                requiredPeerBinding.reviewStep3Loading.isVisible = false
             }
             is StepQuizReviewFeature.State.SubmissionSelected -> {
                 val givenReviewCount = state.session.givenReviews.size
@@ -195,51 +236,74 @@ class StepQuizReviewDelegate(
                                 } else {
                                     R.plurals.step_quiz_review_given_pending
                                 }
-                            append(resources.getQuantityString(pluralRes, remainingReviewCount, remainingReviewCount))
+                            append(headerBinding.root.resources.getQuantityString(pluralRes, remainingReviewCount, remainingReviewCount))
                         }
 
                         if (givenReviewCount > 0) {
                             if (isNotEmpty()) {
                                 append(" ")
                             }
-                            append(resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount))
+                            append(headerBinding.root.resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount))
                         }
                     }
 
-                reviewStep3Title.text = text
+                requiredPeerBinding.reviewStep3Title.text = text
 
-                reviewStep3Container.isVisible = remainingReviewCount > 0 && !state.isReviewCreationInProgress
+                requiredPeerBinding.reviewStep3Container.isVisible = remainingReviewCount > 0 && !state.isReviewCreationInProgress
 
-                if (reviewStep3Container.isVisible) {
-                    reviewStep3Container.isEnabled = remainingReviewCount <= 0 || state.session.isReviewAvailable
-                    reviewStep3Container.setText(if (reviewStep3Container.isEnabled) R.string.step_quiz_review_given_start_review else R.string.step_quiz_review_given_no_review)
+                if (requiredPeerBinding.reviewStep3Container.isVisible) {
+                    requiredPeerBinding.reviewStep3Container.isEnabled = remainingReviewCount <= 0 || state.session.isReviewAvailable
+                    requiredPeerBinding.reviewStep3Container.setText(
+                        if (requiredPeerBinding.reviewStep3Container.isEnabled) {
+                            R.string.step_quiz_review_given_start_review
+                        } else {
+                            R.string.step_quiz_review_given_no_review
+                        }
+                    )
                 }
 
-                reviewStep3Loading.isVisible = state.isReviewCreationInProgress
-                setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.IN_PROGRESS)
+                requiredPeerBinding.reviewStep3Loading.isVisible = state.isReviewCreationInProgress
+                setStepStatus(
+                    requiredPeerBinding.reviewStep3Title,
+                    requiredPeerBinding.reviewStep3Link,
+                    requiredPeerBinding.reviewStep3Status,
+                    ReviewStatusView.Status.IN_PROGRESS
+                )
             }
             is StepQuizReviewFeature.State.Completed -> {
                 val givenReviewCount = state.session.givenReviews.size
 
-                reviewStep3Title.text = resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount)
-                reviewStep3Container.isVisible = false
-                reviewStep3Loading.isVisible = false
-                setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.COMPLETED)
+                requiredPeerBinding.reviewStep3Title.text =
+                    headerBinding.root.resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount)
+                requiredPeerBinding.reviewStep3Container.isVisible = false
+                requiredPeerBinding.reviewStep3Loading.isVisible = false
+                setStepStatus(
+                    requiredPeerBinding.reviewStep3Title,
+                    requiredPeerBinding.reviewStep3Link,
+                    requiredPeerBinding.reviewStep3Status,
+                    ReviewStatusView.Status.COMPLETED
+                )
             }
             else -> Unit
         }
     }
 
     private fun renderStep4(state: StepQuizReviewFeature.State) {
+        val requiredPeerBinding = requireNotNull(peerBinding) { "Peer review binding is required for peer review steps" }
         val reviewCount = state.safeCast<StepQuizReviewFeature.State.WithInstruction>()?.instruction?.minReviews ?: 0
 
         when (state) {
             is StepQuizReviewFeature.State.SubmissionNotMade,
             is StepQuizReviewFeature.State.SubmissionNotSelected -> {
-                reviewStep4Title.setText(R.string.step_quiz_review_taken_pending_zero)
-                setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.PENDING)
-                reviewStep4Container.isVisible = false
-                reviewStep4Hint.isVisible = false
+                requiredPeerBinding.reviewStep4Title.setText(R.string.step_quiz_review_taken_pending_zero)
+                setStepStatus(
+                    requiredPeerBinding.reviewStep4Title,
+                    requiredPeerBinding.reviewStep4Link,
+                    requiredPeerBinding.reviewStep4Status,
+                    ReviewStatusView.Status.PENDING
+                )
+                requiredPeerBinding.reviewStep4Container.isVisible = false
+                requiredPeerBinding.reviewStep4Hint.isVisible = false
             }
             is StepQuizReviewFeature.State.SubmissionSelected -> {
                 val takenReviewCount = state.session.takenReviews.size
@@ -255,14 +319,14 @@ class StepQuizReviewDelegate(
                                 } else {
                                     R.plurals.step_quiz_review_taken_pending
                                 }
-                            append(resources.getQuantityString(pluralRes, remainingReviewCount, remainingReviewCount))
+                            append(headerBinding.root.resources.getQuantityString(pluralRes, remainingReviewCount, remainingReviewCount))
                         }
 
                         if (takenReviewCount > 0) {
                             if (isNotEmpty()) {
                                 append(" ")
                             }
-                            append(resources.getQuantityString(R.plurals.step_quiz_review_taken_completed, takenReviewCount, takenReviewCount))
+                            append(headerBinding.root.resources.getQuantityString(R.plurals.step_quiz_review_taken_completed, takenReviewCount, takenReviewCount))
                         }
                     }
 
@@ -273,27 +337,38 @@ class StepQuizReviewDelegate(
                         ReviewStatusView.Status.COMPLETED
                     }
 
-                reviewStep4Title.text = text
-                setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, status)
+                requiredPeerBinding.reviewStep4Title.text = text
+                setStepStatus(
+                    requiredPeerBinding.reviewStep4Title,
+                    requiredPeerBinding.reviewStep4Link,
+                    requiredPeerBinding.reviewStep4Status,
+                    status
+                )
 
-                reviewStep4Container.isVisible = takenReviewCount > 0
-                reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
-                reviewStep4Hint.isVisible = takenReviewCount == 0
+                requiredPeerBinding.reviewStep4Container.isVisible = takenReviewCount > 0
+                requiredPeerBinding.reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
+                requiredPeerBinding.reviewStep4Hint.isVisible = takenReviewCount == 0
             }
             is StepQuizReviewFeature.State.Completed -> {
                 val takenReviewCount = state.session.takenReviews.size
-                reviewStep4Title.text = resources.getQuantityString(R.plurals.step_quiz_review_taken_completed, takenReviewCount, takenReviewCount)
-                setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.COMPLETED)
-                reviewStep4Container.isVisible = takenReviewCount > 0
-                reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
-                reviewStep4Hint.isVisible = false
+                requiredPeerBinding.reviewStep4Title.text =
+                    headerBinding.root.resources.getQuantityString(R.plurals.step_quiz_review_taken_completed, takenReviewCount, takenReviewCount)
+                setStepStatus(
+                    requiredPeerBinding.reviewStep4Title,
+                    requiredPeerBinding.reviewStep4Link,
+                    requiredPeerBinding.reviewStep4Status,
+                    ReviewStatusView.Status.COMPLETED
+                )
+                requiredPeerBinding.reviewStep4Container.isVisible = takenReviewCount > 0
+                requiredPeerBinding.reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
+                requiredPeerBinding.reviewStep4Hint.isVisible = false
             }
             else -> Unit
         }
     }
 
     private fun renderStep5(state: StepQuizReviewFeature.State) {
-        reviewStep5Status.position =
+        footerBinding.reviewStep5Status.position =
             when (instructionType) {
                 ReviewStrategyType.PEER -> 5
                 ReviewStrategyType.INSTRUCTOR -> 3
@@ -303,9 +378,9 @@ class StepQuizReviewDelegate(
             is StepQuizReviewFeature.State.Completed -> {
                 val receivedPoints = state.progress?.score?.toFloatOrNull() ?: 0f
 
-                reviewStep5Title.text = ProgressTextMapper
+                footerBinding.reviewStep5Title.text = ProgressTextMapper
                     .mapProgressToText(
-                        containerView.context,
+                        footerBinding.reviewStep5Title.context,
                         receivedPoints,
                         state.progress?.cost ?: 0,
                         R.string.step_quiz_review_peer_completed,
@@ -315,16 +390,21 @@ class StepQuizReviewDelegate(
 
                 when (instructionType) {
                     ReviewStrategyType.PEER ->
-                        reviewStep5Container.isVisible = false
+                        footerBinding.reviewStep5Container.isVisible = false
 
                     ReviewStrategyType.INSTRUCTOR -> {
-                        reviewStep5Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
-                        reviewStep5Container.isVisible = true
+                        footerBinding.reviewStep5Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
+                        footerBinding.reviewStep5Container.isVisible = true
                     }
                 }
-                setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, ReviewStatusView.Status.IN_PROGRESS)
-                reviewStep5Status.status = ReviewStatusView.Status.COMPLETED
-                reviewStep5Hint.isVisible = false
+                setStepStatus(
+                    footerBinding.reviewStep5Title,
+                    reviewStep5Link,
+                    footerBinding.reviewStep5Status,
+                    ReviewStatusView.Status.IN_PROGRESS
+                )
+                footerBinding.reviewStep5Status.status = ReviewStatusView.Status.COMPLETED
+                footerBinding.reviewStep5Hint.isVisible = false
             }
             else -> {
                 val cost = state.safeCast<StepQuizReviewFeature.State.WithProgress>()?.progress?.cost ?: 0L
@@ -339,8 +419,12 @@ class StepQuizReviewDelegate(
                             R.string.step_quiz_review_instructor_pending
                     }
 
-                reviewStep5Title.text = resources.getString(stringRes, resources.getQuantityString(R.plurals.points, cost.toInt(), cost))
-                reviewStep5Container.isVisible = false
+                footerBinding.reviewStep5Title.text =
+                    headerBinding.root.resources.getString(
+                        stringRes,
+                        headerBinding.root.resources.getQuantityString(R.plurals.points, cost.toInt(), cost)
+                    )
+                footerBinding.reviewStep5Container.isVisible = false
                 val status =
                     if (state is StepQuizReviewFeature.State.SubmissionSelected && instructionType == ReviewStrategyType.INSTRUCTOR) {
                         ReviewStatusView.Status.IN_PROGRESS
@@ -348,9 +432,15 @@ class StepQuizReviewDelegate(
                         ReviewStatusView.Status.PENDING
                     }
 
-                reviewStep5Hint.isVisible = instructionType == ReviewStrategyType.INSTRUCTOR && status == ReviewStatusView.Status.IN_PROGRESS
+                footerBinding.reviewStep5Hint.isVisible =
+                    instructionType == ReviewStrategyType.INSTRUCTOR && status == ReviewStatusView.Status.IN_PROGRESS
 
-                setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, status)
+                setStepStatus(
+                    footerBinding.reviewStep5Title,
+                    reviewStep5Link,
+                    footerBinding.reviewStep5Status,
+                    status
+                )
             }
         }
     }

@@ -2,11 +2,10 @@ package org.stepik.android.view.personal_deadlines.ui.adapters
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.view_learning_rate.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewLearningRateBinding
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import ru.nobird.android.view.base.ui.extension.inflate
@@ -23,11 +22,11 @@ class LearningRateAdapter(
 
     override fun onBindViewHolder(holder: LearningRateViewHolder, position: Int) {
         val rate = rates[position]
-        holder.title.setText(rate.title)
-        holder.icon.setImageResource(rate.icon)
+        holder.viewBinding.title.setText(rate.title)
+        holder.viewBinding.icon.setImageResource(rate.icon)
 
         val hours = rate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR
-        holder.rate.text = hours.toString()
+        holder.viewBinding.rate.text = hours.toString()
     }
 
     private fun onItemClicked(position: Int) {
@@ -35,9 +34,7 @@ class LearningRateAdapter(
     }
 
     inner class LearningRateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        internal val title: TextView = view.title
-        internal val icon: ImageView = view.icon
-        internal val rate: TextView = view.rate
+        val viewBinding: ViewLearningRateBinding by viewBinding { ViewLearningRateBinding.bind(view) }
 
         init {
             view.setOnClickListener { onItemClicked(adapterPosition) }

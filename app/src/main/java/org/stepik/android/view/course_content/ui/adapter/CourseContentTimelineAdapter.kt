@@ -4,8 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.view_course_content_section_date.view.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewCourseContentSectionDateBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentSectionDate
@@ -33,25 +34,22 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<CourseContentTimelineA
     }
 
     inner class ViewHolder(root: View) : RecyclerView.ViewHolder(root) {
-        private val dateDot = root.dateDot
-        private val dateProgress = root.dateProgress
-        private val dateTitle = root.dateTitle
-        private val dateValue = root.dateValue
+        private val viewBinding: ViewCourseContentSectionDateBinding by viewBinding { ViewCourseContentSectionDateBinding.bind(root) }
 
         internal fun bind(data: CourseContentSectionDate) {
-            dateTitle.setText(data.titleRes)
-            dateValue.text = DateTimeHelper.getPrintableDate(data.date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+            viewBinding.dateTitle.setText(data.titleRes)
+            viewBinding.dateValue.text = DateTimeHelper.getPrintableDate(data.date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
 
             val isNotLastItem = adapterPosition < itemCount - 1
-            dateProgress.isVisible = isNotLastItem
+            viewBinding.dateProgress.isVisible = isNotLastItem
             if (isNotLastItem) {
                 val total = (dates[adapterPosition + 1].date.time - data.date.time)
                 val progress = (now.time - data.date.time) * 100 safeDiv total
-                dateProgress.max = 100
-                dateProgress.progress = progress.toInt()
+                viewBinding.dateProgress.max = 100
+                viewBinding.dateProgress.progress = progress.toInt()
             }
 
-            dateDot.isEnabled = now >= data.date
+            viewBinding.dateDot.isEnabled = now >= data.date
         }
     }
 }

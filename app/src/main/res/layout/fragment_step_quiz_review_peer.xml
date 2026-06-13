@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:viewBindingIgnore="true">
+    >
 
     <include layout="@layout/layout_step_quiz_review_header" />
 

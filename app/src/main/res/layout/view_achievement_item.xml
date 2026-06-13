@@ -11,7 +11,7 @@
     android:paddingRight="?dialogPreferredPadding"
     android:paddingTop="@dimen/guideline_standard_padding"
     android:paddingBottom="@dimen/guideline_standard_padding"
-    tools:viewBindingIgnore="true">
+>
 
     <include
         layout="@layout/view_achievement_tile"

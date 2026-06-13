@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/courseReviewsRecycler"
@@ -32,12 +30,14 @@
     </LinearLayout>
 
     <include
+        android:id="@+id/reportProblem"
         layout="@layout/error_no_connection"
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <include
+        android:id="@+id/reportEmpty"
         layout="@layout/empty_default"
         android:layout_marginTop="48dp"
         android:layout_width="match_parent"

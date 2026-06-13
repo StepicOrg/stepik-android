@@ -1,24 +1,23 @@
 package org.stepik.android.view.course.ui.delegates
 
-import android.view.View
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.layout_course_progress.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutCourseProgressBinding
 import org.stepic.droid.util.toFixed
 import org.stepik.android.model.Progress
 
 class CourseProgressDelegate(
-    view: View,
+    binding: LayoutCourseProgressBinding,
     onSubmissionCountClicked: () -> Unit,
     private val isLocalSubmissionsEnabled: Boolean
 ) {
-    private val context = view.context
+    private val context = binding.root.context
 
-    private val courseProgressCircle = view.courseProgressCircle
-    private val courseProgressValue = view.courseProgressValue
+    private val courseProgressCircle = binding.courseProgressCircle
+    private val courseProgressValue = binding.courseProgressValue
 
-    private val courseSolutionsTitle = view.courseSolutionsTitle
-    private val courseSolutionsValue = view.courseSolutionsValue
+    private val courseSolutionsTitle = binding.courseSolutionsTitle
+    private val courseSolutionsValue = binding.courseSolutionsValue
 
     init {
         courseSolutionsValue.setOnClickListener { onSubmissionCountClicked() }

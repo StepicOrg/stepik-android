@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_lesson_demo_complete.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.BottomSheetDialogLessonDemoCompleteBinding
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 import org.stepik.android.domain.course_payments.model.DefaultPromoCode
@@ -69,6 +69,8 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     @Inject
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
+    private val binding: BottomSheetDialogLessonDemoCompleteBinding by viewBinding(BottomSheetDialogLessonDemoCompleteBinding::bind)
+
     private val lessonDemoViewModel: LessonDemoViewModel by reduxViewModel(this) { viewModelFactory }
     private val viewStateDelegate = ViewStateDelegate<LessonDemoFeature.LessonDemoState>()
     private lateinit var wishlistViewDelegate: WishlistViewDelegate
@@ -96,19 +98,19 @@ class LessonDemoCompleteBottomSheetDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewStateDelegate()
-        wishlistViewDelegate = WishlistViewDelegate(demoWishlistAction)
-        demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
-        demoCompleteAction.setOnClickListener {
+        wishlistViewDelegate = WishlistViewDelegate(binding.demoWishlistAction)
+        binding.demoCompleteTitle.text = getString(R.string.demo_complete_title, course.title)
+        binding.demoCompleteAction.setOnClickListener {
             lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.BuyActionMessage)
         }
-        demoWishlistAction.setOnClickListener {
+        binding.demoWishlistAction.setOnClickListener {
             lessonDemoViewModel.onNewMessage(
                 LessonDemoFeature.Message.WishlistMessage(
                     WishlistOperationFeature.Message.WishlistAddMessage(course, CourseViewSource.LessonDemoDialog)
                 )
             )
         }
-        tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(forceUpdate = true)) }
+        binding.demoCompleteNetworkError.tryAgain.setOnClickListener { lessonDemoViewModel.onNewMessage(LessonDemoFeature.Message.InitMessage(forceUpdate = true)) }
     }
 
     override fun onAction(action: LessonDemoFeature.Action.ViewAction) {
@@ -157,10 +159,10 @@ class LessonDemoCompleteBottomSheetDialogFragment :
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Idle>()
-        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Loading>(demoCompleteProgressbar)
-        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Error>(demoCompleteNetworkError)
-        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Unavailable>(demoCompleteContent, demoCompleteTitle, demoPurchaseUnavailable, demoWishlistAction)
-        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Content>(demoCompleteContent, demoCompleteTitle, demoCompleteInfo, demoCompleteDivider, demoCompleteAction, demoWishlistAction)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Loading>(binding.demoCompleteProgressbar)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Error>(binding.demoCompleteNetworkError.root)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Unavailable>(binding.demoCompleteContent, binding.demoCompleteTitle, binding.demoPurchaseUnavailable, binding.demoWishlistAction)
+        viewStateDelegate.addState<LessonDemoFeature.LessonDemoState.Content>(binding.demoCompleteContent, binding.demoCompleteTitle, binding.demoCompleteInfo, binding.demoCompleteDivider.root, binding.demoCompleteAction, binding.demoWishlistAction)
     }
 
     private fun setupWeb(deeplinkPromoCode: DeeplinkPromoCode) {
@@ -175,7 +177,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
             ),
             course
         )
-        demoCompleteAction.text =
+        binding.demoCompleteAction.text =
             if (courseDisplayPrice != null) {
                 if (hasPromo) {
                     displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(courseDisplayPrice, promoPrice, currencyCode)
@@ -189,7 +191,7 @@ class LessonDemoCompleteBottomSheetDialogFragment :
 
     private fun setupIAP(coursePurchaseData: CoursePurchaseData) {
         val courseDisplayPrice = coursePurchaseData.course.displayPrice
-        demoCompleteAction.text =
+        binding.demoCompleteAction.text =
             if (courseDisplayPrice != null) {
                 if (coursePurchaseData.promoCodeSku.lightSku != null) {
                     displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(coursePurchaseData.primarySku.price, coursePurchaseData.promoCodeSku.lightSku.price)

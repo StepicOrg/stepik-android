@@ -9,10 +9,11 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.strikeThrough
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ItemCourseBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
@@ -49,16 +50,18 @@ class CourseListItemAdapterDelegate(
     }
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
-        private val courseCertificateProgress = root.courseCertificateProgress
-        private val coursePropertiesDelegate = CoursePropertiesDelegate(root, root.coursePropertiesContainer as ViewGroup)
-        private val courseItemImage = root.courseItemImage
-        private val courseItemName = root.courseItemName
-        private val adaptiveCourseMarker = root.adaptiveCourseMarker
-        private val courseContinueButton = root.courseContinueButton
-        private val courseDescription = root.courseDescription
-        private val courseButtonSeparator = root.courseButtonSeparator
-        private val courseOldPrice = root.courseOldPrice
-        private val coursePrice = root.coursePrice
+        private val viewBinding: ItemCourseBinding by viewBinding { ItemCourseBinding.bind(root) }
+
+        private val courseCertificateProgress = viewBinding.courseCertificateProgress
+        private val coursePropertiesDelegate = CoursePropertiesDelegate(root, viewBinding.coursePropertiesContainer.root as ViewGroup)
+        private val courseItemImage = viewBinding.courseItemImage
+        private val courseItemName = viewBinding.courseItemName
+        private val adaptiveCourseMarker = viewBinding.adaptiveCourseMarker
+        private val courseContinueButton = viewBinding.courseContinueButton
+        private val courseDescription = viewBinding.courseDescription
+        private val courseButtonSeparator = viewBinding.courseButtonSeparator.root
+        private val courseOldPrice = viewBinding.courseOldPrice
+        private val coursePrice = viewBinding.coursePrice
 
         init {
             root.setOnClickListener { (itemData as? CourseListItem.Data)?.let(onItemClicked) }

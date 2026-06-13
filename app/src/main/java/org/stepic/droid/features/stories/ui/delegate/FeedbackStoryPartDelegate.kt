@@ -16,11 +16,10 @@ import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.view_story_feedback.view.*
-import kotlinx.android.synthetic.main.view_story_text_input.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ViewStoryFeedbackBinding
 import org.stepic.droid.features.stories.model.FeedbackStoryPart
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepik.android.model.StoryTemplate
@@ -50,42 +49,42 @@ class FeedbackStoryPartDelegate(
     override fun isForViewType(part: StoryPart): Boolean =
         part is FeedbackStoryPart
 
-    override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View =
-        container.inflate(R.layout.view_story_feedback, false).apply {
-            part as FeedbackStoryPart
-            (context as? AppCompatActivity)?.currentFocus?.clearFocus()
+    override fun onBindView(storyView: StoryView, container: ViewGroup, position: Int, part: StoryPart): View {
+        val binding = ViewStoryFeedbackBinding.inflate(LayoutInflater.from(context), container, false)
+        part as FeedbackStoryPart
+        (context as? AppCompatActivity)?.currentFocus?.clearFocus()
 
-            Glide.with(context)
-                .load(part.cover)
-                .placeholder(progressDrawable)
-                .into(this.storyCover)
+        Glide.with(context)
+            .load(part.cover)
+            .placeholder(progressDrawable)
+            .into(binding.storyCover)
 
-            val story = storyView.adapter?.story
-            if (story != null) {
-                analytic.reportAmplitudeEvent(
-                    AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
-                    AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
-                    AmplitudeAnalytic.Stories.Values.POSITION to position
-                ))
-            }
-
-            setUpText(this, part.text)
-            setUpButton(story, this, part.button, position)
-            setUpInput(this, storyView, part.feedback)
+        val story = storyView.adapter?.story
+        if (story != null) {
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.Stories.STORY_PART_OPENED, mapOf(
+                AmplitudeAnalytic.Stories.Values.STORY_ID to story.id,
+                AmplitudeAnalytic.Stories.Values.POSITION to position
+            ))
         }
 
-    private fun setUpText(view: View, text: StoryTemplate.Text?) {
+        setUpText(binding, part.text)
+        setUpButton(story, binding, part.button, position)
+        setUpInput(binding, storyView, part.feedback)
+        return binding.root
+    }
+
+    private fun setUpText(binding: ViewStoryFeedbackBinding, text: StoryTemplate.Text?) {
         if (text != null) {
-            val storyTitle = view.storyTitle
             @ColorInt val textColor = getColorInt(text.textColor)
-            storyTitle.setTextColor(textColor)
-            storyTitle.text = text.title
+            binding.storyTitle.setTextColor(textColor)
+            binding.storyTitle.text = text.title
         }
     }
 
-    private fun setUpButton(story: Story?, view: View, button: StoryTemplate.Button?, position: Int) {
-        val storyButton = view.storyButton
-        val storyFeedbackEditText = view.storyFeedbackEditText
+    private fun setUpButton(story: Story?, binding: ViewStoryFeedbackBinding, button: StoryTemplate.Button?, position: Int) {
+        val storyButton = binding.storyButton
+        val storyFeedbackEditText = binding.storyInputContainer.storyFeedbackEditText
         if (button != null) {
             ViewCompat.setBackgroundTintList(storyButton, ColorStateList.valueOf(getColorInt(button.backgroundColor)))
             storyButton.setTextColor(getColorInt(button.textColor))
@@ -114,15 +113,15 @@ class FeedbackStoryPartDelegate(
         }
     }
 
-    private fun setUpInput(view: View, storyView: StoryView, feedback: StoryTemplate.Feedback?) {
+    private fun setUpInput(binding: ViewStoryFeedbackBinding, storyView: StoryView, feedback: StoryTemplate.Feedback?) {
         if (feedback == null) return
-        val title = view.storyTitle
-        val storyFeedbackContainer = view.storyInputContainer
-        val storyFeedbackText = view.storyFeedbackText
-        val storyFeedbackIcon = view.storyFeedbackIcon
-        val storyFeedbackEditText = view.storyFeedbackEditText
+        val title = binding.storyTitle
+        val storyInputBinding = binding.storyInputContainer
+        val storyFeedbackText = storyInputBinding.storyFeedbackText
+        val storyFeedbackIcon = storyInputBinding.storyFeedbackIcon
+        val storyFeedbackEditText = storyInputBinding.storyFeedbackEditText
 
-        storyFeedbackContainer.background = getColoredDrawable(R.drawable.bg_shape_rounded, feedback.backgroundColor)
+        storyInputBinding.root.background = getColoredDrawable(R.drawable.bg_shape_rounded, feedback.backgroundColor)
         storyFeedbackText.text = feedback.text
         storyFeedbackText.setTextColor(getColorInt(feedback.textColor))
 
@@ -140,9 +139,9 @@ class FeedbackStoryPartDelegate(
         storyFeedbackEditText.setHintTextColor(getColorInt(feedback.placeholderTextColor))
 
         storyFeedbackEditText.setOnFocusChangeListener { _, hasFocus ->
-            view.isFocusableInTouchMode = hasFocus
-            view.isFocusable = hasFocus
-            view.isClickable = hasFocus
+            binding.root.isFocusableInTouchMode = hasFocus
+            binding.root.isFocusable = hasFocus
+            binding.root.isClickable = hasFocus
             storyFeedbackEditText.post {
                 dismissableLayout.isFocusable = !hasFocus
                 dismissableLayout.isFocusableInTouchMode = !hasFocus

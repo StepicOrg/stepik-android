@@ -12,10 +12,10 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.dialog_compose_course_review.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.DialogComposeCourseReviewBinding
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
@@ -52,6 +52,8 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
     private val composeCourseReviewPresenter: ComposeCourseReviewPresenter by viewModels { viewModelFactory }
 
+    private val binding: DialogComposeCourseReviewBinding by viewBinding(DialogComposeCourseReviewBinding::bind)
+
     private var courseId: Long by argument()
     private var courseReviewViewSource: String by argument()
     private val courseReview: CourseReview? by lazy { arguments?.getParcelable<CourseReview>(ARG_COURSE_REVIEW) }
@@ -87,11 +89,12 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
         inflater.inflate(R.layout.dialog_compose_course_review, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
-        centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
-        centeredToolbar.inflateMenu(R.menu.compose_course_review_menu)
-        centeredToolbar.setOnMenuItemClickListener { menuItem ->
+        val centeredToolbarContainer = binding.appBarLayout.centeredToolbarContainer
+        centeredToolbarContainer.centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
+        centeredToolbarContainer.centeredToolbar.setNavigationOnClickListener { dismiss() }
+        centeredToolbarContainer.centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbarContainer.centeredToolbar.inflateMenu(R.menu.compose_course_review_menu)
+        centeredToolbarContainer.centeredToolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.course_review_submit) {
                 submitCourseReview()
                 true
@@ -104,16 +107,16 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             courseRating
                 .takeIf { it > -1 }
                 ?.let {
-                    courseReviewRating.rating = courseRating
+                    binding.courseReviewRating.rating = courseRating
                 }
             courseReview?.let {
-                courseReviewEditText.setText(it.text)
-                courseReviewRating.rating = it.score.toFloat()
+                binding.courseReviewEditText.setText(it.text)
+                binding.courseReviewRating.rating = it.score.toFloat()
             }
         }
         invalidateMenuState()
-        courseReviewEditText.doAfterTextChanged { invalidateMenuState() }
-        courseReviewRating.setOnRatingBarChangeListener { _, _, _ -> invalidateMenuState() }
+        binding.courseReviewEditText.doAfterTextChanged { invalidateMenuState() }
+        binding.courseReviewRating.setOnRatingBarChangeListener { _, _, _ -> invalidateMenuState() }
     }
 
     override fun onStart() {
@@ -134,11 +137,11 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
 
     private fun submitCourseReview() {
-        courseReviewEditText.hideKeyboard()
+        binding.courseReviewEditText.hideKeyboard()
         val oldCourseReview = courseReview
 
-        val text = courseReviewEditText.text?.toString()
-        val score = courseReviewRating.rating.toInt()
+        val text = binding.courseReviewEditText.text?.toString()
+        val score = binding.courseReviewRating.rating.toInt()
 
         if (oldCourseReview == null) {
             val courseReview = CourseReview(
@@ -158,8 +161,8 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
 
     private fun invalidateMenuState() {
-        centeredToolbar.menu.findItem(R.id.course_review_submit)?.isEnabled =
-            !courseReviewEditText.text.isNullOrEmpty() && courseReviewRating.rating > 0
+        binding.appBarLayout.centeredToolbarContainer.centeredToolbar.menu.findItem(R.id.course_review_submit)?.isEnabled =
+            !binding.courseReviewEditText.text.isNullOrEmpty() && binding.courseReviewRating.rating > 0
     }
 
     override fun setState(state: ComposeCourseReviewView.State) {

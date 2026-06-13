@@ -7,9 +7,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.view_profile_user_id.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ViewProfileUserIdBinding
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.profile_id.ProfileIdPresenter
@@ -33,6 +34,8 @@ class ProfileIdFragment : Fragment(R.layout.view_profile_user_id), ProfileIdView
 
     private val profileIdPresenter: ProfileIdPresenter by viewModels { viewModelFactory }
 
+    private val binding: ViewProfileUserIdBinding by viewBinding(ViewProfileUserIdBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -40,7 +43,7 @@ class ProfileIdFragment : Fragment(R.layout.view_profile_user_id), ProfileIdView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.isVisible = false
-        profileUserId.setOnLongClickListener {
+        binding.profileUserId.setOnLongClickListener {
             val textToCopy = (it as AppCompatTextView).text.toString()
             requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
             true
@@ -68,7 +71,7 @@ class ProfileIdFragment : Fragment(R.layout.view_profile_user_id), ProfileIdView
 
         if (profileData?.isCurrentUser == true && userId != null) {
             view?.isVisible = true
-            profileUserId.text = getString(R.string.profile_user_id, userId)
+            binding.profileUserId.text = getString(R.string.profile_user_id, userId)
         } else {
             view?.isVisible = false
         }

@@ -8,13 +8,12 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.jakewharton.rxrelay2.BehaviorRelay
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz.*
-import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentStepQuizBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
@@ -37,6 +36,8 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.State, StepQuizFeature.Action.ViewAction> {
+    protected val stepQuizBinding: FragmentStepQuizBinding by viewBinding(FragmentStepQuizBinding::bind)
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -63,9 +64,6 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizFeature.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
 
-    protected abstract val quizLayoutRes: Int
-        @LayoutRes get
-
     protected abstract val quizViews: Array<View>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +84,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         (inflater.inflate(R.layout.fragment_step_quiz, container, false) as ViewGroup)
             .apply {
-                addView(inflater.inflate(quizLayoutRes, this, false))
+                addView(createStepView(inflater, this))
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,7 +92,7 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
 
         viewStateDelegate = stepQuizViewStateDelegateFactory.create(view, *quizViews)
 
-        stepQuizNetworkError.tryAgain.setOnClickListener {
+        stepQuizBinding.stepQuizNetworkError.tryAgain.setOnClickListener {
             viewModel.onNewMessage(StepQuizFeature.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
         }
 
@@ -102,24 +100,26 @@ abstract class DefaultStepQuizFragment : Fragment(), ReduxView<StepQuizFeature.S
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizLessonData = StepQuizLessonData(lessonData),
-                stepQuizFormDelegate = createStepQuizFormDelegate(view),
+                stepQuizFormDelegate = createStepQuizFormDelegate(),
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
-                        stepQuizFeedbackBlocks,
+                        stepQuizBinding.stepQuizFeedbackBlocks.root,
                         lessonData.lesson.isTeacher,
                         stepWrapper.step.actions?.doReview != null
                     ) { openStepInWeb(stepWrapper.step) },
-                stepQuizActionButton = stepQuizAction,
-                stepRetryButton = stepQuizRetry,
-                stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
-                stepQuizReviewTeacherMessage = stepQuizReviewTeacherMessage,
+                stepQuizActionButton = stepQuizBinding.stepQuizActionContainer.stepQuizAction,
+                stepRetryButton = stepQuizBinding.stepQuizActionContainer.stepQuizRetry,
+                stepQuizDiscountingPolicy = stepQuizBinding.stepQuizDiscountingPolicy,
+                stepQuizReviewTeacherMessage = stepQuizBinding.stepQuizReviewTeacherMessage,
                 onNewMessage = viewModel::onNewMessage
             ) {
                 (parentFragment as? Moveable)?.move()
             }
     }
 
-    protected abstract fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate
+    protected abstract fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View
+
+    protected abstract fun createStepQuizFormDelegate(): StepQuizFormDelegate
 
     protected fun onActionButtonClicked() {
         stepQuizDelegate.onActionButtonClicked()

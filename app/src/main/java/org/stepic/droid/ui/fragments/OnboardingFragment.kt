@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.fragment_onboarding_page.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.databinding.FragmentOnboardingPageBinding
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 import ru.nobird.android.view.base.ui.extension.argument
 
 class OnboardingFragment : FragmentBase() {
+    private val onboardingPageBinding: FragmentOnboardingPageBinding by viewBinding(FragmentOnboardingPageBinding::bind)
+
     companion object {
         fun newInstance(onboardingType: OnboardingType): OnboardingFragment =
             OnboardingFragment()
@@ -31,29 +34,29 @@ class OnboardingFragment : FragmentBase() {
     }
 
     private fun initScreen(type: OnboardingType) {
-        onboardingPageTitle.setText(type.title)
-        onboardingPageSubtitle.setText(type.subtitle)
-        onboardingPageAction.setText(type.getActionText())
+        onboardingPageBinding.onboardingPageTitle.setText(type.title)
+        onboardingPageBinding.onboardingPageSubtitle.setText(type.subtitle)
+        onboardingPageBinding.onboardingPageAction.setText(type.getActionText())
 
-        onboardingPageAction.setOnClickListener {
+        onboardingPageBinding.onboardingPageAction.setOnClickListener {
             (context as OnNextClickedListener).onNextClicked()
         }
         initAnimation(type)
     }
 
     private fun initAnimation(type: OnboardingType) {
-        onboardingAnimationView.visibility = View.VISIBLE
-        onboardingAnimationView.pauseAnimation()
-        onboardingAnimationView.setAnimation(type.assetPathToAnimation)
+        onboardingPageBinding.onboardingAnimationView.visibility = View.VISIBLE
+        onboardingPageBinding.onboardingAnimationView.pauseAnimation()
+        onboardingPageBinding.onboardingAnimationView.setAnimation(type.assetPathToAnimation)
     }
 
     fun startAnimation() {
-        onboardingAnimationView.setAnimation(onboardingType.assetPathToAnimation)
-        onboardingAnimationView.playAnimation()
+        onboardingPageBinding.onboardingAnimationView.setAnimation(onboardingType.assetPathToAnimation)
+        onboardingPageBinding.onboardingAnimationView.playAnimation()
     }
 
     override fun onPause() {
         super.onPause()
-        onboardingAnimationView.pauseAnimation()
+        onboardingPageBinding.onboardingAnimationView.pauseAnimation()
     }
 }

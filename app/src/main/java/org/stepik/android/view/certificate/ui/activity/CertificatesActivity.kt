@@ -4,17 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_certificates.*
-import kotlinx.android.synthetic.main.empty_certificates.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.databinding.ActivityCertificatesBinding
 import org.stepic.droid.model.CertificateListItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -65,6 +64,8 @@ class CertificatesActivity :
     private val viewStateDelegate =
         ViewStateDelegate<CertificatesView.State>()
 
+    private val binding: ActivityCertificatesBinding by viewBinding(ActivityCertificatesBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_certificates)
@@ -82,7 +83,7 @@ class CertificatesActivity :
             isCurrentUser = isCurrentUser
         )
 
-        with(certificateRecyclerView) {
+        with(binding.certificateRecyclerView) {
             adapter = certificatesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -95,9 +96,13 @@ class CertificatesActivity :
 
         initViewStateDelegate()
 
-        certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.forceUpdate(userId) }
-        tryAgain.setOnClickListener { certificatesPresenter.forceUpdate(userId) }
-        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        binding.certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.forceUpdate(userId) }
+        binding.certificateErrorNoConnection.tryAgain.setOnClickListener {
+            certificatesPresenter.forceUpdate(userId)
+        }
+        binding.certificateEmptyView.goToCatalog.setOnClickListener {
+            screenManager.showCatalog(this)
+        }
 
         certificatesPresenter.fetchCertificates(userId)
     }
@@ -130,17 +135,21 @@ class CertificatesActivity :
         }
 
     private fun initViewStateDelegate() {
-        viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(reportEmptyCertificates)
-        viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<CertificatesView.State.NetworkError>(error)
-        viewStateDelegate.addState<CertificatesView.State.CertificatesCache>(certificateSwipeRefresh, certificateRecyclerView)
-        viewStateDelegate.addState<CertificatesView.State.CertificatesRemote>(certificateSwipeRefresh, certificateRecyclerView)
-        viewStateDelegate.addState<CertificatesView.State.CertificatesRemoteLoading>(certificateSwipeRefresh, certificateRecyclerView, loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(binding.certificateEmptyView.reportEmptyCertificates)
+        viewStateDelegate.addState<CertificatesView.State.Loading>(binding.certificateProgressBar.loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<CertificatesView.State.NetworkError>(binding.certificateErrorNoConnection.error)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesCache>(binding.certificateSwipeRefresh, binding.certificateRecyclerView)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesRemote>(binding.certificateSwipeRefresh, binding.certificateRecyclerView)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesRemoteLoading>(
+            binding.certificateSwipeRefresh,
+            binding.certificateRecyclerView,
+            binding.certificateProgressBar.loadProgressbarOnEmptyScreen
+        )
     }
 
     override fun setState(state: CertificatesView.State) {
-        certificateSwipeRefresh.isRefreshing = false
-        certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesRemote ||
+        binding.certificateSwipeRefresh.isRefreshing = false
+        binding.certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesRemote ||
                 state is CertificatesView.State.CertificatesCache ||
                 state is CertificatesView.State.NetworkError)
         viewStateDelegate.switchState(state)
@@ -156,7 +165,7 @@ class CertificatesActivity :
     }
 
     override fun showNetworkError() {
-        root.snackbar(messageRes = R.string.connectionProblems)
+        binding.root.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
@@ -168,7 +177,7 @@ class CertificatesActivity :
     }
 
     override fun showChangeNameSuccess() {
-        root.snackbar(messageRes = R.string.certificate_name_change_snackbar_success)
+        binding.root.snackbar(messageRes = R.string.certificate_name_change_snackbar_success)
     }
 
     override fun showChangeNameDialogError(certificate: Certificate, attemptedFullName: String) {

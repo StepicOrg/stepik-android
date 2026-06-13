@@ -3,10 +3,11 @@ package org.stepik.android.view.step_quiz_unsupported.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentStepQuizUnsupportedBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.in_app_web_view.ui.dialog.InAppWebViewDialogFragment
@@ -38,6 +39,8 @@ class UnsupportedStepQuizFragment : Fragment(R.layout.fragment_step_quiz_unsuppo
 
     private var stepId: Long by argument()
 
+    private val binding: FragmentStepQuizUnsupportedBinding by viewBinding(FragmentStepQuizUnsupportedBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -52,7 +55,7 @@ class UnsupportedStepQuizFragment : Fragment(R.layout.fragment_step_quiz_unsuppo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        stepQuizAction.setOnClickListener {
+        binding.stepQuizAction.setOnClickListener {
             InAppWebViewDialogFragment
                 .newInstance(lessonData.lesson.title.orEmpty(), stepDeepLinkBuilder.createStepLink(stepWrapper.step), isProvideAuth = true)
                 .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)

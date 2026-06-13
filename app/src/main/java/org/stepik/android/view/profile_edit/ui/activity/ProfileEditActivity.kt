@@ -11,10 +11,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_profile_edit.*
+import by.kirich1409.viewbindingdelegate.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.ActivityProfileEditBinding
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import ru.nobird.app.core.model.mutate
@@ -33,6 +34,8 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
         fun createIntent(context: Context): Intent =
             Intent(context, ProfileEditActivity::class.java)
     }
+
+    private val binding: ActivityProfileEditBinding by viewBinding(ActivityProfileEditBinding::bind)
 
     private val profileEditPresenter: ProfileEditPresenter by viewModels { viewModelFactory }
 
@@ -72,17 +75,17 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
 
         profileEditAdapter += adapterDelegate<ProfileEditItem, ProfileEditItem>(R.layout.item_profile_edit_navigation)
 
-        navigationRecycler.layoutManager = LinearLayoutManager(this)
-        navigationRecycler.adapter = profileEditAdapter
+        binding.navigationRecycler.layoutManager = LinearLayoutManager(this)
+        binding.navigationRecycler.adapter = profileEditAdapter
 
-        navigationRecycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL).apply {
+        binding.navigationRecycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL).apply {
             ContextCompat.getDrawable(this@ProfileEditActivity, R.drawable.bg_divider_vertical)?.let(::setDrawable)
         })
 
         viewStateDelegate.addState<ProfileEditView.State.Idle>()
         viewStateDelegate.addState<ProfileEditView.State.Loading>()
-        viewStateDelegate.addState<ProfileEditView.State.Error>(profileEditEmptyLogin)
-        viewStateDelegate.addState<ProfileEditView.State.ProfileLoaded>(navigationRecycler)
+        viewStateDelegate.addState<ProfileEditView.State.Error>(binding.profileEditEmptyLogin.root)
+        viewStateDelegate.addState<ProfileEditView.State.ProfileLoaded>(binding.navigationRecycler)
     }
 
     private fun injectComponent() {
@@ -114,12 +117,12 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
         when (requestCode) {
             ProfileEditInfoActivity.REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    root.snackbar(messageRes = R.string.profile_edit_change_success_info)
+                    binding.root.snackbar(messageRes = R.string.profile_edit_change_success_info)
                 }
 
             ProfileEditPasswordActivity.REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    root.snackbar(messageRes = R.string.profile_edit_change_success_password)
+                    binding.root.snackbar(messageRes = R.string.profile_edit_change_success_password)
                 }
 
             else ->

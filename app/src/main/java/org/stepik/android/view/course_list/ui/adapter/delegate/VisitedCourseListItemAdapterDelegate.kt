@@ -8,13 +8,11 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.strikeThrough
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.item_course.view.courseItemImage
-import kotlinx.android.synthetic.main.item_course.view.courseItemName
-import kotlinx.android.synthetic.main.item_visited_course.view.*
-import kotlinx.android.synthetic.main.item_visited_course.view.coursePrice
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ItemVisitedCourseBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
@@ -47,11 +45,7 @@ class VisitedCourseListItemAdapterDelegate(
     }
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
-        private val courseItemImage = root.courseItemImage
-        private val courseListWishlist = root.courseListWishlist
-        private val courseItemName = root.courseItemName
-        private val courseItemOldPrice = root.courseOldPrice
-        private val courseItemPrice = root.coursePrice
+        private val viewBinding: ItemVisitedCourseBinding by viewBinding { ItemVisitedCourseBinding.bind(root) }
 
         init {
             root.setOnClickListener { (itemData as? CourseListItem.Data)?.let(onItemClicked) }
@@ -66,9 +60,9 @@ class VisitedCourseListItemAdapterDelegate(
                 .load(data.course.cover)
                 .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(courseItemImage)
+                .into(viewBinding.courseItemImage)
 
-            courseItemName.text = data.course.title
+            viewBinding.courseItemName.text = data.course.title
 
             val defaultPromoCode = defaultPromoCodeMapper.mapToDefaultPromoCode(data.course)
             val mustShowDefaultPromoCode = defaultPromoCode != DefaultPromoCode.EMPTY &&
@@ -92,11 +86,11 @@ class VisitedCourseListItemAdapterDelegate(
                         R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
                 }
 
-            courseItemPrice.setTextColor(AppCompatResources.getColorStateList(context, textColor))
-            courseItemPrice.text = displayPrice
+            viewBinding.coursePrice.setTextColor(AppCompatResources.getColorStateList(context, textColor))
+            viewBinding.coursePrice.text = displayPrice
 
-            courseItemOldPrice.isVisible = mustShowDefaultPromoCode && !isEnrolled
-            courseItemOldPrice.text = buildSpannedString {
+            viewBinding.courseOldPrice.isVisible = mustShowDefaultPromoCode && !isEnrolled
+            viewBinding.courseOldPrice.text = buildSpannedString {
                 strikeThrough {
                     if (data.courseStats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
                         append(data.courseStats.enrollmentState.standardLightSku.price)
@@ -106,7 +100,7 @@ class VisitedCourseListItemAdapterDelegate(
                 }
             }
 
-            courseListWishlist.isVisible = !isEnrolled && data.course.isInWishlist
+            viewBinding.courseListWishlist.isVisible = !isEnrolled && data.course.isInWishlist
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
             analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))

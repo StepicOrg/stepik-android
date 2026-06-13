@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:viewBindingIgnore="true">
+    >
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackWrong"

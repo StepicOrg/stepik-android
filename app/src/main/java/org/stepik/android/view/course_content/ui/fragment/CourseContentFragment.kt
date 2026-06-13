@@ -18,19 +18,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.empty_default.*
-import kotlinx.android.synthetic.main.error_no_connection.*
-import kotlinx.android.synthetic.main.fragment_course_content.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentCourseContentBinding
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
@@ -100,6 +99,8 @@ class CourseContentFragment :
     private lateinit var contentAdapter: CourseContentAdapter
     private var courseId: Long by argument()
 
+    private val binding: FragmentCourseContentBinding by viewBinding(FragmentCourseContentBinding::bind)
+
     private val courseContentPresenter: CourseContentPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseContentView.State>
@@ -137,7 +138,7 @@ class CourseContentFragment :
         inflater.inflate(R.layout.fragment_course_content, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        with(courseContentRecycler) {
+        with(binding.courseContentRecycler) {
             contentAdapter =
                 CourseContentAdapter(
                     sectionClickListener =
@@ -204,11 +205,11 @@ class CourseContentFragment :
         }
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<CourseContentView.State.Idle>(courseContentPlaceholder)
-        viewStateDelegate.addState<CourseContentView.State.Loading>(courseContentPlaceholder)
-        viewStateDelegate.addState<CourseContentView.State.CourseContentLoaded>(courseContentRecycler)
-        viewStateDelegate.addState<CourseContentView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CourseContentView.State.EmptyContent>(report_empty)
+        viewStateDelegate.addState<CourseContentView.State.Idle>(binding.courseContentPlaceholder)
+        viewStateDelegate.addState<CourseContentView.State.Loading>(binding.courseContentPlaceholder)
+        viewStateDelegate.addState<CourseContentView.State.CourseContentLoaded>(binding.courseContentRecycler)
+        viewStateDelegate.addState<CourseContentView.State.NetworkError>(binding.errorNoConnection.reportProblem)
+        viewStateDelegate.addState<CourseContentView.State.EmptyContent>(binding.emptyDefault.reportEmpty)
     }
 
     override fun onStart() {
@@ -292,7 +293,7 @@ class CourseContentFragment :
             .firstElement()
             .ignoreElement()
             .subscribe {
-                val anchorView = courseContentRecycler.findViewById<View>(R.id.course_control_schedule)
+                val anchorView = binding.courseContentRecycler.findViewById<View>(R.id.course_control_schedule)
                 val deadlinesDescription = getString(R.string.deadlines_banner_description)
                 PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true, withArrow = true)
             }
