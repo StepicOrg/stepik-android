@@ -20,6 +20,7 @@ import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.listeners.OnItemClickListener
 import org.stepic.droid.util.resolveColorAttribute
 import ru.nobird.android.view.base.ui.extension.inflate
+import java.util.Locale
 import javax.inject.Inject
 
 class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>(), OnItemClickListener {
@@ -80,7 +81,7 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
     private fun filterItems() {
         items = (rawDBItems + rawAPIItems)
                 .filter { it.text.contains(constraint, ignoreCase = true) }
-                .distinctBy { it.text.toLowerCase() }
+                .distinctBy { it.text.lowercase(Locale.getDefault()) }
                 .map {
                     val spannable = SpannableString(it.text)
                     val spanStart = it.text.indexOf(constraint, ignoreCase = true)

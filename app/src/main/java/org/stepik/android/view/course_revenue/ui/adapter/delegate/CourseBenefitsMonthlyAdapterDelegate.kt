@@ -43,7 +43,7 @@ class CourseBenefitsMonthlyAdapterDelegate(
                 data.courseBenefitByMonth.date,
                 DateTimeHelper.DISPLAY_MONTH_YEAR_NOMINAL_PATTERN,
                 TimeZone.getDefault()
-            ).capitalize(Locale.ROOT)
+            ).replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
             val (incomeString, incomeStringColor) = resolveIncomeString(data.courseBenefitByMonth.totalUserIncome, data.courseBenefitByMonth.currencyCode, decimalFormat)
             viewBinding.courseBenefitByMonthIncome.text = incomeString

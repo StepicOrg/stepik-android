@@ -27,11 +27,11 @@ import org.stepik.android.view.base.ui.extension.ColorExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import kotlin.text.StringsKt;
 import timber.log.Timber;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> implements StickyHeaderAdapter<NotificationAdapter.DateHeaderViewHolder> {
@@ -183,12 +183,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             String date = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DATE, TimeZone.getDefault());
             String day = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DAY, TimeZone.getDefault());
-            viewHolder.sectionDate.setText(StringsKt.capitalize(date));
-            viewHolder.sectionDay.setText(StringsKt.capitalize(day));
+            viewHolder.sectionDate.setText(capitalize(date));
+            viewHolder.sectionDay.setText(capitalize(day));
             ViewKt.setVisible(viewHolder.itemView, true);
         }
     }
 
+    private static String capitalize(String value) {
+        if (!value.isEmpty()) {
+            char firstChar = value.charAt(0);
+            if (Character.isLowerCase(firstChar)) {
+                char titleChar = Character.toTitleCase(firstChar);
+                String first = titleChar != Character.toUpperCase(firstChar)
+                        ? String.valueOf(titleChar)
+                        : value.substring(0, 1).toUpperCase(Locale.getDefault());
+                return first + value.substring(1);
+            }
+        }
+        return value;
+    }
 
     public static final class DateHeaderViewHolder extends RecyclerView.ViewHolder {
         private final TextView sectionDate;
