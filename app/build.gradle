@@ -168,6 +168,7 @@ dependencies {
     implementation files('libs/flexbox-release.aar')
     implementation project(':billing')
     implementation project(':model')
+    implementation platform(libraries.kotlinBom)
     implementation libraries.kotlinStd
 
     //<DI>
