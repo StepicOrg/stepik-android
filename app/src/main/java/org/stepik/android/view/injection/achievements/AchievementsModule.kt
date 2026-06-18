@@ -4,10 +4,11 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.base.injection.ViewModelKey
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 internal abstract class AchievementsModule {
 
     /**

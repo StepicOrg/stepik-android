@@ -8,14 +8,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.tabs.TabLayout
-import kotlinx.android.synthetic.main.activity_course_benefits.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.ActivityCourseBenefitsBinding
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitClickedEvent
 import org.stepik.android.domain.course_revenue.analytic.CourseBenefitsScreenOpenedEvent
@@ -70,6 +70,8 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private val courseRevenueViewModel: CourseRevenueViewModel by reduxViewModel(this) { viewModelFactory }
 
+    private val binding: ActivityCourseBenefitsBinding by viewBinding(ActivityCourseBenefitsBinding::bind)
+
     private lateinit var courseBenefitSummaryDelegate: CourseBenefitSummaryViewDelegate
 
     private val viewStateDelegate = ViewStateDelegate<CourseRevenueFeature.CourseRevenueState>()
@@ -81,7 +83,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         setContentView(R.layout.activity_course_benefits)
         injectComponent()
 
-        setSupportActionBar(courseBenefitToolbar)
+        setSupportActionBar(binding.courseBenefitToolbar)
         val actionBar = this.supportActionBar
             ?: throw IllegalStateException("support action bar should be set")
 
@@ -94,22 +96,22 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
         analytic.report(CourseBenefitsScreenOpenedEvent(courseId, courseTitle))
 
-        courseBenefitToolbarTitle.text = if (courseTitle.isNullOrBlank()) {
+        binding.courseBenefitToolbarTitle.text = if (courseTitle.isNullOrBlank()) {
             getString(R.string.course_benefits_revenue_title)
         } else {
             getString(R.string.course_benefits_toolbar_title, courseTitle)
         }
 
-        courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-            val ratio = abs(verticalOffset).toFloat() / (courseBenefitsCollapsingToolbar.height - courseBenefitToolbar.height)
-            courseBenefitSummaryContainer.alpha = 1f - (ratio * 1.5f)
+        binding.courseBenefitsAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            val ratio = abs(verticalOffset).toFloat() / (binding.courseBenefitsCollapsingToolbar.height - binding.courseBenefitToolbar.height)
+            binding.courseBenefitSummaryContainer.root.alpha = 1f - (ratio * 1.5f)
         })
 
-        ViewCompat.setTranslationZ(divider, ViewCompat.getElevation(courseBenefitsAppBar))
+        ViewCompat.setTranslationZ(binding.divider.root, ViewCompat.getElevation(binding.courseBenefitsAppBar))
 
         initViewPager()
         initViewStateDelegate()
-        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(courseBenefitSummaryContainer,
+        courseBenefitSummaryDelegate = CourseBenefitSummaryViewDelegate(binding.courseBenefitSummaryContainer,
             revenuePriceMapper,
             onCourseSummaryClicked = { isExpanded -> analytic.report(CourseBenefitsSummaryClicked(courseId, courseTitle, isExpanded)) },
             onContactSupportClicked = {
@@ -124,7 +126,7 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
         )
         courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = false))
 
-        tryAgain.setOnClickListener { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = true)) }
+        binding.coursesBenefitsLoadingError.tryAgain.setOnClickListener { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.InitMessage(courseId, forceUpdate = true)) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -144,9 +146,9 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Idle>()
-        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Loading>(courseBenefitsTabs, courseBenefitSummaryContainer, courseBenefitsOperationsViewPager)
-        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Error>(coursesBenefitsLoadingError)
-        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Content>(courseBenefitsTabs, courseBenefitSummaryContainer, courseBenefitsOperationsViewPager)
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Loading>(binding.courseBenefitsTabs, binding.courseBenefitSummaryContainer.root, binding.courseBenefitsOperationsViewPager)
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Error>(binding.coursesBenefitsLoadingError.root)
+        viewStateDelegate.addState<CourseRevenueFeature.CourseRevenueState.Content>(binding.courseBenefitsTabs, binding.courseBenefitSummaryContainer.root, binding.courseBenefitsOperationsViewPager)
     }
 
     private fun initViewPager() {
@@ -176,13 +178,13 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
             reloadListAction = { courseRevenueViewModel.onNewMessage(CourseRevenueFeature.Message.CourseBenefitsMonthlyMessage(CourseBenefitsMonthlyFeature.Message.TryAgain(courseId))) }
         )
 
-        courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
-        courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
-        courseBenefitsTabs.addTab(courseBenefitsTabs.newTab().setText(R.string.course_benefits_monthly_tab))
-        courseBenefitsTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.courseBenefitsOperationsViewPager.adapter = courseBenefitsOperationsItemAdapter
+        binding.courseBenefitsTabs.addTab(binding.courseBenefitsTabs.newTab().setText(getString(R.string.course_benefits_tab)))
+        binding.courseBenefitsTabs.addTab(binding.courseBenefitsTabs.newTab().setText(R.string.course_benefits_monthly_tab))
+        binding.courseBenefitsTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab?.position ?: return
-                courseBenefitsOperationsViewPager.currentItem = position
+                binding.courseBenefitsOperationsViewPager.currentItem = position
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 // no op
@@ -192,9 +194,9 @@ class CourseRevenueActivity : AppCompatActivity(), ReduxView<CourseRevenueFeatur
                 // no op
             }
         })
-        courseBenefitsOperationsViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.courseBenefitsOperationsViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                courseBenefitsTabs.selectTab(courseBenefitsTabs.getTabAt(position))
+                binding.courseBenefitsTabs.selectTab(binding.courseBenefitsTabs.getTabAt(position))
             }
         })
     }

@@ -1,7 +1,7 @@
 package org.stepik.android.presentation.course_purchase.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.mobile_tiers.model.LightSku

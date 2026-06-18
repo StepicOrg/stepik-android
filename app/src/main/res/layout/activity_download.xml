@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:viewBindingIgnore="true">
+    android:orientation="vertical">
 
     <include layout="@layout/view_centered_appbar"/>
 
-    <include layout="@layout/progress_bar_on_empty_screen"/>
+    <include
+        android:id="@+id/progressBarOnEmptyScreen"
+        layout="@layout/progress_bar_on_empty_screen"/>
 
     <RelativeLayout
         android:id="@+id/downloadsRootView"
@@ -97,7 +97,9 @@
             android:scrollbarStyle="outsideOverlay"
             android:visibility="gone"/>
 
-        <include layout="@layout/empty_downloading"/>
+        <include
+            android:id="@+id/emptyDownloadsView"
+            layout="@layout/empty_downloading"/>
     </RelativeLayout>
 
 </LinearLayout>

@@ -17,7 +17,7 @@ import org.stepik.android.view.course.mapper.DisplayPriceMapper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 
 class BuyActionViewDelegate(
-    coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
+    private val binding: BottomSheetDialogCoursePurchaseBinding,
     private val coursePurchaseData: CoursePurchaseData,
     private val displayPriceMapper: DisplayPriceMapper,
     launchPurchaseFlowAction: () -> Unit,
@@ -25,16 +25,6 @@ class BuyActionViewDelegate(
     launchRestoreAction: () -> Unit,
     closeDialog: () -> Unit
 ) {
-    private val context = coursePurchaseBinding.root.context
-    private val coursePurchaseBuyActionGreen = coursePurchaseBinding.coursePurchaseBuyActionGreen
-    private val coursePurchaseBuyActionViolet = coursePurchaseBinding.coursePurchaseBuyActionViolet
-    private val coursePurchaseTerminalAction = coursePurchaseBinding.coursePurchaseTerminalAction
-    private val coursePurchasePaymentIcon = coursePurchaseBinding.coursePurchasePaymentIcon
-    private val coursePurchasePaymentTitle = coursePurchaseBinding.coursePurchasePaymentTitle
-    private val coursePurchasePaymentFailureFeedback = coursePurchaseBinding.coursePurchasePaymentFailureFeedback
-    private val coursePurchasePaymentPendingFeedback = coursePurchaseBinding.coursePurchasePaymentPendingFeedback
-    private val coursePurchaseCommissionNotice = coursePurchaseBinding.coursePurchaseCommissionNotice
-
     private var paymentState: CoursePurchaseFeature.PaymentState = CoursePurchaseFeature.PaymentState.Idle
 
     private val idleClickListener = View.OnClickListener {
@@ -44,9 +34,9 @@ class BuyActionViewDelegate(
     }
 
     init {
-        coursePurchaseBuyActionGreen.setOnClickListener(idleClickListener)
-        coursePurchaseBuyActionViolet.setOnClickListener(idleClickListener)
-        coursePurchaseTerminalAction.setOnClickListener {
+        binding.coursePurchaseBuyActionGreen.setOnClickListener(idleClickListener)
+        binding.coursePurchaseBuyActionViolet.setOnClickListener(idleClickListener)
+        binding.coursePurchaseTerminalAction.setOnClickListener {
             when (paymentState) {
                 is CoursePurchaseFeature.PaymentState.PaymentSuccess -> {
                     launchStartStudying()
@@ -69,21 +59,23 @@ class BuyActionViewDelegate(
             state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending ||
             state.paymentState is CoursePurchaseFeature.PaymentState.PaymentSuccess
 
-        coursePurchasePaymentTitle.isVisible = isTerminalState
-        coursePurchasePaymentIcon.isVisible = isTerminalState
-        coursePurchasePaymentFailureFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure
-        coursePurchasePaymentPendingFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending
-        coursePurchaseCommissionNotice.isGone = isTerminalState
+        binding.coursePurchasePaymentTitle.isVisible = isTerminalState
+        binding.coursePurchasePaymentIcon.isVisible = isTerminalState
+        binding.coursePurchasePaymentFailureFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentFailure
+        binding.coursePurchasePaymentPendingFeedback.isVisible = state.paymentState is CoursePurchaseFeature.PaymentState.PaymentPending
+        binding.coursePurchaseCommissionNotice.isGone = isTerminalState
 
-        coursePurchaseBuyActionGreen.isVisible = state.promoCodeState !is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
-        coursePurchaseBuyActionViolet.isVisible = state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
-        coursePurchaseTerminalAction.isVisible = isTerminalState
-        renderIdleButton(state, coursePurchaseBuyActionGreen)
-        renderIdleButton(state, coursePurchaseBuyActionViolet)
+        binding.coursePurchaseBuyActionGreen.isVisible = state.promoCodeState !is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
+        binding.coursePurchaseBuyActionViolet.isVisible = state.promoCodeState is CoursePurchaseFeature.PromoCodeState.Valid && !isTerminalState
+        binding.coursePurchaseTerminalAction.isVisible = isTerminalState
+        renderIdleButton(state, binding.coursePurchaseBuyActionGreen)
+        renderIdleButton(state, binding.coursePurchaseBuyActionViolet)
         renderTerminalButton(state)
     }
 
     private fun renderIdleButton(state: CoursePurchaseFeature.State.Content, coursePurchaseBuyAction: MaterialButton) {
+        val context = binding.root.context
+
         when (state.paymentState) {
             is CoursePurchaseFeature.PaymentState.Idle -> {
                 coursePurchaseBuyAction.icon = null
@@ -122,6 +114,8 @@ class BuyActionViewDelegate(
     }
 
     private fun renderTerminalButton(state: CoursePurchaseFeature.State.Content) {
+        val context = binding.root.context
+
         when (state.paymentState) {
             is CoursePurchaseFeature.PaymentState.PaymentSuccess -> {
                 val icon = AppCompatResources
@@ -132,24 +126,24 @@ class BuyActionViewDelegate(
                         DrawableCompat.setTint(it, context.resolveColorAttribute(R.attr.colorOnPrimary))
                         DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
                     }
-                coursePurchaseTerminalAction.icon = icon
-                coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_learn_action)
-                coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_success)
-                coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_success))
+                binding.coursePurchaseTerminalAction.icon = icon
+                binding.coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_learn_action)
+                binding.coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_success)
+                binding.coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_success))
             }
 
             is CoursePurchaseFeature.PaymentState.PaymentFailure -> {
-                coursePurchaseTerminalAction.icon = null
-                coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_restore_action)
-                coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_failure)
-                coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_fail))
+                binding.coursePurchaseTerminalAction.icon = null
+                binding.coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_restore_action)
+                binding.coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_failure)
+                binding.coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_fail))
             }
 
             is CoursePurchaseFeature.PaymentState.PaymentPending -> {
-                coursePurchaseTerminalAction.icon = null
-                coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_ok_action)
-                coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_pending)
-                coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_pending))
+                binding.coursePurchaseTerminalAction.icon = null
+                binding.coursePurchaseTerminalAction.text = context.getString(R.string.course_purchase_payment_ok_action)
+                binding.coursePurchasePaymentTitle.text = context.getString(R.string.course_purchase_payment_pending)
+                binding.coursePurchasePaymentIcon.setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_purchase_pending))
             }
             else -> {}
         }

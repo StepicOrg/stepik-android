@@ -4,9 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_collection_horizontal_list.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCollectionHorizontalListBinding
 import org.stepik.android.domain.catalog.model.CatalogAuthor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -26,9 +26,8 @@ class CourseCollectionAuthorListAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
         AuthorListViewHolder(createView(parent, R.layout.item_collection_horizontal_list))
 
-    private inner class AuthorListViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseListItem>(containerView), LayoutContainer {
+    private inner class AuthorListViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
+        private val viewBinding: ItemCollectionHorizontalListBinding by viewBinding { ItemCollectionHorizontalListBinding.bind(root) }
 
         private val adapter = DefaultDelegateAdapter<CatalogAuthor>()
             .also {
@@ -37,7 +36,7 @@ class CourseCollectionAuthorListAdapterDelegate(
 
         init {
             val rowCount = context.resources.getInteger(R.integer.author_lists_default_rows)
-            horizontalListRecycler.layoutManager =
+            viewBinding.horizontalListRecycler.layoutManager =
                 TableLayoutManager(
                     context,
                     horizontalSpanCount = context.resources.getInteger(R.integer.author_lists_default_columns),
@@ -45,18 +44,18 @@ class CourseCollectionAuthorListAdapterDelegate(
                     orientation = RecyclerView.HORIZONTAL,
                     reverseLayout = false
                 )
-            horizontalListRecycler.setRecycledViewPool(sharedViewPool)
-            horizontalListRecycler.setHasFixedSize(true)
-            horizontalListRecycler.adapter = adapter
+            viewBinding.horizontalListRecycler.setRecycledViewPool(sharedViewPool)
+            viewBinding.horizontalListRecycler.setHasFixedSize(true)
+            viewBinding.horizontalListRecycler.adapter = adapter
 
             val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(horizontalListRecycler)
+            snapHelper.attachToRecyclerView(viewBinding.horizontalListRecycler)
         }
 
         override fun onBind(data: CourseListItem) {
             data as CourseListItem.SimilarAuthors
 
-            containerTitle.setText(R.string.authors_title)
+            viewBinding.containerTitle.setText(R.string.authors_title)
 
             adapter.items = data.similarAuthors
         }

@@ -1,10 +1,9 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_block_simple_course_list_grid_first.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemBlockSimpleCourseListGridFirstBinding
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -20,16 +19,16 @@ class SimpleCourseListGridFirstAdapter(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogCourseList> =
         ViewHolder(createView(parent, R.layout.item_block_simple_course_list_grid_first))
 
-    private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogCourseList>(containerView), LayoutContainer {
+    private inner class ViewHolder(root: android.view.View) : DelegateViewHolder<CatalogCourseList>(root) {
+        private val viewBinding: ItemBlockSimpleCourseListGridFirstBinding by viewBinding { ItemBlockSimpleCourseListGridFirstBinding.bind(root) }
+
         init {
-            simpleCourseListGridOverlay.setOnClickListener { onCourseListClicked(itemData ?: return@setOnClickListener) }
+            viewBinding.simpleCourseListGridOverlay.setOnClickListener { onCourseListClicked(itemData ?: return@setOnClickListener) }
         }
 
         override fun onBind(data: CatalogCourseList) {
-            simpleCourseListGridTitle.text = data.title
-            simpleCourseListGridCount.text =
+            viewBinding.simpleCourseListGridTitle.text = data.title
+            viewBinding.simpleCourseListGridCount.text =
                 courseCountMapper.mapCourseCountToString(context, data.coursesCount)
         }
     }

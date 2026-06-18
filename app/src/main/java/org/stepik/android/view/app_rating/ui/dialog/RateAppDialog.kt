@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.dialog_rate_app.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.DialogRateAppBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.util.RatingUtil
@@ -37,6 +38,8 @@ class RateAppDialog : DialogFragment() {
             fun onClickSupport(starNumber: Int)
         }
     }
+    private val rateAppBinding: DialogRateAppBinding by viewBinding(DialogRateAppBinding::bind)
+
     @Inject
     lateinit var analytic: Analytic
 
@@ -54,14 +57,14 @@ class RateAppDialog : DialogFragment() {
         val callback = targetFragment as? Callback
             ?: activity as Callback
 
-        rateDialogLater.setOnClickListener {
+        rateAppBinding.rateDialogLater.setOnClickListener {
             dialog?.dismiss()
-            callback.onClickLater(rateDialogRatingBar.rating.toInt())
+            callback.onClickLater(rateAppBinding.rateDialogRatingBar.rating.toInt())
         }
 
-        rateDialogPositive.setOnClickListener {
+        rateAppBinding.rateDialogPositive.setOnClickListener {
             dialog?.dismiss()
-            val rating = rateDialogRatingBar.rating.toInt()
+            val rating = rateAppBinding.rateDialogRatingBar.rating.toInt()
             if (RatingUtil.isExcellent(rating)) {
                 callback.onClickGooglePlay(rating)
             } else {
@@ -69,7 +72,7 @@ class RateAppDialog : DialogFragment() {
             }
         }
 
-        rateDialogRatingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
+        rateAppBinding.rateDialogRatingBar.setOnRatingBarChangeListener { _, rating, fromUser ->
             if (!fromUser) {
                 return@setOnRatingBarChangeListener
             }
@@ -87,28 +90,28 @@ class RateAppDialog : DialogFragment() {
 
     private fun applyRating(rating: Int) {
         if (rating == 0) {
-            rateDialogTitle.setText(R.string.rate_dialog_title)
-            rateDialogButtonsContainer.visibility = View.GONE
-            rateDialogHint.visibility = View.GONE
+            rateAppBinding.rateDialogTitle.setText(R.string.rate_dialog_title)
+            rateAppBinding.rateDialogButtonsContainer.visibility = View.GONE
+            rateAppBinding.rateDialogHint.visibility = View.GONE
         } else {
-            rateDialogHint.visibility = View.VISIBLE
-            rateDialogTitle.setText(R.string.rate_dialog_thanks)
+            rateAppBinding.rateDialogHint.visibility = View.VISIBLE
+            rateAppBinding.rateDialogTitle.setText(R.string.rate_dialog_thanks)
 
             if (rating in 1..4) {
-                rateDialogHint.setText(R.string.rate_dialog_hint_negative)
-                rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.attr.colorError)
+                rateAppBinding.rateDialogHint.setText(R.string.rate_dialog_hint_negative)
+                rateAppBinding.rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.attr.colorError)
             } else if (RatingUtil.isExcellent(rating)) {
-                rateDialogHint.setText(R.string.rate_dialog_hint_positive)
-                rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.attr.colorSecondary)
+                rateAppBinding.rateDialogHint.setText(R.string.rate_dialog_hint_positive)
+                rateAppBinding.rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.attr.colorSecondary)
             }
 
-            rateDialogButtonsContainer.visibility = View.VISIBLE
+            rateAppBinding.rateDialogButtonsContainer.visibility = View.VISIBLE
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
+        outState.putInt(ratingKey, rateAppBinding.rateDialogRatingBar.rating.toInt())
     }
 
     private fun TextView.setTextAndColor(@StringRes stringRes: Int, @AttrRes textColorRes: Int) {

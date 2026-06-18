@@ -17,15 +17,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_lesson.*
-import kotlinx.android.synthetic.main.empty_login.*
-import kotlinx.android.synthetic.main.error_lesson_is_exam.*
-import kotlinx.android.synthetic.main.error_lesson_not_found.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.layout_step_tab_icon.view.*
-import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ActivityLessonBinding
+import org.stepic.droid.databinding.LayoutStepTabIconBinding
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -73,6 +69,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     RateAppDialog.Companion.Callback,
     TimeIntervalPickerDialogFragment.Companion.Callback,
     StreakNotificationDialogFragment.Callback {
+    private val lessonBinding: ActivityLessonBinding by viewBinding(ActivityLessonBinding::bind)
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -159,43 +156,43 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         initCenteredToolbar(R.string.lesson_title, showHomeButton = true)
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<LessonView.State.Idle>(lessonPlaceholder)
-        viewStateDelegate.addState<LessonView.State.Loading>(lessonPlaceholder)
-        viewStateDelegate.addState<LessonView.State.LessonNotFound>(lessonNotFound)
-        viewStateDelegate.addState<LessonView.State.EmptyLogin>(emptyLogin)
-        viewStateDelegate.addState<LessonView.State.NetworkError>(errorNoConnection)
-        viewStateDelegate.addState<LessonView.State.LessonLoaded>(lessonPager)
+        viewStateDelegate.addState<LessonView.State.Idle>(lessonBinding.lessonPlaceholder)
+        viewStateDelegate.addState<LessonView.State.Loading>(lessonBinding.lessonPlaceholder)
+        viewStateDelegate.addState<LessonView.State.LessonNotFound>(lessonBinding.lessonNotFound.root)
+        viewStateDelegate.addState<LessonView.State.EmptyLogin>(lessonBinding.emptyLogin.root)
+        viewStateDelegate.addState<LessonView.State.NetworkError>(lessonBinding.errorNoConnection.root)
+        viewStateDelegate.addState<LessonView.State.LessonLoaded>(lessonBinding.lessonPager)
 
         viewStepStateDelegate = ViewStateDelegate()
-        viewStepStateDelegate.addState<LessonView.StepsState.Idle>(lessonPlaceholder)
-        viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonPlaceholder)
-        viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
-        viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
-        viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonNotFound)
-        viewStepStateDelegate.addState<LessonView.StepsState.Exam>(lessonIsExam)
-        viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
+        viewStepStateDelegate.addState<LessonView.StepsState.Idle>(lessonBinding.lessonPlaceholder)
+        viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonBinding.lessonPlaceholder)
+        viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(lessonBinding.errorNoConnection.root)
+        viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(lessonBinding.emptyLesson)
+        viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonBinding.lessonNotFound.root)
+        viewStepStateDelegate.addState<LessonView.StepsState.Exam>(lessonBinding.lessonIsExam.root)
+        viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonBinding.lessonPager, lessonBinding.lessonTab)
 
-        lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
+        lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(lessonBinding.viewSubtitledToolbar.centeredToolbar)
 
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
-        authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
+        lessonBinding.errorNoConnection.tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        lessonBinding.lessonNotFound.goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
+        lessonBinding.emptyLogin.authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
         stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
-        lessonPager.adapter = stepsAdapter
-        lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
-        lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        lessonBinding.lessonPager.adapter = stepsAdapter
+        lessonBinding.lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonBinding.lessonPager, stepsAdapter))
+        lessonBinding.lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
-                centeredToolbarSubtitle.text = getString(
+                lessonBinding.viewSubtitledToolbar.centeredToolbarSubtitle.text = getString(
                     R.string.lesson_step_counter, position + 1,
                     stepsAdapter.items.size
                 )
                 invalidateOptionsMenu()
             }
         })
-        lessonTab.setupWithViewPager(lessonPager, true)
+        lessonBinding.lessonTab.setupWithViewPager(lessonBinding.lessonPager, true)
 
         setDataToPresenter()
     }
@@ -268,7 +265,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 true
             }
             R.id.lesson_menu_item_info -> {
-                lessonPresenter.onShowLessonInfoClicked(lessonPager.currentItem)
+                lessonPresenter.onShowLessonInfoClicked(lessonBinding.lessonPager.currentItem)
                 true
             }
             else ->
@@ -282,7 +279,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             val stepNavigationDirection = intent.getIntExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION, -1)
             when {
                 stepNavigationDirection != -1 -> {
-                    lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? Moveable)?.move(isAutoplayEnabled = true, stepNavigationDirection = StepNavigationDirection.values()[stepNavigationDirection]) }
+                    lessonBinding.lessonPager.post { (stepsAdapter.activeFragments[lessonBinding.lessonPager.currentItem] as? Moveable)?.move(isAutoplayEnabled = true, stepNavigationDirection = StepNavigationDirection.values()[stepNavigationDirection]) }
                     intent.removeExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION)
                 }
 
@@ -300,8 +297,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             is LessonView.State.LessonLoaded -> {
                 viewStepStateDelegate.switchState(state.stepsState)
                 setupToolbarTitle(state.lessonData)
-                if (centeredToolbarSubtitle.text.isEmpty()) {
-                    centeredToolbarSubtitle.text = getString(
+                if (lessonBinding.viewSubtitledToolbar.centeredToolbarSubtitle.text.isEmpty()) {
+                    lessonBinding.viewSubtitledToolbar.centeredToolbarSubtitle.text = getString(
                         R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
                         state.lessonData.lesson.steps.size
                     )
@@ -312,21 +309,21 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     stepsAdapter.items = state.stepsState.stepItems
 
                     if (intent.getBooleanExtra(EXTRA_AUTOPLAY, false)) {
-                        lessonPager.post { playCurrentStep() }
+                        lessonBinding.lessonPager.post { playCurrentStep() }
                         intent.removeExtra(EXTRA_AUTOPLAY)
                     }
 
                     val stepNavigationDirectionExtra = intent.getIntExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION, -1)
                     if (stepNavigationDirectionExtra != -1) {
-                        lessonPager.post {
-                            (stepsAdapter.activeFragments[lessonPager.currentItem] as? Moveable)
+                        lessonBinding.lessonPager.post {
+                            (stepsAdapter.activeFragments[lessonBinding.lessonPager.currentItem] as? Moveable)
                                 ?.move(isAutoplayEnabled = true, stepNavigationDirection = StepNavigationDirection.values()[stepNavigationDirectionExtra])
                         }
                         intent.removeExtra(EXTRA_MOVE_STEP_NAVIGATION_DIRECTION)
                     }
                 } else {
                     if (state.stepsState is LessonView.StepsState.Exam) {
-                        errorLessonIsExamAction.setOnClickListener {
+                        lessonBinding.lessonIsExam.errorLessonIsExamAction.setOnClickListener {
                             val url = courseDeepLinkBuilder
                                 .createCourseLink(state.stepsState.courseId, CourseScreenTab.SYLLABUS)
 
@@ -338,7 +335,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     stepsAdapter.items = emptyList()
                 }
 
-                centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
+                lessonBinding.viewSubtitledToolbar.centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
                 invalidateTabLayout()
             }
             else -> Unit
@@ -350,12 +347,12 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     private fun setupToolbarTitle(lessonData: LessonData) {
-        centeredToolbarTitle.text =
+        lessonBinding.viewSubtitledToolbar.centeredToolbarTitle.text =
             lessonTitleMapper.mapToLessonTitle(this, lessonData)
     }
 
     private fun invalidateTabLayout() {
-        for (i in 0 until lessonTab.tabCount) {
+        for (i in 0 until lessonBinding.lessonTab.tabCount) {
             val tabFrames = stepsAdapter.getTabDrawable(i)
 
             val item = stepsAdapter.items[i]
@@ -372,19 +369,22 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 tabFrames.second
             }
 
-            if (lessonTab.getTabAt(i)?.customView == null) {
-                lessonTab.getTabAt(i)?.customView = View.inflate(this, R.layout.layout_step_tab_icon, null)
+            if (lessonBinding.lessonTab.getTabAt(i)?.customView == null) {
+                lessonBinding.lessonTab.getTabAt(i)?.customView = View.inflate(this, R.layout.layout_step_tab_icon, null)
             }
 
-            lessonTab.getTabAt(i)?.customView?.tabIconDrawable?.apply {
-                setImageResource(tabIconResource)
-                isEnabled = isPassed
+            val customView = lessonBinding.lessonTab.getTabAt(i)?.customView
+            if (customView != null) {
+                LayoutStepTabIconBinding.bind(customView).tabIconDrawable.apply {
+                    setImageResource(tabIconResource)
+                    isEnabled = isPassed
+                }
             }
         }
     }
 
     override fun showStepAtPosition(position: Int) {
-        lessonPager.currentItem = position
+        lessonBinding.lessonPager.currentItem = position
         lessonPresenter.onStepOpened(position)
     }
 
@@ -397,24 +397,24 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         isAutoplayEnabled: Boolean,
         stepNavigationDirection: StepNavigationDirection
     ): Boolean {
-        val itemCount = lessonPager
+        val itemCount = lessonBinding.lessonPager
             .adapter
             ?.count
             ?: return false
 
         return if (stepNavigationDirection == StepNavigationDirection.NEXT) {
-            val isNotLastItem = lessonPager.currentItem < itemCount - 1
+            val isNotLastItem = lessonBinding.lessonPager.currentItem < itemCount - 1
             if (isNotLastItem) {
-                lessonPager.currentItem++
+                lessonBinding.lessonPager.currentItem++
                 if (isAutoplayEnabled) {
                     playCurrentStep()
                 }
             }
             isNotLastItem
         } else {
-            val isNotFirstItem = lessonPager.currentItem > 0
+            val isNotFirstItem = lessonBinding.lessonPager.currentItem > 0
             if (isNotFirstItem) {
-                lessonPager.currentItem--
+                lessonBinding.lessonPager.currentItem--
                 if (isAutoplayEnabled) {
                     playCurrentStep()
                 }
@@ -424,7 +424,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     private fun playCurrentStep() {
-        (stepsAdapter.activeFragments[lessonPager.currentItem] as? Playable)
+        (stepsAdapter.activeFragments[lessonBinding.lessonPager.currentItem] as? Playable)
             ?.play()
     }
 
@@ -437,7 +437,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             screenManager.openComments(this, discussionThread, step, discussionId, false, isTeacher)
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE)
-            lessonPager.snackbar(messageRes = R.string.comment_disabled)
+            lessonBinding.lessonPager.snackbar(messageRes = R.string.comment_disabled)
         }
     }
 
@@ -501,7 +501,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         lessonPresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, chosenInterval.toString())
-        lessonPager.snackbar(messageRes = R.string.streak_notification_enabled_successfully, length = Snackbar.LENGTH_LONG)
+        lessonBinding.lessonPager.snackbar(messageRes = R.string.streak_notification_enabled_successfully, length = Snackbar.LENGTH_LONG)
     }
 
     private fun setupTextFeedback() {
@@ -524,7 +524,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     override fun onStreakNotificationDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
-        lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
+        lessonBinding.lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -536,7 +536,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
                 if (deniedPermissionIndex != -1) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[deniedPermissionIndex])) {
-                        lessonPager.snackbar(messageRes = R.string.notification_permission_error)
+                        lessonBinding.lessonPager.snackbar(messageRes = R.string.notification_permission_error)
                     }
                 } else {
                     TimeIntervalPickerDialogFragment

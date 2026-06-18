@@ -2,29 +2,30 @@ package org.stepik.android.view.catalog.ui.delegate
 
 import android.view.View
 import androidx.core.view.isVisible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.header_catalog_block.*
+import org.stepic.droid.databinding.HeaderCatalogBlockBinding
 import org.stepik.android.domain.catalog.model.CatalogBlock
 
 class CatalogBlockHeaderDelegate(
-    override val containerView: View,
+    private val rootView: View,
     onClickListener: View.OnClickListener? = null
-) : LayoutContainer {
+) {
+    private val binding: HeaderCatalogBlockBinding = HeaderCatalogBlockBinding.bind(rootView)
+
     init {
-        onClickListener?.let { containerView.setOnClickListener(it) }
-        containerViewAll.isVisible = onClickListener != null
+        onClickListener?.let { rootView.setOnClickListener(it) }
+        binding.containerViewAll.isVisible = onClickListener != null
     }
 
     fun setInformation(data: CatalogBlock) {
-        containerView.isVisible = data.isTitleVisible
-        containerTitle.text = data.title
+        rootView.isVisible = data.isTitleVisible
+        binding.containerTitle.text = data.title
 
-        containerDescription.text = data.description
-        containerDescription.isVisible = data.description.isNotEmpty()
+        binding.containerDescription.text = data.description
+        binding.containerDescription.isVisible = data.description.isNotEmpty()
     }
 
     fun setCount(countText: String) {
-        containerCarouselCount.isVisible = true
-        containerCarouselCount.text = countText
+        binding.containerCarouselCount.isVisible = true
+        binding.containerCarouselCount.text = countText
     }
 }

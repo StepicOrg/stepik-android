@@ -2,9 +2,10 @@ package org.stepik.android.view.download.ui.adapter
 
 import android.view.View
 import android.view.ViewGroup
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.downloaded_course_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.DownloadedCourseItemBinding
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -24,30 +25,27 @@ class DownloadedCoursesAdapterDelegate(
         ViewHolder(createView(parent, R.layout.downloaded_course_item))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<DownloadItem>(root) {
-
-        private val downloadedCourseTitle = root.downloadedCourseName
-        private val downloadedCourseImage = root.downloadedCourseImage
-        private val downloadedCourseStatus = root.downloadedCourseStatus
+        private val viewBinding: DownloadedCourseItemBinding by viewBinding { DownloadedCourseItemBinding.bind(itemView) }
 
         init {
             root.setOnClickListener { itemData?.let(onItemClick) }
-            downloadedCourseStatus.setOnClickListener {
-                if (downloadedCourseStatus.status is DownloadProgress.Status.Cached) {
+            viewBinding.downloadedCourseStatus.setOnClickListener {
+                if (viewBinding.downloadedCourseStatus.status is DownloadProgress.Status.Cached) {
                     itemData?.let(onItemRemoveClick)
                 }
             }
         }
 
         override fun onBind(data: DownloadItem) {
-            downloadedCourseTitle.text = data.course.title
-            downloadedCourseStatus.status = data.status
+            viewBinding.downloadedCourseName.text = data.course.title
+            viewBinding.downloadedCourseStatus.status = data.status
 
             Glide.with(context)
                 .asBitmap()
                 .load(data.course.cover)
                 .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(downloadedCourseImage)
+                .into(viewBinding.downloadedCourseImage)
         }
     }
 }

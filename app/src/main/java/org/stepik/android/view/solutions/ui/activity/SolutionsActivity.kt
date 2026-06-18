@@ -13,15 +13,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_solutions.*
-import kotlinx.android.synthetic.main.empty_default.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.databinding.ActivitySolutionsBinding
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
@@ -73,6 +70,8 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
+    private val binding: ActivitySolutionsBinding by viewBinding(ActivitySolutionsBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_solutions)
@@ -91,7 +90,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             onItemClick = ::handleSubmissionItemClick
         )
 
-        with(solutionsRecycler) {
+        with(binding.solutionsRecycler) {
             itemAnimator = null
             adapter = solutionsAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -107,10 +106,10 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
         evaluationDrawable.isOneShot = false
 
-        solutionsSubmitFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+        binding.solutionsSubmitFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()
 
-        solutionsSubmitButton.setOnClickListener {
+        binding.solutionsSubmitButton.setOnClickListener {
             if (fetchSelectedSubmissionItems().isEmpty()) {
                 for (index in solutionsAdapter.items.indices) {
                     selectionHelper.select(index)
@@ -122,7 +121,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
 
         initViewStateDelegate()
         solutionsPresenter.fetchSolutionItems(localOnly = true)
-        tryAgain.setOnClickListener { solutionsPresenter.fetchSolutionItems(localOnly = false) }
+        binding.solutionsError.tryAgain.setOnClickListener { solutionsPresenter.fetchSolutionItems(localOnly = false) }
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CHECKED_ITEMS_ARGUMENT)) {
             checkedIndices.addAll(savedInstanceState.getIntegerArrayList(CHECKED_ITEMS_ARGUMENT) as ArrayList<Int>)
@@ -162,11 +161,11 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         val selectedCount = fetchSelectedSubmissionItems().size
         menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0 && isDeleteMenuItemVisible
         if (selectedCount == 0) {
-            centeredToolbarTitle.text = getString(R.string.solutions_toolbar_title)
-            solutionsSubmitButton.text = getString(R.string.solutions_submit_all)
+            binding.solutionsAppbar.centeredToolbarContainer.centeredToolbarTitle.text = getString(R.string.solutions_toolbar_title)
+            binding.solutionsSubmitButton.text = getString(R.string.solutions_submit_all)
         } else {
-            centeredToolbarTitle.text = getString(R.string.solutions_selected, selectedCount)
-            solutionsSubmitButton.text = resources.getQuantityString(R.plurals.submit_solutions, selectedCount, selectedCount)
+            binding.solutionsAppbar.centeredToolbarContainer.centeredToolbarTitle.text = getString(R.string.solutions_selected, selectedCount)
+            binding.solutionsSubmitButton.text = resources.getQuantityString(R.plurals.submit_solutions, selectedCount, selectedCount)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -189,13 +188,13 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<SolutionsView.State.Idle>()
-        viewStateDelegate.addState<SolutionsView.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<SolutionsView.State.Empty>(report_empty)
-        viewStateDelegate.addState<SolutionsView.State.Error>(error)
+        viewStateDelegate.addState<SolutionsView.State.Loading>(binding.solutionsLoadingProgress.root)
+        viewStateDelegate.addState<SolutionsView.State.Empty>(binding.solutionsEmpty.root)
+        viewStateDelegate.addState<SolutionsView.State.Error>(binding.solutionsError.root)
         viewStateDelegate.addState<SolutionsView.State.SolutionsLoaded>(
-            solutionsRecycler,
-            solutionsSubmissionSeparator,
-            solutionsSubmitButton
+            binding.solutionsRecycler,
+            binding.solutionsSubmissionSeparator.root,
+            binding.solutionsSubmitButton
         )
     }
 
@@ -206,8 +205,8 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
 
         if (state is SolutionsView.State.SolutionsLoaded) {
             solutionsAdapter.items = listOf(SolutionItem.Disclaimer) + state.solutions
-            solutionsSubmitButton.isEnabled = !state.isSending && hasSubmissionItemsToSend()
-            solutionsSubmitFeedback.isVisible = state.isSending
+            binding.solutionsSubmitButton.isEnabled = !state.isSending && hasSubmissionItemsToSend()
+            binding.solutionsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {
                 checkedIndices.forEach { selectionHelper.select(it) }
             }
@@ -217,7 +216,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
     }
 
     override fun showNetworkError() {
-        root.snackbar(messageRes = R.string.no_connection)
+        binding.root.snackbar(messageRes = R.string.no_connection)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {

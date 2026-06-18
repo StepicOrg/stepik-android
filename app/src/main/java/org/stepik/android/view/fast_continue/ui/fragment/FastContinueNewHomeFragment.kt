@@ -7,11 +7,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.fragment_fast_continue_new_home.*
-import kotlinx.android.synthetic.main.view_fast_continue_information.*
-import kotlinx.android.synthetic.main.view_fast_continue_information.fastContinueCourseCover
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentFastContinueNewHomeBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -30,6 +29,8 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new_home), FastContinueView {
+    private val binding: FragmentFastContinueNewHomeBinding by viewBinding(FragmentFastContinueNewHomeBinding::bind)
+
     companion object {
         fun newInstance(): Fragment =
             FastContinueNewHomeFragment()
@@ -68,9 +69,9 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<FastContinueView.State.Idle>()
         viewStateDelegate.addState<FastContinueView.State.Loading>()
-        viewStateDelegate.addState<FastContinueView.State.Empty>(fastContinueEmpty)
-        viewStateDelegate.addState<FastContinueView.State.Anonymous>(fastContinueEmpty)
-        viewStateDelegate.addState<FastContinueView.State.Content>(fastContinueInformation)
+        viewStateDelegate.addState<FastContinueView.State.Empty>(binding.fastContinueEmpty.root)
+        viewStateDelegate.addState<FastContinueView.State.Anonymous>(binding.fastContinueEmpty.root)
+        viewStateDelegate.addState<FastContinueView.State.Content>(binding.fastContinueInformation.root)
     }
 
     override fun onStart() {
@@ -89,14 +90,14 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
         when (state) {
             is FastContinueView.State.Empty -> {
                 analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
-                fastContinueEmpty.setOnClickListener {
+                binding.fastContinueEmpty.root.setOnClickListener {
                     analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
                     screenManager.showCatalog(context)
                 }
             }
             is FastContinueView.State.Anonymous -> {
                 analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
-                fastContinueEmpty.setOnClickListener {
+                binding.fastContinueEmpty.root.setOnClickListener {
                     analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
                     screenManager.showCatalog(context)
                 }
@@ -104,7 +105,7 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
             is FastContinueView.State.Content -> {
                 analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
                 setCourse(state.courseListItem)
-                fastContinueInformation.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
+                binding.fastContinueInformation.root.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
             }
             else -> Unit
         }
@@ -128,9 +129,9 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
             .load(courseListItem.course.cover)
             .placeholder(R.drawable.general_placeholder)
             .fitCenter()
-            .into(fastContinueCourseCover)
+            .into(binding.fastContinueInformation.fastContinueCourseCover)
 
-        fastContinueCourseTitle.text = courseListItem.course.title
+        binding.fastContinueInformation.fastContinueCourseTitle.text = courseListItem.course.title
 
         val progress = courseListItem.courseStats.progress
         val needShow = if (progress != null && progress.cost > 0f) {
@@ -144,8 +145,8 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
         } else {
             false
         }
-        fastContinueProgressView.isVisible = needShow
-        fastContinueProgressTitle.isVisible = needShow
+        binding.fastContinueInformation.fastContinueProgressView.isVisible = needShow
+        binding.fastContinueInformation.fastContinueProgressTitle.isVisible = needShow
     }
 
     private fun handleContinueCourseClick(course: Course) {
@@ -166,8 +167,8 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
-        fastContinueInformation.isEnabled = !isLoading
-        fastContinueInformation.isEnabled = !isLoading
+        binding.fastContinueInformation.root.isEnabled = !isLoading
+        binding.fastContinueInformation.root.isEnabled = !isLoading
         if (isLoading) {
             ProgressHelper.activate(progressDialogFragment, parentFragmentManager, LoadingProgressDialogFragment.TAG)
         } else {
@@ -176,8 +177,8 @@ class FastContinueNewHomeFragment : Fragment(R.layout.fragment_fast_continue_new
     }
 
     private fun prepareViewForProgress(score: Float, cost: Long) {
-        fastContinueProgressView.progress = (score * 100 safeDiv cost) / 100f
-        fastContinueProgressTitle.text = resources
+        binding.fastContinueInformation.fastContinueProgressView.progress = (score * 100 safeDiv cost) / 100f
+        binding.fastContinueInformation.fastContinueProgressTitle.text = resources
             .getString(R.string.course_content_text_progress, score.toFixed(resources.getInteger(R.integer.score_decimal_count)), cost)
     }
 

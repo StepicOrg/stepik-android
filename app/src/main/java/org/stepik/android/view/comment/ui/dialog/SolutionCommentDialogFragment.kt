@@ -10,14 +10,11 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
-import kotlinx.android.synthetic.main.dialog_comment_solution.*
-import kotlinx.android.synthetic.main.dialog_comment_solution.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.DialogCommentSolutionBinding
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.util.AppConstants
@@ -85,6 +82,8 @@ class SolutionCommentDialogFragment : DialogFragment() {
     private val discussionThread: DiscussionThread? by lazy { arguments?.getParcelable<DiscussionThread>(ARG_DISCUSSION_THREAD) }
     private var discussionId: Long by argument()
 
+    private val solutionBinding: DialogCommentSolutionBinding by viewBinding(DialogCommentSolutionBinding::bind)
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext(), theme)
 
@@ -108,11 +107,12 @@ class SolutionCommentDialogFragment : DialogFragment() {
             .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.dialog_comment_solution, container, false)
-            .also {
-                it.solutionContainer.addView(inflater.inflate(getLayoutResForStep(step.block?.name), it.solutionContainer, false), 1)
-            }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.dialog_comment_solution, container, false)
+        val binding = DialogCommentSolutionBinding.bind(view)
+        binding.solutionContainer.addView(inflater.inflate(getLayoutResForStep(step.block?.name), binding.solutionContainer, false), 1)
+        return view
+    }
 
     @LayoutRes
     private fun getLayoutResForStep(blockName: String?): Int =
@@ -147,6 +147,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
         }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val centeredToolbar = solutionBinding.appBarLayout.centeredToolbarContainer.centeredToolbar
+        val centeredToolbarTitle = solutionBinding.appBarLayout.centeredToolbarContainer.centeredToolbarTitle
+
         centeredToolbarTitle.text = getString(R.string.comment_solution_pattern, submission.id)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
@@ -162,12 +165,13 @@ class SolutionCommentDialogFragment : DialogFragment() {
         if (stepQuizFormDelegate != null) {
             stepQuizFormDelegate.setState(state)
 
-            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, isTeacher = false, hasReview = false, onReviewClicked = {})
+            StepQuizFeedbackBlocksDelegate(solutionBinding.stepQuizFeedbackBlocks.root, isTeacher = false, hasReview = false, onReviewClicked = {})
                 .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))
 
-            stepQuizCodeContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = 0 }
-            codeStepLayout?.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
+            view.findViewById<View?>(R.id.stepQuizCodeContainer)?.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = 0 }
+            view.findViewById<View?>(R.id.codeStepLayout)?.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
         } else {
+            val stepQuizAction = view.findViewById<android.widget.TextView>(R.id.stepQuizAction)
             stepQuizAction.setOnClickListener {
                 val discussionThread = this.discussionThread
                 val url =
@@ -186,9 +190,10 @@ class SolutionCommentDialogFragment : DialogFragment() {
                 bottomMargin = resources.getDimensionPixelOffset(R.dimen.space_normal)
             }
 
+            val stepQuizFeedback = view.findViewById<android.widget.TextView>(R.id.stepQuizFeedback)
             stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
-            stepQuizFeedbackBlocks.isVisible = false
+            solutionBinding.stepQuizFeedbackBlocks.root.isVisible = false
         }
     }
 

@@ -2,9 +2,9 @@ package org.stepik.android.view.achievement.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import kotlinx.android.synthetic.main.view_achievement_item.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewAchievementItemBinding
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.view.achievement.ui.delegate.AchievementTileDelegate
@@ -22,10 +22,9 @@ class AchievementAdapterDelegate(
         ViewHolder(createView(parent, R.layout.view_achievement_item))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<AchievementItem>(root) {
-        private val achievementTitle: TextView = root.achievementTitle
-        private val achievementDescription: TextView = root.achievementDescription
+        private val viewBinding: ViewAchievementItemBinding by viewBinding { ViewAchievementItemBinding.bind(itemView) }
 
-        private val achievementTileDelegate = AchievementTileDelegate(root.achievementTile, achievementResourceResolver)
+        private val achievementTileDelegate = AchievementTileDelegate(viewBinding.achievementTile.root, achievementResourceResolver)
 
         init {
             root.setOnClickListener { itemData?.let(onItemClicked) }
@@ -34,8 +33,8 @@ class AchievementAdapterDelegate(
         override fun onBind(data: AchievementItem) {
             achievementTileDelegate.setAchievement(data)
 
-            achievementTitle.text = achievementResourceResolver.resolveTitleForKind(data.kind)
-            achievementDescription.text = achievementResourceResolver.resolveDescription(data)
+            viewBinding.achievementTitle.text = achievementResourceResolver.resolveTitleForKind(data.kind)
+            viewBinding.achievementDescription.text = achievementResourceResolver.resolveDescription(data)
         }
     }
 }

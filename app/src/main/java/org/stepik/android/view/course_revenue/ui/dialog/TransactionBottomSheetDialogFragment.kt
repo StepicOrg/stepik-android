@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_transaction.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.BottomSheetDialogTransactionBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_revenue.model.CourseBeneficiary
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
@@ -42,6 +43,8 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     this.arguments?.putString(ARG_COURSE_TITLE, courseTitle)
                 }
     }
+
+    private val binding: BottomSheetDialogTransactionBinding by viewBinding(BottomSheetDialogTransactionBinding::bind)
 
     private var courseBenefit: CourseBenefit by argument()
     private var courseBeneficiary: CourseBeneficiary by argument()
@@ -78,36 +81,36 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
         decimalFormat.minimumFractionDigits = 2
 
-        transactionTitle.text =
+        binding.transactionTitle.text =
             if (courseBenefit.status == CourseBenefit.Status.DEBITED) {
                 getString(R.string.transaction_title_purchase)
             } else {
                 getString(R.string.transaction_title_refund)
             }
-        transactionDateValue.text = DateTimeHelper.getPrintableDate(courseBenefit.time, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+        binding.transactionDateValue.text = DateTimeHelper.getPrintableDate(courseBenefit.time, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
 
-        transactionCourseValue.text = courseTitle.orEmpty()
-        transactionCourseTitle.isVisible = courseTitle != null
-        transactionCourseValue.isVisible = courseTitle != null
+        binding.transactionCourseValue.text = courseTitle.orEmpty()
+        binding.transactionCourseTitle.isVisible = courseTitle != null
+        binding.transactionCourseValue.isVisible = courseTitle != null
 
-        transactionBuyerValue.text = user?.fullName.orEmpty()
-        transactionBuyerTitle.isVisible = user != null
-        transactionBuyerValue.isVisible = user != null
-        buyerOverlayView.setOnClickListener { user?.let { screenManager.openProfile(requireContext(), it.id) } }
+        binding.transactionBuyerValue.text = user?.fullName.orEmpty()
+        binding.transactionBuyerTitle.isVisible = user != null
+        binding.transactionBuyerValue.isVisible = user != null
+        binding.buyerOverlayView.setOnClickListener { user?.let { screenManager.openProfile(requireContext(), it.id) } }
 
-        transactionPaymentValue.text =
+        binding.transactionPaymentValue.text =
             revenuePriceMapper.mapToDisplayPrice(courseBenefit.currencyCode, decimalFormat.format(courseBenefit.paymentAmount?.toDoubleOrNull() ?: 0.0))
 
-        transactionPromoCodeValue.text = courseBenefit.promoCode.orEmpty()
-        transactionPromoCodeTitle.isVisible = courseBenefit.promoCode != null
-        transactionPromoCodeValue.isVisible = courseBenefit.promoCode != null
+        binding.transactionPromoCodeValue.text = courseBenefit.promoCode.orEmpty()
+        binding.transactionPromoCodeTitle.isVisible = courseBenefit.promoCode != null
+        binding.transactionPromoCodeValue.isVisible = courseBenefit.promoCode != null
 
         val isChannelInfoVisible = courseBenefit.status == CourseBenefit.Status.DEBITED ||
             (courseBenefit.buyer == null && !courseBenefit.isInvoicePayment)
 
-        transactionChannelTitle.isVisible = isChannelInfoVisible
-        transactionChannelValue.isVisible = isChannelInfoVisible
-        transactionChannelValue.text =
+        binding.transactionChannelTitle.isVisible = isChannelInfoVisible
+        binding.transactionChannelValue.isVisible = isChannelInfoVisible
+        binding.transactionChannelValue.text =
             when {
                 courseBenefit.isZLinkUsed == true ->
                     getString(R.string.transaction_a_link_channel)
@@ -125,8 +128,8 @@ class TransactionBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     getString(R.string.transaction_stepik_channel)
             }
 
-        transactionPercentageValue.text = getString(R.string.transaction_share_value, courseBeneficiary.percent.removeSuffix(PERCENTAGE_SUFFIX))
-        transactionIncomeValue.text = revenuePriceMapper.mapToDisplayPrice(
+        binding.transactionPercentageValue.text = getString(R.string.transaction_share_value, courseBeneficiary.percent.removeSuffix(PERCENTAGE_SUFFIX))
+        binding.transactionIncomeValue.text = revenuePriceMapper.mapToDisplayPrice(
             courseBenefit.currencyCode,
             decimalFormat.format(courseBenefit.amount.toDoubleOrNull() ?: 0.0),
             debitPrefixRequired = courseBenefit.status == CourseBenefit.Status.DEBITED

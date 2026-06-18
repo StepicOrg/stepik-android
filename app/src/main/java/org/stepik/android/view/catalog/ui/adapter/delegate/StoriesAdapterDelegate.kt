@@ -1,10 +1,10 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.view_stories_container.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewStoriesContainerBinding
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepik.android.presentation.stories.StoriesFeature
 import org.stepik.android.view.catalog.model.CatalogItem
@@ -22,9 +22,10 @@ class StoriesAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         StoriesViewHolder(createView(parent, R.layout.view_stories_container), onStoryClicked = onStoryClicked)
 
-    class StoriesViewHolder(root: View, onStoryClicked: (Story, Int) -> Unit) : DelegateViewHolder<CatalogItem>(root) {
-        private val storiesPlaceholder = root.storiesContainerLoadingPlaceholder
-        val storiesRecycler = root.storiesRecycler
+    class StoriesViewHolder(root: android.view.View, onStoryClicked: (Story, Int) -> Unit) : DelegateViewHolder<CatalogItem>(root) {
+        private val viewBinding: ViewStoriesContainerBinding by viewBinding { ViewStoriesContainerBinding.bind(itemView) }
+        private val storiesPlaceholder = viewBinding.storiesContainerLoadingPlaceholder
+        val storiesRecycler = viewBinding.storiesRecycler
         val storiesAdapter = StoriesAdapter(onStoryClicked = onStoryClicked)
 
         private val viewStateDelegate = ViewStateDelegate<StoriesFeature.State>()

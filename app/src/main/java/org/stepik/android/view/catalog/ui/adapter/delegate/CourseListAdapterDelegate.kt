@@ -4,12 +4,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import dev.androidbroadcast.vbpd.viewBinding
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.android.synthetic.main.header_catalog_block.view.*
-import kotlinx.android.synthetic.main.item_course_list_new.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ItemCourseListNewBinding
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -56,12 +56,13 @@ constructor(
         CourseCollectionViewHolder(createView(parent, R.layout.item_course_list_new))
 
     private inner class CourseCollectionViewHolder(root: View) : DelegateViewHolder<CatalogItem>(root) {
+        private val viewBinding: ItemCourseListNewBinding by viewBinding { ItemCourseListNewBinding.bind(root) }
 
         private var catalogBlock: CatalogBlock? = null
         private var courseCount: Int? = null
 
-        private val courseListCoursesRecycler = root.courseListCoursesRecycler
-        private val courseListTitleContainer = root.catalogBlockContainer
+        private val courseListCoursesRecycler = viewBinding.courseListCoursesRecycler
+        private val courseListTitleContainer = viewBinding.catalogBlockHeader.root
 
         private val catalogBlockTitleDelegate = CatalogBlockHeaderDelegate(courseListTitleContainer) {
             val block = (catalogBlock?.content as? CatalogBlockContent.FullCourseList) ?: return@CatalogBlockHeaderDelegate

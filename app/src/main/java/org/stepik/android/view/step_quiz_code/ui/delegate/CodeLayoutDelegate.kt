@@ -1,23 +1,56 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
 import android.view.View
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
+import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
+import org.stepic.droid.code.ui.CodeEditorLayout
+import org.stepic.droid.databinding.LayoutStepQuizCodeBinding
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepik.android.model.Step
 
-class CodeLayoutDelegate(
-    codeContainerView: View,
+class CodeLayoutDelegate private constructor(
+    private val codeLayout: CodeEditorLayout,
+    private val stepQuizActionChangeLang: MaterialButton,
     private val step: Step,
     private val codeTemplates: Map<String, String>,
     private val codeQuizInstructionDelegate: CodeQuizInstructionDelegate,
     private var codeToolbarAdapter: CodeToolbarAdapter?,
     private val onChangeLanguageClicked: () -> Unit
 ) {
+    constructor(
+        codeLayoutBinding: LayoutStepQuizCodeBinding,
+        step: Step,
+        codeTemplates: Map<String, String>,
+        codeQuizInstructionDelegate: CodeQuizInstructionDelegate,
+        codeToolbarAdapter: CodeToolbarAdapter?,
+        onChangeLanguageClicked: () -> Unit
+    ) : this(
+        codeLayoutBinding.codeStepLayout,
+        codeLayoutBinding.stepQuizActionChangeLang,
+        step,
+        codeTemplates,
+        codeQuizInstructionDelegate,
+        codeToolbarAdapter,
+        onChangeLanguageClicked
+    )
 
-    private val codeLayout = codeContainerView.codeStepLayout
-    private val stepQuizActionChangeLang = codeContainerView.stepQuizActionChangeLang
+    constructor(
+        codeContainerView: View,
+        step: Step,
+        codeTemplates: Map<String, String>,
+        codeQuizInstructionDelegate: CodeQuizInstructionDelegate,
+        codeToolbarAdapter: CodeToolbarAdapter?,
+        onChangeLanguageClicked: () -> Unit
+    ) : this(
+        codeContainerView.findViewById(R.id.codeStepLayout),
+        codeContainerView.findViewById(R.id.stepQuizActionChangeLang),
+        step,
+        codeTemplates,
+        codeQuizInstructionDelegate,
+        codeToolbarAdapter,
+        onChangeLanguageClicked
+    )
 
     init {
         /**

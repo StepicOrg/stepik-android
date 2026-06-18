@@ -10,9 +10,9 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.item_comment.view.*
-import kotlinx.android.synthetic.main.layout_comment_actions.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCommentBinding
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
@@ -38,23 +38,9 @@ class CommentDataAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_comment))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root), View.OnClickListener {
-        private val commentUserIcon = root.commentUserIcon
-        private val commentUserIconWrapper = commentUserIcon.wrapWithGlide()
-        private val commentUserName = root.commentUserName
+        private val viewBinding: ItemCommentBinding by viewBinding { ItemCommentBinding.bind(root) }
 
-        private val commentText = root.commentText
-        private val commentMenu = root.commentMenu
-        private val commentTags = root.commentTags
-
-        private val commentTime = root.commentTime
-        private val commentReply = root.commentReply
-        private val commentLike = root.commentLike
-        private val commentDislike = root.commentDislike
-
-        private val commentSolution = root.commentSolution
-
-        private val replyOffset =
-            context.resources.getDimensionPixelOffset(R.dimen.comment_item_reply_offset)
+        private val commentUserIconWrapper = viewBinding.commentUserIcon.wrapWithGlide()
 
         private val voteStatusViewStateDelegate: ViewStateDelegate<CommentItem.Data.VoteStatus> =
             ViewStateDelegate()
@@ -62,23 +48,23 @@ class CommentDataAdapterDelegate(
         private val commentTagsAdapter = DefaultDelegateAdapter<CommentTag>()
 
         init {
-            TextViewCompat.setLineHeight(commentText.textView, context.resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
+            TextViewCompat.setLineHeight(viewBinding.commentText.textView, context.resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
 
-            commentReply.setOnClickListener(this)
-            commentLike.setOnClickListener(this)
-            commentDislike.setOnClickListener(this)
-            commentMenu.setOnClickListener(this)
-            commentSolution.setOnClickListener(this)
+            viewBinding.commentActions.commentReply.setOnClickListener(this)
+            viewBinding.commentActions.commentLike.setOnClickListener(this)
+            viewBinding.commentActions.commentDislike.setOnClickListener(this)
+            viewBinding.commentMenu.setOnClickListener(this)
+            viewBinding.commentSolution.setOnClickListener(this)
 
-            commentUserIcon.setOnClickListener(this)
-            commentUserName.setOnClickListener(this)
+            viewBinding.commentUserIcon.setOnClickListener(this)
+            viewBinding.commentUserName.setOnClickListener(this)
 
-            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Resolved>(commentLike, commentDislike)
-            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Pending>(root.commentVoteProgress)
-            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Unavailable>(commentLike, commentDislike)
+            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Resolved>(viewBinding.commentActions.commentLike, viewBinding.commentActions.commentDislike)
+            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Pending>(viewBinding.commentActions.commentVoteProgress)
+            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Unavailable>(viewBinding.commentActions.commentLike, viewBinding.commentActions.commentDislike)
 
             commentTagsAdapter += CommentTagsAdapterDelegate()
-            with(commentTags) {
+            with(viewBinding.commentTags) {
                 itemAnimator = null
                 isNestedScrollingEnabled = false
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -95,18 +81,18 @@ class CommentDataAdapterDelegate(
                         if (data.comment.parent == null) {
                             0
                         } else {
-                            replyOffset
+                            context.resources.getDimensionPixelOffset(R.dimen.comment_item_reply_offset)
                         }
                 }
             itemView.isActivated = data.isFocused
 
-            commentUserName.text = data.user.fullName
+            viewBinding.commentUserName.text = data.user.fullName
 
             commentUserIconWrapper.setImagePath(data.user.avatar ?: "", AppCompatResources.getDrawable(context, R.drawable.general_placeholder))
 
-            commentText.latexData = data.textData
+            viewBinding.commentText.latexData = data.textData
 
-            commentMenu.isVisible =
+            viewBinding.commentMenu.isVisible =
                 data.comment.actions?.delete == true || data.comment.actions?.edit == true
 
             commentTagsAdapter.items = listOfNotNull(
@@ -115,21 +101,21 @@ class CommentDataAdapterDelegate(
                 CommentTag.PINNED.takeIf { data.comment.isPinned },
                 CommentTag.MODERATOR.takeIf { data.comment.userRole == UserRole.MODERATOR }
             )
-            commentTags.isVisible = commentTagsAdapter.itemCount > 0
+            viewBinding.commentTags.isVisible = commentTagsAdapter.itemCount > 0
 
-            commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
+            viewBinding.commentActions.commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
 
             voteStatusViewStateDelegate.switchState(data.voteStatus)
 
-            commentLike.text = data.comment.epicCount.toString()
-            commentDislike.text = data.comment.abuseCount.toString()
+            viewBinding.commentActions.commentLike.text = data.comment.epicCount.toString()
+            viewBinding.commentActions.commentDislike.text = data.comment.abuseCount.toString()
 
-            commentLike.isEnabled = data.comment.actions?.vote == true && data.voteStatus is CommentItem.Data.VoteStatus.Resolved
-            commentDislike.isEnabled = data.comment.actions?.vote == true && data.voteStatus is CommentItem.Data.VoteStatus.Resolved
+            viewBinding.commentActions.commentLike.isEnabled = data.comment.actions?.vote == true && data.voteStatus is CommentItem.Data.VoteStatus.Resolved
+            viewBinding.commentActions.commentDislike.isEnabled = data.comment.actions?.vote == true && data.voteStatus is CommentItem.Data.VoteStatus.Resolved
 
             when (data.voteStatus) {
                 is CommentItem.Data.VoteStatus.Resolved -> {
-                    commentLike.alpha =
+                    viewBinding.commentActions.commentLike.alpha =
                         when (data.voteStatus.vote.value) {
                             Vote.Value.LIKE ->
                                 1f
@@ -137,7 +123,7 @@ class CommentDataAdapterDelegate(
                                 0.5f
                         }
 
-                    commentDislike.alpha =
+                    viewBinding.commentActions.commentDislike.alpha =
                         when (data.voteStatus.vote.value) {
                             Vote.Value.DISLIKE ->
                                 1f
@@ -146,14 +132,14 @@ class CommentDataAdapterDelegate(
                         }
                 }
                 is CommentItem.Data.VoteStatus.Unavailable -> {
-                    commentLike.alpha = 0.5f
-                    commentDislike.alpha = 0.5f
+                    viewBinding.commentActions.commentLike.alpha = 0.5f
+                    viewBinding.commentActions.commentDislike.alpha = 0.5f
                 }
                 else -> {}
             }
 
             // solution
-            commentSolution.setSubmission(data.solution?.submission)
+            viewBinding.commentSolution.setSubmission(data.solution?.submission)
         }
 
         private fun showItemMenu(view: View) {

@@ -10,11 +10,12 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_social_auth_consent.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.BottomSheetDialogSocialAuthConsentBinding
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepik.android.domain.auth.mapper.SocialConsentMapper
@@ -26,6 +27,8 @@ import ru.nobird.android.view.base.ui.extension.argument
 
 class SocialAuthConsentBottomSheetDialogFragment :
     BottomSheetDialogFragment() {
+
+    private val binding: BottomSheetDialogSocialAuthConsentBinding by viewBinding(BottomSheetDialogSocialAuthConsentBinding::bind)
 
     companion object {
         const val TAG = "SocialAuthConsentBottomSheetDialogFragment"
@@ -69,26 +72,26 @@ class SocialAuthConsentBottomSheetDialogFragment :
         super.onViewCreated(view, savedInstanceState)
 
         val consentRequiredHtml = getString(R.string.registration_consent_required)
-        requiredConsentText.movementMethod = LinkMovementMethod.getInstance()
-        requiredConsentText.text = HtmlCompat.fromHtml(consentRequiredHtml, HtmlCompat.FROM_HTML_MODE_LEGACY)
-        stripUnderlinesFromLinks(requiredConsentText)
+        binding.requiredConsentText.movementMethod = LinkMovementMethod.getInstance()
+        binding.requiredConsentText.text = HtmlCompat.fromHtml(consentRequiredHtml, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        stripUnderlinesFromLinks(binding.requiredConsentText)
 
         if (isMarketingEnabled) {
-            marketingConsentRow.isVisible = true
-            marketingHelperText.isVisible = true
-            marketingConsentCheckBox.isChecked = true
+            binding.marketingConsentRow.isVisible = true
+            binding.marketingHelperText.isVisible = true
+            binding.marketingConsentCheckBox.isChecked = true
         }
 
-        requiredConsentCheckBox.setOnCheckedChangeListener { _, _ ->
+        binding.requiredConsentCheckBox.setOnCheckedChangeListener { _, _ ->
             clearRequiredConsentError()
         }
         clearRequiredConsentError()
 
-        continueButton.setOnClickListener {
+        binding.continueButton.setOnClickListener {
             val currentState = RegistrationConsentState(
-                isRequiredConsentGranted = requiredConsentCheckBox.isChecked,
-                isMarketingVisible = marketingConsentRow.isVisible,
-                isMarketingChecked = marketingConsentCheckBox.isChecked
+                isRequiredConsentGranted = binding.requiredConsentCheckBox.isChecked,
+                isMarketingVisible = binding.marketingConsentRow.isVisible,
+                isMarketingChecked = binding.marketingConsentCheckBox.isChecked
             )
 
             val result = SocialConsentMapper.mapConsent(currentState, socialNetwork)
@@ -105,17 +108,17 @@ class SocialAuthConsentBottomSheetDialogFragment :
     }
 
     private fun showRequiredConsentError() {
-        consentErrorText.isVisible = true
+        binding.consentErrorText.isVisible = true
         CompoundButtonCompat.setButtonTintList(
-            requiredConsentCheckBox,
+            binding.requiredConsentCheckBox,
             requiredConsentErrorTint
         )
     }
 
     private fun clearRequiredConsentError() {
-        consentErrorText.isVisible = false
+        binding.consentErrorText.isVisible = false
         CompoundButtonCompat.setButtonTintList(
-            requiredConsentCheckBox,
+            binding.requiredConsentCheckBox,
             requiredConsentDefaultTint
         )
     }

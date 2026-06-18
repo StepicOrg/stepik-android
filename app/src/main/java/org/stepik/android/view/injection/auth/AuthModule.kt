@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.auth.RegistrationPresenter
 import org.stepik.android.presentation.auth.SocialAuthPresenter
 import org.stepik.android.presentation.base.injection.ViewModelKey
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 internal abstract class AuthModule {
 
     /**

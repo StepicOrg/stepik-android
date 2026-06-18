@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_recommendations.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.ui.animations.RecommendationsFragmentAnimations
@@ -17,6 +16,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
+import org.stepic.droid.databinding.FragmentRecommendationsBinding
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolveColorAttribute
@@ -46,6 +46,8 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     private lateinit var animations: RecommendationsFragmentAnimations
 
+    private val recommendationsBinding: FragmentRecommendationsBinding by viewBinding(FragmentRecommendationsBinding::bind)
+
     private var course: Course? = null
 
     private val loadingPlaceholders by lazy { resources.getStringArray(R.array.recommendation_loading_placeholders) }
@@ -71,21 +73,21 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
         val context = requireContext()
 
-        animations = RecommendationsFragmentAnimations(streakSuccessContainer.context)
+        animations = RecommendationsFragmentAnimations(recommendationsBinding.streakSuccessContainer.context)
 
-        error.setBackgroundColor(0)
+        recommendationsBinding.errorNoConnectionWithButton.error.setBackgroundColor(0)
 
-        tryAgain.setOnClickListener {
+        recommendationsBinding.errorNoConnectionWithButton.tryAgain.setOnClickListener {
             recommendationsPresenter.retry()
         }
 
         (activity as? AppCompatActivity)?.let {
-            it.setSupportActionBar(toolbar)
+            it.setSupportActionBar(recommendationsBinding.toolbar)
             it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
             it.supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        toolbar.setOnClickListener {
+        recommendationsBinding.toolbar.setOnClickListener {
             screenManager.showAdaptiveStats(context, course?.id ?: 0)
 
             expPopupWindow?.let { popup ->
@@ -95,54 +97,54 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
             }
         }
 
-        streakSuccessContainer.nestedTextView = streakSuccess
-        streakSuccessContainer.setGradientDrawableParams(streakSuccessContainer.context.resolveColorAttribute(R.attr.colorPrimary), 0f)
+        recommendationsBinding.streakSuccessContainer.nestedTextView = recommendationsBinding.streakSuccess
+        recommendationsBinding.streakSuccessContainer.setGradientDrawableParams(recommendationsBinding.streakSuccessContainer.context.resolveColorAttribute(R.attr.colorPrimary), 0f)
     }
 
     override fun onAdapter(cardsAdapter: QuizCardsAdapter) {
-        cardsContainer.setAdapter(cardsAdapter)
+        recommendationsBinding.cardsContainer.setAdapter(cardsAdapter)
     }
 
     override fun onLoading() {
-        progress.visibility = View.VISIBLE
-        error.visibility = View.GONE
-        loadingPlaceholder.text = loadingPlaceholders.random()
+        recommendationsBinding.progress.visibility = View.VISIBLE
+        recommendationsBinding.errorNoConnectionWithButton.error.visibility = View.GONE
+        recommendationsBinding.loadingPlaceholder.text = loadingPlaceholders.random()
     }
 
     override fun onCardLoaded() {
-        progress.visibility = View.GONE
-        cardsContainer.visibility = View.VISIBLE
+        recommendationsBinding.progress.visibility = View.GONE
+        recommendationsBinding.cardsContainer.visibility = View.VISIBLE
     }
 
     private fun onError() {
-        cardsContainer.visibility = View.GONE
-        error.visibility = View.VISIBLE
-        progress.visibility = View.GONE
+        recommendationsBinding.cardsContainer.visibility = View.GONE
+        recommendationsBinding.errorNoConnectionWithButton.error.visibility = View.VISIBLE
+        recommendationsBinding.progress.visibility = View.GONE
     }
 
     override fun onConnectivityError() {
-        errorMessage.setText(R.string.no_connection)
+        recommendationsBinding.errorNoConnectionWithButton.errorMessage.setText(R.string.no_connection)
         onError()
     }
 
     override fun onRequestError() {
-        errorMessage.setText(R.string.request_error)
+        recommendationsBinding.errorNoConnectionWithButton.errorMessage.setText(R.string.request_error)
         onError()
     }
 
     private fun onCourseState() {
-        cardsContainer.visibility = View.GONE
-        progress.visibility = View.GONE
-        courseState.visibility = View.VISIBLE
+        recommendationsBinding.cardsContainer.visibility = View.GONE
+        recommendationsBinding.progress.visibility = View.GONE
+        recommendationsBinding.courseState.visibility = View.VISIBLE
     }
 
     override fun onCourseCompleted() {
-        courseStateText.setText(R.string.adaptive_course_completed)
+        recommendationsBinding.courseStateText.setText(R.string.adaptive_course_completed)
         onCourseState()
     }
 
     override fun onCourseNotSupported() {
-        courseStateText.setText(R.string.adaptive_course_not_supported)
+        recommendationsBinding.courseStateText.setText(R.string.adaptive_course_not_supported)
         onCourseState()
     }
 
@@ -153,37 +155,37 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
         level: Long
     ) {
-        expProgress.progress = (exp - currentLevelExp).toInt()
-        expProgress.max = (nextLevelExp - currentLevelExp).toInt()
+        recommendationsBinding.expProgress.progress = (exp - currentLevelExp).toInt()
+        recommendationsBinding.expProgress.max = (nextLevelExp - currentLevelExp).toInt()
 
-        expCounter.text = formatExp(exp)
-        expLevel.text = getString(R.string.adaptive_exp_title, level)
-        expLevelNext.text = getString(R.string.adaptive_exp_subtitle, formatExp(nextLevelExp - exp))
+        recommendationsBinding.expCounter.text = formatExp(exp)
+        recommendationsBinding.expLevel.text = getString(R.string.adaptive_exp_title, level)
+        recommendationsBinding.expLevelNext.text = getString(R.string.adaptive_exp_subtitle, formatExp(nextLevelExp - exp))
     }
 
     override fun onStreak(streak: Long) {
-        expInc.text = getString(R.string.adaptive_exp_inc, streak)
-        streakSuccess.text = resources.getQuantityString(R.plurals.adaptive_streak_success, streak.toInt(), streak)
+        recommendationsBinding.expInc.text = getString(R.string.adaptive_exp_inc, streak)
+        recommendationsBinding.streakSuccess.text = resources.getQuantityString(R.plurals.adaptive_streak_success, streak.toInt(), streak)
 
         if (streak > 1) {
             animations.playStreakSuccessAnimationSequence(
-                root = rootView,
-                streakSuccessContainer = streakSuccessContainer,
-                expProgress = expProgress,
-                expInc = expInc,
-                expBubble = expBubble
+                root = recommendationsBinding.rootView,
+                streakSuccessContainer = recommendationsBinding.streakSuccessContainer,
+                expProgress = recommendationsBinding.expProgress,
+                expInc = recommendationsBinding.expInc,
+                expBubble = recommendationsBinding.expBubble
             )
         } else {
-            animations.playStreakBubbleAnimation(expInc)
+            animations.playStreakBubbleAnimation(recommendationsBinding.expInc)
         }
     }
 
     override fun showExpTooltip() {
-        expPopupWindow = PopupHelper.showPopupAnchoredToView(requireContext(), expBubble, getString(R.string.adaptive_exp_tooltip_text), withArrow = true)
+        expPopupWindow = PopupHelper.showPopupAnchoredToView(requireContext(), recommendationsBinding.expBubble, getString(R.string.adaptive_exp_tooltip_text), withArrow = true)
     }
 
     override fun onStreakLost() {
-        animations.playStreakFailedAnimation(streakFailed, expProgress)
+        animations.playStreakFailedAnimation(recommendationsBinding.streakFailed, recommendationsBinding.expProgress)
     }
 
     override fun showNewLevelDialog(level: Long) {

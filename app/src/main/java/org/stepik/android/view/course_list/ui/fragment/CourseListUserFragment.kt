@@ -8,14 +8,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.empty_search.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.view.*
-import kotlinx.android.synthetic.main.fragment_course_list.*
-import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentCourseListBinding
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_payments.mapper.DefaultPromoCodeMapper
@@ -59,6 +57,11 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
 
+    private val courseListBinding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
+
+    private val searchToolbar
+        inline get() = courseListBinding.courseListSearchToolbar
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
     private lateinit var wrapperViewStateDelegate: ViewStateDelegate<CourseListUserView.State>
@@ -71,10 +74,10 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        appBarLayout.isVisible = false
-        courseListUserSkeleton.isVisible = true
+        searchToolbar.root.isVisible = false
+        courseListBinding.courseListUserSkeleton.isVisible = true
 
-        with(courseListCoursesRecycler) {
+        with(courseListBinding.courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
@@ -86,20 +89,20 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
                 ?.supportsChangeAnimations = false
         }
 
-        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener {
+        courseListBinding.courseListCoursesEmpty.goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListBinding.courseListSwipeRefresh.setOnRefreshListener {
             setDataToPresenter(forceUpdate = true)
         }
-        courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
+        courseListBinding.courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
             setDataToPresenter(forceUpdate = true)
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListBinding.courseListCoursesEmpty.root)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListBinding.courseListCoursesLoadingErrorVertical.root)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -108,8 +111,8 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListSwipeRefresh = courseListSwipeRefresh,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListSwipeRefresh = courseListBinding.courseListSwipeRefresh,
+            courseItemsRecyclerView = courseListBinding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter
@@ -125,8 +128,8 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
         wrapperViewStateDelegate = ViewStateDelegate()
         wrapperViewStateDelegate.addState<CourseListUserView.State.Idle>()
-        wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
-        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListBinding.courseListUserSkeleton)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListBinding.courseListCoursesLoadingErrorVertical.root)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
         setDataToPresenter()

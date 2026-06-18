@@ -4,8 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import kotlinx.android.synthetic.main.item_solution_submission.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemSolutionSubmissionBinding
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveResourceIdAttribute
@@ -28,19 +29,11 @@ class SolutionSubmissionAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_solution_submission))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<SolutionItem>(root) {
-
-        private val submissionRoot = root
-        private val submissionQuizIcon = root.submissionQuizIcon
-        private val submissionTitle = root.submissionTitle
-        private val submissionStep = root.submissionStep
-        private val submissionCheckBox = root.submissionCheckBox
-        private val submissionStatusIconWrong = root.submissionStatusIconWrong
-        private val submissionStatusIconCorrect = root.submissionStatusIconCorrect
-        private val submissionStatusText = root.submissionStatusText
+        private val viewBinding: ItemSolutionSubmissionBinding by viewBinding { ItemSolutionSubmissionBinding.bind(root) }
 
         init {
             root.setOnClickListener { (itemData as? SolutionItem.SubmissionItem)?.let(onItemClick) }
-            submissionCheckBox.setOnClickListener {
+            viewBinding.submissionCheckBox.setOnClickListener {
                 (itemData as? SolutionItem.SubmissionItem)?.let(onCheckboxClick)
             }
         }
@@ -50,11 +43,11 @@ class SolutionSubmissionAdapterDelegate(
 
             selectionHelper.isSelected(adapterPosition).let { isSelected ->
                 itemView.isSelected = isSelected
-                submissionCheckBox.isChecked = isSelected
+                viewBinding.submissionCheckBox.isChecked = isSelected
             }
 
-            submissionRoot.isEnabled = data.isEnabled
-            submissionCheckBox.isEnabled = data.isEnabled
+            itemView.isEnabled = data.isEnabled
+            viewBinding.submissionCheckBox.isEnabled = data.isEnabled
 
             val resourceId =
                 when (data.step.block?.name) {
@@ -64,9 +57,9 @@ class SolutionSubmissionAdapterDelegate(
                         R.drawable.ic_easy_quiz
                 }
 
-            submissionQuizIcon.setImageResource(resourceId)
-            submissionTitle.text = HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
-            submissionStep.text =
+            viewBinding.submissionQuizIcon.setImageResource(resourceId)
+            viewBinding.submissionTitle.text = HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            viewBinding.submissionStep.text =
                 context.resources.getString(
                     R.string.solutions_submission_step_position,
                     data.step.position,
@@ -75,29 +68,29 @@ class SolutionSubmissionAdapterDelegate(
 
             when (data.submission.status) {
                 Submission.Status.CORRECT -> {
-                    submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_correct_item)
-                    submissionStatusText.text = context.getString(R.string.solutions_submission_correctly)
-                    submissionStatusText.setTextColor(ContextCompat.getColor(context, R.color.submission_correct))
-                    submissionStatusText.visibility = View.VISIBLE
-                    submissionStatusIconCorrect.visibility = View.VISIBLE
-                    submissionStatusIconWrong.visibility = View.GONE
-                    submissionCheckBox.visibility = View.INVISIBLE
+                    itemView.setBackgroundResource(R.drawable.bg_attempt_submission_correct_item)
+                    viewBinding.submissionStatusText.text = context.getString(R.string.solutions_submission_correctly)
+                    viewBinding.submissionStatusText.setTextColor(ContextCompat.getColor(context, R.color.submission_correct))
+                    viewBinding.submissionStatusText.visibility = View.VISIBLE
+                    viewBinding.submissionStatusIconCorrect.visibility = View.VISIBLE
+                    viewBinding.submissionStatusIconWrong.visibility = View.GONE
+                    viewBinding.submissionCheckBox.visibility = View.INVISIBLE
                 }
                 Submission.Status.WRONG -> {
-                    submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_incorrect_item)
-                    submissionStatusText.text = context.getString(R.string.solutions_submission_incorrectly)
-                    submissionStatusText.setTextColor(ContextCompat.getColor(context, R.color.submission_incorrect))
-                    submissionStatusText.visibility = View.VISIBLE
-                    submissionStatusIconCorrect.visibility = View.GONE
-                    submissionStatusIconWrong.visibility = View.VISIBLE
-                    submissionCheckBox.visibility = View.INVISIBLE
+                    itemView.setBackgroundResource(R.drawable.bg_attempt_submission_incorrect_item)
+                    viewBinding.submissionStatusText.text = context.getString(R.string.solutions_submission_incorrectly)
+                    viewBinding.submissionStatusText.setTextColor(ContextCompat.getColor(context, R.color.submission_incorrect))
+                    viewBinding.submissionStatusText.visibility = View.VISIBLE
+                    viewBinding.submissionStatusIconCorrect.visibility = View.GONE
+                    viewBinding.submissionStatusIconWrong.visibility = View.VISIBLE
+                    viewBinding.submissionCheckBox.visibility = View.INVISIBLE
                 }
                 else -> {
-                    submissionRoot.setBackgroundResource(context.resolveResourceIdAttribute(R.attr.selectableItemBackground))
-                    submissionStatusText.visibility = View.GONE
-                    submissionStatusIconCorrect.visibility = View.GONE
-                    submissionStatusIconWrong.visibility = View.GONE
-                    submissionCheckBox.visibility = View.VISIBLE
+                    itemView.setBackgroundResource(context.resolveResourceIdAttribute(R.attr.selectableItemBackground))
+                    viewBinding.submissionStatusText.visibility = View.GONE
+                    viewBinding.submissionStatusIconCorrect.visibility = View.GONE
+                    viewBinding.submissionStatusIconWrong.visibility = View.GONE
+                    viewBinding.submissionCheckBox.visibility = View.VISIBLE
                 }
             }
         }

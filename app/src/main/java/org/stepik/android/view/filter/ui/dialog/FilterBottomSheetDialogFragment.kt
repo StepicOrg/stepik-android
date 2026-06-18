@@ -8,11 +8,12 @@ import android.widget.CompoundButton
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_filter.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.BottomSheetDialogFilterBinding
 import org.stepic.droid.base.App
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -23,6 +24,8 @@ import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
+    private val binding: BottomSheetDialogFilterBinding by viewBinding(BottomSheetDialogFilterBinding::bind)
+
     companion object {
         const val TAG = "FilterBottomSheetDialogFragment"
 
@@ -62,37 +65,37 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         defaultLanguageRadioButton = obtainDefaultLanguageRadioButton()
-        radioButtons = listOf<AppCompatRadioButton>(anyRadioButton, rusRadioButton, engRadioButton)
-        compoundButtons = radioButtons + listOf(certificatesSwitch, freeSwitch)
+        radioButtons = listOf<AppCompatRadioButton>(binding.anyRadioButton, binding.rusRadioButton, binding.engRadioButton)
+        compoundButtons = radioButtons + listOf(binding.certificatesSwitch, binding.freeSwitch)
 
         setupFilters(filterQuery)
 
-        dismissFilter.isVisible = isMustShowDismiss()
+        binding.dismissFilter.isVisible = isMustShowDismiss()
 
         radioButtons.forEach {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {
                     onRadioButtonClicked(buttonView)
-                    dismissFilter.isVisible = isMustShowDismiss()
+                    binding.dismissFilter.isVisible = isMustShowDismiss()
                 }
             }
         }
 
-        certificatesSwitch.setOnCheckedChangeListener { _, _ ->
-            dismissFilter.isVisible = isMustShowDismiss()
+        binding.certificatesSwitch.setOnCheckedChangeListener { _, _ ->
+            binding.dismissFilter.isVisible = isMustShowDismiss()
         }
 
-        freeSwitch.setOnCheckedChangeListener { _, _ ->
-            dismissFilter.isVisible = isMustShowDismiss()
+        binding.freeSwitch.setOnCheckedChangeListener { _, _ ->
+            binding.dismissFilter.isVisible = isMustShowDismiss()
         }
 
-        dismissFilter.setOnClickListener {
+        binding.dismissFilter.setOnClickListener {
             compoundButtons.forEach { compoundButton ->  compoundButton.isChecked = false }
             defaultLanguageRadioButton.isChecked = true
             it.isVisible = false
         }
 
-        applyFilterAction.setOnClickListener {
+        binding.applyFilterAction.setOnClickListener {
             val newFilterQuery = mapFiltersToQuery()
             if (newFilterQuery != filterQuery || parentFragment is CatalogFragment) {
                 (activity.safeCast<Callback>() ?: parentFragment.safeCast<Callback>())
@@ -150,10 +153,10 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private fun obtainDefaultLanguageRadioButton(): AppCompatRadioButton =
         when (sharedPreferenceHelper.languageForFeatured) {
             StepikFilter.RUSSIAN.language ->
-                rusRadioButton
+                binding.rusRadioButton
 
             StepikFilter.ENGLISH.language ->
-                engRadioButton
+                binding.engRadioButton
 
             else ->
                 throw IllegalStateException()

@@ -8,9 +8,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentFastContinueBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -43,6 +44,7 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
     @Inject
     internal lateinit var screenManager: ScreenManager
 
+    private val fastContinueBinding: FragmentFastContinueBinding by viewBinding(FragmentFastContinueBinding::bind)
     private val fastContinuePresenter: FastContinuePresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<FastContinueView.State>
 
@@ -66,13 +68,13 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
         super.onViewCreated(view, savedInstanceState)
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<FastContinueView.State.Idle>()
-        viewStateDelegate.addState<FastContinueView.State.Loading>(fastContinueProgress)
-        viewStateDelegate.addState<FastContinueView.State.Empty>(fastContinuePlaceholder)
-        viewStateDelegate.addState<FastContinueView.State.Anonymous>(fastContinuePlaceholder)
-        viewStateDelegate.addState<FastContinueView.State.Content>(fastContinueMask)
+        viewStateDelegate.addState<FastContinueView.State.Loading>(fastContinueBinding.fastContinueProgress)
+        viewStateDelegate.addState<FastContinueView.State.Empty>(fastContinueBinding.fastContinuePlaceholder)
+        viewStateDelegate.addState<FastContinueView.State.Anonymous>(fastContinueBinding.fastContinuePlaceholder)
+        viewStateDelegate.addState<FastContinueView.State.Content>(fastContinueBinding.fastContinueMask)
 
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
+        fastContinueBinding.fastContinueOverlay.isEnabled = true
+        fastContinueBinding.fastContinueAction.isEnabled = true
     }
 
     override fun onStart() {
@@ -105,8 +107,8 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
             is FastContinueView.State.Content -> {
                 analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
                 setCourse(state.courseListItem)
-                fastContinueOverlay.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
-                fastContinueAction.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
+                fastContinueBinding.fastContinueOverlay.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
+                fastContinueBinding.fastContinueAction.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
             }
             else -> Unit
         }
@@ -119,9 +121,9 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
             .load(courseListItem.course.cover)
             .placeholder(R.drawable.general_placeholder)
             .fitCenter()
-            .into(fastContinueCourseCover)
+            .into(fastContinueBinding.fastContinueCourseCover)
 
-        fastContinueCourseName.text = courseListItem.course.title
+        fastContinueBinding.fastContinueCourseName.text = courseListItem.course.title
 
         val progress = courseListItem.courseStats.progress
         val needShow = if (progress != null && progress.cost > 0f) {
@@ -130,19 +132,19 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
                 ?.toFloatOrNull()
                 ?: 0f
 
-            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score.toFixed(resources.getInteger(R.integer.score_decimal_count)), progress.cost)
-            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
+            fastContinueBinding.fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score.toFixed(resources.getInteger(R.integer.score_decimal_count)), progress.cost)
+            fastContinueBinding.fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
             true
         } else {
-            fastContinueCourseProgress.progress = 0
+            fastContinueBinding.fastContinueCourseProgress.progress = 0
             false
         }
-        fastContinueCourseProgressText.isVisible = needShow
+        fastContinueBinding.fastContinueCourseProgressText.isVisible = needShow
     }
 
     private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
-        fastContinuePlaceholder.setPlaceholderText(stringRes)
-        fastContinuePlaceholder.setOnClickListener(listener)
+        fastContinueBinding.fastContinuePlaceholder.setPlaceholderText(stringRes)
+        fastContinueBinding.fastContinuePlaceholder.setOnClickListener(listener)
     }
 
     private fun handleContinueCourseClick(course: Course) {
@@ -163,8 +165,8 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
-        fastContinueOverlay.isEnabled = !isLoading
-        fastContinueAction.isEnabled = !isLoading
+        fastContinueBinding.fastContinueOverlay.isEnabled = !isLoading
+        fastContinueBinding.fastContinueAction.isEnabled = !isLoading
         if (isLoading) {
             ProgressHelper.activate(progressDialogFragment, fragmentManager, LoadingProgressDialogFragment.TAG)
         } else {

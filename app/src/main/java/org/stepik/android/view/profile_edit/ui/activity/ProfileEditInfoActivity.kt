@@ -10,9 +10,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_profile_edit_info.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ActivityProfileEditInfoBinding
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
@@ -33,6 +34,8 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
                 .putExtra(EXTRA_PROFILE, profile)
     }
 
+    private val binding: ActivityProfileEditInfoBinding by viewBinding(ActivityProfileEditInfoBinding::bind)
+
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
@@ -52,11 +55,11 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         initCenteredToolbar(R.string.profile_edit_info_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
         if (savedInstanceState == null) {
-            firstNameEditText.setText(profile.firstName ?: "")
-            lastNameEditText.setText(profile.lastName ?: "")
+            binding.firstNameEditText.setText(profile.firstName ?: "")
+            binding.lastNameEditText.setText(profile.lastName ?: "")
 
-            shortBioEditText.setText(profile.shortBio ?: "")
-            detailsEditText.setText(profile.details ?: "")
+            binding.shortBioEditText.setText(profile.shortBio ?: "")
+            binding.detailsEditText.setText(profile.details ?: "")
         }
     }
 
@@ -96,10 +99,10 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         }
 
     private fun submit() {
-        val firstName = firstNameEditText.text.toString()
-        val lastName = lastNameEditText.text.toString()
-        val shortBio = shortBioEditText.text.toString()
-        val details = detailsEditText.text.toString()
+        val firstName = binding.firstNameEditText.text.toString()
+        val lastName = binding.lastNameEditText.text.toString()
+        val shortBio = binding.shortBioEditText.text.toString()
+        val details = binding.detailsEditText.text.toString()
 
         profileEditInfoPresenter.updateProfileInfo(profile, firstName, lastName, shortBio, details)
     }
@@ -121,11 +124,11 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
     }
 
     override fun showNetworkError() {
-        root.snackbar(messageRes = R.string.no_connection)
+        binding.root.snackbar(messageRes = R.string.no_connection)
     }
 
     override fun showInfoError() {
-        root.snackbar(messageRes = R.string.profile_edit_error_info)
+        binding.root.snackbar(messageRes = R.string.profile_edit_error_info)
     }
 
     override fun finish() {

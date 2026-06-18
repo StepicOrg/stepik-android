@@ -16,8 +16,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnPreDraw
 import androidx.core.widget.PopupWindowCompat
-import kotlinx.android.synthetic.main.tooltip_lesson_info.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.TooltipLessonInfoBinding
 import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
 
 class LessonInfoTooltipDelegate(
@@ -34,21 +34,21 @@ class LessonInfoTooltipDelegate(
             .findViewById<View>(R.id.lesson_menu_item_info)
             ?: return
 
-        val popupView = LayoutInflater
-            .from(anchorView.context)
-            .inflate(R.layout.tooltip_lesson_info, null)
+        val popupBinding = TooltipLessonInfoBinding
+            .inflate(LayoutInflater.from(anchorView.context))
+        val popupView = popupBinding.root
 
         if (stepScore > 0f) {
-            popupView
+            popupBinding
                 .stepWorth
                 .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.string.lesson_info_points_with_score_fraction, R.plurals.points, R.drawable.ic_check_rounded)
         } else {
             if (isExam) {
-                popupView
+                popupBinding
                     .stepWorth
                     .setItem(R.string.lesson_info_is_exam, R.drawable.ic_check_rounded)
             } else {
-                popupView
+                popupBinding
                     .stepWorth
                     .setItem(stepCost, R.string.lesson_info_points, R.plurals.points, R.drawable.ic_check_rounded)
             }
@@ -61,11 +61,11 @@ class LessonInfoTooltipDelegate(
                 lessonTimeToCompleteInSeconds / 3600 to R.plurals.hours
             }
 
-        popupView
+        popupBinding
             .lessonTimeToComplete
             .setItem(timeValue, R.string.lesson_info_time_to_complete, timeUnitPlural, R.drawable.ic_duration)
 
-        popupView
+        popupBinding
             .certificateThreshold
             .setItem(certificateThreshold, R.string.lesson_info_certificate_threshold, R.plurals.points, R.drawable.ic_lesson_info)
 
@@ -79,7 +79,7 @@ class LessonInfoTooltipDelegate(
         }
 
         popupView.doOnPreDraw {
-            popupView.arrowView?.x = calcArrowHorizontalOffset(anchorView, popupView, popupView.arrowView)
+            popupBinding.arrowView?.x = calcArrowHorizontalOffset(anchorView, popupView, popupBinding.arrowView)
         }
 
         anchorView.post {

@@ -11,4 +11,4 @@
     android:scrollbarStyle="outsideOverlay"
     android:splitMotionEvents="false"
     android:visibility="gone"
-    tools:viewBindingIgnore="true" />
+    />

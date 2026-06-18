@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:viewBindingIgnore="true">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
@@ -26,7 +25,9 @@
         android:layout_marginRight="@dimen/profile_block_margin"
         android:text="@string/notification_about_learning" />
 
-    <include layout="@layout/view_notification_interval_chooser"/>
+    <include
+        android:id="@+id/notificationIntervalChooser"
+        layout="@layout/view_notification_interval_chooser"/>
 
     <org.stepic.droid.ui.custom.BetterSwitch
         android:id="@+id/marketingNotificationSwitch"

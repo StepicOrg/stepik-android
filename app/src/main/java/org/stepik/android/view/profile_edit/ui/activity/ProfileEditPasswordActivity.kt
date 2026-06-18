@@ -12,9 +12,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_profile_edit_password.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ActivityProfileEditPasswordBinding
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
@@ -45,6 +46,8 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
 
     private val profileId by lazy { intent.getLongExtra(EXTRA_PROFILE_ID, -1) }
 
+    private val binding: ActivityProfileEditPasswordBinding by viewBinding(ActivityProfileEditPasswordBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_edit_password)
@@ -53,18 +56,18 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
 
         initCenteredToolbar(R.string.profile_edit_password_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
-        currentPasswordEditText.addTextChangedListener(object : TextWatcher {
+        binding.currentPasswordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                currentPasswordInputLayout.isErrorEnabled = false
+                binding.currentPasswordInputLayout.isErrorEnabled = false
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        newPasswordEditText.addTextChangedListener(object : TextWatcher {
+        binding.newPasswordEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                newPasswordInputLayout.isErrorEnabled = false
+                binding.newPasswordInputLayout.isErrorEnabled = false
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -108,16 +111,16 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
         }
 
     private fun submit() {
-        val isCurrentPasswordFilled = ValidateUtil.validateRequiredField(currentPasswordInputLayout, currentPasswordEditText)
-        val isNewPasswordFilled = ValidateUtil.validateRequiredField(newPasswordInputLayout, newPasswordEditText)
+        val isCurrentPasswordFilled = ValidateUtil.validateRequiredField(binding.currentPasswordInputLayout, binding.currentPasswordEditText)
+        val isNewPasswordFilled = ValidateUtil.validateRequiredField(binding.newPasswordInputLayout, binding.newPasswordEditText)
 
         if (!isCurrentPasswordFilled ||
             !isNewPasswordFilled) {
             return
         }
 
-        val currentPassword = currentPasswordEditText.text.toString()
-        val newPassword = newPasswordEditText.text.toString()
+        val currentPassword = binding.currentPasswordEditText.text.toString()
+        val newPassword = binding.newPasswordEditText.text.toString()
 
         profileEditPasswordPresenter
             .updateProfilePassword(profileId, currentPassword, newPassword)
@@ -140,11 +143,11 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
     }
 
     override fun showNetworkError() {
-        root.snackbar(messageRes = R.string.no_connection)
+        binding.root.snackbar(messageRes = R.string.no_connection)
     }
 
     override fun showPasswordError() {
-        root.snackbar(messageRes = R.string.profile_edit_error_password)
+        binding.root.snackbar(messageRes = R.string.profile_edit_error_password)
     }
 
     override fun finish() {

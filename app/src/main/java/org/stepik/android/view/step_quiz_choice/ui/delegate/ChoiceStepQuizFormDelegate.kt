@@ -1,11 +1,13 @@
 package org.stepik.android.view.step_quiz_choice.ui.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizChoiceBinding
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -20,18 +22,36 @@ import ru.nobird.android.ui.adapters.selection.SelectionHelper
 import ru.nobird.android.ui.adapters.selection.SingleChoiceSelectionHelper
 
 class ChoiceStepQuizFormDelegate(
-    containerView: View,
+    private val quizDescription: TextView,
+    private val choicesRecycler: RecyclerView,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val context = containerView.context
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        choiceStepQuizBinding: LayoutStepQuizChoiceBinding,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        stepQuizBinding.stepQuizDescription,
+        choiceStepQuizBinding.root,
+        onQuizChanged
+    )
 
-    private val quizDescription = containerView.stepQuizDescription
+    constructor(
+        containerView: View,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stepQuizDescription),
+        containerView.findViewById(R.id.choicesRecycler),
+        onQuizChanged
+    )
+
+    private val context = choicesRecycler.context
     private val choiceStepQuizOptionsMapper = ChoiceStepQuizOptionsMapper()
     private var choicesAdapter: DefaultDelegateAdapter<Choice> = DefaultDelegateAdapter()
     private lateinit var selectionHelper: SelectionHelper
 
     init {
-        containerView.choicesRecycler.apply {
+        choicesRecycler.apply {
             itemAnimator = null
             adapter = choicesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)

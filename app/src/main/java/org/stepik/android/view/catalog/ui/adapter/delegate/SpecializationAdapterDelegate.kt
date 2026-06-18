@@ -1,12 +1,11 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.core.text.strikeThrough
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_specialization.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemSpecializationBinding
 import org.stepik.android.domain.catalog.model.CatalogSpecialization
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -28,8 +27,9 @@ class SpecializationAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_specialization))
 
     private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogSpecialization>(containerView), LayoutContainer {
+        containerView: android.view.View
+    ) : DelegateViewHolder<CatalogSpecialization>(containerView) {
+        private val viewBinding: ItemSpecializationBinding by viewBinding { ItemSpecializationBinding.bind(itemView) }
 
         init {
             containerView.setOnClickListener {
@@ -40,19 +40,19 @@ class SpecializationAdapterDelegate(
         }
 
         override fun onBind(data: CatalogSpecialization) {
-            specializationTitle.text = data.title
-            specializationDuration.text = data.duration
+            viewBinding.specializationTitle.text = data.title
+            viewBinding.specializationDuration.text = data.duration
             val discount = data.discount?.toFloatOrNull() ?: 0f
 
             if (discount > 0f && data.discount != null) {
-                specializationPrice.text = formatDisplayPrice(data.discount.removeSuffix(PRICE_SUFFIX), data.currency)
-                specializationDiscountPrice.text = buildSpannedString {
+                viewBinding.specializationPrice.text = formatDisplayPrice(data.discount.removeSuffix(PRICE_SUFFIX), data.currency)
+                viewBinding.specializationDiscountPrice.text = buildSpannedString {
                     strikeThrough {
                         append(formatDisplayPrice(data.price.removeSuffix(PRICE_SUFFIX), data.currency))
                     }
                 }
             } else {
-                specializationPrice.text = formatDisplayPrice(data.price.removeSuffix(PRICE_SUFFIX), data.currency)
+                viewBinding.specializationPrice.text = formatDisplayPrice(data.price.removeSuffix(PRICE_SUFFIX), data.currency)
             }
         }
 

@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.fragment_user_reviews.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentUserReviewsBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -39,6 +39,8 @@ import ru.nobird.android.view.redux.ui.extension.reduxViewModel
 import javax.inject.Inject
 
 class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<UserReviewsFeature.State, UserReviewsFeature.Action.ViewAction> {
+
+    private val binding: FragmentUserReviewsBinding by viewBinding(FragmentUserReviewsBinding::bind)
 
     companion object {
         fun newInstance(): Fragment =
@@ -91,7 +93,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
             },
             onRemoveReviewClicked = { courseReview -> userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.DeletedReviewUserReviews(courseReview)) }
         )
-        with(userReviewsRecycler) {
+        with(binding.userReviewsRecycler) {
             adapter = userReviewItemAdapter
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
@@ -102,7 +104,7 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
         }
         userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = false))
         userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.ScreenOpenedMessage)
-        tryAgain.setOnClickListener {
+        binding.userReviewsError.tryAgain.setOnClickListener {
             userReviewsViewModel.onNewMessage(UserReviewsFeature.Message.InitMessage(forceUpdate = true))
         }
     }
@@ -115,10 +117,10 @@ class UserReviewsFragment : Fragment(R.layout.fragment_user_reviews), ReduxView<
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<UserReviewsFeature.State.Idle>()
-        viewStateDelegate.addState<UserReviewsFeature.State.Loading>(userReviewsRecycler)
-        viewStateDelegate.addState<UserReviewsFeature.State.Error>(userReviewsError)
-        viewStateDelegate.addState<UserReviewsFeature.State.Empty>(userReviewsEmpty)
-        viewStateDelegate.addState<UserReviewsFeature.State.Content>(userReviewsRecycler)
+        viewStateDelegate.addState<UserReviewsFeature.State.Loading>(binding.userReviewsRecycler)
+        viewStateDelegate.addState<UserReviewsFeature.State.Error>(binding.userReviewsError.root)
+        viewStateDelegate.addState<UserReviewsFeature.State.Empty>(binding.userReviewsEmpty.root)
+        viewStateDelegate.addState<UserReviewsFeature.State.Content>(binding.userReviewsRecycler)
     }
 
     override fun onAction(action: UserReviewsFeature.Action.ViewAction) {

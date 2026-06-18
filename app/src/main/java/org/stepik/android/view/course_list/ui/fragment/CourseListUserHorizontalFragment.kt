@@ -7,10 +7,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_user_course_list.*
-import kotlinx.android.synthetic.main.view_user_course_list_empty.view.*
-import kotlinx.android.synthetic.main.view_user_course_list_network_error.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentUserCourseListBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
@@ -36,6 +35,8 @@ import ru.nobird.android.view.base.ui.extension.setOnPaginationListener
 import javax.inject.Inject
 
 class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_list), CourseListUserView {
+    private val binding: FragmentUserCourseListBinding by viewBinding(FragmentUserCourseListBinding::bind)
+
     companion object {
         fun newInstance(): Fragment =
             CourseListUserHorizontalFragment()
@@ -80,12 +81,12 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        containerTitle.text = resources.getString(R.string.course_list_user_courses_title)
+        binding.containerTitle.text = resources.getString(R.string.course_list_user_courses_title)
         val rowCount = resources.getInteger(R.integer.course_list_rows)
         val columnsCount = resources.getInteger(R.integer.course_list_columns)
         tableLayoutManager = TableLayoutManager(requireContext(), columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
 
-        with(courseListCoursesRecycler) {
+        with(binding.courseListCoursesRecycler) {
             layoutManager = tableLayoutManager
             itemAnimator?.changeDuration = 0
             val snapHelper = LinearSnapHelper()
@@ -97,7 +98,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             }
         }
 
-        catalogBlockContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
+        binding.catalogBlockContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
 
         /**
          * Empty user courses action
@@ -120,21 +121,21 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
                 R.string.user_courses_catalog_action_message
             }
 
-        with(courseListPlaceholderEmpty.userCoursesListEmptyAction) {
+        with(binding.courseListPlaceholderEmpty.userCoursesListEmptyAction) {
             setOnClickListener(userCoursesListEmptyActionListener)
             setText(userCoursesListEmptyActionText)
         }
-        with(courseListPlaceholderEmptyWrapper.userCoursesListEmptyAction) {
+        with(binding.courseListPlaceholderEmptyWrapper.userCoursesListEmptyAction) {
             setOnClickListener(userCoursesListEmptyActionListener)
             setText(userCoursesListEmptyActionText)
         }
 
-        courseListPlaceholderNoConnection
+        binding.courseListPlaceholderNoConnection
             .userCoursesListNetworkErrorAction
             .setOnClickListener {
                 setDataToPresenter(forceUpdate = true)
             }
-        courseListPlaceholderNoConnectionWrapper
+        binding.courseListPlaceholderNoConnectionWrapper
             .userCoursesListNetworkErrorAction
             .setOnClickListener {
                 setDataToPresenter(forceUpdate = true)
@@ -142,11 +143,11 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
-        viewStateDelegate.addState<CourseListView.State.Idle>(catalogBlockContainer, containerTitle)
-        viewStateDelegate.addState<CourseListView.State.Loading>(catalogBlockContainer, containerTitle, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(catalogBlockContainer, containerTitle, containerCarouselCount, containerViewAll, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(catalogBlockContainer, containerTitle, courseListPlaceholderEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(catalogBlockContainer, containerTitle, courseListPlaceholderNoConnection)
+        viewStateDelegate.addState<CourseListView.State.Idle>(binding.catalogBlockContainer, binding.containerTitle)
+        viewStateDelegate.addState<CourseListView.State.Loading>(binding.catalogBlockContainer, binding.containerTitle, binding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(binding.catalogBlockContainer, binding.containerTitle, binding.containerCarouselCount, binding.containerViewAll, binding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(binding.catalogBlockContainer, binding.containerTitle, binding.courseListPlaceholderEmpty.root)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(binding.catalogBlockContainer, binding.containerTitle, binding.courseListPlaceholderNoConnection.root)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -155,7 +156,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseItemsRecyclerView = binding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter
@@ -171,9 +172,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
         wrapperViewStateDelegate = ViewStateDelegate()
         wrapperViewStateDelegate.addState<CourseListUserView.State.Idle>()
-        wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
-        wrapperViewStateDelegate.addState<CourseListUserView.State.EmptyLogin>(courseListPlaceholderEmptyWrapper)
-        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnectionWrapper)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(binding.courseListUserSkeleton)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.EmptyLogin>(binding.courseListPlaceholderEmptyWrapper.root)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(binding.courseListPlaceholderNoConnectionWrapper.root)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
         setDataToPresenter()
@@ -191,9 +192,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     }
 
     override fun setState(state: CourseListUserView.State) {
-        catalogBlockContainer.isEnabled = (state as? CourseListUserView.State.Data)?.courseListViewState is CourseListView.State.Content
+        binding.catalogBlockContainer.isEnabled = (state as? CourseListUserView.State.Data)?.courseListViewState is CourseListView.State.Content
         if (state is CourseListUserView.State.Data) {
-            containerCarouselCount.text = requireContext().resources.getQuantityString(
+            binding.containerCarouselCount.text = requireContext().resources.getQuantityString(
                 R.plurals.course_count,
                 state.userCourses.size,
                 state.userCourses.size

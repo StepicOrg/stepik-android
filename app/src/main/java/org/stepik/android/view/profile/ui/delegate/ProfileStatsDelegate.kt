@@ -2,21 +2,20 @@ package org.stepik.android.view.profile.ui.delegate
 
 import android.text.Spannable
 import android.text.SpannableString
-import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.header_profile.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.HeaderProfileBinding
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepik.android.model.user.User
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 
 class ProfileStatsDelegate(
-    view: View,
+    headerBinding: HeaderProfileBinding,
     private val analytic: Analytic
 ) {
     companion object {
@@ -24,15 +23,15 @@ class ProfileStatsDelegate(
         private const val MIN_KNOWLEDGE = 10
     }
 
-    private val context = view.context
+    private val context = headerBinding.root.context
     private val resources = context.resources
 
-    private val profileStats = view.profileStats
+    private val profileStats = headerBinding.profileStats
 
-    private val profileCertificatesIssued = view.profileCertificatesIssued
-    private val profileCoursesPublished = view.profileCoursesPublished
-    private val profileKnowledgeRank = view.profileKnowledgeRank
-    private val profileReputationRank = view.profileReputationRank
+    private val profileCertificatesIssued = headerBinding.profileCertificatesIssued
+    private val profileCoursesPublished = headerBinding.profileCoursesPublished
+    private val profileKnowledgeRank = headerBinding.profileKnowledgeRank
+    private val profileReputationRank = headerBinding.profileReputationRank
 
     init {
         profileKnowledgeRank.setOnClickListener {

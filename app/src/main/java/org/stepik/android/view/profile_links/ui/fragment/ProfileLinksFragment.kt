@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.fragment_profile_links.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentProfileLinksBinding
 import org.stepik.android.model.SocialProfile
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksView
@@ -45,6 +45,8 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileLinksView.State>
 
+    private val binding: FragmentProfileLinksBinding by viewBinding(FragmentProfileLinksBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,14 +67,14 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileLinksView.State.Idle>()
-        viewStateDelegate.addState<ProfileLinksView.State.Loading>(view, profileExternalLinksLoading)
-        viewStateDelegate.addState<ProfileLinksView.State.Error>(view, profileExternalLinksLoadingError)
-        viewStateDelegate.addState<ProfileLinksView.State.ProfileLinksLoaded>(view, profileExternalLinksRecycler)
+        viewStateDelegate.addState<ProfileLinksView.State.Loading>(view, binding.profileExternalLinksLoading)
+        viewStateDelegate.addState<ProfileLinksView.State.Error>(view, binding.profileExternalLinksLoadingError.root)
+        viewStateDelegate.addState<ProfileLinksView.State.ProfileLinksLoaded>(view, binding.profileExternalLinksRecycler)
         viewStateDelegate.addState<ProfileLinksView.State.Empty>()
 
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        binding.profileExternalLinksLoadingError.tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
-        with(profileExternalLinksRecycler) {
+        with(binding.profileExternalLinksRecycler) {
             adapter = profileLinksAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             isNestedScrollingEnabled = false

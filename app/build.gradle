@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../code_quality_tools/jacoco.gradle'
 //apply from: '../code_quality_tools/findbugs.gradle'
@@ -143,11 +143,17 @@ android {
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
+    }
+
+    kapt {
+        arguments {
+            arg("dagger.useBindingGraphFix", "ENABLED")
+        }
     }
 
     buildFeatures {
@@ -156,8 +162,8 @@ android {
     namespace 'org.stepic.droid'
 }
 
-androidExtensions {
-    experimental = true
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-XDstringConcat=inline']
 }
 
 configurations {
@@ -172,6 +178,7 @@ dependencies {
     implementation files('libs/flexbox-release.aar')
     implementation project(':billing')
     implementation project(':model')
+    implementation platform(libraries.kotlinBom)
     implementation libraries.kotlinStd
 
     //<DI>

@@ -15,11 +15,12 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.activity_auth_credential.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ActivityAuthCredentialBinding
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -37,6 +38,8 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
+    private val binding: ActivityAuthCredentialBinding by viewBinding(ActivityAuthCredentialBinding::bind)
+
     companion object {
         private const val EXTRA_EMAIL = "extra_email"
         private const val EXTRA_PASSWORD = "extra_password"
@@ -79,20 +82,20 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
         initTitle()
 
-        forgotPasswordView.setOnClickListener {
+        binding.forgotPasswordView.setOnClickListener {
             screenManager.openRemindPassword(this@CredentialAuthActivity)
         }
 
-        loginField.setOnEditorActionListener { _, actionId, _ ->
+        binding.loginField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                passwordField.requestFocus()
+                binding.passwordField.requestFocus()
                 handled = true
             }
             handled
         }
 
-        passwordField.setOnEditorActionListener { _, actionId, _ ->
+        binding.passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN)
@@ -108,8 +111,8 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
                 analytic.reportEvent(Analytic.Login.TAP_ON_FIELDS)
             }
         }
-        loginField.setOnFocusChangeListener(onFocusField)
-        passwordField.setOnFocusChangeListener(onFocusField)
+        binding.loginField.setOnFocusChangeListener(onFocusField)
+        binding.passwordField.setOnFocusChangeListener(onFocusField)
 
         val reportAnalyticWhenTextBecomeNotBlank = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -124,10 +127,10 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
             override fun afterTextChanged(s: Editable?) {}
         }
-        loginField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-        passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        binding.loginField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
+        binding.passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
-        launchSignUpButton.setOnClickListener {
+        binding.launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
             screenManager
                 .showRegistration(
@@ -136,22 +139,22 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
                 )
         }
 
-        signInWithSocial.setOnClickListener { finish() }
-        loginButton.setOnClickListener {
+        binding.signInWithSocial.setOnClickListener { finish() }
+        binding.loginButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN)
             analytic.reportEvent(Analytic.Login.REQUEST_LOGIN_WITH_INTERACTION_TYPE, LoginInteractionType.button.toBundle())
             submit()
         }
-        loginRootView.requestFocus()
+        binding.loginRootView.requestFocus()
 
         initGoogleApiClient()
 
-        setOnKeyboardOpenListener(root_view, {
-            stepikLogo.isVisible = false
-            signInText.isVisible = false
+        setOnKeyboardOpenListener(binding.rootView, {
+            binding.stepikLogo.isVisible = false
+            binding.signInText.isVisible = false
         }, {
-            stepikLogo.isVisible = true
-            signInText.isVisible = true
+            binding.stepikLogo.isVisible = true
+            binding.signInText.isVisible = true
         })
 
         if (savedInstanceState == null) {
@@ -185,7 +188,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
         spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        signInText.text = spannableSignIn
+        binding.signInText.text = spannableSignIn
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -201,15 +204,15 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         val email = intent.getStringExtra(EXTRA_EMAIL)
         val password = intent.getStringExtra(EXTRA_PASSWORD)
 
-        loginField.setText(email)
-        passwordField.setText(password)
+        binding.loginField.setText(email)
+        binding.passwordField.setText(password)
 
         when {
             email == null ->
-                loginField.requestFocus()
+                binding.loginField.requestFocus()
 
-            passwordField == null ->
-                passwordField.requestFocus()
+            password == null ->
+                binding.passwordField.requestFocus()
         }
 
         if (autoAuth != AutoAuth.NONE) {
@@ -220,8 +223,8 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     private fun submit(autoAuth: AutoAuth = AutoAuth.NONE) {
         currentFocus?.hideKeyboard()
 
-        val login = loginField.text.toString()
-        val password = passwordField.text.toString()
+        val login = binding.loginField.text.toString()
+        val password = binding.passwordField.text.toString()
 
         credentialAuthPresenter.submit(Credentials(login, password), isRegistration = autoAuth == AutoAuth.REGISTRATION)
     }
@@ -237,19 +240,19 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
         when (state) {
             is CredentialAuthView.State.Idle -> {
-                loginButton.isEnabled = true
-                loginForm.isEnabled = true
-                loginErrorMessage.isVisible = false
+                binding.loginButton.isEnabled = true
+                binding.loginForm.isEnabled = true
+                binding.loginErrorMessage.isVisible = false
             }
 
             is CredentialAuthView.State.Error -> {
-                loginErrorMessage.text = getMessageFor(state.failType)
-                loginErrorMessage.isVisible = true
+                binding.loginErrorMessage.text = getMessageFor(state.failType)
+                binding.loginErrorMessage.isVisible = true
 
                 if (state.failType == LoginFailType.EMAIL_ALREADY_USED ||
                     state.failType == LoginFailType.EMAIL_PASSWORD_INVALID) {
-                    loginForm.isEnabled = false
-                    loginButton.isEnabled = false
+                    binding.loginForm.isEnabled = false
+                    binding.loginButton.isEnabled = false
                 }
             }
 

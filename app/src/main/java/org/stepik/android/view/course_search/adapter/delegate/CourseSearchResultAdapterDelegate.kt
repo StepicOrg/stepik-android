@@ -4,10 +4,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_course_search_result.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCourseSearchResultBinding
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course_search.model.CourseSearchResult
 import org.stepik.android.domain.course_search.model.CourseSearchResultListItem
@@ -29,10 +29,12 @@ class CourseSearchResultAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_course_search_result))
 
     private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseSearchResultListItem>(containerView), LayoutContainer {
+        root: View
+    ) : DelegateViewHolder<CourseSearchResultListItem>(root) {
+        private val viewBinding: ItemCourseSearchResultBinding by viewBinding { ItemCourseSearchResultBinding.bind(root) }
+
         init {
-            courseSearchResultContainer.setOnClickListener {
+            viewBinding.courseSearchResultContainer.setOnClickListener {
                 val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
                 logEvent(data.courseSearchResult)
                 with(data.courseSearchResult) {
@@ -41,7 +43,7 @@ class CourseSearchResultAdapterDelegate(
                 }
             }
 
-            courseSearchCommentContainer.setOnClickListener {
+            viewBinding.courseSearchCommentContainer.setOnClickListener {
                 val data = itemData as? CourseSearchResultListItem.Data ?: return@setOnClickListener
                 logEvent(data.courseSearchResult)
                 with(data.courseSearchResult) {
@@ -57,9 +59,9 @@ class CourseSearchResultAdapterDelegate(
         }
         override fun onBind(data: CourseSearchResultListItem) {
             data as CourseSearchResultListItem.Data
-            courseSearchTitle.text = data.courseSearchResult.searchResult.lessonTitle
+            viewBinding.courseSearchTitle.text = data.courseSearchResult.searchResult.lessonTitle
 
-            courseSearchTitle.text = buildString {
+            viewBinding.courseSearchTitle.text = buildString {
                 if (data.courseSearchResult.section != null && data.courseSearchResult.unit != null) {
                     append("${data.courseSearchResult.section.position}.${data.courseSearchResult.unit.position} ")
                 }
@@ -69,24 +71,24 @@ class CourseSearchResultAdapterDelegate(
                 }
             }
 
-            Glide.with(courseSearchIcon)
+            Glide.with(viewBinding.courseSearchIcon)
                 .asBitmap()
                 .load(data.courseSearchResult.searchResult.lessonCoverUrl)
                 .placeholder(R.drawable.general_placeholder)
                 .centerCrop()
-                .into(courseSearchIcon)
+                .into(viewBinding.courseSearchIcon)
 
             val progress = data.courseSearchResult.progress
             val lesson = data.courseSearchResult.lesson
             val isProgressAvailable = progress != null
 
-            courseSearchProgressPlaceholder.isVisible = data.courseSearchResult.progress == null
-            courseSearchTextProgress.isVisible = isProgressAvailable
-            courseSearchTimeToComplete.isVisible = isProgressAvailable
-            courseSearchViewCountIcon.isVisible = isProgressAvailable
-            courseSearchViewCount.isVisible = isProgressAvailable
-            courseSearchRatingIcon.isVisible = isProgressAvailable
-            courseSearchRating.isVisible = isProgressAvailable
+            viewBinding.courseSearchProgressPlaceholder.isVisible = data.courseSearchResult.progress == null
+            viewBinding.courseSearchTextProgress.isVisible = isProgressAvailable
+            viewBinding.courseSearchTimeToComplete.isVisible = isProgressAvailable
+            viewBinding.courseSearchViewCountIcon.isVisible = isProgressAvailable
+            viewBinding.courseSearchViewCount.isVisible = isProgressAvailable
+            viewBinding.courseSearchRatingIcon.isVisible = isProgressAvailable
+            viewBinding.courseSearchRating.isVisible = isProgressAvailable
 
             if (progress != null && progress.cost > 0) {
                 val score = progress
@@ -94,10 +96,10 @@ class CourseSearchResultAdapterDelegate(
                     ?.toFloatOrNull()
                     ?: 0f
 
-                courseSearchTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
+                viewBinding.courseSearchTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
                     score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
             } else {
-                courseSearchTextProgress.isVisible = false
+                viewBinding.courseSearchTextProgress.isVisible = false
             }
 
             if (lesson != null) {
@@ -110,10 +112,10 @@ class CourseSearchResultAdapterDelegate(
                     } else {
                         context.resources.getString(R.string.course_content_time_to_complete_hours_unit, timeToComplete / 3600)
                     }
-                    courseSearchTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
+                    viewBinding.courseSearchTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
                 }
 
-                courseSearchViewCount.text = lesson.passedBy.toString()
+                viewBinding.courseSearchViewCount.text = lesson.passedBy.toString()
 
                 @DrawableRes
                 val unitRatingDrawableRes =
@@ -123,25 +125,25 @@ class CourseSearchResultAdapterDelegate(
                         R.drawable.ic_course_content_like
                     }
 
-                courseSearchRatingIcon.setImageResource(unitRatingDrawableRes)
-                courseSearchRating.text = abs(lesson.voteDelta).toString()
+                viewBinding.courseSearchRatingIcon.setImageResource(unitRatingDrawableRes)
+                viewBinding.courseSearchRating.text = abs(lesson.voteDelta).toString()
             }
 
             val hasComment = with(data.courseSearchResult.searchResult) {
                 comment != null && commentUser != null
             }
 
-            courseSearchCommentContainer.isVisible = hasComment && data.courseSearchResult.commentOwner != null
+            viewBinding.courseSearchCommentContainer.isVisible = hasComment && data.courseSearchResult.commentOwner != null
 
             if (hasComment && data.courseSearchResult.commentOwner != null) {
-                Glide.with(courseSearchCommentUserIcon)
+                Glide.with(viewBinding.courseSearchCommentUserIcon)
                     .asBitmap()
                     .load(data.courseSearchResult.commentOwner.avatar)
                     .placeholder(R.drawable.general_placeholder)
                     .centerCrop()
-                    .into(courseSearchCommentUserIcon)
-                courseSearchCommentUserName.text = data.courseSearchResult.commentOwner.fullName
-                courseSearchCommentText.text = data.courseSearchResult.searchResult.commentText
+                    .into(viewBinding.courseSearchCommentUserIcon)
+                viewBinding.courseSearchCommentUserName.text = data.courseSearchResult.commentOwner.fullName
+                viewBinding.courseSearchCommentText.text = data.courseSearchResult.searchResult.commentText
             }
         }
 

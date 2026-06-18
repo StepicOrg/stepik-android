@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import kotlinx.android.synthetic.main.fragment_adaptive_onboarding.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.adapters.OnboardingQuizCardsAdapter
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.databinding.FragmentAdaptiveOnboardingBinding
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.Block
 import org.stepik.android.model.Lesson
@@ -17,6 +18,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.attempts.Attempt
 
 class AdaptiveOnboardingFragment: FragmentBase() {
+    private val onboardingBinding: FragmentAdaptiveOnboardingBinding by viewBinding(FragmentAdaptiveOnboardingBinding::bind)
     private val adapter = OnboardingQuizCardsAdapter {
         if (it == 0) onOnboardingCompleted()
     }
@@ -31,7 +33,7 @@ class AdaptiveOnboardingFragment: FragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        cardsContainer.setAdapter(adapter)
+        onboardingBinding.cardsContainer.setAdapter(adapter)
         initCenteredToolbar(R.string.adaptive_onboarding_title, showHomeButton = true, homeIndicatorRes = getCloseIconDrawableRes())
     }
 

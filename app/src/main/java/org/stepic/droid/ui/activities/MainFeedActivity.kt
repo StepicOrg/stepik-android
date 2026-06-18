@@ -14,9 +14,10 @@ import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import kotlinx.android.synthetic.main.activity_main_feed.*
+import org.stepic.droid.databinding.ActivityMainFeedBinding
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -69,6 +70,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         NotificationsBadgesListener,
         StreakNotificationDialogFragment.Callback,
         TimeIntervalPickerDialogFragment.Companion.Callback {
+
+    private val mainFeedBinding: ActivityMainFeedBinding by viewBinding(ActivityMainFeedBinding::bind)
 
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
@@ -236,7 +239,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         when (getFragmentIndexFromIntent(launchIntent)) {
             HOME_INDEX -> {
-                navigationView.selectedItemId = R.id.home
+                mainFeedBinding.navigationView.selectedItemId = R.id.home
                 val storyId = launchIntent?.getStoryId()
                 if (storyId != null) {
                     StoryDeepLinkDialogFragment
@@ -245,7 +248,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 }
             }
             CATALOG_INDEX -> {
-                navigationView.selectedItemId = R.id.catalog
+                mainFeedBinding.navigationView.selectedItemId = R.id.catalog
                 launchIntent?.data?.pathSegments?.let {
                     when {
                         it.contains(CATALOG_DEEPLINK) -> {
@@ -268,9 +271,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     }
                 }
             }
-            PROFILE_INDEX -> navigationView.selectedItemId = R.id.profile
-            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
-            DEBUG_INDEX -> navigationView.selectedItemId = R.id.debug
+            PROFILE_INDEX -> mainFeedBinding.navigationView.selectedItemId = R.id.profile
+            NOTIFICATIONS_INDEX -> mainFeedBinding.navigationView.selectedItemId = R.id.notifications
+            DEBUG_INDEX -> mainFeedBinding.navigationView.selectedItemId = R.id.debug
             else -> {
                 //do nothing
             }
@@ -299,9 +302,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
-        navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
-        navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
-        navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE == DEBUG_BUILD_TYPE || BuildConfig.BUILD_TYPE == STAGE_DEBUGGABLE_BUILD_TYPE
+        mainFeedBinding.navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
+        mainFeedBinding.navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
+        mainFeedBinding.navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE == DEBUG_BUILD_TYPE || BuildConfig.BUILD_TYPE == STAGE_DEBUGGABLE_BUILD_TYPE
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
@@ -319,11 +322,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBackPressed() {
-        if (navigationView.selectedItemId == R.id.home) {
+        if (mainFeedBinding.navigationView.selectedItemId == R.id.home) {
             finish()
             return
         } else {
-            navigationView.selectedItemId = R.id.home
+            mainFeedBinding.navigationView.selectedItemId = R.id.home
         }
     }
 
@@ -413,8 +416,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     //RootScreen methods
     override fun showCatalog() {
-        if (navigationView.selectedItemId != R.id.catalog) {
-            navigationView.selectedItemId = R.id.catalog
+        if (mainFeedBinding.navigationView.selectedItemId != R.id.catalog) {
+            mainFeedBinding.navigationView.selectedItemId = R.id.catalog
         }
     }
 
@@ -445,11 +448,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBadgeShouldBeHidden() {
-        navigationView.removeBadge(R.id.notifications)
+        mainFeedBinding.navigationView.removeBadge(R.id.notifications)
     }
 
     override fun onBadgeCountChanged(count: Int) {
-        val badge = navigationView.getOrCreateBadge(R.id.notifications)
+        val badge = mainFeedBinding.navigationView.getOrCreateBadge(R.id.notifications)
         badge.number = count
         badge.maxCharacterCount = 3
         badge.isVisible = true
@@ -479,7 +482,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
                 if (deniedPermissionIndex != -1) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[deniedPermissionIndex])) {
-                        frame.snackbar(messageRes = R.string.notification_permission_error)
+                        mainFeedBinding.frame.snackbar(messageRes = R.string.notification_permission_error)
                     }
                 } else {
                     TimeIntervalPickerDialogFragment
