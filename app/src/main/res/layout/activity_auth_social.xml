@@ -44,6 +44,16 @@
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_stepik_logotype_square_black" />
 
+        <Space
+            android:id="@+id/authTopSpacing"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stepikLogo" />
+
         <FrameLayout
             android:id="@+id/bottomButtons"
             android:layout_width="@dimen/auth_elements_width"
@@ -91,18 +101,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@id/stepikLogo"
-            app:layout_constraintBottom_toTopOf="@id/bottomButtons"
-
-            android:layout_marginTop="32dp">
+            app:layout_constraintTop_toBottomOf="@id/authTopSpacing">
 
             <TextView
                 android:id="@+id/signInText"
-                app:fontFamily="@font/roboto_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="20sp"
+                android:textAppearance="?textAppearanceHeadline6"
                 tools:text="Sign in with social accounts"
                 tools:ignore="MissingPrefix"/>
 
@@ -114,8 +120,8 @@
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
                 tools:listitem="@layout/item_social"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:itemCount="3" />
 
         </LinearLayout>

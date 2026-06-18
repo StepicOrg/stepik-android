@@ -11,7 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
@@ -141,7 +141,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
         val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithSocial)
-        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_medium))
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
 
         spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -202,7 +202,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
     }
 
     private fun initSocialRecycler() {
-        binding.socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
+        binding.socialListRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
         binding.socialListRecyclerView.adapter = SocialAuthAdapter(this::onSocialItemClicked)
     }
