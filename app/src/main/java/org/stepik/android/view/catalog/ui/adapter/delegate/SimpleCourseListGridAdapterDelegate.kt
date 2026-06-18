@@ -2,7 +2,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.flexbox.FlexboxLayoutManager
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemBlockSimpleCourseListGridBinding

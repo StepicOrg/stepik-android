@@ -3,7 +3,7 @@ package org.stepic.droid.ui.activities
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic

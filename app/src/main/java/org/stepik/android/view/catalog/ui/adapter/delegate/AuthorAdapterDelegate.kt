@@ -1,7 +1,7 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.ViewGroup
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemAuthorBinding

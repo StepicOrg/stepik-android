@@ -3,7 +3,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemAuthorListBinding
 import org.stepik.android.domain.catalog.model.CatalogAuthor

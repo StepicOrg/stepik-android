@@ -20,7 +20,7 @@ import javax.inject.Inject
 import android.content.Intent
 import android.content.Context
 import androidx.core.view.isVisible
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
 import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
 import org.stepik.android.view.debug.ui.dialog.BackendFeaturesDialogFragment

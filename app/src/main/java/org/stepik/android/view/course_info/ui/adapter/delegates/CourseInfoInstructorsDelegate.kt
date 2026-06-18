@@ -3,7 +3,7 @@ package org.stepik.android.view.course_info.ui.adapter.delegates
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ViewCourseInfoInstructorsBlockBinding
 import org.stepik.android.model.user.User

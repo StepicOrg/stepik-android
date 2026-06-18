@@ -3,7 +3,7 @@ package org.stepik.android.view.course_revenue.ui.adapter.delegate
 import android.text.SpannedString
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemCourseBenefitByMonthBinding
 import org.stepic.droid.util.DateTimeHelper

@@ -3,7 +3,7 @@ package org.stepik.android.view.certificate.ui.adapter.delegate
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.databinding.CertificateItemBinding

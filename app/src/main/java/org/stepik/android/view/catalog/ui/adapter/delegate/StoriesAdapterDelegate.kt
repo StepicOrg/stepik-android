@@ -2,7 +2,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ViewStoriesContainerBinding
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter

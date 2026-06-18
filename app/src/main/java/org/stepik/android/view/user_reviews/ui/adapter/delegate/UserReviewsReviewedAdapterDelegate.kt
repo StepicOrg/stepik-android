@@ -6,7 +6,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemUserReviewReviewedBinding

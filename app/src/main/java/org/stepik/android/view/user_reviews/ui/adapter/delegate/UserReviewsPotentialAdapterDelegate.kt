@@ -2,7 +2,7 @@ package org.stepik.android.view.user_reviews.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemUserReviewPotentialBinding

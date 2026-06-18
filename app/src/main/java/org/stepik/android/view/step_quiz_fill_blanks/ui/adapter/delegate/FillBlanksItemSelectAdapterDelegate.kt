@@ -14,7 +14,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.graphics.drawable.DrawableCompat
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemStepQuizFillBlanksSelectBinding
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate

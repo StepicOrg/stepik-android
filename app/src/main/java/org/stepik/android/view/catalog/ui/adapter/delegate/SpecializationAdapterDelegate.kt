@@ -3,7 +3,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.ViewGroup
 import androidx.core.text.buildSpannedString
 import androidx.core.text.strikeThrough
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemSpecializationBinding
 import org.stepik.android.domain.catalog.model.CatalogSpecialization

@@ -2,7 +2,7 @@ package org.stepik.android.view.debug.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemSplitTestDataBinding
 import org.stepik.android.domain.debug.model.SplitTestData

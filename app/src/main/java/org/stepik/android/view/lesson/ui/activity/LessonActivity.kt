@@ -17,7 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.snackbar.Snackbar
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ActivityLessonBinding

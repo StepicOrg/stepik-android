@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic

@@ -6,7 +6,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.vk.api.sdk.VK
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic

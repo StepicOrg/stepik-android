@@ -3,7 +3,7 @@ package org.stepik.android.view.step_quiz_matching.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemStepQuizSortingBinding
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient

@@ -6,7 +6,7 @@ import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.view.isVisible
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.chrisbanes.photoview.PhotoViewAttacher

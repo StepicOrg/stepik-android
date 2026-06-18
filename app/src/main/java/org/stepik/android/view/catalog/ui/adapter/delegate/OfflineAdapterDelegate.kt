@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ErrorNoConnectionWithButtonSmallBinding
 import org.stepik.android.view.catalog.model.CatalogItem

@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.collection.LongSparseArray
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ViewCourseContentControlBarBinding
 import org.stepic.droid.persistence.model.DownloadProgress
