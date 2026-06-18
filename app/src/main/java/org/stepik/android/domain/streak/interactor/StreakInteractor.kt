@@ -2,8 +2,6 @@ package org.stepik.android.domain.streak.interactor
 
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.StepikUtil
-import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import javax.inject.Inject
@@ -24,9 +22,8 @@ constructor(
     fun onNeedShowStreak(): Maybe<Int> =
         Maybe
             .fromCallable { sharedPreferenceHelper.profile?.id }
-            .flatMapSingleElement { userActivityRepository.getUserActivities(it) }
-            .flatMap { it.firstOrNull()?.pins.toMaybe() }
-            .map { StepikUtil.getCurrentStreak(it) }
+            .flatMapSingleElement { userActivityRepository.getUserActivitySummary(it) }
+            .map { it.recentStrike }
 
     fun setStreakTime(timeIntervalCode: Int) {
         sharedPreferenceHelper.isStreakNotificationEnabled = true
