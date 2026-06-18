@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
@@ -20,7 +21,7 @@ import org.stepik.android.presentation.profile_id.ProfileIdPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
 import org.stepik.android.presentation.profile_notification.ProfileNotificationPresenter
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 abstract class ProfileModule {
     /**
      * PRESENTATION LAYER

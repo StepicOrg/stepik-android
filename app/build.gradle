@@ -150,6 +150,12 @@ android {
         jvmTarget = "1.8"
     }
 
+    kapt {
+        arguments {
+            arg("dagger.useBindingGraphFix", "ENABLED")
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }
