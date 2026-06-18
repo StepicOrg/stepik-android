@@ -23,7 +23,7 @@ class CourseBenefitClickedEvent(
     override val params: Map<String, Any> =
         mapOf(
             PARAM_BENEFIT to benefitId,
-            PARAM_STATUS to benefitStatus.name.toLowerCase(Locale.ROOT),
+            PARAM_STATUS to benefitStatus.name.lowercase(Locale.ROOT),
             PARAM_COURSE to courseId,
             PARAM_COURSE_TITLE to courseTitle.orEmpty()
         )

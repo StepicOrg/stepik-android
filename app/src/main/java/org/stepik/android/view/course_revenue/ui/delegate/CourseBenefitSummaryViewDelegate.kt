@@ -67,13 +67,13 @@ class CourseBenefitSummaryViewDelegate(
                 state.courseBenefitSummary.currentDate,
                 DateTimeHelper.DISPLAY_MONTH_YEAR_NOMINAL_PATTERN,
                 TimeZone.getDefault()
-            ).capitalize(Locale.ROOT)
+            ).replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
             val totalDate = DateTimeHelper.getPrintableDate(
                 state.courseBenefitSummary.beginPaymentDate,
                 DateTimeHelper.DISPLAY_MONTH_YEAR_GENITIVE_PATTERN,
                 TimeZone.getDefault()
-            ).capitalize(Locale.ROOT)
+            ).replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
             binding.courseBenefitSummaryEarningsCurrentMonthText.text = context.getString(R.string.course_benefits_earning_current_month, currentMonthDate)
             binding.courseBenefitSummaryEarningsCurrentMonthValue.text = revenuePriceMapper.mapToDisplayPrice(state.courseBenefitSummary.currencyCode, decimalFormat.format(state.courseBenefitSummary.monthUserIncome.toDoubleOrNull() ?: 0.0))

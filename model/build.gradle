@@ -22,11 +22,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     namespace 'org.stepik.android.model'
 
 }
 
 dependencies {
+    implementation platform(libraries.kotlinBom)
     implementation libraries.kotlinStd
     implementation libraries.gson
     implementation libraries.model

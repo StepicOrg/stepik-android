@@ -150,6 +150,12 @@ android {
         jvmTarget = "1.8"
     }
 
+    kapt {
+        arguments {
+            arg("dagger.useBindingGraphFix", "ENABLED")
+        }
+    }
+
     buildFeatures {
         viewBinding true
     }
@@ -168,6 +174,7 @@ dependencies {
     implementation files('libs/flexbox-release.aar')
     implementation project(':billing')
     implementation project(':model')
+    implementation platform(libraries.kotlinBom)
     implementation libraries.kotlinStd
 
     //<DI>
