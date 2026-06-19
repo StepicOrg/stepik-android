@@ -95,7 +95,7 @@ class StreakNotificationDelegateTest {
     @Test
     fun `positive recent strike with solved today sends improvement notification`() {
         whenever(userActivityRepository.getUserActivitySummary(USER_ID)) doReturn Single.just(
-            UserActivitySummary(recentStrike = 10, solvedToday = 1)
+            UserActivitySummary(recentStrike = 381, solvedToday = 1)
         )
 
         streakNotificationDelegate.onNeedShowNotification()
@@ -107,7 +107,7 @@ class StreakNotificationDelegateTest {
     @Test
     fun `positive recent strike without solved today sends call to action notification`() {
         whenever(userActivityRepository.getUserActivitySummary(USER_ID)) doReturn Single.just(
-            UserActivitySummary(recentStrike = 10, solvedToday = 0)
+            UserActivitySummary(recentStrike = 380, solvedToday = 0)
         )
 
         streakNotificationDelegate.onNeedShowNotification()
