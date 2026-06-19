@@ -3,7 +3,7 @@ package org.stepik.android.domain.streak.interactor
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
-import org.stepik.android.view.streak.notification.StreakNotificationDelegate
+import org.stepik.android.view.streak.notification.StreakNotificationScheduler
 import javax.inject.Inject
 
 class StreakInteractor
@@ -11,7 +11,7 @@ class StreakInteractor
 constructor(
     private val userActivityRepository: UserActivityRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val streakNotificationDelegate: StreakNotificationDelegate
+    private val streakNotificationScheduler: StreakNotificationScheduler
 ) {
 
     fun needShowStreakDialog(): Boolean =
@@ -28,7 +28,7 @@ constructor(
     fun setStreakTime(timeIntervalCode: Int) {
         sharedPreferenceHelper.isStreakNotificationEnabled = true
         sharedPreferenceHelper.timeNotificationCode = timeIntervalCode
-        streakNotificationDelegate.scheduleStreakNotification()
+        streakNotificationScheduler.scheduleStreakNotification()
     }
 
     fun wasStreakDialogSeenOnHomeScreen(): Boolean =

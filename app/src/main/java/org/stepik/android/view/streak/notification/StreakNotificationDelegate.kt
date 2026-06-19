@@ -35,7 +35,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager
-) : NotificationDelegate("show_streak_notification", stepikNotificationManager) {
+) : NotificationDelegate("show_streak_notification", stepikNotificationManager), StreakNotificationScheduler {
     companion object {
         const val STREAK_NOTIFICATION_CLICKED = "streak_notification_clicked"
         private const val STREAK_NOTIFICATION_ID = 3214L
@@ -92,7 +92,7 @@ constructor(
         }
     }
 
-    fun scheduleStreakNotification() {
+    override fun scheduleStreakNotification() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
             // plan new alarm
             val hour = sharedPreferenceHelper.timeNotificationCode
