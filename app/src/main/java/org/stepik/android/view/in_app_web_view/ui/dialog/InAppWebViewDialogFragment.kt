@@ -274,7 +274,9 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                inAppWebViewPresenter.onError()
+                if (request?.isForMainFrame != false) {
+                    inAppWebViewPresenter.onError()
+                }
             }
         }
 
@@ -313,7 +315,9 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                inAppWebViewPresenter.onError()
+                if (request?.isForMainFrame != false) {
+                    inAppWebViewPresenter.onError()
+                }
             }
         }
 
