@@ -12,6 +12,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.databinding.FragmentSettingsBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -21,7 +22,6 @@ import org.stepik.android.view.filter.ui.dialog.CoursesLangDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
-import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.presentation.settings.SettingsPresenter
@@ -56,6 +56,9 @@ class SettingsFragment :
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var config: Config
 
     @Inject
     internal lateinit var userPreferences: UserPreferences
@@ -157,10 +160,9 @@ class SettingsFragment :
         }
 
         binding.contactSupportButton.setOnClickListener {
-            presenter.contactSupport(
-                getString(R.string.feedback_subject),
-                DeviceInfoUtil.getInfosAboutDevice(context, "\n")
-            )
+            InAppWebViewDialogFragment
+                .newInstance(getString(R.string.settings_contact_support), config.supportUrl)
+                .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
         }
 
         binding.helpCenterButton.setOnClickListener {
