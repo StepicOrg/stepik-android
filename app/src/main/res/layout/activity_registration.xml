@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<org.stepik.android.view.auth.ui.view.AuthScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -43,19 +43,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@+id/stepikLogo"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/stepikLogo"
 
-            android:layout_marginTop="36dp"
-            android:paddingBottom="24dp">
+            android:paddingBottom="24dp"
+            android:layout_marginTop="32dp">
 
             <TextView
                 android:id="@+id/signUpText"
-                app:fontFamily="@font/roboto_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?textAppearanceHeadline6"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="32dp"
                 tools:text="Sign up"
                 tools:ignore="MissingPrefix"/>
 
@@ -222,4 +220,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</ScrollView>
+</org.stepik.android.view.auth.ui.view.AuthScrollView>
