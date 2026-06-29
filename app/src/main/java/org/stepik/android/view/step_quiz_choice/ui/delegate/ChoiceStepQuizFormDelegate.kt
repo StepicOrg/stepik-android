@@ -115,10 +115,10 @@ class ChoiceStepQuizFormDelegate(
     private fun handleChoiceClick(choice: Choice) {
         when (selectionHelper) {
             is SingleChoiceSelectionHelper ->
-                selectionHelper.select(choicesAdapter.items.indexOf(choice))
+                selectionHelper.select(choice.id)
 
             is MultipleChoiceSelectionHelper ->
-                selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
+                selectionHelper.toggle(choice.id)
         }
         onQuizChanged(createReply())
     }
