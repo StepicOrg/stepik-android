@@ -12,6 +12,8 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -24,13 +26,13 @@ import org.stepic.droid.databinding.ActivityAuthCredentialBinding
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.toBundle
 import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.auth.CredentialAuthView
+import org.stepik.android.view.auth.extension.addAuthKeyboardInsetsAnimation
 import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
@@ -73,9 +75,11 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+    private var keyboardTargetField: View? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_auth_credential)
 
         injectComponent()
@@ -149,13 +153,12 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
         initGoogleApiClient()
 
-        setOnKeyboardOpenListener(binding.rootView, {
-            binding.stepikLogo.isVisible = false
-            binding.signInText.isVisible = false
-        }, {
-            binding.stepikLogo.isVisible = true
-            binding.signInText.isVisible = true
-        })
+        binding.loginRootView.addAuthKeyboardInsetsAnimation(
+            contentView = binding.container,
+            logoView = binding.stepikLogo,
+            titleView = binding.signInText,
+            keyboardPinnedView = binding.bottomButtons
+        )
 
         if (savedInstanceState == null) {
             setData(intent)
@@ -184,7 +187,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         val signInWithPasswordSuffix = getString(R.string.sign_in_with_password_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithPasswordSuffix)
-        val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
+        val typeface = ResourcesCompat.getFont(this, R.font.roboto_bold)
 
         spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -194,6 +197,13 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setData(intent)
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            showKeyboardForTargetField()
+        }
     }
 
     private fun setData(intent: Intent) {
@@ -207,16 +217,39 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         binding.loginField.setText(email)
         binding.passwordField.setText(password)
 
-        when {
+        val fieldToFocus = when {
             email == null ->
-                binding.loginField.requestFocus()
+                binding.loginField
 
             password == null ->
-                binding.passwordField.requestFocus()
+                binding.passwordField
+
+            else ->
+                null
         }
+        fieldToFocus?.requestFocus()
 
         if (autoAuth != AutoAuth.NONE) {
+            keyboardTargetField = null
             submit(autoAuth)
+        } else {
+            keyboardTargetField = fieldToFocus
+            showKeyboardForTargetField()
+        }
+    }
+
+    private fun showKeyboardForTargetField() {
+        val targetField = keyboardTargetField ?: return
+        if (!window.decorView.hasWindowFocus()) {
+            return
+        }
+
+        targetField.post {
+            targetField.requestFocus()
+
+            keyboardTargetField = null
+            WindowCompat.getInsetsController(window, targetField)
+                .show(WindowInsetsCompat.Type.ime())
         }
     }
 

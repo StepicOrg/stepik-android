@@ -412,8 +412,6 @@
 
     <string name="sign_in_with_social_suffix">" with social accounts"</string>
     <string name="sign_in_with_social">Sign in with social</string>
-    <string name="social_recycler_show_more">More</string>
-    <string name="social_recycler_show_less">Less</string>
     <string name="name">Name</string>
 
     <string name="sign_up_with_email_suffix">" with e-mail"</string>

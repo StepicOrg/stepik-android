@@ -52,10 +52,10 @@ class StoryTemplate(
             val text: String?,
 
             @SerializedName("text_color")
-            val textColor: String,
+            val textColor: String?,
 
             @SerializedName("title")
-            val title: String
+            val title: String?
     ) : Parcelable {
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeString(backgroundStyle)
@@ -70,8 +70,8 @@ class StoryTemplate(
             override fun createFromParcel(parcel: Parcel) = Text(
                     parcel.readString(),
                     parcel.readString(),
-                    parcel.readString()!!,
-                    parcel.readString()!!
+                    parcel.readString(),
+                    parcel.readString()
             )
 
             override fun newArray(size: Int) =
