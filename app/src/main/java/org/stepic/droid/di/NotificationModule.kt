@@ -19,6 +19,7 @@ import org.stepik.android.view.purchase_notification.notification.PurchaseNotifi
 import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
 import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
+import org.stepik.android.view.streak.notification.StreakNotificationScheduler
 
 @Module(includes = [CourseDataModule::class])
 interface NotificationModule {
@@ -53,6 +54,9 @@ interface NotificationModule {
     @Binds
     @IntoSet
     fun provideStreakNotificationDelegate(streakNotificationDelegate: StreakNotificationDelegate): NotificationDelegate
+
+    @Binds
+    fun bindStreakNotificationScheduler(streakNotificationDelegate: StreakNotificationDelegate): StreakNotificationScheduler
 
     @Binds
     @IntoSet

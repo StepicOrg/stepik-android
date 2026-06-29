@@ -33,6 +33,7 @@ class PlainTextWithButtonStoryPartDelegate(
 ) : StoryPartViewDelegate() {
     companion object {
         private const val COLOR_MASK = 0xFF000000.toInt()
+        private const val DEFAULT_TEXT_COLOR = "ffffff"
     }
 
     private val progressDrawable =
@@ -73,12 +74,14 @@ class PlainTextWithButtonStoryPartDelegate(
 
     private fun setUpText(binding: ViewStoryPlainTextWithButtonBinding, text: StoryTemplate.Text?) {
         if (text != null) {
-            @ColorInt val textColor = COLOR_MASK or text.textColor.toInt(16)
+            val textColorValue = text.textColor?.takeIf(String::isNotBlank) ?: DEFAULT_TEXT_COLOR
+            @ColorInt val textColor = COLOR_MASK or textColorValue.toInt(16)
 
             binding.storyTitle.setTextColor(textColor)
             binding.storyText.setTextColor(textColor)
 
             binding.storyTitle.text = text.title
+            binding.storyTitle.isVisible = text.title?.isNotBlank() ?: false
             binding.storyText.text = text.text
             binding.storyText.isVisible = text.text?.isNotBlank() ?: false
         }

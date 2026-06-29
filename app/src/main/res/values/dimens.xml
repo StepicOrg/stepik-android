@@ -128,7 +128,7 @@
     <!-- Auth -->
     <dimen name="auth_social_item_size">@dimen/min_ux_touchable_size</dimen>
     <dimen name="auth_elements_width">-1px</dimen>
-    <dimen name="auth_elements_offset">36dp</dimen>
+    <dimen name="auth_elements_offset">24dp</dimen>
 
     <!-- Video player -->
     <dimen name="video_player_play_button_size">72dp</dimen>

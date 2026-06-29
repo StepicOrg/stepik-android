@@ -29,13 +29,15 @@ import ru.nobird.android.stories.ui.custom.DismissableLayout
 import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import ru.nobird.android.view.base.ui.extension.inflate
 
 class FeedbackStoryPartDelegate(
     private val analytic: Analytic,
     private val context: Context,
     private val dismissableLayout: DismissableLayout
 ) : StoryPartViewDelegate() {
+    private companion object {
+        private const val DEFAULT_TEXT_COLOR = "ffffff"
+    }
 
     private val progressDrawable =
         CircularProgressDrawable(context).apply {
@@ -76,9 +78,11 @@ class FeedbackStoryPartDelegate(
 
     private fun setUpText(binding: ViewStoryFeedbackBinding, text: StoryTemplate.Text?) {
         if (text != null) {
-            @ColorInt val textColor = getColorInt(text.textColor)
+            val textColorValue = text.textColor?.takeIf(String::isNotBlank) ?: DEFAULT_TEXT_COLOR
+            @ColorInt val textColor = getColorInt(textColorValue)
             binding.storyTitle.setTextColor(textColor)
             binding.storyTitle.text = text.title
+            binding.storyTitle.isVisible = text.title?.isNotBlank() ?: false
         }
     }
 

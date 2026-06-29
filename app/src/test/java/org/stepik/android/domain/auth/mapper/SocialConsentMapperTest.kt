@@ -63,9 +63,9 @@ class SocialConsentMapperTest {
             isMarketingVisible = true,
             isMarketingChecked = true
         )
-        val result = mapper.mapConsent(state, SocialNetwork.TWITTER)
+        val result = mapper.mapConsent(state, SocialNetwork.GITHUB)
         assertTrue(result is SocialConsentResult.Valid)
-        assertEquals(SocialNetwork.TWITTER, (result as SocialConsentResult.Valid).provider)
+        assertEquals(SocialNetwork.GITHUB, (result as SocialConsentResult.Valid).provider)
     }
 
     // AC3: Marketing Hidden Clears Pending Consent
@@ -132,13 +132,6 @@ class SocialConsentMapperTest {
         val state = validConsentState()
         val result = mapper.mapConsent(state, SocialNetwork.VK) as SocialConsentResult.Valid
         assertEquals(SocialNetwork.VK, result.provider)
-    }
-
-    @Test
-    fun `twitter provider is preserved in valid result`() {
-        val state = validConsentState()
-        val result = mapper.mapConsent(state, SocialNetwork.TWITTER) as SocialConsentResult.Valid
-        assertEquals(SocialNetwork.TWITTER, result.provider)
     }
 
     @Test

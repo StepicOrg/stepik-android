@@ -14,6 +14,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.CompoundButtonCompat
 import androidx.fragment.app.DialogFragment
@@ -26,7 +27,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.databinding.ActivityRegistrationBinding
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
@@ -41,6 +41,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.presentation.auth.RegistrationPresenter
 import org.stepik.android.presentation.auth.RegistrationView
+import org.stepik.android.view.auth.extension.addAuthKeyboardInsetsAnimation
 import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -97,6 +98,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_registration)
 
         injectComponent()
@@ -187,13 +189,11 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
 
         setSignUpButtonState()
 
-        setOnKeyboardOpenListener(binding.rootView, {
-            binding.stepikLogo.isVisible = false
-            binding.signUpText.isVisible = false
-        }, {
-            binding.stepikLogo.isVisible = true
-            binding.signUpText.isVisible = true
-        })
+        binding.registerRootView.addAuthKeyboardInsetsAnimation(
+            contentView = binding.container,
+            logoView = binding.stepikLogo,
+            titleView = binding.signUpText
+        )
     }
 
     private fun injectComponent() {
@@ -225,7 +225,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
         val signUpSuffix = getString(R.string.sign_up_with_email_suffix)
 
         val spannableSignIn = SpannableString(signUpString + signUpSuffix)
-        val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
+        val typeface = ResourcesCompat.getFont(this, R.font.roboto_bold)
 
         spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signUpString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
