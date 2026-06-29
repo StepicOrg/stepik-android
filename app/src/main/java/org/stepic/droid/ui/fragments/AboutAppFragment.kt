@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
@@ -50,7 +50,8 @@ class AboutAppFragment : FragmentBase() {
     }
 
     private fun initSocialRecycler() {
-        aboutAppBinding.socialListRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+        aboutAppBinding.socialListRecyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         aboutAppBinding.socialListRecyclerView.adapter = SocialLinksAdapter(onClick = ::handleSocialClick)
     }
 

@@ -11,7 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
@@ -20,7 +20,6 @@ import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthCallback
 import com.vk.api.sdk.auth.VKScope
 import com.vk.api.sdk.exceptions.VKApiCodes
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
@@ -55,7 +54,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
     companion object {
         private const val REQUEST_CODE_GOOGLE_SIGN_IN = 7007
 
-        private const val KEY_SOCIAL_ADAPTER_STATE = "social_adapter_state_key"
         private const val KEY_SELECTED_SOCIAL_TYPE = "selected_social_type"
 
         private const val EXTRA_WAS_LOGOUT_KEY = "wasLogoutKey"
@@ -135,12 +133,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
 
         initGoogleApiClient(true) { showNetworkError() }
 
-        val recyclerState = savedInstanceState?.getSerializable(KEY_SOCIAL_ADAPTER_STATE)
-        if (recyclerState is SocialAuthAdapter.State) {
-            initSocialRecycler(recyclerState)
-        } else {
-            initSocialRecycler()
-        }
+        initSocialRecycler()
 
         selectedSocialType = savedInstanceState?.getSerializable(KEY_SELECTED_SOCIAL_TYPE) as? SocialNetwork
 
@@ -148,7 +141,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
         val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithSocial)
-        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_medium))
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
 
         spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -208,31 +201,10 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
         super.onPause()
     }
 
-    private fun initSocialRecycler(state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
-        binding.socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
+    private fun initSocialRecycler() {
+        binding.socialListRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        binding.socialListRecyclerView.itemAnimator = FadeInDownAnimator()
-            .apply {
-                removeDuration = 0
-            }
-
-        val adapter = SocialAuthAdapter(this::onSocialItemClicked, state)
-        binding.showMore.setOnClickListener {
-            binding.showMore.isVisible = false
-            binding.showLess.isVisible = true
-            adapter.showMore()
-        }
-
-        binding.showLess.setOnClickListener {
-            binding.showLess.isVisible = false
-            binding.showMore.isVisible = true
-            adapter.showLess()
-        }
-
-        binding.showLess.isVisible = state == SocialAuthAdapter.State.EXPANDED
-        binding.showMore.isVisible = state == SocialAuthAdapter.State.NORMAL
-
-        binding.socialListRecyclerView.adapter = adapter
+        binding.socialListRecyclerView.adapter = SocialAuthAdapter(this::onSocialItemClicked)
     }
 
     private fun onSocialItemClicked(type: SocialNetwork) {
@@ -391,10 +363,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthCo
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val adapter = binding.socialListRecyclerView.adapter
-        if (adapter is SocialAuthAdapter) {
-            outState.putSerializable(KEY_SOCIAL_ADAPTER_STATE, adapter.state)
-        }
         selectedSocialType?.let { outState.putSerializable(KEY_SELECTED_SOCIAL_TYPE, it) }
         super.onSaveInstanceState(outState)
     }
