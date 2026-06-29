@@ -5,6 +5,7 @@ import com.android.billingclient.api.Purchase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Maybe
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
@@ -55,6 +56,23 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap { obtainCourseHeaderData(it, promo) }
 
+    fun observeCourseHeaderData(courseId: Long, promo: String? = null, forceUpdate: Boolean = false): Observable<CourseHeaderData> {
+        val remoteSource = getCourseHeaderData(courseId, promo, canUseCache = false)
+            .toObservable()
+
+        if (forceUpdate) {
+            return remoteSource
+        }
+
+        val cacheSource = courseRepository
+            .getCourse(courseId, DataSourceType.CACHE, allowFallback = false)
+            .doOnSuccess(coursePublishSubject::onNext)
+            .flatMap { obtainCourseHeaderData(it, promo) }
+            .toObservable()
+
+        return Observable.concat(cacheSource, remoteSource)
+    }
+
     /**
      * Trying to fetch DB data in first place as course object passed with intent could be obsolete
      */
@@ -64,6 +82,27 @@ constructor(
             .onErrorReturnItem(course)
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
+
+    fun observeCourseHeaderData(course: Course, forceUpdate: Boolean = false): Observable<CourseHeaderData> {
+        val remoteSource = courseRepository
+            .getCourse(course.id, DataSourceType.REMOTE, allowFallback = false)
+            .doOnSuccess(coursePublishSubject::onNext)
+            .flatMap(::obtainCourseHeaderData)
+            .toObservable()
+
+        if (forceUpdate) {
+            return remoteSource
+        }
+
+        val cacheSource = courseRepository
+            .getCourse(course.id, DataSourceType.CACHE, allowFallback = false)
+            .switchIfEmpty(Maybe.just(course))
+            .doOnSuccess(coursePublishSubject::onNext)
+            .flatMap(::obtainCourseHeaderData)
+            .toObservable()
+
+        return Observable.concat(cacheSource, remoteSource)
+    }
 
     private fun obtainCourseHeaderData(course: Course, promo: String? = null): Maybe<CourseHeaderData> {
         val currentFlow = CoursePurchaseFlow.valueOfWithFallback(
