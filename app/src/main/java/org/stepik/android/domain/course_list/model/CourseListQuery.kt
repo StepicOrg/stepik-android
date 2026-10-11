@@ -2,7 +2,7 @@ package org.stepik.android.domain.course_list.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import ru.nobird.app.core.model.mapOfNotNull
 import java.io.Serializable

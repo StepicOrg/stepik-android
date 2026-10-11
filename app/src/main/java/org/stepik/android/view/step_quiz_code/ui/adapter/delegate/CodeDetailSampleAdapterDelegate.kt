@@ -4,9 +4,9 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.TextViewCompat
-import kotlinx.android.synthetic.main.item_step_quiz_code_detail_sample.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.base.ui.drawable.GravityDrawable
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
@@ -21,9 +21,9 @@ class CodeDetailSampleAdapterDelegate : AdapterDelegate<CodeDetail, DelegateView
         data is CodeDetail.Sample
 
     private class ViewHolder(root: View) : DelegateViewHolder<CodeDetail>(root) {
-        private val title = root.stepQuizCodeDetailSampleTitle
-        private val input = root.stepQuizCodeDetailSampleInput
-        private val output = root.stepQuizCodeDetailSampleOutput
+        private val title = root.findViewById<AppCompatTextView>(R.id.stepQuizCodeDetailSampleTitle)
+        private val input = root.findViewById<AppCompatTextView>(R.id.stepQuizCodeDetailSampleInput)
+        private val output = root.findViewById<AppCompatTextView>(R.id.stepQuizCodeDetailSampleOutput)
 
         init {
             val sampleHeight = context.resources.getDimensionPixelOffset(R.dimen.step_quiz_code_sample_min_height)

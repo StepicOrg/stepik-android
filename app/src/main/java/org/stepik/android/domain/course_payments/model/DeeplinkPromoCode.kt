@@ -1,7 +1,7 @@
 package org.stepik.android.domain.course_payments.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class DeeplinkPromoCode(

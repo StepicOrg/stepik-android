@@ -4,9 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.item_course.view.*
-import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCourseBinding
+import org.stepic.droid.databinding.LayoutCoursePropertiesBinding
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -20,20 +20,23 @@ class CoursePropertiesDelegate(
     root: View,
     private val view: ViewGroup
 ) {
-    private val learnersCountImage = view.learnersCountImage
-    private val learnersCountText = view.learnersCountText
+    private val rootBinding = ItemCourseBinding.bind(root)
+    private val propertiesBinding = LayoutCoursePropertiesBinding.bind(view)
 
-    private val courseRatingImage = view.courseRatingImage
-    private val courseRatingText = view.courseRatingText
+    private val learnersCountImage = propertiesBinding.learnersCountImage
+    private val learnersCountText = propertiesBinding.learnersCountText
 
-    private val courseCertificateImage = view.courseCertificateImage
-    private val courseCertificateText = view.courseCertificateText
+    private val courseRatingImage = propertiesBinding.courseRatingImage
+    private val courseRatingText = propertiesBinding.courseRatingText
 
-    private val courseArchiveImage = view.courseArchiveImage
-    private val courseArchiveText = view.courseArchiveText
+    private val courseCertificateImage = propertiesBinding.courseCertificateImage
+    private val courseCertificateText = propertiesBinding.courseCertificateText
 
-    private val courseFavoriteImage = root.courseListFavorite
-    private val courseWishlistImage = root.courseListWishlist
+    private val courseArchiveImage = propertiesBinding.courseArchiveImage
+    private val courseArchiveText = propertiesBinding.courseArchiveText
+
+    private val courseFavoriteImage = rootBinding.courseListFavorite
+    private val courseWishlistImage = rootBinding.courseListWishlist
 
     fun setStats(courseListItem: CourseListItem.Data) {
         setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)

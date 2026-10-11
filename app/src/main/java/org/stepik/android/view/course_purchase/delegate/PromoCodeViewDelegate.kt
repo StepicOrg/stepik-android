@@ -18,20 +18,12 @@ import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.setTextIfChanged
 
 class PromoCodeViewDelegate(
-    coursePurchaseBinding: BottomSheetDialogCoursePurchaseBinding,
+    private val binding: BottomSheetDialogCoursePurchaseBinding,
     private val coursePurchaseViewModel: CoursePurchaseViewModel
 ) {
     companion object {
         private const val EVALUATION_FRAME_DURATION_MS = 250
     }
-
-    private val context = coursePurchaseBinding.root.context
-    private val coursePromoCodeAction = coursePurchaseBinding.coursePromoCodeAction
-    private val coursePromoCodeContainer = coursePurchaseBinding.coursePurchasePromoCodeInputContainer
-    private val coursePromoCodeInput = coursePurchaseBinding.coursePurchasePromoCodeInput
-    private val coursePromoCodeDismiss = coursePurchaseBinding.coursePurchasePromoCodeInputDismiss
-    private val coursePromoCodeSubmitAction = coursePurchaseBinding.coursePurchasePromoCodeSubmitAction
-    private val coursePurchasePromoCodeResultMessage = coursePurchaseBinding.coursePurchasePromoCodeResultMessage
 
     private val layerListDrawableDelegate = LayerListDrawableDelegate(
         listOf(
@@ -40,19 +32,19 @@ class PromoCodeViewDelegate(
             R.id.invalid_state,
             R.id.valid_state
         ),
-        (coursePromoCodeSubmitAction.background as RippleDrawable).findDrawableByLayerId(R.id.promo_code_layer_list) as LayerDrawable
+        (binding.coursePurchasePromoCodeSubmitAction.background as RippleDrawable).findDrawableByLayerId(R.id.promo_code_layer_list) as LayerDrawable
     )
 
     private var promoCodeState: PromoCodeState = PromoCodeState.Idle
 
     init {
-        coursePromoCodeAction.setOnClickListener {
+        binding.coursePromoCodeAction.setOnClickListener {
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.HavePromoCodeMessage)
         }
-        coursePromoCodeInput.doAfterTextChanged { text: Editable? ->
+        binding.coursePurchasePromoCodeInput.doAfterTextChanged { text: Editable? ->
             val length = text?.length ?: 0
-            coursePromoCodeDismiss.isVisible = length != 0
-            coursePromoCodeSubmitAction.isVisible = length != 0
+            binding.coursePurchasePromoCodeInputDismiss.isVisible = length != 0
+            binding.coursePurchasePromoCodeSubmitAction.isVisible = length != 0
 
             if ((promoCodeState as? PromoCodeState.Valid)?.text == text.toString()) {
                 return@doAfterTextChanged
@@ -60,38 +52,43 @@ class PromoCodeViewDelegate(
 
             coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeEditingMessage)
         }
-        coursePromoCodeDismiss.setOnClickListener {
-            coursePromoCodeInput.setText("")
+        binding.coursePurchasePromoCodeInputDismiss.setOnClickListener {
+            binding.coursePurchasePromoCodeInput.setText("")
         }
-        coursePromoCodeSubmitAction.setOnClickListener { coursePurchaseViewModel.onNewMessage(CoursePurchaseFeature.Message.PromoCodeCheckMessage(coursePromoCodeInput.text.toString())) }
+        binding.coursePurchasePromoCodeSubmitAction.setOnClickListener {
+            coursePurchaseViewModel.onNewMessage(
+                CoursePurchaseFeature.Message.PromoCodeCheckMessage(binding.coursePurchasePromoCodeInput.text.toString())
+            )
+        }
     }
 
     fun setViewVisibility(isVisible: Boolean) {
-        coursePromoCodeAction.isVisible = isVisible
-        coursePromoCodeContainer.isVisible = isVisible
-        coursePromoCodeInput.isVisible = isVisible
-        coursePromoCodeDismiss.isVisible = isVisible
-        coursePromoCodeSubmitAction.isVisible = isVisible
-        coursePurchasePromoCodeResultMessage.isVisible = isVisible
+        binding.coursePromoCodeAction.isVisible = isVisible
+        binding.coursePurchasePromoCodeInputContainer.isVisible = isVisible
+        binding.coursePurchasePromoCodeInput.isVisible = isVisible
+        binding.coursePurchasePromoCodeInputDismiss.isVisible = isVisible
+        binding.coursePurchasePromoCodeSubmitAction.isVisible = isVisible
+        binding.coursePurchasePromoCodeResultMessage.isVisible = isVisible
     }
 
     fun render(state: PromoCodeState) {
         this.promoCodeState = state
-        coursePromoCodeAction.isVisible = state is PromoCodeState.Idle
-        coursePromoCodeContainer.isVisible = state !is PromoCodeState.Idle
-        coursePromoCodeDismiss.isEnabled = state !is PromoCodeState.Checking
-        coursePromoCodeSubmitAction.isEnabled = state is PromoCodeState.Editing
-        coursePromoCodeInput.isEnabled = state !is PromoCodeState.Checking
+        binding.coursePromoCodeAction.isVisible = state is PromoCodeState.Idle
+        binding.coursePurchasePromoCodeInputContainer.isVisible = state !is PromoCodeState.Idle
+        binding.coursePurchasePromoCodeInputDismiss.isEnabled = state !is PromoCodeState.Checking
+        binding.coursePurchasePromoCodeSubmitAction.isEnabled = state is PromoCodeState.Editing
+        binding.coursePurchasePromoCodeInput.isEnabled = state !is PromoCodeState.Checking
 
-        coursePurchasePromoCodeResultMessage.isVisible = state is PromoCodeState.Checking || state is PromoCodeState.Valid || state is PromoCodeState.Invalid
+        binding.coursePurchasePromoCodeResultMessage.isVisible = state is PromoCodeState.Checking || state is PromoCodeState.Valid || state is PromoCodeState.Invalid
 
         val (messageRes, colorRes) = getPromoCodeResultMessage(state)
         if (messageRes != -1 && colorRes != -1) {
-            coursePurchasePromoCodeResultMessage.text = context.getString(messageRes)
-            coursePurchasePromoCodeResultMessage.setTextColor(AppCompatResources.getColorStateList(context, colorRes))
+            val context = binding.root.context
+            binding.coursePurchasePromoCodeResultMessage.text = context.getString(messageRes)
+            binding.coursePurchasePromoCodeResultMessage.setTextColor(AppCompatResources.getColorStateList(context, colorRes))
         }
 
-        coursePromoCodeSubmitAction.setImageDrawable(getDrawableForSubmitAction(state))
+        binding.coursePurchasePromoCodeSubmitAction.setImageDrawable(getDrawableForSubmitAction(state))
         setEditTextFromState(state)
         layerListDrawableDelegate.showLayer(getBackgroundLayer(state))
     }
@@ -111,10 +108,10 @@ class PromoCodeViewDelegate(
     private fun setEditTextFromState(state: PromoCodeState) {
         when (state) {
             is PromoCodeState.Checking -> {
-                coursePromoCodeInput.setTextIfChanged(state.text)
+                binding.coursePurchasePromoCodeInput.setTextIfChanged(state.text)
             }
             is PromoCodeState.Valid ->
-                coursePromoCodeInput.setTextIfChanged(state.text)
+                binding.coursePurchasePromoCodeInput.setTextIfChanged(state.text)
             else ->
                 return
         }
@@ -123,9 +120,10 @@ class PromoCodeViewDelegate(
     private fun getDrawableForSubmitAction(state: PromoCodeState): Drawable? =
         when (state) {
             is PromoCodeState.Idle, is PromoCodeState.Editing ->
-                AppCompatResources.getDrawable(context, R.drawable.ic_arrow_forward)
+                AppCompatResources.getDrawable(binding.root.context, R.drawable.ic_arrow_forward)
             is PromoCodeState.Checking -> {
                 val evaluationDrawable = AnimationDrawable()
+                val context = binding.root.context
                 evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
                 evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
                 evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
@@ -134,9 +132,9 @@ class PromoCodeViewDelegate(
                 evaluationDrawable
             }
             is PromoCodeState.Invalid ->
-                AppCompatResources.getDrawable(context, R.drawable.ic_step_quiz_wrong)
+                AppCompatResources.getDrawable(binding.root.context, R.drawable.ic_step_quiz_wrong)
             is PromoCodeState.Valid ->
-                AppCompatResources.getDrawable(context, R.drawable.ic_step_quiz_correct)
+                AppCompatResources.getDrawable(binding.root.context, R.drawable.ic_step_quiz_correct)
         }
 
     private fun getBackgroundLayer(state: PromoCodeState): Int =

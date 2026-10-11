@@ -9,7 +9,6 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.StepikUtil
 import org.stepik.android.domain.base.analytic.BUNDLEABLE_ANALYTIC_EVENT
 import org.stepik.android.domain.base.analytic.toBundle
 import org.stepik.android.domain.streak.analytic.StreakNotificationClicked
@@ -36,7 +35,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager
-) : NotificationDelegate("show_streak_notification", stepikNotificationManager) {
+) : NotificationDelegate("show_streak_notification", stepikNotificationManager), StreakNotificationScheduler {
     companion object {
         const val STREAK_NOTIFICATION_CLICKED = "streak_notification_clicked"
         private const val STREAK_NOTIFICATION_ID = 3214L
@@ -48,23 +47,35 @@ constructor(
             val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
             if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
                 try {
-                    val pins: ArrayList<Long> = userActivityRepository.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
+                    val userId = sharedPreferenceHelper.profile?.id
+                        ?: throw Exception("User is not auth")
+                    val userActivitySummary = userActivityRepository
+                        .getUserActivitySummary(userId)
                         .blockingGet()
-                        .firstOrNull()
-                        ?.pins!!
-                    val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
-                    if (currentStreak <= 0) {
-                        analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
-                        showNotificationWithoutStreakInfo(StreakNotificationType.ZERO)
-                    } else {
-                        // if current streak is > 0 -> streaks works! -> continue send it
-                        // it will reset before sending, after sending it will be incremented
-                        sharedPreferenceHelper.resetNumberOfStreakNotifications()
-                        if (isSolvedToday) {
-                            showNotificationStreakImprovement(currentStreak)
-                        } else {
-                            showNotificationWithStreakCallToAction(currentStreak)
+
+                    val notificationType = getStreakNotificationType(
+                        userActivitySummary.recentStrike,
+                        userActivitySummary.solvedToday
+                    )
+
+                    when (notificationType) {
+                        StreakNotificationType.ZERO -> {
+                            analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)
+                            showNotificationWithoutStreakInfo(StreakNotificationType.ZERO)
                         }
+
+                        StreakNotificationType.SOLVED_TODAY -> {
+                            sharedPreferenceHelper.resetNumberOfStreakNotifications()
+                            showNotificationStreakImprovement(userActivitySummary.recentStrike)
+                        }
+
+                        StreakNotificationType.NOT_SOLVED_TODAY -> {
+                            sharedPreferenceHelper.resetNumberOfStreakNotifications()
+                            showNotificationWithStreakCallToAction(userActivitySummary.recentStrike)
+                        }
+
+                        StreakNotificationType.NO_INTERNET ->
+                            Unit
                     }
                 } catch (exception: Exception) {
                     // no internet || cant get streaks -> show some notification without streak information.
@@ -81,7 +92,7 @@ constructor(
         }
     }
 
-    fun scheduleStreakNotification() {
+    override fun scheduleStreakNotification() {
         if (sharedPreferenceHelper.isStreakNotificationEnabled) {
             // plan new alarm
             val hour = sharedPreferenceHelper.timeNotificationCode
@@ -158,3 +169,13 @@ constructor(
         return PendingIntentCompat.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }
+
+internal fun getStreakNotificationType(recentStrike: Int, solvedToday: Int): StreakNotificationType =
+    when {
+        recentStrike <= 0 ->
+            StreakNotificationType.ZERO
+        solvedToday > 0 ->
+            StreakNotificationType.SOLVED_TODAY
+        else ->
+            StreakNotificationType.NOT_SOLVED_TODAY
+    }

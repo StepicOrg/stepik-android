@@ -10,10 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.fragment_profile_activities.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentProfileActivitiesBinding
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -33,6 +33,7 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
 
     private var userId by argument<Long>()
 
+    private val profileActivitiesBinding: FragmentProfileActivitiesBinding by viewBinding(FragmentProfileActivitiesBinding::bind)
     private val profileActivitiesPresenter: ProfileActivitiesPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileActivitiesView.State>
@@ -53,12 +54,12 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
         viewStateDelegate.addState<ProfileActivitiesView.State.Idle>()
         viewStateDelegate.addState<ProfileActivitiesView.State.SilentLoading>()
         viewStateDelegate.addState<ProfileActivitiesView.State.Empty>()
-        viewStateDelegate.addState<ProfileActivitiesView.State.Loading>(view, streakLoadingPlaceholder)
-        viewStateDelegate.addState<ProfileActivitiesView.State.Error>(view, streakLoadingError)
-        viewStateDelegate.addState<ProfileActivitiesView.State.Content>(view, streakContainer)
+        viewStateDelegate.addState<ProfileActivitiesView.State.Loading>(view, profileActivitiesBinding.streakLoadingPlaceholder)
+        viewStateDelegate.addState<ProfileActivitiesView.State.Error>(view, profileActivitiesBinding.streakLoadingError.root)
+        viewStateDelegate.addState<ProfileActivitiesView.State.Content>(view, profileActivitiesBinding.streakContainer)
 
         setDataToPresenter()
-        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        profileActivitiesBinding.streakLoadingError.tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
@@ -89,10 +90,10 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
                         R.color.color_overlay_yellow
                     }
 
-                currentStreak.supportCompoundDrawablesTintList = ColorStateList
+                profileActivitiesBinding.currentStreak.supportCompoundDrawablesTintList = ColorStateList
                     .valueOf(ContextCompat.getColor(requireContext(), streakTintColorRes))
 
-                currentStreakCount.text = streak
+                profileActivitiesBinding.currentStreakCount.text = streak
                     .takeIf { it > 0 }
                     ?.toString()
                     .orEmpty()
@@ -109,9 +110,9 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
                         else ->
                             R.string.profile_activities_current_streak_start
                     }
-                currentStreak.setText(currentStreakRes)
+                profileActivitiesBinding.currentStreak.setText(currentStreakRes)
 
-                maxStreakCount.text = maxStreak.toString()
+                profileActivitiesBinding.maxStreakCount.text = maxStreak.toString()
             }
         }
     }

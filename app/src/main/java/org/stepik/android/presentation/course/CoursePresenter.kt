@@ -4,7 +4,6 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingResult
 import com.android.billingclient.api.Purchase
 import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -111,6 +110,8 @@ constructor(
         }
 
     private var isCoursePreviewLogged = false
+    private var isCourseOpenedHandled = false
+    private var isInitialPurchaseActionResolved = false
     private var isNeedCheckCourseEnrollment = false
     private lateinit var viewSource: CourseViewSource
 
@@ -140,8 +141,8 @@ constructor(
         val courseHeaderDataSource = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?.course
-            ?.let { courseInteractor.getCourseHeaderData(it, canUseCache = !forceUpdate) }
-            ?: courseInteractor.getCourseHeaderData(courseId, promo = promo, canUseCache = !forceUpdate)
+            ?.let { courseInteractor.observeCourseHeaderData(it, forceUpdate) }
+            ?: courseInteractor.observeCourseHeaderData(courseId, promo = promo, forceUpdate)
         observeCourseData(courseHeaderDataSource, viewSource, forceUpdate)
     }
 
@@ -150,10 +151,10 @@ constructor(
             ?.courseHeaderData
             ?.course
             ?: course
-        observeCourseData(courseInteractor.getCourseHeaderData(courseToPass, canUseCache = !forceUpdate), viewSource, forceUpdate)
+        observeCourseData(courseInteractor.observeCourseHeaderData(courseToPass, forceUpdate), viewSource, forceUpdate)
     }
 
-    private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, viewSource: CourseViewSource, forceUpdate: Boolean) {
+    private fun observeCourseData(courseDataSource: Observable<CourseHeaderData>, viewSource: CourseViewSource, forceUpdate: Boolean) {
         if (state != CourseView.State.Idle &&
             !((state == CourseView.State.NetworkError || state is CourseView.State.CourseLoaded) && forceUpdate)
         ) {
@@ -162,27 +163,42 @@ constructor(
 
         this.viewSource = viewSource
 
+        var lastCourseHeaderData: CourseHeaderData? = null
         state = CourseView.State.Loading
         compositeDisposable += courseDataSource
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onComplete = { state = CourseView.State.EmptyCourse },
-                onSuccess  = {
+                onComplete = {
+                    if (lastCourseHeaderData == null) {
+                        state = CourseView.State.EmptyCourse
+                    }
+                },
+                onNext  = {
+                    lastCourseHeaderData = it
                     state = CourseView.State.CourseLoaded(it)
-                    postCourseViewedNotification(it.courseId)
-                    logCoursePreviewOpenedEvent(it.course, viewSource)
-                    saveVisitedCourse(it.courseId)
+                    if (!isCourseOpenedHandled) {
+                        isCourseOpenedHandled = true
+                        postCourseViewedNotification(it.courseId)
+                        logCoursePreviewOpenedEvent(it.course, viewSource)
+                        saveVisitedCourse(it.courseId)
+                    }
                     /**
                      * Open IAP purchase dialog to finalize purchase
                      */
-                    if (it.coursePurchaseInfo is CoursePurchaseInfo.Result &&
+                    if (!isInitialPurchaseActionResolved &&
+                        it.coursePurchaseInfo is CoursePurchaseInfo.Result &&
                         it.coursePurchaseInfo.purchaseState == Purchase.PurchaseState.PURCHASED
                     ) {
+                        isInitialPurchaseActionResolved = true
                         resolveShowInAppAction(it)
                     }
                 },
-                onError    = { state = CourseView.State.NetworkError }
+                onError = {
+                    if (lastCourseHeaderData == null) {
+                        state = CourseView.State.NetworkError
+                    }
+                }
             )
     }
 

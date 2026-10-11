@@ -15,11 +15,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.activity_download.*
-import kotlinx.android.synthetic.main.empty_certificates.goToCatalog
-import kotlinx.android.synthetic.main.empty_downloading.*
-import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ActivityDownloadBinding
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -41,6 +39,8 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedContentDialog.Callback {
+    private val binding: ActivityDownloadBinding by viewBinding(ActivityDownloadBinding::bind)
+
     companion object {
         private const val MB = 1024 * 1024L
 
@@ -74,7 +74,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
             onItemRemoveClick = ::showRemoveCourseDialog
         )
 
-        with(downloadsRecyclerView) {
+        with(binding.downloadsRecyclerView) {
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
             adapter = downloadedCoursesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -82,13 +82,13 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         }
 
         initViewStateDelegate()
-        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        binding.emptyDownloadsView.goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
         downloadPresenter.fetchStorage()
         downloadPresenter.fetchDownloadedCourses()
 
-        TextViewCompat.setCompoundDrawableTintList(downloadsOtherApps, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_yellow)))
-        TextViewCompat.setCompoundDrawableTintList(downloadsStepik, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green)))
-        TextViewCompat.setCompoundDrawableTintList(downloadsFree, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_elevation_overlay_2dp)))
+        TextViewCompat.setCompoundDrawableTintList(binding.downloadsOtherApps, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_yellow)))
+        TextViewCompat.setCompoundDrawableTintList(binding.downloadsStepik, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green)))
+        TextViewCompat.setCompoundDrawableTintList(binding.downloadsFree, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_elevation_overlay_2dp)))
     }
 
     private fun injectComponent() {
@@ -120,9 +120,9 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
 
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<DownloadView.State.Idle>()
-        viewStateDelegate.addState<DownloadView.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<DownloadView.State.Empty>(emptyDownloading)
-        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadStorageContainer, downloadsRecyclerView, downloadsStorageDivider)
+        viewStateDelegate.addState<DownloadView.State.Loading>(binding.progressBarOnEmptyScreen.loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<DownloadView.State.Empty>(binding.emptyDownloadsView.root)
+        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(binding.downloadStorageContainer, binding.downloadsRecyclerView, binding.downloadsStorageDivider.root)
     }
 
     override fun setState(state: DownloadView.State) {
@@ -141,14 +141,14 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
     }
 
     override fun setStorageInfo(contentSize: Long, avalableSize: Long, totalSize: Long) {
-        downloadStorageUsed.text = buildSpannedString {
+        binding.downloadStorageUsed.text = buildSpannedString {
             bold { append(TextUtil.formatBytes(contentSize, MB)) }
             append(resources.getString(R.string.downloads_is_used_by_stepik))
         }
-        downloadsFree.text = resources.getString(R.string.downloads_free_space, TextUtil.formatBytes(avalableSize, MB))
-        downloadsStorageProgress.max = (totalSize / MB).toInt()
-        downloadsStorageProgress.progress = ((totalSize - avalableSize) / MB).toInt()
-        downloadsStorageProgress.secondaryProgress = (downloadsStorageProgress.progress + (contentSize / MB)).toInt()
+        binding.downloadsFree.text = resources.getString(R.string.downloads_free_space, TextUtil.formatBytes(avalableSize, MB))
+        binding.downloadsStorageProgress.max = (totalSize / MB).toInt()
+        binding.downloadsStorageProgress.progress = ((totalSize - avalableSize) / MB).toInt()
+        binding.downloadsStorageProgress.secondaryProgress = (binding.downloadsStorageProgress.progress + (contentSize / MB)).toInt()
     }
 
     private fun showRemoveCourseDialog(downloadItem: DownloadItem) {
@@ -169,6 +169,6 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
     }
 
     override fun showRemoveTaskError() {
-        root.snackbar(messageRes = R.string.downloads_remove_task_error)
+        binding.root.snackbar(messageRes = R.string.downloads_remove_task_error)
     }
 }

@@ -4,10 +4,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.viewpager.widget.ViewPager
-import kotlinx.android.synthetic.main.activity_stories.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ActivityStoriesBinding
+import org.stepic.droid.databinding.ViewStoryPlainTextWithButtonBinding
 import org.stepik.android.domain.story.model.StoryReaction
 import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.stories.model.Story
@@ -22,15 +23,17 @@ class StoriesActivityDelegate(
     private val analytic: Analytic,
     storyReactionListener: (storyId: Long, storyPosition: Int, storyReaction: StoryReaction) -> Unit
 ) : StoriesActivityDelegateBase(activity) {
+    private val activityBinding = ActivityStoriesBinding.bind(activity.findViewById(R.id.content))
+
     private val storyReactions = mutableMapOf<Long, StoryReaction>()
     private val storyPartDelegate =
         PlainTextWithButtonStoryPartDelegate(analytic, activity, storyReactions, storyReactionListener)
 
     public override val dismissableLayout: DismissableLayout =
-        activity.content
+        activityBinding.content
 
     public override val storiesViewPager: ViewPager =
-        activity.storiesPager
+        activityBinding.storiesPager
 
     override val arguments: Bundle =
         activity.intent.extras ?: Bundle.EMPTY
@@ -76,7 +79,8 @@ class StoriesActivityDelegate(
                 ?.findViewById<ViewPager>(R.id.storyViewPager)
 
             storyPartPager?.children?.forEach { view ->
-                storyPartDelegate.setUpReactions(story, view, position)
+                val binding = ViewStoryPlainTextWithButtonBinding.bind(view)
+                storyPartDelegate.setUpReactions(story, binding, position)
             }
         }
     }

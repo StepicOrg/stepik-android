@@ -6,10 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?colorSurface"
-    android:elevation="?appBarElevation"
-    tools:viewBindingIgnore="true">
+    android:elevation="?appBarElevation">
 
-    <include layout="@layout/view_centered_toolbar"/>
+    <include
+        android:id="@+id/viewCenteredToolbar"
+        layout="@layout/view_centered_toolbar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchViewContainer"

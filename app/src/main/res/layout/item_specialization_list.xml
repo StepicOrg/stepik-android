@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:viewBindingIgnore="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <include
         android:id="@+id/specializationDivider"

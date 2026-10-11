@@ -16,28 +16,12 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements OnItemClickListener {
-    private SocialNetwork[] socialList;
-    private Function1<SocialNetwork, Unit> onSocialItemClick;
+    private final SocialNetwork[] socialList;
+    private final Function1<SocialNetwork, Unit> onSocialItemClick;
 
-    private State state;
-
-    public enum State {
-        EXPANDED(4), NORMAL(3);
-
-        public final int multiplier;
-        State(int multiplier) {
-            this.multiplier = multiplier;
-        }
-    }
-
-    public SocialAuthAdapter(Function1<SocialNetwork, Unit> onSocialItemClick, State state) {
+    public SocialAuthAdapter(Function1<SocialNetwork, Unit> onSocialItemClick) {
         this.onSocialItemClick = onSocialItemClick;
         socialList = SocialNetwork.values();
-        if (state == null) {
-            this.state = State.NORMAL;
-        } else {
-            this.state = state;
-        }
     }
 
 
@@ -56,30 +40,12 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public int getItemCount() {
-        return state.multiplier;
+        return socialList.length;
     }
 
     @Override
     public void onItemClick(int position) {
         onSocialItemClick.invoke(socialList[position]);
-    }
-
-    public void showMore() {
-        int start = getItemCount();
-        state = State.EXPANDED;
-        int end = getItemCount();
-        notifyItemRangeInserted(start, end - start);
-    }
-
-    public void showLess() {
-        int end = getItemCount();
-        state = State.NORMAL;
-        int start = getItemCount();
-        notifyItemRangeRemoved(start, end - start);
-    }
-
-    public State getState() {
-        return state;
     }
 
     static class SocialViewHolder extends RecyclerView.ViewHolder {

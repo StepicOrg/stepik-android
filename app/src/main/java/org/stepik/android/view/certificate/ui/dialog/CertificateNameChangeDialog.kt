@@ -3,14 +3,13 @@ package org.stepik.android.view.certificate.ui.dialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.dialog_certificate_name_change.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.DialogCertificateNameChangeBinding
 import org.stepik.android.model.Certificate
 import ru.nobird.android.view.base.ui.extension.argument
 
@@ -29,9 +28,9 @@ class CertificateNameChangeDialog : DialogFragment() {
     private var attemptedFullName: String by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = View.inflate(requireContext(), R.layout.dialog_certificate_name_change, null)
-        val editTextWrapper = view.certificateChangeNameWrapper
-        val editText = view.certificateChangeNameEditText
+        val binding = DialogCertificateNameChangeBinding.inflate(layoutInflater)
+        val editTextWrapper = binding.certificateChangeNameWrapper
+        val editText = binding.certificateChangeNameEditText
 
         editText.setText(attemptedFullName)
         editText.doAfterTextChanged { editTextWrapper.error = null }
@@ -46,7 +45,7 @@ class CertificateNameChangeDialog : DialogFragment() {
         }
 
         val remainingEdits = certificate.allowedEditsCount - certificate.editsCount
-        view.certificateChangeNameBody.text = resources.getString(
+        binding.certificateChangeNameBody.text = resources.getString(
             R.string.certificate_name_change_dialog_body_warning,
             resources.getQuantityString(
                 R.plurals.times,
@@ -57,7 +56,7 @@ class CertificateNameChangeDialog : DialogFragment() {
 
         return MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.certificate_name_change_dialog_title)
-            .setView(view)
+            .setView(binding.root)
             .setCancelable(false)
             .setNegativeButton(R.string.cancel) { _, _ -> }
             .setPositiveButton(R.string.ok, null)

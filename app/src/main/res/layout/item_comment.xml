@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_comment_item"
-    tools:viewBindingIgnore="true">
+    android:background="@drawable/bg_comment_item">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/commentUserIcon"
@@ -117,6 +116,7 @@
         tools:text="Решение 31293193128392" />
 
     <include
+        android:id="@+id/commentActions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         layout="@layout/layout_comment_actions"

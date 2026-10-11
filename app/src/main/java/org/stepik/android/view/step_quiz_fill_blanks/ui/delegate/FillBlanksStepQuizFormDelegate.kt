@@ -1,12 +1,13 @@
 package org.stepik.android.view.step_quiz_fill_blanks.ui.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_fill_blanks.view.*
 import org.stepic.droid.R
-import ru.nobird.app.core.model.mutate
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizFillBlanksBinding
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -20,13 +21,40 @@ import org.stepik.android.view.step_quiz_fill_blanks.ui.mapper.FillBlanksItemMap
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import ru.nobird.app.core.model.mutate
 
 class FillBlanksStepQuizFormDelegate(
-    private val containerView: View,
+    private val rootView: View,
+    private val quizDescription: TextView,
+    private val fillBlanksRecycler: RecyclerView,
     private val fragmentManager: FragmentManager,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = containerView.stepQuizDescription
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        fillBlanksBinding: LayoutStepQuizFillBlanksBinding,
+        fragmentManager: FragmentManager,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        stepQuizBinding.root,
+        stepQuizBinding.stepQuizDescription,
+        fillBlanksBinding.root,
+        fragmentManager,
+        onQuizChanged
+    )
+
+    constructor(
+        containerView: View,
+        fragmentManager: FragmentManager,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView,
+        containerView.findViewById(R.id.stepQuizDescription),
+        containerView.findViewById(R.id.fillBlanksRecycler),
+        fragmentManager,
+        onQuizChanged
+    )
+
     private val itemsAdapter = DefaultDelegateAdapter<FillBlanksItem>()
     private val fillBlanksItemMapper = FillBlanksItemMapper()
 
@@ -37,7 +65,7 @@ class FillBlanksStepQuizFormDelegate(
         itemsAdapter += FillBlanksItemInputAdapterDelegate(onItemClicked = ::inputItemAction)
         itemsAdapter += FillBlanksItemSelectAdapterDelegate(onItemClicked = ::selectItemAction)
 
-        with(containerView.fillBlanksRecycler) {
+        with(fillBlanksRecycler) {
             itemAnimator = null
             adapter = itemsAdapter
             isNestedScrollingEnabled = false
@@ -73,7 +101,7 @@ class FillBlanksStepQuizFormDelegate(
             ?.submission
 
         itemsAdapter.items = fillBlanksItemMapper.mapToFillBlanksItems(state.attempt, submission, StepQuizFormResolver.isQuizEnabled(state))
-        containerView.post { containerView.fillBlanksRecycler.requestLayout() }
+        rootView.post { fillBlanksRecycler.requestLayout() }
     }
 
     override fun createReply(): ReplyResult =

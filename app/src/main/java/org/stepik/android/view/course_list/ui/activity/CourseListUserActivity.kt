@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_course_list_user.*
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -36,7 +37,9 @@ class CourseListUserActivity : FragmentActivityBase() {
 
     private fun initViewPager() {
         courseListUserPagerAdapter = CourseListUserPagerAdapter(this, supportFragmentManager)
-        userCourseListsPager.adapter = courseListUserPagerAdapter
-        userCourseListsTabs.setupWithViewPager(userCourseListsPager)
+        val pager = findViewById<ViewPager>(R.id.userCourseListsPager)
+        val tabs = findViewById<TabLayout>(R.id.userCourseListsTabs)
+        pager.adapter = courseListUserPagerAdapter
+        tabs.setupWithViewPager(pager)
     }
 }

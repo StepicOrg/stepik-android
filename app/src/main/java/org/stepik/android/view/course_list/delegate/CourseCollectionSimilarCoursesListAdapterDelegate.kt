@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_collection_horizontal_list.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCollectionHorizontalListBinding
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
@@ -29,9 +29,9 @@ class CourseCollectionSimilarCoursesListAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
         ViewHolder(createView(parent, R.layout.item_collection_horizontal_list))
 
-    private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseListItem>(containerView), LayoutContainer {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
+        private val viewBinding: ItemCollectionHorizontalListBinding by viewBinding { ItemCollectionHorizontalListBinding.bind(root) }
+
         private val adapter = DefaultDelegateAdapter<CatalogCourseList>()
             .also {
                 it += SimpleCourseListDefaultAdapterDelegate(courseCountMapper, onCourseListClicked)
@@ -39,7 +39,7 @@ class CourseCollectionSimilarCoursesListAdapterDelegate(
 
         init {
             val rowCount = 1
-            horizontalListRecycler.layoutManager =
+            viewBinding.horizontalListRecycler.layoutManager =
                 TableLayoutManager(
                     context,
                     horizontalSpanCount = context.resources.getInteger(R.integer.simple_course_lists_default_columns),
@@ -47,18 +47,18 @@ class CourseCollectionSimilarCoursesListAdapterDelegate(
                     orientation = LinearLayoutManager.HORIZONTAL,
                     reverseLayout = false
                 )
-            horizontalListRecycler.setRecycledViewPool(sharedViewPool)
-            horizontalListRecycler.setHasFixedSize(true)
-            horizontalListRecycler.adapter = adapter
+            viewBinding.horizontalListRecycler.setRecycledViewPool(sharedViewPool)
+            viewBinding.horizontalListRecycler.setHasFixedSize(true)
+            viewBinding.horizontalListRecycler.adapter = adapter
 
             val snapHelper = LinearSnapHelper()
-            snapHelper.attachToRecyclerView(horizontalListRecycler)
+            snapHelper.attachToRecyclerView(viewBinding.horizontalListRecycler)
         }
 
         override fun onBind(data: CourseListItem) {
             data as CourseListItem.SimilarCourses
 
-            containerTitle.setText(R.string.similar_courses_title)
+            viewBinding.containerTitle.setText(R.string.similar_courses_title)
 
             adapter.items = data.similarCourses
         }

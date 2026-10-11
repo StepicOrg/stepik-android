@@ -14,19 +14,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
-import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
+import com.google.android.material.tabs.TabLayout
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
+import org.stepic.droid.databinding.DialogStepQuizCodeFullscreenBinding
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
@@ -68,6 +64,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                     this.lessonTitle = lessonTitle
                 }
     }
+
+    private val binding: DialogStepQuizCodeFullscreenBinding by viewBinding(DialogStepQuizCodeFullscreenBinding::bind)
 
     private lateinit var codeLayoutDelegate: CodeLayoutDelegate
     private var runCodeDelegate: CodeStepRunCodeDelegate? = null
@@ -137,6 +135,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val centeredToolbar = view.findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.centeredToolbar)
+        val centeredToolbarTitle = view.findViewById<android.widget.TextView>(R.id.centeredToolbarTitle)
+
         centeredToolbarTitle.text = lessonTitle
         centeredToolbar.inflateMenu(R.menu.code_playground_menu)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
@@ -171,22 +172,22 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.text
             ?.takeIf(String::isNotEmpty)
 
-        instructionsLayout.stepQuizCodeTextContent.setText(text)
+        instructionsLayout.findViewById<org.stepik.android.view.latex.ui.widget.LatexView>(R.id.stepQuizCodeTextContent).setText(text)
 
         /**
          *  Code play ground view binding
          */
-        submitButtonSeparator = playgroundLayout.submitButtonSeparator
-        codeSubmitFab = playgroundLayout.codeSubmitFab
-        codeSubmitButton = playgroundLayout.stepQuizAction
-        retryButton = playgroundLayout.stepQuizRetry
-        codeLayout = playgroundLayout.codeStepLayout
+        submitButtonSeparator = playgroundLayout.findViewById(R.id.submitButtonSeparator)
+        codeSubmitFab = playgroundLayout.findViewById(R.id.codeSubmitFab)
+        codeSubmitButton = playgroundLayout.findViewById(R.id.stepQuizAction)
+        retryButton = playgroundLayout.findViewById(R.id.stepQuizRetry)
+        codeLayout = playgroundLayout.findViewById(R.id.codeStepLayout)
 
         runCodeDelegate = runCodeLayout?.let { layout ->
             CodeStepRunCodeDelegate(
                 runCodeLayout = layout,
                 codeRunPresenter = codeRunPresenter,
-                fullScreenCodeTabs = fullScreenCodeTabs,
+                fullScreenCodeTabs = binding.fullScreenCodeTabs,
                 codeLayout = codeLayout,
                 context = requireContext(),
                 stepWrapper = stepWrapper
@@ -198,13 +199,13 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         /**
          *  Run code view binding
          */
-        runCodeActionSeparator = runCodeLayout?.runCodeActionSeparator
-        runCodeFab = runCodeLayout?.runCodeFab
-        runCodeAction = runCodeLayout?.runCodeAction
+        runCodeActionSeparator = runCodeLayout?.findViewById(R.id.runCodeActionSeparator)
+        runCodeFab = runCodeLayout?.findViewById(R.id.runCodeFab)
+        runCodeAction = runCodeLayout?.findViewById(R.id.runCodeAction)
 
         retryButton.isVisible = false
         setupCodeToolAdapter()
-        setupKeyboardExtension()
+        setupKeyboardExtension(view, centeredToolbar)
 
         codeLayoutDelegate = CodeLayoutDelegate(
             codeContainerView = playgroundLayout,
@@ -217,7 +218,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         codeLayoutDelegate.setLanguage(lang, code)
         codeLayoutDelegate.setDetailsContentData(lang)
-        fullScreenCodeViewPager.setCurrentItem(CODE_TAB, false)
+        binding.fullScreenCodeViewPager.setCurrentItem(CODE_TAB, false)
 
         codeSubmitButton.setIconResource(R.drawable.ic_submit_code)
         codeSubmitButton.iconPadding = requireContext().resources.getDimensionPixelSize(R.dimen.step_quiz_full_screen_code_layout_action_button_icon_padding)
@@ -234,9 +235,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     private fun initViewPager(isShowRunCode: Boolean) {
         val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(requireContext(), isShowRunCode = isShowRunCode)
 
-        fullScreenCodeViewPager.adapter = pagerAdapter
-        fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
-        fullScreenCodeViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        binding.fullScreenCodeViewPager.adapter = pagerAdapter
+        binding.fullScreenCodeTabs.setupWithViewPager(binding.fullScreenCodeViewPager)
+        binding.fullScreenCodeViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
@@ -318,16 +319,17 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     /**
      * Keyboard extension
      */
-    private fun setupKeyboardExtension() {
+    private fun setupKeyboardExtension(view: View, centeredToolbar: com.google.android.material.appbar.MaterialToolbar) {
+        val stepQuizCodeKeyboardExtension = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.stepQuizCodeKeyboardExtension)
         stepQuizCodeKeyboardExtension.adapter = codeToolbarAdapter
         stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         codeLayout.codeToolbarAdapter = codeToolbarAdapter
 
         setOnKeyboardOpenListener(
-            coordinator,
+            binding.coordinator,
             onKeyboardHidden = {
                 if (keyboardShown) {
-                    if (fullScreenCodeViewPager.currentItem == CODE_TAB && runCodeDelegate != null) {
+                    if (binding.fullScreenCodeViewPager.currentItem == CODE_TAB && runCodeDelegate != null) {
                         codeRunPresenter.resolveRunCodePopup()
                     }
                     stepQuizCodeKeyboardExtension.visibility = View.GONE
@@ -343,14 +345,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                         0,
                         requireContext().resources.getDimensionPixelSize(R.dimen.step_quiz_fullscreen_code_layout_bottom_padding)
                     )
-                    setViewsVisibility(needShow = true)
+                    setViewsVisibility(needShow = true, centeredToolbar = centeredToolbar)
                     keyboardShown = false
                 }
             },
             onKeyboardShown = {
                 if (!keyboardShown) {
                     // We show the keyboard extension only when "Code" tab is opened
-                    if (fullScreenCodeViewPager.currentItem == CODE_TAB) {
+                    if (binding.fullScreenCodeViewPager.currentItem == CODE_TAB) {
                         stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
                     }
                     codeLayout.isNestedScrollingEnabled = false
@@ -360,7 +362,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                                 bottomMargin = stepQuizCodeKeyboardExtension.height
                             }
                     codeLayout.setPadding(0, 0, 0, 0)
-                    setViewsVisibility(needShow = false)
+                    setViewsVisibility(needShow = false, centeredToolbar = centeredToolbar)
                     keyboardShown = true
                 }
             }
@@ -370,12 +372,12 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     /**
      *  Hiding views upon opening keyboard
      */
-    private fun setViewsVisibility(needShow: Boolean) {
+    private fun setViewsVisibility(needShow: Boolean, centeredToolbar: com.google.android.material.appbar.MaterialToolbar = view!!.findViewById(R.id.centeredToolbar)) {
         submitButtonSeparator.isVisible = needShow
         codeSubmitFab.isVisible = !needShow
         codeSubmitButton.isVisible = needShow
         centeredToolbar.isVisible = needShow
-        fullScreenCodeTabs.isVisible = needShow
+        binding.fullScreenCodeTabs.isVisible = needShow
         runCodeActionSeparator?.isVisible = needShow
         runCodeFab?.isVisible = !needShow
         runCodeAction?.isVisible = needShow

@@ -10,8 +10,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.adaptive_rating_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.AdaptiveRatingItemBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.model.adaptive.RatingItem
 
@@ -110,10 +110,11 @@ class AdaptiveRatingAdapter(
     }
 
     class RatingViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
-        val icon: ImageView = root.icon
-        val rank: TextView = root.rank
-        val exp: TextView = root.exp
-        val name: TextView = root.name
+        private val binding = AdaptiveRatingItemBinding.bind(root)
+        val icon: ImageView = binding.icon
+        val rank: TextView = binding.rank
+        val exp: TextView = binding.exp
+        val name: TextView = binding.name
     }
 
     class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view)

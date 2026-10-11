@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -51,7 +50,6 @@ import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.resolvers.text.TextResolverImpl
-import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.view.injection.billing.PublicLicenseKey
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
@@ -97,9 +95,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     abstract fun bindStepTypeResolver(stepTypeResolver: StepTypeResolverImpl): StepTypeResolver
-
-    @Binds
-    internal abstract fun bindViewModelFactory(daggerViewModelFactory: DaggerViewModelFactory): ViewModelProvider.Factory
 
     @Module
     companion object {

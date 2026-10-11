@@ -60,7 +60,7 @@ constructor(
 
     private fun getAssignments(unit: Unit?): Single<List<Assignment>> =
         assignmentRepository
-            .getAssignments(*unit?.assignments ?: emptyList())
+            .getAssignments(unit?.assignments ?: emptyList())
 
     private fun packStepItems(assignments: List<Assignment>, steps: List<StepPersistentWrapper>, progresses: List<Progress>, reviewSessions: List<ReviewSessionData>): List<StepItem> =
         steps

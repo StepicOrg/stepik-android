@@ -281,7 +281,7 @@ constructor(
 
     private fun castStringToFirebaseEvent(eventName: String): String {
         val firebaseEventName = eventName
-            .decapitalize(Locale.ENGLISH)
+            .replaceFirstChar { it.lowercase(Locale.ENGLISH) }
             .replace(' ', '_')
 
         return firebaseEventName.take(FIREBASE_LENGTH_LIMIT)

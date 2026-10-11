@@ -2,10 +2,8 @@ package org.stepik.android.domain.streak.interactor
 
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.StepikUtil
-import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
-import org.stepik.android.view.streak.notification.StreakNotificationDelegate
+import org.stepik.android.view.streak.notification.StreakNotificationScheduler
 import javax.inject.Inject
 
 class StreakInteractor
@@ -13,7 +11,7 @@ class StreakInteractor
 constructor(
     private val userActivityRepository: UserActivityRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val streakNotificationDelegate: StreakNotificationDelegate
+    private val streakNotificationScheduler: StreakNotificationScheduler
 ) {
 
     fun needShowStreakDialog(): Boolean =
@@ -24,14 +22,13 @@ constructor(
     fun onNeedShowStreak(): Maybe<Int> =
         Maybe
             .fromCallable { sharedPreferenceHelper.profile?.id }
-            .flatMapSingleElement { userActivityRepository.getUserActivities(it) }
-            .flatMap { it.firstOrNull()?.pins.toMaybe() }
-            .map { StepikUtil.getCurrentStreak(it) }
+            .flatMapSingleElement { userActivityRepository.getUserActivitySummary(it) }
+            .map { it.recentStrike }
 
     fun setStreakTime(timeIntervalCode: Int) {
         sharedPreferenceHelper.isStreakNotificationEnabled = true
         sharedPreferenceHelper.timeNotificationCode = timeIntervalCode
-        streakNotificationDelegate.scheduleStreakNotification()
+        streakNotificationScheduler.scheduleStreakNotification()
     }
 
     fun wasStreakDialogSeenOnHomeScreen(): Boolean =

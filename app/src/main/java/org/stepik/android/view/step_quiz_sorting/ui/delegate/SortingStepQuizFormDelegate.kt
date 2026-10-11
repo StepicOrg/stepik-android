@@ -1,11 +1,13 @@
 package org.stepik.android.view.step_quiz_sorting.ui.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizSortingBinding
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -18,10 +20,28 @@ import ru.nobird.app.core.model.swap
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SortingStepQuizFormDelegate(
-    containerView: View,
+    private val quizDescription: TextView,
+    private val sortingRecycler: RecyclerView,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
-    private val quizDescription = containerView.stepQuizDescription
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        sortingStepQuizBinding: LayoutStepQuizSortingBinding,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        stepQuizBinding.stepQuizDescription,
+        sortingStepQuizBinding.root,
+        onQuizChanged
+    )
+
+    constructor(
+        containerView: View,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stepQuizDescription),
+        containerView.findViewById(R.id.sortingRecycler),
+        onQuizChanged
+    )
 
     private val optionsAdapter = DefaultDelegateAdapter<SortingOption>()
 
@@ -32,7 +52,7 @@ class SortingStepQuizFormDelegate(
 
         optionsAdapter += SortingOptionAdapterDelegate(optionsAdapter, ::moveSortingOption)
 
-        with(containerView.sortingRecycler) {
+        with(sortingRecycler) {
             adapter = optionsAdapter
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)

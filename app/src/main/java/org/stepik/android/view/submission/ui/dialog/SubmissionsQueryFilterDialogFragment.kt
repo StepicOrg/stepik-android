@@ -11,8 +11,9 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_submissions_filter.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.BottomSheetDialogSubmissionsFilterBinding
 import org.stepik.android.domain.filter.model.SubmissionsFilterQuery
 import org.stepik.android.model.Submission
 import ru.nobird.android.view.base.ui.extension.argument
@@ -40,6 +41,8 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
     private lateinit var reviewStatusRadioButtons: List<AppCompatRadioButton>
     private lateinit var allRadioButtons: List<AppCompatRadioButton>
 
+    private val binding: BottomSheetDialogSubmissionsFilterBinding by viewBinding(BottomSheetDialogSubmissionsFilterBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_BottomSheetDialog)
@@ -56,29 +59,29 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        defaultStatusButton = anyStatusButton
-        defaultDateSortButton = descendingDateSortButton
-        defaultReviewStatusButton = anyReviewStatusButton
+        defaultStatusButton = binding.anyStatusButton
+        defaultDateSortButton = binding.descendingDateSortButton
+        defaultReviewStatusButton = binding.anyReviewStatusButton
 
-        submissionStatusRadioButtons = listOf<AppCompatRadioButton>(anyStatusButton, correctStatusButton, incorrectStatusButton)
-        dateSortRadioButtons = listOf<AppCompatRadioButton>(descendingDateSortButton, ascendingDateSortButton)
-        reviewStatusRadioButtons = listOf<AppCompatRadioButton>(anyReviewStatusButton, finishedReviewStatusButton, awaitingReviewStatusButton)
+        submissionStatusRadioButtons = listOf<AppCompatRadioButton>(binding.anyStatusButton, binding.correctStatusButton, binding.incorrectStatusButton)
+        dateSortRadioButtons = listOf<AppCompatRadioButton>(binding.descendingDateSortButton, binding.ascendingDateSortButton)
+        reviewStatusRadioButtons = listOf<AppCompatRadioButton>(binding.anyReviewStatusButton, binding.finishedReviewStatusButton, binding.awaitingReviewStatusButton)
         allRadioButtons = submissionStatusRadioButtons + dateSortRadioButtons + reviewStatusRadioButtons
 
-        reviewStatusTitle.isVisible = isPeerReview
-        anyReviewStatusButtonDivider.isVisible = isPeerReview
-        reviewStatusClosingDivider.isVisible = isPeerReview
+        binding.reviewStatusTitle.isVisible = isPeerReview
+        binding.anyReviewStatusButtonDivider.root.isVisible = isPeerReview
+        binding.reviewStatusClosingDivider.root.isVisible = isPeerReview
         reviewStatusRadioButtons.forEach { it.isVisible = isPeerReview }
 
         setupFilters(submissionsFilterQuery)
 
-        dismissSubmissionsFilter.isVisible = isMustShowDismiss()
+        binding.dismissSubmissionsFilter.isVisible = isMustShowDismiss()
 
         setupListeners(submissionStatusRadioButtons)
         setupListeners(dateSortRadioButtons)
         setupListeners(reviewStatusRadioButtons)
 
-        dismissSubmissionsFilter.setOnClickListener {
+        binding.dismissSubmissionsFilter.setOnClickListener {
             allRadioButtons.forEach { radioButton -> radioButton.isChecked = false }
             defaultStatusButton.isChecked = true
             defaultDateSortButton.isChecked = true
@@ -86,7 +89,7 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
             it.isVisible = false
         }
 
-        applyFilterAction.setOnClickListener {
+        binding.applyFilterAction.setOnClickListener {
             val newFilter = mapFiltersToQuery()
             if (newFilter != submissionsFilterQuery) {
                 (parentFragment as? Callback)
@@ -101,7 +104,7 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
             it.setOnCheckedChangeListener { buttonView, isChecked ->
                 if (isChecked) {
                     onRadioButtonClicked(buttonView, radioButtons)
-                    dismissSubmissionsFilter.isVisible = isMustShowDismiss()
+                    binding.dismissSubmissionsFilter.isVisible = isMustShowDismiss()
                 }
             }
         }
@@ -110,34 +113,34 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
     private fun setupFilters(submissionsFilterQuery: SubmissionsFilterQuery) {
         val submissionStatusRadioButton = when (submissionsFilterQuery.status) {
             Submission.Status.CORRECT.scope ->
-                correctStatusButton
+                binding.correctStatusButton
 
             Submission.Status.WRONG.scope ->
-                incorrectStatusButton
+                binding.incorrectStatusButton
 
             else ->
-                anyStatusButton
+                binding.anyStatusButton
         }
 
         submissionStatusRadioButton.isChecked = true
 
         val dateSortRadioButton = if (submissionsFilterQuery.order == SubmissionsFilterQuery.Order.ASC) {
-            ascendingDateSortButton
+            binding.ascendingDateSortButton
         } else {
-            descendingDateSortButton
+            binding.descendingDateSortButton
         }
 
         dateSortRadioButton.isChecked = true
 
         val reviewStatusRadioButton = when (submissionsFilterQuery.reviewStatus) {
             SubmissionsFilterQuery.ReviewStatus.AWAITING ->
-                awaitingReviewStatusButton
+                binding.awaitingReviewStatusButton
 
             SubmissionsFilterQuery.ReviewStatus.DONE ->
-                finishedReviewStatusButton
+                binding.finishedReviewStatusButton
 
             else ->
-                anyReviewStatusButton
+                binding.anyReviewStatusButton
         }
 
         reviewStatusRadioButton.isChecked = true
@@ -145,27 +148,27 @@ class SubmissionsQueryFilterDialogFragment : BottomSheetDialogFragment() {
 
     private fun mapFiltersToQuery(): SubmissionsFilterQuery {
         val status = when {
-            correctStatusButton.isChecked ->
+            binding.correctStatusButton.isChecked ->
                 Submission.Status.CORRECT?.scope
 
-            incorrectStatusButton.isChecked ->
+            binding.incorrectStatusButton.isChecked ->
                 Submission.Status.WRONG?.scope
 
             else ->
                 null
         }
 
-        val dateOrder = if (ascendingDateSortButton.isChecked) {
+        val dateOrder = if (binding.ascendingDateSortButton.isChecked) {
             SubmissionsFilterQuery.Order.ASC
         } else {
             SubmissionsFilterQuery.Order.DESC
         }
 
         val reviewStatus = when {
-            awaitingReviewStatusButton.isChecked ->
+            binding.awaitingReviewStatusButton.isChecked ->
                 SubmissionsFilterQuery.ReviewStatus.AWAITING
 
-            finishedReviewStatusButton.isChecked ->
+            binding.finishedReviewStatusButton.isChecked ->
                 SubmissionsFilterQuery.ReviewStatus.DONE
 
             else ->

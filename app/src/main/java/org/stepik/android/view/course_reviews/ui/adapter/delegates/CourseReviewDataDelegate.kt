@@ -10,8 +10,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewCourseReviewsItemBinding
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
@@ -34,14 +34,16 @@ class CourseReviewDataDelegate(
         data is CourseReviewItem.Data
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
-        private val reviewIcon = root.reviewIcon
+        private val viewBinding = ViewCourseReviewsItemBinding.bind(root)
+
+        private val reviewIcon = viewBinding.reviewIcon
         private val reviewIconWrapper = reviewIcon.wrapWithGlide()
-        private val reviewDate = root.reviewDate
-        private val reviewName = root.reviewName
-        private val reviewRating = root.reviewRating
-        private val reviewText = root.reviewText
-        private val reviewMenu = root.reviewMenu
-        private val reviewMark = root.reviewMark
+        private val reviewDate = viewBinding.reviewDate
+        private val reviewName = viewBinding.reviewName
+        private val reviewRating = viewBinding.reviewRating
+        private val reviewText = viewBinding.reviewText
+        private val reviewMenu = viewBinding.reviewMenu
+        private val reviewMark = viewBinding.reviewMark
 
         private val reviewIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)

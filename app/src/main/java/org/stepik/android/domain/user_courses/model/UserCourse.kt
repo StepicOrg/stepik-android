@@ -2,7 +2,7 @@ package org.stepik.android.domain.user_courses.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.Date
 
 @Parcelize

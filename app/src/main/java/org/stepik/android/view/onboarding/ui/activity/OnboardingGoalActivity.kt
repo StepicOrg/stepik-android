@@ -6,13 +6,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_onboarding_goal.*
-import kotlinx.android.synthetic.main.item_onboarding.*
-import kotlinx.android.synthetic.main.item_onboarding.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.ActivityOnboardingGoalBinding
+import org.stepic.droid.databinding.ItemOnboardingBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.domain.onboarding.analytic.OnboardingAllCoursesAnalyticEvent
@@ -48,6 +48,8 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
     @Inject
     internal lateinit var onboardingRemoteConfigResolver: OnboardingRemoteConfigResolver
 
+    private val binding: ActivityOnboardingGoalBinding by viewBinding(ActivityOnboardingGoalBinding::bind)
+
     private val onboardingGoalsAdapter: DefaultDelegateAdapter<OnboardingGoal> = DefaultDelegateAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,18 +65,18 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
         val items = onboardingRemoteConfigResolver.buildOnboardingGoals()
         onboardingGoalsAdapter.items = items
 
-        goalRecycler.layoutManager = LinearLayoutManager(this)
-        goalRecycler.adapter = onboardingGoalsAdapter
+        binding.goalRecycler.layoutManager = LinearLayoutManager(this)
+        binding.goalRecycler.adapter = onboardingGoalsAdapter
 
         val (icon, title) = getString(R.string.onboarding_goal_all_courses).split(' ', limit = 2)
-        itemIcon.text = icon
-        itemTitle.text = title
+        binding.allCoursesAction.itemIcon.text = icon
+        binding.allCoursesAction.itemTitle.text = title
 
-        dismissButton.setOnClickListener {
+        binding.dismissButton.setOnClickListener {
             analytic.report(OnboardingClosedAnalyticEvent(screen = 1))
             onBackPressed()
         }
-        allCoursesAction.setOnClickListener {
+        binding.allCoursesAction.root.setOnClickListener {
             analytic.report(OnboardingAllCoursesAnalyticEvent)
             onBackPressed()
         }
@@ -94,8 +96,9 @@ class OnboardingGoalActivity : AppCompatActivity(R.layout.activity_onboarding_go
 
     private fun createGoalsAdapterDelegate(onItemClicked: (OnboardingGoal) -> Unit) =
         adapterDelegate<OnboardingGoal, OnboardingGoal>(layoutResId = R.layout.item_onboarding) {
-            val itemIcon = itemView.itemIcon
-            val itemTitle = itemView.itemTitle
+            val itemBinding = ItemOnboardingBinding.bind(itemView)
+            val itemIcon = itemBinding.itemIcon
+            val itemTitle = itemBinding.itemTitle
 
             itemView.setOnClickListener { item?.let(onItemClicked) }
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import org.stepik.android.presentation.banner.BannerFeature
 import org.stepik.android.presentation.banner.dispatcher.BannerActionDispatcher
 import org.stepik.android.presentation.base.injection.ViewModelKey
@@ -30,7 +31,7 @@ import ru.nobird.app.presentation.redux.dispatcher.transform
 import ru.nobird.app.presentation.redux.dispatcher.wrapWithActionDispatcher
 import ru.nobird.app.presentation.redux.feature.ReduxFeature
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 object CatalogBlockPresentationModule {
     @Provides
     @IntoMap

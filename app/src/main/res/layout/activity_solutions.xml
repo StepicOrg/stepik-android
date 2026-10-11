@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+    >
 
-    <include layout="@layout/view_centered_appbar"/>
+    <include
+        android:id="@+id/solutionsAppbar"
+        layout="@layout/view_centered_appbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,15 +17,20 @@
         android:orientation="vertical">
 
         <include
+            android:id="@+id/solutionsLoadingProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_centerInParent="true"
             layout="@layout/progress_bar_on_empty_screen" />
 
-        <include layout="@layout/empty_default"/>
+        <include
+            android:id="@+id/solutionsEmpty"
+            layout="@layout/empty_default"/>
 
-        <include layout="@layout/error_no_connection_with_button"/>
+        <include
+            android:id="@+id/solutionsError"
+            layout="@layout/error_no_connection_with_button"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/solutionsRecycler"

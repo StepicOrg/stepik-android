@@ -2,7 +2,7 @@ package org.stepik.android.model.user
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Profile(
@@ -26,6 +26,9 @@ data class Profile(
     val isPrivate: Boolean = false,
     @SerializedName("is_guest")
     val isGuest: Boolean = false,
+
+    @SerializedName("subscribed_for_marketing")
+    val subscribedForMarketing: Boolean? = null,
 
     @SerializedName("email_addresses")
     val emailAddresses: List<Long>? = null

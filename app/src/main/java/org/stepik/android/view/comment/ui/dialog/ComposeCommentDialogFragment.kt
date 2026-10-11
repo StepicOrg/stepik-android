@@ -10,15 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.dialog_compose_comment.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.DialogComposeCommentBinding
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setTintedNavigationIcon
@@ -77,6 +77,8 @@ class ComposeCommentDialogFragment :
 
     private val composeCommentPresenter: ComposeCommentPresenter by viewModels { viewModelFactory }
 
+    private val composeCommentBinding: DialogComposeCommentBinding by viewBinding(DialogComposeCommentBinding::bind)
+
     private var discussionThread: DiscussionThread by argument()
     private var step: Step by argument()
     private val parent: Long? by lazy { arguments?.getLong(ARG_PARENT, -1)?.takeIf { it != -1L } }
@@ -119,12 +121,17 @@ class ComposeCommentDialogFragment :
         inflater.inflate(R.layout.dialog_compose_comment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val error = view.findViewById<View>(R.id.error)
+        val tryAgain = view.findViewById<View>(R.id.tryAgain)
+        val centeredToolbar = composeCommentBinding.appBarLayout.centeredToolbarContainer.centeredToolbar
+        val centeredToolbarTitle = composeCommentBinding.appBarLayout.centeredToolbarContainer.centeredToolbarTitle
+
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<ComposeCommentView.State.Idle>(commentContent)
-        viewStateDelegate.addState<ComposeCommentView.State.Loading>(commentContent)
+        viewStateDelegate.addState<ComposeCommentView.State.Idle>(composeCommentBinding.commentContent)
+        viewStateDelegate.addState<ComposeCommentView.State.Loading>(composeCommentBinding.commentContent)
         viewStateDelegate.addState<ComposeCommentView.State.NetworkError>(error)
-        viewStateDelegate.addState<ComposeCommentView.State.Create>(commentContent, commentSolution)
-        viewStateDelegate.addState<ComposeCommentView.State.Complete>(commentContent)
+        viewStateDelegate.addState<ComposeCommentView.State.Create>(composeCommentBinding.commentContent, composeCommentBinding.commentSolution)
+        viewStateDelegate.addState<ComposeCommentView.State.Complete>(composeCommentBinding.commentContent)
 
         centeredToolbarTitle.setText(
             if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) R.string.solutions_compose_title else R.string.comment_compose_title)
@@ -141,22 +148,22 @@ class ComposeCommentDialogFragment :
         }
 
         if (savedInstanceState == null) {
-            commentEditText.setText(comment?.text)
+            composeCommentBinding.commentEditText.setText(comment?.text)
             requestFocusNewComment(comment?.text ?: "")
         }
-        invalidateMenuState()
+        invalidateMenuState(centeredToolbar)
 
-        commentEditText.addTextChangedListener(object : TextWatcher {
+        composeCommentBinding.commentEditText.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                invalidateMenuState()
+                invalidateMenuState(centeredToolbar)
             }
         })
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
-        commentSolution.setOnClickListener { showSubmissions() }
+        composeCommentBinding.commentSolution.setOnClickListener { showSubmissions() }
         setDataToPresenter()
     }
 
@@ -164,9 +171,9 @@ class ComposeCommentDialogFragment :
         composeCommentPresenter.onData(discussionThread, step.id, parent, submission, forceUpdate)
     }
 
-    private fun invalidateMenuState() {
+    private fun invalidateMenuState(centeredToolbar: Toolbar) {
         centeredToolbar.menu.findItem(R.id.comment_submit)?.isEnabled =
-            !commentEditText.text.isNullOrEmpty()
+            !composeCommentBinding.commentEditText.text.isNullOrEmpty()
     }
 
     override fun onStart() {
@@ -193,10 +200,10 @@ class ComposeCommentDialogFragment :
     }
 
     private fun submit() {
-        commentEditText.hideKeyboard()
+        composeCommentBinding.commentEditText.hideKeyboard()
         val oldComment = comment
 
-        val text = commentEditText.text?.toString()
+        val text = composeCommentBinding.commentEditText.text?.toString()
 
         if (oldComment == null) {
             val comment = Comment(
@@ -221,9 +228,9 @@ class ComposeCommentDialogFragment :
 
         when (state) {
             is ComposeCommentView.State.Create -> {
-                commentSolution.isEnabled = comment == null
-                commentSolution.setSubmission(state.submission, showArrow = commentSolution.isEnabled)
-                commentSolutionSeparator.isVisible = state.submission != null
+                composeCommentBinding.commentSolution.isEnabled = comment == null
+                composeCommentBinding.commentSolution.setSubmission(state.submission, showArrow = composeCommentBinding.commentSolution.isEnabled)
+                composeCommentBinding.commentSolutionSeparator.root.isVisible = state.submission != null
             }
 
             is ComposeCommentView.State.Complete -> {
@@ -248,7 +255,7 @@ class ComposeCommentDialogFragment :
     }
 
     private fun onClose() {
-        if (commentEditText.text.isNullOrEmpty() || commentEditText.text.toString() == comment?.text) {
+        if (composeCommentBinding.commentEditText.text.isNullOrEmpty() || composeCommentBinding.commentEditText.text.toString() == comment?.text) {
             super.dismiss()
         } else {
             if (childFragmentManager.findFragmentByTag(DiscardTextDialogFragment.TAG) == null) {
@@ -261,9 +268,9 @@ class ComposeCommentDialogFragment :
 
     private fun requestFocusNewComment(text: String) {
         if (text.isNotEmpty()) return
-        commentEditText.post {
-            commentEditText.requestFocus()
-            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(commentEditText, InputMethodManager.SHOW_IMPLICIT)
+        composeCommentBinding.commentEditText.post {
+            composeCommentBinding.commentEditText.requestFocus()
+            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(composeCommentBinding.commentEditText, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

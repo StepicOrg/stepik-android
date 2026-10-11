@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentManager
-import kotlinx.android.synthetic.main.item_banner.view.*
 import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepik.android.domain.banner.model.Banner
 import org.stepik.android.view.banner.mapper.BannerResourcesMapper
@@ -29,6 +28,6 @@ fun ItemBannerBinding.bind(banner: Banner, bannerResourcesMapper: BannerResource
     val descriptionTextColorRes = bannerResourcesMapper.mapBannerTypeToDescriptionTextColor(root.context, banner.type)
 
     bannerImage.setImageResource(imageRes)
-    ViewCompat.setBackgroundTintList(root.bannerRoot, AppCompatResources.getColorStateList(root.context, backgroundColorRes))
+    ViewCompat.setBackgroundTintList(bannerRoot, AppCompatResources.getColorStateList(root.context, backgroundColorRes))
     bannerDescription.setTextColor(descriptionTextColorRes)
 }

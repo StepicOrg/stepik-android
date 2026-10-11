@@ -8,14 +8,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.fragment_step_content_video.*
-import kotlinx.android.synthetic.main.view_course_info_video.*
-import kotlinx.android.synthetic.main.view_length_video_thumbnail.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.FragmentStepContentVideoBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
@@ -53,6 +52,8 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     private val presenter: VideoStepContentPresenter by viewModels { viewModelFactory }
     private var stepId: Long by argument()
 
+    private val binding: FragmentStepContentVideoBinding by viewBinding(FragmentStepContentVideoBinding::bind)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
@@ -80,15 +81,15 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
         Glide.with(this)
             .load(thumbnail)
             .placeholder(R.drawable.general_placeholder)
-            .into(videoThumbnail)
+            .into(binding.videoContainer.videoThumbnail)
 
-        videoContainer.setOnClickListener { openVideoPlayer() }
+        binding.videoContainer.root.setOnClickListener { openVideoPlayer() }
     }
 
     private fun openVideoPlayer() {
         if (stepWrapper.cachedVideo == null && stepWrapper.step.block?.video == null) {
             analytic.reportEventWithName(Analytic.Error.ILLEGAL_STATE_VIDEO_STEP_PLAY, stepWrapper.step.id.toString())
-            videoStepContent.snackbar(messageRes = R.string.step_content_video_no_video)
+            binding.root.snackbar(messageRes = R.string.step_content_video_no_video)
         } else {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail
@@ -116,8 +117,8 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
         val videoLengthText = (state as? VideoStepContentView.State.Loaded)
             ?.videoLength
 
-        videoLength.isVisible = videoLengthText != null
-        videoLength.text = videoLengthText
+        binding.videoLengthContainer.videoLength.isVisible = videoLengthText != null
+        binding.videoLengthContainer.videoLength.text = videoLengthText
     }
 
     override fun play(): Boolean {

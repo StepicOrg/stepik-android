@@ -8,9 +8,9 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_course_benefit.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCourseBenefitBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_revenue.model.CourseBenefit
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
@@ -32,8 +32,9 @@ class CourseBenefitsAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_course_benefit))
 
     private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseBenefitListItem>(containerView), LayoutContainer {
+        containerView: View
+    ) : DelegateViewHolder<CourseBenefitListItem>(containerView) {
+        private val viewBinding: ItemCourseBenefitBinding by viewBinding { ItemCourseBenefitBinding.bind(itemView) }
 
         init {
             itemView.setOnClickListener { (itemData as? CourseBenefitListItem.Data)?.let { onItemClick(it) } }
@@ -46,8 +47,8 @@ class CourseBenefitsAdapterDelegate(
             val decimalFormat = DecimalFormat().apply { setCurrency(currency) }
             decimalFormat.minimumFractionDigits = 2
 
-            purchaseRefundIcon.setImageDrawable(getIconDrawable(data.courseBenefit))
-            purchaseRefundName.text =
+            viewBinding.purchaseRefundIcon.setImageDrawable(getIconDrawable(data.courseBenefit))
+            viewBinding.purchaseRefundName.text =
                 if (data.courseBenefit.buyer == null && !data.courseBenefit.isInvoicePayment) {
                     buildString {
                         append(context.getString(R.string.transaction_manual_channel))
@@ -59,7 +60,7 @@ class CourseBenefitsAdapterDelegate(
                     data.user?.fullName ?: data.courseBenefit.buyer.toString()
                 }
 
-            purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
+            viewBinding.purchaseRefundDate.text = DateTimeHelper.getPrintableDate(
                 data.courseBenefit.time,
                 DateTimeHelper.DISPLAY_DATETIME_PATTERN,
                 TimeZone.getDefault()
@@ -82,11 +83,11 @@ class CourseBenefitsAdapterDelegate(
             } else {
                 ContextCompat.getColor(context, R.color.color_overlay_red)
             }
-            purchaseRefundIncomeSum.setTextColor(textColor)
-            purchaseRefundTransactionSum.text = transactionSum
-            purchaseRefundIncomeSum.text = amount
-            purchaseRefundPromocode.text = data.courseBenefit.promoCode
-            purchaseRefundPromocode.isVisible = data.courseBenefit.promoCode != null
+            viewBinding.purchaseRefundIncomeSum.setTextColor(textColor)
+            viewBinding.purchaseRefundTransactionSum.text = transactionSum
+            viewBinding.purchaseRefundIncomeSum.text = amount
+            viewBinding.purchaseRefundPromocode.text = data.courseBenefit.promoCode
+            viewBinding.purchaseRefundPromocode.isVisible = data.courseBenefit.promoCode != null
         }
 
         private fun getIconDrawable(data: CourseBenefit): Drawable? =

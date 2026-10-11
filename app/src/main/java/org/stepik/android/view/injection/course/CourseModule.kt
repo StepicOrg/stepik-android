@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
@@ -15,7 +16,7 @@ import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 abstract class CourseModule {
     /**
      * PRESENTATION LAYER

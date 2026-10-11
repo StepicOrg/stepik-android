@@ -3,7 +3,7 @@ package org.stepik.android.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 class StoryTemplate(
         @SerializedName("id")
@@ -52,10 +52,10 @@ class StoryTemplate(
             val text: String?,
 
             @SerializedName("text_color")
-            val textColor: String,
+            val textColor: String?,
 
             @SerializedName("title")
-            val title: String
+            val title: String?
     ) : Parcelable {
         override fun writeToParcel(parcel: Parcel, flags: Int) {
             parcel.writeString(backgroundStyle)
@@ -70,8 +70,8 @@ class StoryTemplate(
             override fun createFromParcel(parcel: Parcel) = Text(
                     parcel.readString(),
                     parcel.readString(),
-                    parcel.readString()!!,
-                    parcel.readString()!!
+                    parcel.readString(),
+                    parcel.readString()
             )
 
             override fun newArray(size: Int) =

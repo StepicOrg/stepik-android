@@ -5,8 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
-import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_input.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemStepQuizFillBlanksInputBinding
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
@@ -23,25 +24,25 @@ class FillBlanksItemInputAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_step_quiz_fill_blanks_input))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<FillBlanksItem>(root) {
-        private val stepQuizFillBlanksText = root.stepQuizFillBlanksText
+        private val viewBinding: ItemStepQuizFillBlanksInputBinding by viewBinding { ItemStepQuizFillBlanksInputBinding.bind(root) }
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
-            stepQuizFillBlanksText.setOnClickListener { onItemClicked(adapterPosition, (itemData as FillBlanksItem.Input).text) }
+            viewBinding.stepQuizFillBlanksText.setOnClickListener { onItemClicked(adapterPosition, (itemData as FillBlanksItem.Input).text) }
             layerListDrawableDelegate = LayerListDrawableDelegate(
                 listOf(
                     R.id.checked_layer,
                     R.id.correct_layer,
                     R.id.incorrect_layer
                 ),
-                stepQuizFillBlanksText.background.mutate() as LayerDrawable
+                viewBinding.stepQuizFillBlanksText.background.mutate() as LayerDrawable
             )
         }
 
         override fun onBind(data: FillBlanksItem) {
             data as FillBlanksItem.Input
             itemView.isEnabled = data.isEnabled
-            stepQuizFillBlanksText.text = data.text
+            viewBinding.stepQuizFillBlanksText.text = data.text
             val (@IdRes layer, @DrawableRes icon) = when (data.correct) {
                 true ->
                     R.id.correct_layer to R.drawable.ic_step_quiz_correct
@@ -53,7 +54,7 @@ class FillBlanksItemInputAdapterDelegate(
                     R.id.checked_layer to -1
             }
             layerListDrawableDelegate.showLayer(layer)
-            stepQuizFillBlanksText.setCompoundDrawables(start = icon)
+            viewBinding.stepQuizFillBlanksText.setCompoundDrawables(start = icon)
         }
     }
 }

@@ -10,12 +10,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_achievements_list.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.FragmentAchievementsListBinding
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.presentation.achievement.AchievementsPresenter
@@ -30,6 +30,8 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class AchievementsListFragment : Fragment(), AchievementsView {
+    private val achievementsListBinding: FragmentAchievementsListBinding by viewBinding(FragmentAchievementsListBinding::bind)
+
     companion object {
         fun newInstance(userId: Long, isMyProfile: Boolean): Fragment =
             AchievementsListFragment().apply {
@@ -78,26 +80,26 @@ class AchievementsListFragment : Fragment(), AchievementsView {
         val context = requireContext()
 
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<AchievementsView.State.Idle>(progress)
-        viewStateDelegate.addState<AchievementsView.State.Loading>(progress)
-        viewStateDelegate.addState<AchievementsView.State.Error>(error)
-        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(recycler)
+        viewStateDelegate.addState<AchievementsView.State.Idle>(achievementsListBinding.progress)
+        viewStateDelegate.addState<AchievementsView.State.Loading>(achievementsListBinding.progress)
+        viewStateDelegate.addState<AchievementsView.State.Error>(achievementsListBinding.errorLayout.root)
+        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(achievementsListBinding.recycler)
 
         initPlaceholders()
 
         initCenteredToolbar(R.string.achievements_title, showHomeButton = true)
 
-        recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = achievementsAdapter
+        achievementsListBinding.recycler.layoutManager = LinearLayoutManager(context)
+        achievementsListBinding.recycler.adapter = achievementsAdapter
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
-        recycler.addItemDecoration(divider)
+        achievementsListBinding.recycler.addItemDecoration(divider)
 
         achievementsPresenter.attachView(this)
         fetchAchievements()
 
-        tryAgain.setOnClickListener { fetchAchievements(true) }
+        achievementsListBinding.errorLayout.tryAgain.setOnClickListener { fetchAchievements(true) }
     }
 
     private fun initPlaceholders() {
@@ -105,8 +107,8 @@ class AchievementsListFragment : Fragment(), AchievementsView {
         val screenHeight = resources.displayMetrics.heightPixels
 
         for (i in 0..(screenHeight / itemHeight).toInt()) {
-            progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, progress, false))
-            progress.addView(layoutInflater.inflate(R.layout.view_divider_vertical, progress, false))
+            achievementsListBinding.progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, achievementsListBinding.progress, false))
+            achievementsListBinding.progress.addView(layoutInflater.inflate(R.layout.view_divider_vertical, achievementsListBinding.progress, false))
         }
     }
 

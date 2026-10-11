@@ -1,16 +1,14 @@
 package org.stepik.android.view.catalog.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.header_catalog_block.*
-import kotlinx.android.synthetic.main.item_block_simple_course_lists_grid.courseListsRecycler
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemBlockSimpleCourseListsGridBinding
 import org.stepik.android.domain.catalog.model.CatalogCourseList
 import org.stepik.android.presentation.course_list_redux.model.CatalogBlockStateWrapper
 import org.stepik.android.view.catalog.mapper.CourseCountMapper
@@ -33,11 +31,11 @@ class SimpleCourseListsGridAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         ViewHolder(createView(parent, R.layout.item_block_simple_course_lists_grid))
 
-    private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogItem>(containerView), LayoutContainer {
+    private inner class ViewHolder(root: android.view.View) : DelegateViewHolder<CatalogItem>(root) {
+        private val viewBinding: ItemBlockSimpleCourseListsGridBinding by viewBinding { ItemBlockSimpleCourseListsGridBinding.bind(root) }
+
         private val catalogBlockTitleDelegate =
-            CatalogBlockHeaderDelegate(catalogBlockContainer, null)
+            CatalogBlockHeaderDelegate(viewBinding.catalogBlockHeader.root, null)
 
         private val adapter = DefaultDelegateAdapter<CatalogCourseList>()
             .also {
@@ -46,13 +44,13 @@ class SimpleCourseListsGridAdapterDelegate(
             }
 
         init {
-            courseListsRecycler.layoutManager =
+            viewBinding.courseListsRecycler.layoutManager =
                 FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP)
                     .apply { justifyContent = JustifyContent.FLEX_START }
 
-            courseListsRecycler.setRecycledViewPool(sharedViewPool)
-            courseListsRecycler.setHasFixedSize(true)
-            courseListsRecycler.adapter = adapter
+            viewBinding.courseListsRecycler.setRecycledViewPool(sharedViewPool)
+            viewBinding.courseListsRecycler.setHasFixedSize(true)
+            viewBinding.courseListsRecycler.adapter = adapter
         }
 
         override fun onBind(data: CatalogItem) {

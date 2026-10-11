@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.course
 import android.app.Activity
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
+import org.stepic.droid.databinding.ActivityCourseBinding
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_purchase.model.CoursePurchaseData
@@ -12,6 +13,7 @@ import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 interface CourseHeaderDelegateFactory {
     fun create(
         courseActivity: Activity,
+        courseBinding: ActivityCourseBinding,
         coursePresenter: CoursePresenter,
         courseViewSource: CourseViewSource,
         @Assisted("isAuthorized")

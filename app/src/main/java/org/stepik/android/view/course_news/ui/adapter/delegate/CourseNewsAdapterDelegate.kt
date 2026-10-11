@@ -8,7 +8,7 @@ import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.databinding.ItemAnnouncementBadgeBinding
 import org.stepic.droid.databinding.ItemCourseNewsBinding

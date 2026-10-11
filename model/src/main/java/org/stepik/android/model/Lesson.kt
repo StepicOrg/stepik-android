@@ -2,8 +2,8 @@ package org.stepik.android.model
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.IgnoredOnParcel
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 import ru.nobird.app.core.model.Identifiable
 import java.util.Date
 

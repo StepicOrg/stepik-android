@@ -7,11 +7,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.item_course_list.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.databinding.ItemCourseListBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -49,6 +50,8 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
     @Inject
     internal lateinit var displayPriceMapper: DisplayPriceMapper
 
+    private val courseListBinding: ItemCourseListBinding by viewBinding(ItemCourseListBinding::bind)
+
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private val courseListVisitedPresenter: CourseListVisitedPresenter by viewModels { viewModelFactory }
 
@@ -60,27 +63,27 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        containerCarouselCount.isVisible = false
-        courseListPlaceholderNoConnection.isVisible = false
-        courseListPlaceholderEmpty.isVisible = false
-        containerTitle.text = resources.getString(R.string.visited_courses_title)
+        courseListBinding.containerCarouselCount.isVisible = false
+        courseListBinding.courseListPlaceholderNoConnection.isVisible = false
+        courseListBinding.courseListPlaceholderEmpty.isVisible = false
+        courseListBinding.containerTitle.text = resources.getString(R.string.visited_courses_title)
 
-        with(courseListCoursesRecycler) {
+        with(courseListBinding.courseListCoursesRecycler) {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
             val snapHelper = CoursesSnapHelper(1)
             snapHelper.attachToRecyclerView(this)
         }
 
-        catalogBlockContainer.setOnClickListener {
+        courseListBinding.catalogBlockContainer.setOnClickListener {
             screenManager.showVisitedCourses(requireContext())
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(view, catalogBlockContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(view, catalogBlockContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Loading>(view, courseListBinding.catalogBlockContainer, courseListBinding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(view, courseListBinding.catalogBlockContainer, courseListBinding.courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>()
         viewStateDelegate.addState<CourseListView.State.NetworkError>()
 
@@ -91,8 +94,8 @@ class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) 
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListTitleContainer = catalogBlockContainer,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListTitleContainer = courseListBinding.catalogBlockContainer,
+            courseItemsRecyclerView = courseListBinding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListVisitedPresenter

@@ -1,15 +1,13 @@
 package org.stepik.android.view.course_revenue.ui.adapter.delegate
 
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.item_course_benefits.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemCourseBenefitsBinding
 import org.stepik.android.domain.course_revenue.model.CourseBenefitListItem
 import org.stepik.android.presentation.course_revenue.CourseBenefitsFeature
 import org.stepik.android.view.course_revenue.mapper.RevenuePriceMapper
@@ -36,8 +34,10 @@ class CourseBenefitsListAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_course_benefits))
 
     private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseBenefitOperationItem>(containerView), LayoutContainer {
+        view: android.view.View
+    ) : DelegateViewHolder<CourseBenefitOperationItem>(view) {
+
+        private val viewBinding: ItemCourseBenefitsBinding by viewBinding(ItemCourseBenefitsBinding::bind)
 
         private val viewStateDelegate = ViewStateDelegate<CourseBenefitsFeature.State>()
         private val adapter = DefaultDelegateAdapter<CourseBenefitListItem>()
@@ -47,25 +47,25 @@ class CourseBenefitsListAdapterDelegate(
             }
 
         init {
-            viewStateDelegate.addState<CourseBenefitsFeature.State.Loading>(courseBenefitsRecycler)
-            viewStateDelegate.addState<CourseBenefitsFeature.State.Empty>(courseBenefitsEmpty)
-            viewStateDelegate.addState<CourseBenefitsFeature.State.Error>(courseBenefitsError)
-            viewStateDelegate.addState<CourseBenefitsFeature.State.Content>(courseBenefitsRecycler)
+            viewStateDelegate.addState<CourseBenefitsFeature.State.Loading>(viewBinding.courseBenefitsRecycler)
+            viewStateDelegate.addState<CourseBenefitsFeature.State.Empty>(viewBinding.courseBenefitsEmpty.root)
+            viewStateDelegate.addState<CourseBenefitsFeature.State.Error>(viewBinding.courseBenefitsError.root)
+            viewStateDelegate.addState<CourseBenefitsFeature.State.Content>(viewBinding.courseBenefitsRecycler)
 
-            courseBenefitsRecycler.adapter = adapter
-            courseBenefitsRecycler.layoutManager = LinearLayoutManager(context)
-            courseBenefitsRecycler.setRecycledViewPool(sharedViewPool)
-            courseBenefitsRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+            viewBinding.courseBenefitsRecycler.adapter = adapter
+            viewBinding.courseBenefitsRecycler.layoutManager = LinearLayoutManager(context)
+            viewBinding.courseBenefitsRecycler.setRecycledViewPool(sharedViewPool)
+            viewBinding.courseBenefitsRecycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
 
-            courseBenefitsRecycler.setOnPaginationListener { direction ->
+            viewBinding.courseBenefitsRecycler.setOnPaginationListener { direction ->
                 if (direction == PaginationDirection.NEXT) {
                     onFetchNextPage()
                 }
             }
 
-            tryAgain.setOnClickListener { reloadListAction() }
+            viewBinding.courseBenefitsError.tryAgain.setOnClickListener { reloadListAction() }
         }
 
         override fun onBind(data: CourseBenefitOperationItem) {

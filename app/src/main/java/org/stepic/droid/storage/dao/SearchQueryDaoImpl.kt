@@ -6,6 +6,7 @@ import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureSearchQuery
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -18,16 +19,16 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<SearchQuery>(datab
 
     override fun getDefaultPrimaryColumn(): String = DbStructureSearchQuery.Column.QUERY_HASH
 
-    override fun getDefaultPrimaryValue(persistentObject: SearchQuery): String = persistentObject.text.toLowerCase().hashCode().toString()
+    override fun getDefaultPrimaryValue(persistentObject: SearchQuery): String = persistentObject.text.lowercase(Locale.getDefault()).hashCode().toString()
 
     override fun getContentValues(persistentObject: SearchQuery): ContentValues {
         val contentValues = ContentValues()
 
         contentValues.put(DbStructureSearchQuery.Column.QUERY_COURSE_ID, persistentObject.courseId)
         val queryHash = if (persistentObject.courseId != -1L) {
-            "${COURSE_PREFIX}_${persistentObject.courseId}_${persistentObject.text}".toLowerCase().hashCode()
+            "${COURSE_PREFIX}_${persistentObject.courseId}_${persistentObject.text}".lowercase(Locale.getDefault()).hashCode()
         } else {
-            persistentObject.text.toLowerCase().hashCode()
+            persistentObject.text.lowercase(Locale.getDefault()).hashCode()
         }
         contentValues.put(DbStructureSearchQuery.Column.QUERY_HASH, queryHash)  // toLowerCase to avoid problems with case sensitive duplicates due to SQLite
         contentValues.put(DbStructureSearchQuery.Column.QUERY_TEXT, persistentObject.text)
@@ -48,7 +49,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<SearchQuery>(datab
                         "ORDER BY ${DbStructureSearchQuery.Column.QUERY_TIMESTAMP} DESC " +
                         "LIMIT $count"
 
-        val pattern = "%${constraint.toLowerCase()}%"
+        val pattern = "%${constraint.lowercase(Locale.getDefault())}%"
         return getAllWithQuery(sql, arrayOf(pattern, courseId.toString()))
     }
 

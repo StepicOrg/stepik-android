@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:viewBindingIgnore="true">
+    android:layout_height="wrap_content">
     <FrameLayout
         android:id="@+id/adaptiveLevelDialogConfetti"
         android:theme="@style/ThemeOverlay.Secondary.Green"

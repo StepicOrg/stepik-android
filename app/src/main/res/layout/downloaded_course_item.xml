@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="96dp"
     android:background="?selectableItemBackground"
-    tools:viewBindingIgnore="true">
+>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/downloadedCourseImage"

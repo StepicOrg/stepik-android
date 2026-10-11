@@ -9,8 +9,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizFeedbackBlockBinding
 import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -26,26 +26,27 @@ class StepQuizFeedbackBlocksDelegate(
         private const val EVALUATION_FRAME_DURATION_MS = 250
     }
 
-    private val context = containerView.context
-    private val resources = containerView.resources
+    private val binding = LayoutStepQuizFeedbackBlockBinding.bind(containerView)
+    private val context = binding.root.context
+    private val resources = binding.root.resources
 
-    private val stepQuizFeedbackEvaluation = containerView.stepQuizFeedbackEvaluation
-    private val stepQuizFeedbackCorrect = containerView.stepQuizFeedbackCorrect
-    private val stepQuizFeedbackPartiallyCorrect = containerView.stepQuizFeedbackPartiallyCorrect
-    private val stepQuizFeedbackWrong = containerView.stepQuizFeedbackWrong
-    private val stepQuizFeedbackValidation = containerView.stepQuizFeedbackValidation
+    private val stepQuizFeedbackEvaluation = binding.stepQuizFeedbackEvaluation
+    private val stepQuizFeedbackCorrect = binding.stepQuizFeedbackCorrect
+    private val stepQuizFeedbackPartiallyCorrect = binding.stepQuizFeedbackPartiallyCorrect
+    private val stepQuizFeedbackWrong = binding.stepQuizFeedbackWrong
+    private val stepQuizFeedbackValidation = binding.stepQuizFeedbackValidation
 
-    private val stepQuizFeedbackHint = containerView.stepQuizFeedbackHint
+    private val stepQuizFeedbackHint = binding.stepQuizFeedbackHint
 
     private val viewStateDelegate = ViewStateDelegate<StepQuizFeedbackState>()
 
     init {
         viewStateDelegate.addState<StepQuizFeedbackState.Idle>()
-        viewStateDelegate.addState<StepQuizFeedbackState.Evaluation>(containerView, stepQuizFeedbackEvaluation)
-        viewStateDelegate.addState<StepQuizFeedbackState.Correct>(containerView, stepQuizFeedbackCorrect, stepQuizFeedbackHint)
-        viewStateDelegate.addState<StepQuizFeedbackState.PartiallyCorrect>(containerView, stepQuizFeedbackPartiallyCorrect, stepQuizFeedbackHint)
-        viewStateDelegate.addState<StepQuizFeedbackState.Wrong>(containerView, stepQuizFeedbackWrong, stepQuizFeedbackHint)
-        viewStateDelegate.addState<StepQuizFeedbackState.Validation>(containerView, stepQuizFeedbackValidation)
+        viewStateDelegate.addState<StepQuizFeedbackState.Evaluation>(binding.root, stepQuizFeedbackEvaluation)
+        viewStateDelegate.addState<StepQuizFeedbackState.Correct>(binding.root, stepQuizFeedbackCorrect, stepQuizFeedbackHint)
+        viewStateDelegate.addState<StepQuizFeedbackState.PartiallyCorrect>(binding.root, stepQuizFeedbackPartiallyCorrect, stepQuizFeedbackHint)
+        viewStateDelegate.addState<StepQuizFeedbackState.Wrong>(binding.root, stepQuizFeedbackWrong, stepQuizFeedbackHint)
+        viewStateDelegate.addState<StepQuizFeedbackState.Validation>(binding.root, stepQuizFeedbackValidation)
 
         val evaluationDrawable = AnimationDrawable()
         evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)

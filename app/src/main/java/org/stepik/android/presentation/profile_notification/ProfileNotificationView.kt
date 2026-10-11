@@ -7,4 +7,7 @@ interface ProfileNotificationView {
     fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String)
     fun hideNotificationTime(needHide: Boolean)
     fun setNewTimeInterval(timePresentationString: String)
+    fun showMarketingNotificationState(subscribedForMarketing: Boolean, isUpdating: Boolean)
+    fun hideMarketingNotification()
+    fun showMarketingNotificationUpdateFailed()
 }

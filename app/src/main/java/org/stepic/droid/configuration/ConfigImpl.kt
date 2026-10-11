@@ -50,6 +50,7 @@ private constructor() : Config {
     private val publicLicenseKey: String? = null
     private val isAppInStore: Boolean = false
     private val supportEmail: String? = null
+    private val supportUrl: String? = null
 
     override fun getOAuthClientId(type: TokenType) = when (type) {
         TokenType.SOCIAL -> oauthClientIdSocial
@@ -99,4 +100,6 @@ private constructor() : Config {
     override fun getAppPublicLicenseKey() = publicLicenseKey
 
     override fun getSupportEmail() = supportEmail
+
+    override fun getSupportUrl() = supportUrl
 }

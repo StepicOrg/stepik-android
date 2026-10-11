@@ -2,8 +2,8 @@ package org.stepik.android.view.course_reviews.ui.adapter.delegates
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.view_course_review_summary_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewCourseReviewSummaryItemBinding
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -18,16 +18,18 @@ class CourseReviewSummaryDelegate : AdapterDelegate<CourseReviewItem, DelegateVi
         data is CourseReviewItem.Summary
 
     private class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
-        private val summaryAverage = root.summaryAverage
-        private val summaryRating = root.summaryRating
-        private val summaryCount = root.summaryCount
+        private val viewBinding = ViewCourseReviewSummaryItemBinding.bind(root)
+
+        private val summaryAverage = viewBinding.summaryAverage
+        private val summaryRating = viewBinding.summaryRating
+        private val summaryCount = viewBinding.summaryCount
 
         private val summaryDistribution = listOf(
-            root.summaryCount1Progress to root.summaryCount1Value,
-            root.summaryCount2Progress to root.summaryCount2Value,
-            root.summaryCount3Progress to root.summaryCount3Value,
-            root.summaryCount4Progress to root.summaryCount4Value,
-            root.summaryCount5Progress to root.summaryCount5Value
+            viewBinding.summaryCount1Progress to viewBinding.summaryCount1Value,
+            viewBinding.summaryCount2Progress to viewBinding.summaryCount2Value,
+            viewBinding.summaryCount3Progress to viewBinding.summaryCount3Value,
+            viewBinding.summaryCount4Progress to viewBinding.summaryCount4Value,
+            viewBinding.summaryCount5Progress to viewBinding.summaryCount5Value
         )
 
         init {

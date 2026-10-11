@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="bottom"
-    tools:viewBindingIgnore="true">
+>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/stepQuizFeedback"

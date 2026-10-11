@@ -11,7 +11,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.common.api.GoogleApiClient
 import com.vk.api.sdk.VK
@@ -19,15 +20,17 @@ import com.vk.api.sdk.auth.VKAccessToken
 import com.vk.api.sdk.auth.VKAuthCallback
 import com.vk.api.sdk.auth.VKScope
 import com.vk.api.sdk.exceptions.VKApiCodes
-import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
-import kotlinx.android.synthetic.main.activity_auth_social.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.analytic.experiments.OnboardingSplitTestVersion2
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ActivityAuthSocialBinding
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.domain.auth.model.PendingSocialMarketingConsent
+import org.stepik.android.domain.feature.interactor.FeaturesInteractor
+import org.stepik.android.view.auth.ui.dialog.SocialAuthConsentBottomSheetDialogFragment
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
@@ -42,13 +45,15 @@ import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.auth.model.SocialNetwork
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
+class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView, SocialAuthConsentBottomSheetDialogFragment.Callback {
+    private val binding: ActivityAuthSocialBinding by viewBinding(ActivityAuthSocialBinding::bind)
+
     companion object {
         private const val REQUEST_CODE_GOOGLE_SIGN_IN = 7007
 
-        private const val KEY_SOCIAL_ADAPTER_STATE = "social_adapter_state_key"
         private const val KEY_SELECTED_SOCIAL_TYPE = "selected_social_type"
 
         private const val EXTRA_WAS_LOGOUT_KEY = "wasLogoutKey"
@@ -80,6 +85,10 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     @Inject
     internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
+    @Inject
+    internal lateinit var featuresInteractor: FeaturesInteractor
+
+
     private val socialAuthPresenter: SocialAuthPresenter by viewModels { viewModelFactory }
 
     private val progressDialogFragment: DialogFragment =
@@ -88,6 +97,8 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 //    private lateinit var callbackManager: CallbackManager
 
     private var selectedSocialType: SocialNetwork? = null
+
+    private var isMarketingEnabled: Boolean = false
 
     private var course: Course? = null
 
@@ -99,33 +110,30 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
         injectComponent()
 
+        isMarketingEnabled = featuresInteractor.isAuthMarketingAgreementEnabledCached()
+
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
-        dismissButton.setOnClickListener {
+        binding.dismissButton.setOnClickListener {
             onBackPressed()
         }
 
-        dismissButton.isVisible = true
+        binding.dismissButton.isVisible = true
 //        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isDeferredAuth || onboardingSplitTest.currentGroup == OnboardingSplitTest.Group.Personalized
 
-        launchSignUpButton.setOnClickListener {
+        binding.launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
             screenManager.showRegistration(this@SocialAuthActivity, course)
         }
 
-        signInWithEmail.setOnClickListener {
+        binding.signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
             screenManager.showLogin(this@SocialAuthActivity, null, null, AutoAuth.NONE, course)
         }
 
         initGoogleApiClient(true) { showNetworkError() }
 
-        val recyclerState = savedInstanceState?.getSerializable(KEY_SOCIAL_ADAPTER_STATE)
-        if (recyclerState is SocialAuthAdapter.State) {
-            initSocialRecycler(recyclerState)
-        } else {
-            initSocialRecycler()
-        }
+        initSocialRecycler()
 
         selectedSocialType = savedInstanceState?.getSerializable(KEY_SELECTED_SOCIAL_TYPE) as? SocialNetwork
 
@@ -133,11 +141,11 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithSocial)
-        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_medium))
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
 
         spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        signInText.text = spannableSignIn
+        binding.signInText.text = spannableSignIn
 
 //        callbackManager = CallbackManager.Factory.create()
 //        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
@@ -193,48 +201,35 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         super.onPause()
     }
 
-    private fun initSocialRecycler(state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
-        socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
+    private fun initSocialRecycler() {
+        binding.socialListRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
-        socialListRecyclerView.itemAnimator = FadeInDownAnimator()
-            .apply {
-                removeDuration = 0
-            }
-
-        val adapter = SocialAuthAdapter(this::onSocialItemClicked, state)
-        showMore.setOnClickListener {
-            showMore.isVisible = false
-            showLess.isVisible = true
-            adapter.showMore()
-        }
-
-        showLess.setOnClickListener {
-            showLess.isVisible = false
-            showMore.isVisible = true
-            adapter.showLess()
-        }
-
-        showLess.isVisible = state == SocialAuthAdapter.State.EXPANDED
-        showMore.isVisible = state == SocialAuthAdapter.State.NORMAL
-
-        socialListRecyclerView.adapter = adapter
+        binding.socialListRecyclerView.adapter = SocialAuthAdapter(this::onSocialItemClicked)
     }
 
     private fun onSocialItemClicked(type: SocialNetwork) {
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.identifier)
+        SocialAuthConsentBottomSheetDialogFragment
+            .newInstance(type, isMarketingEnabled)
+            .showIfNotExists(supportFragmentManager, SocialAuthConsentBottomSheetDialogFragment.TAG)
+    }
+
+    override fun onSocialConsentConfirmed(socialNetwork: SocialNetwork, marketingConsent: PendingSocialMarketingConsent) {
+        sharedPreferenceHelper.putPendingSocialMarketingConsent(marketingConsent)
+        launchSocialAuth(socialNetwork)
+    }
+
+    private fun launchSocialAuth(type: SocialNetwork) {
         when (type) {
             SocialNetwork.GOOGLE -> {
                 if (googleApiClient == null) {
                     analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED)
-                    root_view.snackbar(messageRes = R.string.google_services_late)
+                    binding.rootView.snackbar(messageRes = R.string.google_services_late)
                 } else {
                     val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
                     startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
                 }
             }
-
-//            SocialNetwork.FACEBOOK ->
-//                LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
 
             SocialNetwork.VK ->
                 VK.login(this, listOf(VKScope.OFFLINE, VKScope.EMAIL))
@@ -348,7 +343,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun showAuthError(failType: LoginFailType) {
-        root_view.snackbar(message = getMessageFor(failType))
+        binding.rootView.snackbar(message = getMessageFor(failType))
 
         // logout from socials
         VK.logout()
@@ -360,7 +355,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun showNetworkError() {
-        root_view.snackbar(messageRes = R.string.connectionProblems)
+        binding.rootView.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun onSocialLoginWithExistingEmail(email: String) {
@@ -368,10 +363,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val adapter = socialListRecyclerView.adapter
-        if (adapter is SocialAuthAdapter) {
-            outState.putSerializable(KEY_SOCIAL_ADAPTER_STATE, adapter.state)
-        }
         selectedSocialType?.let { outState.putSerializable(KEY_SELECTED_SOCIAL_TYPE, it) }
         super.onSaveInstanceState(outState)
     }

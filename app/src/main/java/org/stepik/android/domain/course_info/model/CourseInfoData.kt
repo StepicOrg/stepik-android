@@ -1,7 +1,7 @@
 package org.stepik.android.domain.course_info.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.model.user.User
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 

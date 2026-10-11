@@ -84,6 +84,7 @@ class ParcelizeTest {
                 avatar = "",
                 isPrivate = false,
                 isGuest = false,
+                subscribedForMarketing = true,
                 emailAddresses = listOf(123213, 131333)
             )
     }

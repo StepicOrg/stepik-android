@@ -6,13 +6,10 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.item_user_review_reviewed.*
-import kotlinx.android.synthetic.main.item_user_review_reviewed.userReviewCourseTitle
-import kotlinx.android.synthetic.main.item_user_review_reviewed.userReviewIcon
-import kotlinx.android.synthetic.main.item_user_review_reviewed.userReviewRating
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemUserReviewReviewedBinding
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -33,17 +30,19 @@ class UserReviewsReviewedAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<UserCourseReviewItem> =
         ViewHolder(createView(parent, R.layout.item_user_review_reviewed))
 
-    private inner class ViewHolder(override val containerView: View) : DelegateViewHolder<UserCourseReviewItem>(containerView), LayoutContainer {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<UserCourseReviewItem>(root) {
+        private val viewBinding: ItemUserReviewReviewedBinding by viewBinding { ItemUserReviewReviewedBinding.bind(root) }
+
         init {
-            userReviewIcon.setOnClickListener { (itemData as? UserCourseReviewItem.ReviewedItem)?.course?.let(onCourseTitleClicked) }
-            userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.ReviewedItem)?.course?.let(onCourseTitleClicked) }
-            userReviewMenu.setOnClickListener(::showReviewMenu)
+            viewBinding.userReviewIcon.setOnClickListener { (itemData as? UserCourseReviewItem.ReviewedItem)?.course?.let(onCourseTitleClicked) }
+            viewBinding.userReviewCourseTitle.setOnClickListener { (itemData as? UserCourseReviewItem.ReviewedItem)?.course?.let(onCourseTitleClicked) }
+            viewBinding.userReviewMenu.setOnClickListener(::showReviewMenu)
         }
 
         override fun onBind(data: UserCourseReviewItem) {
             data as UserCourseReviewItem.ReviewedItem
-            userReviewCourseTitle.text = data.course.title
-            userReviewText.text = data.courseReview.text
+            viewBinding.userReviewCourseTitle.text = data.course.title
+            viewBinding.userReviewText.text = data.courseReview.text
 
             Glide
                 .with(context)
@@ -51,11 +50,11 @@ class UserReviewsReviewedAdapterDelegate(
                 .load(data.course.cover)
                 .placeholder(R.drawable.general_placeholder)
                 .fitCenter()
-                .into(userReviewIcon)
+                .into(viewBinding.userReviewIcon)
 
-            userReviewTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.courseReview.updateDate?.time ?: 0)
-            userReviewRating.progress = data.courseReview.score
-            userReviewRating.total = 5
+            viewBinding.userReviewTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.courseReview.updateDate?.time ?: 0)
+            viewBinding.userReviewRating.progress = data.courseReview.score
+            viewBinding.userReviewRating.total = 5
         }
 
         private fun showReviewMenu(view: View) {

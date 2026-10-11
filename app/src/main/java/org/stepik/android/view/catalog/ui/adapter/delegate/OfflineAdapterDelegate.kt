@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ErrorNoConnectionWithButtonSmallBinding
 import org.stepik.android.view.catalog.model.CatalogItem
 import ru.nobird.app.core.model.safeCast
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -28,13 +28,14 @@ class OfflineAdapterDelegate(
     }
 
     private class OfflineViewHolder(
-        override val containerView: View,
+        root: View,
         private val onRetry: () -> Unit
-    ) : DelegateViewHolder<CatalogItem>(containerView), LayoutContainer {
+    ) : DelegateViewHolder<CatalogItem>(root) {
+        private val viewBinding: ErrorNoConnectionWithButtonSmallBinding by viewBinding { ErrorNoConnectionWithButtonSmallBinding.bind(root) }
 
         init {
-            tryAgain.setOnClickListener { onRetry() }
-            containerView.isVisible = true
+            viewBinding.tryAgain.setOnClickListener { onRetry() }
+            root.isVisible = true
         }
 
         override fun onBind(data: CatalogItem) {
@@ -42,10 +43,10 @@ class OfflineAdapterDelegate(
 
             itemView.doOnLayout {
                 val parent = it.parent.safeCast<View>() ?: return@doOnLayout
-                val remainingHeight = parent.height - containerView.bottom - containerView.top
+                val remainingHeight = parent.height - itemView.bottom - itemView.top
                 if (remainingHeight > 0) {
                     itemView.updateLayoutParams {
-                        height = containerView.height + remainingHeight
+                        height = itemView.height + remainingHeight
                     }
                 }
             }

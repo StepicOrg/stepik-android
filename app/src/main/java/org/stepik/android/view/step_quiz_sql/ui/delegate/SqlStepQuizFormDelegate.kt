@@ -1,10 +1,12 @@
 package org.stepik.android.view.step_quiz_sql.ui.delegate
 
 import android.view.View
+import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
+import org.stepic.droid.code.ui.CodeEditorLayout
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizSqlBinding
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizFeature
@@ -13,14 +15,33 @@ import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class SqlStepQuizFormDelegate(
-    containerView: View,
+    private val quizDescription: TextView,
+    private val codeLayout: CodeEditorLayout,
     private val onFullscreenClicked: (lang: String, code: String) -> Unit,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        sqlStepQuizBinding: LayoutStepQuizSqlBinding,
+        onFullscreenClicked: (lang: String, code: String) -> Unit,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        stepQuizBinding.stepQuizDescription,
+        sqlStepQuizBinding.codeStepLayout,
+        onFullscreenClicked,
+        onQuizChanged
+    )
 
-    private val quizDescription = containerView.stepQuizDescription
-
-    private val codeLayout = containerView.codeStepLayout
+    constructor(
+        containerView: View,
+        onFullscreenClicked: (lang: String, code: String) -> Unit,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stepQuizDescription),
+        containerView.findViewById(R.id.codeStepLayout),
+        onFullscreenClicked,
+        onQuizChanged
+    )
 
     init {
         quizDescription.setText(R.string.step_quiz_sql_description)

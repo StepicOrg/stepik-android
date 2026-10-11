@@ -1,9 +1,10 @@
 package org.stepik.android.view.step_quiz_matching.ui.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.layout_step_quiz_sorting.*
-import org.stepic.droid.R
+import org.stepic.droid.databinding.LayoutStepQuizSortingBinding
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFormDelegate
@@ -17,12 +18,23 @@ class MatchingStepQuizFragment : DefaultStepQuizFragment() {
                 }
     }
 
-    override val quizLayoutRes: Int =
-        R.layout.layout_step_quiz_sorting
+    private var _binding: LayoutStepQuizSortingBinding? = null
+    private val binding
+        get() = requireNotNull(_binding)
 
     override val quizViews: Array<View>
-        get() = arrayOf(sortingRecycler)
+        get() = arrayOf(binding.root)
 
-    override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        MatchingStepQuizFormDelegate(view, onQuizChanged = ::syncReplyState)
+    override fun createStepView(layoutInflater: LayoutInflater, parent: ViewGroup): View {
+        return LayoutStepQuizSortingBinding.inflate(layoutInflater, parent, false).also {
+            _binding = it
+        }.root
+    }
+
+    override fun createStepQuizFormDelegate(): StepQuizFormDelegate =
+        MatchingStepQuizFormDelegate(
+            stepQuizBinding = stepQuizBinding,
+            matchingStepQuizBinding = binding,
+            onQuizChanged = ::syncReplyState
+        )
 }

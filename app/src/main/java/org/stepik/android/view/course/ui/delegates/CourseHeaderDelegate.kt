@@ -21,11 +21,9 @@ import com.google.android.material.appbar.AppBarLayout
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import jp.wasabeef.glide.transformations.BlurTransformation
-import kotlinx.android.synthetic.main.activity_course.*
-import kotlinx.android.synthetic.main.header_course.*
-import kotlinx.android.synthetic.main.view_discounted_purchase_button.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.databinding.ActivityCourseBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DiscountButtonAppearanceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
@@ -61,6 +59,7 @@ class CourseHeaderDelegate
 @AssistedInject
 constructor(
     @Assisted private val courseActivity: Activity,
+    @Assisted private val courseBinding: ActivityCourseBinding,
     private val analytic: Analytic,
     @Assisted private val coursePresenter: CoursePresenter,
     private val discountButtonAppearanceSplitTest: DiscountButtonAppearanceSplitTest,
@@ -101,10 +100,10 @@ constructor(
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
-    private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
-    private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress, onSubmissionCountClicked, isLocalSubmissionsEnabled)
+    private val courseStatsDelegate = CourseStatsDelegate(courseBinding.headerCourse.courseStats)
+    private val courseProgressDelegate = CourseProgressDelegate(courseBinding.headerCourse.courseProgress, onSubmissionCountClicked, isLocalSubmissionsEnabled)
 
-    private val courseCollapsingToolbar = courseActivity.courseCollapsingToolbar
+    private val courseCollapsingToolbar = courseBinding.courseCollapsingToolbar
 
     private val viewStateDelegate = ViewStateDelegate<EnrollmentState>()
 
@@ -115,18 +114,16 @@ constructor(
     }
 
     private fun initCollapsingAnimation() {
-        with(courseActivity) {
-            courseToolbarScrim.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(courseCollapsingToolbar.context, 4))
+        courseBinding.courseToolbarScrim.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(courseCollapsingToolbar.context, 4))
 
-            courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
-                courseToolbarScrim.alpha = ratio * 1.5f
-            })
-        }
+        courseBinding.courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseBinding.courseToolbar.height)
+            courseBinding.courseToolbarScrim.alpha = ratio * 1.5f
+        })
     }
 
     private fun initActions() {
-        with(courseActivity) {
+        with(courseBinding.headerCourse) {
             courseEnrollAction.setOnClickListener {
                 coursePresenter.enrollCourse()
 
@@ -171,7 +168,7 @@ constructor(
                 courseHeaderData?.let(::setupBuyAction)
             }
 
-            courseBuyInWebActionDiscounted.setOnClickListener {
+            courseBuyInWebActionDiscounted.root.setOnClickListener {
                 courseHeaderData?.let(::setupBuyAction)
             }
 
@@ -195,7 +192,7 @@ constructor(
     }
 
     private fun initViewStateDelegate() {
-        with(courseActivity) {
+        with(courseBinding.headerCourse) {
             viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
@@ -208,171 +205,168 @@ constructor(
         }
     }
 
-    private fun setCourseData(courseHeaderData: CourseHeaderData) =
-        with(courseActivity) {
-            val multi = MultiTransformation(BlurTransformation(), CenterCrop())
-            Glide
-                .with(this)
-                .load(courseHeaderData.cover)
-                .placeholder(R.drawable.general_placeholder)
-                .apply(RequestOptions.bitmapTransform(multi))
-                .into(courseCover)
+    private fun setCourseData(courseHeaderData: CourseHeaderData) {
+        val multi = MultiTransformation(BlurTransformation(), CenterCrop())
+        Glide
+            .with(courseActivity)
+            .load(courseHeaderData.cover)
+            .placeholder(R.drawable.general_placeholder)
+            .apply(RequestOptions.bitmapTransform(multi))
+            .into(courseBinding.courseCover)
 
-            courseToolbarTitle.text = courseHeaderData.title
+        courseBinding.courseToolbarTitle.text = courseHeaderData.title
 
-            val isNeedShowProgress = courseHeaderData.stats.progress != null
-            courseProgress.isVisible = isNeedShowProgress
-            courseProgressSeparator.isVisible = isNeedShowProgress
-            courseStats.isVisible = !isNeedShowProgress
+        val headerBinding = courseBinding.headerCourse
+        val isNeedShowProgress = courseHeaderData.stats.progress != null
+        headerBinding.courseProgress.root.isVisible = isNeedShowProgress
+        headerBinding.courseProgressSeparator.root.isVisible = isNeedShowProgress
+        headerBinding.courseStats.root.isVisible = !isNeedShowProgress
 
-            if (courseHeaderData.stats.progress != null) {
-                courseProgressDelegate.setProgress(courseHeaderData.stats.progress)
-                courseProgressDelegate.setSolutionsCount(courseHeaderData.localSubmissionsCount)
-            } else {
-                courseStatsDelegate.setStats(courseHeaderData.stats)
-            }
-
-            setupWishlistAction(courseHeaderData)
-            /**
-             * Purchase setup section
-             */
-
-            if (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
-                setupIAP(courseHeaderData)
-            } else {
-                setupWeb(courseHeaderData)
-            }
-
-            courseDefaultPromoInfo.text = courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.let {
-                val formattedDate = DateTimeHelper.getPrintableDate(it, DateTimeHelper.DISPLAY_DAY_MONTH_PATTERN, TimeZone.getDefault())
-                getString(R.string.course_promo_code_date, formattedDate)
-            }
-
-            courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
-                courseHeaderData.course.enrollment == 0L &&
-                (courseHeaderData.deeplinkPromoCode == DeeplinkPromoCode.EMPTY || courseHeaderData.deeplinkPromoCode.name == courseHeaderData.defaultPromoCode.defaultPromoCodeName)
-
-            with(courseHeaderData.stats.enrollmentState) {
-                viewStateDelegate.switchState(this)
-
-                dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
-                restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledMobileTier
-            }
-
-            courseTryFree.isVisible = courseHeaderData.course.previewLesson != 0L &&
-                    courseHeaderData.course.enrollment == 0L &&
-                    courseHeaderData.course.isPaid &&
-                    (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier ||
-                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb ||
-                        courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledUnavailableIAP)
-
-            shareCourseMenuItem?.isVisible = true
-            setupPurchaseFeedback(courseHeaderData)
+        if (courseHeaderData.stats.progress != null) {
+            courseProgressDelegate.setProgress(courseHeaderData.stats.progress)
+            courseProgressDelegate.setSolutionsCount(courseHeaderData.localSubmissionsCount)
+        } else {
+            courseStatsDelegate.setStats(courseHeaderData.stats)
         }
+
+        setupWishlistAction(courseHeaderData)
+        /**
+         * Purchase setup section
+         */
+
+        if (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier) {
+            setupIAP(courseHeaderData)
+        } else {
+            setupWeb(courseHeaderData)
+        }
+
+        headerBinding.courseDefaultPromoInfo.text = courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.let {
+            val formattedDate = DateTimeHelper.getPrintableDate(it, DateTimeHelper.DISPLAY_DAY_MONTH_PATTERN, TimeZone.getDefault())
+            courseActivity.getString(R.string.course_promo_code_date, formattedDate)
+        }
+
+        headerBinding.courseDefaultPromoInfo.isVisible = (courseHeaderData.defaultPromoCode.defaultPromoCodeExpireDate?.time ?: -1L) > DateTimeHelper.nowUtc() &&
+            courseHeaderData.course.enrollment == 0L &&
+            (courseHeaderData.deeplinkPromoCode == DeeplinkPromoCode.EMPTY || courseHeaderData.deeplinkPromoCode.name == courseHeaderData.defaultPromoCode.defaultPromoCodeName)
+
+        with(courseHeaderData.stats.enrollmentState) {
+            viewStateDelegate.switchState(this)
+
+            dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
+            restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledMobileTier
+        }
+
+        headerBinding.courseTryFree.isVisible = courseHeaderData.course.previewLesson != 0L &&
+                courseHeaderData.course.enrollment == 0L &&
+                courseHeaderData.course.isPaid &&
+                (courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledMobileTier ||
+                    courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledWeb ||
+                    courseHeaderData.stats.enrollmentState is EnrollmentState.NotEnrolledUnavailableIAP)
+
+        shareCourseMenuItem?.isVisible = true
+        setupPurchaseFeedback(courseHeaderData)
+    }
 
     private fun setupPurchaseFeedback(courseHeaderData: CourseHeaderData) {
-        with(courseActivity) {
-            ViewCompat.setBackgroundTintList(coursePurchaseFeedbackUnder, AppCompatResources.getColorStateList(courseActivity, R.color.black_alpha_30))
-            coursePurchaseFeedback.text =
-                when (courseHeaderData.stats.enrollmentState) {
-                    is EnrollmentState.NotEnrolledUnavailableIAP ->
-                        getString(R.string.course_purchase_unavailable)
-                    is EnrollmentState.NotEnrolledEnded ->
-                        if (courseHeaderData.course.endDate != null) {
-                            getString(
-                                R.string.course_payments_not_available_ended,
-                                getPrintableOfIsoDate(courseHeaderData.course.endDate, DateTimeHelper.DISPLAY_DAY_MONTH_YEAR_GENITIVE_PATTERN, TimeZone.getDefault())
-                            )
-                        } else {
-                            getString(R.string.course_payments_not_available)
-                        }
-                    is EnrollmentState.NotEnrolledCantBeBought ->
-                        getString(R.string.course_payments_cant_be_bought)
-                    else -> ""
-                }
-        }
+        val headerBinding = courseBinding.headerCourse
+        ViewCompat.setBackgroundTintList(headerBinding.coursePurchaseFeedbackUnder, AppCompatResources.getColorStateList(courseActivity, R.color.black_alpha_30))
+        headerBinding.coursePurchaseFeedback.text =
+            when (courseHeaderData.stats.enrollmentState) {
+                is EnrollmentState.NotEnrolledUnavailableIAP ->
+                    courseActivity.getString(R.string.course_purchase_unavailable)
+                is EnrollmentState.NotEnrolledEnded ->
+                    if (courseHeaderData.course.endDate != null) {
+                        courseActivity.getString(
+                            R.string.course_payments_not_available_ended,
+                            getPrintableOfIsoDate(courseHeaderData.course.endDate, DateTimeHelper.DISPLAY_DAY_MONTH_YEAR_GENITIVE_PATTERN, TimeZone.getDefault())
+                        )
+                    } else {
+                        courseActivity.getString(R.string.course_payments_not_available)
+                    }
+                is EnrollmentState.NotEnrolledCantBeBought ->
+                    courseActivity.getString(R.string.course_payments_cant_be_bought)
+                else -> ""
+            }
     }
 
     private fun setupIAP(courseHeaderData: CourseHeaderData) {
-        with(courseActivity) {
-            val notEnrolledMobileTierState = courseHeaderData.stats.enrollmentState as EnrollmentState.NotEnrolledMobileTier
-            val promoCodeSku = when {
-                courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
-                    courseHeaderData.deeplinkPromoCodeSku
+        val headerBinding = courseBinding.headerCourse
+        val notEnrolledMobileTierState = courseHeaderData.stats.enrollmentState as EnrollmentState.NotEnrolledMobileTier
+        val promoCodeSku = when {
+            courseHeaderData.deeplinkPromoCodeSku != PromoCodeSku.EMPTY ->
+                courseHeaderData.deeplinkPromoCodeSku
 
-                notEnrolledMobileTierState.promoLightSku != null -> {
-                    PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
-                }
-
-                else ->
-                    PromoCodeSku.EMPTY
+            notEnrolledMobileTierState.promoLightSku != null -> {
+                PromoCodeSku(courseHeaderData.course.defaultPromoCodeName.orEmpty(), notEnrolledMobileTierState.promoLightSku)
             }
 
-            courseBuyInWebAction.text =
-                if (courseHeaderData.course.displayPrice != null) {
-                    if (promoCodeSku.lightSku != null) {
-                        displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(notEnrolledMobileTierState.standardLightSku.price, promoCodeSku.lightSku.price)
-                    } else {
-                        getString(R.string.course_payments_purchase_in_web_with_price, notEnrolledMobileTierState.standardLightSku.price)
-                    }
+            else ->
+                PromoCodeSku.EMPTY
+        }
+
+        headerBinding.courseBuyInWebAction.text =
+            if (courseHeaderData.course.displayPrice != null) {
+                if (promoCodeSku.lightSku != null) {
+                    displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(notEnrolledMobileTierState.standardLightSku.price, promoCodeSku.lightSku.price)
                 } else {
-                    getString(R.string.course_payments_purchase_in_web)
+                    courseActivity.getString(R.string.course_payments_purchase_in_web_with_price, notEnrolledMobileTierState.standardLightSku.price)
+                }
+            } else {
+                courseActivity.getString(R.string.course_payments_purchase_in_web)
+            }
+
+        headerBinding.courseBuyInWebActionDiscounted.courseBuyInWebActionDiscountedNewPrice.text =
+                courseActivity.getString(R.string.course_payments_purchase_in_web_with_price, promoCodeSku.lightSku?.price)
+
+        headerBinding.courseBuyInWebActionDiscounted.courseBuyInWebActionDiscountedOldPrice.text =
+                buildSpannedString {
+                    strikeThrough {
+                        append(notEnrolledMobileTierState.standardLightSku.price)
+                    }
                 }
 
-            courseBuyInWebActionDiscountedNewPrice.text =
-                    getString(R.string.course_payments_purchase_in_web_with_price, promoCodeSku.lightSku?.price)
-
-            courseBuyInWebActionDiscountedOldPrice.text =
-                    buildSpannedString {
-                        strikeThrough {
-                            append(notEnrolledMobileTierState.standardLightSku.price)
-                        }
-                    }
-
-            setupDiscountButtons(hasDiscount = promoCodeSku.lightSku != null)
-        }
+        setupDiscountButtons(hasDiscount = promoCodeSku.lightSku != null)
     }
 
     private fun setupWeb(courseHeaderData: CourseHeaderData) {
-        with(courseActivity) {
-            val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
-                courseHeaderData.deeplinkPromoCode,
-                courseHeaderData.defaultPromoCode,
-                courseHeaderData.course
-            )
+        val headerBinding = courseBinding.headerCourse
+        val (_, currencyCode, promoPrice, hasPromo) = coursePromoCodeResolver.resolvePromoCodeInfo(
+            courseHeaderData.deeplinkPromoCode,
+            courseHeaderData.defaultPromoCode,
+            courseHeaderData.course
+        )
 
-            val courseDisplayPrice = courseHeaderData.course.displayPrice
+        val courseDisplayPrice = courseHeaderData.course.displayPrice
 
-            courseBuyInWebAction.text =
-                if (courseDisplayPrice != null) {
-                    if (hasPromo) {
-                        displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(
-                            courseDisplayPrice,
-                            promoPrice,
-                            currencyCode
-                        )
-                    } else {
-                        getString(
-                            R.string.course_payments_purchase_in_web_with_price,
-                            courseDisplayPrice
-                        )
-                    }
+        headerBinding.courseBuyInWebAction.text =
+            if (courseDisplayPrice != null) {
+                if (hasPromo) {
+                    displayPriceMapper.mapToDiscountedDisplayPriceSpannedString(
+                        courseDisplayPrice,
+                        promoPrice,
+                        currencyCode
+                    )
                 } else {
-                    getString(R.string.course_payments_purchase_in_web)
+                    courseActivity.getString(
+                        R.string.course_payments_purchase_in_web_with_price,
+                        courseDisplayPrice
+                    )
                 }
+            } else {
+                courseActivity.getString(R.string.course_payments_purchase_in_web)
+            }
 
-            courseBuyInWebActionDiscountedNewPrice.text =
-                getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPriceWithCurrency(currencyCode, promoPrice))
+        headerBinding.courseBuyInWebActionDiscounted.courseBuyInWebActionDiscountedNewPrice.text =
+            courseActivity.getString(R.string.course_payments_purchase_in_web_with_price, displayPriceMapper.mapToDisplayPriceWithCurrency(currencyCode, promoPrice))
 
-            courseBuyInWebActionDiscountedOldPrice.text =
-                buildSpannedString {
-                    strikeThrough {
-                        append(courseHeaderData.course.displayPrice)
-                    }
+        headerBinding.courseBuyInWebActionDiscounted.courseBuyInWebActionDiscountedOldPrice.text =
+            buildSpannedString {
+                strikeThrough {
+                    append(courseHeaderData.course.displayPrice)
                 }
+            }
 
-            setupDiscountButtons(hasDiscount = courseHeaderData.course.displayPrice != null && hasPromo)
-        }
+        setupDiscountButtons(hasDiscount = courseHeaderData.course.displayPrice != null && hasPromo)
     }
 
     private fun setupBuyAction(courseHeaderData: CourseHeaderData) {
@@ -388,68 +382,65 @@ constructor(
     }
 
     private fun setupDiscountButtons(hasDiscount: Boolean) {
-        with(courseActivity) {
-            if (hasDiscount) {
-                when (discountButtonAppearanceSplitTest.currentGroup) {
-                    DiscountButtonAppearanceSplitTest.Group.DiscountTransparent -> {
-                        courseBuyInWebAction.isVisible = false
-                        courseBuyInWebActionDiscounted.isVisible = true
-                    }
-                    DiscountButtonAppearanceSplitTest.Group.DiscountGreen -> {
-                        courseBuyInWebAction.isVisible = true
-                        courseBuyInWebActionDiscounted.isVisible = false
-                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, AppCompatResources.getColorStateList(courseActivity, R.color.color_overlay_green))
-                    }
-                    DiscountButtonAppearanceSplitTest.Group.DiscountPurple -> {
-                        courseBuyInWebAction.isVisible = true
-                        courseBuyInWebActionDiscounted.isVisible = false
-                        ViewCompat.setBackgroundTintList(courseBuyInWebAction, AppCompatResources.getColorStateList(courseActivity, R.color.color_overlay_violet))
-                    }
+        val headerBinding = courseBinding.headerCourse
+        if (hasDiscount) {
+            when (discountButtonAppearanceSplitTest.currentGroup) {
+                DiscountButtonAppearanceSplitTest.Group.DiscountTransparent -> {
+                    headerBinding.courseBuyInWebAction.isVisible = false
+                    headerBinding.courseBuyInWebActionDiscounted.root.isVisible = true
                 }
-            } else {
-                courseBuyInWebAction.isVisible = true
-                courseBuyInWebActionDiscounted.isVisible = false
+                DiscountButtonAppearanceSplitTest.Group.DiscountGreen -> {
+                    headerBinding.courseBuyInWebAction.isVisible = true
+                    headerBinding.courseBuyInWebActionDiscounted.root.isVisible = false
+                    ViewCompat.setBackgroundTintList(headerBinding.courseBuyInWebAction, AppCompatResources.getColorStateList(courseActivity, R.color.color_overlay_green))
+                }
+                DiscountButtonAppearanceSplitTest.Group.DiscountPurple -> {
+                    headerBinding.courseBuyInWebAction.isVisible = true
+                    headerBinding.courseBuyInWebActionDiscounted.root.isVisible = false
+                    ViewCompat.setBackgroundTintList(headerBinding.courseBuyInWebAction, AppCompatResources.getColorStateList(courseActivity, R.color.color_overlay_violet))
+                }
             }
+        } else {
+            headerBinding.courseBuyInWebAction.isVisible = true
+            headerBinding.courseBuyInWebActionDiscounted.root.isVisible = false
         }
     }
 
     private fun setupWishlistAction(courseHeaderData: CourseHeaderData) {
-        with(courseActivity) {
-            courseWishlistAction.isEnabled = !courseHeaderData.course.isInWishlist && !courseHeaderData.isWishlistUpdating
+        val headerBinding = courseBinding.headerCourse
+        headerBinding.courseWishlistAction.isEnabled = !courseHeaderData.course.isInWishlist && !courseHeaderData.isWishlistUpdating
 
-            val wishlistText = if (courseHeaderData.isWishlistUpdating) {
-                if (courseHeaderData.course.isInWishlist) {
-                    getString(R.string.course_purchase_wishlist_removing)
-                } else {
-                    getString(R.string.course_purchase_wishlist_adding)
-                }
+        val wishlistText = if (courseHeaderData.isWishlistUpdating) {
+            if (courseHeaderData.course.isInWishlist) {
+                courseActivity.getString(R.string.course_purchase_wishlist_removing)
             } else {
-                if (courseHeaderData.course.isInWishlist) {
-                    getString(R.string.course_purchase_wishlist_added)
-                } else {
-                    getString(R.string.course_purchase_wishlist_add)
-                }
+                courseActivity.getString(R.string.course_purchase_wishlist_adding)
             }
-            courseWishlistAction.text = wishlistText
-
-            if (courseHeaderData.isWishlistUpdating) {
-                val evaluationDrawable = AnimationDrawable()
-                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
-                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
-                evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
-                evaluationDrawable.isOneShot = false
-
-                courseWishlistAction.icon = evaluationDrawable
-                evaluationDrawable.start()
+        } else {
+            if (courseHeaderData.course.isInWishlist) {
+                courseActivity.getString(R.string.course_purchase_wishlist_added)
             } else {
-                courseWishlistAction.icon = null
+                courseActivity.getString(R.string.course_purchase_wishlist_add)
             }
+        }
+        headerBinding.courseWishlistAction.text = wishlistText
+
+        if (courseHeaderData.isWishlistUpdating) {
+            val evaluationDrawable = AnimationDrawable()
+            evaluationDrawable.addFrame(courseActivity.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
+            evaluationDrawable.addFrame(courseActivity.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
+            evaluationDrawable.addFrame(courseActivity.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
+            evaluationDrawable.isOneShot = false
+
+            headerBinding.courseWishlistAction.icon = evaluationDrawable
+            evaluationDrawable.start()
+        } else {
+            headerBinding.courseWishlistAction.icon = null
         }
     }
 
     fun showCourseShareTooltip() {
-        val menuItemView = courseActivity
-            .courseToolbar
+        val menuItemView = courseBinding.courseToolbar
             .findViewById<View>(R.id.share_course)
             ?: return
 

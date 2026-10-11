@@ -8,12 +8,15 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
+import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.bottom_sheet_dialog_fill_blanks_input.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.BottomSheetDialogFillBlanksInputBinding
 import ru.nobird.android.view.base.ui.extension.argument
 
 class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
+    private val binding: BottomSheetDialogFillBlanksInputBinding by viewBinding(BottomSheetDialogFillBlanksInputBinding::bind)
+
     companion object {
         const val TAG = "FillBlanksInputBottomSheetDialogFragment"
 
@@ -46,22 +49,22 @@ class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
             index = savedInstanceState.getInt(ARG_INDEX)
             text = savedInstanceState.getString(ARG_TEXT) ?: return
         }
-        fillBlanksInputField.append(text)
-        fillBlanksInputField.setOnEditorActionListener { _, actionId, _ ->
+        binding.fillBlanksInputField.append(text)
+        binding.fillBlanksInputField.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 super.dismiss()
             }
             false
         }
-        fillBlanksInputField.post {
-            fillBlanksInputField.requestFocus()
-            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(fillBlanksInputField, InputMethodManager.SHOW_IMPLICIT)
+        binding.fillBlanksInputField.post {
+            binding.fillBlanksInputField.requestFocus()
+            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(binding.fillBlanksInputField, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
     override fun onPause() {
         (parentFragment as? Callback)
-            ?.onSyncInputItemWithParent(index, fillBlanksInputField.text.toString())
+            ?.onSyncInputItemWithParent(index, binding.fillBlanksInputField.text.toString())
         super.onPause()
     }
 

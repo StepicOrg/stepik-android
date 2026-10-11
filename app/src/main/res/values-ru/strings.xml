@@ -75,11 +75,17 @@
     <string name="try_again">Попробовать снова</string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="terms_message_register">
-        <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
+        <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://welcome.stepik.org/ru/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://welcome.stepik.org/ru/privacy">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и
         получить баллы.
     </string>
     <string name="password_too_short">Минимальное количество символов в пароле: 6.</string>
+    <string name="registration_consent_required"><![CDATA[Я соглашаюсь с <a href="https://welcome.stepik.org/ru/terms/?from_mobile_app=true">условиями использования</a>, <a href="https://welcome.stepik.org/ru/privacy/?from_mobile_app=true">политикой конфиденциальности</a> и разрешаю обрабатывать мои персональные данные]]></string>
+    <string name="registration_consent_marketing">Хочу получать новости, полезные подборки и специальные предложения</string>
+    <string name="registration_consent_marketing_helper">Не чаще 2 раз в неделю. Отписаться можно в любой момент</string>
+    <string name="registration_consent_required_error">Нам нужно ваше согласие, чтобы создать аккаунт</string>
+    <string name="social_auth_consent_title">Ознакомьтесь и примите условия</string>
+    <string name="social_auth_consent_continue">Продолжить</string>
     <string name="send">Отправить</string>
     <string name="email_sent">Мы отправили вам письмо.</string>
     <string name="email_wrong">Нет пользователя с таким e-mail.</string>
@@ -396,8 +402,6 @@
 
     <string name="sign_in_with_social_suffix">" через социальные сети"</string>
     <string name="sign_in_with_social">Вход через соцсети</string>
-    <string name="social_recycler_show_more">Ещё</string>
-    <string name="social_recycler_show_less">Меньше</string>
     <string name="name">Имя</string>
 
     <string name="sign_up_with_email_suffix">" с e-mail"</string>
@@ -726,7 +730,7 @@
 
     <string name="step_disabled_teacher_tariff_description">"\n\nВ шаге использована платная функциональность. "</string>
     <string name="step_disabled_teacher_tariff_title">О тарифных планах</string>
-    <string name="step_disabled_teacher_tariff_url">https://support.stepik.org/hc/ru/articles/360012252539</string>
+    <string name="step_disabled_teacher_tariff_url">https://help.stepik.org/article/54722</string>
 
     <string name="step_disabled_student_title">Увидеть задачу пока нельзя</string>
     <string name="step_disabled_student_description_part_1">"Напишите авторам курса, чтобы они обратили внимание на настройки "</string>
@@ -930,6 +934,8 @@
 
     <string name="profile_external_links_title">Ссылки</string>
     <string name="profile_notifcation_title">Уведомления</string>
+    <string name="profile_marketing_notifications_switch">Получать маркетинговые письма</string>
+    <string name="profile_marketing_notifications_update_error">Не удалось обновить маркетинговые уведомления</string>
     <string name="profile_settings_menu_item">Настройки</string>
 
     <string name="profile_courses_title">Курсы</string>
@@ -1216,7 +1222,7 @@
     <!-- Settings -->
     <string name="settings_contact_support">Написать в поддержку</string>
     <string name="settings_help_center">Справочный центр</string>
-    <string name="settings_help_center_url"> https://support.stepik.org/hc/ru</string>
+    <string name="settings_help_center_url">https://help.stepik.org</string>
     <string name="settings_app_version">Версия: %s</string>
     <string name="settings_delete_account">Удалить учётную запись</string>
 

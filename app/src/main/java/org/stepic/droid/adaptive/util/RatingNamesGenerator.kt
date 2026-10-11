@@ -4,6 +4,7 @@ import android.content.Context
 import org.stepic.droid.R
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import java.util.Locale
 import javax.inject.Inject
 
 @AppSingleton
@@ -34,7 +35,7 @@ constructor(
                 adjectives[adjIndex]
             }
 
-            adj.capitalize() + ' ' + animal
+            adj.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } + ' ' + animal
         }
 
     private fun isFemaleNoun(noun: String) = animalsFemale.contains(noun)

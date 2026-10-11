@@ -9,10 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.empty_search.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.fragment_course_list.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentCourseListBinding
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -44,6 +43,8 @@ class CourseListQueryFragment :
     CourseListQueryView,
     FilterQueryView,
     FilterSearchBottomSheetDialogFragment.Callback {
+    private val binding: FragmentCourseListBinding by viewBinding(FragmentCourseListBinding::bind)
+
     companion object {
         fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
             CourseListQueryFragment().apply {
@@ -86,7 +87,7 @@ class CourseListQueryFragment :
 
         initCenteredToolbar(courseListTitle, true)
 
-        with(courseListCoursesRecycler) {
+        with(binding.courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
@@ -95,16 +96,16 @@ class CourseListQueryFragment :
             }
         }
 
-        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
+        binding.courseListCoursesEmpty.goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        binding.courseListSwipeRefresh.setOnRefreshListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
+        binding.courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+        viewStateDelegate.addState<CourseListView.State.Loading>(binding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(binding.courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(binding.courseListCoursesEmpty.root)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(binding.courseListCoursesLoadingErrorVertical.root)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -113,8 +114,8 @@ class CourseListQueryFragment :
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListSwipeRefresh = courseListSwipeRefresh,
-            courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListSwipeRefresh = binding.courseListSwipeRefresh,
+            courseItemsRecyclerView = binding.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListQueryPresenter

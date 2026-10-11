@@ -4,13 +4,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import dev.androidbroadcast.vbpd.viewBinding
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.header_catalog_block.view.*
-import kotlinx.android.synthetic.main.item_course_list_new.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.databinding.ItemCourseListNewBinding
 import org.stepik.android.domain.catalog.model.CatalogBlock
 import org.stepik.android.domain.catalog.model.CatalogBlockContent
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -54,11 +53,13 @@ constructor(
         CourseRecommendationsViewHolder(createView(parent, R.layout.item_course_list_new))
 
     private inner class CourseRecommendationsViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CatalogItem>(containerView), LayoutContainer {
+        root: View
+    ) : DelegateViewHolder<CatalogItem>(root) {
+        private val viewBinding: ItemCourseListNewBinding by viewBinding { ItemCourseListNewBinding.bind(root) }
+
         private var catalogBlock: CatalogBlock? = null
 
-        private val courseListTitleContainer = containerView.catalogBlockContainer
+        private val courseListTitleContainer = viewBinding.catalogBlockHeader.root
         private val catalogBlockTitleDelegate = CatalogBlockHeaderDelegate(courseListTitleContainer)
 
         private val skeletonCount = context.resources.getInteger(R.integer.course_list_rows) * context.resources.getInteger(R.integer.course_list_columns)
@@ -69,9 +70,9 @@ constructor(
         private var tableLayoutManager: TableLayoutManager
 
         init {
-            viewStateDelegate.addState<CourseListFeature.State.Idle>(courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Idle>(viewBinding.courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Loading>(courseListTitleContainer, viewBinding.courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListFeature.State.Content>(courseListTitleContainer, viewBinding.courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListFeature.State.Empty>()
             viewStateDelegate.addState<CourseListFeature.State.NetworkError>()
 
@@ -90,7 +91,7 @@ constructor(
             val columnsCount = context.resources.getInteger(R.integer.course_list_columns)
             tableLayoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
 
-            with(courseListCoursesRecycler) {
+            with(viewBinding.courseListCoursesRecycler) {
                 adapter = courseItemAdapter
                 layoutManager = tableLayoutManager
                 itemAnimator?.changeDuration = 0

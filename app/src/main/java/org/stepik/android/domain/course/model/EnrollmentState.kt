@@ -1,7 +1,7 @@
 package org.stepik.android.domain.course.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.stepik.android.domain.mobile_tiers.model.LightSku
 import org.stepik.android.domain.user_courses.model.UserCourse
 

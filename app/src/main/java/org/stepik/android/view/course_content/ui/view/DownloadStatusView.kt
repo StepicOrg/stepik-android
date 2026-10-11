@@ -2,15 +2,15 @@ package org.stepik.android.view.course_content.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import kotlinx.android.synthetic.main.view_download_status.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewDownloadStatusBinding
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.view.base.ui.extension.inflate
 
 class DownloadStatusView
 @JvmOverloads
@@ -42,14 +42,14 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private val viewStateDelegate = ViewStateDelegate<DownloadProgress.Status>()
 
     init {
-        val view = inflate(R.layout.view_download_status, true)
-        statusCached = view.statusCached
+        val binding = ViewDownloadStatusBinding.inflate(LayoutInflater.from(context), this)
+        statusCached = binding.statusCached
 
-        viewStateDelegate.addState<DownloadProgress.Status.NotCached>(view.statusNotCached)
+        viewStateDelegate.addState<DownloadProgress.Status.NotCached>(binding.statusNotCached)
         viewStateDelegate.addState<DownloadProgress.Status.Cached>(statusCached)
-        viewStateDelegate.addState<DownloadProgress.Status.Pending>(view.statusPending)
-        viewStateDelegate.addState<DownloadProgress.Status.InProgress>(view.statusInProgress)
+        viewStateDelegate.addState<DownloadProgress.Status.Pending>(binding.statusPending)
+        viewStateDelegate.addState<DownloadProgress.Status.InProgress>(binding.statusInProgress)
 
-        statusProgress = view.statusProgress
+        statusProgress = binding.statusProgress
     }
 }

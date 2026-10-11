@@ -7,8 +7,9 @@ import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
 import androidx.collection.LongSparseArray
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewCourseContentControlBarBinding
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.setHeight
 import org.stepic.droid.util.TextUtil
@@ -32,8 +33,9 @@ class CourseContentControlBarDelegate(
         data is CourseContentItem.ControlBar
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
+        private val viewBinding: ViewCourseContentControlBarBinding by viewBinding { ViewCourseContentControlBarBinding.bind(root) }
 
-        private val controlBar = root.controlBar
+        private val controlBar = viewBinding.controlBar
         private lateinit var status: DownloadProgress.Status
         private lateinit var downloadControl: View
         private lateinit var downloadDrawable: ImageView

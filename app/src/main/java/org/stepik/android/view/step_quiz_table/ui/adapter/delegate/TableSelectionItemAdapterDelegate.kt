@@ -3,8 +3,9 @@ package org.stepik.android.view.step_quiz_table.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.item_table_selection.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemTableSelectionBinding
 import org.stepik.android.model.Cell
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import org.stepik.android.view.step_quiz_table.ui.model.TableSelectionItem
@@ -24,27 +25,22 @@ class TableSelectionItemAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_table_selection))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<TableSelectionItem>(root) {
-        private val viewOverlay = root.viewOverlay
-        private val stepQuizTableTitle = root.stepQuizTableTitleText
-        private val stepQuizTableTitleProgress = root.stepQuizTitleProgress
-        private val stepQuizTableChoice = root.stepQuizTableChoiceText
-        private val stepQuizTableChoiceProgress = root.stepQuizChoiceProgress
-        private val stepQuizTableChevron = root.stepQuizTableChevron
+        private val viewBinding: ItemTableSelectionBinding by viewBinding { ItemTableSelectionBinding.bind(root) }
 
         init {
-            viewOverlay.setOnClickListener { onItemClicked(adapterPosition, (itemData as TableSelectionItem).titleText, (itemData as TableSelectionItem).tableChoices) }
-            stepQuizTableTitle.webViewClient = ProgressableWebViewClient(stepQuizTableTitleProgress, stepQuizTableTitle.webView)
-            stepQuizTableChoice.webViewClient = ProgressableWebViewClient(stepQuizTableChoiceProgress, stepQuizTableChoice.webView)
+            viewBinding.viewOverlay.setOnClickListener { onItemClicked(adapterPosition, (itemData as TableSelectionItem).titleText, (itemData as TableSelectionItem).tableChoices) }
+            viewBinding.stepQuizTableTitleText.webViewClient = ProgressableWebViewClient(viewBinding.stepQuizTitleProgress, viewBinding.stepQuizTableTitleText.webView)
+            viewBinding.stepQuizTableChoiceText.webViewClient = ProgressableWebViewClient(viewBinding.stepQuizChoiceProgress, viewBinding.stepQuizTableChoiceText.webView)
         }
 
         override fun onBind(data: TableSelectionItem) {
-            viewOverlay.isEnabled = data.isEnabled
-            stepQuizTableChevron.alpha = if (data.isEnabled) 1f else 0.2f
-            stepQuizTableTitle.setText(data.titleText)
+            viewBinding.viewOverlay.isEnabled = data.isEnabled
+            viewBinding.stepQuizTableChevron.alpha = if (data.isEnabled) 1f else 0.2f
+            viewBinding.stepQuizTableTitleText.setText(data.titleText)
             val selectedChoices = data.tableChoices.filter { it.answer }
 
-            stepQuizTableChoice.isVisible = selectedChoices.isNotEmpty()
-            stepQuizTableChoice.setText(selectedChoices.joinToString(separator = SEPARATOR) { it.name })
+            viewBinding.stepQuizTableChoiceText.isVisible = selectedChoices.isNotEmpty()
+            viewBinding.stepQuizTableChoiceText.setText(selectedChoices.joinToString(separator = SEPARATOR) { it.name })
         }
     }
 }

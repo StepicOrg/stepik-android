@@ -9,9 +9,9 @@ import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.TextViewCompat
 import androidx.core.widget.doAfterTextChanged
-import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.FragmentStepQuizBinding
+import org.stepic.droid.databinding.LayoutStepQuizTextBinding
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
@@ -23,23 +23,44 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import ru.nobird.android.view.base.ui.extension.setTextIfChanged
 
 class TextStepQuizFormDelegate(
-    containerView: View,
+    private val quizTextField: TextView,
+    private val quizDescription: TextView,
     private val stepBlockName: String?,
     private val onQuizChanged: (ReplyResult) -> Unit
 ) : StepQuizFormDelegate {
     companion object {
-        private const val MINUS = "-\\\u002D\u00AD\u2012\u2013\u2014\u2015\u02D7"
+        private const val MINUS = "-\\-­‒–—―˗"
         private const val PLUS = "+"
         private const val POINT = ",\\."
         private const val EXP = "eEеЕ"
 
-        private const val NUMBER_VALIDATION_REGEX = "^[$MINUS$PLUS]?[0-9]*[$POINT]?[0-9]+([$EXP][$$MINUS$PLUS]?[0-9]+)?$"
+        private const val NUMBER_VALIDATION_REGEX = "^[$MINUS$PLUS]?[0-9]*[$POINT]?[0-9]+([$EXP][$MINUS$PLUS]?[0-9]+)?$"
     }
 
-    private val context = containerView.context
+    constructor(
+        stepQuizBinding: FragmentStepQuizBinding,
+        textStepQuizBinding: LayoutStepQuizTextBinding,
+        stepBlockName: String?,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        textStepQuizBinding.root as TextView,
+        stepQuizBinding.stepQuizDescription,
+        stepBlockName,
+        onQuizChanged
+    )
 
-    private val quizTextField = containerView.stringStepQuizField as TextView
-    private val quizDescription = containerView.stepQuizDescription
+    constructor(
+        containerView: View,
+        stepBlockName: String?,
+        onQuizChanged: (ReplyResult) -> Unit
+    ) : this(
+        containerView.findViewById(R.id.stringStepQuizField),
+        containerView.findViewById(R.id.stepQuizDescription),
+        stepBlockName,
+        onQuizChanged
+    )
+
+    private val context = quizTextField.context
 
     init {
         val (inputType, @StringRes descriptionTextRes) =

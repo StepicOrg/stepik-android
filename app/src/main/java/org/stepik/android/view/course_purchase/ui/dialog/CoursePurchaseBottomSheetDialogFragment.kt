@@ -12,7 +12,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import by.kirich1409.viewbindingdelegate.viewBinding
+import dev.androidbroadcast.vbpd.viewBinding
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingFlowParams
 import com.bumptech.glide.Glide

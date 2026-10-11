@@ -6,7 +6,6 @@ import android.webkit.WebView
 import android.widget.Button
 import androidx.annotation.StringRes
 import androidx.core.widget.doOnTextChanged
-import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
 import org.stepic.droid.adaptive.ui.custom.CardScrollView
@@ -16,6 +15,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
+import org.stepic.droid.databinding.AdaptiveQuizCardViewBinding
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
@@ -30,27 +30,29 @@ import kotlin.math.max
 class QuizCardViewHolder(
     private val root: View
 ) : ContainerView.ViewHolder(root), CardView {
-    private val curtain = root.curtain
-    private val answersProgress = root.answersProgress
-    private val titleView = root.title
-    val question: LatexView = root.question
-    val quizViewContainer: ViewGroup = root.quizViewContainer
-    val separatorAnswers: View = root.separatorAnswers
+    private val binding = AdaptiveQuizCardViewBinding.bind(root)
 
-    val actionButton: Button = root.submit
-    val nextButton: Button = root.next
-    private val correctSign = root.correct
-    private val wrongSign = root.wrong
-    private val wrongButton = root.wrongRetry
-    private val hint = root.hint
+    private val curtain = binding.curtain
+    private val answersProgress = binding.answersProgress
+    private val titleView = binding.title
+    val question: LatexView = binding.question
+    val quizViewContainer: ViewGroup = binding.quizViewContainer
+    val separatorAnswers: View = binding.separatorAnswers.root
 
-    val scrollContainer: CardScrollView = root.scroll
-    val container: SwipeableLayout = root.container
+    val actionButton: Button = binding.submit
+    val nextButton: Button = binding.next
+    private val correctSign = binding.correct
+    private val wrongSign = binding.wrong
+    private val wrongButton = binding.wrongRetry
+    private val hint = binding.hint
 
-    private val hardReaction = root.reaction_hard
-    private val easyReaction = root.reaction_easy
+    val scrollContainer: CardScrollView = binding.scroll
+    val container: SwipeableLayout = binding.container
 
-    val cardView: androidx.cardview.widget.CardView = root.card
+    private val hardReaction = binding.reactionHard
+    private val easyReaction = binding.reactionEasy
+
+    val cardView: androidx.cardview.widget.CardView = binding.card
 
     private lateinit var quizDelegate: QuizDelegate
 

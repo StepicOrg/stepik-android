@@ -2,7 +2,7 @@ package org.stepik.android.model.user
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import ru.nobird.app.core.model.Identifiable
 import java.util.Date
 

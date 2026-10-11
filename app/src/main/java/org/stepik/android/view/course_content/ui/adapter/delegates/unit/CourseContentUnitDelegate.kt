@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.collection.LongSparseArray
 import androidx.core.view.isVisible
+import dev.androidbroadcast.vbpd.viewBinding
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewCourseContentUnitBinding
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.toFixed
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -27,29 +28,16 @@ class CourseContentUnitDelegate(
         data is CourseContentItem.UnitItem
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
-        private val unitIcon = root.unitIcon
-        private val unitTitle = root.unitTitle
-        private val unitDemoAccess = root.unitDemoAccess
-        private val unitTextProgress = root.unitTextProgress
-        private val unitProgress = root.unitProgress
-
-        private val unitViewCount = root.unitViewCount
-        private val unitViewCountIcon = root.unitViewCountIcon
-        private val unitRating = root.unitRating
-        private val unitRatingIcon = root.unitRatingIcon
-
-        private val unitTimeToComplete = root.unitTimeToComplete
-
-        private val unitDownloadStatus = root.unitDownloadStatus
+        private val viewBinding: ViewCourseContentUnitBinding by viewBinding { ViewCourseContentUnitBinding.bind(root) }
 
         init {
             root.setOnClickListener {
                 (itemData as? CourseContentItem.UnitItem)?.let(unitClickListener::onItemClicked)
             }
 
-            unitDownloadStatus.setOnClickListener {
+            viewBinding.unitDownloadStatus.setOnClickListener {
                 val item = (itemData as? CourseContentItem.UnitItem) ?: return@setOnClickListener
-                when (unitDownloadStatus.status) {
+                when (viewBinding.unitDownloadStatus.status) {
                     DownloadProgress.Status.NotCached ->
                         unitClickListener.onItemDownloadClicked(item)
 
@@ -66,7 +54,7 @@ class CourseContentUnitDelegate(
 
         override fun onBind(data: CourseContentItem) {
             with(data as CourseContentItem.UnitItem) {
-                unitTitle.text = context.resources.getString(R.string.course_content_unit_title,
+                viewBinding.unitTitle.text = context.resources.getString(R.string.course_content_unit_title,
                         section.position, unit.position, lesson.title)
                 if (progress != null && progress.cost > 0) {
                     val score = progress
@@ -74,20 +62,20 @@ class CourseContentUnitDelegate(
                         ?.toFloatOrNull()
                         ?: 0f
 
-                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
+                    viewBinding.unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
                         score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
 
-                    unitProgress.progress = score / progress.cost.toFloat()
-                    unitTextProgress.isVisible = true
+                    viewBinding.unitProgress.progress = score / progress.cost.toFloat()
+                    viewBinding.unitTextProgress.isVisible = true
                 } else {
-                    unitProgress.progress = 0f
-                    unitTextProgress.isVisible = false
+                    viewBinding.unitProgress.progress = 0f
+                    viewBinding.unitTextProgress.isVisible = false
                 }
 
                 val timeToComplete = lesson.timeToComplete.takeIf { it > 60 } ?: lesson.steps.size * 60L
 
                 if (timeToComplete > 0) {
-                    unitTimeToComplete.isVisible = true
+                    viewBinding.unitTimeToComplete.isVisible = true
 
                     val timeToCompleteString = if (timeToComplete in 0 until 3600) {
                         val timeValue = timeToComplete / 60
@@ -96,21 +84,21 @@ class CourseContentUnitDelegate(
                         context.resources.getString(R.string.course_content_time_to_complete_hours_unit, timeToComplete / 3600)
                     }
 
-                    unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
+                    viewBinding.unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
                 } else {
-                    unitTimeToComplete.isVisible = false
+                    viewBinding.unitTimeToComplete.isVisible = false
                 }
 
-                unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
+                viewBinding.unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
 
-                Glide.with(unitIcon.context)
+                Glide.with(viewBinding.unitIcon.context)
                     .asBitmap()
                     .load(lesson.coverUrl)
                     .placeholder(R.drawable.general_placeholder)
                     .centerCrop()
-                    .into(unitIcon)
+                    .into(viewBinding.unitIcon)
 
-                unitViewCount.text = lesson.passedBy.toString()
+                viewBinding.unitViewCount.text = lesson.passedBy.toString()
 
                 @DrawableRes
                 val unitRatingDrawableRes =
@@ -120,21 +108,21 @@ class CourseContentUnitDelegate(
                         R.drawable.ic_course_content_like
                     }
 
-                unitRatingIcon.setImageResource(unitRatingDrawableRes)
-                unitRating.text = abs(lesson.voteDelta).toString()
+                viewBinding.unitRatingIcon.setImageResource(unitRatingDrawableRes)
+                viewBinding.unitRating.text = abs(lesson.voteDelta).toString()
 
-                unitDownloadStatus.isVisible = access == CourseContentItem.UnitItem.Access.FULL_ACCESS
-                unitDemoAccess.isVisible = access == CourseContentItem.UnitItem.Access.DEMO
+                viewBinding.unitDownloadStatus.isVisible = access == CourseContentItem.UnitItem.Access.FULL_ACCESS
+                viewBinding.unitDemoAccess.isVisible = access == CourseContentItem.UnitItem.Access.DEMO
                 itemView.isEnabled = access != CourseContentItem.UnitItem.Access.NO_ACCESS
 
                 val alpha = if (access != CourseContentItem.UnitItem.Access.NO_ACCESS) 1f else 0.4f
-                unitTitle.alpha = alpha
-                unitRatingIcon.alpha = alpha
-                unitRating.alpha = alpha
-                unitViewCount.alpha = alpha
-                unitViewCountIcon.alpha = alpha
-                unitTimeToComplete.alpha = alpha
-                unitTextProgress.alpha = alpha
+                viewBinding.unitTitle.alpha = alpha
+                viewBinding.unitRatingIcon.alpha = alpha
+                viewBinding.unitRating.alpha = alpha
+                viewBinding.unitViewCount.alpha = alpha
+                viewBinding.unitViewCountIcon.alpha = alpha
+                viewBinding.unitTimeToComplete.alpha = alpha
+                viewBinding.unitTextProgress.alpha = alpha
             }
         }
     }

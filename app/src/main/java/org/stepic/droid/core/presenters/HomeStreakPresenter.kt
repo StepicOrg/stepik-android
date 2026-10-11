@@ -10,10 +10,8 @@ import org.stepic.droid.di.home.HomeScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.StepikUtil
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import ru.nobird.android.domain.rx.toMaybe
 import javax.inject.Inject
 
 @HomeScope
@@ -32,14 +30,8 @@ constructor(
     fun onNeedShowStreak() {
         compositeDisposable += Maybe
             .fromCallable { sharedPreferences.profile?.id }
-            .flatMapSingleElement(userActivityRepository::getUserActivities)
-            .flatMap { userActivities ->
-                userActivities
-                    .firstOrNull()
-                    ?.pins
-                    ?.let(StepikUtil::getCurrentStreak)
-                    .toMaybe()
-            }
+            .flatMapSingleElement(userActivityRepository::getUserActivitySummary)
+            .map { it.recentStrike }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

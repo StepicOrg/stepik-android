@@ -3,15 +3,15 @@ package org.stepik.android.view.step_quiz_review.ui.widget
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.view_review_status.view.*
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ViewReviewStatusBinding
 import org.stepic.droid.util.resolveColorAttribute
-import ru.nobird.android.view.base.ui.extension.inflate
 
 class ReviewStatusView
 @JvmOverloads
@@ -55,10 +55,10 @@ constructor(
         }
 
     init {
-        val view = inflate(R.layout.view_review_status, true)
+        val binding = ViewReviewStatusBinding.inflate(LayoutInflater.from(context), this)
 
-        textView = view.peerReviewStatusText
-        imageView = view.peerReviewStatusImage
+        textView = binding.peerReviewStatusText
+        imageView = binding.peerReviewStatusImage
 
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ReviewStatusView)
         try {

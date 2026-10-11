@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import kotlinx.android.synthetic.main.adaptive_header_stats.view.*
-import kotlinx.android.synthetic.main.adaptive_item_week.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.AdaptiveWeekProgress
+import org.stepic.droid.databinding.AdaptiveHeaderStatsBinding
+import org.stepic.droid.databinding.AdaptiveItemWeekBinding
 import org.stepic.droid.util.defaultLocale
 import org.stepic.droid.util.resolveColorAttribute
 import java.util.ArrayList
@@ -111,16 +111,18 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
 
     sealed class StatsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         class WeekViewHolder(root: View) : StatsViewHolder(root) {
-            val total: TextView = root.total
-            val start: TextView = root.start
-            val end: TextView = root.end
+            private val binding = AdaptiveItemWeekBinding.bind(root)
+            val total: TextView = binding.total
+            val start: TextView = binding.start
+            val end: TextView = binding.end
         }
 
         class StatsHeaderViewHolder(val root: View) : StatsViewHolder(root) {
-            val chart: LineChart = root.chart
-            val expTotal: TextView = root.expTotal
-            val level: TextView = root.level
-            val expThisWeek: TextView = root.expThisWeek
+            private val binding = AdaptiveHeaderStatsBinding.bind(root)
+            val chart: LineChart = binding.chart
+            val expTotal: TextView = binding.expTotal
+            val level: TextView = binding.level
+            val expThisWeek: TextView = binding.expThisWeek
 
             init {
                 chart.description.isEnabled = false

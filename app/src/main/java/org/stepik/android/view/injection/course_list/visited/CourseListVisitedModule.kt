@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListView
@@ -13,7 +14,7 @@ import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.ViewContainer
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 abstract class CourseListVisitedModule {
     @Binds
     @IntoMap

@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import org.stepik.android.view.injection.base.ViewModelFactoryModule
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditPasswordPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
 
-@Module
+@Module(includes = [ViewModelFactoryModule::class])
 abstract class ProfileEditModule {
 
     /**

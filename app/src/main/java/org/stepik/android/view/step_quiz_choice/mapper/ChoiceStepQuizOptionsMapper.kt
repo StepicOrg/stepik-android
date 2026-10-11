@@ -19,8 +19,9 @@ class ChoiceStepQuizOptionsMapper {
                         }
                     } else {
                         null
-                    }
+                }
                 Choice(
+                    id = i,
                     option = option,
                     feedback = feedback?.optionsFeedback?.getOrNull(i)?.let(TextUtil::linkify),
                     correct = isCorrect,

@@ -25,4 +25,4 @@
     app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks"
 
     tools:listitem="@layout/item_step_quiz_sorting"
-    tools:viewBindingIgnore="true" />
+    />

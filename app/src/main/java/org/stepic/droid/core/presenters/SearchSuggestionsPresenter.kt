@@ -13,6 +13,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.SearchQuerySource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.search.repository.SearchRepository
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 class SearchSuggestionsPresenter
@@ -59,7 +60,7 @@ constructor(
     }
 
     fun onQueryTextSubmit(query: String) {
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(AmplitudeAnalytic.Search.PARAM_SUGGESTION to query.toLowerCase()))
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.SEARCHED, mapOf(AmplitudeAnalytic.Search.PARAM_SUGGESTION to query.lowercase(Locale.getDefault())))
     }
 
     override fun detachView(view: SearchSuggestionsView) {

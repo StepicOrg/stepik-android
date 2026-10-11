@@ -6,8 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    tools:viewBindingIgnore="true">
+    android:gravity="center_horizontal">
 
     <FrameLayout
         android:layout_width="@dimen/achievement_tile_width"

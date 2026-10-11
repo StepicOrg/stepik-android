@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/appBarLayoutBinding"
+        layout="@layout/view_centered_appbar_binding" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/backendFeaturesHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_backend_features_hint"
+                android:textAppearance="?textAppearanceBody2" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/backendFeaturesError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:textColor="?colorError"
+                android:visibility="gone"
+                tools:text="Feature fetch error: timeout"
+                tools:visibility="visible" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/backendFeaturesRefresh"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_backend_features_refresh"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/backendFeaturesClearOverrides"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/debug_backend_features_clear" />
+
+            <include layout="@layout/view_divider_vertical" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_backend_features_auth_title"
+                android:textAppearance="?textAppearanceSubtitle1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/authMarketingServerValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                tools:text="Server: true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/authMarketingActiveValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                tools:text="Active cache: true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/authMarketingOverrideValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                tools:text="Override: SERVER" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/authMarketingChooseOverride"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/debug_backend_features_choose_auth" />
+
+            <include layout="@layout/view_divider_vertical" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_backend_features_rubricator_title"
+                android:textAppearance="?textAppearanceSubtitle1" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rubricatorServerValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="16dp"
+                tools:text="Server: rubricator.json" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rubricatorActiveValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                tools:text="Active cache: rubricator.json" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rubricatorOverrideValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="16dp"
+                tools:text="Override: Server cacheFile" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rubricatorChooseOverride"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_backend_features_choose_rubricator" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

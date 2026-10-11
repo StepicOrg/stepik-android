@@ -2,7 +2,6 @@ package org.stepik.android.view.course_list.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.extensions.LayoutContainer
 import org.stepic.droid.R
 import org.stepik.android.domain.course_list.model.CourseListItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -18,8 +17,8 @@ class CourseListViewAllAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_course_view_all))
 
     private inner class ViewHolder(
-        override val containerView: View
-    ) : DelegateViewHolder<CourseListItem>(containerView), LayoutContainer {
+        containerView: View
+    ) : DelegateViewHolder<CourseListItem>(containerView) {
         init {
             containerView.setOnClickListener { onViewClick() }
         }

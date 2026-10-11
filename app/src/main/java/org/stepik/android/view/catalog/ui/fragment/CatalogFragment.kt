@@ -15,11 +15,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.androidbroadcast.vbpd.viewBinding
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import kotlinx.android.synthetic.main.fragment_catalog.*
-import kotlinx.android.synthetic.main.item_catalog_rubricator.view.rubricatorCard
-import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -28,6 +26,7 @@ import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
+import org.stepic.droid.databinding.FragmentCatalogBinding
 import org.stepic.droid.databinding.ItemBannerBinding
 import org.stepic.droid.databinding.ItemCatalogRubricatorBinding
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
@@ -148,12 +147,26 @@ class CatalogFragment :
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
 
+    private val catalogBinding: FragmentCatalogBinding by viewBinding(FragmentCatalogBinding::bind)
+
     private val catalogViewModel: CatalogViewModel by reduxViewModel(this) { viewModelFactory }
 
     private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+
+    private val searchViewToolbar: AutoCompleteSearchView
+        inline get() = catalogBinding.catalogSearchToolbar.searchViewToolbar
+
+    private val backIcon: ImageView
+        inline get() = catalogBinding.catalogSearchToolbar.backIcon
+
+    private val filterIcon: ImageView
+        inline get() = catalogBinding.catalogSearchToolbar.filterIcon
+
+    private val centeredToolbar: MaterialToolbar
+        inline get() = catalogBinding.catalogSearchToolbar.centeredToolbar.centeredToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -191,7 +204,10 @@ class CatalogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
+
+        // Views from included layouts are not in FragmentCatalogBinding — use findViewById
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
+
         setupSearchBar()
 
         catalogItemAdapter += StoriesAdapterDelegate(
@@ -257,7 +273,7 @@ class CatalogFragment :
         catalogItemAdapter += buildBannerBlockAdapterDelegate()
         catalogItemAdapter += buildRubricatorAdapterDelegate()
 
-        with(catalogRecyclerView) {
+        with(catalogBinding.catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = LinearLayoutManager(context)
             itemAnimator = null
@@ -274,8 +290,7 @@ class CatalogFragment :
             SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object :
                 SharedTransitionContainerDelegate {
                 override fun getSharedView(position: Int): View? {
-                    if (catalogRecyclerView == null) return null
-                    val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
+                    val storiesViewHolder = catalogBinding.catalogRecyclerView.findViewHolderForAdapterPosition(
                         CATALOG_STORIES_INDEX
                     ) as? StoriesAdapterDelegate.StoriesViewHolder
                         ?: return null
@@ -288,8 +303,7 @@ class CatalogFragment :
                 }
 
                 override fun onPositionChanged(position: Int) {
-                    if (catalogRecyclerView == null) return
-                    val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
+                    val storiesViewHolder = catalogBinding.catalogRecyclerView.findViewHolderForAdapterPosition(
                         CATALOG_STORIES_INDEX
                     ) as? StoriesAdapterDelegate.StoriesViewHolder
                         ?: return
@@ -306,7 +320,7 @@ class CatalogFragment :
             SharedTransitionsManager.registerTransitionDelegate(CATALOG_DEEPLINK_STORY_KEY, object :
                 SharedTransitionContainerDelegate {
                 override fun getSharedView(position: Int): View? =
-                    storyDeepLinkMockView
+                    catalogBinding.storyDeepLinkMockView
 
                 override fun onPositionChanged(position: Int) {}
             })
@@ -370,7 +384,7 @@ class CatalogFragment :
                 listOf()
         }
 
-        catalogRecyclerView.post {
+        catalogBinding.catalogRecyclerView.post {
             val catalogItems =
                 if (state.blocksState is CatalogFeature.BlocksState.Content) {
                     resolveCatalogItems(bannerBlocks, collectionCatalogItems)
@@ -409,7 +423,7 @@ class CatalogFragment :
         }
 
     private fun showStories(position: Int) {
-        val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(
+        val storiesViewHolder = catalogBinding.catalogRecyclerView.findViewHolderForAdapterPosition(
             CATALOG_STORIES_INDEX
         )
                 as? StoriesAdapterDelegate.StoriesViewHolder
@@ -452,7 +466,7 @@ class CatalogFragment :
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
-        val query = searchViewToolbar.query.toString()
+        val query =  catalogBinding.catalogSearchToolbar.searchViewToolbar.query.toString()
         val intent = createSearchViewIntent(query, filterQuery)
         searchSuggestionsPresenter.onQueryTextSubmit(query)
         collapseSearchView()
@@ -460,7 +474,7 @@ class CatalogFragment :
     }
 
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
-        searchViewToolbar.setSuggestions(suggestions, source)
+        catalogBinding.catalogSearchToolbar.searchViewToolbar.setSuggestions(suggestions, source)
     }
 
     private fun logStoryEvent(story: Story) {
@@ -480,13 +494,15 @@ class CatalogFragment :
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
         filterIcon.isVisible = true
-        searchViewToolbar.isVisible = true
-        searchViewToolbar.onActionViewExpanded()
-        searchViewToolbar.clearFocus()
-        searchViewToolbar.setIconifiedByDefault(false)
-        setupSearchView(searchViewToolbar)
-        searchViewToolbar.setFocusCallback(this)
-        searchViewToolbar.setSuggestionClickCallback(this)
+        catalogBinding.catalogSearchToolbar.searchViewToolbar.let { searchViewToolbar ->
+            searchViewToolbar.isVisible = true
+            searchViewToolbar.onActionViewExpanded()
+            searchViewToolbar.clearFocus()
+            searchViewToolbar.setIconifiedByDefault(false)
+            setupSearchView(searchViewToolbar)
+            searchViewToolbar.setFocusCallback(this)
+            searchViewToolbar.setSuggestionClickCallback(this)
+        }
         backIcon.setOnClickListener {
             collapseSearchView()
         }
@@ -499,7 +515,7 @@ class CatalogFragment :
 
     private fun setupSearchView(searchView: AutoCompleteSearchView?) {
         searchView?.let {
-            it.initSuggestions(catalogContainer)
+            it.initSuggestions(catalogBinding.catalogContainer)
             it.setCloseIconDrawableRes(CloseIconHolder.getCloseIconDrawableRes())
             it.setSearchable(requireActivity())
 
@@ -586,7 +602,7 @@ class CatalogFragment :
         ) {
             val rubricatorBinding = ItemCatalogRubricatorBinding.bind(this.itemView)
 
-            rubricatorBinding.root.rubricatorCard.setOnClickListener {
+            rubricatorBinding.rubricatorCard.setOnClickListener {
                 (item as? CatalogItem.Rubricator)?.let { rubricatorBlock ->
                     if (rubricatorBlock.state is FeaturesFeature.State.Success) {
                         screenManager.showRubricator(requireContext(), rubricatorBlock.state.rubricatorUrl)

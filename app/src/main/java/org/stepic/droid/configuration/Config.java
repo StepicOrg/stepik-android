@@ -44,4 +44,6 @@ public interface Config {
     boolean isAppInStore();
 
     String getSupportEmail();
+
+    String getSupportUrl();
 }

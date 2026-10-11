@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/step_submit_button_height"
     android:orientation="horizontal"
-    tools:viewBindingIgnore="true">
+    >
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/stepQuizRetry"

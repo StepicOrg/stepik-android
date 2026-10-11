@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    tools:viewBindingIgnore="true">
+    android:orientation="vertical">
 
     <include
         android:id="@+id/catalogBlockContainerDivider"

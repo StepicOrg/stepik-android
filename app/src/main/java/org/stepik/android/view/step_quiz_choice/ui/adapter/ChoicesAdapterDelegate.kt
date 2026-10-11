@@ -9,8 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
+import org.stepic.droid.databinding.ItemStepQuizChoiceBinding
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
@@ -32,15 +33,12 @@ class ChoicesAdapterDelegate(
         root: View
     ) : DelegateViewHolder<Choice>(root) {
 
-        private val itemChoiceContainer = root.itemChoiceContainer
-        private val itemChoiceCheckmark = root.itemChoiceCheckmark
-        private val itemChoiceLatex = root.itemChoiceLatex
-        private val itemChoiceLatexProgress = root.itemChoiceLatexProgress
-        private val itemChoiceFeedback  = root.itemChoiceFeedback
+        private val viewBinding: ItemStepQuizChoiceBinding by viewBinding { ItemStepQuizChoiceBinding.bind(root) }
+
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
-            root.itemChoiceContainer.setOnClickListener {
+            viewBinding.itemChoiceContainer.setOnClickListener {
                 if (it.isEnabled) {
                     onClick(itemData as Choice)
                 }
@@ -54,11 +52,11 @@ class ChoicesAdapterDelegate(
                     R.id.incorrect_layer,
                     R.id.incorrect_layer_with_hint
                 ),
-                itemChoiceContainer.background.mutate() as LayerDrawable
+                viewBinding.itemChoiceContainer.background.mutate() as LayerDrawable
             )
-            itemChoiceLatex.webViewClient = ProgressableWebViewClient(itemChoiceLatexProgress, itemChoiceLatex.webView)
+            viewBinding.itemChoiceLatex.webViewClient = ProgressableWebViewClient(viewBinding.itemChoiceLatexProgress, viewBinding.itemChoiceLatex.webView)
 
-            itemChoiceFeedback.background = AppCompatResources
+            viewBinding.itemChoiceFeedback.background = AppCompatResources
                 .getDrawable(context, R.drawable.bg_shape_rounded_bottom)
                 ?.mutate()
                 ?.let { DrawableCompat.wrap(it) }
@@ -69,17 +67,17 @@ class ChoicesAdapterDelegate(
         }
 
         override fun onBind(data: Choice) {
-            itemView.itemChoiceContainer.isEnabled = data.isEnabled
+            viewBinding.itemChoiceContainer.isEnabled = data.isEnabled
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            itemChoiceCheckmark.isInvisible = data.correct != true
-            itemChoiceLatex.setText(data.option)
+            viewBinding.itemChoiceCheckmark.isInvisible = data.correct != true
+            viewBinding.itemChoiceLatex.setText(data.option)
             layerListDrawableDelegate.showLayer(getItemBackgroundLayer(data))
             bindHint(data)
         }
 
         private fun bindHint(data: Choice) {
-            itemChoiceFeedback.isVisible = !data.feedback.isNullOrEmpty()
-            itemChoiceFeedback.setText(data.feedback)
+            viewBinding.itemChoiceFeedback.isVisible = !data.feedback.isNullOrEmpty()
+            viewBinding.itemChoiceFeedback.setText(data.feedback)
         }
 
         private fun getItemBackgroundLayer(data: Choice): Int =

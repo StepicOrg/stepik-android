@@ -5,11 +5,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.view_stories_container.*
+import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.ViewStoriesContainerBinding
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepik.android.presentation.stories.StoriesFeature
@@ -43,6 +44,8 @@ class StoriesFragment : Fragment(R.layout.view_stories_container), ReduxView<Sto
 
     private lateinit var storiesAdapter: StoriesAdapter
 
+    private val binding: ViewStoriesContainerBinding by viewBinding(ViewStoriesContainerBinding::bind)
+
     private val storiesViewModel: StoriesViewModel by reduxViewModel(this) { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,8 +67,8 @@ class StoriesFragment : Fragment(R.layout.view_stories_container), ReduxView<Sto
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StoriesFeature.State.Idle>()
         viewStateDelegate.addState<StoriesFeature.State.Empty>()
-        viewStateDelegate.addState<StoriesFeature.State.Loading>(storiesContainerLoadingPlaceholder)
-        viewStateDelegate.addState<StoriesFeature.State.Success>(storiesRecycler)
+        viewStateDelegate.addState<StoriesFeature.State.Loading>(binding.storiesContainerLoadingPlaceholder)
+        viewStateDelegate.addState<StoriesFeature.State.Success>(binding.storiesRecycler)
 
         storiesAdapter = StoriesAdapter { _, position ->
             requireContext().startActivity(
@@ -75,7 +78,7 @@ class StoriesFragment : Fragment(R.layout.view_stories_container), ReduxView<Sto
             )
         }
 
-        with(storiesRecycler) {
+        with(binding.storiesRecycler) {
             itemAnimator = null
             adapter = storiesAdapter
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -87,14 +90,14 @@ class StoriesFragment : Fragment(R.layout.view_stories_container), ReduxView<Sto
         SharedTransitionsManager.registerTransitionDelegate(HOME_STORIES_KEY, object :
             SharedTransitionContainerDelegate {
             override fun getSharedView(position: Int): View? {
-                val storyViewHolder = storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
+                val storyViewHolder = binding.storiesRecycler.findViewHolderForAdapterPosition(position) as? StoriesAdapter.StoryViewHolder
                     ?: return null
 
                 return storyViewHolder.cover
             }
 
             override fun onPositionChanged(position: Int) {
-                storiesRecycler.layoutManager?.scrollToPosition(position)
+                binding.storiesRecycler.layoutManager?.scrollToPosition(position)
                 storiesAdapter.selected = position
 
                 if (position != -1) {

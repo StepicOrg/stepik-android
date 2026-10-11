@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:viewBindingIgnore="true">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/courseAppBar"
@@ -40,8 +39,12 @@
                 android:alpha="?alphaEmphasisHigh"
                 android:background="?colorSurface" />
 
-            <include layout="@layout/header_course" />
-            <include layout="@layout/header_course_placeholder" />
+            <include
+                android:id="@+id/headerCourse"
+                layout="@layout/header_course" />
+            <include
+                android:id="@+id/headerCoursePlaceholder"
+                layout="@layout/header_course_placeholder" />
 
             <View
                 android:id="@+id/courseToolbarScrim"

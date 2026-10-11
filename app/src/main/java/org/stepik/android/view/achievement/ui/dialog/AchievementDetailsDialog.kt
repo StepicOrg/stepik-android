@@ -8,11 +8,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.databinding.DialogAchievementDetailsBinding
 import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
@@ -51,36 +51,34 @@ class AchievementDetailsDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_achievement_details, null, false)
+        val binding = DialogAchievementDetailsBinding.inflate(LayoutInflater.from(context))
 
-        view.apply {
-            achievementTitle.text = achievementResourceResolver.resolveTitleForKind(achievementItem.kind)
-            achievementDescription.text = achievementResourceResolver.resolveDescription(achievementItem)
-            achievementIcon.apply {
-                wrapWithGlide()
-                    .setImagePath(
-                        achievementResourceResolver.resolveAchievementIcon(achievementItem, resources.getDimensionPixelSize(R.dimen.achievement_details_icon_size)),
-                        placeholder = AppCompatResources.getDrawable(context, R.drawable.ic_achievement_empty)
-                    )
-            }
-
-            achievementLevelProgress.progress = achievementItem.currentScore.toFloat() / achievementItem.targetScore
-            achievementLevels.progress = achievementItem.currentLevel
-            achievementLevels.total = achievementItem.maxLevel
-
-            achievementLevel.text = getString(R.string.achievement_level, achievementItem.currentLevel, achievementItem.maxLevel)
-
-            val scoreDiff = achievementItem.targetScore - achievementItem.currentScore
-            achievementRest.text = if (achievementItem.isLocked) {
-                getString(R.string.achievement_remaining_exp_locked)
-            } else {
-                getString(R.string.achievement_remaining_exp, scoreDiff)
-            }
-            achievementRest.isVisible = scoreDiff > 0
+        binding.achievementTitle.text = achievementResourceResolver.resolveTitleForKind(achievementItem.kind)
+        binding.achievementDescription.text = achievementResourceResolver.resolveDescription(achievementItem)
+        binding.achievementIcon.apply {
+            wrapWithGlide()
+                .setImagePath(
+                    achievementResourceResolver.resolveAchievementIcon(achievementItem, resources.getDimensionPixelSize(R.dimen.achievement_details_icon_size)),
+                    placeholder = AppCompatResources.getDrawable(context, R.drawable.ic_achievement_empty)
+                )
         }
 
+        binding.achievementLevelProgress.progress = achievementItem.currentScore.toFloat() / achievementItem.targetScore
+        binding.achievementLevels.progress = achievementItem.currentLevel
+        binding.achievementLevels.total = achievementItem.maxLevel
+
+        binding.achievementLevel.text = getString(R.string.achievement_level, achievementItem.currentLevel, achievementItem.maxLevel)
+
+        val scoreDiff = achievementItem.targetScore - achievementItem.currentScore
+        binding.achievementRest.text = if (achievementItem.isLocked) {
+            getString(R.string.achievement_remaining_exp_locked)
+        } else {
+            getString(R.string.achievement_remaining_exp, scoreDiff)
+        }
+        binding.achievementRest.isVisible = scoreDiff > 0
+
         val builder = MaterialAlertDialogBuilder(requireContext())
-                .setView(view)
+                .setView(binding.root)
 
         if (canShare && !achievementItem.isLocked) {
             builder
