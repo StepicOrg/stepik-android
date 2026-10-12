@@ -24,7 +24,9 @@ android {
         versionCode versions.code
         versionName versions.name
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner project.findProperty('billingDatabaseTests') == 'true'
+                ? "org.stepik.android.cache.testutil.BillingDatabaseTestRunner"
+                : "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
@@ -36,6 +38,9 @@ android {
     }
 
     sourceSets {
+        if (project.findProperty('billingDatabaseTests') == 'true') {
+            debug.manifest.srcFile 'src/billingDatabaseTest/AndroidManifest.xml'
+        }
         androidTest {
             java.srcDirs += "src/sharedTest/java"
         }
@@ -282,6 +287,8 @@ dependencies {
     testImplementation libraries.hamcrest
 
     androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.testCore
+    androidTestImplementation libraries.testExtJunit
     androidTestImplementation libraries.testRules
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Used only for debug instrumentation with -PbillingDatabaseTests=true. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application android:name="android.app.Application" tools:replace="android:name">
+        <provider android:name="org.stepik.android.view.analytic.AnalyticContentProvider" tools:node="remove" />
+        <provider android:name="io.appmetrica.analytics.internal.PreloadInfoContentProvider" tools:node="remove" />
+        <provider android:name="com.google.firebase.provider.FirebaseInitProvider" tools:node="remove" />
+        <provider android:name="com.vk.api.sdk.internal.VKInitProvider" tools:node="remove" />
+        <provider android:name="androidx.startup.InitializationProvider" tools:node="remove" />
+        <service android:name="org.stepik.android.view.notification.service.BootCompleteService" tools:node="remove" />
+        <receiver android:name="org.stepik.android.view.notification.receiver.BootCompleteReceiver" tools:node="remove" />
+    </application>
+</manifest>
