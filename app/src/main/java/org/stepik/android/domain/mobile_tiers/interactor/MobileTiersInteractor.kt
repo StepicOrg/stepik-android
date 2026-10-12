@@ -28,7 +28,7 @@ constructor(
                 val promoTiers = mobileTiers.mapNotNull(MobileTier::promoTier)
                 val skuIds = priceTiers.union(promoTiers).toList()
                 lightSkuRepository
-                    .getLightInventory(BillingClient.SkuType.INAPP, skuIds, sourceType)
+                    .getLightInventory(BillingClient.ProductType.INAPP, skuIds, sourceType)
                     .map { lightSkus -> mobileTiers to lightSkus }
             }
             .onErrorReturnItem(emptyList<MobileTier>() to emptyList<LightSku>())

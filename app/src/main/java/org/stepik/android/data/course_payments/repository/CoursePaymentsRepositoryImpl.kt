@@ -1,7 +1,7 @@
 package org.stepik.android.data.course_payments.repository
 
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import io.reactivex.Single
 import org.stepik.android.data.course_payments.source.CoursePaymentsCacheDataSource
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
@@ -18,7 +18,7 @@ constructor(
     private val coursePaymentsRemoteDataSource: CoursePaymentsRemoteDataSource,
     private val coursePaymentsCacheDataSource: CoursePaymentsCacheDataSource
 ) : CoursePaymentsRepository {
-    override fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment> =
+    override fun createCoursePayment(courseId: Long, sku: ProductDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment> =
         coursePaymentsRemoteDataSource
             .createCoursePayment(courseId, sku, purchase, promoCode)
 

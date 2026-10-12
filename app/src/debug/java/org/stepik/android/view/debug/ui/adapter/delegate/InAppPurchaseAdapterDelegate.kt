@@ -31,7 +31,7 @@ class InAppPurchaseAdapterDelegate(
             viewBinding.inAppPurchaseConsumeAction.setOnClickListener { itemData?.let(onItemClick) }
         }
         override fun onBind(data: Purchase) {
-            viewBinding.inAppPurchaseSku.text = data.skus.first()
+            viewBinding.inAppPurchaseSku.text = data.products.first()
             viewBinding.inAppPurchaseTime.text = context.getString(R.string.debug_purchase_date, DateTimeHelper.getPrintableDate(Date(data.purchaseTime), DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()))
             viewBinding.inAppPurchaseStatus.text = context.getString(R.string.debug_purchase_status, data.purchaseState.toString())
 

@@ -206,7 +206,16 @@ class CoursePurchaseBottomSheetDialogFragment :
                     .newBuilder()
                     .setObfuscatedAccountId(action.obfuscatedParams.obfuscatedAccountId)
                     .setObfuscatedProfileId(action.obfuscatedParams.obfuscatedProfileId)
-                    .setSkuDetails(action.skuDetails)
+                    .setProductDetailsParamsList(listOf(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                            .setProductDetails(action.skuDetails)
+                            .apply {
+                                action.skuDetails.oneTimePurchaseOfferDetails?.offerToken
+                                    ?.takeIf { it.isNotEmpty() }
+                                    ?.let(::setOfferToken)
+                            }
+                            .build()
+                    ))
                     .build()
 
                 billingClient.launchBillingFlow(requireActivity(), billingFlowParams)

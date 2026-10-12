@@ -1,7 +1,7 @@
 package org.stepik.android.remote.course_payments
 
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import io.reactivex.Single
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
 import org.stepik.android.domain.course_payments.model.CoursePayment
@@ -18,7 +18,7 @@ constructor(
     private val coursePaymentService: CoursePaymentService
 ) : CoursePaymentsRemoteDataSource {
 
-    override fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment> =
+    override fun createCoursePayment(courseId: Long, sku: ProductDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment> =
         coursePaymentService
             .createCoursePayment(
                 CoursePaymentRequest(CoursePaymentRequest.Body(
@@ -27,9 +27,9 @@ constructor(
                     data     = CoursePaymentRequest.Body.Data(
                         token       = purchase.purchaseToken,
                         packageName = purchase.packageName,
-                        productId   = purchase.skus.first(),
-                        amount      = sku.priceAmountMicros / 1_000_000f,
-                        currency    = sku.priceCurrencyCode
+                        productId   = purchase.products.first(),
+                        amount      = requireNotNull(sku.oneTimePurchaseOfferDetails).priceAmountMicros / 1_000_000f,
+                        currency    = requireNotNull(sku.oneTimePurchaseOfferDetails).priceCurrencyCode
                     ),
                     promoCode = promoCode
                 ))

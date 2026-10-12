@@ -66,7 +66,7 @@ constructor(
                                 Single.just(deeplinkPromoCode to PromoCodeSku.EMPTY)
                             } else {
                                 lightSkuRepository
-                                    .getLightInventory(BillingClient.SkuType.INAPP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
+                                    .getLightInventory(BillingClient.ProductType.INAPP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
                                     .map { lightSku -> deeplinkPromoCode to PromoCodeSku(promo, lightSku.firstOrNull()) }
                             }
                         }

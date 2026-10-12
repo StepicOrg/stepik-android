@@ -15,7 +15,11 @@ constructor(
     private val lightSkuCacheDataSource: LightSkuCacheDataSource,
     private val billingRemoteDataSource: BillingRemoteDataSource
 ) : LightSkuRepository {
-    override fun getLightInventory(productType: String, skuIds: List<String>, dataSourceType: DataSourceType): Single<List<LightSku>> {
+    override fun getLightInventory(
+        productType: String,
+        skuIds: List<String>,
+        dataSourceType: DataSourceType
+    ): Single<List<LightSku>> {
         val remote = remoteAction(productType, skuIds)
 
         val cache = lightSkuCacheDataSource
@@ -28,7 +32,7 @@ constructor(
 
             DataSourceType.CACHE ->
                 cache.flatMap { cachedItems ->
-                    val newIds = (skuIds.toList() - cachedItems.map { it.id })
+                    val newIds = (skuIds.toList() - cachedItems.map { it.id }.toSet())
                     remoteAction(productType, newIds)
                             .map { remoteItems -> (cachedItems + remoteItems) }
                 }
@@ -41,6 +45,13 @@ constructor(
     private fun remoteAction(productType: String, skuIds: List<String>): Single<List<LightSku>> =
         billingRemoteDataSource
             .getInventory(productType, skuIds)
-            .map { inventory -> inventory.map { LightSku(it.sku, it.price) } }
+            .map { inventory ->
+                inventory.map {
+                    LightSku(
+                        id = it.productId,
+                        price = requireNotNull(it.oneTimePurchaseOfferDetails).formattedPrice
+                    )
+                }
+            }
             .doCompletableOnSuccess(lightSkuCacheDataSource::saveLightInventory)
 }

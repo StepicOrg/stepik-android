@@ -1,14 +1,14 @@
 package org.stepik.android.domain.course_payments.repository
 
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import io.reactivex.Single
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.model.DeeplinkPromoCode
 
 interface CoursePaymentsRepository {
-    fun createCoursePayment(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment>
+    fun createCoursePayment(courseId: Long, sku: ProductDetails, purchase: Purchase, promoCode: String?): Single<CoursePayment>
 
     /**
      * Return course payments for selected course id

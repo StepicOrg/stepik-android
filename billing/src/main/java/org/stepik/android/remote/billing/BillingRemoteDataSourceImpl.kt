@@ -3,8 +3,9 @@ package org.stepik.android.remote.billing
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.ConsumeParams
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
-import com.android.billingclient.api.SkuDetailsParams
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryPurchasesParams
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -25,19 +26,29 @@ constructor(
     private val backgroundScheduler: Scheduler
 ) : BillingRemoteDataSource {
 
-    override fun getInventory(productType: String, skuIds: List<String>): Single<List<SkuDetails>> =
+    override fun getInventory(productType: String, skuIds: List<String>): Single<List<ProductDetails>> =
         Single
-            .create<List<SkuDetails>> { emitter ->
-                val skuParams = SkuDetailsParams
+            .create<List<ProductDetails>> { emitter ->
+                // Billing rejects empty product lists, including when all prices are cached.
+                if (skuIds.isEmpty()) {
+                    emitter.onSuccess(emptyList())
+                    return@create
+                }
+
+                val productParams = QueryProductDetailsParams
                     .newBuilder()
-                    .setSkusList(skuIds)
-                    .setType(productType)
+                    .setProductList(skuIds.map { skuId ->
+                        QueryProductDetailsParams.Product.newBuilder()
+                            .setProductId(skuId)
+                            .setProductType(productType)
+                            .build()
+                    })
                     .build()
 
-                billingClient.querySkuDetailsAsync(skuParams) { billingResult, skuDetails ->
+                billingClient.queryProductDetailsAsync(productParams) { billingResult, queryResult ->
                     if (!emitter.isDisposed) {
-                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && skuDetails != null) {
-                            emitter.onSuccess(skuDetails)
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                            emitter.onSuccess(queryResult.productDetailsList)
                         } else {
                             emitter.onError(BillingNotSupportedException(billingResult))
                         }
@@ -51,7 +62,12 @@ constructor(
         Single
             .create { emitter ->
                 billingClient
-                    .queryPurchasesAsync(productType) { billingResult, purchases ->
+                    .queryPurchasesAsync(
+                        QueryPurchasesParams
+                            .newBuilder()
+                            .setProductType(productType)
+                            .build()
+                    ) { billingResult, purchases ->
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                             emitter.onSuccess(purchases)
                         } else {

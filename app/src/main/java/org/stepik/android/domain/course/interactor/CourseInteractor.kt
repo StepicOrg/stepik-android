@@ -185,7 +185,7 @@ constructor(
     private fun getInitialPurchaseResult(courseId: Long): Single<CoursePurchaseInfo> =
         zip(
             getCurrentProfileId(),
-            billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
+            billingRepository.getAllPurchases(BillingClient.ProductType.INAPP)
         ) { profileId, purchases ->
             val obfuscatedParams =
                 CoursePurchaseObfuscatedParams(

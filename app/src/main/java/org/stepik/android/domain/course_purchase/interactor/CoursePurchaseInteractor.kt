@@ -2,7 +2,7 @@ package org.stepik.android.domain.course_purchase.interactor
 
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
@@ -58,7 +58,7 @@ constructor(
                     Single.just(PromoCodeSku.EMPTY)
                 } else {
                     lightSkuRepository
-                        .getLightInventory(BillingClient.SkuType.INAPP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
+                        .getLightInventory(BillingClient.ProductType.INAPP, listOf(mobileTier.promoTier), dataSourceType = DataSourceType.REMOTE)
                         .map { lightSku -> PromoCodeSku(promoCodeName, lightSku.firstOrNull()) }
                 }
             }
@@ -77,7 +77,7 @@ constructor(
     fun consumePurchase(
         courseId: Long,
         profileId: Long,
-        sku: SkuDetails,
+        sku: ProductDetails,
         purchase: Purchase,
         promoCodeName: String? = null
     ): Completable =
@@ -87,7 +87,7 @@ constructor(
     fun restorePurchase(courseId: Long): Completable =
         Singles.zip(
             getCurrentProfileId(),
-            billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
+            billingRepository.getAllPurchases(BillingClient.ProductType.INAPP)
         ).flatMapMaybe { (profileId, purchases) ->
             val obfuscatedParams = createCoursePurchaseObfuscatedParams(profileId, courseId)
             val purchase =
@@ -115,7 +115,7 @@ constructor(
                 )
             )
 
-    private fun completePurchase(courseId: Long, sku: SkuDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
+    private fun completePurchase(courseId: Long, sku: ProductDetails, purchase: Purchase, promoCodeName: String? = null): Completable =
         coursePaymentsRepository
             .createCoursePayment(courseId, sku, purchase, promoCodeName)
             .flatMapCompletable { payment ->
@@ -132,7 +132,7 @@ constructor(
     private fun completePurchaseRestore(courseId: Long, purchase: Purchase): Completable =
         Singles.zip(
             billingPurchasePayloadRepository.getBillingPurchasePayload(purchase.orderId ?: "").onErrorReturnItem(BillingPurchasePayload.EMPTY), // TODO Order ID may be null; Case must be handled, for IAP to work correctly
-            billingRepository.getInventory(BillingClient.SkuType.INAPP, purchase.skus.first()).toSingle()
+            billingRepository.getInventory(BillingClient.ProductType.INAPP, purchase.products.first()).toSingle()
         ).flatMapCompletable { (billingPurchasePayload, skuDetails) ->
             val promoCode =
                 if (billingPurchasePayload.obfuscatedAccountId == purchase.accountIdentifiers?.obfuscatedAccountId &&
@@ -149,7 +149,7 @@ constructor(
         getCurrentProfileId()
             .flatMap { profileId ->
                 billingRepository
-                    .getInventory(BillingClient.SkuType.INAPP, skuId)
+                    .getInventory(BillingClient.ProductType.INAPP, skuId)
                     .toSingle()
                     .map { skuDetails ->
                         PurchaseFlowData(

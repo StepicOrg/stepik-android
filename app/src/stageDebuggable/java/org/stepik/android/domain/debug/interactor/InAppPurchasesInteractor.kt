@@ -14,7 +14,7 @@ constructor(
     private val billingRepository: BillingRepository
 ) {
     fun getAllPurchases(): Single<List<Purchase>> =
-        billingRepository.getAllPurchases(BillingClient.SkuType.INAPP)
+        billingRepository.getAllPurchases(BillingClient.ProductType.INAPP)
 
     fun consumePurchase(purchase: Purchase): Completable =
         billingRepository.consumePurchase(purchase)

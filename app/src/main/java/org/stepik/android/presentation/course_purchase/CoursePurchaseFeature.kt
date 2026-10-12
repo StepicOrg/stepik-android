@@ -1,7 +1,7 @@
 package org.stepik.android.presentation.course_purchase
 
 import com.android.billingclient.api.Purchase
-import com.android.billingclient.api.SkuDetails
+import com.android.billingclient.api.ProductDetails
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_payments.model.PromoCodeSku
 import org.stepik.android.domain.course_purchase.error.BillingException
@@ -70,7 +70,7 @@ interface CoursePurchaseFeature {
         data class ConsumePurchaseAction(
             val courseId: Long,
             val profileId: Long,
-            val skuDetails: SkuDetails,
+            val skuDetails: ProductDetails,
             val purchase: Purchase,
             val promoCode: String?
         ) : Action()
@@ -84,7 +84,7 @@ interface CoursePurchaseFeature {
         data class SaveBillingPurchasePayload(
             val courseId: Long,
             val profileId: Long,
-            val skuDetails: SkuDetails,
+            val skuDetails: ProductDetails,
             val purchase: Purchase,
             val promoCode: String?
         ) : Action()
@@ -95,7 +95,7 @@ interface CoursePurchaseFeature {
         data class WishlistAction(val action: WishlistOperationFeature.Action) : Action()
 
         sealed class ViewAction : Action() {
-            data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: SkuDetails) : ViewAction()
+            data class LaunchPurchaseFlowBilling(val obfuscatedParams: CoursePurchaseObfuscatedParams, val skuDetails: ProductDetails) : ViewAction()
             data class Error(val error: EnrollmentError) : ViewAction()
 
             object ShowLoading : Action.ViewAction()
@@ -110,7 +110,7 @@ interface CoursePurchaseFeature {
         object Idle : PaymentState()
         object ProcessingInitialCheck : PaymentState()
         data class ProcessingBillingPayment(val purchaseFlowData: PurchaseFlowData) : PaymentState()
-        data class ProcessingConsume(val skuDetails: SkuDetails, val purchase: Purchase) : PaymentState()
+        data class ProcessingConsume(val skuDetails: ProductDetails, val purchase: Purchase) : PaymentState()
 
         object PaymentSuccess : PaymentState()
         object PaymentPending : PaymentState()
