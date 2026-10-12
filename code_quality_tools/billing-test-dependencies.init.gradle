@@ -1,0 +1,38 @@
+// Run with --init-script; does not change the normal build or any resolution rules.
+// Use -Dphase0.output=<directory> to keep comparable before/after snapshots.
+allprojects { p ->
+    p.afterEvaluate {
+        if (p.path in [':app', ':billing']) {
+            p.tasks.register('billingTestDependencySnapshot') {
+                doLast {
+                    def configNames = [
+                        'releaseRuntimeClasspath',
+                        'debugUnitTestRuntimeClasspath',
+                        'debugAndroidTestRuntimeClasspath'
+                    ]
+                    def outputDir = new File(System.getProperty(
+                        'phase0.output',
+                        new File(p.rootProject.projectDir, 'reports/billing-phase-0/dependencies').path
+                    ))
+                    outputDir.mkdirs()
+                    configNames.each { configName ->
+                        def config = p.configurations.getByName(configName)
+                        def ids = config.incoming.resolutionResult.allComponents.collect {
+                            it.id.displayName
+                        }.sort()
+                        // Also verify external artifacts can be downloaded. Android project
+                        // artifacts need a consumer artifact type and are built by the test gates.
+                        config.incoming.artifactView {
+                            componentFilter {
+                                it instanceof org.gradle.api.artifacts.component.ModuleComponentIdentifier
+                            }
+                        }.files.files
+                        new File(outputDir, p.name + '-' + configName + '.txt').text =
+                            ids.join('\n') + '\n'
+                        println 'Resolved ' + p.path + ':' + configName + ': ' + ids.size() + ' components'
+                    }
+                }
+            }
+        }
+    }
+}

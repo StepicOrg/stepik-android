@@ -24,7 +24,9 @@ android {
         versionCode versions.code
         versionName versions.name
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // Opt in only for low-level database tests; UI tests retain the production application.
+        testInstrumentationRunner project.findProperty('billingDatabaseTests') == 'true' ?
+            "org.stepik.android.testutil.BillingDatabaseTestRunner" : "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
@@ -36,12 +38,17 @@ android {
     }
 
     sourceSets {
+        if (project.findProperty('billingDatabaseTests') == 'true') {
+            debug.manifest.srcFile 'src/billingDatabaseTest/AndroidManifest.xml'
+        }
+
         androidTest {
             java.srcDirs += "src/sharedTest/java"
         }
 
         test {
             java.srcDirs += "src/sharedTest/java"
+            java.srcDirs += project(':billing').file('src/sharedTest/java')
         }
     }
 
@@ -277,11 +284,14 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.robolectric
     testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoInline
     testImplementation libraries.mockitoKt
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest
 
     androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.testCore
+    androidTestImplementation libraries.testExtJunit
     androidTestImplementation libraries.testRules
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
