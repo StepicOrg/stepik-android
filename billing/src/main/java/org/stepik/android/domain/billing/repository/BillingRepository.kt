@@ -31,7 +31,7 @@ interface BillingRepository {
     fun getAllPurchases(productType: String, skus: List<String>): Single<List<Purchase>> =
         getAllPurchases(productType)
             .map { purchases ->
-                purchases.filter { it.products.first() in skus }
+                purchases.filter { purchase -> purchase.products.any { it in skus } }
             }
 
     /**
