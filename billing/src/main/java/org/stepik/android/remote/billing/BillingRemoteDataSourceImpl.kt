@@ -9,6 +9,7 @@ import com.android.billingclient.api.QueryPurchasesParams
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.exceptions.Exceptions
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
 import org.stepik.android.domain.billing.exception.BillingNotSupportedException
 import org.stepik.android.view.injection.billing.BillingSingleton
@@ -45,14 +46,19 @@ constructor(
                     })
                     .build()
 
-                billingClient.queryProductDetailsAsync(productParams) { billingResult, queryResult ->
-                    if (!emitter.isDisposed) {
-                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            emitter.onSuccess(queryResult.productDetailsList)
-                        } else {
-                            emitter.onError(BillingNotSupportedException(billingResult))
+                try {
+                    billingClient.queryProductDetailsAsync(productParams) { billingResult, queryResult ->
+                        if (!emitter.isDisposed) {
+                            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                                emitter.onSuccess(queryResult.productDetailsList)
+                            } else {
+                                emitter.tryOnError(BillingNotSupportedException(billingResult))
+                            }
                         }
                     }
+                } catch (error: Throwable) {
+                    Exceptions.throwIfFatal(error)
+                    emitter.tryOnError(error)
                 }
             }
             .observeOn(backgroundScheduler)
@@ -61,19 +67,26 @@ constructor(
     override fun getAllPurchases(productType: String): Single<List<Purchase>> =
         Single
             .create { emitter ->
-                billingClient
-                    .queryPurchasesAsync(
-                        QueryPurchasesParams
-                            .newBuilder()
-                            .setProductType(productType)
-                            .build()
-                    ) { billingResult, purchases ->
-                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            emitter.onSuccess(purchases)
-                        } else {
-                            emitter.onError(BillingNotSupportedException(billingResult))
+                try {
+                    billingClient
+                        .queryPurchasesAsync(
+                            QueryPurchasesParams
+                                .newBuilder()
+                                .setProductType(productType)
+                                .build()
+                        ) { billingResult, purchases ->
+                            if (!emitter.isDisposed) {
+                                if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                                    emitter.onSuccess(purchases)
+                                } else {
+                                    emitter.tryOnError(BillingNotSupportedException(billingResult))
+                                }
+                            }
                         }
-                    }
+                } catch (error: Throwable) {
+                    Exceptions.throwIfFatal(error)
+                    emitter.tryOnError(error)
+                }
             }
 
 
@@ -83,14 +96,19 @@ constructor(
                 val consumeParams = ConsumeParams.newBuilder()
                     .setPurchaseToken(purchase.purchaseToken)
                     .build()
-                billingClient.consumeAsync(consumeParams) { billingResult, _ ->
-                    if (!emitter.isDisposed) {
-                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            emitter.onComplete()
-                        } else {
-                            emitter.onError(BillingNotSupportedException(billingResult))
+                try {
+                    billingClient.consumeAsync(consumeParams) { billingResult, _ ->
+                        if (!emitter.isDisposed) {
+                            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                                emitter.onComplete()
+                            } else {
+                                emitter.tryOnError(BillingNotSupportedException(billingResult))
+                            }
                         }
                     }
+                } catch (error: Throwable) {
+                    Exceptions.throwIfFatal(error)
+                    emitter.tryOnError(error)
                 }
             }
             .observeOn(backgroundScheduler)

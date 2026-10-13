@@ -28,6 +28,8 @@ android {
 
     namespace 'org.stepik.android.billing'
 
+    sourceSets.test.java.srcDirs += 'src/sharedTest/java'
+
 }
 
 kotlin {
@@ -57,6 +59,7 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.robolectric
     testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoInline
     testImplementation libraries.mockitoKt
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest

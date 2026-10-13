@@ -47,6 +47,7 @@ android {
 
         test {
             java.srcDirs += "src/sharedTest/java"
+            java.srcDirs += "../billing/src/sharedTest/java"
         }
     }
 
@@ -282,6 +283,7 @@ dependencies {
     testImplementation libraries.junit
     testImplementation libraries.robolectric
     testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoInline
     testImplementation libraries.mockitoKt
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest
