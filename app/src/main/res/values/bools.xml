@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="is_night_mode">false</bool>
+    <bool name="adaptive_stats_fits_system_windows">true</bool>
 </resources>

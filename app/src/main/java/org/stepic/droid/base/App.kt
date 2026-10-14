@@ -87,6 +87,9 @@ class App : MultiDexApplication() {
             // You should not init your app in this process.
             return
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            registerActivityLifecycleCallbacks(ActivitySafeZone)
+        }
         refWatcher = LeakCanary.install(this)
 
         setTheme(R.style.AppTheme)
