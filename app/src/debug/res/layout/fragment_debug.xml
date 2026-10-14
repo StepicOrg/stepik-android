@@ -159,6 +159,19 @@
                     android:paddingBottom="8dp"
                     android:text="@string/debug_purchases_subtitle" />
 
+                <include layout="@layout/view_divider_vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/debugPlayVideo"
+                    style="@style/Widget.AppTheme.Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/debug_play_video_action"
+                    android:theme="@style/ThemeOverlay.Violet" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/debugApplySettingsAction"
                     android:layout_width="match_parent"

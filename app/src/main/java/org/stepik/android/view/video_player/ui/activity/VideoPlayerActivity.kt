@@ -32,6 +32,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import dev.androidbroadcast.vbpd.viewBinding
@@ -46,7 +50,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.databinding.ActivityVideoPlayerBinding
 import org.stepic.droid.databinding.ExoPlayerControlViewBinding
 import org.stepic.droid.preferences.VideoPlaybackRate
-import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.DisplayUtils
@@ -257,6 +260,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         injectComponent()
         gestureDetector = GestureDetectorCompat(this, onSimpleGestureListener)
 
@@ -274,6 +278,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
+        applyControlInsets()
 
         controlsBinding.closeButton.setOnClickListener {
             finish()
@@ -306,9 +311,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 return@setControllerVisibilityListener
             }
             if (visibility == View.VISIBLE) {
-                NavigationBarUtil.hideNavigationBar(false, this)
+                setSystemBarsHidden(false)
             } else if (visibility == View.GONE) {
-                NavigationBarUtil.hideNavigationBar(true, this)
+                setSystemBarsHidden(true)
             }
         }
 
@@ -532,6 +537,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus && !isPIPModeActive) {
+            syncSystemBarsWithControls()
+        }
         if (!hasFocus &&
             !isFinishing &&
             exoPlayer?.playWhenReady == true) {
@@ -549,6 +558,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             if (exoPlayer?.isPlaying == false) {
                 binding.playerView.showController()
             }
+            syncSystemBarsWithControls()
         }
     }
 
@@ -659,6 +669,43 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
         controlsBinding.skipNext.layoutParams = (controlsBinding.skipNext.layoutParams as ViewGroup.MarginLayoutParams).apply {
             leftMargin = skipMargin
+        }
+    }
+
+    private fun applyControlInsets() {
+        val controls = controlsBinding.root
+        val initialLeft = controls.paddingLeft
+        val initialTop = controls.paddingTop
+        val initialRight = controls.paddingRight
+        val initialBottom = controls.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(controls) { view, insets ->
+            // Keep controls clear of bars and cutouts even while the bars are hidden.
+            val safeInsets = insets.getInsetsIgnoringVisibility(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                initialLeft + safeInsets.left,
+                initialTop + safeInsets.top,
+                initialRight + safeInsets.right,
+                initialBottom + safeInsets.bottom
+            )
+            insets
+        }
+        ViewCompat.requestApplyInsets(controls)
+    }
+
+    private fun syncSystemBarsWithControls() {
+        setSystemBarsHidden(!binding.playerView.isControllerVisible)
+    }
+
+    private fun setSystemBarsHidden(hidden: Boolean) {
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        if (hidden) {
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+        } else {
+            controller.show(WindowInsetsCompat.Type.systemBars())
         }
     }
 

@@ -22,6 +22,7 @@ import android.content.Context
 import androidx.core.view.isVisible
 import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
+import org.stepik.android.view.debug.ui.activity.DebugVideoPlayerLauncher
 import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
 import org.stepik.android.view.debug.ui.dialog.BackendFeaturesDialogFragment
 import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
@@ -92,6 +93,10 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
         debugBinding.debugPurchases.setOnClickListener {
             val intent = InAppPurchasesActivity.createIntent(requireContext())
             startActivity(intent)
+        }
+
+        debugBinding.debugPlayVideo.setOnClickListener {
+            startActivity(DebugVideoPlayerLauncher.createIntent(requireContext()))
         }
     }
 
