@@ -8,11 +8,11 @@ import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -302,6 +302,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            // ActivitySafeZone already moves the whole layout above the navigation bar.
+            // Material 1.3.0 adds the same inset to BottomNavigationView's padding.
+            ViewCompat.setOnApplyWindowInsetsListener(mainFeedBinding.navigationView) { _, insets -> insets }
+        }
         mainFeedBinding.navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
         mainFeedBinding.navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
         mainFeedBinding.navigationView.menu.findItem(R.id.debug).isVisible = BuildConfig.BUILD_TYPE == DEBUG_BUILD_TYPE || BuildConfig.BUILD_TYPE == STAGE_DEBUGGABLE_BUILD_TYPE
