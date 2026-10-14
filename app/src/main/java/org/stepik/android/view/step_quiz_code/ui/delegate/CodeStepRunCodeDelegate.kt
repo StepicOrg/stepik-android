@@ -23,7 +23,7 @@ import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
-import ru.nobird.android.view.base.ui.extension.snackbar
+import org.stepic.droid.ui.util.snackbar
 
 class CodeStepRunCodeDelegate(
     runCodeLayout: View,

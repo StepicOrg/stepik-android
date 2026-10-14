@@ -26,6 +26,7 @@ import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
+import org.stepic.droid.ui.util.ViewExtensionsKt;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepik.android.view.notification.FcmNotificationHandler;
 
@@ -243,9 +244,10 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     }
 
     private void showConnectionProblemMessage() {
-        Snackbar.make(notificationRecyclerView,
-                R.string.connectionProblems,
-                Snackbar.LENGTH_SHORT).show();
+        ViewExtensionsKt.withoutDuplicateSystemBarInsets(
+                Snackbar.make(notificationRecyclerView, R.string.connectionProblems, Snackbar.LENGTH_SHORT),
+                notificationRecyclerView
+        ).show();
     }
 
     @Override

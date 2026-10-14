@@ -13,7 +13,9 @@ import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.core.view.ViewCompat
 import com.google.android.material.snackbar.Snackbar
+import org.stepic.droid.base.ActivitySafeZone
 
 fun View.setHeight(height: Int) {
     layoutParams.height = height
@@ -53,16 +55,33 @@ inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) 
     })
 }
 
-fun View.snackbar(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_SHORT) {
-    snackbar(context.getString(messageRes), length)
+fun View.snackbar(
+    @StringRes messageRes: Int,
+    length: Int = Snackbar.LENGTH_SHORT,
+    setup: Snackbar.() -> Unit = {}
+) {
+    snackbar(context.getString(messageRes), length, setup)
 }
 
-fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
+fun View.snackbar(
+    message: String,
+    length: Int = Snackbar.LENGTH_SHORT,
+    setup: Snackbar.() -> Unit = {}
+) {
     Snackbar
         .make(this, message, length)
+        .withoutDuplicateSystemBarInsets(this)
+        .apply(setup)
         .show()
 }
 
+fun Snackbar.withoutDuplicateSystemBarInsets(sourceView: View): Snackbar = apply {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM && ActivitySafeZone.contains(sourceView)) {
+        // This parent is already inside ActivitySafeZone; Material 1.3.0 would add its bottom inset again.
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets -> insets }
+        setGestureInsetBottomIgnored(true)
+    }
+}
 
 private const val durationMillis = 300
 

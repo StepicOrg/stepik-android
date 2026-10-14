@@ -63,7 +63,7 @@ import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import ru.nobird.android.view.base.ui.extension.snackbar
+import org.stepic.droid.ui.util.snackbar
 import javax.inject.Inject
 
 class StepFragment : Fragment(R.layout.fragment_step), StepView,

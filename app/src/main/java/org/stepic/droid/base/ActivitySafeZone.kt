@@ -27,6 +27,11 @@ object ActivitySafeZone : Application.ActivityLifecycleCallbacks {
     private const val DARK_ICON_LUMINANCE_THRESHOLD = 0.179
     private val installedViews = WeakHashMap<View, Boolean>()
 
+    fun contains(view: View): Boolean {
+        val content = view.rootView.findViewById<View>(android.R.id.content)
+        return content != null && installedViews[content] == true
+    }
+
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         // Auth screens animate their own insets; the player manages fullscreen controls separately.
         if (isHandledSeparately(activity)) return

@@ -64,7 +64,6 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
 class CourseContentFragment :
