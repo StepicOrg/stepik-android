@@ -28,9 +28,7 @@ android {
 
     namespace 'org.stepik.android.billing'
 
-    sourceSets {
-        test.java.srcDirs += "src/sharedTest/java"
-    }
+    sourceSets.test.java.srcDirs += 'src/sharedTest/java'
 
 }
 

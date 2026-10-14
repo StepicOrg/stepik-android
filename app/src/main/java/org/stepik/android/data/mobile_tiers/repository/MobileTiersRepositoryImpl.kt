@@ -31,10 +31,14 @@ constructor(
 
             DataSourceType.CACHE ->
                 cache.flatMap { cachedItems ->
-                    val newIds = (mobileTierCalculations.map { it.course } - cachedItems.map { it.course })
-                    val newMobileCalculations = newIds.map { MobileTierCalculation(course = it) }
-                    remoteAction(newMobileCalculations)
-                            .map { remoteItems -> (cachedItems + remoteItems) }
+                    val cachedCourseIds = cachedItems.map { it.course }.toSet()
+                    val missingCalculations = mobileTierCalculations.filter { it.course !in cachedCourseIds }
+                    if (missingCalculations.isEmpty()) {
+                        Single.just(cachedItems)
+                    } else {
+                        remoteAction(missingCalculations)
+                            .map { remoteItems -> cachedItems + remoteItems }
+                    }
                 }
 
             else -> throw IllegalArgumentException("Unsupported source type = $dataSourceType")

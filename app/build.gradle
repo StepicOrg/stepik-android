@@ -24,9 +24,9 @@ android {
         versionCode versions.code
         versionName versions.name
 
-        // Opt in only for low-level database tests; UI tests retain the production application.
-        testInstrumentationRunner project.findProperty('billingDatabaseTests') == 'true' ?
-            "org.stepik.android.testutil.BillingDatabaseTestRunner" : "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner project.findProperty('billingDatabaseTests') == 'true'
+                ? "org.stepik.android.cache.testutil.BillingDatabaseTestRunner"
+                : "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
@@ -41,14 +41,13 @@ android {
         if (project.findProperty('billingDatabaseTests') == 'true') {
             debug.manifest.srcFile 'src/billingDatabaseTest/AndroidManifest.xml'
         }
-
         androidTest {
             java.srcDirs += "src/sharedTest/java"
         }
 
         test {
             java.srcDirs += "src/sharedTest/java"
-            java.srcDirs += project(':billing').file('src/sharedTest/java')
+            java.srcDirs += "../billing/src/sharedTest/java"
         }
     }
 
