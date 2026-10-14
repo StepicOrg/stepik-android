@@ -28,6 +28,7 @@
     <application
         android:name=".base.App"
         android:allowBackup="false"
+        android:enableOnBackInvokedCallback="false"
         android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:largeHeap="true"
@@ -37,7 +38,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="allowBackup, supportsRtl"
-        tools:targetApi="m">
+        >
+
+        <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"

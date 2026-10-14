@@ -35,7 +35,7 @@ Important versions live in `dependencies.gradle`.
 - Gradle wrapper: `7.2`.
 - Android Gradle Plugin: `7.1.2`.
 - Kotlin: `1.7.10`.
-- SDKs: `minSdk 21`, `targetSdk 34`, `compileSdk 34`, build tools `34.0.0`.
+- SDKs: `minSdk 21`, `targetSdk 36`, `compileSdk 36`, build tools `36.0.0`.
 - Java/Kotlin target: JVM 1.8.
 - AndroidX is enabled in `gradle.properties`.
 - `:app` uses multidex, ViewBinding, and the deprecated
