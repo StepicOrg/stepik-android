@@ -8,9 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import org.stepic.droid.R
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.ui.activities.PhotoViewActivity
@@ -42,30 +40,12 @@ object ActivitySafeZone : Application.ActivityLifecycleCallbacks {
         setBarIconContrast(activity)
         val statusBarBackground = addStatusBarBackground(activity)
 
-        val initialLeft = content.paddingLeft
-        val initialTop = content.paddingTop
-        val initialRight = content.paddingRight
-        val initialBottom = content.paddingBottom
-
-        ViewCompat.setOnApplyWindowInsetsListener(content) { view, insets ->
-            val safeInsets = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
-            )
+        WindowSafeZone.apply(activity.window) { safeInsets ->
             val backgroundParams = statusBarBackground.layoutParams
             if (backgroundParams.height != safeInsets.top) {
                 backgroundParams.height = safeInsets.top
                 statusBarBackground.layoutParams = backgroundParams
             }
-            view.setPadding(
-                initialLeft + safeInsets.left,
-                initialTop + safeInsets.top,
-                initialRight + safeInsets.right,
-                initialBottom + safeInsets.bottom
-            )
-            insets
-        }
-        if (ViewCompat.isAttachedToWindow(content)) {
-            ViewCompat.requestApplyInsets(content)
         }
     }
 

@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.databinding.DialogStepQuizCodeFullscreenBinding
@@ -262,6 +263,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
+                WindowSafeZone.apply(window)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         runCodeDelegate?.let {
