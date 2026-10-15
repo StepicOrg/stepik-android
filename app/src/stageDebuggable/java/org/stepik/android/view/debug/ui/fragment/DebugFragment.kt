@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.copyTextToClipboard
+import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.course_purchase.analytic.CoursePurchaseSource
 import org.stepik.android.presentation.debug.DebugFeature
 import org.stepik.android.presentation.debug.DebugViewModel
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -20,11 +22,14 @@ import javax.inject.Inject
 import android.content.Intent
 import android.content.Context
 import androidx.core.view.isVisible
+import com.google.android.material.snackbar.Snackbar
 import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
 import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
+import org.stepik.android.view.debug.ui.CoursePurchasePreviewData
 import org.stepik.android.view.debug.ui.dialog.BackendFeaturesDialogFragment
 import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
+import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.State, DebugFeature.Action.ViewAction> {
@@ -91,6 +96,22 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
         debugBinding.debugPurchases.setOnClickListener {
             val intent = InAppPurchasesActivity.createIntent(requireContext())
             startActivity(intent)
+        }
+
+        debugBinding.debugCoursePurchasePreview.setOnClickListener {
+            CoursePurchaseBottomSheetDialogFragment
+                .newInstance(
+                    CoursePurchasePreviewData.create(requireContext()),
+                    coursePurchaseSource = CoursePurchaseSource.COURSE_SCREEN_SOURCE,
+                    isNeedRestoreMessage = false
+                )
+                .showIfNotExists(childFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
+        }
+
+        debugBinding.debugSnackbarPreview.setOnClickListener {
+            debugBinding.catalogRootView.snackbar(R.string.debug_snackbar_preview_message, Snackbar.LENGTH_INDEFINITE) {
+                setAction(android.R.string.ok) { }
+            }
         }
     }
 

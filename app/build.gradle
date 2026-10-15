@@ -41,6 +41,14 @@ android {
         if (project.findProperty('billingDatabaseTests') == 'true') {
             debug.manifest.srcFile 'src/billingDatabaseTest/AndroidManifest.xml'
         }
+        debug {
+            java.srcDirs += 'src/debugShared/java'
+            res.srcDirs += 'src/debugShared/res'
+        }
+        stageDebuggable {
+            java.srcDirs += 'src/debugShared/java'
+            res.srcDirs += 'src/debugShared/res'
+        }
         androidTest {
             java.srcDirs += "src/sharedTest/java"
         }

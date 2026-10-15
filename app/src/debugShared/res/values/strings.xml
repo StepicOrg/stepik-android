@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="debug_course_purchase_preview_action" translatable="false">Show sample purchase sheet</string>
+    <string name="debug_snackbar_preview_action" translatable="false">Show Snackbar</string>
+    <string name="debug_snackbar_preview_message" translatable="false">Sample Snackbar for navigation bar spacing</string>
+    <string name="debug_course_purchase_preview_title" translatable="false">Sample course for layout testing</string>
+    <string name="debug_course_purchase_preview_price" translatable="false">€9.99</string>
+</resources>
