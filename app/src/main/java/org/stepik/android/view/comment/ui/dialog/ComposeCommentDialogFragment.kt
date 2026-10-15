@@ -184,7 +184,7 @@ class ComposeCommentDialogFragment :
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
-                WindowSafeZone.apply(window)
+                WindowSafeZone.applyFullscreenDialog(window)
             }
 
         composeCommentPresenter.attachView(this)

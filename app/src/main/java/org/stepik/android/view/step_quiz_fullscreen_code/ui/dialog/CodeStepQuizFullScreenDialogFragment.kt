@@ -263,7 +263,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
-                WindowSafeZone.apply(window)
+                WindowSafeZone.applyFullscreenDialog(window)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         runCodeDelegate?.let {

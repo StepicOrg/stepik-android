@@ -134,7 +134,7 @@ class EditStepSourceDialogFragment :
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-                WindowSafeZone.apply(window)
+                WindowSafeZone.applyFullscreenDialog(window)
             }
 
         editStepContentPresenter.attachView(this)
