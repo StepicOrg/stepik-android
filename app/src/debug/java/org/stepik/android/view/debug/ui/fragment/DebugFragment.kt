@@ -29,6 +29,13 @@ import org.stepik.android.view.debug.ui.activity.DebugVideoPlayerLauncher
 import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
 import org.stepik.android.view.debug.ui.CoursePurchasePreviewData
 import org.stepik.android.view.debug.ui.CodeStepQuizFullScreenPreviewData
+import org.stepik.android.view.debug.ui.ComposeCommentPreviewData
+import org.stepik.android.view.debug.ui.ComposeCourseReviewPreviewData
+import org.stepik.android.view.debug.ui.CourseSearchPreviewData
+import org.stepik.android.view.debug.ui.EditStepSourcePreviewData
+import org.stepik.android.view.debug.ui.InAppWebViewPreviewData
+import org.stepik.android.view.debug.ui.SolutionCommentPreviewData
+import org.stepik.android.view.debug.ui.SubmissionsPreviewData
 import org.stepik.android.view.debug.ui.dialog.BackendFeaturesDialogFragment
 import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
 import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
@@ -114,6 +121,14 @@ class DebugFragment : Fragment(R.layout.fragment_debug),
         debugBinding.debugCodeStepQuizPreview.setOnClickListener {
             CodeStepQuizFullScreenPreviewData.show(this)
         }
+
+        debugBinding.debugComposeCommentPreview.setOnClickListener { ComposeCommentPreviewData.show(this) }
+        debugBinding.debugSolutionCommentPreview.setOnClickListener { SolutionCommentPreviewData.show(this) }
+        debugBinding.debugComposeCourseReviewPreview.setOnClickListener { ComposeCourseReviewPreviewData.show(this) }
+        debugBinding.debugCourseSearchPreview.setOnClickListener { CourseSearchPreviewData.show(this) }
+        debugBinding.debugEditStepSourcePreview.setOnClickListener { EditStepSourcePreviewData.show(this) }
+        debugBinding.debugInAppWebViewPreview.setOnClickListener { InAppWebViewPreviewData.show(this) }
+        debugBinding.debugSubmissionsPreview.setOnClickListener { SubmissionsPreviewData.show(this) }
 
         debugBinding.debugSnackbarPreview.setOnClickListener {
             debugBinding.catalogRootView.snackbar(R.string.debug_snackbar_preview_message, Snackbar.LENGTH_INDEFINITE) {

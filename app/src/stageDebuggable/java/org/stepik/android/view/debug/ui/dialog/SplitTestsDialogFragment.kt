@@ -13,6 +13,7 @@ import dev.androidbroadcast.vbpd.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.databinding.DialogSplitTestsBinding
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.debug.model.SplitTestData
@@ -56,6 +57,11 @@ class SplitTestsDialogFragment : DialogFragment(R.layout.dialog_split_tests), Re
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.let(WindowSafeZone::apply)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -2,6 +2,13 @@
 <resources>
     <string name="debug_course_purchase_preview_action" translatable="false">Show sample purchase sheet</string>
     <string name="debug_code_step_quiz_preview_action" translatable="false">Show sample code quiz dialog</string>
+    <string name="debug_compose_comment_preview_action" translatable="false">Show sample compose comment dialog</string>
+    <string name="debug_solution_comment_preview_action" translatable="false">Show sample solution comment dialog</string>
+    <string name="debug_compose_course_review_preview_action" translatable="false">Show sample course review dialog</string>
+    <string name="debug_course_search_preview_action" translatable="false">Show sample course search dialog</string>
+    <string name="debug_edit_step_source_preview_action" translatable="false">Show sample step source editor</string>
+    <string name="debug_in_app_web_view_preview_action" translatable="false">Show sample in-app web dialog</string>
+    <string name="debug_submissions_preview_action" translatable="false">Show sample submissions dialog</string>
     <string name="debug_code_step_quiz_run_preview_message" translatable="false">Code execution is disabled in this preview</string>
     <string name="debug_snackbar_preview_action" translatable="false">Show Snackbar</string>
     <string name="debug_snackbar_preview_message" translatable="false">Sample Snackbar for navigation bar spacing</string>

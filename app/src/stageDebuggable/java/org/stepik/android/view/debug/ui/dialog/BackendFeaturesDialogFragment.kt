@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.databinding.DialogBackendFeaturesBinding
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -58,6 +59,11 @@ class BackendFeaturesDialogFragment : DialogFragment(R.layout.dialog_backend_fea
         super.onCreate(savedInstanceState)
         injectComponent()
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.let(WindowSafeZone::apply)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

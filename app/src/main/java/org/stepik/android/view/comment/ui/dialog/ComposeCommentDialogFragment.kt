@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.databinding.DialogComposeCommentBinding
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -183,6 +184,7 @@ class ComposeCommentDialogFragment :
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
+                WindowSafeZone.apply(window)
             }
 
         composeCommentPresenter.attachView(this)

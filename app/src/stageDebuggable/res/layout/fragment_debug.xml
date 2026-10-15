@@ -207,6 +207,83 @@
         </FrameLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugComposeCommentPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_compose_comment_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugSolutionCommentPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_solution_comment_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugComposeCourseReviewPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_compose_course_review_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugCourseSearchPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_course_search_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugEditStepSourcePreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_edit_step_source_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugInAppWebViewPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_in_app_web_view_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugSubmissionsPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/debug_submissions_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/debugCodeStepQuizPreview"
                 style="@style/Widget.AppTheme.Button"
                 android:layout_width="match_parent"

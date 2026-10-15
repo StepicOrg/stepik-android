@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.databinding.DialogComposeCourseReviewBinding
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setTintedNavigationIcon
@@ -126,6 +127,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
+                WindowSafeZone.apply(window)
             }
 
         composeCourseReviewPresenter.attachView(this)

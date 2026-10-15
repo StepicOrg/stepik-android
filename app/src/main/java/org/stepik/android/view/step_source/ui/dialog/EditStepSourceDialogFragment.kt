@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.databinding.DialogStepSourceEditBinding
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
@@ -133,6 +134,7 @@ class EditStepSourceDialogFragment :
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                WindowSafeZone.apply(window)
             }
 
         editStepContentPresenter.attachView(this)

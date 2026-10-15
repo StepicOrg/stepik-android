@@ -18,6 +18,7 @@ import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.base.WindowSafeZone
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
 import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
@@ -182,6 +183,7 @@ class CourseSearchDialogFragment :
 
     override fun onStart() {
         super.onStart()
+        dialog?.window?.let(WindowSafeZone::apply)
         searchSuggestionsPresenter.attachView(this)
     }
 
