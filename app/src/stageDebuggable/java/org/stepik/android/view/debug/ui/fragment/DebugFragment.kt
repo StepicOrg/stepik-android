@@ -27,6 +27,7 @@ import dev.androidbroadcast.vbpd.viewBinding
 import org.stepic.droid.databinding.FragmentDebugBinding
 import org.stepik.android.view.debug.ui.activity.InAppPurchasesActivity
 import org.stepik.android.view.debug.ui.CoursePurchasePreviewData
+import org.stepik.android.view.debug.ui.CodeStepQuizFullScreenPreviewData
 import org.stepik.android.view.debug.ui.dialog.BackendFeaturesDialogFragment
 import org.stepik.android.view.debug.ui.dialog.SplitTestsDialogFragment
 import org.stepik.android.view.course_purchase.ui.dialog.CoursePurchaseBottomSheetDialogFragment
@@ -106,6 +107,10 @@ class DebugFragment : Fragment(R.layout.fragment_debug), ReduxView<DebugFeature.
                     isNeedRestoreMessage = false
                 )
                 .showIfNotExists(childFragmentManager, CoursePurchaseBottomSheetDialogFragment.TAG)
+        }
+
+        debugBinding.debugCodeStepQuizPreview.setOnClickListener {
+            CodeStepQuizFullScreenPreviewData.show(this)
         }
 
         debugBinding.debugSnackbarPreview.setOnClickListener {

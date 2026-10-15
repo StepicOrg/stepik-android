@@ -18,9 +18,14 @@
         android:scrollbarStyle="outsideOverlay"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <FrameLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
             <include
                 android:id="@+id/debugProgressBar"
@@ -211,5 +216,18 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </FrameLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/debugCodeStepQuizPreview"
+                style="@style/Widget.AppTheme.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/debug_code_step_quiz_preview_action"
+                android:theme="@style/ThemeOverlay.Violet" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
